@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.13",
+ "version": "2026-10-19.kb-cs-bachelor.14",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -42,6 +42,8 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
+  "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -888,7 +890,74 @@
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All applicants to Oxford's undergraduate Computer Science degrees (Computer Science, Mathematics and Computer Science, Computer Science and Philosophy)",
+      "source_url": "https://www.cs.ox.ac.uk/admissions/undergraduate/how_to_apply/home.html",
+      "quote": "5. Submit a UCAS application All applicants apply through UCAS by the mid October deadline.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All applicants to Oxford's undergraduate Computer Science degrees (Computer Science, Mathematics and Computer Science, Computer Science and Philosophy)",
+      "source_url": "https://www.cs.ox.ac.uk/admissions/undergraduate/how_to_apply/home.html",
+      "quote": "As part of the process you will be asked to nominate a referree, this will be someone that knows you academically and can comment on your suitability for higher education.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All applicants to Oxford's undergraduate Computer Science degrees (Computer Science, Mathematics and Computer Science, Computer Science and Philosophy)",
+      "source_url": "https://www.cs.ox.ac.uk/admissions/undergraduate/how_to_apply/home.html",
+      "quote": "we will use scores on the Test of Mathematics for University Admission (TMUA) which all applicants for Maths, Computer Science, or joint honours courses must take.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -918,7 +987,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 0
+   "known_fact_count": 3,
+   "source_batches": [
+    "batch3",
+    "topup_documents4"
+   ]
   },
   "qs2027-005": {
    "seed_id": "qs2027-005",
@@ -2350,7 +2423,165 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Qualifications for Foreigners: international applicants with international high school qualifications to NUS undergraduate programmes (including the Common Computer Science Programmes)",
+      "source_url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+      "quote": "S/N Supporting Document Applicable to / if 1.1 Passport All applicants",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Updated as of November 2025",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "National Level High School Examination result slips if the applicant has completed the high school final examinations; otherwise (have not completed high school final examinations) the full set of most recent High School Examination Result slips"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Qualifications for Foreigners: international applicants with international high school qualifications to NUS undergraduate programmes (including the Common Computer Science Programmes)",
+      "source_url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+      "quote": "2.1 National Level High School Examination result slips Completed high school final examinations 2.2 Full set of most recent High School Examination Result slips",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Updated as of November 2025",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "if available (the table: additional test score report(s) where the applicant indicated the scores)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Qualifications for Foreigners: international applicants with international high school qualifications to NUS undergraduate programmes (including the Common Computer Science Programmes)",
+      "source_url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+      "quote": "Submit English Language test scores (if available) such as: • IELTS • TOEFL",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Updated as of November 2025",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "conditional",
+       "condition": "if available; ACT, AP and SAT official reports must also be sent directly to NUS by the testing agencies"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Qualifications for Foreigners: international applicants with international high school qualifications to NUS undergraduate programmes (including the Common Computer Science Programmes)",
+      "source_url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+      "quote": "Submit Standardised test scores (if available) such as: • SAT • AP • ACT with Writing In addition to uploading your ACT, AP, and SAT scores to the Applicant Portal, you must also have the official reports sent directly to NUS from the testing agencies (College Board or ACT).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Updated as of November 2025",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Qualifications for Foreigners: international applicants with international high school qualifications to NUS undergraduate programmes (including the Common Computer Science Programmes)",
+      "source_url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+      "quote": "Your application will be only considered after you have completed the application process. This includes: • Successful submission of the online application form",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Updated as of November 2025",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2026/2027",
+      "population": "International Qualifications for Foreigners: international applicants with international high school qualifications to NUS undergraduate programmes (including the Common Computer Science Programmes)",
+      "source_url": "https://nus.edu.sg/oam/docs/default-source/application-guide/international-qualifications-application-guide.pdf",
+      "quote": "You are required to answer five short response questions and list up to four achievements.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Achievements section of the online application (Aptitude-Based Admissions Scheme).",
+      "cycle_stated": "ACADEMIC YEAR 2026/2027",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026/2027 is before the fall 2027 intake's 2027/28",
+       "document list published for \"ACADEMIC YEAR 2026/2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -2376,10 +2607,11 @@
      "source_batch": "topup_deadlines1"
     }
    ],
-   "known_fact_count": 3,
+   "known_fact_count": 9,
    "source_batches": [
     "batch8",
-    "topup_deadlines1"
+    "topup_deadlines1",
+    "topup_documents4"
    ]
   },
   "qs2027-011": {
@@ -2511,7 +2743,140 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying with international (non-Singapore) high school qualifications to NTU undergraduate programmes, including Computer Science",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/application-process",
+      "quote": "STEP 2: Submit the online application form The form covers the following sections:",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying with international (non-Singapore) high school qualifications to NTU undergraduate programmes, including Computer Science",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+      "quote": "The documents include: Personal Identity: International students: Passport particulars page",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying with international (non-Singapore) high school qualifications to NTU undergraduate programmes, including Computer Science",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+      "quote": "High school result slip/certificate/Diploma, e.g. American High School Diploma and transcript, GCE A Level Statement of Results & Certificate",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying with international (non-Singapore) high school qualifications to NTU undergraduate programmes, including Computer Science",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+      "quote": "Secondary school result slip or certificate, e.g. IGCSE, GCE O Level, India Standard 10, Malaysia SPM & E1119/ CEFR, Grade 10 transcript, PRC Zhong Kao",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "if applicable; the general admission requirements page makes an approved English test mandatory for applicants holding or pursuing PRC Gao Kao, Taiwan GSAT, South Korea CSAT or General High School Diploma, HKDSE, Vietnam High School Graduation Certificate, Thailand Mathayom 6, Indonesia Ijazah SMA, or any qualification where English was not studied at both junior and senior high school levels or was offered only as a second language"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying with international (non-Singapore) high school qualifications to NTU undergraduate programmes, including Computer Science",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+      "quote": "English Proficiency - TOEFL iBT/ TOEFL iBT ® Home Edition, SAT, IELTS or PTE Academic or ACT with Writing (if applicable).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents in a language other than English, Chinese, Bahasa Indonesia or Malay"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying with international (non-Singapore) high school qualifications to NTU undergraduate programmes, including Computer Science",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+      "quote": "Documents in Chinese, Bahasa Indonesia and Malay do not need to be translated into English. For documents in other languages, it is necessary to get your teacher or professional translator to translate them into English before uploading both original and translated versions.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -2536,7 +2901,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 1
+   "known_fact_count": 7,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents4"
+   ]
   },
   "qs2027-013": {
    "seed_id": "qs2027-013",
@@ -4077,7 +4446,162 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants to Yale College, including international applicants (who fulfil the same requirements as domestic applicants); Computer Science is a Yale College major",
+      "source_url": "https://admissions.yale.edu/requirements",
+      "quote": "Step 1 Complete and submit the Common Application , Coalition Application on SCOIR , or QuestBridge Application , online.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants to Yale College, including international applicants (who fulfil the same requirements as domestic applicants); Computer Science is a Yale College major",
+      "source_url": "https://admissions.yale.edu/requirements",
+      "quote": "Letters of recommendation from two teachers and one counselor",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants to Yale College, including international applicants (who fulfil the same requirements as domestic applicants); Computer Science is a Yale College major",
+      "source_url": "https://admissions.yale.edu/requirements",
+      "quote": "Also request a letter from your school’s college counselor. If your school does not have someone serving as a college counselor, please request a recommendation from a school administrator.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants to Yale College, including international applicants (who fulfil the same requirements as domestic applicants); Computer Science is a Yale College major",
+      "source_url": "https://admissions.yale.edu/requirements",
+      "quote": "Ask your counselor or other school official to submit a School Report with an official transcript that includes all completed secondary school courses",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants to Yale College, including international applicants (who fulfil the same requirements as domestic applicants); Computer Science is a Yale College major",
+      "source_url": "https://admissions.yale.edu/international",
+      "quote": "International applicants fulfill the same standardized testing requirements as domestic applicants. First-year and transfer applicants must submit scores from the SAT or ACT.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "non-native English speaker without two or more years of enrollment in an English-medium school"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants to Yale College, including international applicants (who fulfil the same requirements as domestic applicants); Computer Science is a Yale College major",
+      "source_url": "https://admissions.yale.edu/standardized-testing",
+      "quote": "If you are a non-native English speaker without two or more years of enrollment in an English-medium school, you are required to submit scores from an English proficiency test, in addition to fulfilling Yale’s standardized testing requirement with ACT or SAT scores.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents in a language other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants to Yale College, including international applicants (who fulfil the same requirements as domestic applicants); Computer Science is a Yale College major",
+      "source_url": "https://admissions.yale.edu/international",
+      "quote": "If any of your documents, including transcripts and letters of recommendation, are in a language other than English, they must be accompanied by a certified translation. We are not able to accept any documents that you have translated yourself.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -4097,7 +4621,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 10,
+   "source_batches": [
+    "batch2",
+    "topup_documents4"
+   ]
   },
   "qs2027-018": {
    "seed_id": "qs2027-018",
@@ -6090,7 +6618,162 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students with overseas qualifications applying directly to the University for undergraduate or postgraduate coursework (Australian Year 12 / IB-in-Australia applicants apply through UAC)",
+      "source_url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+      "quote": "Have overseas qualifications? Apply directly to the University from your course page or via an authorised agent.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students with overseas qualifications applying directly to the University for undergraduate or postgraduate coursework (Australian Year 12 / IB-in-Australia applicants apply through UAC)",
+      "source_url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+      "quote": "You’ll need to include official documents with your application, such as academic certificates and transcripts,",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students with overseas qualifications applying directly to the University for undergraduate or postgraduate coursework (Australian Year 12 / IB-in-Australia applicants apply through UAC)",
+      "source_url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+      "quote": "academic certificates and transcripts, proof of English language proficiency and proof of identity",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students with overseas qualifications applying directly to the University for undergraduate or postgraduate coursework (Australian Year 12 / IB-in-Australia applicants apply through UAC)",
+      "source_url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+      "quote": "proof of English language proficiency and proof of identity (such as your passport).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents in languages other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students with overseas qualifications applying directly to the University for undergraduate or postgraduate coursework (Australian Year 12 / IB-in-Australia applicants apply through UAC)",
+      "source_url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+      "quote": "If you have documents in languages other than English, you need to have them translated by a government-accredited translator such as NAATI, or your school’s registrar or equivalent department.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.credential_evaluation",
+      "value": {
+       "kind": "credential_evaluation",
+       "requirement": "conditional",
+       "condition": "applying from China, where the academic documents need verification by China's Center for Student Services and Development"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students with overseas qualifications applying directly to the University for undergraduate or postgraduate coursework (Australian Year 12 / IB-in-Australia applicants apply through UAC)",
+      "source_url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+      "quote": "If you're applying from China, check if you need your academic documents verified by China’s Center for Student Services and Development",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "conditional",
+       "condition": "depending on the applicant's background"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students with overseas qualifications applying directly to the University for undergraduate or postgraduate coursework (Australian Year 12 / IB-in-Australia applicants apply through UAC)",
+      "source_url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+      "quote": "Other supporting documents may be required depending on your background, for example a change of name certificate or curriculum vitae.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -6115,7 +6798,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 11,
+   "source_batches": [
+    "batch1",
+    "topup_documents4"
+   ]
   },
   "qs2027-029": {
    "seed_id": "qs2027-029",
@@ -6293,7 +6980,118 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants applying directly to ANU for undergraduate programs (including the Bachelor of Advanced Computing (Honours)); applicants with Australian Year 12, the IB Diploma or NCEA apply through UAC International instead",
+      "source_url": "https://study.anu.edu.au/apply/international-applications",
+      "quote": "Submit your application through our online application portal. Simply search for your preferred program in the below list, and click on Apply.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants applying directly to ANU for undergraduate programs (including the Bachelor of Advanced Computing (Honours)); applicants with Australian Year 12, the IB Diploma or NCEA apply through UAC International instead",
+      "source_url": "https://study.anu.edu.au/apply/international-applications/documentation-requirements",
+      "quote": "Documents you will need to apply to ANU Proof that you have met the University's minimum English language requirements.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants applying directly to ANU for undergraduate programs (including the Bachelor of Advanced Computing (Honours)); applicants with Australian Year 12, the IB Diploma or NCEA apply through UAC International instead",
+      "source_url": "https://study.anu.edu.au/apply/international-applications/documentation-requirements",
+      "quote": "Your academic records, including a grading scale. If you are applying for an undergraduate program, you will need to provide an academic transcript that shows that you have completed your secondary studies.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "conditional",
+       "condition": "if the application is successful and the applicant is offered a place (optional at application); official ID may be a birth certificate, citizenship documents or a passport"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants applying directly to ANU for undergraduate programs (including the Bachelor of Advanced Computing (Honours)); applicants with Australian Year 12, the IB Diploma or NCEA apply through UAC International instead",
+      "source_url": "https://study.anu.edu.au/apply/international-applications/documentation-requirements",
+      "quote": "You can choose to provide official ID when you apply (birth certificate, citizenship documents, passport). Official ID will be required if your application is successful and you are offered a place at ANU.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents not in English: translations only from the accepted organisations listed; self-translated documents are not acceptable"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants applying directly to ANU for undergraduate programs (including the Bachelor of Advanced Computing (Honours)); applicants with Australian Year 12, the IB Diploma or NCEA apply through UAC International instead",
+      "source_url": "https://study.anu.edu.au/apply/international-applications/documentation-requirements",
+      "quote": "Translating your documents into English ANU accepts translations from these organisations:",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -6303,10 +7101,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6,
+   "known_fact_count": 11,
    "source_batches": [
     "batch2",
-    "topup_round3"
+    "topup_round3",
+    "topup_documents4"
    ]
   },
   "qs2027-030": {
@@ -9172,7 +9971,96 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants, including international applicants ('International applicants apply via UCAS in the same way as UK applicants'), BSc Computer Science (UCAS G400)",
+      "source_url": "https://www.manchester.ac.uk/study/undergraduate/applying/how-to-apply/ucas-personal-statement/",
+      "quote": "To study for an undergraduate degree at Manchester or any UK university, you must make your application through UCAS.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants, including international applicants ('International applicants apply via UCAS in the same way as UK applicants'), BSc Computer Science (UCAS G400)",
+      "source_url": "https://www.manchester.ac.uk/study/undergraduate/applying/how-to-apply/ucas-personal-statement/",
+      "quote": "A personal statement – an opportunity to tell us why you're interested in your chosen course.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (Year of entry: 2027)",
+      "population": "Undergraduate applicants, including international applicants ('International applicants apply via UCAS in the same way as UK applicants'), BSc Computer Science (UCAS G400)",
+      "source_url": "https://www.manchester.ac.uk/study/undergraduate/courses/2027/00560/bsc-computer-science/",
+      "quote": "Your referee should give realistic grade predictions for all qualifications that you are currently studying at the top of their reference. If you attend a non-UK school or college that does not provide predicted grades your referee should explain this policy within their reference.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (Year of entry: 2027)",
+      "population": "Undergraduate applicants, including international applicants ('International applicants apply via UCAS in the same way as UK applicants'), BSc Computer Science (UCAS G400)",
+      "source_url": "https://www.manchester.ac.uk/study/undergraduate/courses/2027/00560/bsc-computer-science/",
+      "quote": "All applicants to the University (from the UK and Overseas) are required to show evidence of English Language proficiency. The minimum English Language requirement for this course is:",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "The course page lists GCSE/IGCSE English Language grade C/4, IELTS 6.5 (no subskill below 6.5) or TOEFL iBT 90 among the accepted evidence; 'Your English Language test report must be valid on the start date of the course'.",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9182,7 +10070,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 7
+   "known_fact_count": 11,
+   "source_batches": [
+    "batch1",
+    "topup_documents4"
+   ]
   },
   "qs2027-041": {
    "seed_id": "qs2027-041",
@@ -9347,7 +10239,118 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students whose senior schooling is from outside Australia, applying directly to UQ for undergraduate programs (including the Bachelor of Computer Science)",
+      "source_url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+      "quote": "Step 3: Complete your application Complete all details on the application form and include all required documents.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students whose senior schooling is from outside Australia, applying directly to UQ for undergraduate programs (including the Bachelor of Computer Science)",
+      "source_url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+      "quote": "You will need to provide: evidence of your previous study, such as certified copies of complete academic transcripts and/or testamurs for any non-UQ studies",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students whose senior schooling is from outside Australia, applying directly to UQ for undergraduate programs (including the Bachelor of Computer Science)",
+      "source_url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+      "quote": "a copy of your passport or national ID card",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students whose senior schooling is from outside Australia, applying directly to UQ for undergraduate programs (including the Bachelor of Computer Science)",
+      "source_url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+      "quote": "a copy of your passport or national ID card evidence that you meet our English language requirements",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "conditional",
+       "condition": "studies completed and the transcript does not state the degree or diploma and the date it was awarded"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students whose senior schooling is from outside Australia, applying directly to UQ for undergraduate programs (including the Bachelor of Computer Science)",
+      "source_url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+      "quote": "If you have completed your studies and the transcript does not state your degree or diploma and the date it was awarded, you must also provide an award certificate or testamur.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9362,7 +10365,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 11,
+   "source_batches": [
+    "batch2",
+    "topup_documents4"
+   ]
   },
   "qs2027-042": {
    "seed_id": "qs2027-042",
@@ -9436,7 +10443,268 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "Documents Essential /Optional Details Application Form Essential One printed copy of the application",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "Personal Statement Essential One printed copy of the application",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "High School Diploma or Certificate of (Expected) Graduation Graduates from high schools except P.R.China Essential Original document with an Apostille or Consulate",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "Official Transcripts of All Attended High School (G10, G11 and G12) Graduates from high schools except P.R.China Essential",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.apostille",
+      "value": {
+       "kind": "apostille",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "Original Yearly transcripts by each semester(term, quarter, etc.) with an Apostille or Consulate Authentication",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Apostille or consulate authentication on the diploma and transcripts; not required for (expected) graduates from high school in Korea.",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "Documents verifying foreign nationality of applicant and his/her parents Essential A Copy of the applicant's and his/her parents'",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents written in languages other than Korean or English (notarized translation; translations by the applicant are not accepted)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "Documents written in languages other than Korean or English must be accompanied by a notarized translation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "a certificate of language proficiency is essential, choosing ONE of: a Korean or English language proficiency test score, a standardized test result indicating proficiency in Korean or English, a certificate of completion from a Korean language institution, or official documents proving Korean- or English-taught high school courses"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "Certificate of Language proficiency [Choose ONE] Essential - Korean or English language proficiency test",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.credential_evaluation",
+      "value": {
+       "kind": "credential_evaluation",
+       "requirement": "conditional",
+       "condition": "graduates from high schools in P.R. China (expected graduates submit it after acceptance)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "2. Verification Report of China Secondary Education Qualification Certificate (in English)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+      "source_url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+      "quote": "Supplementary Documents Optional Middle school transcripts, awards, reports of standardized test scores,",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Fall Semester 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9461,7 +10729,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 1
+   "known_fact_count": 11,
+   "source_batches": [
+    "batch3",
+    "topup_documents4"
+   ]
   },
   "qs2027-043": {
    "seed_id": "qs2027-043",
@@ -10957,7 +12229,118 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (students who require an F-1 visa) to UCLA, including Computer Science (Samueli School of Engineering)",
+      "source_url": "https://admission.ucla.edu/apply/first-year/first-year-requirements",
+      "quote": "In addition to your UC application, we take both your academic record and your personal experiences into consideration during the review process.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (students who require an F-1 visa) to UCLA, including Computer Science (Samueli School of Engineering)",
+      "source_url": "https://admission.ucla.edu/apply/first-year/first-year-requirements",
+      "quote": "Personal Insight Questions These personal questions are just that — personal.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "'As a first-year applicant, you may respond to four of eight questions. Each response is limited to a maximum of 350 words.'",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "all or some high school or secondary school completed in a country where English was not the language of instruction, with less than 3 years of instruction in English; scores are self-reported on the UC application (no later than January)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (students who require an F-1 visa) to UCLA, including Computer Science (Samueli School of Engineering)",
+      "source_url": "https://admission.ucla.edu/apply/international-applicants",
+      "quote": "To demonstrate English language proficiency, students are required to take the Test of English as a Foreign Language (TOEFL), the International English Language Testing Service (IELTS), or the Duolingo English Test.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "if admitted: 'Please do not send these documents now. If you apply and are admitted, your admission packet will have instructions.'"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (students who require an F-1 visa) to UCLA, including Computer Science (Samueli School of Engineering)",
+      "source_url": "https://admission.ucla.edu/apply/international-applicants",
+      "quote": "We require records from the secondary schools you have attended that show subjects taken and grades received, as well as any national or government certificates earned.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "conditional",
+       "condition": "international students (F-1 visa), after admission"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (students who require an F-1 visa) to UCLA, including Computer Science (Samueli School of Engineering)",
+      "source_url": "https://admission.ucla.edu/apply/international-applicants",
+      "quote": "International students must prove that they have sufficient funds available to them to pay for their educational and living expenses.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -10977,7 +12360,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 8,
+   "source_batches": [
+    "batch8",
+    "topup_documents4"
+   ]
   },
   "qs2027-050": {
    "seed_id": "qs2027-050",
@@ -11394,7 +12781,118 @@
      }
     ],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "as listed for the applicant's qualification: the latest official high school transcript is in nearly every overseas row (e.g. GCE, IB, USA, Kazakhstan UNT and NIS, 'Others'), but not in some (e.g. Hong Kong public examinations, India SSC/HSC/ISC)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-JUPAS applicants with secondary qualifications from overseas school curricula (GCE, IB, national curricula; the 'Others' row for curricula not listed), applying to CityUHK undergraduate programmes including Computer Science",
+      "source_url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+      "quote": "Others • predicted national examination results from school, if applicable • latest official high school transcript in original language with English translation • an explanation of the transcript grading system",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "conditional",
+       "condition": "if awarded (the qualification's diploma or school-leaving certificate, as named in the applicant's row)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-JUPAS applicants with secondary qualifications from overseas school curricula (GCE, IB, national curricula; the 'Others' row for curricula not listed), applying to CityUHK undergraduate programmes including Computer Science",
+      "source_url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+      "quote": "USA • High School Diploma, if awarded • latest official high school transcript",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents that are not in English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-JUPAS applicants with secondary qualifications from overseas school curricula (GCE, IB, national curricula; the 'Others' row for curricula not listed), applying to CityUHK undergraduate programmes including Computer Science",
+      "source_url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+      "quote": "2. Documents that are not in English must be accompanied by an officially certified English translation provided by the awarding body or your school or university.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "if available"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-JUPAS applicants with secondary qualifications from overseas school curricula (GCE, IB, national curricula; the 'Others' row for curricula not listed), applying to CityUHK undergraduate programmes including Computer Science",
+      "source_url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+      "quote": "other examination results (e.g. GCSE, SAT, ACT, AP), if available • TOEFL/IELTS results or other acceptable English results, if available",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "conditional",
+       "condition": "if available (SAT/ACT/AP result sheets, named in rows such as USA, Korea, Thailand and 'Others'; Kazakhstan UNT/NIS: SAT result sheet if available)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-JUPAS applicants with secondary qualifications from overseas school curricula (GCE, IB, national curricula; the 'Others' row for curricula not listed), applying to CityUHK undergraduate programmes including Computer Science",
+      "source_url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+      "quote": "an explanation of the transcript grading system and school profile • SAT/ACT/AP result sheets, if available",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -11419,7 +12917,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 2
+   "known_fact_count": 7,
+   "source_batches": [
+    "batch1",
+    "topup_documents4"
+   ]
   },
   "qs2027-053": {
    "seed_id": "qs2027-053",
@@ -15278,7 +16780,140 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying for undergraduate courses at Birmingham (via UCAS), including BSc Computer Science",
+      "source_url": "https://www.birmingham.ac.uk/study/undergraduate/apply",
+      "quote": "For all undergraduate courses at Birmingham, you apply online through UCAS.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying for undergraduate courses at Birmingham (via UCAS), including BSc Computer Science",
+      "source_url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+      "quote": "you will need to provide us with some supporting documents: These supporting documents will include a results' transcript,",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying for undergraduate courses at Birmingham (via UCAS), including BSc Computer Science",
+      "source_url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+      "quote": "a results' transcript, personal statement, your references",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying for undergraduate courses at Birmingham (via UCAS), including BSc Computer Science",
+      "source_url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+      "quote": "personal statement, your references, copy of your English language certificate if needed",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "if needed (to meet the English language requirement)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying for undergraduate courses at Birmingham (via UCAS), including BSc Computer Science",
+      "source_url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+      "quote": "copy of your English language certificate if needed, as well as a copy of your passport details.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students applying for undergraduate courses at Birmingham (via UCAS), including BSc Computer Science",
+      "source_url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+      "quote": "as well as a copy of your passport details.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -15293,7 +16928,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 12,
+   "source_batches": [
+    "batch2",
+    "topup_documents4"
+   ]
   },
   "qs2027-070": {
    "seed_id": "qs2027-070",
@@ -17945,7 +19584,74 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international students (secondary education outside the U.S.) applying to UC San Diego, including Computer Science",
+      "source_url": "https://admissions.ucsd.edu/international/index.html",
+      "quote": "To be considered for admission to UC San Diego, international students must meet specific English proficiency requirements. Applying as a First-Year International Student The tests listed below are all accepted to showcase English proficiency.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Accepted: TOEFL iBT, IELTS Academic (7), AP English Language/Literature (3-5), IB English A, Duolingo (115).",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "newly admitted first-year students who attended a school outside the United States: official records from grade 9 onward, sent directly by the school or an approved e-transcript vendor by July 1, as listed for the applicant's country"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international students (secondary education outside the U.S.) applying to UC San Diego, including Computer Science",
+      "source_url": "https://admissions.ucsd.edu/international/index.html",
+      "quote": "Your admission to UC San Diego is provisional pending the receipt and review of your official transcripts, records and exam results.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "conditional",
+       "condition": "international students who need a student visa"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international students (secondary education outside the U.S.) applying to UC San Diego, including Computer Science",
+      "source_url": "https://admissions.ucsd.edu/international/index.html",
+      "quote": "To be granted a visa, international students must prove sufficient funds to meet all expenses for studying in the U.S.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -17955,10 +19661,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 7,
+   "known_fact_count": 10,
    "source_batches": [
     "batch2",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents4"
    ]
   },
   "qs2027-082": {
@@ -18862,7 +20569,162 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students (not citizens of Australia or New Zealand or permanent residents of Australia) applying to UTS undergraduate courses, including the Bachelor of Computing Science",
+      "source_url": "https://www.uts.edu.au/globalassets/shared-media/documents/international/uts-international-undergraduate-application-form-sept-26.pdf",
+      "quote": "16. CHECKLIST Have you: Completed all sections of this application?",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students (not citizens of Australia or New Zealand or permanent residents of Australia) applying to UTS undergraduate courses, including the Bachelor of Computing Science",
+      "source_url": "https://www.uts.edu.au/globalassets/shared-media/documents/international/uts-international-undergraduate-application-form-sept-26.pdf",
+      "quote": "Attached a certified copy of your passport?",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students (not citizens of Australia or New Zealand or permanent residents of Australia) applying to UTS undergraduate courses, including the Bachelor of Computing Science",
+      "source_url": "https://www.uts.edu.au/globalassets/shared-media/documents/international/uts-international-undergraduate-application-form-sept-26.pdf",
+      "quote": "Attached details of English language proficiency?",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Section 5: if the applicant has taken an English test (e.g. IELTS, TOEFL, PTE), 'please attach a certified copy of your results'.",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students (not citizens of Australia or New Zealand or permanent residents of Australia) applying to UTS undergraduate courses, including the Bachelor of Computing Science",
+      "source_url": "https://www.uts.edu.au/globalassets/shared-media/documents/international/uts-international-undergraduate-application-form-sept-26.pdf",
+      "quote": "Attached a certified copy of qualifications including academic transcripts?",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "any document not in English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students (not citizens of Australia or New Zealand or permanent residents of Australia) applying to UTS undergraduate courses, including the Bachelor of Computing Science",
+      "source_url": "https://www.uts.edu.au/globalassets/shared-media/documents/international/uts-international-undergraduate-application-form-sept-26.pdf",
+      "quote": "Attached a certified official translation of any document not in English?",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "conditional",
+       "condition": "sponsored applicants (letter of guarantee from the sponsor), if applicable"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students (not citizens of Australia or New Zealand or permanent residents of Australia) applying to UTS undergraduate courses, including the Bachelor of Computing Science",
+      "source_url": "https://www.uts.edu.au/globalassets/shared-media/documents/international/uts-international-undergraduate-application-form-sept-26.pdf",
+      "quote": "Attached copies of letter of guarantee documents from your sponsor? (if applicable)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.portfolio",
+      "value": {
+       "kind": "portfolio",
+       "requirement": "conditional",
+       "condition": "if applicable (courses that require a supporting statement and/or portfolio)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International students (not citizens of Australia or New Zealand or permanent residents of Australia) applying to UTS undergraduate courses, including the Bachelor of Computing Science",
+      "source_url": "https://www.uts.edu.au/globalassets/shared-media/documents/international/uts-international-undergraduate-application-form-sept-26.pdf",
+      "quote": "Attached a supporting statement and/or portfolio? (if applicable)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -18877,7 +20739,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5
+   "known_fact_count": 12,
+   "source_batches": [
+    "batch7",
+    "topup_documents4"
+   ]
   },
   "qs2027-089": {
    "seed_id": "qs2027-089",
@@ -19610,7 +21476,184 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "All first-year students need to provide the following: Online Application via MyPennState or the Common App",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "native language is not English (U.S. citizens and permanent residents are exempt); test score reports must come directly from the testing service"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "All international students whose native language is not English must submit proof of English language proficiency.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "Official SAT or ACT scores, should you wish to include them",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "first-year applicants who completed the self-reported record send official secondary school records after accepting an offer of admission (prior to attending); applicants in the South Korean educational system send official transcripts at the time of application"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "Secondary records are required for both first-year and transfer international students, but first-year international students who completed a SRAR do not need to provide them until after they accept an offer of admission.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "conditional",
+       "condition": "if the applicant has already completed secondary school (sent prior to attending Penn State)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "Certified copies of diplomas or certificates if you have already completed secondary school",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents in languages other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "All documents in languages other than English must be accompanied by a certified line-by-line, literal English translation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+      "source_url": "https://www.psu.edu/resources/international-students/steps-to-apply",
+      "quote": "Lastly, all applicants can complete the optional Activities section and Personal Statement within the application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "conditional",
+       "condition": "after admission (enrollment requirement for admitted international students)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+      "source_url": "https://www.psu.edu/resources/international-students/steps-to-apply",
+      "quote": "First, international students must certify that sufficient resources are available to cover out-of-state tuition and other expenses for the first calendar year at Penn State, exclusive of travel expenses.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents4"
+     }
+    ]
    },
    "unknown": [
     {
@@ -19630,10 +21673,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5,
+   "known_fact_count": 13,
    "source_batches": [
     "batch9",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents4"
    ]
   },
   "qs2027-093": {
@@ -21531,6 +23575,55 @@
    ]
   },
   {
+   "seed_id": "qs2027-010",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-010",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-010",
+   "question": "documents",
+   "key": "documents.english_test_report",
+   "reasons": [
+    "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-010",
+   "question": "documents",
+   "key": "documents.entrance_test",
+   "reasons": [
+    "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-010",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"Updated as of November 2025\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-010",
+   "question": "documents",
+   "key": "documents.essay",
+   "reasons": [
+    "academic year 2026/2027 is before the fall 2027 intake's 2027/28",
+    "document list published for \"ACADEMIC YEAR 2026/2027\", not the fall 2027 intake"
+   ]
+  },
+  {
    "seed_id": "qs2027-011",
    "question": "tuition",
    "key": "tuition",
@@ -22008,6 +24101,86 @@
    "key": "tuition",
    "reasons": [
     "published for academic year 2026"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.personal_statement",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.apostille",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.translation",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.english_test_report",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.credential_evaluation",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "documents",
+   "key": "documents.entrance_test",
+   "reasons": [
+    "document list published for \"Fall Semester 2026\", not the fall 2027 intake"
    ]
   },
   {

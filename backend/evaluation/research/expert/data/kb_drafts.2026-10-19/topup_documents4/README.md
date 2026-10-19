@@ -134,3 +134,10 @@ Several "self-signed certificate in certificate chain" and connection-reset fail
 robots.txt, so there is no robots-override report. A first run that still included NUS and CityUHK had 87
 document rows, 76 ok and 11 failing (those two PDFs behind the Incapsula challenge); they were moved to
 `withheld/`.
+
+## CI check (main session, 2026-10-19)
+
+The CI runner read every draft in the directory, `withheld/` included: 82/87 document rows ok, the 5
+Queensland rows HTTP 403 and verified on the proxy recheck (5/5). NUS (qs2027-010) and CityUHK
+(qs2027-052) passed on CI (11/11; the runner was not served the Incapsula challenge), so both drafts are
+back in `core/`.
