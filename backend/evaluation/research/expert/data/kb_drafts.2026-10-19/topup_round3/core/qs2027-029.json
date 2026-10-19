@@ -1,0 +1,40 @@
+{
+ "case": "qs2027-029",
+ "seed_id": "qs2027-029",
+ "university": "Australian National University (ANU)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-029",
+  "round": "topup_round3"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://programsandcourses.anu.edu.au/2027/program/BCOMP",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.5,
+    "ielts_min_section": 6.0
+   },
+   "url": "https://policies.anu.edu.au/ppl/document/ANUP_000408",
+   "quote": "Table 2: English Language Tests and minimum scores for admission into Undergraduate Programs Test Minimum scores IELTS Academic [including One Skill Retake] and IELTS UKVI Academic [ including One Skill Retake] IELTS results must be completed at an IELTS testing centre; online test results are not accepted. All of the following: Ov erall score : 6.5 Reading: 6.0 Writing: 6.0 Listening: 6.0 Speaking: 6.0",
+   "notes": "ANU policy 'English language requirements for admission' (ANUP_000408), Table 2, undergraduate programs; the BCOMP 2027 page links to it. IELTS Academic in a test centre, 6.5 overall with 6.0 in each of Reading, Writing, Listening and Speaking. TOEFL iBT (TOEFL iBT Australia only for tests from 21 January 2026) for study commencing on or after 1 January 2027 is 81 overall (Reading 16, Writing 19, Listening 16, Speaking 19), but the page's text layer splits those digits ('8 1', '1 6'), so no TOEFL figure is drafted. Home-edition/online tests are not accepted. BCOMP adds that competitive ranking may be confirmed on higher-level English proficiency. policies.anu.edu.au was unreachable (SSO redirect) in round 1; it answered 200 to the production Fetcher on 2026-10-19.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

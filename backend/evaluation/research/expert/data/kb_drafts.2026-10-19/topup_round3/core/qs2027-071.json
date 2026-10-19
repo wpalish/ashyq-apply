@@ -1,0 +1,41 @@
+{
+ "case": "qs2027-071",
+ "seed_id": "qs2027-071",
+ "university": "Lund University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-071",
+  "round": "topup_round3"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": null,
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.5,
+    "ielts_min_section": 5.5,
+    "toefl_ibt": 90
+   },
+   "url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/entry-requirements",
+   "quote": "Most programmes and courses at Lund University require at least English 6 (advanced level) language proficiency which is the equivalent of IELTS 6.5 (no section less than 5.5) or TOEFL 90. It is important that you check the programme or course as some programmes have a higher requirement for admission.",
+   "notes": "University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Datavetenskap) is Swedish-taught: the Swedish-taught page (https://www.lunduniversity.lu.se/study/study-lund-university/study-opportunities-lund-university/education-swedish) says Swedish (Svenska 3 / Tisus) is also a general admission requirement and that 'Most programmes and courses taught in Swedish at Lund University require English language proficiency level English 6'. A programme with a higher English level would raise this figure; no CS-specific page was verified. Last updated 16 Sep 2026.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}
