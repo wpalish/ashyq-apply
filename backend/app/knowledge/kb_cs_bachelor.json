@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.9",
+ "version": "2026-10-19.kb-cs-bachelor.10",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -12,7 +12,8 @@
   "deadline",
   "tuition",
   "scholarship_exists",
-  "scholarship_international"
+  "scholarship_international",
+  "documents"
  ],
  "stale_policy": {
   "as_of": "2026-10-19",
@@ -36,6 +37,8 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -50,6 +53,8 @@
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
@@ -212,7 +217,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -286,7 +292,119 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.imperial.ac.uk/study/apply/undergraduate/process/",
+      "quote": "Apply online through UCAS Hub.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.imperial.ac.uk/study/apply/undergraduate/process/",
+      "quote": "You can only submit one personal statement with your application. So it needs to cover all your course choices.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.imperial.ac.uk/study/apply/undergraduate/process/",
+      "quote": "Only one reference is required for your UCAS application from someone who knows you academically.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027 entry)",
+      "population": "All undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+      "quote": "To be eligible for selection for this course for 2027 entry, you must sit the Test of Mathematics for University Admission (TMUA) as part of the application process.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+      "quote": "All candidates must demonstrate a minimum level of English language proficiency for admission to the university.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     }
+    ]
    },
    "unknown": [
     {
@@ -316,10 +434,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1,
+   "known_fact_count": 6,
    "source_batches": [
     "topup_imported",
-    "topup_tuition1"
+    "topup_tuition1",
+    "topup_documents1"
    ]
   },
   "qs2027-003": {
@@ -437,7 +556,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -511,7 +631,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -648,7 +769,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -858,7 +980,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [],
    "not_applicable": [
@@ -1050,7 +1173,8 @@
       "stale": false,
       "source_batch": "topup_round2"
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -1121,7 +1245,185 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": [
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+      "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+      "quote": "Current passport photograph : in colour",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+      "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+      "quote": "Copy of valid passport / identity card",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+      "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+      "quote": "Curriculum vitae / Resume",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+      "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+      "quote": "Be sure to start gathering the required application documents early: Current passport photograph : in colour Copy of valid passport / identity card Curriculum vitae / Resume : Examples in German Download Curriculum vitae (PDF, 81 KB) / Download Curriculum vitae (DOCX, 20 KB) Upper secondary school-leaving certificate",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "The original is required at registration: 'The upper secondary school-leaving certificate ... must be submitted in the original. Copies / certified copies are not accepted.'",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+      "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+      "quote": "School reports from the last three school years",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "a document is not written in German, English, French or Italian"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+      "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+      "quote": "An official translation into German or English is required for any document which is not written in German, Englisch, French or Italian.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "'Englisch' is the page's own spelling.",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "conditional",
+       "condition": "the admission decision requires the ETH entrance examination (country- and certificate-specific)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+      "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+      "quote": "Applicants who are required to sit the ETH entrance examination will receive, with their admission decision, an information sheet on the entrance examination",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+      "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+      "quote": "Apply for your desired Bachelor's degree programme via eApply. Please complete the online application form fully and truthfully.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     }
+    ]
    },
    "unknown": [
     {
@@ -1160,7 +1462,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 9,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents1"
+   ]
   },
   "qs2027-009": {
    "seed_id": "qs2027-009",
@@ -1188,7 +1494,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -1334,7 +1641,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -1416,7 +1724,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -1493,7 +1802,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -1633,7 +1943,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -1724,7 +2035,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -1900,7 +2212,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -2087,7 +2400,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -2225,7 +2539,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -2285,7 +2600,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -2434,7 +2750,8 @@
       "stale": false,
       "source_batch": "topup_round2"
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -2594,7 +2911,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -2800,7 +3118,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -2958,7 +3277,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -3026,7 +3346,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -3157,7 +3478,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -3331,7 +3653,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [],
    "not_applicable": [
@@ -3470,7 +3793,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -3600,7 +3924,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -3672,7 +3997,49 @@
     ]
    },
    "facts": {
-    "english": [],
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://policies.anu.edu.au/ppl/document/ANUP_000408",
+      "quote": "Table 2: English Language Tests and minimum scores for admission into Undergraduate Programs Test Minimum scores IELTS Academic [including One Skill Retake] and IELTS UKVI Academic [ including One Skill Retake] IELTS results must be completed at an IELTS testing centre; online test results are not accepted. All of the following: Ov erall score : 6.5 Reading: 6.0 Writing: 6.0 Listening: 6.0 Speaking: 6.0",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): ANU policy 'English language requirements for admission' (ANUP_000408), Table 2, undergraduate programs; the BCOMP 2027 page links to it. IELTS Academic in a test centre, 6.5 overall with 6.0 in each of Reading, Writing, Listening and Speaking. TOEFL iBT (TOEFL iBT Australia only for tests from 21…",
+      "stale": false,
+      "source_batch": "topup_round3"
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 6.0,
+       "reading": 6.0,
+       "speaking": 6.0,
+       "writing": 6.0
+      },
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://policies.anu.edu.au/ppl/document/ANUP_000408",
+      "quote": "Table 2: English Language Tests and minimum scores for admission into Undergraduate Programs Test Minimum scores IELTS Academic [including One Skill Retake] and IELTS UKVI Academic [ including One Skill Retake] IELTS results must be completed at an IELTS testing centre; online test results are not accepted. All of the following: Ov erall score : 6.5 Reading: 6.0 Writing: 6.0 Listening: 6.0 Speaking: 6.0",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): ANU policy 'English language requirements for admission' (ANUP_000408), Table 2, undergraduate programs; the BCOMP 2027 page links to it. IELTS Academic in a test centre, 6.5 overall with 6.0 in each of Reading, Writing, Listening and Speaking. TOEFL iBT (TOEFL iBT Australia only for tests from 21…",
+      "stale": false,
+      "source_batch": "topup_round3"
+     }
+    ],
     "gpa": [],
     "deadline": [
      {
@@ -3760,29 +4127,18 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
-    {
-     "question": "english",
-     "key": "ielts.overall",
-     "reason": "expert value 6.5 unverified: no evidence-check row. Expert (2026-10-19): ANU policy 'English language requirements for admission' (ANUP_000408), Table 2, undergraduate programs; the BCOMP 2027 page links to it. IELTS Academic in a test centre, 6.5 overall with 6.0 in each of Reading, Writing, Listening and Speaking. TOEFL iBT (TOEFL iBT Australia only for tests from 21…",
-     "source_batch": "topup_round3"
-    },
     {
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): Threshold is an ATAR-style selection rank, not a GPA: 'Applicants with an ANU selection rank of 80 or above are guaranteed admission' / minimum unadjusted rank 70; International Baccalaureate 31. International applicants get 'an equivalent selection rank that is calculated upon application' via a c…"
-    },
-    {
-     "question": "english",
-     "key": "ielts.subscores",
-     "reason": "expert value каждая часть ≥ 6 unverified: no evidence-check row. Expert (2026-10-19): ANU policy 'English language requirements for admission' (ANUP_000408), Table 2, undergraduate programs; the BCOMP 2027 page links to it. IELTS Academic in a test centre, 6.5 overall with 6.0 in each of Reading, Writing, Listening and Speaking. TOEFL iBT (TOEFL iBT Australia only for tests from 21…",
-     "source_batch": "topup_round3"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4,
+   "known_fact_count": 6,
    "source_batches": [
     "batch2",
     "topup_round3"
@@ -3964,7 +4320,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -4027,7 +4384,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -4161,6 +4519,96 @@
       },
       "stale": false
      }
+    ],
+    "documents": [
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants; high schools outside Canada and the U.S. upload transcripts after applying",
+      "source_url": "https://future.utoronto.ca/required-documents",
+      "quote": "You must provide full documentation (transcripts) for all secondary and post-secondary studies attempted.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "depending on your academic background and the areas you've applied to"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants; high schools outside Canada and the U.S. upload transcripts after applying",
+      "source_url": "https://future.utoronto.ca/required-documents",
+      "quote": "Depending on your academic background and the areas you've applied to, you may also need to submit: Self-reported grades form (if applicable) Proof of English language proficiency",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "conditional",
+       "condition": "depending on your academic background and the areas you've applied to"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants; high schools outside Canada and the U.S. upload transcripts after applying",
+      "source_url": "https://future.utoronto.ca/required-documents",
+      "quote": "Proof of English language proficiency Standardized test results (e.g., SAT, ACT, IB, AP)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "your documents are in a language other than English or French"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants; high schools outside Canada and the U.S. upload transcripts after applying",
+      "source_url": "https://future.utoronto.ca/required-documents",
+      "quote": "If your documents are in a language other than English or French, you will also need to provide notarized translations.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     }
     ]
    },
    "unknown": [
@@ -4181,10 +4629,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3,
+   "known_fact_count": 7,
    "source_batches": [
     "topup_imported",
-    "topup_tuition1"
+    "topup_tuition1",
+    "topup_documents1"
    ]
   },
   "qs2027-033": {
@@ -4337,7 +4786,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -4414,7 +4864,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -4604,6 +5055,162 @@
       },
       "stale": false
      }
+    ],
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "UCAS applicants; certificates: international applicants after accepting an offer",
+      "source_url": "https://study.ed.ac.uk/undergraduate/applying/making-application/what-you-need-apply",
+      "quote": "You must submit a fully completed UCAS application including a personal statement, reference and predicted grades by the relevant deadline to ensure that your application is considered.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "UCAS applicants; certificates: international applicants after accepting an offer",
+      "source_url": "https://study.ed.ac.uk/undergraduate/applying/making-application/what-you-need-apply",
+      "quote": "To apply to Edinburgh you'll need qualifications, a personal statement and a reference.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "UCAS applicants; certificates: international applicants after accepting an offer",
+      "source_url": "https://study.ed.ac.uk/undergraduate/applying/making-application/what-you-need-apply",
+      "quote": "If you are applying from a school, college or registered UCAS centre, a teacher or tutor who knows you – your referee – will write your reference before submitting your application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "UCAS applicants; certificates: international applicants after accepting an offer",
+      "source_url": "https://study.ed.ac.uk/undergraduate/applying/making-application/what-you-need-apply",
+      "quote": "You will also need to provide evidence of your English language skills.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "conditional",
+       "condition": "you accept the offer as your firm choice"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "UCAS applicants; certificates: international applicants after accepting an offer",
+      "source_url": "https://study.ed.ac.uk/undergraduate/applying/after-you-apply/submitting-your-qualification-certificates",
+      "quote": "If you accept our offer as your firm choice, send us copies of any certificates of qualifications you have already achieved. Examples include: SQA National 5 GCSE and IGCSE certificates College Board or ACT transcripts (international applicants) high school diploma or school leaving certificate (international applicants)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "certificates are written in languages other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "UCAS applicants; certificates: international applicants after accepting an offer",
+      "source_url": "https://study.ed.ac.uk/undergraduate/applying/after-you-apply/submitting-your-qualification-certificates",
+      "quote": "Provide authorised translations of all certificates that are written in languages other than English.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "UCAS applicants; certificates: international applicants after accepting an offer",
+      "source_url": "https://study.ed.ac.uk/undergraduate/applying/after-you-apply/submitting-your-qualification-certificates",
+      "quote": "If you are an EU or international applicant, send us a scanned copy of your passport to help us process your visa application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     }
     ]
    },
    "unknown": [
@@ -4619,7 +5226,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5
+   "known_fact_count": 12,
+   "source_batches": [
+    "batch7",
+    "topup_documents1"
+   ]
   },
   "qs2027-036": {
    "seed_id": "qs2027-036",
@@ -4814,7 +5425,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [],
    "not_applicable": [
@@ -4948,7 +5560,8 @@
     ],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -5151,7 +5764,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -5231,7 +5845,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -5449,7 +6064,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -5623,7 +6239,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -5711,7 +6328,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -5843,7 +6461,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -6028,7 +6647,8 @@
       "stale": false
      }
     ],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -6178,7 +6798,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -6200,7 +6821,7 @@
    "source_case": "qs2027-046",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": null,
+   "verified_on": "2026-10-19",
    "verified_on_basis": "ci_evidence_check",
    "university": "University of British Columbia",
    "country": "Canada",
@@ -6221,7 +6842,75 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": [
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International high school students (all other international curricula)",
+      "source_url": "https://you.ubc.ca/applying-ubc/applied/submit-documents/",
+      "quote": "All other international curricula February 15 Deadline to submit documents showing you meet the English Language Admission Standard (ELAS), or an ELAS waiver request and supporting documentation. March 15 Deadline to submit transcripts which show courses in progress if you are currently attending high school.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Final transcripts by June 30 for current high school students.",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "unless an ELAS waiver is requested instead (documents showing you meet the English Language Admission Standard)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International high school students (all other international curricula)",
+      "source_url": "https://you.ubc.ca/applying-ubc/applied/submit-documents/",
+      "quote": "All other international curricula February 15 Deadline to submit documents showing you meet the English Language Admission Standard (ELAS), or an ELAS waiver request and supporting documentation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "high school students applying to UBC Okanagan or Vancouver degrees",
+      "source_url": "https://you.ubc.ca/applying-ubc/how-to-apply/personal-profile/",
+      "quote": "You must complete a personal profile as part of your online application if: You're a high school student applying to any degree on UBC's Okanagan or Vancouver campuses",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Short essay responses, 500-2100 characters each.",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     }
+    ]
    },
    "unknown": [
     {
@@ -6251,7 +6940,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 0
+   "known_fact_count": 3,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents1"
+   ]
   },
   "qs2027-047": {
    "seed_id": "qs2027-047",
@@ -6435,7 +7128,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -6452,7 +7146,7 @@
    "source_case": "qs2027-048",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": null,
+   "verified_on": "2026-10-19",
    "verified_on_basis": "ci_evidence_check",
    "university": "Delft University of Technology",
    "country": "Netherlands",
@@ -6473,7 +7167,141 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": [
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "BSc applicants with an international (non-Dutch) diploma",
+      "source_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+      "quote": "A certified copy of your original diploma (+ translation, if necessary)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "BSc applicants with an international (non-Dutch) diploma",
+      "source_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+      "quote": "A certified copy of your complete list of grade",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "if necessary (the page's words)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "BSc applicants with an international (non-Dutch) diploma",
+      "source_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+      "quote": "A certified copy of your original diploma (+ translation, if necessary)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "BSc applicants with an international (non-Dutch) diploma",
+      "source_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+      "quote": "Proof of language proficiency TOEFL, IELTS or Cambridge",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "BSc applicants with an international (non-Dutch) diploma",
+      "source_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+      "quote": "CV An extensive resume written in English.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "BSc applicants with an international (non-Dutch) diploma",
+      "source_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+      "quote": "Photocopy of the page(s) of your passport that give your name, date of birth, place of birth and the passport expiration date.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     }
+    ]
    },
    "unknown": [
     {
@@ -6512,7 +7340,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 0
+   "known_fact_count": 6,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents1"
+   ]
   },
   "qs2027-049": {
    "seed_id": "qs2027-049",
@@ -6619,7 +7451,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -6800,7 +7633,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [],
    "not_applicable": [
@@ -6825,8 +7659,8 @@
    "source_case": "qs2027-051",
    "source_batch": "batch10",
    "review_status": "expert_checked",
-   "verified_on": null,
-   "verified_on_basis": "ci_evidence_check",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check+sandbox_recheck",
    "university": "University of Michigan-Ann Arbor",
    "country": "United States of America",
    "official_domain": "umich.edu",
@@ -6834,13 +7668,25 @@
     "umich.edu"
    ],
    "programme": {
-    "status": "unknown",
-    "urls": [],
-    "evidence": [],
+    "status": "known",
+    "urls": [
+     "https://teamdynamix.umich.edu/TDClient/154/Portal/KB/ArticleDet?ID=7445"
+    ],
+    "evidence": [
+     {
+      "url": "https://teamdynamix.umich.edu/TDClient/154/Portal/KB/ArticleDet?ID=7445",
+      "quote": "The LSA degree is a Bachelor of Science (Computer Science) and the Engineering degree is a Bachelor of Science Engineering (Computer Science).",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "source_type": "official"
+     }
+    ],
     "related_programme_urls": [
      "https://admissions.umich.edu/major/computer-science-bse"
     ],
-    "reason": "https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/ not verified: quote not found on the page (fetch outcome http_error: HTTP 403). https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/ not verified: quote not found on the page (fetch outcome http_error: HTTP 403). https://teamdynamix.umich.edu/TDClient/154/Portal/KB/ArticleDet?ID=7445 not verified: quote not found on the page (fetch outcome robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed)."
+    "notes": "https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/ not verified: quote not found on the page (fetch outcome http_error: HTTP 403). https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/ not verified: quote not found on the page (fetch outcome http_error: HTTP 403)."
    },
    "facts": {
     "english": [],
@@ -6848,7 +7694,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -6973,7 +7820,8 @@
       "stale": false
      }
     ],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -7123,7 +7971,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -7239,7 +8088,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -7413,7 +8263,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -7528,7 +8379,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -7723,7 +8575,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [],
    "not_applicable": [],
@@ -7800,7 +8653,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -7853,7 +8707,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -8035,7 +8890,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -8101,7 +8957,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -8298,7 +9155,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -8472,7 +9330,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -8648,7 +9507,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -8705,7 +9565,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -8913,7 +9774,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -8980,7 +9842,119 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": [
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "conditional",
+       "condition": "one of a birth certificate, the relevant passport pages or a citizenship certificate is accepted as evidence of identity; it must be certified"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with overseas secondary schooling (international)",
+      "source_url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+      "quote": "Evidence of your name, date of birth, name changes, citizenship or residency Birth certificate, or Relevant pages of your passport, or Citizenship certificate",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with overseas secondary schooling (international)",
+      "source_url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+      "quote": "Overseas secondary school You can submit your secondary school transcript if you have completed your studies overseas.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "your documents are in a language other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with overseas secondary schooling (international)",
+      "source_url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+      "quote": "If your documents are in a language other than English, you must provide the original language version and the English translation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with overseas secondary schooling (international)",
+      "source_url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+      "quote": "Evidence of English language proficiency (4) IELTS or TOEFL or equivalent.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Footnote 4: 'International applicants or domestic applicants whose first language is not English need to meet English language requirements.'",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.portfolio",
+      "value": {
+       "kind": "portfolio",
+       "requirement": "conditional",
+       "condition": "the programme asks for it after you apply"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with overseas secondary schooling (international)",
+      "source_url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+      "quote": "Additional documents Supplementary forms, interviews, portfolios or auditions. After you apply, we will email you with any additional requirements and how to complete them.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9010,7 +9984,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 6,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents1"
+   ]
   },
   "qs2027-068": {
    "seed_id": "qs2027-068",
@@ -9154,7 +10132,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -9332,7 +10311,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -9472,7 +10452,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -9534,7 +10515,67 @@
     "reason": "no programme page draft"
    },
    "facts": {
-    "english": [],
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/entry-requirements",
+      "quote": "Most programmes and courses at Lund University require at least English 6 (advanced level) language proficiency which is the equivalent of IELTS 6.5 (no section less than 5.5) or TOEFL 90. It is important that you check the programme or course as some programmes have a higher requirement for admission.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
+      "stale": false,
+      "source_batch": "topup_round3"
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 5.5,
+       "reading": 5.5,
+       "speaking": 5.5,
+       "writing": 5.5
+      },
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/entry-requirements",
+      "quote": "Most programmes and courses at Lund University require at least English 6 (advanced level) language proficiency which is the equivalent of IELTS 6.5 (no section less than 5.5) or TOEFL 90. It is important that you check the programme or course as some programmes have a higher requirement for admission.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
+      "stale": false,
+      "source_batch": "topup_round3"
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 90,
+      "unit": "TOEFL iBT total (0-120)",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/entry-requirements",
+      "quote": "Most programmes and courses at Lund University require at least English 6 (advanced level) language proficiency which is the equivalent of IELTS 6.5 (no section less than 5.5) or TOEFL 90. It is important that you check the programme or course as some programmes have a higher requirement for admission.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
+      "stale": false,
+      "source_batch": "topup_round3"
+     }
+    ],
     "gpa": [],
     "deadline": [],
     "tuition": [
@@ -9563,15 +10604,10 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
-    {
-     "question": "english",
-     "key": "ielts.overall",
-     "reason": "expert value 6.5 unverified: no evidence-check row. Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
-     "source_batch": "topup_round3"
-    },
     {
      "question": "gpa",
      "key": "gpa",
@@ -9581,18 +10617,6 @@
      "question": "deadline",
      "key": "deadline",
      "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-04-15). Expert (2026-10-19): National admission round (Antagning.se) — the round a non-EU applicant uses for a Swedish-taught programme; no year printed (\"normalt\"), so for autumn 2027 this is 15 April 2027 unless the 15th is a holiday. TGDAT page itself: \"Det finns inga tillfällen att söka till just nu\"."
-    },
-    {
-     "question": "english",
-     "key": "ielts.subscores",
-     "reason": "expert value каждая часть ≥ 5.5 unverified: no evidence-check row. Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
-     "source_batch": "topup_round3"
-    },
-    {
-     "question": "english",
-     "key": "english_evidence.toefl_ibt.minimum",
-     "reason": "expert value 90 unverified: no evidence-check row. TOEFL iBT, 0-120. Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
-     "source_batch": "topup_round3"
     }
    ],
    "not_applicable": [
@@ -9606,7 +10630,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1,
+   "known_fact_count": 4,
    "source_batches": [
     "batch4",
     "topup_round3"
@@ -9723,7 +10747,8 @@
       "stale": false
      }
     ],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -9815,7 +10840,8 @@
     ],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -9972,7 +10998,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -10109,6 +11136,184 @@
       "stale": false,
       "source_batch": "topup_round2"
      }
+    ],
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-EU/international applicants (direct application)",
+      "source_url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+      "quote": "Applicants who are not resident in the EU, EEA, UK countries or Switzerland are usually defined as non-EU/international applicants and apply directly to Trinity via the page of the course they wish to study.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-EU/international applicants (direct application)",
+      "source_url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+      "quote": "As part of the online application, applicants will also need to submit original or certified true * copies of: Final second level qualification results",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "your first language is not English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-EU/international applicants (direct application)",
+      "source_url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+      "quote": "IELTS, Cambridge Advanced/Proficiency, TOEFL scores, for applicants whose first language is not English",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "conditional",
+       "condition": "US and Canadian applicants only"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-EU/international applicants (direct application)",
+      "source_url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+      "quote": "SAT, AP or ACT scores (US and Canadian applicants only)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-EU/international applicants (direct application)",
+      "source_url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+      "quote": "Two letters of recommendation Passport",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-EU/international applicants (direct application)",
+      "source_url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+      "quote": "Two letters of recommendation Passport",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-EU/international applicants (direct application)",
+      "source_url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+      "quote": "Please explain why you have chosen to study at Trinity College Dublin, what you hope to gain academically from the courses you chose, and what you can contribute to Trinity during your stay here.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "the statement of examination results is in a language other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-EU/international applicants (direct application)",
+      "source_url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+      "quote": "where the statement of examination results is in a language other than English, applicants should submit a certified true translation of the statement along with a certified true copy of their original results with the application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents1"
+     }
     ]
    },
    "unknown": [
@@ -10129,11 +11334,12 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4,
+   "known_fact_count": 12,
    "source_batches": [
     "topup_imported",
     "topup_round2",
-    "topup_tuition1"
+    "topup_tuition1",
+    "topup_documents1"
    ]
   },
   "qs2027-076": {
@@ -10187,7 +11393,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -10374,7 +11581,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -10566,7 +11774,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [],
    "not_applicable": [
@@ -10741,7 +11950,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -10905,7 +12115,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -11107,7 +12318,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -11227,7 +12439,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -11412,7 +12625,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -11450,7 +12664,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -11538,7 +12753,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -11715,7 +12931,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -11894,7 +13111,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -11958,7 +13176,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -12106,7 +13325,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -12168,7 +13388,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -12354,7 +13575,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -12548,7 +13770,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -12716,7 +13939,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -12847,7 +14071,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -12895,7 +14120,8 @@
     "deadline": [],
     "tuition": [],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -13054,7 +14280,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
@@ -13272,7 +14499,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [],
    "not_applicable": [],
@@ -13360,7 +14588,8 @@
      }
     ],
     "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_international": [],
+    "documents": []
    },
    "unknown": [
     {
@@ -13541,7 +14770,8 @@
       },
       "stale": false
      }
-    ]
+    ],
+    "documents": []
    },
    "unknown": [
     {
