@@ -27,7 +27,12 @@ import httpx
 
 from app.adapters.network_policy import BlockedRequest, check_url
 from app.adapters.search import intent as intent_module
-from app.adapters.search.base import SearchResponse, SearchResult, SearchUnavailable
+from app.adapters.search.base import (
+    SearchResponse,
+    SearchResult,
+    SearchUnavailable,
+    error_body_excerpt,
+)
 
 SERPER_SEARCH_URL = "https://google.serper.dev/search"
 
@@ -155,9 +160,15 @@ class SerperSearchProvider:
                 await client.aclose()
 
         if response.status_code != httpx.codes.OK:
-            # The body is external text and may echo the request; not repeated.
+            # The body is external text and may echo the request, so the
+            # message and every diagnostic built from it stay status-only. The
+            # body goes to ``body_excerpt`` (an operator's log: one capped line,
+            # the key masked) so that an exhausted account or a revoked key
+            # reads as what it is, not as "no reason, http 400".
             raise SearchUnavailable(
-                f"Serper answered {response.status_code}", http_status=response.status_code
+                f"Serper answered {response.status_code}",
+                http_status=response.status_code,
+                body_excerpt=error_body_excerpt(response.content, secrets=(self._api_key,)),
             )
         if len(response.content) > MAX_RESPONSE_BYTES:
             raise SearchUnavailable(

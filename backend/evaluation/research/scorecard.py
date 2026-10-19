@@ -108,6 +108,9 @@ class Arm:
     access_by_rep: list[dict[str, tuple[str, int, int]]] = field(default_factory=list)
     #: Per repetition, case id -> the hosts whose every request failed.
     failed_hosts: list[dict[str, set[str]]] = field(default_factory=list)
+    #: Per repetition, case id -> (search calls, failed search calls) its
+    #: case log recorded; absent for a case that left no log.
+    search_log: list[dict[str, tuple[int, int]]] = field(default_factory=list)
 
 
 #: WF-17: how far the gold programme page got, furthest first. ``confirmed``:
@@ -408,6 +411,7 @@ def load_run(run_dir: Path) -> dict[str, Arm]:
             traces: dict[str, dict[str, Any]] = {}
             access: dict[str, tuple[str, int, int]] = {}
             failed: dict[str, set[str]] = {}
+            searches: dict[str, tuple[int, int]] = {}
             for case_id, paths in cases.items():
                 if index < len(paths):
                     rep_dir = paths[index].parent
@@ -421,9 +425,13 @@ def load_run(run_dir: Path) -> dict[str, Arm]:
                     for log in sorted(rep_dir.glob("*.log")):
                         text = log.read_text(encoding="utf-8", errors="replace")
                         failed[case_id] |= failed_hosts(text)
+                        calls, errors = logged_searches(text)
+                        prior = searches.get(case_id, (0, 0))
+                        searches[case_id] = (prior[0] + calls, prior[1] + errors)
             arm.traces.append(traces)
             arm.access_by_rep.append(access)
             arm.failed_hosts.append(failed)
+            arm.search_log.append(searches)
         arms[name] = arm
     return arms
 
@@ -523,6 +531,71 @@ def failed_hosts(log_text: str) -> set[str]:
                 continue
             tally[_host(url)].append(match["outcome"] != "ok")
     return {host for host, failed in tally.items() if all(failed)}
+
+
+_SEARCH_DONE = re.compile(r"^search #\d+ took ", re.MULTILINE)
+_SEARCH_FAILED = re.compile(r"^search failed after ", re.MULTILINE)
+_FAILURE_HTTP_STATUS = re.compile(r"\bHTTP \d{3}\b")
+
+#: Search-provider health (2026-10-19, the Serper outage): a repetition in
+#: which more than this share of all search calls failed measured the
+#: provider, not the pipeline, and is never a valid measurement.
+SEARCH_FAILURE_LIMIT = 0.2
+
+
+def logged_searches(log_text: str) -> tuple[int, int]:
+    """(search calls, failed search calls) one case log recorded."""
+    return len(_SEARCH_DONE.findall(log_text)), len(_SEARCH_FAILED.findall(log_text))
+
+
+def search_health(
+    capture: Capture,
+    traces: dict[str, dict[str, Any]],
+    logged: dict[str, tuple[int, int]],
+) -> dict[str, Any]:
+    """How many of a repetition's search calls failed, over every case.
+
+    A case's log is the record of every provider call (discovery and topic
+    search alike). A case with no log falls back to its discovery trace, and
+    there only a failure that names an HTTP status counts: a strict budget's
+    own refusal also leaves a diagnostic, but it never reached the provider.
+    """
+    calls = failed = 0
+    for observation in capture.observations:
+        case_calls = observation.telemetry.search_calls or 0
+        if observation.case_id in logged:
+            log_calls, case_failed = logged[observation.case_id]
+            case_calls = max(case_calls, log_calls)
+        else:
+            diagnostics = (traces.get(observation.case_id) or {}).get("search_failures") or []
+            case_failed = sum(bool(_FAILURE_HTTP_STATUS.search(str(d))) for d in diagnostics)
+        calls += max(case_calls, case_failed)
+        failed += case_failed
+    share = round(failed / calls, 3) if calls else 0.0
+    return {
+        "calls": calls,
+        "failed": failed,
+        "failed_share": share,
+        "healthy": share <= SEARCH_FAILURE_LIMIT,
+    }
+
+
+def search_warning(columns: list[tuple[str, int, dict[str, Any]]]) -> list[str]:
+    """The banner for a run whose search provider failed; empty when it held up."""
+    sick = [
+        f"{name}#{i} {rep['search_health']['failed']}/{rep['search_health']['calls']}"
+        for name, i, rep in columns
+        if "search_health" in rep and not rep["search_health"]["healthy"]
+    ]
+    if not sick:
+        return []
+    return [
+        "> **WARNING: SEARCH PROVIDER UNHEALTHY. THIS RUN IS NOT A VALID MEASUREMENT.** "
+        f"More than {SEARCH_FAILURE_LIMIT} of all search calls failed in: "
+        f"{', '.join(sick)} (failed/calls). Every number below measures the provider "
+        "outage, not the pipeline.",
+        "",
+    ]
 
 
 def case_readable(access: tuple[str, int, int] | None) -> bool:
@@ -675,6 +748,11 @@ def build(
                         if case.id in observed
                     },
                     "programme": programme_pages(dataset, capture, report),
+                    "search_health": search_health(
+                        capture,
+                        traces,
+                        arm.search_log[index] if index < len(arm.search_log) else {},
+                    ),
                     # G-06: which entry path the arm took (absent = the default).
                     "entry_path": str(capture.config.get("entry_path") or "default"),
                 }
@@ -763,15 +841,26 @@ def check_targets(
                 "met": over == 0,
             }
         )
-        if not all("readable" in rep for rep in arm["repetitions"]):
-            continue
-        for metric in ("programme_found_on_readable", "wrong_programme_pages", core_metric):
-            values = [rep["readable"][metric] for rep in arm["repetitions"]]
-            row = _worst_row(
-                name, metric, [v["value"] if isinstance(v, dict) else v for v in values]
+        if all("readable" in rep for rep in arm["repetitions"]):
+            for metric in ("programme_found_on_readable", "wrong_programme_pages", core_metric):
+                values = [rep["readable"][metric] for rep in arm["repetitions"]]
+                row = _worst_row(
+                    name, metric, [v["value"] if isinstance(v, dict) else v for v in values]
+                )
+                if row is not None:
+                    rows.append(row)
+        # Only on an outage, so a healthy run's targets read as they always did.
+        health = [rep["search_health"] for rep in arm["repetitions"] if "search_health" in rep]
+        if any(not h["healthy"] for h in health):
+            rows.append(
+                {
+                    "arm": name,
+                    "metric": "search_provider_healthy",
+                    "worst": max(h["failed_share"] for h in health),
+                    "target": f"<= {SEARCH_FAILURE_LIMIT}",
+                    "met": all(h["healthy"] for h in health),
+                }
             )
-            if row is not None:
-                rows.append(row)
     return rows
 
 
@@ -801,6 +890,7 @@ def render(card: dict[str, Any]) -> str:
         for name, arm in card["arms"].items()
         for i, rep in enumerate(arm["repetitions"], 1)
     ]
+    lines += search_warning(columns)
     lines.append("| metric | " + " | ".join(f"{n}#{i}" for n, i, _ in columns) + " |")
     lines.append("|---|" + "---|" * len(columns))
     _entry_path_line(lines, [rep.get("entry_path", "default") for _, _, rep in columns])
@@ -1027,6 +1117,7 @@ def summarize(card: dict[str, Any]) -> dict[str, Any]:
                 "reads": sum(r["http_fetches"] or 0 for r in rep["cost"].values()),
                 "cases_over_budget": sum(1 for r in rep["cost"].values() if r["over_budget"]),
                 "wrong_claims": len(rep["outcomes"]["wrong_claims"]),
+                **({"search_health": dict(rep["search_health"])} if "search_health" in rep else {}),
                 "known_labels_by_outcome": _counted(
                     x["outcome"] for x in rep["outcomes"]["labels"]
                 ),
@@ -1071,6 +1162,7 @@ def render_summary(summary: dict[str, Any]) -> str:
         for name, arm in summary["arms"].items()
         for i, rep in enumerate(arm["repetitions"], 1)
     ]
+    lines += search_warning(columns)
 
     def frac(value: dict[str, Any]) -> str:
         return f"{value['numerator']}/{value['denominator']}"
@@ -1118,6 +1210,14 @@ def render_summary(summary: dict[str, Any]) -> str:
     line("cases over budget", [str(rep["cases_over_budget"]) for *_, rep in columns])
     line("reads (all cases)", [str(rep["reads"]) for *_, rep in columns])
     line("wrong claims", [str(rep["wrong_claims"]) for *_, rep in columns])
+    if all("search_health" in rep for *_, rep in columns):
+        line(
+            "search calls failed",
+            [
+                f"{rep['search_health']['failed']}/{rep['search_health']['calls']}"
+                for *_, rep in columns
+            ],
+        )
     if "changes" in summary:
         ch = summary["changes"]
         lines += [

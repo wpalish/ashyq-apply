@@ -12,7 +12,10 @@ summed over every case:
 * evidence: pages read per evidence stage, claims per claim type, claims
   matched to labels, and wrong-scope claims by the scope dimension that did
   not match (``metrics.dimension_matches``);
-* budget and time per case, mean and max.
+* budget and time per case, mean and max;
+* failed discovery searches (``search_failures``, by provider status, and
+  their share of attempted discovery queries), so that a provider outage reads
+  as an outage and never as a pipeline result.
 
 Built for the one heldout look the owner approved (heldout pre-registration
 §9, H-1, 2026-10-19): no case id, university name, URL, host, claim value,
@@ -91,6 +94,8 @@ _REFUSAL_CATEGORIES: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"front page is not a programme page"), "front_page"),
 )
 
+#: The status ``search_failure_diagnostic`` writes: "(serper; HTTP 400)".
+_FAILURE_STATUS = re.compile(r"\bHTTP (\d{3})\b")
 _IDENTITY_RECOVERY = re.compile(r"search identity recovery: checked (\d+), confirmed (\d+)")
 _CONTROLLED = re.compile(r"[a-z][a-z0-9_]{0,40}")
 _LANGUAGE = re.compile(r"[a-z]{2,3}(-[a-z0-9]{2,8})?")
@@ -140,6 +145,12 @@ def claim_type(key: str) -> str:
     if parts[0] == "scholarships" and len(parts) > 2:
         parts[1] = "*"
     return ".".join(_controlled(p) if p != "*" else p for p in parts)
+
+
+def failure_status(diagnostic: object) -> str:
+    """The HTTP status a search-failure diagnostic names, or ``none``."""
+    match = _FAILURE_STATUS.search(str(diagnostic or ""))
+    return match[1] if match else "none"
 
 
 def _host_on(url: object, domain: str) -> bool:
@@ -256,6 +267,12 @@ def repetition_summary(
                 _host_on(u, case.domain) for u in urls
             )
         funnel["search_calls_total"] += observation.telemetry.search_calls or 0
+        # A provider outage must read as an outage, never as a pipeline result:
+        # every discovery query that failed, by the status the provider gave.
+        failures = trace.get("search_failures") or []
+        funnel["search_failures"] += len(failures)
+        for diagnostic in failures:
+            funnel[f"search_failures_by_status:{failure_status(diagnostic)}"] += 1
         for line in trace.get("errors") or []:
             if match := _IDENTITY_RECOVERY.search(str(line)):
                 funnel["identity_recovery_leads_checked"] += int(match[1])
@@ -365,6 +382,9 @@ def repetition_summary(
         queries.append(t.search_calls)
         seconds.append(t.latency_seconds)
 
+    # Failed over attempted discovery queries (answered rows plus failures).
+    attempted = funnel["discovery_queries"] + funnel["search_failures"]
+    discovery_share = round(funnel["search_failures"] / attempted, 3) if attempted else 0.0
     budget: dict[str, Any] = {}
     for name, values in (("reads", reads), ("queries", queries), ("seconds", seconds)):
         for stat, value in _stats(values).items():
@@ -373,8 +393,9 @@ def repetition_summary(
     budget["queries_total"] = sum(v or 0 for v in queries)
     for stage in GOLD_STAGES:
         gold.setdefault(f"furthest:{stage}", 0)
+    funnel.setdefault("search_failures", 0)
     return {
-        "discovery funnel": dict(funnel),
+        "discovery funnel": {**funnel, "discovery_search_failed_share": discovery_share},
         "gold programme page": dict(gold),
         "refusals": dict(refusals),
         "languages": dict(languages),
@@ -417,13 +438,15 @@ def render(summary: dict[str, Any]) -> str:
         lines.append("| row | " + " | ".join(names) + " |")
         lines.append("|---|" + "---:|" * len(names))
         for row in rows:
-            cells = [_cell(columns[n][section].get(row, 0)) for n in names]
+            cells = [_cell(columns[n][section].get(row, 0), row) for n in names]
             lines.append(f"| {row} | " + " | ".join(cells) + " |")
         lines.append("")
     return "\n".join(lines)
 
 
-def _cell(value: object) -> str:
+def _cell(value: object, row: str = "") -> str:
+    if isinstance(value, float) and row.endswith("_share"):
+        return f"{value:.3f}"
     if isinstance(value, float):
         return f"{value:.1f}"
     return str(value)

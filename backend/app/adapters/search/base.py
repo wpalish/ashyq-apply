@@ -76,10 +76,36 @@ class SearchUnavailable(SearchError):
         *,
         http_status: int | None = None,
         reason: SearchFailureReason | None = None,
+        body_excerpt: str | None = None,
     ) -> None:
         super().__init__(message)
         self.http_status = http_status
         self.reason = reason
+        #: The first characters of the provider's error body, for an operator's
+        #: log only: one line, capped, with the API key masked. Never part of
+        #: ``str(self)`` or :func:`search_failure_diagnostic`, so nothing a
+        #: product page or a trace shows can carry vendor text.
+        self.body_excerpt = body_excerpt
+
+
+#: How much of a provider's error body an operator's log keeps.
+BODY_EXCERPT_CHARS = 200
+
+
+def error_body_excerpt(body: bytes | str, *, secrets: Sequence[str] = ()) -> str:
+    """A provider's error body as one capped line, every secret in it masked.
+
+    Masking happens before truncation, so a key cut in half by the cap cannot
+    leak its first half.
+    """
+    text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
+    for secret in secrets:
+        if secret:
+            text = text.replace(secret, "[redacted]")
+    text = " ".join(text.split())
+    if len(text) > BODY_EXCERPT_CHARS:
+        text = text[:BODY_EXCERPT_CHARS] + "…"
+    return text
 
 
 def search_failure_diagnostic(provider: str, error: Exception) -> str:

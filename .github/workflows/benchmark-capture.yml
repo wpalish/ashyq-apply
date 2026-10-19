@@ -549,6 +549,24 @@ jobs:
             --out out/packet.json
           echo "extra_args=${{ inputs.extra_args }} bindings=$MEASUREMENT_BINDINGS" >> out/config.txt
 
+      - name: Search pre-flight (one Serper call before any capture)
+        if: inputs.mode == 'expert_paired'
+        # 2026-10-19: every Serper call answered HTTP 400 for hours and eight
+        # paired runs measured the outage as a pipeline result. One query
+        # through the product client first; on failure the job stops here with
+        # the provider's status and capped error body (the key is masked by
+        # the adapter and never printed), before any budget is spent.
+        run: |
+          set -o pipefail
+          if [ "$UNIMATCH_SEARCH_PROVIDER" != serper ]; then
+            echo "search pre-flight skipped: provider is $UNIMATCH_SEARCH_PROVIDER"
+            exit 0
+          fi
+          if ! .venv/bin/python -m evaluation.research.search_preflight 2> out/preflight.err; then
+            echo "::error::$(cat out/preflight.err)"
+            exit 1
+          fi
+
       - name: Paired rule experiment (same runner, ABBA order)
         if: inputs.mode == 'expert_paired'
         # inputs.case is a space-separated list; inputs.extra_args is the rule

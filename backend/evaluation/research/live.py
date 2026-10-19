@@ -1011,9 +1011,14 @@ async def capture_one(
             return await original_search(provider, *args, **kwargs)
         except Exception as exc:
             reason = getattr(getattr(exc, "reason", None), "value", None)
+            # The adapter's capped, key-masked excerpt of the provider's error
+            # body: "http 400" alone read as a pipeline result for a night.
+            body = getattr(exc, "body_excerpt", None)
             print(
                 f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}"
-                f" ({reason or 'no reason'}, http {getattr(exc, 'http_status', None)})"
+                f" ({reason or 'no reason'}, http {getattr(exc, 'http_status', None)}"
+                + (f", body {body!r}" if isinstance(body, str) and body else "")
+                + ")"
             )
             if budget:
                 raise budget.failed_search(exc) from None
