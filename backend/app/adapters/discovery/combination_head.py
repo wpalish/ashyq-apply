@@ -829,6 +829,40 @@ def _named(table: dict[str, tuple[str, ...]], folded: str) -> str | None:
     return " ".join(found.group(0).split()) if found else None
 
 
+def _subject_cover(text: str, names: list[str]) -> tuple[list[str], set[int], set[str]]:
+    """CQ-1: ``text``'s words, the positions that name the subject, and the subject's words."""
+    head = _ld._with_engineering_as_the_field(_ld._without_award(text), names)
+    tokens = _ld._shape_tokens(head)
+    covered: set[int] = set()
+    alias_words: set[str] = set()
+    for name in names:
+        wanted = _ld._shape_tokens(name)
+        alias_words.update(wanted)
+        for start in range(len(tokens) - len(wanted) + 1):
+            if wanted and tokens[start : start + len(wanted)] == wanted:
+                covered.update(range(start, start + len(wanted)))
+    return tokens, covered, alias_words
+
+
+def _subject_clause(text: str, names: list[str]) -> str:
+    """CQ-1: the clause of a head that names the subject, else the whole head.
+
+    Bracketed parts are set aside and the rest is cut at its subtitle marks
+    (a colon, a spaced dash), R2's own marks (``_BRACKETED``,
+    ``_SUBTITLE_MARK``); the first clause that names the subject is the
+    subject's clause. A subtitle or a bracket after the subject names its
+    track, so a joiner there joins words of the track, not a second field
+    to the subject. When no clause names the subject on its own (it is only
+    in a bracket), the whole head is read, as before. Combination markers
+    are read in the whole head regardless ("Computer Science (JH)").
+    """
+    unbracketed = _ld._BRACKETED.sub(" ", text)
+    for clause in _ld._SUBTITLE_MARK.split(unbracketed):
+        if clause.strip() and _subject_cover(clause, names)[1]:
+            return clause
+    return text
+
+
 def _joined_field(text: str, fields: list[str], languages: tuple[str, ...]) -> str | None:
     """CQ-1: "<joiner> <field>" when ``text`` joins the subject to another field.
 
@@ -841,6 +875,12 @@ def _joined_field(text: str, fields: list[str], languages: tuple[str, ...]) -> s
     specialisation word on the other side ("with a specialisation in …")
     makes it the subject's own track, not a combination. "<field> and
     Engineering" is the field itself (R2, 19-Q4 as amended).
+
+    Only the subject's own clause is read (``_subject_clause``): what a
+    subtitle mark or a bracket adds to the subject's name is its track
+    ("Informatikk: programmering og systemarkitektur", "Bachelor of Computer
+    Science (Computer System and Network)"), as R2's ``subject_head`` reads
+    a title.
     """
     joiners = {
         _ld._fold(word)
@@ -850,16 +890,7 @@ def _joined_field(text: str, fields: list[str], languages: tuple[str, ...]) -> s
     if not joiners or not fields:
         return None
     names = _ld.with_strong_aliases(fields)
-    head = _ld._with_engineering_as_the_field(_ld._without_award(text), names)
-    tokens = _ld._shape_tokens(head)
-    covered: set[int] = set()
-    alias_words: set[str] = set()
-    for name in names:
-        wanted = _ld._shape_tokens(name)
-        alias_words.update(wanted)
-        for start in range(len(tokens) - len(wanted) + 1):
-            if wanted and tokens[start : start + len(wanted)] == wanted:
-                covered.update(range(start, start + len(wanted)))
+    tokens, covered, alias_words = _subject_cover(_subject_clause(text, names), names)
     if not covered:
         return None
     at = [i for i, token in enumerate(tokens) if token in joiners and i not in covered]

@@ -13,7 +13,9 @@ Offline: synthetic pages in English, German, Spanish, French and Chinese, plus
 four development pages hand-fetched through the production ``Fetcher``
 (``trust_env_proxy=True``, robots honoured, 2026-10-19) and trimmed of scripts,
 styles and comments: ``tests/fixtures/combination_head/``. Groningen's and
-Delft's gold pages are CH-1's fixtures.
+Delft's gold pages are CH-1's fixtures. uio's and um's gold pages (same
+fetch, 2026-10-19) pin the dev3 bundle-replay regression: a joiner in the
+subject's track, after a colon or in a bracket, joins no second field.
 """
 
 from __future__ import annotations
@@ -229,6 +231,43 @@ def test_an_alias_of_the_requested_subject_is_no_second_field() -> None:
     assert combination_named("Mathematics and Computer Science", [*CS, "mathematics"]) is None
 
 
+@pytest.mark.parametrize(
+    ("text", "country"),
+    [
+        # uio's and um's gold heads (dev3 bundle replay, 2026-10-19): the joiner
+        # sits in the subject's track, after a subtitle mark or in a bracket.
+        ("Informatikk: programmering og systemarkitektur", "Norway"),
+        ("Informatikk: robotikk og intelligente systemer", "Norway"),
+        ("BACHELOR OF COMPUTER SCIENCE (COMPUTER SYSTEM AND NETWORK)", "Malaysia"),
+        ("Computer Science: Software and Systems", ""),
+        ("Computer Science - Theory and Practice of Computation", ""),
+        ("Informatik (Algorithmen und Datenstrukturen)", "Germany"),
+    ],
+)
+def test_a_joiner_in_the_subjects_track_names_no_combination(text, country) -> None:
+    assert combination_named(text, CS, country=country) is None
+
+
+@pytest.mark.parametrize(
+    ("text", "country", "named"),
+    [
+        # The subject's own clause still joins a second field.
+        ("Computer Science (Hons) and Philosophy", "", "and philosophy"),
+        ("BSc: Computer Science and Philosophy", "", "and philosophy"),
+        ("Computer Science and Philosophy: Joint Programme", "", "and philosophy"),
+        ("Informatikk og filosofi", "Norway", "og filosofi"),
+        ("Informatikk og filosofi: bachelor", "Norway", "og filosofi"),
+        # The subject only in a bracket: the whole head is read, as before.
+        ("Bachelor (Computer Science and Philosophy)", "", "and philosophy"),
+        # Markers are read in the whole head, brackets and subtitles included.
+        ("Computer Science (JH)", "", "jh"),
+        ("Computer Science: Second Major in Business", "", "second major"),
+    ],
+)
+def test_the_subjects_own_clause_still_names_a_combination(text, country, named) -> None:
+    assert combination_named(text, CS, country=country) == named
+
+
 def test_joiners_are_read_in_english_and_the_institutions_languages_only() -> None:
     assert combination_named("Informatik und Philosophie", CS, country="Germany") == (
         "und philosophie"
@@ -434,6 +473,35 @@ async def test_single_subject_gold_pages_are_still_confirmed(
     page = classify_page(url=url, html=html())
     assert profile_rejects(page, "bachelor", CS, url=url) is None
     found, trace = await _recover(tmp_path, profile, url, html())
+    assert found == [url]
+    assert trace.related_programmes == []
+
+
+UIO_GOLD = "https://www.uio.no/studier/program/informatikk-programmering"
+UM_GOLD = "https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("url", "name", "country"),
+    [(UIO_GOLD, "uio_gold", "Norway"), (UM_GOLD, "um_gold", "Malaysia")],
+    ids=["uio_gold", "um_gold"],
+)
+async def test_gold_pages_whose_track_holds_a_joiner_are_confirmed_under_the_bundle(
+    tmp_path, profile, monkeypatch, url, name, country
+) -> None:
+    # dev3 bundle replay (2026-10-19): CQ-1 read "og systemarkitektur" in uio's
+    # "Informatikk: programmering og systemarkitektur" and "and network" in
+    # um's "… (COMPUTER SYSTEM AND NETWORK)" as second fields and refused both
+    # gold pages as related. Pages fetched through the production Fetcher.
+    monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", True)
+    monkeypatch.setattr(live_discovery, "CONFIRM_REJECTS_COMBINATION_HEAD", True)
+    monkeypatch.setattr(live_discovery, "CONFIRM_REJECTS_SUBPAGE_HEAD", True)
+    html = fixture(name)
+    page = classify_page(url=url, html=html)
+    assert head_combination_rejects(page, CS, country=country) is None
+    assert profile_rejects(page, "bachelor", CS, url=url, country=country) is None
+    found, trace = await _recover(tmp_path, profile, url, html, country=country)
     assert found == [url]
     assert trace.related_programmes == []
 
