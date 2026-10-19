@@ -564,12 +564,17 @@ def test_live_provider_selection_reaches_child_and_capture(tmp_path, monkeypatch
             "_validate_search",
             lambda self: pytest.fail("implicit provider must not add a new validation gate"),
         )
+    expected = override or "serper"
+    capped = expected not in {"none", "fake"}
+    if capped:
+        # Free-search ticket 02: a provider that sends queries needs the run's cap.
+        command.extend(["--max-search-queries", "6"])
     monkeypatch.setattr(sys, "argv", command)
     monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
-    expected = override or "serper"
 
     def child(command, **kwargs):
         assert kwargs["env"]["UNIMATCH_SEARCH_PROVIDER"] == expected
+        assert ("--max-search-queries" in command) == capped
         assert ("--search-provider" in command) == bool(override)
         if override:
             assert command[command.index("--search-provider") + 1] == expected
@@ -642,7 +647,8 @@ def test_live_child_provider_override_replaces_cached_settings(tmp_path, monkeyp
     assert get_settings().search_provider == "serper"
     calls = []
 
-    async def capture(case_id, output, max_pages, seconds):
+    async def capture(case_id, output, max_pages, seconds, *, search_ledger):
+        assert search_ledger.cap == 6
         calls.append(case_id)
         assert Settings().search_provider == "tavily"
         assert get_settings().search_provider == "tavily"
@@ -661,6 +667,10 @@ def test_live_child_provider_override_replaces_cached_settings(tmp_path, monkeyp
             str(tmp_path),
             "--search-provider",
             "tavily",
+            "--max-search-queries",
+            "6",
+            "--search-ledger",
+            str(tmp_path / "search_ledger.json"),
         ],
     )
     try:
@@ -701,6 +711,9 @@ def test_live_provider_choices_follow_factory_allowlist(tmp_path, monkeypatch):
             str(tmp_path),
             "--search-provider",
             provider,
+            # A provider the harness has never seen is capped like any other.
+            "--max-search-queries",
+            "6",
         ],
     )
     monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")

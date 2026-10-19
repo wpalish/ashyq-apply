@@ -13,6 +13,10 @@ It never prints the API key or the request headers: the adapter masks the key
 in the body excerpt before truncating it, and nothing else about the request
 is printed.
 
+With ``--search-ledger PATH --max-search-queries N`` (free-search ticket 02)
+its one query is charged to the run's query ledger before it is sent, and a
+spent ledger fails the pre-flight with no request sent.
+
 Evaluation tooling only: nothing under ``app/`` may import it.
 """
 
@@ -21,20 +25,30 @@ from __future__ import annotations
 import argparse
 import asyncio
 import sys
+from pathlib import Path
 
 from app.adapters.search import get_search_provider
 from app.adapters.search.base import SearchError, SearchUnavailable
+
+from .search_cap import SearchCapError, SearchQueryLedger
 
 #: A query any working web index answers, naming no applicant and no case.
 PREFLIGHT_QUERY = "university bachelor programme admission requirements"
 
 
-async def preflight(query: str = PREFLIGHT_QUERY) -> tuple[bool, str]:
-    """(provider answered, one line saying how), after exactly one search call."""
+async def preflight(
+    query: str = PREFLIGHT_QUERY, ledger: SearchQueryLedger | None = None
+) -> tuple[bool, str]:
+    """(provider answered, one line saying how), after at most one search call."""
     try:
         provider = get_search_provider()
     except SearchError as exc:
         return False, f"search pre-flight: no provider ({type(exc).__name__})"
+    if ledger is not None and not ledger.reserve():
+        return False, (
+            "search pre-flight FAILED: the run's search query cap is already spent;"
+            " no request was sent and no capture was started."
+        )
     try:
         response = await provider.search(query=query, max_results=1)
     except SearchUnavailable as exc:
@@ -52,8 +66,18 @@ async def preflight(query: str = PREFLIGHT_QUERY) -> tuple[bool, str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=(__doc__ or "").splitlines()[0])
     parser.add_argument("--query", default=PREFLIGHT_QUERY, help=argparse.SUPPRESS)
+    parser.add_argument("--max-search-queries", type=int, default=None, metavar="N")
+    parser.add_argument("--search-ledger", type=Path, default=None, metavar="PATH")
     args = parser.parse_args(argv)
-    ok, message = asyncio.run(preflight(args.query))
+    if (args.max_search_queries is None) != (args.search_ledger is None):
+        parser.error("--search-ledger and --max-search-queries go together")
+    ledger = None
+    if args.search_ledger is not None:
+        try:
+            ledger = SearchQueryLedger.open(args.search_ledger, args.max_search_queries)
+        except SearchCapError as exc:
+            parser.error(f"--search-ledger: {exc}")
+    ok, message = asyncio.run(preflight(args.query, ledger))
     print(message, file=sys.stdout if ok else sys.stderr, flush=True)
     return 0 if ok else 1
 

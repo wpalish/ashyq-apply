@@ -66,7 +66,7 @@ async def test_the_request_carries_key_query_domains_and_a_capped_count():
     assert payload["max_results"] == MAX_RESULTS_PER_QUERY
 
 
-@pytest.mark.parametrize("status", [401, 402, 429, 500])
+@pytest.mark.parametrize("status", [401, 402, 429, 432, 500])
 async def test_any_non_200_is_unavailable_without_retry(status):
     handler = answering(status=status, body={"detail": "no"})
     with pytest.raises(SearchUnavailable, match=str(status)):

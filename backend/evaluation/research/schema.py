@@ -141,6 +141,12 @@ class Telemetry(Strict):
     search_localized_calls: int | None = Field(
         default=None, ge=0, exclude_if=lambda value: value is None
     )
+    #: Free-search ticket 02: queries the run's ``--max-search-queries`` cap
+    #: refused before any request was sent (not in ``search_calls``). Unset
+    #: when none was, so every capture without one keeps its bytes.
+    search_cap_refusals: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
     model_input_tokens: int | None = Field(default=None, ge=0)
     jev_input_tokens: int | None = Field(default=None, ge=0)
     latency_seconds: float | None = Field(default=None, ge=0)

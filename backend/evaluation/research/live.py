@@ -21,6 +21,14 @@ overrun. The final metering-envelope write is audit persistence after that work.
 "never reads ground truth": it reads the case's gold programme URLs from a
 development dataset so the read wrapper can answer them with a counted
 synthetic 404 (:class:`GoldKnockout`). Off the arm nothing is read or changed.
+
+``--max-search-queries N`` (free-search ticket 02) is the run's hard cap on
+provider queries, required for every provider that sends a query anywhere
+(all but ``none``, ``fake`` and ``recorded``). The run refuses to start when
+its plan (6 per case) exceeds what the cap leaves; each query reserves one
+unit of a ledger file shared by every capture of the run (``--search-ledger``)
+before it is sent, and the (N+1)th is refused locally with no request sent:
+the capture records ``search_budget_exhausted`` and attempts no further case.
 """
 
 import argparse
@@ -53,6 +61,13 @@ from .schema import (
     Prediction,
     SiteIdentity,
     Telemetry,
+)
+from .search_cap import (
+    RUN_CAP_STOP_REASON,
+    SearchCapError,
+    SearchQueryLedger,
+    needs_cap,
+    planned_queries,
 )
 
 # Evaluation cohort IDs, not expected URLs/values. Registry remains production's input.
@@ -1046,6 +1061,7 @@ async def capture_one(
     knockout_gold: Path | None = None,
     no_registry_seeds: bool = False,
     trust_env_proxy: bool = False,
+    search_ledger: SearchQueryLedger | None = None,
 ) -> None:
     entered = time.monotonic()
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
@@ -1222,6 +1238,22 @@ async def capture_one(
         # somewhere, and search is the first place to look.
         if budget:
             budget.before_search(getattr(provider, "name", ""))
+        if search_ledger is not None and not search_ledger.reserve():
+            # Ticket 02: the run's cap is spent. Refused here, before the
+            # provider is asked anything, so the (N+1)th query costs nothing.
+            from app.adapters.search.base import SearchUnavailable
+
+            if budget:
+                budget.search_queries -= 1
+                budget.blocked_search_queries += 1
+                budget.stop_reason = budget.stop_reason or RUN_CAP_STOP_REASON
+            observation.telemetry.search_cap_refusals = (
+                observation.telemetry.search_cap_refusals or 0
+            ) + 1
+            print("search refused: the run's query cap is reached; no request sent", flush=True)
+            checkpoint()
+            raise SearchUnavailable("Run search query cap reached; no request was sent")
+        if budget:
             observation.telemetry.search_calls = budget.search_queries
         else:
             observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
@@ -1804,6 +1836,24 @@ def recorded_store_config(store: Path | None) -> dict[str, Any]:
     }
 
 
+def cap_config(
+    ledger: SearchQueryLedger,
+    planned: int,
+    planned_cases: Sequence[str],
+    case_index: int,
+    batch_stop_reason: str | None,
+) -> dict[str, Any]:
+    """Ticket 02: the run's query ledger as this capture saw it, for ``capture.json``."""
+    stopped = batch_stop_reason == RUN_CAP_STOP_REASON
+    return {
+        **ledger.state(),
+        "planned_this_capture": planned,
+        "ledger": ledger.path.name,
+        "stop_reason": RUN_CAP_STOP_REASON if stopped else None,
+        "remaining_case_ids": list(planned_cases[case_index + 1 :]) if stopped else [],
+    }
+
+
 def entry_path_config(args: argparse.Namespace) -> dict[str, str]:
     """G-06: the capture's ``entry_path`` when an arm changes it (absent = default)."""
     if args.no_registry_seeds:
@@ -1849,6 +1899,23 @@ def main() -> None:
         help="with --search-provider recorded: the recorded-search store to replay "
         "(default: UNIMATCH_RECORDED_SEARCH_STORE, else data/recorded_search.base3.json); "
         "a query it has no answer for returns nothing and is counted as a miss",
+    )
+    parser.add_argument(
+        "--max-search-queries",
+        type=int,
+        default=None,
+        metavar="N",
+        help="the run's hard cap on provider queries, required for every provider but none, "
+        "fake and recorded; the run refuses to start when 6 per case exceeds what it leaves, "
+        "and the (N+1)th query is refused locally with no request sent",
+    )
+    parser.add_argument(
+        "--search-ledger",
+        type=Path,
+        default=None,
+        metavar="PATH",
+        help="with --max-search-queries: the query ledger every capture of one run shares "
+        "(default: search_ledger.json in this capture's directory)",
     )
     parser.add_argument(
         "--trust-env-proxy",
@@ -2563,6 +2630,36 @@ def main() -> None:
     if args.strict_expert_budget and search_provider not in STRICT_PROVIDERS:
         parser.error("Strict expert budget requires configured exa or exa_mcp")
     print(f"search provider: {search_provider}", flush=True)
+    cap = args.max_search_queries
+    if cap is None and needs_cap(search_provider):
+        parser.error(
+            f"--search-provider {search_provider} sends queries that can spend an allowance or a "
+            "paid key: pass --max-search-queries N, the run's hard cap (6 per case is planned)"
+        )
+    if cap is not None and cap < 1:
+        parser.error("--max-search-queries must be a positive integer")
+    if args.search_ledger is not None and cap is None:
+        parser.error("--search-ledger needs --max-search-queries")
+    planned_cases = [args.case] if args.case else list(COHORT)
+    planned = planned_queries(len(planned_cases))
+    search_ledger: SearchQueryLedger | None = None
+    if cap is not None and (args.search_ledger is not None or args.child):
+        if args.search_ledger is None:
+            parser.error("--child with --max-search-queries needs the run's --search-ledger")
+        try:
+            search_ledger = SearchQueryLedger.open(args.search_ledger, cap)
+            remaining = search_ledger.remaining()
+        except SearchCapError as exc:
+            parser.error(f"--search-ledger: {exc}")
+    else:
+        remaining = cap or 0
+    if cap is not None and not args.child and planned > remaining:
+        parser.error(
+            f"the run plans {planned} provider queries ({len(planned_cases)} case(s) x 6) but "
+            f"its cap leaves {remaining} of {cap}; no capture started"
+        )
+    if cap is not None:
+        print(f"search query cap: {cap} (planned {planned}, left {remaining})", flush=True)
     if args.child:
         web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
         web_scholarships.TARGET_AWARD_SEARCH = args.target_award_search
@@ -2956,6 +3053,8 @@ def main() -> None:
                     strict_arguments["no_registry_seeds"] = True
                 if args.trust_env_proxy:
                     strict_arguments["trust_env_proxy"] = True
+                if search_ledger is not None:
+                    strict_arguments["search_ledger"] = search_ledger
                 asyncio.run(
                     capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
                 )
@@ -2967,7 +3066,8 @@ def main() -> None:
     directory.mkdir(parents=True)
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     observations = []
-    planned_cases = [args.case] if args.case else list(COHORT)
+    if cap is not None and search_ledger is None:
+        search_ledger = SearchQueryLedger.open(directory / "search_ledger.json", cap)
     case_budgets: dict[str, Any] = {}
     batch_stop_reason = None
     for case_index, case_id in enumerate(planned_cases):
@@ -3008,6 +3108,16 @@ def main() -> None:
                             else []
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
+                        *(
+                            [
+                                "--max-search-queries",
+                                str(cap),
+                                "--search-ledger",
+                                str(search_ledger.path),
+                            ]
+                            if search_ledger is not None
+                            else []
+                        ),
                         *(["--through-identity-gate"] if args.through_identity_gate else []),
                         *(["--no-registry-seeds"] if args.no_registry_seeds else []),
                         *(["--trust-env-proxy"] if args.trust_env_proxy else []),
@@ -3203,6 +3313,9 @@ def main() -> None:
                 process_error=error,
                 active_checkpoint_available=budget_output.exists(),
             )
+        # Ticket 02: the run's cap is spent, so no further case could search.
+        if search_ledger is not None and search_ledger.exhausted():
+            batch_stop_reason = batch_stop_reason or RUN_CAP_STOP_REASON
         strict_config = (
             {
                 "strict_expert_budget": True,
@@ -3269,6 +3382,15 @@ def main() -> None:
                 **recorded_store_config(recorded_store),
                 **({"trust_env_proxy": True} if args.trust_env_proxy else {}),
                 **(
+                    {
+                        "search_query_cap": cap_config(
+                            search_ledger, planned, planned_cases, case_index, batch_stop_reason
+                        )
+                    }
+                    if search_ledger is not None
+                    else {}
+                ),
+                **(
                     {"rules_off": rule_negation_arguments(args)}
                     if rule_negation_arguments(args)
                     else {}
@@ -3280,7 +3402,10 @@ def main() -> None:
         print(f"{case_id}: {observation.error or 'complete'}", flush=True)
         if batch_stop_reason:
             print(
-                "Capture stopped after provider HTTP 429; remaining cases were not attempted.",
+                "Capture stopped: the run's search query cap is reached; remaining cases were "
+                "not attempted."
+                if batch_stop_reason == RUN_CAP_STOP_REASON
+                else "Capture stopped after provider HTTP 429; remaining cases were not attempted.",
                 flush=True,
             )
             break

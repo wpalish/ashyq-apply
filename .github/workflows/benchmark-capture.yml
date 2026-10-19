@@ -67,6 +67,10 @@ on:
         description: 'Experiment: search before the navigation fallback (false matches the measured default)'
         required: false
         default: 'false'
+      max_search_queries:
+        description: 'The run''s hard cap on provider queries (free-search ticket 02). Required for every search layer but none and recorded: the run refuses to start when it plans more (6 per case per capture, x4 for expert_paired, +1 for the Serper pre-flight), and the query after the cap is refused with no request sent'
+        required: false
+        default: ''
       search_provider:
         description: 'Search layer: auto preserves historic secret precedence; explicit exa requires its API key; recorded (expert modes) replays the recorded Serper lists of the dev sets, no provider called and no key read (store: --recorded-store PATH in base_args, else evaluation/research/data/recorded_search.base3.json). "--search-provider recorded" in base_args or extra_args selects it too, for both arms'
         type: choice
@@ -154,6 +158,51 @@ jobs:
           echo "provider=$provider" > out/config.txt
           echo "decided_by=$decided_by" >> out/config.txt
 
+      - name: Search query cap (refuse a provider run without one)
+        # Free-search ticket 02. Every query a keyed or keyless provider
+        # answers can spend an allowance or a paid key, and the 2026-10-19
+        # outage spent eight runs before anyone read the logs. So a run on any
+        # provider but none/recorded names its cap, its plan must fit under it,
+        # and every capture of the run charges one shared ledger.
+        env:
+          REQUESTED_CAP: ${{ inputs.max_search_queries }}
+          REQUESTED_CASE: ${{ inputs.case }}
+          REQUESTED_MODE: benchmark
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          case "$UNIMATCH_SEARCH_PROVIDER" in
+            none|recorded)
+              echo "search query cap: not needed ($UNIMATCH_SEARCH_PROVIDER sends no provider query)"
+              echo "SEARCH_CAP_ARGS=" >> "$GITHUB_ENV"
+              echo "max_search_queries=uncapped ($UNIMATCH_SEARCH_PROVIDER)" >> out/config.txt
+              exit 0
+              ;;
+          esac
+          if ! [[ "$REQUESTED_CAP" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::search provider $UNIMATCH_SEARCH_PROVIDER needs the max_search_queries input (a positive integer): the run's hard cap on provider queries. No capture started, nothing was sent."
+            exit 1
+          fi
+          read -r -a cases <<< "$REQUESTED_CASE"
+          count=${#cases[@]}
+          if [ "$count" -eq 0 ]; then
+            read -r -a cases <<< "$(.venv/bin/python -c 'from evaluation.research.live import COHORT; print(" ".join(COHORT))')"
+            count=${#cases[@]}
+          fi
+          columns=1; extra=0
+          if [ "$REQUESTED_MODE" = expert_paired ]; then
+            columns=4
+            [ "$UNIMATCH_SEARCH_PROVIDER" = serper ] && extra=1
+          fi
+          planned=$(( 6 * count * columns + extra ))
+          if [ "$planned" -gt "$REQUESTED_CAP" ]; then
+            echo "::error::the run plans $planned provider queries ($count case(s) x $columns capture(s) x 6 + $extra pre-flight) but max_search_queries is $REQUESTED_CAP. No capture started, nothing was sent."
+            exit 1
+          fi
+          echo "SEARCH_CAP_ARGS=--max-search-queries $REQUESTED_CAP --search-ledger $PWD/out/search_ledger.json" >> "$GITHUB_ENV"
+          echo "search query cap: $REQUESTED_CAP for $UNIMATCH_SEARCH_PROVIDER (planned $planned)"
+          echo "max_search_queries=$REQUESTED_CAP planned=$planned provider=$UNIMATCH_SEARCH_PROVIDER" >> out/config.txt
+
       - name: Say which pipeline is being measured
         run: |
           echo "runner=${{ runner.name }} os=${{ runner.os }} environment=${{ runner.environment }}"
@@ -177,7 +226,7 @@ jobs:
             --max-pages ${{ inputs.max_pages }} \
             ${{ inputs.search_first == 'true' && '--search-first' || '' }} \
             ${{ inputs.case && format('--case {0}', inputs.case) || '' }} \
-            --search-provider "$UNIMATCH_SEARCH_PROVIDER" \
+            --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} \
             | tee capture.log
           # The capture writes into a timestamped subdirectory and prints that
           # path as its last line. Reading it back is the only way to name the
@@ -422,6 +471,7 @@ jobs:
             backend/capture-metrics.txt
             backend/capture.log
             backend/out/config.txt
+            backend/out/search_ledger.json
             backend/scope-mismatches.json
             backend/scope-mismatches.txt
             backend/support-shapes.txt
@@ -545,6 +595,52 @@ jobs:
           echo "provider=$provider" > out/config.txt
           echo "decided_by=$decided_by" >> out/config.txt
 
+      - name: Search query cap (refuse a provider run without one)
+        if: inputs.mode != 'expert_actions'
+        # Free-search ticket 02. Every query a keyed or keyless provider
+        # answers can spend an allowance or a paid key, and the 2026-10-19
+        # outage spent eight runs before anyone read the logs. So a run on any
+        # provider but none/recorded names its cap, its plan must fit under it,
+        # and every capture of the run charges one shared ledger.
+        env:
+          REQUESTED_CAP: ${{ inputs.max_search_queries }}
+          REQUESTED_CASE: ${{ inputs.case }}
+          REQUESTED_MODE: ${{ inputs.mode }}
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          case "$UNIMATCH_SEARCH_PROVIDER" in
+            none|recorded)
+              echo "search query cap: not needed ($UNIMATCH_SEARCH_PROVIDER sends no provider query)"
+              echo "SEARCH_CAP_ARGS=" >> "$GITHUB_ENV"
+              echo "max_search_queries=uncapped ($UNIMATCH_SEARCH_PROVIDER)" >> out/config.txt
+              exit 0
+              ;;
+          esac
+          if ! [[ "$REQUESTED_CAP" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::search provider $UNIMATCH_SEARCH_PROVIDER needs the max_search_queries input (a positive integer): the run's hard cap on provider queries. No capture started, nothing was sent."
+            exit 1
+          fi
+          read -r -a cases <<< "$REQUESTED_CASE"
+          count=${#cases[@]}
+          if [ "$count" -eq 0 ]; then
+            read -r -a cases <<< "$(.venv/bin/python -c 'from evaluation.research.live import COHORT; print(" ".join(COHORT))')"
+            count=${#cases[@]}
+          fi
+          columns=1; extra=0
+          if [ "$REQUESTED_MODE" = expert_paired ]; then
+            columns=4
+            [ "$UNIMATCH_SEARCH_PROVIDER" = serper ] && extra=1
+          fi
+          planned=$(( 6 * count * columns + extra ))
+          if [ "$planned" -gt "$REQUESTED_CAP" ]; then
+            echo "::error::the run plans $planned provider queries ($count case(s) x $columns capture(s) x 6 + $extra pre-flight) but max_search_queries is $REQUESTED_CAP. No capture started, nothing was sent."
+            exit 1
+          fi
+          echo "SEARCH_CAP_ARGS=--max-search-queries $REQUESTED_CAP --search-ledger $PWD/out/search_ledger.json" >> "$GITHUB_ENV"
+          echo "search query cap: $REQUESTED_CAP for $UNIMATCH_SEARCH_PROVIDER (planned $planned)"
+          echo "max_search_queries=$REQUESTED_CAP planned=$planned provider=$UNIMATCH_SEARCH_PROVIDER" >> out/config.txt
+
       - name: Provider
         # Which machine read the sites is part of the measurement: a cloud
         # runner and a home connection get different answers (Aalto's
@@ -575,7 +671,7 @@ jobs:
             ${case_flags[@]+"${case_flags[@]}"} \
             --seconds-per-case "${{ inputs.seconds_per_case }}" \
             --max-pages "${{ inputs.max_pages }}" $MEASUREMENT_BINDINGS ${{ inputs.extra_args }} \
-            --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tee out/capture.log
+            --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} | tee out/capture.log
           CAPTURE="$(tail -n 1 out/capture.log)"
           test -f "$CAPTURE"
           .venv/bin/python -m evaluation.research.expert prepare \
@@ -601,7 +697,7 @@ jobs:
             echo "search pre-flight skipped: provider is $UNIMATCH_SEARCH_PROVIDER"
             exit 0
           fi
-          if ! .venv/bin/python -m evaluation.research.search_preflight 2> out/preflight.err; then
+          if ! .venv/bin/python -m evaluation.research.search_preflight ${SEARCH_CAP_ARGS:-} 2> out/preflight.err; then
             echo "::error::$(cat out/preflight.err)"
             exit 1
           fi
@@ -623,7 +719,7 @@ jobs:
             .venv/bin/python -m evaluation.research.live --live --out "out/$1-$2" \
               --case "$1" --seconds-per-case "${{ inputs.seconds_per_case }}" \
               --max-pages "${{ inputs.max_pages }}" $flags \
-              --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tail -n 2
+              --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} | tail -n 2
           }
           cases="${{ inputs.case }}"
           jobs="${{ inputs.case_parallelism }}"
@@ -637,11 +733,14 @@ jobs:
             # observation records the error and the scorecard counts it.
             abba() { capture "$1" off; capture "$1" on; capture "$1" on; capture "$1" off; }
             export -f capture abba
-            export MEASUREMENT_BINDINGS UNIMATCH_SEARCH_PROVIDER
+            export MEASUREMENT_BINDINGS UNIMATCH_SEARCH_PROVIDER SEARCH_CAP_ARGS
             printf '%s\n' $cases | xargs -P "$jobs" -I{} bash -c 'abba "$1" > "out/log-$1.txt" 2>&1; echo "== $1"; cat "out/log-$1.txt"' _ {}
             order="abba-parallel-$jobs"
           fi
           echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }} bindings=$MEASUREMENT_BINDINGS order=$order" >> out/config.txt
+          if [ -f out/search_ledger.json ]; then
+            echo "search_ledger=$(tr -d ' \n' < out/search_ledger.json)" >> out/config.txt
+          fi
 
       - name: Validate the resume request
         if: inputs.mode == 'expert_actions' && inputs.resume_run_id != ''

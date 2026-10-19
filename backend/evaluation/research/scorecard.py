@@ -559,8 +559,14 @@ def search_health(
     search alike). A case with no log falls back to its discovery trace, and
     there only a failure that names an HTTP status counts: a strict budget's
     own refusal also leaves a diagnostic, but it never reached the provider.
+
+    Free-search ticket 02: a query the run's ``--max-search-queries`` cap
+    refused was never sent either, but the case it belonged to ran short of
+    search, so a repetition with any such refusal is unhealthy as well
+    (``cap_refused``, present only then).
     """
     calls = failed = 0
+    cap_refused = sum(o.telemetry.search_cap_refusals or 0 for o in capture.observations)
     for observation in capture.observations:
         case_calls = observation.telemetry.search_calls or 0
         if observation.case_id in logged:
@@ -576,7 +582,8 @@ def search_health(
         "calls": calls,
         "failed": failed,
         "failed_share": share,
-        "healthy": share <= SEARCH_FAILURE_LIMIT,
+        "healthy": share <= SEARCH_FAILURE_LIMIT and not cap_refused,
+        **({"cap_refused": cap_refused} if cap_refused else {}),
     }
 
 
@@ -589,6 +596,18 @@ def search_warning(columns: list[tuple[str, int, dict[str, Any]]]) -> list[str]:
     ]
     if not sick:
         return []
+    capped = [
+        f"{name}#{i} {rep['search_health']['cap_refused']}"
+        for name, i, rep in columns
+        if rep.get("search_health", {}).get("cap_refused")
+    ]
+    if capped:
+        return [
+            "> **WARNING: THE RUN'S SEARCH QUERY CAP WAS REACHED. THIS RUN IS NOT A VALID "
+            "MEASUREMENT.** Queries refused by --max-search-queries (no request sent) in: "
+            f"{', '.join(capped)}. The cases after the cap ran without search.",
+            "",
+        ]
     return [
         "> **WARNING: SEARCH PROVIDER UNHEALTHY. THIS RUN IS NOT A VALID MEASUREMENT.** "
         f"More than {SEARCH_FAILURE_LIMIT} of all search calls failed in: "

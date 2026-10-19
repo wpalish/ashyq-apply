@@ -18,6 +18,7 @@ from app.config import get_settings
 from app.domain.enums import DegreeLevel, FetchOutcome
 from evaluation.research import live
 from evaluation.research.schema import Capture, Observation
+from evaluation.research.search_cap import SearchQueryLedger
 from scripts import canary_discovery as canary
 
 
@@ -280,7 +281,17 @@ def test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_429(
     first_429: bool,
 ) -> None:
     monkeypatch.setattr(
-        sys, "argv", ["live", "--live", "--out", str(tmp_path), "--strict-expert-budget"]
+        sys,
+        "argv",
+        [
+            "live",
+            "--live",
+            "--out",
+            str(tmp_path),
+            "--strict-expert-budget",
+            "--max-search-queries",
+            "60",
+        ],
     )
     monkeypatch.setattr(
         subprocess, "check_output", lambda *args, **kwargs: "app-and-harness-test-sha"
@@ -347,11 +358,18 @@ def test_strict_child_receives_full_active_budget_and_resets_cached_settings(
             "--out",
             str(tmp_path),
             "--strict-expert-budget",
+            "--max-search-queries",
+            "6",
+            "--search-ledger",
+            str(tmp_path / "search_ledger.json"),
         ],
     )
     live.main()
     assert called[0][0][2:] == (60, 120)
-    assert called[0][1] == {"strict_expert_budget": True}
+    assert called[0][1] == {
+        "strict_expert_budget": True,
+        "search_ledger": SearchQueryLedger(tmp_path / "search_ledger.json", 6),
+    }
 
 
 @pytest.mark.parametrize(
@@ -391,7 +409,17 @@ def test_strict_parent_hard_timeout_keeps_active_and_process_clocks_distinct(
     monkeypatch.setattr(
         sys,
         "argv",
-        ["live", "--live", "--case", "groningen", "--out", str(tmp_path), "--strict-expert-budget"],
+        [
+            "live",
+            "--live",
+            "--case",
+            "groningen",
+            "--out",
+            str(tmp_path),
+            "--strict-expert-budget",
+            "--max-search-queries",
+            "6",
+        ],
     )
     monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "test-sha")
 

@@ -1,7 +1,7 @@
 # Query and read volume ledger, the free-tier arithmetic, and a guard against spending by accident
 
 Type: research
-Status: open
+Status: resolved
 Blocked by: —
 Map: ../map.md · AFK, offline — captures, stage summaries and provider documentation only. Output: a ledger document
 and a small harness change (a per-run query cap), no pipeline rule.
@@ -54,3 +54,18 @@ HANDOFF §8 (flag name) and §9 (the trap: a free allowance's reset day is the 1
 
 The ledger is committed with the numbers per set; the cap is on with tests; the map's arithmetic note is corrected
 if the measured demand differs from its estimate (≈ 600–700 queries per four-set run; ≈ 60 per applicant research).
+
+## Answer
+
+[`SEARCH_VOLUME_LEDGER_2026-10-19.md`](../../../SEARCH_VOLUME_LEDGER_2026-10-19.md). A four-set paired run sends about
+820 queries: 660 discovery queries plus about 160 topic, scholarship and identity queries, or 4.7 per case per
+column. One set costs 157–286. An applicant research of ten costs ≤ 60 (≈ 47 measured), a KB refresh costs 0. The
+keyed free tiers (≈ 4 500 a month) buy about 5 four-set runs. The map's arithmetic note is corrected. Guard:
+`live.py --max-search-queries N` is required for every provider except none, fake and recorded. Its shared
+`--search-ledger` file uses a file lock. The run refuses to start when 6 × cases is over what the cap leaves. The
+(N+1)th query is refused unsent, the capture records `search_budget_exhausted`, and the scorecard marks the
+repetition unhealthy. The workflow has a `max_search_queries` input and a "Search query cap" step, and the pre-flight
+is charged to the same ledger. This is a separate input instead of `extra_args`, because `extra_args` reaches only
+the "on" arm.
+
+Gist: ≈ 820 queries per four-set run; the free tiers buy ≈ 5 a month; no provider run starts without a cap.

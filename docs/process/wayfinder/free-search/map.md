@@ -35,7 +35,11 @@ with measured values and has chosen a default, or when every option has been sho
 - **The arithmetic that shapes this map.** A paired run sends ≈ 3.3–3.9 discovery queries per case per column
   (cohort `discovery_queries` 33–39 per 10 cases; `search_calls_total` 39–40 with the scholarship query), so one
   four-column run on the four sets costs ≈ 600–700 queries and the old loop (≈ 170 runs) ≈ 50 000 — which is what
-  was spent. The product's live path costs ≤ 6 queries per university, ≈ 60 per applicant research of ten. The free
+  was spent. *Corrected by 02 ([ledger](../../SEARCH_VOLUME_LEDGER_2026-10-19.md)): 600–700 was discovery only (660);
+  with topic, scholarship and identity queries a four-set paired run is **≈ 820** (4.7 per case per column), the old
+  loop's ≈ 294 per run is one or two sets, and the keyed allowances (≈ 4 500) buy **≈ 5** four-set paired runs or
+  ≈ 75–95 applicant researches; the keyless MCP's ≈ 50 a day carries no paired run.* The product's live path costs
+  ≤ 6 queries per university, ≈ 60 per applicant research of ten. The free
   allowances found on 2026-10-19 (`assets/provider-survey-2026-10-19.md`): Exa $10 of credit a month (≤ 2 500 instant
   searches before contents are billed), Brave $5 a month (≈ 1 000 queries; third parties report a card and public
   attribution are required), Tavily 1 000 credits a month, the keyless Exa MCP ≈ 50 a day per IP. **Together
@@ -114,7 +118,11 @@ with measured values and has chosen a default, or when every option has been sho
 
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
-(none yet — round 1 is open with the owner: ticket 01)
+(round 1 is open with the owner: ticket 01)
+
+- [02](issues/02-query-volume-and-free-tier-arithmetic.md) — a four-set paired run is ≈ 820 queries (not 600–700);
+  free keyed tiers buy ≈ 5 a month; every provider run now needs `--max-search-queries N` / workflow
+  `max_search_queries`, refuses to start over its plan and refuses the (N+1)th query unsent.
 
 ## Ticket order, parallel groups and the critical path
 
