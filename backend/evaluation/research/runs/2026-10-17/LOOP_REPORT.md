@@ -889,3 +889,18 @@ Cells give wrong programme pages per repetition, off#1,off#2 → on#1,on#2.
 - **Blocker:** in normal mode the bundle loses 1–2 gold hits on dev3 (they become related), and cohort on#1 gains one wrong page together with a "queries changed" warning.
 - The stable claim "losses" in the knockout arms (ntu programme.exists, tcd English, rwth programme.exists) are claims read from the guessed pages. They are not a regression in normal mode.
 - Decision: nothing is flipped yet. A worker is diagnosing the dev3 hit loss and the cohort wrong page per rule, with a generic fix. After that, re-run the bundle on normal + knockout.
+
+## 2026-10-19 13:07 — bundle re-run after the CQ-1 clause fix (8 runs, $0)
+
+Cells are hit/wrong/related/missed per repetition, off#1 | off#2 | on#1 | on#2.
+
+| set | normal | knockout |
+|---|---|---|
+| cohort | 4/0/1/5 ×4 (no change) | wrong 1,1 → 0,0 |
+| dev2 | 5/1 → 5/0 (wrong 1 → 0, hits equal) | wrong 3,3 → 1,1 |
+| dev3 | 8/1,8/0 → 8/1,8/0 (uio back to a hit) | 2,1 → 2,1 (uio's specialisation guess returns) |
+| dev4 | 4/0 ×4 | wrong 2,2 → 1,1 |
+
+- No gold hit was lost on any set, and there was no stable loss in normal mode.
+- Knockout guesses fell on 3 of 4 sets, from 8 to 3 in total.
+- Decision: CH-1, CQ-1 and SP-1 go on by default, with `--no-` forms. A worker is doing the flip and checking 11 legacy tests that relied on headless synthetic pages; any real regression stops the flip.
