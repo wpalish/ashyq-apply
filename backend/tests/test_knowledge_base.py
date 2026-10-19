@@ -703,3 +703,13 @@ def test_loader_keeps_and_merges_not_applicable(tmp_path):
     assert [n["reason"] for n in kb.entries[MIT].not_applicable] == ["newer"]
     alone = load_knowledge_base(built, tmp_path / "none.json")
     assert alone.entries[MIT].not_applicable == [_NO_AWARD]
+
+
+def test_batch_dirs_include_top_up_dirs(tmp_path):
+    for name in ("batch2", "batch10", "topup_imported", "notes"):
+        (tmp_path / name).mkdir()
+    assert [p.name for p in kb_build.batch_dirs(tmp_path)] == [
+        "batch10",
+        "batch2",
+        "topup_imported",
+    ]

@@ -197,8 +197,14 @@ class Evidence:
 
 
 def batch_dirs(root: Path) -> list[Path]:
-    """``batch*`` directories under the root, or the root itself when it is one batch."""
-    batches = sorted(p for p in root.glob("batch*") if p.is_dir())
+    """``batch*`` and ``topup*`` directories under the root, or the root itself when it is one.
+
+    A top-up dir fills gaps of universities imported from the development sets;
+    the loader merges those entries with ``kb_imported_dev.json`` fact by fact.
+    """
+    batches = sorted(
+        p for pattern in ("batch*", "topup*") for p in root.glob(pattern) if p.is_dir()
+    )
     return batches or [root]
 
 

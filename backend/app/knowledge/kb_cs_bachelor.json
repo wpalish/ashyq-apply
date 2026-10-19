@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.2",
+ "version": "2026-10-19.kb-cs-bachelor.3",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -31,6 +31,8 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
+  "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -204,6 +206,69 @@
    ],
    "not_applicable": [],
    "known_fact_count": 4
+  },
+  "qs2027-002": {
+   "seed_id": "qs2027-002",
+   "source_case": "qs2027-002",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": null,
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Imperial College London",
+   "country": "United Kingdom",
+   "official_domain": "imperial.ac.uk",
+   "official_domains": [
+    "imperial.ac.uk"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: 2027 entry minimum entry standard for Computing BEng (G400). Grade threshold on the school qualification, not a GPA on a scale; subject requirements and other qualifications under 'View full entry requirements' (not read).",
+     "source_url": "https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng",
+     "quote": "Minimum entry standard A*A*A or A*AAA (A-level) 41 points (International Baccalaureate)",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 0
   },
   "qs2027-003": {
    "seed_id": "qs2027-003",
@@ -931,6 +996,97 @@
    "not_applicable": [],
    "known_fact_count": 6
   },
+  "qs2027-008": {
+   "seed_id": "qs2027-008",
+   "source_case": "qs2027-008",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "ETH Zurich",
+   "country": "Switzerland",
+   "official_domain": "ethz.ch",
+   "official_domains": [
+    "ethz.ch"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 2190.0,
+       "currency": "CHF"
+      },
+      "unit": "CHF per semester",
+      "period": "semester",
+      "academic_year": null,
+      "population": "foreign students who do not meet the simple-fee criteria (fee group 2)",
+      "source_url": "https://ethz.ch/students/en/studies/financial/tuition-fees.html",
+      "quote": "Threefold tuition fee: CHF 2190 / semester",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Regulation in effect since autumn semester 2025: simple fee CHF 730/semester for Swiss/Liechtenstein citizens and those resident in CH/FL when obtaining their entrance qualification, and certain EU/EFTA permit holders; all others pay the threefold fee. Study fees 'include the tuition and the semester fees'. Not multiplied to a year.",
+      "stale": true,
+      "stale_reasons": [
+       "the academic year is not stated"
+      ]
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published by ETH: admission with a non-Swiss certificate is country- and certificate-specific (without exam, reduced or comprehensive entrance examination), per swissuniversities and the ETH country list PDF (https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere…"
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-03-31). Expert (2026-10-19): Year not printed; Bachelor studies start only in the Autumn Semester, so the 1 December 2026 - 31 March 2027 window is for autumn 2027 entry. German language certificate also due 31 March. One Bachelor programme per application."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "No English language test result is required for this route. Expert (2026-10-19): University-wide for all Bachelor's programmes: 'The main teaching language during Bachelor's degree studies is German.' No English test applies; German C1 certificate (list of recognised certificates and waivers on the same page) by 31 March.",
+     "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/language-requirements.html",
+     "quote": "The German C1 language certificate must be submitted by the application deadline (=31 March) at the latest.",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "No English language test result is required for this route.",
+     "source_url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/language-requirements.html",
+     "quote": "The German C1 language certificate must be submitted by the application deadline (=31 March) at the latest.",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 1
+  },
   "qs2027-009": {
    "seed_id": "qs2027-009",
    "source_case": "qs2027-009",
@@ -1125,6 +1281,160 @@
    "not_applicable": [],
    "known_fact_count": 3
   },
+  "qs2027-011": {
+   "seed_id": "qs2027-011",
+   "source_case": "qs2027-011",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "The University of Hong Kong",
+   "country": "Hong Kong SAR, China",
+   "official_domain": "hku.hk",
+   "official_domains": [
+    "hku.hk"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 249000.0,
+       "currency": "HKD"
+      },
+      "unit": "HKD per year",
+      "period": "year",
+      "academic_year": "2026/2027",
+      "population": "non-local students admitted to STEM faculties and schools",
+      "source_url": "https://www.hku.hk/en/admission-aid/tuition-fee-scholarships",
+      "quote": "For Non-local Students Admitted to the STEM Faculties and Schools (inclusive of STEM Fee)^ Tuition Fees HKD249,000 Per annum, 2026-2027 cohort",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "The footnote on the same page lists 'School of Computing and Data Science' among the STEM faculties/schools (the BEng(CompSc)/BSc(CDS) programmes sit there). Local students: HKD47,000 per annum. 2027-2028 cohort fee not published on this page.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+      ]
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure. Target page: https://admissions.hku.hk/apply/international-qualifications/english-language-requirement. admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not…"
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure (international qualifications page on admissions.hku.hk). admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not send a complete chain) and https://www.admissi…"
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure (international application deadlines on admissions.hku.hk; the 2027 international pamphlet PDF https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf was also unreachable). admissions.hku.hk could not…"
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [],
+   "known_fact_count": 1
+  },
+  "qs2027-012": {
+   "seed_id": "qs2027-012",
+   "source_case": "qs2027-012",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Nanyang Technological University, Singapore (NTU Singapore)",
+   "country": "Singapore",
+   "official_domain": "ntu.edu.sg",
+   "official_domains": [
+    "ntu.edu.sg"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 21400.0,
+       "currency": "SGD"
+      },
+      "unit": "SGD per year",
+      "period": "year",
+      "academic_year": "2026/2027",
+      "population": "international students (non-ASEAN) on subsidised fees, i.e. with the MOE Tuition Grant",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/fees-and-funding/tuition-fees",
+      "quote": "All Programmes (except for those listed below) $ 8,300 $ 11,600 $ 18,050 $ 21,400 $ 40,600 $ 36,350",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Table 'Tuition fees for Academic Year 2026/2027', columns in order: Subsidised - Singapore Citizens 8,300; Singapore PRs 11,600; ASEAN IS 18,050; other international students 21,400 (inclusive of 9% GST); Non-subsidised (no tuition grant) - Lab Based 40,600; Non-Lab Based 36,350. Computer Science falls under 'All Programmes (except for those listed below)'. The subsidised rate requires accepting the MOE Tuition Grant, which 'obliges you to work for a Singapore entity for three (3) years upon graduation'; whether CS is lab-based for the non-subsidised rate is not stated on the page.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+      ]
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No single grade minimum: NTU publishes per-qualification minimums to apply (e.g. 'German Abitur Yes An overall grade of between 1.0 and 2.0 with points between 12 and 15 in individual subjects', 'Bangladesh ... An overall GPA of at least 4.0 ... AND Additional qualification') on https://www.ntu.edu…"
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [],
+   "known_fact_count": 1
+  },
   "qs2027-013": {
    "seed_id": "qs2027-013",
    "source_case": "qs2027-013",
@@ -1277,6 +1587,98 @@
     }
    ],
    "known_fact_count": 3
+  },
+  "qs2027-014": {
+   "seed_id": "qs2027-014",
+   "source_case": "qs2027-014",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Tsinghua University",
+   "country": "China (Mainland)",
+   "official_domain": "tsinghua.edu.cn",
+   "official_domains": [
+    "tsinghua.edu.cn",
+    "join-tsinghua.edu.cn"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 30000.0,
+       "currency": "CNY"
+      },
+      "unit": "CNY per year",
+      "period": "year",
+      "academic_year": null,
+      "population": "international undergraduates (foreign nationals)",
+      "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Fees.htm",
+      "quote": "Tuition Fee (RMB) Chinese-English Taught Programs 1. Architecture 2. Intelligent Manufacturing and Equipment 3. Electronic Information 4. Computer Science 5. Automation 6. Mathematics, Physics and Modern Engineering 7. Chemistry and Life Science 8. Weixian College 9. Xiuzhong College 10. Dushi College 11. Wuqiong College 12. Ziqiang College 13. Shuimu College 14. Tanwei College 30,000.00 / Per Year",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Fees page of the international undergraduate admissions site (current cycle; academic year not printed). Application fee RMB 800; insurance RMB 800/year. English-taught Zijing College programmes cost RMB 100,000/year (not CS).",
+      "stale": true,
+      "stale_reasons": [
+       "the academic year is not stated"
+      ]
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum. Eligibility page: 'Applicants should demonstrate outstanding academic performance' via transcripts, national exams (ATAR/Abitur/BAC/CSAT/UEC/STPM), international tests (CSCA/SAT/ACT/A-Level/AP/IB) - prose only. Decision is 'a holistic evaluation of academic performance, language p…"
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "No English language test result is required for this route. Expert (2026-10-19): Computer Science is a Chinese-English-taught programme (Fees page). Required: 'Chinese language proficiency at HSK Level 5 or above, with scores above 60 in each of the following categories: Listening, Reading, and Writing' (4.2.1, waiver possible for native Chinese speakers / Chinese-medium school…",
+     "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Eligibility.htm",
+     "quote": "4.2.3 Applicants must possess strong English language proficiency. Those whose native language is not English must provide official English language proficiency test results (e.g. TOEFL/IELTS/others).",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "No English language test result is required for this route.",
+     "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Eligibility.htm",
+     "quote": "4.2.3 Applicants must possess strong English language proficiency. Those whose native language is not English must provide official English language proficiency test results (e.g. TOEFL/IELTS/others).",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 1
   },
   "qs2027-015": {
    "seed_id": "qs2027-015",
@@ -1768,6 +2170,104 @@
    ],
    "not_applicable": [],
    "known_fact_count": 0
+  },
+  "qs2027-019": {
+   "seed_id": "qs2027-019",
+   "source_case": "qs2027-019",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "The University of New South Wales (UNSW Sydney)",
+   "country": "Australia",
+   "official_domain": "unsw.edu.au",
+   "official_domains": [
+    "unsw.edu.au"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-09-24",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.unsw.edu.au/study/international-students/admissions-info",
+      "quote": "Term 1 2027 Both Thursday, 24 September 2026 Thursday, 19 November 2026 Thursday, 24 December 2026",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Undergraduate offer round schedule for applicants from non-International Student Award (ISA) eligible countries, Term 1 2027 intake, onshore and offshore: columns are completed application deadline / offer release / acceptance deadline. This is the last of four rounds (earlier: 14 May, 16 July, 20 August 2026). 'Additional offers ... may be released after the final round for a given term, subject to available capacity'. Already passed on 2026-10-19; Term 2/3 2027 rounds are not listed on the page. ISA-eligible-country applicants follow a different schedule not captured here.",
+      "stale": true,
+      "stale_reasons": [
+       "deadline 2026-09-24 has passed"
+      ]
+     }
+    ],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 61000.0,
+       "currency": "AUD"
+      },
+      "unit": "AUD per year",
+      "period": "year",
+      "academic_year": "2026",
+      "population": "international students",
+      "source_url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science?studentType=International",
+      "quote": "Fees 2026 Indicative first year full fee $61,000*",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "The page shows two fee blocks: domestic (Commonwealth supported) 'Indicative first year full fee $8,500*' then international 'Indicative first year full fee $61,000*' with 'Indicative full fee to complete degree $192,500*'. The quote matches the international block (the domestic one has $8,500). Calendar year 2026; 2027 fees not shown.",
+      "stale": true,
+      "stale_reasons": [
+       "published for academic year 2026, not the fall 2027 intake's"
+      ]
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade threshold is published.",
+     "source_url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science?studentType=International",
+     "quote": "2026 Lowest Selection Rank 93.0 2026 A levels 15.0 2026 IB Diploma 37.0 2026 Lowest ATAR 85.0",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 2
   },
   "qs2027-020": {
    "seed_id": "qs2027-020",
@@ -3295,6 +3795,122 @@
    "not_applicable": [],
    "known_fact_count": 0
   },
+  "qs2027-032": {
+   "seed_id": "qs2027-032",
+   "source_case": "qs2027-032",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check+sandbox_recheck",
+   "university": "University of Toronto",
+   "country": "Canada",
+   "official_domain": "utoronto.ca",
+   "official_domains": [
+    "utoronto.ca"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 63570.0,
+       "currency": "CAD"
+      },
+      "unit": "CAD per year",
+      "period": "year",
+      "academic_year": "2025/2026",
+      "population": "full-time international students, Faculty of Arts & Science first year (incl. Computer Science admission stream)",
+      "source_url": "https://www.registrar.utoronto.ca/wp-content/uploads/2025/06/25-26-FAS-UC-INT.pdf",
+      "quote": "Total Fees 2025 Summer or 2025-26 Fall-Winter Session $63,570.00 $2,040.90 $792.00 $66,402.90",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Table 1A 'Program Fee - Full-Time International Students enrolled in 4.0 credits or more in the Fall-Winter Session', Faculty of Arts & Science (University College schedule; the same FAS rate applies across colleges). Columns: program fee 63,570; incidental/ancillary 2,040.90; UHIP 792; total 66,402.90. Applies to the first-year 'Computer Science' admission stream; from year 2 the CS Major/Specialist deregulated fee (Table 3A) applies. Linked from future.utoronto.ca/finances/fees ('Find the current tuition fee schedules'); only 2025-26 schedules are published, 2026-27/2027-28 not yet.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2025/2026 is past"
+      ]
+     }
+    ],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.lester_pearson.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://future.utoronto.ca/pearson-scholarships",
+      "quote": "The Lester B. Pearson International Scholarship is the university's most prestigious award for international students.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Lester B. Pearson International Scholarship. Expert (2026-10-19): Covers 'tuition, books, incidental fees, and full residence support for four years'; about 37 scholars annually; requires nomination by the high school (nomination deadline October 9, 2026) and applying to U of T for September 2027. Note from https://future.utoronto.ca/finances/fees: 'The Universit…",
+      "award": {
+       "subject": "Lester B. Pearson International Scholarship",
+       "source_url": "https://future.utoronto.ca/pearson-scholarships"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.lester_pearson.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://future.utoronto.ca/pearson-scholarships",
+      "quote": "To be eligible to apply to the Pearson International Scholarship, you must be: an international student (i.e. a non-Canadian requiring a study permit);",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Expert (2026-10-19): Also: final year of secondary school in 2026/2027 or graduated no earlier than June 2026, and beginning studies in September 2027. Highly competitive; school nomination required.",
+      "award": {
+       "subject": "Lester B. Pearson International Scholarship",
+       "source_url": "https://future.utoronto.ca/pearson-scholarships"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum average published for international applicants on https://future.utoronto.ca/program/computer-science (per-school-system pages list required courses only, e.g. Ontario: OSSD with six 4U/M courses incl. ENG4U, MHF4U, MCV4U)."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    }
+   ],
+   "not_applicable": [],
+   "known_fact_count": 3
+  },
   "qs2027-033": {
    "seed_id": "qs2027-033",
    "source_case": "qs2027-033",
@@ -4212,6 +4828,94 @@
    "not_applicable": [],
    "known_fact_count": 6
   },
+  "qs2027-039": {
+   "seed_id": "qs2027-039",
+   "source_case": "qs2027-039",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "The University of Tokyo",
+   "country": "Japan",
+   "official_domain": "u-tokyo.ac.jp",
+   "official_domains": [
+    "u-tokyo.ac.jp"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 642960.0,
+       "currency": "JPY"
+      },
+      "unit": "JPY per year",
+      "period": "year",
+      "academic_year": "2027/2028",
+      "population": "all undergraduates (same for private international students)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "(2) 授業料：642,960円（年額・予定額）",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Section Ⅲ その他 1 入学料・授業料 of the 2027 guidelines: entrance fee 282,000 yen (planned), tuition 642,960 yen per year (planned amount, 予定額; subject to revision). Academic year inferred from the 2027年度 guidelines (April 2027 entry).",
+      "stale": false
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum in the 2027 外国学校卒業学生特別選考 guidelines (PDF https://www.u-tokyo.ac.jp/content/400291798.pdf): first stage is a holistic review of submitted documents ('提出された出願書類を総合的に審査し'), second stage essay + interview. EJU subjects are required without published thresholds."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "No English language test result is required for this route. Expert (2026-10-19): 2027年度 東京大学外国学校卒業学生特別選考募集要項, 第1種（私費留学生）: a TOEFL iBT or IELTS Academic score taken within 2 years before the application start is REQUIRED, but no minimum score is published. Japanese-medium admission: EJU (日本留学試験) 'Japanese' plus science/maths subjects required; the essay must be answered in Japan…",
+     "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "③ TOEFL iBT又はIELTS（国際英語能力テスト。アカデミックモジュール）を出 願開始日前2年以内に受験していること。",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "No English language test result is required for this route.",
+     "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "③ TOEFL iBT又はIELTS（国際英語能力テスト。アカデミックモジュール）を出 願開始日前2年以内に受験していること。",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 1
+  },
   "qs2027-040": {
    "seed_id": "qs2027-040",
    "source_case": "qs2027-040",
@@ -5069,6 +5773,64 @@
    "not_applicable": [],
    "known_fact_count": 0
   },
+  "qs2027-046": {
+   "seed_id": "qs2027-046",
+   "source_case": "qs2027-046",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": null,
+   "verified_on_basis": "ci_evidence_check",
+   "university": "University of British Columbia",
+   "country": "Canada",
+   "official_domain": "ubc.ca",
+   "official_domains": [
+    "ubc.ca"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum average published on https://you.ubc.ca/programs/computer-science-vancouver-bsc/ (lists required courses only: e.g. IB Diploma with at least three Higher Level courses, Math Analysis and Approaches / Applications and Interpretations HL, one of IB Biology/Chemistry/Physics). University-wi…"
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "only the not stated fee is published, not 2027/28 (expert value 53,082 CAD per year). Expert (2026-10-19): Value comes from the page's inline cost-estimator data (script 'pb-cost-estimator-js-extra', var costEstimatorData -> vancouver -> programs -> computer_science), which the page renders as its 'first year cost' estimate. It is NOT in the readable text, so the container quote check is expected to rep…"
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [],
+   "known_fact_count": 0
+  },
   "qs2027-047": {
    "seed_id": "qs2027-047",
    "source_case": "qs2027-047",
@@ -5262,6 +6024,69 @@
    ],
    "not_applicable": [],
    "known_fact_count": 6
+  },
+  "qs2027-048": {
+   "seed_id": "qs2027-048",
+   "source_case": "qs2027-048",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": null,
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Delft University of Technology",
+   "country": "Netherlands",
+   "official_domain": "tudelft.nl",
+   "official_domains": [
+    "tudelft.nl"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert: no university scholarship for incoming bachelor applicants (TU Delft's own scholarships (Justus & Louise van Effen etc.) are for MSc only. External providers are listed separately (scholarships-from-other-providers page), not TU Delft awards.); no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade threshold is published.",
+     "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+     "quote": "You may be admitted with an international diploma if it is equivalent to a Dutch VWO diploma with the correct subjects.",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 0
   },
   "qs2027-049": {
    "seed_id": "qs2027-049",
@@ -5859,6 +6684,122 @@
    "not_applicable": [],
    "known_fact_count": 3
   },
+  "qs2027-054": {
+   "seed_id": "qs2027-054",
+   "source_case": "qs2027-054",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "National Taiwan University (NTU)",
+   "country": "Taiwan",
+   "official_domain": "ntu.edu.tw",
+   "official_domains": [
+    "ntu.edu.tw"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 58940.0,
+       "currency": "TWD"
+      },
+      "unit": "TWD per semester",
+      "period": "semester",
+      "academic_year": "2026/2027",
+      "population": "international students",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "Engineering, Electrical Engineering & Computer Science, D-School 35,980 22,960 58,940 2,300",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Appendix 1 'National Taiwan University 2026/27 Academic Year Tuition and Fees Per Semester for Undergraduate Programs (Currency: NTD)', International Students columns: tuition 35,980; fees 22,960; total 58,940; credit fee 2,300. MOFA Taiwan Scholarship recipients/PR holders pay half (29,470). The guidelines say 2027/28 fees will be published by the Office of Academic Affairs.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+      ]
+     }
+    ],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.ntu_degree.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "NTU provides a variety of scholarships for international degree students. Applicants will be asked whether to apply for NTU scholarships during the online degree application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "NTU scholarships for international degree students. Expert (2026-10-19): Section VII Scholarships of the 2027 September-entry guidelines. 'Taiwan Scholarship awardees are not allowed to apply for NTU scholarships.' Details on the OIA 'Scholarships for Prospective Students' page (not read).",
+      "award": {
+       "subject": "NTU scholarships for international degree students",
+       "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.ntu_degree.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "NTU provides a variety of scholarships for international degree students.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Applied for within the online degree application, no extra documents. Competitive; amounts not stated in the guidelines.",
+      "award": {
+       "subject": "NTU scholarships for international degree students",
+       "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Programme language not confirmed, so the applicable rule is not chosen. 2027 September-entry guidelines (https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf) set university minimums: English-taught programmes 'proof of English proficiency eq…"
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum in the 2027 guidelines: eligibility is a high-school graduation certificate plus transcripts; departments review academically. No numeric threshold for the CSIE bachelor found."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    }
+   ],
+   "not_applicable": [],
+   "known_fact_count": 3
+  },
   "qs2027-055": {
    "seed_id": "qs2027-055",
    "source_case": "qs2027-055",
@@ -6018,6 +6959,112 @@
    ],
    "not_applicable": [],
    "known_fact_count": 4
+  },
+  "qs2027-056": {
+   "seed_id": "qs2027-056",
+   "source_case": "qs2027-056",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Universiti Malaya (UM)",
+   "country": "Malaysia",
+   "official_domain": "um.edu.my",
+   "official_domains": [
+    "um.edu.my"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [
+     {
+      "key": "gpa",
+      "value": "minimum average of 65% (Senior High School Certificate)",
+      "unit": "percent",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+      "quote": "Senior High School Certificate (SHSC) Pass with a minimum average of 65% Obtain a minimum of 60% / grade B- in Mathematics subjects.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "International column of the programme's entry requirements: SHSC pass with minimum average 65%, at least 60%/B- in Mathematics and in one of Physics, Computing, Chemistry, Biology. Same column: Matriculation/Foundation minimum CGPA 3.00.",
+      "stale": false
+     }
+    ],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-08-30",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://study.um.edu.my/how-to-apply",
+      "quote": "UNDERGRADUATE - FOR INTERNATIONAL 09 Feb 2026 30 Aug 2026",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Semester I (October) intake, Academic Session 2026/2027, international applicants (exception: MBBS 9 June 2026). Already passed on 2026-10-19; the October 2027 window is not yet published. A Semester II (March) 2026/2027 international window '07 Sept 2026 30 Jan 2027' exists, but the CS (Software Engineering) page lists 'Intake Semester 1 (October)' only.",
+      "stale": true,
+      "stale_reasons": [
+       "deadline 2026-08-30 has passed"
+      ]
+     }
+    ],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 89200.0,
+       "currency": "MYR"
+      },
+      "unit": "MYR per programme (total)",
+      "period": "programme (total)",
+      "academic_year": "2025/2026",
+      "population": "international students",
+      "source_url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+      "quote": "International RM 89,200 ( Note: Not inclusive of 6% Sales and Service Tax (SST))",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Programme page 'Tuition Fee' block; same figure in the international fee structure PDF (https://study.um.edu.my/doc/tution-fee/Fee%20Structure%2C%20UG%2C%20International%20-%20Updated%2022%20Oct%202025.pdf?_t=1761184801, 'Academic session 2025/2026 TUITION FEE (RM) (INTERNATIONAL)', 'Bachelor of Computer Science (Software Engineering) 89,200.00'). UM lists the fee for the whole programme (e.g. MBBS 673,200), not per year - period recorded as programme total; not divided. SST 6% extra.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2025/2026 is past"
+      ]
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [],
+   "known_fact_count": 3
   },
   "qs2027-057": {
    "seed_id": "qs2027-057",
@@ -6273,6 +7320,82 @@
    "not_applicable": [],
    "known_fact_count": 0
   },
+  "qs2027-059": {
+   "seed_id": "qs2027-059",
+   "source_case": "qs2027-059",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": null,
+   "verified_on_basis": "ci_evidence_check",
+   "university": "KU Leuven",
+   "country": "Belgium",
+   "official_domain": "kuleuven.be",
+   "official_domains": [
+    "kuleuven.be"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-02-01). Expert (2026-10-19): University-wide rule for Dutch-taught programmes (the CS bachelor is Dutch-taught); year not printed next to the date, but the same paragraph refers to the 2027-2028 registration deadline (22/09/2027), so 1 February 2027 for the 2027-28 intake. EEA applicants and non-EEA holders of a Belgian reside…"
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not determinable from official pages. The tuition tool (https://icts.kuleuven.be/apps/tuitionfees/) lists only English-taught programmes (no 'Bachelor in de informatica'); it states 'If a non-EEA student wishes to register for a Dutch-taught programme, and there is an English-taught eguivalent with…"
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "No English language test result is required for this route. Expert (2026-10-19): Bachelor in de informatica (Leuven) is Dutch-taught ('Academische bachelor 180 studiepunten Nederlands'); the language requirement is Dutch B2 (CEFR), not an English test. Page shows the 2026-2027 and 2027-2028 tabs with the same text.",
+     "source_url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+     "quote": "De minimumvereiste voor Nederlandse taalvaardigheid is B2 van het ERK (Europees referentiekader).",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "No English language test result is required for this route.",
+     "source_url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+     "quote": "De minimumvereiste voor Nederlandse taalvaardigheid is B2 van het ERK (Europees referentiekader).",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade threshold is published.",
+     "source_url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+     "quote": "Kandidaten met een niet-Vlaamse vooropleiding (uitzondering VWO*) kunnen toegelaten worden op basis van een diploma of certificaat dat krachtens een wettelijke norm, een Europese richtlijn of een internationale overeenkomst als gelijkwaardig met het Vlaams secundair diploma wordt beschouwd.",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 0
+  },
   "qs2027-060": {
    "seed_id": "qs2027-060",
    "source_case": "qs2027-060",
@@ -6444,6 +7567,78 @@
     }
    ],
    "known_fact_count": 3
+  },
+  "qs2027-061": {
+   "seed_id": "qs2027-061",
+   "source_case": "qs2027-061",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": null,
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Ludwig-Maximilians-Universität München",
+   "country": "Germany",
+   "official_domain": "lmu.de",
+   "official_domains": [
+    "lmu.de"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published. Informatik is 'Örtliche Zulassungsbeschränkung' (local numerus clausus) for the 1st semester; selection by grade ranking, cut-offs not published on the pages read."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-07-15). Expert (2026-10-19): International Office applications (non-EU applicants with foreign school-leaving certificates). Informatik starts only in the winter semester ('Studienbeginn nur im Wintersemester'), so 15 July 2027 for WS 2027/28 (year not printed). From summer semester 2027 LMU works with uni-assist: a VPD must b…"
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No tuition-fee statement found. The programme page lists only 'Beiträge: Die Universität erhebt für das Studentenwerk München den Grundbeitrag ...'; https://www.lmu.de/de/workspace-fuer-studierende/1x1-des-studiums/studierendenwerksbeitraege/ gives 'Sommersemester 2026: Grundbeitrag 97,00 €' per se…"
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "No English language test result is required for this route. Expert (2026-10-19): Informatik (Bachelor) is German-taught ('Studiensprache Deutsch' on the programme page). No English test; German proof required: DSH 2, TestDaF 4 in all four parts, telc Deutsch C1 Hochschule, DSD II, Goethe C2, ÖSD C2, etc. For a locally restricted (zulassungsbeschränkt) subject such as Informatik…",
+     "source_url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/voraussetzungen/nachweis-der-deutschkenntnisse/",
+     "quote": "Das Studium an der LMU setzt ausreichende Deutschkenntnisse voraus (Ausnahme: englischsprachige Master- und Promotionsprogramme).",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "No English language test result is required for this route.",
+     "source_url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/voraussetzungen/nachweis-der-deutschkenntnisse/",
+     "quote": "Das Studium an der LMU setzt ausreichende Deutschkenntnisse voraus (Ausnahme: englischsprachige Master- und Promotionsprogramme).",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 0
   },
   "qs2027-062": {
    "seed_id": "qs2027-062",
@@ -6977,6 +8172,64 @@
    ],
    "known_fact_count": 4
   },
+  "qs2027-065": {
+   "seed_id": "qs2027-065",
+   "source_case": "qs2027-065",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": null,
+   "verified_on_basis": "ci_evidence_check",
+   "university": "KAIST",
+   "country": "Republic of Korea",
+   "official_domain": "kaist.ac.kr",
+   "official_domains": [
+    "kaist.ac.kr"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (application requirements). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate'…"
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (evaluation). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate' on robots.txt…"
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (application schedule, Fall 2027). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certif…"
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [],
+   "known_fact_count": 0
+  },
   "qs2027-066": {
    "seed_id": "qs2027-066",
    "source_case": "qs2027-066",
@@ -7169,6 +8422,88 @@
    ],
    "not_applicable": [],
    "known_fact_count": 6
+  },
+  "qs2027-067": {
+   "seed_id": "qs2027-067",
+   "source_case": "qs2027-067",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "The University of Auckland",
+   "country": "New Zealand",
+   "official_domain": "auckland.ac.nz",
+   "official_domains": [
+    "auckland.ac.nz"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 47221.0,
+       "currency": "NZD"
+      },
+      "unit": "NZD per year",
+      "period": "year",
+      "academic_year": "2026",
+      "population": "international students, Bachelor of Science (range depends on courses taken)",
+      "source_url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+      "quote": "2026 fees Domestic students NZ$7,616.40 – $10,158 * International students NZ$47,221 – $58,009 *",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "'How much does a Bachelor of Science cost per year? 2026 fees': international NZ$47,221 - $58,009, inclusive of 15% GST, excluding the Student Services Fee (est. $1,132.80 for 120 points). Indicative; a CS-major-specific figure is not given. 2027 fees not yet published.",
+      "stale": true,
+      "stale_reasons": [
+       "published for academic year 2026, not the fall 2027 intake's"
+      ]
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade threshold is published.",
+     "source_url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+     "quote": "Qualification NCEA National Certificate of Educational Achievement Score required 165 Qualification CIE Cambridge International Examinations Score required 170 Qualification IB International Baccalaureate Score required 26",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 1
   },
   "qs2027-068": {
    "seed_id": "qs2027-068",
@@ -8129,6 +9464,176 @@
    ],
    "not_applicable": [],
    "known_fact_count": 3
+  },
+  "qs2027-075": {
+   "seed_id": "qs2027-075",
+   "source_case": "qs2027-075",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Trinity College Dublin, The University of Dublin",
+   "country": "Ireland",
+   "official_domain": "tcd.ie",
+   "official_domains": [
+    "tcd.ie"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-05-01",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.tcd.ie/courses/undergraduate/courses/computer-science/",
+      "quote": "Non-EU Applicants Computer Science - 4 Years - Full-Time 01/MAY/2026",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Non-EU direct-application deadline as shown on the course page on 2026-10-19; it is the 2026-entry date (already passed) and the 2027 date is not yet posted. 'Places on the course may fill before the application deadline, so early application is encouraged.' Advanced entry: 30/Jun/2026. EU applicants apply via CAO.",
+      "stale": true,
+      "stale_reasons": [
+       "deadline 2026-05-01 has passed"
+      ]
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade threshold is published.",
+     "source_url": "https://www.tcd.ie/courses/undergraduate/courses/computer-science/",
+     "quote": "Admission Requirements Leaving Certificate: H4 Mathematics Advanced GCE (A-Level): Grade C Mathematics International Baccalaureate: HL Grade 5 Mathematics",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 1
+  },
+  "qs2027-076": {
+   "seed_id": "qs2027-076",
+   "source_case": "qs2027-076",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Université Paris-Saclay",
+   "country": "France",
+   "official_domain": "universite-paris-saclay.fr",
+   "official_domains": [
+    "universite-paris-saclay.fr"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 178.0,
+       "currency": "EUR"
+      },
+      "unit": "EUR per year",
+      "period": "year",
+      "academic_year": "2025/2026",
+      "population": "national rate; non-EU students subject to differentiated fees are brought to this rate by partial exemption",
+      "source_url": "https://www.universite-paris-saclay.fr/en/admission/tuition-fees",
+      "quote": "For the 2025–2026 academic year, tuition fees are set as follows (2026-2027 fees coming soon): Bachelor level Master level Doctoral level €178 €254 €397",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Same page: 'non-EU students who are subject to differentiated fees are eligible for a partial exemption, which brings the differentiated registration fees in line with the fees applicable to domestic students' (Board of Governors Resolution CA-2026-013 of 3 February 2026). The differentiated amount itself is not printed. 2026-2027 fees 'coming soon'; 2027/28 not published.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2025/2026 is past"
+      ]
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum. L1 MI page: 'Public visé et prérequis Bachelier.ère.s avec un bon niveau en mathématiques.' (prose, kept as notes). Capacity 90 places."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No exact international deadline on official university pages. Non-EU applicants without a French/European bac apply via Études en France (country-dependent, Campus France site) or via the DAP; the university page says only: 'This request must be made between the November and January preceding the a…"
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "No English language test result is required for this route. Expert (2026-10-19): The Licence Informatique starts with the L1 'Portail Mathématiques, Informatique (MI)', taught in French (every course unit on the L1 page lists 'Langue d'enseignement Français'). No English test is required; no French-level minimum is published on the programme or university admission pages (non-E…",
+     "source_url": "https://www.universite-paris-saclay.fr/formation/licence/informatique/l1-portail-mathematiques-informatique-mi",
+     "quote": "Langue d'enseignement Français Enseignement à distance non",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "No English language test result is required for this route.",
+     "source_url": "https://www.universite-paris-saclay.fr/formation/licence/informatique/l1-portail-mathematiques-informatique-mi",
+     "quote": "Langue d'enseignement Français Enseignement à distance non",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 1
   },
   "qs2027-077": {
    "seed_id": "qs2027-077",
@@ -9258,6 +10763,82 @@
    "not_applicable": [],
    "known_fact_count": 6
   },
+  "qs2027-084": {
+   "seed_id": "qs2027-084",
+   "source_case": "qs2027-084",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": null,
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Universidad de Buenos Aires (UBA)",
+   "country": "Argentina",
+   "official_domain": "uba.ar",
+   "official_domains": [
+    "uba.ar"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert (2026-10-19): Enrolment dates are on https://www.cbc.uba.ar/inscripciones (CBC registration), which was not read in this top-up; the UBA international office page https://www.uba.ar/internacionales/contenido.php?id=172 timed out (curl 28, 40 s, no bytes)."
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "Expert did not establish it. Expert (2026-10-19): No explicit tuition statement found on the pages read (www.uba.ar/estudiantesextranjeros, ingresantes.exactas.uba.ar). UBA undergraduate study is widely understood to be tuition-free, but no official quote was captured, so not recorded as known."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "No English language test result is required for this route. Expert (2026-10-19): Spanish-taught; no English test. Applicants whose school certificate is from a non-Spanish-speaking country must present Spanish C1 (SIELE GLOBAL C1 or the UBA Filosofía y Letras advanced Spanish certificate, equivalent to C1).",
+     "source_url": "https://www.uba.ar/estudiantesextranjeros",
+     "quote": "Si tu título fue emitido en un país no hispanohablante , de acuerdo a las resoluciones (ver RESCS-2023-1924-E-UBA-REC ) y (ver RAA-2023-36-E-UBA-SAA#REC ), tenés que presentar alguno de estos dos certificado de idioma español: - Certificado SIELE GLOBAL - nivel C1",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "No English language test result is required for this route.",
+     "source_url": "https://www.uba.ar/estudiantesextranjeros",
+     "quote": "Si tu título fue emitido en un país no hispanohablante , de acuerdo a las resoluciones (ver RESCS-2023-1924-E-UBA-REC ) y (ver RAA-2023-36-E-UBA-SAA#REC ), tenés que presentar alguno de estos dos certificado de idioma español: - Certificado SIELE GLOBAL - nivel C1",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade threshold is published.",
+     "source_url": "https://www.uba.ar/estudiantesextranjeros",
+     "quote": "Para el ingreso a una carrera de grado en la Universidad de Buenos Aires los/as aspirantes extranjeros no tienen que efectuar examen de admisión. La inscripción debe realizarse en el Ciclo Básico Común",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 0
+  },
   "qs2027-085": {
    "seed_id": "qs2027-085",
    "source_case": "qs2027-085",
@@ -9669,6 +11250,85 @@
    "not_applicable": [],
    "known_fact_count": 5
   },
+  "qs2027-089": {
+   "seed_id": "qs2027-089",
+   "source_case": "qs2027-089",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "ci_evidence_check",
+   "university": "Uppsala University",
+   "country": "Sweden",
+   "official_domain": "uu.se",
+   "official_domains": [
+    "uu.se"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 75000.0,
+       "currency": "SEK"
+      },
+      "unit": "SEK per semester (first instalment)",
+      "period": "semester (first instalment)",
+      "academic_year": "2027/2028",
+      "population": "citizens of non-EU/EEA countries and non-Switzerland",
+      "source_url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+      "quote": "First tuition fee instalment: SEK 75,000 Total tuition fee: SEK 450,000",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Autumn 2027 block (identical to Autumn 2026): 'If you are not a citizen of a European Union (EU) or European Economic Area (EEA) country, or Switzerland, you are required to pay application and tuition fees.' Total SEK 450,000 for the 3-year (180 credit) programme; instalments per semester. Not multiplied. Also note for the KB owner: the Autumn 2027 block on this page gives 'Application deadline 15 April 2027' (Swedish-taught programme, national round), while kb_imported_dev.json holds 2027-01-15.",
+      "stale": false
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade threshold is published.",
+     "source_url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+     "quote": "Entry requirements General entry requirements and Mathematics Further level 2, or Mathematics 4/Mathematics D Selection Final school grades (66%) - Swedish Scholastic Aptitude Test (34%)",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 1
+  },
   "qs2027-090": {
    "seed_id": "qs2027-090",
    "source_case": "qs2027-090",
@@ -9820,6 +11480,82 @@
     }
    ],
    "known_fact_count": 3
+  },
+  "qs2027-091": {
+   "seed_id": "qs2027-091",
+   "source_case": "qs2027-091",
+   "source_batch": "topup_imported",
+   "review_status": "expert_checked",
+   "verified_on": null,
+   "verified_on_basis": "ci_evidence_check",
+   "university": "University of Copenhagen",
+   "country": "Denmark",
+   "official_domain": "ku.dk",
+   "official_domains": [
+    "ku.dk"
+   ],
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": [],
+    "reason": "no programme page draft"
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "unknown": [
+    {
+     "question": "deadline",
+     "key": "deadline",
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-03-15). Expert (2026-10-19): Year not printed; the 15 March 12:00 CET deadline is the annual quota 2 deadline for the September intake, i.e. 15 March 2027 for autumn 2027. Applicants with a non-EU/EEA/non-Nordic diploma can only apply via quota 2; documents/requirements may be completed until 5 July 12:00. Same date on https:/…"
+    },
+    {
+     "question": "tuition",
+     "key": "tuition",
+     "reason": "only the not stated fee is published, not 2027/28 (expert value 130,000 DKK per year). Expert (2026-10-19): Bachelor 'Computer Science' entry of the page's programme dropdown ('Select study level: Bachelor' -> 'Computer Science'). The text is held in an inline script object (const uddannelser = {BA: [...]}) and rendered on selection, so it is NOT in the page's readable text: the container quote check is…"
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+    }
+   ],
+   "not_applicable": [
+    {
+     "question": "english",
+     "key": "ielts.overall",
+     "reason": "No English language test result is required for this route. Expert (2026-10-19): Danish-taught; no English test minimum published for bachelor admission. Specific requirement for Datalogi is the Danish subject level 'Engelsk B' (with 'Dansk A' and 'Matematik A'), quote on https://www.ku.dk/studier/bachelor/datalogi/: 'Desuden skal du have bestået disse fag: Dansk A Engelsk B Ma…",
+     "source_url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+     "quote": "Be aware, at the University of Copenhagen all bachelor programmes are taught in Danish and require the highest level in Danish or documentation for academic language skills in Danish.",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "No English language test result is required for this route.",
+     "source_url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+     "quote": "Be aware, at the University of Copenhagen all bachelor programmes are taught in Danish and require the highest level in Danish or documentation for academic language skills in Danish.",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    },
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No grade threshold is published.",
+     "source_url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+     "quote": "For exams from outside EU/EEA countries and others, it is not possible to calculate the grade point average. That means that you can only apply in quota 2 , and you have to participate in the quota 2-test.",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci"
+    }
+   ],
+   "known_fact_count": 0
   },
   "qs2027-092": {
    "seed_id": "qs2027-092",
@@ -11140,6 +12876,14 @@
    ]
   },
   {
+   "seed_id": "qs2027-008",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "the academic year is not stated"
+   ]
+  },
+  {
    "seed_id": "qs2027-010",
    "question": "deadline",
    "key": "deadline",
@@ -11149,11 +12893,35 @@
    ]
   },
   {
+   "seed_id": "qs2027-011",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
+   "seed_id": "qs2027-012",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
    "seed_id": "qs2027-013",
    "question": "deadline",
    "key": "deadline",
    "reasons": [
     "deadline 2026-02-28 has passed"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "the academic year is not stated"
    ]
   },
   {
@@ -11178,6 +12946,22 @@
    "key": "tuition",
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
+   "seed_id": "qs2027-019",
+   "question": "deadline",
+   "key": "deadline",
+   "reasons": [
+    "deadline 2026-09-24 has passed"
+   ]
+  },
+  {
+   "seed_id": "qs2027-019",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "published for academic year 2026, not the fall 2027 intake's"
    ]
   },
   {
@@ -11226,6 +13010,14 @@
    "key": "tuition",
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
+   "seed_id": "qs2027-032",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2025/2026 is past"
    ]
   },
   {
@@ -11317,11 +13109,35 @@
    ]
   },
   {
+   "seed_id": "qs2027-054",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
    "seed_id": "qs2027-055",
    "question": "tuition",
    "key": "tuition",
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "deadline",
+   "key": "deadline",
+   "reasons": [
+    "deadline 2026-08-30 has passed"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2025/2026 is past"
    ]
   },
   {
@@ -11338,6 +13154,14 @@
    "key": "tuition",
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
+   "seed_id": "qs2027-067",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "published for academic year 2026, not the fall 2027 intake's"
    ]
   },
   {
@@ -11362,6 +13186,22 @@
    "key": "tuition",
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
+   "seed_id": "qs2027-075",
+   "question": "deadline",
+   "key": "deadline",
+   "reasons": [
+    "deadline 2026-05-01 has passed"
+   ]
+  },
+  {
+   "seed_id": "qs2027-076",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2025/2026 is past"
    ]
   },
   {
