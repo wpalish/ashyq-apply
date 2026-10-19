@@ -43,7 +43,7 @@ import { LOCALES, getLocale, t as translate, type Locale, type MessageKey } from
 import { useTranslation } from '@/lib/useTranslation';
 import type { PersonCard } from '@/types';
 import { BookFooter } from '@/components/BookUI';
-import { Files, House, ListChecks, MagnifyingGlass, UsersThree } from '@phosphor-icons/react';
+import { Files, House, ListChecks, MagnifyingGlass, User } from '@phosphor-icons/react';
 
 export type ScreenId =
   | 'home' | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
@@ -97,7 +97,7 @@ function personFromHash(): string | null {
  */
 function label(id: ScreenId): string {
   const locale=getLocale();
-  const bookLabels:Partial<Record<ScreenId,[string,string]>>={home:['Главная','Басты бет'],settings:['Настройки','Баптаулар'],billing:['Доступ и подписка','Қолжетімділік және жазылым'],today:['Сегодня','Бүгін'],calendar:['Календарь сроков','Мерзімдер күнтізбесі'],applications:['Заявки','Өтінімдер'],share:['Поделиться маршрутом','Бағытпен бөлісу'],person:['Профиль участника','Қатысушының профилі']};
+  const bookLabels:Partial<Record<ScreenId,[string,string]>>={approved:['Мой план','Менің жоспарым'],home:['Главная','Басты бет'],settings:['Настройки','Баптаулар'],billing:['Доступ и подписка','Қолжетімділік және жазылым'],today:['Сегодня','Бүгін'],calendar:['Календарь сроков','Мерзімдер күнтізбесі'],applications:['Заявки','Өтінімдер'],share:['Поделиться маршрутом','Бағытпен бөлісу'],person:['Профиль участника','Қатысушының профилі']};
   const localized=bookLabels[id];if(locale!=='en'&&localized)return localized[locale==='kk'?1:0];
   if (id === 'home') return 'Home';
   if (id === 'settings') return 'Settings';
@@ -124,8 +124,15 @@ const PRIMARY_NAV = [
   { id: 'shortlist', label: 'Find', mobileLabel: 'Find', icon: MagnifyingGlass },
   { id: 'approved', label: 'Plan', mobileLabel: 'Plan', icon: ListChecks },
   { id: 'documents', label: 'Documents', mobileLabel: 'Docs', icon: Files },
-  { id: 'me', label: 'My profile', mobileLabel: 'Me', icon: UsersThree },
+  { id: 'profile', label: 'Profile', mobileLabel: 'Profile', icon: User },
 ] as const;
+
+// Fetch local route code on intent, so navigation does not wait for a first hover/click waterfall.
+function warmWorkspaceScreen(id: ScreenId) {
+  if (id === 'profile') void import('@/screens/ProfileScreen');
+  else if (id === 'approved') void import('@/screens/ApprovedScreen');
+  else if (id === 'documents') void import('@/screens/DocumentsScreen');
+}
 
 export default function App() {
   const {
@@ -378,14 +385,16 @@ export default function App() {
               key={item.id}
               type="button"
               className="nav__item"
-              aria-label={locale==='en'?item.label:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}
+              aria-label={locale==='en'?item.label:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен',profile:'Профиль'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я',profile:'Профиль'} as Record<string,string>)[item.id]}
               aria-current={(screen === item.id || (item.id === 'approved' && ['today', 'calendar', 'applications', 'share', 'funding'].includes(screen))) ? 'page' : undefined}
               data-testid={`nav-${item.id}`}
+              onPointerEnter={() => warmWorkspaceScreen(item.id)}
+              onFocus={() => warmWorkspaceScreen(item.id)}
               onClick={() => { setRedirected(null); setScreen(item.id); }}
             >
               <item.icon size={21} weight={screen === item.id ? 'fill' : 'regular'} aria-hidden="true" />
-              <span className="nav__label--full">{locale==='en'?item.label:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}</span>
-              <span className="nav__label--compact">{locale==='en'?item.mobileLabel:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}</span>
+              <span className="nav__label--full">{locale==='en'?item.label:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен',profile:'Профиль'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я',profile:'Профиль'} as Record<string,string>)[item.id]}</span>
+              <span className="nav__label--compact">{locale==='en'?item.mobileLabel:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен',profile:'Профиль'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я',profile:'Профиль'} as Record<string,string>)[item.id]}</span>
               {badges[item.id] !== undefined && <span className="nav__badge">{badges[item.id]}</span>}
             </button>
           ))}
@@ -544,7 +553,7 @@ export default function App() {
               sidebar and the case switcher down with it. */}
           <details className="book-research-context" open={Boolean(run && (run.stale || ['changed','mixed'].includes(run.profile_input_status?.state??'') || ['failed','retryable_failed','cancelled'].includes(run.stage) || results.some(result=>(result.read_freshness?.stale_claim_count??0)>0)))}><summary>{locale==='en'?'Research context & source limitations':'Состояние исследования и ограничения источников'}</summary><ErrorBoundary label="the research read context"><ResearchReadNotice /></ErrorBoundary></details>
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
-          <Suspense fallback={<div className="panel" role="status">Opening page…</div>}>
+          <Suspense fallback={<div className="panel" role="status">{locale==='en'?'Opening page…':'Открываем раздел…'}</div>}>
           {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}

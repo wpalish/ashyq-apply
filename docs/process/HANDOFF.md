@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[workspace-actions completed] Holder: nobody; released 2026-10-19T04:45:07.221326+00:00. Owner-requested task-first Home/Plan/Profile implemented locally at preview18140. Home exact Today task/programme links; Plan tasks first and local sections; Profile one nav/direct editors/sticky saving and guarded Continue/Budget. Current frontend1011/105files PASS; typecheck/buildPASS; lint0errors/9inherited. Native390/1280 captures; Home883/1000 checks; actual synthetic save/reload/original-name restoration and exact target/reload/back observed. Report: docs/design/workspace-actions-2026-10-19/REPORT.html with source hashes, logs and limits. Root sole writer, original API/recovery contracts preserved. No backend/provider/security/production/hosted gate work; retained preview workers unchanged. Await owner review; remaining screens and release OPEN.
+
+
 [workspace-actions] Holder: gpt-6-astra; since 2026-10-19T04:31:48.157798+00:00. Owner explicitly requested working Home, Plan and Profile at preview18140, preserving style. Root sole writer, clean baseline1c32f7b2. Scope frontend task priority/navigation/profile saving feedback and purposeful motion; existing APIs/recovery identities unchanged. No backend/provider/security/production work.
 
 
@@ -2627,6 +2630,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[workspace-actions] Next: owner review of implemented Home/Plan/Profile at18140. Further pages and stopped security/provider/release work require appropriate fresh direction.
 
 [workspace-actions] Next: replace Home cover with actionable Today projection; move Plan tasks before programmes and remove unrelated rail; consolidate Profile navigation, persistent actions and accurate feedback. Verify types/lint/full frontend and native desktop/mobile/save/reload, record limits.
 

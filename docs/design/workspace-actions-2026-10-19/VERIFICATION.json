@@ -1,0 +1,87 @@
+{
+  "recorded_at": "2026-10-19T04:44:53.901234+00:00",
+  "preview": "http://127.0.0.1:18140/#/home",
+  "branch": "task/unimatch-ui-book",
+  "baseline": "1c32f7b2",
+  "source_manifest": {
+    "frontend/src/App.tsx": {
+      "sha256": "3b20586599fbedc8d24b5e74bf49500dd7aa021d9daa37340baaf2bb7a584897",
+      "bytes": 36984
+    },
+    "frontend/src/screens/HomeScreen.tsx": {
+      "sha256": "dd1c23a5185e9e1552f2c8bb13ac4aa0b7070acf1f2818f7b092fa463519ec08",
+      "bytes": 9253
+    },
+    "frontend/src/screens/ProfileScreen.tsx": {
+      "sha256": "797a207a634a3f6a2e7d811a1ec44bb3d1ae1d37d3b3e41ebe43c3057a473276",
+      "bytes": 60717
+    },
+    "frontend/src/components/BookPlan.tsx": {
+      "sha256": "d9aaaf518eef57b09e5945acc28eeaf239c539074850daae2c8fa82a00b67f03",
+      "bytes": 11949
+    },
+    "frontend/src/components/BookProgramme.tsx": {
+      "sha256": "5dc6de5dc299f8af623e7e4b5644320f8e8bb0bea60d67454c9521d1e633b3e8",
+      "bytes": 11010
+    },
+    "frontend/src/components/HomeAgenda.tsx": {
+      "sha256": "a8bf7795b34aca0757fecda323fdbb1bef045da17ad01ec73c3258255540e752",
+      "bytes": 2929
+    },
+    "frontend/src/components/HomeAgenda.test.tsx": {
+      "sha256": "1f5eb80b2596b281a652e671eede173c804eb7e381c5a3b2cf2c91d75d45a9d0",
+      "bytes": 2625
+    },
+    "frontend/src/components/BookPlan.navigation.test.tsx": {
+      "sha256": "aa359f1719e545bc5c27cdb484555104fca56458e67dea56836b22e89c0ef632",
+      "bytes": 3262
+    },
+    "frontend/src/screens/ProfileScreen.feedback.test.tsx": {
+      "sha256": "4047b8b28c878553a7c1faee72418648435b8e84630c86bd8c87b5673140be68",
+      "bytes": 13514
+    },
+    "frontend/src/styles/workspace.css": {
+      "sha256": "1836310678dbd83d3714c6663ba83b9442ecbc4c795eccda0dfc61f8154b0f07",
+      "bytes": 11318
+    },
+    "frontend/src/main.tsx": {
+      "sha256": "f59feb0799f92422d64e6e6dd279b1c8fe4034aa3e32c971b13ff6a02c5e0133",
+      "bytes": 1691
+    }
+  },
+  "gates": {
+    "typecheck": "PASS",
+    "lint": {
+      "errors": 0,
+      "inherited_warnings": 9
+    },
+    "frontend": {
+      "files": 105,
+      "passed": 1011,
+      "failures": 0
+    },
+    "build": "PASS",
+    "backend": "NOT_RUN, unchanged",
+    "production": "NOT_DEPLOYED"
+  },
+  "native_checks": [
+    "Home opens exact case-owned personal document task",
+    "Home opens selected programme, same programme after reload, back returns to Plan",
+    "Profile synthetic name edit saved and persisted after reload; original name restored by Save and continue",
+    "Save and continue opens academics; exam navigation opens editor directly",
+    "Home no horizontal overflow at390,883,1000,1280; Profile and Plan visually checked390/1280",
+    "Temporary viewport override reset"
+  ],
+  "motion": {
+    "purpose": "press, hover, refresh, save acknowledgement, focus",
+    "reduced_motion": "CSS guards source-verified; runtime reduced-motion emulation NOT_RUN"
+  },
+  "limits": [
+    "Russian core screens reviewed; other pages not redesigned",
+    "Current API and demo capability boundaries retained",
+    "Initial4 frontend failures: duplicate live status and renamed headings; fixed without weakening save guards",
+    "Initial typecheck: unsupported test query exact option removed",
+    "One focused run interrupted due unstable mock array; fixture fixed, current30 focused and1011 full PASS",
+    "Backend, production, full assistive technology acceptance NOT_RUN"
+  ]
+}

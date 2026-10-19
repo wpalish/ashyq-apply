@@ -11,9 +11,10 @@ import { SourceLink } from './primitives';
 const TABS = ['Обзор', 'Требования', 'Стоимость', 'Документы', 'Источники'] as const;
 
 /** The selected result is the same case-owned object as the list. No new research. */
-export function BookProgramme({ result, onBack, onDecision, compared, onCompare }: {
+export function BookProgramme({ result, onBack, onDecision, compared, onCompare, backLabel }: {
   result: ProgramResult;
   onBack: () => void;
+  backLabel?: string;
   onDecision: (decision: UserDecision, reason: string) => Promise<void>;
   compared: boolean;
   onCompare: () => void;
@@ -47,7 +48,7 @@ export function BookProgramme({ result, onBack, onDecision, compared, onCompare 
   </section>;
   const documentPanel = <section className="panel"><h2>Документы</h2>{documents.length ? documents.map((document, index) => <article className="book-programme__document" key={index}><span className="book-icon-tile"><BookmarkSimple size={18}/></span><div><strong>{document.name}</strong><small>{document.required ? 'Требуется по собранным источникам' : 'Уточни применимость'} · {document.owner}</small></div>{document.source_url && <SourceLink url={document.source_url}/>}</article>) : <p className="muted small">Список документов ещё не собран. Добавь программу в план и открой документы.</p>}<p className="small muted">Наличие требования не означает, что личный документ уже готов.</p></section>;
   return <div className="book-programme">
-    <button className="book-text-action book-programme__back" type="button" onClick={onBack}><ArrowLeft size={17}/>Подбор › Результаты › {result.university}</button>
+    <button className="book-text-action book-programme__back" type="button" onClick={onBack}><ArrowLeft size={17}/>{backLabel ?? `Подбор › Результаты › ${result.university}`}</button>
     <header className="book-programme__hero"><div className="book-programme__identity"><BookLogo university={result.university}/><div><h1 id="book-programme-title" tabIndex={-1}>{result.university}</h1><p>{result.program}</p></div></div><div className="book-programme__tags"><span>{result.country}</span><span>{result.degree === 'bachelor' ? 'Программа бакалавриата' : result.degree === 'master' ? 'Магистратура' : result.degree}</span><span>{language ? language === 'english' ? 'Обучение на английском' : language : 'Язык уточняется'}</span><span><CalendarBlank size={15}/> {result.intake || 'Период уточняется'}</span></div><p>Сравни подтверждённые условия программы со своим профилем. Открытые вопросы требуют проверки.</p><BookGlobe compact/>
       <div className="row">{result.program_url && <SourceLink url={result.program_url}/>}<button className="btn btn--sm" type="button" aria-pressed={compared} onClick={onCompare}>{compared ? 'Убрать из сравнения' : 'Добавить в сравнение'}</button></div>
       <div className="book-programme__decisions"><button className="btn btn--primary" type="button" disabled={busy} onClick={() => void choose(result.user_decision === 'approved' ? 'undecided' : 'approved')}><Plus size={20}/>{result.user_decision === 'approved' ? 'В твоём плане · убрать' : 'Добавить в план'}</button><button className="btn" disabled={busy} type="button" onClick={() => void choose(result.user_decision === 'maybe' ? 'undecided' : 'maybe')}><BookmarkSimple size={20}/>{result.user_decision === 'maybe' ? 'Рассматриваю · убрать' : 'Возможно'}</button><button className="btn" type="button" disabled={busy} onClick={() => setRejecting(value => !value)}><X size={20}/>Не подходит</button></div>

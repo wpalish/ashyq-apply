@@ -153,7 +153,7 @@ it.each(['refused','newer-typing','created'] as const)('book Save and continue r
   view.rerender(<ProfileScreen onNext={()=>{}}/>);
   if(outcome==='refused') call.reject(new Error('Save refused')); else call.resolve();
   await flush();
-  expect(screen.getByRole('heading',{level:1})).toHaveTextContent(outcome==='created'?'Учёба и экзамены':'Расскажи о себе');
+  expect(screen.getByRole('heading',{level:1})).toHaveTextContent(outcome==='created'?'Образование и оценки':'Личные данные');
 });
 
 it('clears a superseded refusal after the current draft matches a freshly read server revision without claiming a new write',async()=>{
@@ -165,4 +165,23 @@ it('clears a superseded refusal after the current draft matches a freshly read s
  view.rerender(<ProfileScreen onNext={()=>{}}/>);await flush();
  expect(screen.getByRole('status')).toBeEmptyDOMElement();
  expect(save).toHaveBeenCalledTimes(1);
+});
+
+it('opens the actual exam editor from one section navigation and retains its route', () => {
+  window.history.replaceState(null,'','#/profile'); setLocale('ru');
+  render(<ProfileScreen onNext={()=>{}}/>);
+  fireEvent.click(screen.getByRole('button',{name:'Экзамены'}));
+  expect(window.location.hash).toBe('#/profile?section=exams');
+  expect(screen.getByLabelText('IELTS overall')).toBeVisible();
+  expect(screen.getByLabelText('Средний балл (GPA)')).not.toBeVisible();
+  window.history.replaceState(null,'','#/profile');
+});
+it('keeps the applicant on the form when saving before Budget is refused', async () => {
+  window.history.replaceState(null,'','#/profile'); setLocale('ru');
+  const call=deferred(); const next=vi.fn(); state.value.saveProfile=vi.fn(()=>call.promise);
+  render(<ProfileScreen onNext={next}/>);
+  fireEvent.click(screen.getByRole('button',{name:'Бюджет'}));
+  call.reject(new Error('Synthetic refusal')); await flush();
+  expect(next).not.toHaveBeenCalled();
+  expect(screen.getByRole('status')).toHaveTextContent('Не сохранено');
 });

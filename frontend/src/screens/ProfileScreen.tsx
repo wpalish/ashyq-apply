@@ -1,10 +1,9 @@
 import { readPublicSearchIntent, clearPublicSearchIntent } from '@/lib/publicSearchIntent';
 import { ProfileRecoveryPanel } from '@/components/ProfileRecoveryPanel';
 import { useTranslation } from '@/lib/useTranslation';
-import { dateTime } from '@/lib/format';
-import { BookHelp, BookProfileProgress } from '@/components/BookUI';
+import { dateTime, localDate } from '@/lib/format';
+import { BookHelp } from '@/components/BookUI';
 import { BookActivities } from '@/components/BookActivities';
-import { BookAcademics } from '@/components/BookAcademics';
 import { User, GraduationCap, Trophy, Coins } from '@phosphor-icons/react';
 /**
  * Screen 01 — Applicant profile.
@@ -127,18 +126,17 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     }
   }, [saveProfile, caseEpoch, profileDraft, currentAdmissionsCase, currentProfileDraft]);
   const receiptConfirmsCurrentDraft = !dirty && !profileRecovery && Boolean(savedProfile?.write_receipt);
-  const [step, setStep] = useState(()=>{const section=new URLSearchParams(window.location.hash.split('?')[1]??'').get('section');return section==='academics'?2:section==='activities'?4:1;});
+  const sections = ['personal', 'academics', 'exams', 'activities', 'review'];
+  const [step, setStep] = useState(() => Math.max(0, sections.indexOf(new URLSearchParams(window.location.hash.split('?')[1]??'').get('section')??'personal')) + 1);
+  const goToStep = (next: number) => {  setStep(next); if (ru) window.location.hash = `#/profile?section=${sections[next-1]}`; };
   const stepRef = useRef(step); stepRef.current = step;
-  const [academicEditing, setAcademicEditing] = useState(false);
   useEffect(() => {
     const followSection = () => {
       const [route,query] = window.location.hash.split('?');
       if (route !== '#/profile') return;
       const section = new URLSearchParams(query ?? '').get('section');
-      if (section === 'academics' || section === 'activities') {
-        setAcademicEditing(false);
-        setStep(section === 'academics' ? 2 : 4);
-      }
+      const index = ['personal', 'academics', 'exams', 'activities', 'review'].indexOf(section ?? 'personal');
+      if (index >= 0) {  setStep(index + 1); }
     };
     window.addEventListener('hashchange',followSection);
     return () => window.removeEventListener('hashchange',followSection);
@@ -147,9 +145,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     const before = step;
     if (ru && !(await commitProfile())) return;
     if (stepRef.current !== before) return;
-    if (ru && (before === 4 || before === 5)) onNext();
-    else if (ru && (before === 2 || before === 3)) { setAcademicEditing(false); setStep(4); }
-    else if (before < PROFILE_STEPS.length) { setAcademicEditing(false); setStep(before + 1); }
+    if (before < PROFILE_STEPS.length) goToStep(before + 1);
     else onNext();
   };
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
@@ -299,14 +295,14 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   if (hydrated === false) return <div className="panel" role="status">Loading your saved applicant profile…</div>;
   return (
     <>
-      {profileRecovery && <ProfileRecoveryPanel asPage={ru&&!recoveryFormOpen} onContinue={section=>{setRecoveryFormOpen(true);setAcademicEditing(false);if(section)setStep(section==='academics'?2:section==='activities'?4:1);window.requestAnimationFrame(()=>{(document.querySelector('.profile-editing-wrapper .screen__title') as HTMLElement|null)?.focus();});}} />}
+      {profileRecovery && <ProfileRecoveryPanel asPage={ru&&!recoveryFormOpen} onContinue={section=>{setRecoveryFormOpen(true);if(section)setStep(section==='academics'?2:section==='activities'?4:1);window.requestAnimationFrame(()=>{(document.querySelector('.profile-editing-wrapper .screen__title') as HTMLElement|null)?.focus();});}} />}
       <div className="profile-editing-wrapper" hidden={ru&&Boolean(profileRecovery)&&!recoveryFormOpen}>
       {publicIntent && !savedProfile && <Notice><div className="stack stack--tight"><strong>Your search starts here: {publicIntent.subject}</strong><p className="small">{publicIntent.country || 'Worldwide'} · {publicIntent.budget === null ? 'Budget not decided' : `Up to USD ${publicIntent.budget.toLocaleString()} per year`}. Add these preferences to this draft, then complete your profile.</p><div className="row"><button className="btn btn--primary" onClick={() => { setProfileDraft(draft => { let next = setIn(draft, ['context', 'intended_fields'], [publicIntent.subject]); next = setIn(next, ['preferences', 'preferred_countries'], publicIntent.country ? [publicIntent.country] : []); if (publicIntent.budget !== null) { next = setIn(next, ['funding', 'max_annual_budget'], publicIntent.budget); next = setIn(next, ['funding', 'budget_currency'], 'USD'); } return next; }); clearPublicSearchIntent(); setPublicIntent(null); }}>Use these preferences</button><button className="btn btn--ghost" onClick={() => { clearPublicSearchIntent(); setPublicIntent(null); }}>Start blank</button></div></div></Notice>}
-      {ru&&<BookProfileProgress step={step===1?1:step<=3?2:3} showSteps={step===1}/>}
+      <a className="workspace-back" href="#/home">← На главную</a>
       <div className="screen__head">
-        {ru&&step===1&&<div className="profile-save-status"><strong>{profileRecovery?'Нужно проверить сохранение':dirty?'Есть несохранённые изменения':!savedProfile?'Анкета ещё не сохранена':'Изменения сохранены'}</strong>{savedProfile?.updated_at&&<small>Последнее сохранение: {dateTime(savedProfile.updated_at)}</small>}</div>}
+        {ru&&<div className="profile-save-status"><strong>{profileRecovery?'Нужно проверить сохранение':saving?'Сохраняем…':saveFailed?'Сохранить не удалось':dirty?'Есть несохранённые изменения':receiptConfirmsCurrentDraft || saved?'Изменения сохранены':savedProfile?'Загружена сохранённая анкета':'Анкета ещё не сохранена'}</strong>{savedProfile?.updated_at&&<small>Последняя запись: {/T.*(?:Z|[+-]\d{2}:\d{2})$/.test(savedProfile.updated_at) ? dateTime(savedProfile.updated_at) : localDate(savedProfile.updated_at.slice(0,10),'ru-RU')}</small>}</div>}
         <p className="screen__eyebrow">{ru?'Профиль абитуриента':'Applicant profile'}</p>
-        <h1 className="screen__title" tabIndex={-1}>{ru ? ['','Расскажи о себе','Учёба и экзамены','Учёба и экзамены','Активности и достижения','Проверь свой профиль'][step] : step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
+        <h1 className="screen__title" tabIndex={-1}>{ru ? ['','Личные данные','Образование и оценки','Экзамены и сертификаты','Активности и достижения','Проверь свой профиль'][step] : step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
         <p className="screen__lede">
           {ru?(step===4?'Расскажи о внеучебной деятельности, проектах, волонтёрстве и своих достижениях. Здесь ты можешь добавить то, что показывает твои интересы и сильные стороны.':step===2||step===3?'Добавь сведения об образовании, оценках и экзаменах. Это поможет проверить требования выбранных программ.':'Заполни основную информацию. Её можно будет изменить в любой момент.'):'A few simple details help us find the right matches for you. Your information stays editable.'}
         </p>
@@ -315,9 +311,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       <div id="profile-editing" className={`profile-layout ${ru?'book-russian':''}`}>
       <aside className="profile-rail" aria-label={ru?'Разделы анкеты':'Profile sections'}><nav className="profile-steps" aria-label="Profile steps">
         <div className="profile-rail-heading"><h2>{ru?'Мой профиль':'My profile'}</h2><p>{ru?'Заполни профиль, чтобы мы могли подобрать для тебя подходящие программы.':'Build your profile so we can research relevant programmes.'}</p></div>
-        {PROFILE_STEPS.map((name,index)=>{const Icon=[User,GraduationCap,GraduationCap,Trophy,User][index]??User;return <button key={name} data-step={index+1} type="button" aria-current={step===index+1||(index===1&&step===3)?'step':undefined} onClick={()=>{setAcademicEditing(false);setStep(index+1);}}><span>{ru?<Icon size={22}/>:index+1}</span>{ru?['Личные данные','Учёба','Экзамены','Активности','Проверка'][index]:name}</button>;})}
-        {ru&&<button type="button" onClick={onNext}><span><Coins size={22}/></span>Бюджет</button>}
-      </nav><div className="profile-rail-progress"><strong>{ru?'Раздел':'Section'} {step===1?1:step<=3?2:3} {ru?'из4':'of4'}</strong><progress max={4} value={step===1?1:step<=3?2:3}/><ul>{(ru?['Личные данные','Учёба','Активности','Бюджет']:['Personal details','Education','Activities','Budget']).map((value,index)=><li key={value} className={index===(step===1?0:step<=3?1:2)?'is-current':''}><span/>{value}</li>)}</ul></div><BookHelp>{ru?<><strong>Зачем это нужно?</strong><br/>На основе профиля мы подбираем программы, которые соответствуют твоим целям и возможностям.</>:'Your context helps research programmes that fit your goals.'}</BookHelp></aside>
+        {PROFILE_STEPS.map((name,index)=>{const Icon=[User,GraduationCap,GraduationCap,Trophy,User][index]??User;return <button key={name} data-step={index+1} type="button" aria-current={step===index+1?'step':undefined} onClick={()=>goToStep(index+1)}><span>{ru?<Icon size={22}/>:index+1}</span>{ru?['Личные данные','Учёба','Экзамены','Активности','Проверка'][index]:name}</button>;})}
+        {ru&&<button type="button" disabled={loading || saving} onClick={()=>{void commitProfile().then(accepted=>{if(accepted)onNext();});}}><span><Coins size={22}/></span>Бюджет</button>}
+      </nav><BookHelp>{ru?<><strong>Зачем это нужно?</strong><br/>На основе профиля мы подбираем программы, которые соответствуют твоим целям и возможностям.</>:'Your context helps research programmes that fit your goals.'}</BookHelp></aside>
 
       <div className="stack stack--loose">
         {draftRestored && (
@@ -517,15 +513,13 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
         </div>
 
-        {ru&&(step===2||step===3)&&!academicEditing&&<BookAcademics draft={profileDraft} onGrades={()=>{setStep(2);setAcademicEditing(true);}} onTests={()=>{setStep(3);setAcademicEditing(true);}}/>}
-        {ru&&(step===2||step===3)&&academicEditing&&<button type="button" className="book-text-action" onClick={()=>setAcademicEditing(false)}>← Вернуться к сводке учёбы и экзаменов</button>}
-        <div className="profile-step-content" hidden={step !== 2 || (ru&&!academicEditing)}>{ru&&<div className="row"><button className="btn btn--sm" type="button" onClick={()=>setStep(2)}>Образование</button><button className="btn btn--sm" type="button" onClick={()=>setStep(3)}>Экзамены</button></div>}
+        <div className="profile-step-content" hidden={step !== 2}>
         <Panel
           title={ru?'Чтение табеля':'Read it off your transcript'}
-          hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
+          hint={ru?'Необязательно. Файл читается без сохранения. Предложенные значения попадут в анкету только после твоего подтверждения.':'Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so.'}
         >
           <div className="stack stack--tight">
-            <Field label="Transcript (PDF)" htmlFor="transcript-file">
+            <Field label={ru?'Табель или выписка (PDF)':'Transcript (PDF)'} htmlFor="transcript-file">
               <input
                 id="transcript-file"
                 type="file"
@@ -560,23 +554,23 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </Panel>
 
         <Panel
-          title="Grades"
-          hint="Enter the grade exactly as it appears on your transcript. Unimatch does not convert it silently."
+          title={ru?'Оценки':'Grades'}
+          hint={ru?'Укажи исходную оценку и её шкалу. Автоматического пересчёта нет.':'Enter the grade exactly as it appears on your transcript. Unimatch does not convert it silently.'}
         >
           <div className="grid-2">
             <Field label={ru?'Средний балл (GPA)':'GPA / average'} htmlFor="gpa">
               <input id="gpa" type="number" step="0.01" {...bind(['academics', 'gpa', 'raw_value'], 'float')} />
             </Field>
-            <Field label="Maximum on your scale" htmlFor="gpamax">
+            <Field label={ru?'Максимум по твоей шкале':'Maximum on your scale'} htmlFor="gpamax">
               <input id="gpamax" type="number" step="0.1" {...bind(['academics', 'gpa', 'raw_scale_max'], 'float')} />
             </Field>
-            <Field label="Scale name" htmlFor="gpascale" hint="e.g. 'KZ 5-point', 'US 4.0 unweighted'">
+            <Field label={ru?'Название шкалы':'Scale name'} htmlFor="gpascale" hint="e.g. 'KZ 5-point', 'US 4.0 unweighted'">
               <input id="gpascale" {...bind(['academics', 'gpa', 'raw_scale_label'])} />
             </Field>
-            <Field label="Class rank" htmlFor="rank">
+            <Field label={ru?'Место в классе':'Class rank'} htmlFor="rank">
               <input id="rank" type="number" {...bind(['academics', 'class_rank'], 'number')} />
             </Field>
-            <Field label="Class size" htmlFor="class-size">
+            <Field label={ru?'Учеников в классе':'Class size'} htmlFor="class-size">
               <input id="class-size" type="number" {...bind(['academics', 'class_size'], 'number')} />
             </Field>
           </div>
@@ -625,10 +619,10 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </Panel>
         </div>
 
-        <div className="profile-step-content" hidden={step !== 3 || (ru&&!academicEditing)}>{ru&&<div className="row"><button className="btn btn--sm" type="button" onClick={()=>setStep(2)}>Образование</button><button className="btn btn--sm" type="button" onClick={()=>setStep(3)}>Экзамены</button></div>}
+        <div className="profile-step-content" hidden={step !== 3}>
         <Panel
-          title="English language"
-          hint="Subscores matter: many programmes publish a per-section minimum on top of the overall band."
+          title={ru?'Английский язык':'English language'}
+          hint={ru?'Добавь результаты, если они есть. Минимальные баллы по разделам проверяются по требованиям программы.':'Subscores matter: many programmes publish a per-section minimum on top of the overall band.'}
         >
           <div className="grid-3">
             {(['overall', 'listening', 'reading', 'writing', 'speaking'] as const).map((band) => (
@@ -652,12 +646,12 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title={ru?'Стандартизированные экзамены':'Standardised tests'} hint="Leave blank if not taken — test-optional programmes are unaffected.">
+        <Panel title={ru?'Стандартизированные экзамены':'Standardised tests'} hint={ru?'Оставь пустым, если экзамен ещё не сдавался. Обязательность определяется требованиями программы.':'Leave blank if not taken — test-optional programmes are unaffected.'}>
           <div className="grid-3">
-            <Field label="SAT total" htmlFor="sat"><input id="sat" type="number" {...bind(['academics', 'sat', 'total'], 'number')} /></Field>
+            <Field label={ru?'SAT — общий балл':'SAT total'} htmlFor="sat"><input id="sat" type="number" {...bind(['academics', 'sat', 'total'], 'number')} /></Field>
             <Field label="SAT Math" htmlFor="satm"><input id="satm" type="number" {...bind(['academics', 'sat', 'math'], 'number')} /></Field>
             <Field label="SAT Reading &amp; Writing" htmlFor="satr"><input id="satr" type="number" {...bind(['academics', 'sat', 'reading_writing'], 'number')} /></Field>
-            <Field label="TOEFL total" htmlFor="toefl"><input id="toefl" type="number" {...bind(['academics', 'toefl', 'total'], 'number')} /></Field>
+            <Field label={ru?'TOEFL — общий балл':'TOEFL total'} htmlFor="toefl"><input id="toefl" type="number" {...bind(['academics', 'toefl', 'total'], 'number')} /></Field>
             <Field label="ACT composite" htmlFor="act"><input id="act" type="number" {...bind(['academics', 'act', 'composite'], 'number')} /></Field>
             <Field label="ACT English" htmlFor="act-en"><input id="act-en" type="number" {...bind(['academics', 'act', 'english'], 'number')} /></Field>
             <Field label="ACT Math" htmlFor="act-math"><input id="act-math" type="number" {...bind(['academics', 'act', 'math'], 'number')} /></Field>
@@ -709,7 +703,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </Panel>
         </div>
 
-        <div className="profile-step-content" hidden={step !== 2 || (ru&&!academicEditing)}>{ru&&<div className="row"><button className="btn btn--sm" type="button" onClick={()=>setStep(2)}>Образование</button><button className="btn btn--sm" type="button" onClick={()=>setStep(3)}>Экзамены</button></div>}
+        <div className="profile-step-content" hidden={step !== 2}>
         <Panel title={ru?'Оценки по предметам':'Subject grades'} hint="Keep the original transcript scale for every subject.">
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
@@ -846,7 +840,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         {!validation && <Panel title={ru?'Проверка профиля':'Ready to review'}><p className="muted">Save your profile to check which information is blocking, recommended or optional.</p></Panel>}
         </div>
 
-        {step > 1 && <button className="btn profile-step-back" type="button" onClick={() => setStep(step - 1)}>{ru?'← Назад':'← Back'}</button>}
+        <div className="workspace-savebar">
+        {step > 1 && <button className="btn profile-step-back" type="button" onClick={() => goToStep(step - 1)}>{ru?'← Назад':'← Back'}</button>}
           <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft}
             uncertain={Boolean(profileRecovery && !receiptConfirmsCurrentDraft && profileRecovery.entry && ['pending', 'unknown', 'accepted'].includes(profileRecovery.entry.status))} />
         <div className="profile-step-actions">
@@ -861,8 +856,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </button>
 
           <button className="btn btn--primary" disabled={loading || saving} onClick={() => void continueStep()} data-testid="to-preferences">
-            {ru?'Сохранить и продолжить →':step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
+            {ru?step < PROFILE_STEPS.length?'Сохранить и продолжить →':'Сохранить и перейти к бюджету →':step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>
+        </div>
         </div>
       </div>
       </div>
