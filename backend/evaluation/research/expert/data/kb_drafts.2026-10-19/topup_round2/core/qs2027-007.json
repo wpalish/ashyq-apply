@@ -1,0 +1,46 @@
+{
+ "case": "qs2027-007",
+ "seed_id": "qs2027-007",
+ "university": "California Institute of Technology (Caltech)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-007",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "deadline"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.cms.caltech.edu/academics/ugrad/ugrad_cs",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Caltech Scholarships (need-based)"
+   },
+   "url": "https://www.admissions.caltech.edu/afford",
+   "quote": "admitted Caltech students who applied for financial aid will receive scholarships and grants (which are gifts and do not have to be paid back)",
+   "notes": "Need-based only: same page, 'Caltech does not award merit scholarships. Financial aid is need-based'. Re-sourced from the admissions site because finaid.caltech.edu answers HTTP 403 to the production user agent (round-1 URL).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/international-applicants",
+   "quote": "we offer need-based financial aid that meets 100% of your demonstrated financial need",
+   "notes": "Restated from the round-1 draft (batch6, verified in the KB). International first-year applicants are eligible for need-based aid; admission is need-aware for internationals ('the total amount of financial aid funds for international students is limited', afford page); aid must be requested with the application.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

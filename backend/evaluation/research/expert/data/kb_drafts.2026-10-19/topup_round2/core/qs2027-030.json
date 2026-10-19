@@ -1,0 +1,39 @@
+{
+ "case": "qs2027-030",
+ "seed_id": "qs2027-030",
+ "university": "McGill University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-030",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.mcgill.ca/undergraduate-admissions/program/computer-science-faculty-science",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.5,
+    "ielts_min_section": 6.0,
+    "duolingo": 125
+   },
+   "url": "https://www.mcgill.ca/undergraduate-admissions/apply/english-proficiency",
+   "quote": "Score of 125 or better (130 for B.Ed. (TESL), B.Com.) (updated September 2022). For further information: englishtest.duolingo.com/ IELTS (International English Language Testing System) – Academic version A band score of 6.5 or better; individual component scores of 6.0 or better.",
+   "notes": "Duolingo English Test 'Score of 125 or better' (130 only for B.Ed. (TESL) and B.Com.; Science gets 125). IELTS Academic 6.5 overall, 6.0 per component. TOEFL for Science: 90 (120-point scale, tests up to 20 January 2026) or 4.5 (6-point scale), components 21 (or 4.5/4.0) - in a table, kept in notes. Exempt after at least four years of school where English is the primary language; 'score minima can change at any time'.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "case": "qs2027-094",
+ "seed_id": "qs2027-094",
+ "university": "Boston University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-094",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.bu.edu/academics/cas/programs/computer-science/ba/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 7
+   },
+   "url": "https://www.bu.edu/admissions/apply/international/",
+   "quote": "A total/overall score of 7 or higher will satisfy BU’s English Language proficiency requirement for all programs.",
+   "notes": "IELTS Academic 7 overall satisfies the requirement 'for all programs'; component scores reviewed 'for consistency', no stated per-band minimum. TOEFL iBT and DET are worded as 'most competitive' ranges (TOEFL 90-100 with 20 per section; new scale 5.0+; DET 125-135), not minimums, so they are left out. IELTS Indicator and One Skill Retake not accepted. A test is required when English is not the first language. Round-1 quote was the TOEFL sentence, which does not contain the IELTS figure.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

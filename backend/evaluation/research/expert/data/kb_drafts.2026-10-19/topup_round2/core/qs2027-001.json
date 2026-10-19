@@ -1,0 +1,38 @@
+{
+ "case": "qs2027-001",
+ "seed_id": "qs2027-001",
+ "university": "Massachusetts Institute of Technology (MIT)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-001",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://catalog.mit.edu/degree-charts/computer-science-engineering-course-6-3/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 7,
+    "duolingo": 120
+   },
+   "url": "https://mitadmissions.org/apply/firstyear/tests-scores/",
+   "quote": "IELTS Minimum: 7 Recommended: 7.5 Pearson Test of English (PTE) Academic Minimum: 65 Recommended: 70 Cambridge English Qualifications (C1 Advanced or C2 Proficiency) Minimum: 185 Recommended: 190 Duolingo English Test (DET) Minimum: 120 Recommended: 125",
+   "notes": "Published 'minimum and recommended scores' for English tests: IELTS min 7 / rec 7.5; PTE 65 / 70; Cambridge 185 / 190; DET 120 / 125. TOEFL (before 1/21/26) min 90 / rec 100 and TOEFL 1-6 scale min 5 / rec 5.5 are on the same page but separated from this run by an embedded link block, so TOEFL is left out of this answer (notes only). Tests are 'strongly recommended' for non-native speakers with fewer than five years of English, not formally required. mitadmissions.org is in the list's extra_domains for MIT.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

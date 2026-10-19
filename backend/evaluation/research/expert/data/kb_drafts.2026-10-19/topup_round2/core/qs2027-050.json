@@ -1,0 +1,40 @@
+{
+ "case": "qs2027-050",
+ "seed_id": "qs2027-050",
+ "university": "The Hong Kong Polytechnic University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-050",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.polyu.edu.hk/study/ug/international/2027/js3868",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.0,
+    "toefl_ibt": 80
+   },
+   "url": "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-english",
+   "quote": "TOEFL (iBT) (For tests taken before 21 January 2026) Total Score of 80 or above out of 120 in one sitting (For tests taken on or after 21 January 2026) Total Score of 4.5 or above out of 6.0 in one sitting *The test date should be within 2 years before the commencement date of study at PolyU for the results to be considered valid. *TOEFL iBT Home Edition test results will not be considered for meeting the English language requirements for taught programmes. IELTS (Academic) An overall band score of 6.0 or above in one sitting",
+   "notes": "University-wide for non-local applicants 'unless otherwise specified by the individual programme' (the JS3868 page specifies nothing else). IELTS Academic 6.0 overall, one sitting, no per-section minimum. TOEFL iBT 80 (tests before 21 January 2026) or 4.5/6.0 (tests on or after 21 January 2026). Tests within 2 years before commencement; TOEFL Home Edition, IELTS Online/Indicator/One Skill Retake not accepted. Round-1 draft had the figure under 'overall', which the converter does not read.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

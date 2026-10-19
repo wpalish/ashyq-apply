@@ -1,0 +1,40 @@
+{
+ "case": "qs2027-078",
+ "seed_id": "qs2027-078",
+ "university": "University of Leeds",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-078",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://courses.leeds.ac.uk/3260/computer-science-bsc",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.0,
+    "ielts_min_section": 5.5
+   },
+   "url": "https://courses.leeds.ac.uk/3260/computer-science-bsc",
+   "quote": "IELTS 6.0 overall, with no less than 5.5 in each section.",
+   "notes": "Programme page, 'English language requirements'. Other tests via the 'English language equivalent qualifications' page (not read).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

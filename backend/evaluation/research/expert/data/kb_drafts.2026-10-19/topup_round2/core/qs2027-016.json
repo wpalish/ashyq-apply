@@ -1,0 +1,39 @@
+{
+ "case": "qs2027-016",
+ "seed_id": "qs2027-016",
+ "university": "Cornell University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-016",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.cs.cornell.edu/bachelor-science-computer-science",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 7.5,
+    "toefl_ibt": 100,
+    "duolingo": 130
+   },
+   "url": "https://admissions.cornell.edu/policies/standardized-testing-policy",
+   "quote": "TOEFL exams taken prior to January 2026: minimum score of 100 TOEFL exams taken January 2026 or later: minimum score of 5.0, recommended score of 5.5 IELTS, minimum score of 7.5 Duolingo English Test, minimum score of 130",
+   "notes": "Required for applicants who are not US citizens/permanent residents, not native English speakers and not taught in English for the past four years. The page introduces the list as 'Accepted exams and score requirements to be most competitive in our admissions review process' and words each line as a minimum score: TOEFL (before January 2026) 100; TOEFL (January 2026 or later) 5.0, recommended 5.5; IELTS 7.5; DET 130; Cambridge C1/C2 191. No per-section minimums.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

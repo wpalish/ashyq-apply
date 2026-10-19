@@ -1,0 +1,38 @@
+{
+ "case": "qs2027-055",
+ "seed_id": "qs2027-055",
+ "university": "Carnegie Mellon University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-055",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.cmu.edu/admission/majors-programs/school-of-computer-science/computer-science",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 7.5,
+    "toefl_ibt": 102
+   },
+   "url": "https://www.cmu.edu/admission/admission/international-applicants",
+   "quote": "We require at least a 7.5 overall band score on either the paper-based or computer-delivered Academic Examination and give consideration to those with subscores of 7.5 and above. When sending your official IELTS scores, please ensure that you choose \"Carnegie Mellon University – Office of Undergraduate Admission\" as the recipient for your score report. TOEFL iBT or iBT Home Edition For exams taken before Jan. 21, 2026: We require at least a 102 overall score",
+   "notes": "Required of nonnative English speakers. IELTS Academic 7.5 overall (subscores of 7.5 'given consideration', not a stated minimum). TOEFL iBT (exams before 21 January 2026) 102 overall; on or after 21 January 2026: 5 overall. TOEFL Essentials 11. DET 135 overall and Cambridge 191 are further down the same page (beyond the converter's 600-character excerpt, so not in this quote). Scores no more than two years old at application.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}
