@@ -831,3 +831,8 @@ Owner decision: no scraping; algorithm work after search continues on replayed S
   - Only discovery queries were recorded. Topic, scholarship and identity searches always miss, so absolute claim and recall numbers are below live; compare arms, not absolutes.
   - A flag whose on arm raises `recorded_search_misses` above the off arm changed the queries and is not measurable on replay. The scorecard target fails in that case.
 - Not counted as a paid run: zero Serper credits.
+
+**Correction (10:40 A/A entry):** the cohort A/A above was scored on `ground_truth.draft10`. On the signed
+`ground_truth.reviewed11` (the scorecard default) the same artifact reads claim precision 28/28, wrong scope 0/28,
+and wrong pages 1 (toronto) in all four columns. Score cohort replays on reviewed11. Plan:
+`docs/process/wayfinder/free-search/REPLAY_PLAN_2026-10-19.md`.
