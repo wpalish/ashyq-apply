@@ -1760,8 +1760,7 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "reject-combination-head": (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_COMBINATION_HEAD"),
     ),
-    # Default-off (replay plan 2026-10-19 §5.3, CL-2): the off arm is ready
-    # when the rule turns on.
+    # On by default since replay rp-cl2 of 2026-10-19 (CL-2).
     "classify-head-and-slug-identity": (
         ("app.adapters.page_classifier", "CLASSIFY_HEAD_AND_SLUG_IDENTITY"),
     ),
@@ -1778,9 +1777,7 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
-    {"classify-head-and-slug-identity", "listing-follows-local-aliases"}
-)
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"listing-follows-local-aliases"})
 
 
 def _negation_dest(stem: str) -> str:

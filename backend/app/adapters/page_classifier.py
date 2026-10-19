@@ -175,9 +175,9 @@ AWARD_PAGE_EVIDENCE = True  # on: runs 39149288366 / 39149290043 (ubc, imperial 
 #: changes.
 # on: runs 39173608793..613552 with AN-1b (uppsala Anders Wall exists +1, scoped bachelor; 0 wrong)
 AWARD_NAME_QUALIFIER = True
-#: Plan rule CL-2 (replay plan 2026-10-19 §5.3), off until its replay passes;
-#: the benchmark harness flips it per capture
-#: (``--classify-head-and-slug-identity``). Bologna's programme page
+#: Plan rule CL-2 (replay plan 2026-10-19 §5.3), on by default since its
+#: replay passed; the benchmark harness negates it per capture
+#: (``--no-classify-head-and-slug-identity``). Bologna's programme page
 #: (``corsi.unibo.it/laurea/informatica``, title "Informatica - Laurea -
 #: Bologna") read UNKNOWN because its only ``h1`` is "home page", so the
 #: subject was never read from its head; Monterrey's English page ("B.S. in
@@ -202,8 +202,10 @@ AWARD_NAME_QUALIFIER = True
 #: verdict still apply. No word,
 #: alias or slug is added: the tables are the ones discovery reads. CH-1 then
 #: judges the page like any candidate; CL-2 does nothing while CH-1 is off.
-#: False (the default) changes nothing.
-CLASSIFY_HEAD_AND_SLUG_IDENTITY = False
+#: A page whose heading the body's own full degree title names under another
+#: subject (``_NAMED_OTHERWISE_SIGNAL``) is a refusal, not "nothing decided",
+#: and is not revisited. False changes nothing.
+CLASSIFY_HEAD_AND_SLUG_IDENTITY = True
 #: Programme links on a page with no identity of its own that make it a
 #: catalogue; CL-2 reads the same count as listing structure.
 _CATALOGUE_LINK_MIN = 5
@@ -1007,10 +1009,14 @@ def _classify_parsed(
     # admissions page.
     subject = _program_name(identity, lang)
     context_degree: str | None = None
+    # The heading the body's own full degree title names under another
+    # subject: refused below, and recorded so that CL-2 does not promote it.
+    named_otherwise = False
     if subject is None:
         from_context = _program_name_from_context(identity, title, path, body[:4000], lang)
-        if from_context:
+        if isinstance(from_context, tuple):
             subject, context_degree = from_context
+        named_otherwise = from_context is _NAMED_OTHERWISE
 
     # Links alone may only decide when the page has no programme identity of
     # its own. Counting them first made "BSc Computing Science" a catalogue
@@ -1125,12 +1131,19 @@ def _classify_parsed(
             PageType.COUNTRY_CREDENTIAL_REQUIREMENTS, 0.55, ["credential vocabulary"], title
         )
 
+    if named_otherwise:
+        return PageClassification(PageType.UNKNOWN, 0.2, [_NAMED_OTHERWISE_SIGNAL], title)
     return PageClassification(PageType.UNKNOWN, 0.2, [_NO_DECISIVE_SIGNAL], title)
 
 
 #: The signal of a page nothing decided, and of a page refused because a
 #: heading reads off-topic: the two verdicts CL-2 may revisit.
 _NO_DECISIVE_SIGNAL = "no decisive signals"
+#: A page nothing else decided whose heading the body's own full degree title
+#: names under a different subject (HKU's "Computing and Data Science" school
+#: page, whose body says "Bachelor of Engineering in Computer Science"). The
+#: refusal is a decision, so CL-2 does not revisit it.
+_NAMED_OTHERWISE_SIGNAL = "heading is not the degree title the body names"
 _OFF_TOPIC_SIGNAL = "title is off-topic"
 _CL2_VERDICTS = (
     (PageType.UNKNOWN, (_NO_DECISIVE_SIGNAL,)),
@@ -1502,9 +1515,14 @@ def _program_name(identity: str, lang: str = "") -> str | None:
     return name
 
 
+#: ``_program_name_from_context``'s refusal of a heading the body's own full
+#: degree title names under a different subject, told apart from "no name".
+_NAMED_OTHERWISE = object()
+
+
 def _program_name_from_context(
     identity: str, title: str, path: str, body: str = "", lang: str = ""
-) -> tuple[str, str] | None:
+) -> tuple[str, str] | object | None:
     """A bare subject heading ("Computing Science") that the page's own title
     and address place at one degree level, and the degree they place it at.
 
@@ -1515,7 +1533,8 @@ def _program_name_from_context(
     in the title or the path — and no full degree title in the body naming a
     different subject. HKU's "Computing and Data Science" is a school whose
     page says "The Bachelor of Engineering in Computer Science covers …": its
-    heading is an area, and naming it a programme recorded a false one.
+    heading is an area, and naming it a programme recorded a false one; that
+    refusal returns ``_NAMED_OTHERWISE`` rather than ``None``.
     """
     name = (identity or "").strip()
     if not name or len(name) > 80 or len(name.split()) > 6:
@@ -1532,7 +1551,7 @@ def _program_name_from_context(
         return None
     for match in _FULL_DEGREE_TITLE.finditer(body or ""):
         if name.casefold() not in match.group(0).casefold():
-            return None
+            return _NAMED_OTHERWISE
     return name, degree
 
 

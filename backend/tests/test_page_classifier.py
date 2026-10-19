@@ -746,8 +746,32 @@ class TestHeadAndSlugIdentity:
         for url, html in ((_CL2_UNIBO_URL, _cl2_fixture("unibo_gold")), (_CL2_EN_URL, _CL2_EN)):
             assert classify_page(url=url, html=html).page_type is PageType.UNKNOWN
 
-    def test_cl2_is_off_by_default(self):
-        assert page_classifier.CLASSIFY_HEAD_AND_SLUG_IDENTITY is False
+    def test_cl2_is_on_by_default(self):
+        assert page_classifier.CLASSIFY_HEAD_AND_SLUG_IDENTITY is True
+
+    def test_a_heading_the_body_names_otherwise_is_not_revisited(self, monkeypatch):
+        """HKU's school page: its heading is refused because the body's own full
+        degree title names another subject. That refusal is not "nothing
+        decided", and CL-2 does not promote the heading it refused."""
+        html = (
+            "<html><head><title>Computing and Data Science | HKU Admissions</title></head>"
+            "<body><main><h1>Computing and Data Science</h1>"
+            "<p>Explore master programmes as well. The Bachelor of Engineering in Computer "
+            "Science covers algorithms and data structures.</p></main></body></html>"
+        )
+        url = (
+            "https://admissions.hku.hk/programmes/undergraduate-programmes/"
+            "computing-and-data-science"
+        )
+        monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", True)
+        for on in (False, True):
+            monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", on)
+            page = classify_page(url=url, html=html)
+            assert (page.page_type, page.signals, page.subject) == (
+                PageType.UNKNOWN,
+                [page_classifier._NAMED_OTHERWISE_SIGNAL],
+                None,
+            )
 
     def test_off_nothing_is_revisited(self, monkeypatch):
         """Off, CL-2 is never asked: every verdict is the first reading's."""
@@ -790,7 +814,7 @@ class TestHeadAndSlugIdentity:
         assert live.NEGATABLE_RULES["classify-head-and-slug-identity"] == (
             ("app.adapters.page_classifier", "CLASSIFY_HEAD_AND_SLUG_IDENTITY"),
         )
-        assert "classify-head-and-slug-identity" in live.DEFAULT_OFF_NEGATABLE
+        assert "classify-head-and-slug-identity" not in live.DEFAULT_OFF_NEGATABLE
         commands = _parent(monkeypatch, tmp_path, "--classify-head-and-slug-identity")
         assert "--classify-head-and-slug-identity" in commands[0]
 
