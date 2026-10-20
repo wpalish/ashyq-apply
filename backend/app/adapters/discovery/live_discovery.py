@@ -363,6 +363,25 @@ HOMEPAGE_HOP_READ_CAP = 5
 #: harness flips it per capture (``--sitemap-stage-cap``). On by default since
 #: the 2026-10-20 no-search replay with NS-1b (same result as NS-1b's line).
 SITEMAP_STAGE_CAP = True
+#: Ticket SG-1 (NEXT_CYCLES_2026-10-22 §3), off until the no-search paired
+#: runs pass. When robots.txt names no sitemap, discovery guesses the
+#: conventional locations (SITEMAP_FALLBACK_PATHS), one read each; on a host
+#: that asks a crawl delay every guess costs that delay, so four guesses cost
+#: 6–8 s on most such hosts and ~30 s on a Crawl-delay 10 host. On: when
+#: robots.txt names no sitemap and the host asks a crawl delay of at least
+#: SLOW_HOST_SECONDS, only the first location (``/sitemap.xml``) is guessed;
+#: on any host, guessing stops after SITEMAP_GUESS_MAX_404 consecutive guesses
+#: answered 404. A declared sitemap and the children of a guess that answered
+#: are read as before. Structural only: no path and no word is added. The trace
+#: records an ``SG-1:`` line in ``errors`` when a guess is skipped. The
+#: benchmark harness flips it per capture (``--sitemap-guess-cap``).
+SITEMAP_GUESS_RULE = False
+#: SG-1: conventional locations guessed at most (today's four; all of them).
+SITEMAP_GUESS_CAP = 4
+#: SG-1: locations guessed on a host that asks a crawl delay ≥ SLOW_HOST_SECONDS.
+SITEMAP_GUESS_SLOW_HOST_CAP = 1
+#: SG-1: consecutive 404 guesses after which no further location is guessed.
+SITEMAP_GUESS_MAX_404 = 2
 #: PC-1: discovery seconds after which no sitemap document starts.
 SITEMAP_STAGE_MAX_SECONDS = SEARCH_LATEST_START_SECONDS
 #: PC-1: the trace line a stalled sitemap document adds.
@@ -4405,6 +4424,21 @@ def decode_sitemap(body: bytes, url: str) -> str:
     return body.decode("utf-8", errors="replace")
 
 
+async def robots_crawl_delay(fetcher: Fetcher, url: str) -> float | None:
+    """The crawl delay the fetcher's own robots policy holds for ``url``'s host.
+
+    No read: the policy answers from the robots.txt it already parsed.
+    """
+    robots = getattr(fetcher, "robots", None)
+    if robots is None:
+        return None
+    try:
+        delay: float | None = await robots.crawl_delay(url)
+    except Exception:  # a robots policy that cannot answer says nothing
+        return None
+    return delay
+
+
 class HostCost:
     """SO-1: what one host's reads cost so far, to decide the stage order.
 
@@ -4428,13 +4462,9 @@ class HostCost:
         return result
 
     async def learn_crawl_delay(self, fetcher: Fetcher, url: str) -> None:
-        robots = getattr(fetcher, "robots", None)
-        if robots is None:
+        if getattr(fetcher, "robots", None) is None:
             return
-        try:
-            self.crawl_delay = await robots.crawl_delay(url)
-        except Exception:  # a robots policy that cannot answer says nothing
-            self.crawl_delay = None
+        self.crawl_delay = await robots_crawl_delay(fetcher, url)
 
     @property
     def median_read_seconds(self) -> float | None:
@@ -4718,8 +4748,23 @@ class SitemapReader:
         queue: list[tuple[str, int]] = [(u, 0) for u in declared]
         #: SM-1: the conventional locations still to probe, dropped once one answers.
         fallbacks: set[str] = set()
+        #: SG-1: consecutive guesses answered 404 (counted only while on).
+        guess_404s = 0
         if not queue:
-            queue = [(urljoin(origin, path), 0) for path in SITEMAP_FALLBACK_PATHS]
+            paths = SITEMAP_FALLBACK_PATHS[:SITEMAP_GUESS_CAP]
+            if SITEMAP_GUESS_RULE:
+                delay = (
+                    cost.crawl_delay
+                    if cost is not None
+                    else await robots_crawl_delay(self.fetcher, homepage)
+                )
+                if delay is not None and delay >= SLOW_HOST_SECONDS:
+                    paths = paths[:SITEMAP_GUESS_SLOW_HOST_CAP]
+                    trace.errors.append(
+                        f"SG-1: crawl delay {delay:g} s and no declared sitemap; "
+                        f"{len(paths)} location guessed"
+                    )
+            queue = [(urljoin(origin, path), 0) for path in paths]
             fallbacks = {canonical_url(u) for u, _ in queue}
 
         seen_documents: set[str] = set()
@@ -4764,6 +4809,18 @@ class SitemapReader:
                     self.fetcher.get(url) if cost is None else cost.get(self.fetcher, url)
                 )
             trace.note_entry_read(result.ok)
+            if SITEMAP_GUESS_RULE and url in fallbacks:
+                guess_404s = guess_404s + 1 if result.status_code == 404 else 0
+                if guess_404s >= SITEMAP_GUESS_MAX_404:
+                    # SG-1: the host does not keep its sitemap where it is guessed.
+                    skipped = [item for item in queue if canonical_url(item[0]) in fallbacks]
+                    if skipped:
+                        queue = [item for item in queue if item not in skipped]
+                        trace.errors.append(
+                            f"SG-1: {guess_404s} guessed sitemap locations answered 404; "
+                            f"{len(skipped)} more not guessed"
+                        )
+                    fallbacks = set()
             if not result.ok:
                 trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
                 if stall_local and result.outcome == FetchOutcome.TIMEOUT:

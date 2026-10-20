@@ -1806,6 +1806,8 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "homepage-hop-reads": (("app.adapters.discovery.live_discovery", "HOMEPAGE_HOP_READS"),),
     # Default-off (NEXT_CYCLES_2026-10-22 §3, PC-1, menu entry (D)).
     "sitemap-stage-cap": (("app.adapters.discovery.live_discovery", "SITEMAP_STAGE_CAP"),),
+    # Default-off (NEXT_CYCLES_2026-10-22 §3, SG-1).
+    "sitemap-guess-cap": (("app.adapters.discovery.live_discovery", "SITEMAP_GUESS_RULE"),),
     # Default-off (NEXT_CYCLES_2026-10-21 item 6, LQ-2a).
     "local-query-from-evidence": (
         ("app.adapters.search.intent", "LOCAL_QUERY_FROM_PAGE_EVIDENCE"),
@@ -1820,6 +1822,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "identity-fold-marks",
         "same-site-award-links",
         "local-query-from-evidence",
+        "sitemap-guess-cap",
     }
 )
 
@@ -2173,6 +2176,13 @@ def main() -> None:
         "configured, no sitemap document starts after 33 s of discovery, and a sitemap document "
         "that stalls ends the sitemap stage and is skipped alone instead of closing its host, "
         "so the navigation fallback still reads the homepage",
+    )
+    parser.add_argument(
+        "--sitemap-guess-cap",
+        action="store_true",
+        help="ticket SG-1 (NEXT_CYCLES_2026-10-22 §3): when robots.txt names no sitemap, a host "
+        "that asks a crawl delay of at least 5 s has only /sitemap.xml guessed, and on any host "
+        "guessing the conventional sitemap locations stops after two consecutive 404s",
     )
     parser.add_argument(
         "--award-route",
@@ -2894,6 +2904,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as pc1_module
 
             pc1_module.SITEMAP_STAGE_CAP = True
+        if args.sitemap_guess_cap:
+            from app.adapters.discovery import live_discovery as sg1_module
+
+            sg1_module.SITEMAP_GUESS_RULE = True
         if args.award_route:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
@@ -3326,6 +3340,7 @@ def main() -> None:
                         *(["--local-catalogue-entry"] if args.local_catalogue_entry else []),
                         *(["--homepage-hop-reads"] if args.homepage_hop_reads else []),
                         *(["--sitemap-stage-cap"] if args.sitemap_stage_cap else []),
+                        *(["--sitemap-guess-cap"] if args.sitemap_guess_cap else []),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-index-query"] if args.scholarship_index_query else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
