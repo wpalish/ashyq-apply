@@ -177,7 +177,9 @@ def test_converter_marks_a_past_year_document_list_stale_and_keeps_unknown_reaso
     )
     entry = kb_build.build(root, [report], built_at="2026-10-21")["entries"][MIT]
     assert entry["facts"]["documents"] == []
-    assert {"question": "documents", "key": "documents", "reason": "HTTP 403"} in entry["unknown"]
+    wanted = {"question": "documents", "key": "documents", "reason": "HTTP 403"}
+    # WHY-1 adds `kind` and `checked_on` to every unknown record.
+    assert any(wanted.items() <= u.items() for u in entry["unknown"])
 
 
 OTHER_CYCLE = 'document list published for "2027 Spring Admissions Guide", not the fall 2027 intake'
