@@ -10,7 +10,11 @@ from __future__ import annotations
 
 import asyncio
 import json
+import subprocess
+import sys
+from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -18,7 +22,7 @@ import pytest
 from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter, PageCategory
 from app.config import get_settings
 from evaluation.research import live
-from evaluation.research.schema import Observation
+from evaluation.research.schema import Capture, Observation
 from scripts import canary_discovery as canary
 
 PROGRAMME = "https://you.ubc.ca/programs/computer-science/"
@@ -110,3 +114,116 @@ async def test_a_completed_run_keeps_only_the_raw_report(
 def test_the_checkpoint_pages_stand_in_only_when_the_runner_has_none() -> None:
     assert live.timeout_programme_urls([], [], [PROGRAMME]) == [PROGRAMME]
     assert live.timeout_programme_urls([], [], []) == []
+
+
+# --- HC-1: a case the parent's kill ends keeps the claims it had filed --------
+#
+# LOOP_REPORT 2026-10-20 10:45: a case whose own stop does not finish before the
+# parent's kill at 120 s leaves the last checkpoint on disk. Simulated without a
+# real process: the fake run files two claims through the runner's own
+# ``_store_claims`` and then raises ``_ParentKill``, which no ``except`` in the
+# harness catches, so nothing after that point writes the observation - what a
+# SIGKILL leaves.
+
+PAGE = "https://example.edu/admissions/english-language/"
+
+
+class _ParentKill(BaseException):
+    """The parent's kill: no harness code runs after it."""
+
+
+def _ielts_claims() -> list[Any]:
+    from app.domain.enums import ClaimType
+    from app.schemas.claim import Claim
+
+    read_at = datetime(2026, 10, 20, 9, 0, tzinfo=UTC)
+    return [
+        Claim(
+            claim_type=ClaimType.IELTS_MIN_OVERALL,
+            normalized_value=6.5,
+            original_text_excerpt="IELTS Academic: overall band 6.5",
+            source_url=PAGE,
+            official_domain=True,
+            accessed_at=read_at,
+        ),
+        Claim(
+            claim_type=ClaimType.IELTS_MIN_SUBSCORE,
+            normalized_value=6.0,
+            original_text_excerpt="with no band below 6.0",
+            source_url=PAGE,
+            official_domain=True,
+            accessed_at=read_at,
+        ),
+    ]
+
+
+def _arrange_filed_then_killed(
+    monkeypatch: pytest.MonkeyPatch, output: Path, seen: dict[str, Any]
+) -> None:
+    """Discovery confirms a page, the evidence stage files two claims, the parent kills."""
+
+    async def confirm(adapter: Any, selected: Any, ranked: Any, trace: Any, profile: Any) -> None:
+        selected[PageCategory.PROGRAM_PAGE] = [PROGRAMME]
+
+    monkeypatch.setattr(LiveDiscoveryAdapter, "_confirm_programs", confirm)
+
+    async def run(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        trace = DiscoveryTrace(institution="University of British Columbia", domain="ubc.ca")
+        selected: dict[str, list[str]] = {c: [] for c in PageCategory.ALL}
+        ranked: dict[str, list[tuple[int, str]]] = {PageCategory.PROGRAM_PAGE: []}
+        await LiveDiscoveryAdapter._confirm_programs(None, selected, ranked, trace, None)  # type: ignore[arg-type]
+        # The harness's own runner class (patched in by capture_one), built
+        # without a database: only what ``_store_claims`` and the claim
+        # mapping read.
+        runner = object.__new__(canary.CanaryRunner)
+        runner.run = SimpleNamespace(id="run-hc1")  # type: ignore[assignment]
+        runner.session = SimpleNamespace(add=lambda row: None)  # type: ignore[assignment]
+        runner._candidates = []  # type: ignore[assignment]
+        runner._store_claims("result-hc1", _ielts_claims())
+        seen["at_kill"] = Observation.model_validate_json(output.read_text())
+        trace_file = output.with_suffix(".trace.json")
+        seen["trace_at_kill"] = json.loads(trace_file.read_text()) if trace_file.exists() else {}
+        raise _ParentKill
+
+    monkeypatch.setattr(canary, "run_canary", run)
+
+
+@pytest.mark.asyncio
+async def test_a_parent_kill_after_two_claims_were_filed_leaves_the_confirm_checkpoint(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "ubc.json"
+    seen: dict[str, Any] = {}
+    _arrange_filed_then_killed(monkeypatch, output, seen)
+    with pytest.raises(_ParentKill):
+        await live.capture_one("ubc", output, 5, 100)
+
+    # Today: the last checkpoint before the kill is discovery's confirm
+    # checkpoint; filing the claims wrote nothing, so they are not on disk.
+    on_disk = Observation.model_validate_json(output.read_text())
+    assert on_disk == seen["at_kill"]
+    assert seen["trace_at_kill"]["checkpoint"] == "confirm"
+    assert on_disk.error == "CAPTURE_IN_PROGRESS"
+    assert on_disk.predictions == []
+
+
+def test_the_parent_collects_a_killed_case_with_no_claims(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ubc", "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    seen: dict[str, Any] = {}
+
+    def child(command: list[str], **kwargs: Any) -> None:
+        output = Path(command[command.index("--out") + 1])
+        _arrange_filed_then_killed(monkeypatch, output, seen)
+        with pytest.raises(_ParentKill):
+            asyncio.run(live.capture_one("ubc", output, 5, 100))
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    observation = capture.observations[0]
+    assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    assert observation.predictions == []
