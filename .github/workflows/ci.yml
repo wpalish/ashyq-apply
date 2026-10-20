@@ -94,3 +94,30 @@ jobs:
       - run: npm audit --prefix frontend --audit-level=high
       - run: POSTGRES_PASSWORD=ci-only-not-a-secret docker compose config --quiet
       - run: POSTGRES_PASSWORD=ci-only-not-a-secret docker compose build
+
+  # CS-1: the stack the owner would deploy, run in the mode the product ships
+  # in. The build step above fails faster; this one proves the stack serves:
+  # a demo run, then a kb-mode run with no page read, behind a network fence
+  # (docker-compose.ci.yml). No secret: the password is a throwaway literal.
+  compose-stack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      COMPOSE: docker compose -f docker-compose.yml -f docker-compose.ci.yml
+      POSTGRES_PASSWORD: ci-only-not-a-secret
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/verify_compose.sh
+      - if: failure()
+        run: |
+          $COMPOSE ps --all > compose-ps.txt 2>&1 || true
+          $COMPOSE logs --no-color --timestamps > compose-logs.txt 2>&1 || true
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compose-logs
+          path: |
+            compose-ps.txt
+            compose-logs.txt
+      - if: always()
+        run: $COMPOSE down -v --remove-orphans || true

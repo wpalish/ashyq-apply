@@ -1,0 +1,18 @@
+# CI override for scripts/verify_compose.sh (CS-1). Never used for a deployment.
+#
+#   COMPOSE="docker compose -f docker-compose.yml -f docker-compose.ci.yml" \
+#     POSTGRES_PASSWORD=ci-only-not-a-secret scripts/verify_compose.sh
+#
+# A network fence for the kb-mode run: the API and the worker get a proxy that
+# nothing listens on (port 9, discard), so a stray outbound page read fails
+# loudly instead of quietly succeeding on the runner's open network. The
+# containers' own traffic (PostgreSQL, the health probe) is exempt.
+
+services:
+  api:
+    environment: &fence
+      HTTP_PROXY: http://127.0.0.1:9
+      HTTPS_PROXY: http://127.0.0.1:9
+      NO_PROXY: localhost,127.0.0.1,postgres
+  worker:
+    environment: *fence

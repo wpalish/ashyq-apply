@@ -48,7 +48,13 @@ services:
       UNIMATCH_ENVIRONMENT: staging
       UNIMATCH_DATABASE_URL: postgresql+psycopg://ashyq:${POSTGRES_PASSWORD:-change-me-in-production}@postgres:5432/ashyq_apply
       UNIMATCH_AUTO_MIGRATE: "false"
-      UNIMATCH_DEMO_MODE: ${UNIMATCH_DEMO_MODE:-true}
+      # The stack ships the launch path (CS-1): the verified knowledge base, no
+      # search provider and no page read during a run. A demo run is still a
+      # per-run choice ("demo_mode": true on POST /api/runs), and
+      # UNIMATCH_DEMO_MODE=true restores the old server-wide default.
+      UNIMATCH_DEMO_MODE: ${UNIMATCH_DEMO_MODE:-false}
+      UNIMATCH_KNOWLEDGE_MODE: ${UNIMATCH_KNOWLEDGE_MODE:-kb}
+      UNIMATCH_SEARCH_PROVIDER: ${UNIMATCH_SEARCH_PROVIDER:-none}
       UNIMATCH_RESPECT_ROBOTS: "true"
       UNIMATCH_FETCH_CONTACT: ${UNIMATCH_FETCH_CONTACT:-}
       UNIMATCH_CORS_ORIGINS: ${UNIMATCH_CORS_ORIGINS:-http://localhost:8080}
