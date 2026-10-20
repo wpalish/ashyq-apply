@@ -133,6 +133,12 @@ _EVIDENCE_CATEGORIES: tuple[tuple[re.Pattern[str], str, bool], ...] = (
         "award_links_dropped_off_host_same_site",
         True,
     ),
+    # SH-1 (--same-site-award-links): the sibling-host links the walk kept.
+    (
+        re.compile(r": (\d{1,4}) award links on a sibling host of the same site kept\b"),
+        "award_links_kept_same_site",
+        True,
+    ),
 )
 
 #: ES-1: the questions ``evidence_reach:<question>`` is reported for, by label

@@ -1785,6 +1785,10 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     # Default-on, entered for the removal replay of HP-AUDIT D3
     # (HELDOUT_PROVENANCE_AUDIT_2026-10-20): the two heldout-picked LI-1 rows.
     "heldout-picked-rows": (("app.adapters.discovery.live_discovery", "HELDOUT_PICKED_ROWS"),),
+    # Default-off (REACH_ROWS_2026-10-20, shape S5 sibling-host half, SH-1).
+    "same-site-award-links": (
+        ("app.adapters.scholarship.web_scholarships", "SAME_SITE_AWARD_LINKS"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
@@ -1793,6 +1797,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "listing-follows-local-aliases",
         "subpage-requirements-lead",
         "identity-fold-marks",
+        "same-site-award-links",
     }
 )
 
@@ -2195,6 +2200,13 @@ def main() -> None:
         action="store_true",
         help="plan rule QH-1: a funding index's award link whose href opens with a quote or "
         "holds a double quote (broken markup) is not followed",
+    )
+    parser.add_argument(
+        "--same-site-award-links",
+        action="store_true",
+        help="reach rule SH-1: a funding index's award link on another host of the index's own "
+        "registrable domain (a sibling official host) is followed like a same-host link, within "
+        "the award budget; links to other registrable domains stay dropped",
     )
     parser.add_argument(
         "--award-name-qualifier",
@@ -2857,6 +2869,10 @@ def main() -> None:
             from app.adapters.scholarship import web_scholarships as qh1_module
 
             qh1_module.QUOTED_HREF_GUARD = True
+        if args.same_site_award_links:
+            from app.adapters.scholarship import web_scholarships as sh1_module
+
+            sh1_module.SAME_SITE_AWARD_LINKS = True
         if args.award_name_qualifier:
             from app.adapters import page_classifier as an1_module
 
@@ -3245,6 +3261,7 @@ def main() -> None:
                             else []
                         ),
                         *(["--quoted-href-guard"] if args.quoted_href_guard else []),
+                        *(["--same-site-award-links"] if args.same_site_award_links else []),
                         *(["--award-name-qualifier"] if args.award_name_qualifier else []),
                         *(
                             ["--award-coordinated-degree-scope"]

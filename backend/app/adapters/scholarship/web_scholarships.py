@@ -59,6 +59,7 @@ from app.domain.enums import (
     SourceSpecificity,
 )
 from app.domain.funding import roll_up_availability
+from app.domain.site_identity import hosts_share_site
 from app.schemas.claim import MAX_EXCERPT_CHARS
 from app.schemas.money import Money
 from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
@@ -143,6 +144,17 @@ QUOTED_HREF_GUARD = True
 #: QH-1: a quote that opens the value, or a double quote anywhere in it; an
 #: apostrophe inside a path ("st-john's-award") is a legal URL character.
 _QUOTED_HREF = re.compile(r"^[\"'“”‘’]|[\"“”]|%22", re.I)
+#: SH-1 (REACH_ROWS_2026-10-20, shape S5, sibling-host half), off until a
+#: paired run passes; ``--same-site-award-links`` flips it. ES-1 counted the
+#: award-shaped links an index walk drops for their host, and on two sets
+#: some of them sat on another host of the index's own registrable domain (a
+#: sibling official host, e.g. the university's scholarships subdomain). On:
+#: such a link is kept by ``_award_links`` like a same-host one, so it joins
+#: the one shared award budget and its ranking; "same site" is the
+#: public-suffix-aware ``hosts_share_site``, never a site list. A mail
+#: redirector on the same site (``_MAIL_TRACKING_HOST``) and every link to
+#: another registrable domain stay dropped. Off: nothing changes.
+SAME_SITE_AWARD_LINKS = False
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -678,6 +690,10 @@ class WebScholarshipAdapter:
                     found, off_host = _award_links_counted(page.text, url)
                     if off_host:
                         out.errors.append(_off_host_line(url, off_host))
+                    if SAME_SITE_AWARD_LINKS:
+                        sibling = sum(1 for link in found if not _on_page_host(link, url))
+                        if sibling:
+                            out.errors.append(_sibling_host_line(url, sibling))
                     links = [link for link in found if _page_key(link) not in seen_pages]
                     if AWARD_ROUTE:
                         links = self._route_filter(links, candidate, program, out)
@@ -1856,7 +1872,9 @@ def _lists_awards_below(html: str, url: str) -> bool:
     """True when the page links at least three awards filed beneath its own path."""
     own = re.sub(r"(/index)?\.html?$", "", urlparse(url).path.rstrip("/").lower()) + "/"
     below = [
-        link for link in _award_links(html, url) if urlparse(link).path.lower().startswith(own)
+        link
+        for link in _award_links(html, url)
+        if urlparse(link).path.lower().startswith(own) and _on_page_host(link, url)
     ]
     return len(below) >= _CHILD_AWARDS_FOR_INDEX
 
@@ -1869,7 +1887,11 @@ def _award_link_summary(html: str, url: str) -> str:
     """
     links = _award_links(html, url)
     own = re.sub(r"(/index)?\.html?$", "", urlparse(url).path.rstrip("/").lower()) + "/"
-    below = sum(1 for link in links if urlparse(link).path.lower().startswith(own))
+    below = sum(
+        1
+        for link in links
+        if urlparse(link).path.lower().startswith(own) and _on_page_host(link, url)
+    )
     sample = ", ".join(urlparse(link).path for link in links[:4])
     return f"{len(links)} award links, {below} below it: {sample}"
 
@@ -1945,7 +1967,7 @@ def _award_links_counted(html: str, base: str) -> tuple[list[str], list[str]]:
         haystack = f"{label} {url.lower()}"
         if not any(hint in haystack for hint in _AWARD_HINTS):
             continue
-        if elsewhere:
+        if elsewhere and not (SAME_SITE_AWARD_LINKS and _sibling_host(url, base)):
             if url not in off_host:
                 off_host.append(url)
             continue
@@ -1953,6 +1975,32 @@ def _award_links_counted(html: str, base: str) -> tuple[list[str], list[str]]:
         seen.add(url)
         out.append(url)
     return out, off_host
+
+
+def _sibling_host(url: str, base: str) -> bool:
+    """SH-1: ``url`` is on another host of ``base``'s registrable domain.
+
+    Public-suffix aware (``hosts_share_site``): ``awards.uni.ac.uk`` is a
+    sibling of ``www.uni.ac.uk``, ``other.ac.uk`` is not. A mail redirector
+    on the same site is not a page about an award.
+    """
+    parts = urlparse(url)
+    if parts.scheme not in ("http", "https") or not hosts_share_site(url, base):
+        return False
+    return not _MAIL_TRACKING_HOST.match(parts.hostname or "")
+
+
+def _on_page_host(link: str, url: str) -> bool:
+    """SH-1: a sibling-host link is never "filed beneath" a page's own path.
+
+    True for every link while the rule is off, so nothing changes then.
+    """
+    return not SAME_SITE_AWARD_LINKS or urlparse(link).netloc == urlparse(url).netloc
+
+
+def _sibling_host_line(url: str, kept: int) -> str:
+    """SH-1: the one counted line for an index's award links kept on a sibling host."""
+    return f"{url}: {kept} award links on a sibling host of the same site kept (SH-1)."
 
 
 def _off_host_line(url: str, dropped: list[str]) -> str:
