@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-077",
+ "seed_id": "qs2027-077",
+ "university": "The University of Western Australia",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-077",
+  "round": "topup_round10"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.uwa.edu.au/study/courses/bachelor-of-advanced-computer-science",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 54400,
+    "currency": "AUD",
+    "period": "year",
+    "academic_year": "2027",
+    "population": "international onshore undergraduate students starting in 2027, Bachelor of Advanced Computer Science (Honours), course code BH008"
+   },
+   "url": "https://www.fees.uwa.edu.au/Browse/BrowseCourses?feeType=INTUG&feeYear=2027",
+   "quote": "Course fees for 2027 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z B Annual Fee for Start Year Course Name Course Code Course Credit Points The minimum credit points required to complete the course Annual Credit Points The standard number of credit points taken each year by a full-time student 2027 Bachelor of Advanced Computer Science (Honours) BH008 192 48 $54,400",
+   "notes": "UWA fee browser (fees.uwa.edu.au, the 'fee calculator' the course pages link to), international undergraduate fee type (feeType=INTUG), 'Fees for 2027'. Table 'Course fees for 2027', column 'Annual Fee for Start Year' with the start year 2027; the row reads 'Bachelor of Advanced Computer Science (Honours) BH008 192 48 $54,400' (192 course credit points, 48 annual credit points). The page prints '$'; the currency is the Australian dollar (UWA, Perth). The year is printed as '2027', a calendar (Australian academic) year, not a 2027/28 academic year, so the build is expected to keep it stale like Auckland's 2027 figure (topup_round4 README). The same table gives the Bachelor of Science (the route of the Computer Science major page uwa.edu.au/study/courses/computer-science) the same annual fee: 'Bachelor of Science BP004 144 48 $54,400'. The course pages still say 'There is no current fee information available for this course. Please visit the fee calculator'. UWA states onshore international students are charged per credit point at a course-dependent rate and 'Fees are subject to annual indexation'. Student Services and Amenities Fee not included.",
+   "date": "2026-10-20",
+   "page_language": "en"
+  }
+ }
+}
