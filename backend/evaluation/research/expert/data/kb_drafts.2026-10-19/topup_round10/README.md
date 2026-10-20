@@ -95,3 +95,9 @@ Notes for the reviewer:
 | qs2027-083 | Sheffield | Only a university-wide range is published. `sheffield.ac.uk/new-students/tuition-fees/undergraduate-overseas` prints "For the 2027/28 academic year, the University of Sheffield will charge new full-time overseas undergraduates, tuition fees between £27,650 and £34,670 (except for Medicine and Dentistry courses)". No CS value is given. The course page's fee block is a JavaScript look-up, and the look-up tool's host, `tools.sheffield.ac.uk`, has an unreachable robots.txt (ConnectError), which counts as disallowed. **Reviewer option:** an Auckland-style range draft (amount 27,650, amount_max 34,670, GBP, year, "2027/28"), scoped to all overseas undergraduates. |
 | qs2027-091 | Copenhagen | The fee is not in the readable text. The English and Danish CS bachelor pages give no fee, and `studies.ku.dk/bachelor/tuition-fees…` redirects to the bachelor index. The DKK 130,000 figure (base topup_imported) sits in an inline script with no year, as round 5 found. |
 | qs2027-092 | Penn State | The fee table cannot be read. `tuition.psu.edu` and `bursar.psu.edu` answer HTTP 403. The Penn State Global "University Park Undergraduates: Breakout of Expenses" page renders its tuition table client-side; its readable text has only the policy text and living expenses ($20,700). Its PDF is on `psuglobalprod.prod.acquia-sites.com`, which is not an official domain. |
+
+## Main session decision (2026-10-20)
+
+KFUPM (qs2027-063) held back before the CI check: two official pages disagree (the international-students
+page says tuition is waived for international students living outside Saudi Arabia; ses.kfupm.edu.sa says
+non-Saudis pay SR 20,000 a year with 10–100 % aid). The owner decides which page governs.
