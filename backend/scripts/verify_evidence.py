@@ -75,7 +75,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from app.adapters.extraction import pdf_to_text, readable_text
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, FetchResult
 
 #: Official domains per case, as given to the experts. A host is official when
 #: it equals one of these or ends with ``.`` + one of these.
@@ -397,18 +397,21 @@ async def check(
 Page = tuple[str, int | None, str, str, str]
 
 
+def page_text(result: FetchResult) -> str:
+    """A read page's readable text, before normalising: PDFs through the PDF reader."""
+    if result.is_pdf and result.content:
+        return pdf_to_text(result.content)
+    return readable_text(result.text) if result.text else ""
+
+
 async def _read(fetcher: Fetcher, url: str, pages: dict[str, Page]) -> Page:
     """Each URL is read once per run; PDFs through the PDF reader."""
     if url not in pages:
         result = await fetcher.get(url, use_cache=False)
-        if result.is_pdf and result.content:
-            text = pdf_to_text(result.content)
-        else:
-            text = readable_text(result.text) if result.text else ""
         pages[url] = (
             result.outcome.value,
             result.status_code,
-            normalise(text),
+            normalise(page_text(result)),
             result.error or "",
             result.final_url or "",
         )
