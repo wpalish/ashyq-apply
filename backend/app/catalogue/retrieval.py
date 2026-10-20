@@ -84,8 +84,15 @@ def retrieve(
     preferred: list[str] | None = None,
     excluded: list[str] | None = None,
     university_ids: list[str] | None = None,
+    catalogue: list[University] | None = None,
 ) -> list[University]:
-    rows = list(session.scalars(select(University)))
+    """The catalogue rows that match, in display order.
+
+    ``catalogue`` is every ``University`` row when the caller has already
+    loaded them (the catalogue route does, for its counts): the table is then
+    not read a second time. The result does not depend on the rows' order.
+    """
+    rows = list(session.scalars(select(University))) if catalogue is None else catalogue
     tokens = normalize(query).split()
     selected = set(university_ids or [])
     rows = [

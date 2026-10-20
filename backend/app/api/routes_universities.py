@@ -56,7 +56,14 @@ def universities(
         preferred = profile.preferences.preferred_countries
         excluded = profile.preferences.excluded_countries
     all_rows = list(session.scalars(select(University)))
-    rows = retrieve(session, query=q, country=country, preferred=preferred, excluded=excluded)
+    rows = retrieve(
+        session,
+        query=q,
+        country=country,
+        preferred=preferred,
+        excluded=excluded,
+        catalogue=all_rows,
+    )
     # None in live and demo mode: the response then reads exactly as before,
     # with ``knowledge`` and ``kb_total`` null and ``verified`` ignored.
     coverage = KnowledgeCoverage.for_request(get_settings(), profile)

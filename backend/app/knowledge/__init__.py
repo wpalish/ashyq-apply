@@ -333,19 +333,41 @@ class KnowledgeBase:
     built_at: str | None
     entries: dict[str, KnowledgeEntry]
     sources: list[str] = field(default_factory=list)
+    #: official domain -> position of the first entry naming it; built on first use.
+    _domain_index: tuple[int, int, dict[str, int]] | None = field(
+        default=None, init=False, repr=False, compare=False
+    )
 
     def get(self, seed_id: str | None) -> KnowledgeEntry | None:
         return self.entries.get(seed_id or "")
 
     def by_domain(self, host: str | None) -> KnowledgeEntry | None:
-        """The entry whose official domain is ``host`` or a parent of it."""
+        """The entry whose official domain is ``host`` or a parent of it.
+
+        The first such entry in ``entries`` order, as a scan of every entry
+        would find it, looked up through an index of the domains (PERF-1: the
+        catalogue route asks this for each of its ~500 rows on every request).
+        """
         host = (host or "").lower().removeprefix("www.")
         if not host:
             return None
-        for entry in self.entries.values():
-            if any(host == d or host.endswith("." + d) for d in entry.official_domains):
-                return entry
-        return None
+        index = self._domains()
+        # ``host == d or host.endswith("." + d)``: d is host or a suffix after a dot.
+        names = [host, *(host[i + 1 :] for i, ch in enumerate(host) if ch == ".")]
+        found = [index[name] for name in names if name in index]
+        if not found:
+            return None
+        return list(self.entries.values())[min(found)]
+
+    def _domains(self) -> dict[str, int]:
+        key = (id(self.entries), len(self.entries))
+        if self._domain_index is None or self._domain_index[:2] != key:
+            index: dict[str, int] = {}
+            for position, entry in enumerate(self.entries.values()):
+                for domain in entry.official_domains:
+                    index.setdefault(domain, position)
+            self._domain_index = (*key, index)
+        return self._domain_index[2]
 
 
 def _entry(seed_id: str, raw: dict[str, Any], origin: str) -> KnowledgeEntry:
