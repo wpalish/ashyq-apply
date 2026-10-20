@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-20.kb-cs-bachelor.21",
+ "version": "2026-10-20.kb-cs-bachelor.22",
  "built_at": "2026-10-20",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -350,12 +350,16 @@
     {
      "question": "english",
      "key": "english_evidence.toefl_ibt.minimum",
-     "reason": "expert value 90 is not in the quoted excerpt. Expert (2026-10-19): Published 'minimum and recommended scores' for English tests (TOEFL before 1/21/26 min 90 / rec 100; TOEFL 1-6 scale min 5 / rec 5.5; IELTS 7 / 7.5; PTE 65 / 70; Cambridge 185 / 190; DET 120 / 125). The tests are 'strongly recommended' for non-native speakers who have used English for fewer than fi…"
+     "reason": "expert value 90 is not in the quoted excerpt. Expert (2026-10-19): Published 'minimum and recommended scores' for English tests (TOEFL before 1/21/26 min 90 / rec 100; TOEFL 1-6 scale min 5 / rec 5.5; IELTS 7 / 7.5; PTE 65 / 70; Cambridge 185 / 190; DET 120 / 125). The tests are 'strongly recommended' for non-native speakers who have used English for fewer than fi…",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum grade published. MIT: 'We do not try to convert your grades to the American system, or to find other sorts of equivalence.' and 'We do not have cutoff or recommended scores for the ACT or SAT' (https://mitadmissions.org/apply/firstyear/international/). SAT or ACT is required."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum grade published. MIT: 'We do not try to convert your grades to the American system, or to find other sorts of equivalence.' and 'We do not have cutoff or recommended scores for the ACT or SAT' (https://mitadmissions.org/apply/firstyear/international/). SAT or ACT is required.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -532,17 +536,23 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -860,7 +870,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA is published; holistic review. The Academic Preparation page gives only curriculum recommendations: 'We want to emphasize that these are curriculum recommendations, not requirements.' (https://admission.stanford.edu/apply/first-year/prepare.html)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA is published; holistic review. The Academic Preparation page gives only curriculum recommendations: 'We want to emphasize that these are curriculum recommendations, not requirements.' (https://admission.stanford.edu/apply/first-year/prepare.html).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -1025,22 +1037,30 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): Access. Re-tried 2026-10-20 with the production Fetcher: https://www.ox.ac.uk/admissions/undergraduate/applying-to-oxford/english-language-requirements and https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing/computer-science both answer HTTP 403. The department site only defers to…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Offers are qualification-specific (A-level/IB) on the central course page, which returned 403. Department prose: 'Our standard conditional offer is based on 3 A-levels' (FAQ); shortlisting uses the TMUA with 'no \"pass\" mark' (how_to_apply). No GPA threshold."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Offers are qualification-specific (A-level/IB) on the central course page, which returned 403. Department prose: 'Our standard conditional offer is based on 3 A-levels' (FAQ); shortlisting uses the TMUA with 'no \"pass\" mark' (how_to_apply). No GPA threshold.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: course fees are published on www.ox.ac.uk (course page 'Fees' section and /students/fees-funding/fees/rates), which returns HTTP 403 (Cloudflare challenge) to the normal user agent; not bypassed."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: course fees are published on www.ox.ac.uk (course page 'Fees' section and /students/fees-funding/fees/rates), which returns HTTP 403 (Cloudflare challenge) to the normal user agent; not bypassed.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -1360,7 +1380,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA or grade threshold published; holistic review. SAT or ACT required (exceptions listed on the application-requirements page), no minimum score stated."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA or grade threshold published; holistic review. SAT or ACT required (exceptions listed on the application-requirements page), no minimum score stated.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -2033,12 +2055,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published. Prose only: 'Caltech admissions officers are trained to understand your education system, so there is no need to translate or convert grades to the American system' (international applicants page). Required coursework: four years of math incl. calculus, one year each of ph…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published. Prose only: 'Caltech admissions officers are trained to understand your education system, so there is no need to translate or convert grades to the American system' (international applicants page). Required coursework: four years of math incl. calculus, one year each of ph…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "only the 2026/2027 fee is published, not 2027/28 (expert value 68,574 USD per year). Expert (2026-10-19): On-Campus Cost of Attendance, 'estimated nine-month, full-time cost of attendance budgets ... Enrolled full-time in the 2026-27 school year'. Fees 2,655; housing 12,711; food 9,285; total direct costs $93,225. 2027/28 not yet published."
+     "reason": "only the 2026/2027 fee is published, not 2027/28 (expert value 68,574 USD per year). Expert (2026-10-19): On-Campus Cost of Attendance, 'estimated nine-month, full-time cost of attendance budgets ... Enrolled full-time in the 2026-27 school year'. Fees 2,655; housing 12,711; food 9,285; total direct costs $93,225. 2027/28 not yet published.",
+     "checked_on": "2026-10-19",
+     "kind": "other_year"
     }
    ],
    "not_applicable": [],
@@ -2301,12 +2327,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published by ETH: admission with a non-Swiss certificate is country- and certificate-specific (without exam, reduced or comprehensive entrance examination), per swissuniversities and the ETH country list PDF (https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published by ETH: admission with a non-Swiss certificate is country- and certificate-specific (without exam, reduced or comprehensive entrance examination), per swissuniversities and the ETH country list PDF (https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -2369,27 +2399,37 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Candidate source for CI: the course page's entry requirements (UCL English level)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Candidate source for CI: the course page's entry requirements (UCL English level).",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): A*AA with A* in Mathematics/Further Mathematics; IB 40 points; TARA admissions test required for 2027 entry. Prose/grade offers, not…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): A*AA with A* in Mathematics/Further Mathematics; IB 40 points; TARA admissions test required for 2027 entry. Prose/grade offers, not…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): UCAS Equal Consideration deadline 13 January 2027, 6pm UK time."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): UCAS Equal Consideration deadline 13 January 2027, 6pm UK time.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): Overseas fee GBP 48,600 per year for 2027/28 on the course page."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): Overseas fee GBP 48,600 per year for 2027/28 on the course page.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -2700,7 +2740,9 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): Access. Re-tried 2026-10-20: https://www.nus.edu.sg/oam/admissions/international-qualifications and https://www.nus.edu.sg/oam/admissions/english-language-requirements answer HTTP 200 with an empty body (0 readable characters, bot wall). The School of Computing CS page (200) states no English score…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "access"
     }
    ],
    "not_applicable": [
@@ -2780,22 +2822,30 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure. Target page: https://admissions.hku.hk/apply/international-qualifications/english-language-requirement. admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure. Target page: https://admissions.hku.hk/apply/international-qualifications/english-language-requirement. admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure (international qualifications page on admissions.hku.hk). admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not send a complete chain) and https://www.admissi…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure (international qualifications page on admissions.hku.hk). admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not send a complete chain) and https://www.admissi…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure (international application deadlines on admissions.hku.hk; the 2027 international pamphlet PDF https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf was also unreachable). admissions.hku.hk could not…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure (international application deadlines on admissions.hku.hk; the 2027 international pamphlet PDF https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf was also unreachable). admissions.hku.hk could not…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -2991,22 +3041,30 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No single grade minimum: NTU publishes per-qualification minimums to apply (e.g. 'German Abitur Yes An overall grade of between 1.0 and 2.0 with points between 12 and 15 in individual subjects', 'Bangladesh ... An overall GPA of at least 4.0 ... AND Additional qualification') on https://www.ntu.edu…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No single grade minimum: NTU publishes per-qualification minimums to apply (e.g. 'German Abitur Yes An overall grade of between 1.0 and 2.0 with points between 12 and 15 in individual subjects', 'Bangladesh ... An overall GPA of at least 4.0 ... AND Additional qualification') on https://www.ntu.edu…",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -3319,7 +3377,9 @@
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): The 2026 notice says 'Tuition fee. Further notice will be given after approval.' The 2025-entry notice (https://isd.pku.edu.cn/en/detail.php?id=502) said 'Science and Engineering: RMB 30,000 per academic year' - a 2025/26 figure, not recorded as the answer."
+     "reason": "Expert did not establish it. Expert (2026-10-19): The 2026 notice says 'Tuition fee. Further notice will be given after approval.' The 2025-entry notice (https://isd.pku.edu.cn/en/detail.php?id=502) said 'Science and Engineering: RMB 30,000 per academic year' - a 2025/26 figure, not recorded as the answer.",
+     "checked_on": "2026-10-19",
+     "kind": "other_year"
     }
    ],
    "not_applicable": [
@@ -3694,17 +3754,23 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum. Eligibility page: 'Applicants should demonstrate outstanding academic performance' via transcripts, national exams (ATAR/Abitur/BAC/CSAT/UEC/STPM), international tests (CSCA/SAT/ACT/A-Level/AP/IB) - prose only. Decision is 'a holistic evaluation of academic performance, language p…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum. Eligibility page: 'Applicants should demonstrate outstanding academic performance' via transcripts, national exams (ATAR/Abitur/BAC/CSAT/UEC/STPM), international tests (CSCA/SAT/ACT/A-Level/AP/IB) - prose only. Decision is 'a holistic evaluation of academic performance, language p…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -4075,12 +4141,16 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published (re-read 2026-10-20). https://admissions.upenn.edu/how-to-apply/international-applicants lists the accepted tests ('We accept TOEFL , IELTS Academic , and the Duolingo English Test') and gives only guidance: 'Competitive applicants tend to have a composite score of 5 or above'…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "not_published"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Prose only: 'we do not have explicit course requirements or minimum test score requirements for admittance' (https://admissions.upenn.edu/how-to-apply/international-applicants). No GPA minimum."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Prose only: 'we do not have explicit course requirements or minimum test score requirements for admittance' (https://admissions.upenn.edu/how-to-apply/international-applicants). No GPA minimum.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -4443,7 +4513,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; Cornell reviews holistically ('when reviewed in context with other application materials—such as GPA, academic rigor...'). SAT or ACT required for first-year applicants (https://admissions.cornell.edu/policies/standardized-testing-policy)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; Cornell reviews holistically ('when reviewed in context with other application materials—such as GPA, academic rigor...'). SAT or ACT required for first-year applicants (https://admissions.cornell.edu/policies/standardized-testing-policy).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -4753,12 +4825,16 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published (re-read 2026-10-20). https://admissions.yale.edu/international: a test is required of non-native speakers without two years of English-medium secondary school (TOEFL, IELTS, Cambridge English Qualifications, DET, InitialView). https://admissions.yale.edu/standardized-testing g…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "not_published"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; whole-person review ('All applicants, regardless of nationality, citizenship, or country of origin, are considered through the same whole-person admissions process.'). SAT or ACT required."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; whole-person review ('All applicants, regardless of nationality, citizenship, or country of origin, are considered through the same whole-person admissions process.'). SAT or ACT required.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -5032,22 +5108,30 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: the requirements live on admission.cuhk.edu.hk (TLS chain incomplete). Department prose only: 'applicants are expected to demonstrate outstanding abilities in English, mathematics and science subjects.'"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: the requirements live on admission.cuhk.edu.hk (TLS chain incomplete). Department prose only: 'applicants are expected to demonstrate outstanding abilities in English, mathematics and science subjects.'",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No threshold for international first-year applicants on the pages read. Prose: 'applicants will be considered on the basis of their education background and academic achievements'. The 'overall GPA ≥ 3.0 (or equivalent)' on the department page is for local Senior Year (associate degree / higher dip…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No threshold for international first-year applicants on the pages read. Prose: 'applicants will be considered on the basis of their education background and academic achievements'. The 'overall GPA ≥ 3.0 (or equivalent)' on the department page is for local Senior Year (associate degree / higher dip…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: fees for non-local students are on admission.cuhk.edu.hk (TLS chain incomplete); not read."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: fees for non-local students are on admission.cuhk.edu.hk (TLS chain incomplete); not read.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -5181,7 +5265,9 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -5519,7 +5605,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; holistic review. Official-domain note: kb_top100_list.json gives official_domain \"jh.edu\"; every JHU page read lives under jhu.edu (official_site http://www.jhu.edu/). A checker keyed on jh.edu alone will mark these hosts unofficial."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; holistic review. Official-domain note: kb_top100_list.json gives official_domain \"jh.edu\"; every JHU page read lives under jhu.edu (official_site http://www.jhu.edu/). A checker keyed on jh.edu alone will mark these hosts unofficial.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -6179,6 +6267,13 @@
     "related_programme_urls": [
      "https://study.unimelb.edu.au/find/courses/major/computing-and-software-systems/"
     ],
+    "related_reason": {
+     "statement": "Melbourne has no bachelor titled Computer Science; computing is the 'Computing and Software Systems' major of the Bachelor of Science / Bachelor of Design.",
+     "name": "Bachelor of Science - major: Computing and Software Systems",
+     "url": "https://study.unimelb.edu.au/find/courses/major/computing-and-software-systems/",
+     "verified": false,
+     "checked_on": "2026-10-19"
+    },
     "reason": "no programme page draft"
    },
    "facts": {
@@ -6194,27 +6289,37 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Candidate source for CI: Bachelor of Science entry requirements on study.unimelb.edu.au."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Candidate source for CI: Bachelor of Science entry requirements on study.unimelb.edu.au.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Entry is by country-specific ATAR/qualification scores (not read)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Entry is by country-specific ATAR/qualification scores (not read).",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Candidate source for CI: study.unimelb.edu.au international key dates."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Candidate source for CI: study.unimelb.edu.au international key dates.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Candidate source for CI: Bachelor of Science international fees on study.unimelb.edu.au."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Candidate source for CI: Bachelor of Science international fees on study.unimelb.edu.au.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -6351,7 +6456,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Prose only, no threshold: 'Please do not convert your grades into a 4.0 scaled grade-point average. We evaluate all transcripts based upon the system of where you attend school.' (https://collegeadmissions.uchicago.edu/page-data/apply/international-applicants/page-data.json)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Prose only, no threshold: 'Please do not convert your grades into a 4.0 scaled grade-point average. We evaluate all transcripts based upon the system of where you attend school.' (https://collegeadmissions.uchicago.edu/page-data/apply/international-applicants/page-data.json).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -6924,12 +7031,16 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum published. https://admission.princeton.edu/apply/international-students: 'If English is not your native language and you are attending a school where English is not the language of instruction, you must take the Test of English as a Foreign Language (TOEFL), the International English Lan…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum published. https://admission.princeton.edu/apply/international-students: 'If English is not your native language and you are attending a school where English is not the language of instruction, you must take the Test of English as a Foreign Language (TOEFL), the International English Lan…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA or grade minimum published on the admission pages read (apply, international-students); holistic review."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA or grade minimum published on the admission pages read (apply, international-students); holistic review.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -6957,6 +7068,13 @@
      "https://www.sydney.edu.au/handbooks/engineering/advanced-computing/majors.html",
      "https://www.sydney.edu.au/dam/corporate/documents/study/how-to-apply/international-admission-guide.pdf"
     ],
+    "related_reason": {
+     "statement": "Sydney has no bachelor titled Computer Science; Computer Science is a major inside the Bachelor of Advanced Computing (and a Bachelor of Science major).",
+     "name": "Bachelor of Advanced Computing (major: Computer Science)",
+     "url": "https://www.sydney.edu.au/courses/courses/uc/bachelor-of-advanced-computing.html",
+     "verified": true,
+     "checked_on": "2026-10-19"
+    },
     "reason": "no programme page draft"
    },
    "facts": {
@@ -7271,7 +7389,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum. The 2027 International Admission Guide lists indicative admission scores for B Advanced Computing: International ATAR 90, IB Diploma 34 (and national equivalents such as USA - SAT 1340); 'All scores published are indicative only'. Not a published minimum."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum. The 2027 International Admission Guide lists indicative admission scores for B Advanced Computing: International ATAR 90, IB Diploma 34 (and national equivalents such as USA - SAT 1340); 'All scores published are indicative only'. Not a published minimum.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -7575,7 +7695,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Threshold is an ATAR-style selection rank, not a GPA: 'Applicants with an ANU selection rank of 80 or above are guaranteed admission' / minimum unadjusted rank 70; International Baccalaureate 31. International applicants get 'an equivalent selection rank that is calculated upon application' via a c…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Threshold is an ATAR-style selection rank, not a GPA: 'Applicants with an ANU selection rank of 80 or above are guaranteed admission' / minimum unadjusted rank 70; International Baccalaureate 31. International applicants get 'an equivalent selection rank that is calculated upon application' via a c…",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -7856,12 +7978,16 @@
     {
      "question": "english",
      "key": "english_evidence.toefl_ibt.minimum",
-     "reason": "expert value 90 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic. TOEFL for Science: 90 (120-point scale, tests up to January 20, 2026) or 4.5 (6-point scale, tests as of January 21, 2026), minimum components 21 each (or 4.5). Duolingo 'Score of 125 or better'. Exempt after at least four years of school in a country where English is the primary la…"
+     "reason": "expert value 90 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic. TOEFL for Science: 90 (120-point scale, tests up to January 20, 2026) or 4.5 (6-point scale, tests as of January 21, 2026), minimum components 21 each (or 4.5). Duolingo 'Score of 125 or better'. Exempt after at least four years of school in a country where English is the primary la…",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Could not classify the threshold: Equivalent of a B+ average on the high school record (university-wide minimum for 'Other international high schools'); most programs higher"
+     "reason": "Could not classify the threshold: Equivalent of a B+ average on the high school record (university-wide minimum for 'Other international high schools'); most programs higher",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -7916,37 +8042,51 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "expert value 6.5 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): \"Monash Level A\". The text is in the handbook page's embedded JSON (field english_language), not in the readable text, so verify_evidence is expected NOT to find it. TOEFL iBT minimum section scores: Writing 21, Listening 12, Reading 13, Speaking 18 (as printed)."
+     "reason": "expert value 6.5 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): \"Monash Level A\". The text is in the handbook page's embedded JSON (field english_language), not in the readable text, so verify_evidence is expected NOT to find it. TOEFL iBT minimum section scores: Writing 21, Listening 12, Reading 13, Speaking 18 (as printed).",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "english",
      "key": "ielts.subscores",
-     "reason": "expert value каждая часть ≥ 6 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): \"Monash Level A\". The text is in the handbook page's embedded JSON (field english_language), not in the readable text, so verify_evidence is expected NOT to find it. TOEFL iBT minimum section scores: Writing 21, Listening 12, Reading 13, Speaking 18 (as printed)."
+     "reason": "expert value каждая часть ≥ 6 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): \"Monash Level A\". The text is in the handbook page's embedded JSON (field english_language), not in the readable text, so verify_evidence is expected NOT to find it. TOEFL iBT minimum section scores: Writing 21, Listening 12, Reading 13, Speaking 18 (as printed).",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "english",
      "key": "english_evidence.toefl_ibt.minimum",
-     "reason": "expert value 79 unverified: quote not found on the page (fetch outcome ok). TOEFL iBT, 0-120. Expert (2026-10-19): \"Monash Level A\". The text is in the handbook page's embedded JSON (field english_language), not in the readable text, so verify_evidence is expected NOT to find it. TOEFL iBT minimum section scores: Writing 21, Listening 12, Reading 13, Speaking 18 (as printed)."
+     "reason": "expert value 79 unverified: quote not found on the page (fetch outcome ok). TOEFL iBT, 0-120. Expert (2026-10-19): \"Monash Level A\". The text is in the handbook page's embedded JSON (field english_language), not in the readable text, so verify_evidence is expected NOT to find it. TOEFL iBT minimum section scores: Writing 21, Listening 12, Reading 13, Speaking 18 (as printed).",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): ATAR/international qualification thresholds are on the www.monash.edu course page, which could not be read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-1…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): ATAR/international qualification thresholds are on the www.monash.edu course page, which could not be read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-1…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed. The handbook links fees to student.monash.edu.au/fees-international, whose robots…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed. The handbook links fees to student.monash.edu.au/fees-international, whose robots…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -8140,17 +8280,23 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum average published for international applicants on https://future.utoronto.ca/program/computer-science (per-school-system pages list required courses only, e.g. Ontario: OSSD with six 4U/M courses incl. ENG4U, MHF4U, MCV4U)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum average published for international applicants on https://future.utoronto.ca/program/computer-science (per-school-system pages list required courses only, e.g. Ontario: OSSD with six 4U/M courses incl. ENG4U, MHF4U, MCV4U).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -8451,7 +8597,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No published grade or GPA minimum for international qualification holders; the application asks for 'School reports from Grade 10 onwards' and predicted grades (IB). Selection is competitive; no threshold to record."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No published grade or GPA minimum for international qualification holders; the application asks for 'School reports from Grade 10 onwards' and predicted grades (IB). Selection is competitive; no threshold to record.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -8494,6 +8642,13 @@
       "source_type": "official"
      }
     ],
+    "related_reason": {
+     "statement": "PSL's bachelor list has no bachelor titled Computer Science/Informatique; the closest is Dauphine-PSL's Licence Informatique des Organisations (business-informatics shape), entered through the L1 Mathématiques-Informatique.",
+     "name": "Licence Informatique des Organisations (Dauphine-PSL)",
+     "url": "https://dauphine.psl.eu/formations/licences/informatique-des-organisations",
+     "verified": true,
+     "checked_on": "2026-10-19"
+    },
     "reason": "no programme page draft"
    },
    "facts": {
@@ -8533,17 +8688,23 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published. Prose only: 'Quelle que soit la formation, le recrutement à Dauphine reste très sélectif ... les meilleurs candidats sont retenus d'où qu'ils viennent'; recommended: Mathématiques specialty and the mathématiques expertes option."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published. Prose only: 'Quelle que soit la formation, le recrutement à Dauphine reste très sélectif ... les meilleurs candidats sont retenus d'où qu'ils viennent'; recommended: Mathématiques specialty and the mathématiques expertes option.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): L1 applications go through Parcoursup or, for applicants concerned by the DAP who do not hold a French baccalaureate, Etudes en France; the deadline is set by those national procedures and is not printed on a PSL/Dauphine page that was read. Results of the DAP route come 'dans la deuxième quinzaine…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): L1 applications go through Parcoursup or, for applicants concerned by the DAP who do not hold a French baccalaureate, Etudes en France; the deadline is set by those national procedures and is not printed on a PSL/Dauphine page that was read. Results of the DAP route come 'dans la deuxième quinzaine…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -8879,12 +9040,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Grades are UK/IB/country-specific offers, not a GPA: A levels 'from A*A*A* to AAB' is the range most applicants needed in recent years (indicative); SQA Highers AAAAA; international qualifications by country are in a dropdown not rendered in the readable text. Prose, kept here only."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Grades are UK/IB/country-specific offers, not a GPA: A levels 'from A*A*A* to AAB' is the range most applicants needed in recent years (indicative); SQA Highers AAAAA; international qualifications by country are in a dropdown not rendered in the readable text. Prose, kept here only.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): The degree finder's fee table (study.ed.ac.uk/programmes/undergraduate-fees?programme_code=UTBSCIS, 'Estimate your tuition fees (2027-2028 entry)') and registryservices.ed.ac.uk 'Full-time fees for new students 2027-2028' render the amounts client-side: the readable text has no figure. Internationa…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): The degree finder's fee table (study.ed.ac.uk/programmes/undergraduate-fees?programme_code=UTBSCIS, 'Estimate your tuition fees (2027-2028 entry)') and registryservices.ed.ac.uk 'Full-time fees for new students 2027-2028' render the amounts client-side: the readable text has no figure. Internationa…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -9497,12 +9662,16 @@
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): International fee not published in the served HTML: the course page and /fees subpage render the fee block client-side; the university page /study/undergraduate/fees-and-funding/tuition-fees gives only the Home fee ('Home fees for students based in the UK are set at £9,790 for new students starting…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): International fee not published in the served HTML: the course page and /fees subpage render the fee block client-side; the university page /study/undergraduate/fees-and-funding/tuition-fees gives only the Home fee ('Home fees for students based in the UK are set at £9,790 for new students starting…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -9963,7 +10132,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published in the 2027 Spring international guide; document-based selection (transcripts, personal statement, recommendation)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published in the 2027 Spring international guide; document-based selection (transcripts, personal statement, recommendation).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -10247,17 +10418,23 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum in the 2027 外国学校卒業学生特別選考 guidelines (PDF https://www.u-tokyo.ac.jp/content/400291798.pdf): first stage is a holistic review of submitted documents ('提出された出願書類を総合的に審査し'), second stage essay + interview. EJU subjects are required without published thresholds."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum in the 2027 外国学校卒業学生特別選考 guidelines (PDF https://www.u-tokyo.ac.jp/content/400291798.pdf): first stage is a holistic review of submitted documents ('提出された出願書類を総合的に審査し'), second stage essay + interview. EJU subjects are required without published thresholds.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -10559,7 +10736,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA. Typical offers: A-level A*AA including A* in Mathematics and a science; IB 37 points with 7,6,6 at HL (course page). Not a GPA scale."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA. Typical offers: A-level A*AA including A* in Mathematics and a science; IB 37 points with 7,6,6 at HL (course page). Not a GPA scale.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -10849,12 +11028,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): The 'Minimum entry score' depends on the qualification selected in an interactive selector ('Use the minimum entry score as a guide'); no figure for a non-Australian qualification was readable in the static page. Prerequisites: Queensland Year 12 General English and Mathematical Methods (Units 3 &…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): The 'Minimum entry score' depends on the qualification selected in an interactive selector ('Use the minimum entry score as a guide'); no figure for a non-Australian qualification was readable in the static page. Prerequisites: Queensland Year 12 General English and Mathematical Methods (Units 3 &…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): International (direct application to UQ) route; Year 12 in Australia applies via QTAC. Semester 1 2027 start -> 30 November 2026; Semester 2 2027 -> 31 May 2027. The rule is printed without a year (relative to the year of commencement). Year not inferred: the quote names another intake or round ('semester 2')."
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): International (direct application to UQ) route; Year 12 in Australia applies via QTAC. Semester 1 2027 start -> 30 November 2026; Semester 2 2027 -> 31 May 2027. The rule is printed without a year (relative to the year of commencement). Year not inferred: the quote names another intake or round ('semester 2').",
+     "checked_on": "2026-10-19",
+     "kind": "undated"
     }
    ],
    "not_applicable": [],
@@ -11250,18 +11433,24 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): No score published; cycle_stated '2027학년도 3월 신입학' (Spring/March 2027 entry), not the fall 2027 intake. The 2027 international-track guide (https://admission.yonsei.ac.kr/seoul/upload/guide/20260529144906YVFHLB.PDF, re-read 2026-10-20) asks every unit except medicine/dentistry/nursing/pharmacy for o…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "other_year"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published in the international guide; document-based evaluation."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published in the international guide; document-based evaluation.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
      "reason": "Expert did not establish it. Expert (2026-10-19): Not filled. The 2027 academic-year guide (https://www2.yonsei.ac.kr/entrance/2027/intl/2027_3_docu/2027_3_intl_plan_eng.pdf, readable on 2026-10-19) is for Spring (March 2027) entry: 'Online Application 2026. 9. 1.(Tue) 10:00 ~ 9. 17.(Thu) 17:00' (KST), already past and already recorded by the base…",
-     "source_batch": "topup_round5"
+     "checked_on": "2026-10-19",
+     "source_batch": "topup_round5",
+     "kind": "other_year"
     }
    ],
    "not_applicable": [],
@@ -11385,17 +11574,23 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not read: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed. (discovery only, not evidence: the search index shows an English proficiency…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not read: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed. (discovery only, not evidence: the search index shows an English proficiency…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA known; admissions site not readable: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA known; admissions site not readable: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not read: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not read: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -11435,6 +11630,13 @@
       "source_type": "official"
      }
     ],
+    "related_reason": {
+     "statement": "IP Paris has no bachelor titled Computer Science; its only Bachelor of Science (École Polytechnique, English) leads to a double major, the closest being Mathematics and Computer Science (joined shape).",
+     "name": "Bachelor of Science, École Polytechnique / IP Paris - double major Mathematics and Computer Science",
+     "url": "https://programmes.polytechnique.edu/en/bachelor/program-details/double-major-in-mathematics-computer-science",
+     "verified": true,
+     "checked_on": "2026-10-19"
+    },
     "reason": "no programme page draft"
    },
    "facts": {
@@ -11595,7 +11797,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Prose only: 'have an overall strong academic average', advanced mathematics and at least one advanced science course; holistic selection. No numeric threshold."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Prose only: 'have an overall strong academic average', advanced mathematics and at least one advanced science course; holistic selection. No numeric threshold.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -11901,12 +12105,16 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published (rounds 2-3: a proficiency score is required, 'no minimum score'). Re-check on 2026-10-20 was blocked: admissions.northwestern.edu and catalogs.northwestern.edu robots.txt unreachable (ConnectError), which RFC 9309 treats as disallowed. Nothing new to draft.",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "not_published"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published; holistic review. SAT/ACT optional ('Applicants may submit a score if they wish, but scores are not required')."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published; holistic review. SAT/ACT optional ('Applicants may submit a score if they wish, but scores are not required').",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -12042,22 +12250,30 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum average published on https://you.ubc.ca/programs/computer-science-vancouver-bsc/ (lists required courses only: e.g. IB Diploma with at least three Higher Level courses, Math Analysis and Approaches / Applications and Interpretations HL, one of IB Biology/Chemistry/Physics). University-wi…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum average published on https://you.ubc.ca/programs/computer-science-vancouver-bsc/ (lists required courses only: e.g. IB Diploma with at least three Higher Level courses, Math Analysis and Approaches / Applications and Interpretations HL, one of IB Biology/Chemistry/Physics). University-wi…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -12492,7 +12708,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published: 'Students are admitted on the basis of competitive selection according to their academic performance in senior high school, language proficiency and performance in the interview' (prose); a CSCA report is required from 2026/27 (test, no published minimum)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published: 'Students are admitted on the basis of competitive selection according to their academic performance in senior high school, language proficiency and performance in the interview' (prose); a CSCA report is required from 2026/27 (test, no published minimum).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -12668,17 +12886,23 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -12951,12 +13175,16 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published on ucla.edu (re-read 2026-10-20). https://admission.ucla.edu/apply/international-applicants: 'We look for competitive English proficiency scores, including a TOEFL iBT score of 5 or higher (with sub-scores of 5 or higher) on the revised scale (effective January 21, 2026), or ab…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "not_published"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Prose/indicative only: 'Grades and GPA (4.0 average unweighted GPA for Fall 2025 admits)' (https://admission.ucla.edu/apply/first-year); no minimum for international applicants on ucla.edu."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Prose/indicative only: 'Grades and GPA (4.0 average unweighted GPA for Fall 2025 admits)' (https://admission.ucla.edu/apply/first-year); no minimum for international applicants on ucla.edu.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -13262,27 +13490,37 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -13500,22 +13738,30 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): Access. Re-tried 2026-10-20: https://www.cityu.edu.hk/admo/, /admo/admissions/non-jupas-year-1-admission, /admo/faq and /international/admissions/entrance-requirements all answer HTTP 200 with an empty body (0 characters, bot wall); www.admo.cityu.edu.hk does not resolve. Needs the CI read of https…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): For Year 1 international applicants: on the blocked admissions site. The department page states a CGPA rule only for senior-year entry: 'For senior-year admission, applicants are normally expected to have completed the AD/HD award with a CGPA of >=3.0, or an equivalent overall mark or credit award.…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): For Year 1 international applicants: on the blocked admissions site. The department page states a CGPA rule only for senior-year entry: 'For senior-year admission, applicants are normally expected to have completed the AD/HD award with a CGPA of >=3.0, or an equivalent overall mark or credit award.…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): ACCESS: www.cityu.edu.hk (the Admissions Office site /admo/, including the programme pages https://www.cityu.edu.hk/admo/programmes/bsc-computer-science-0 and /admo/admissions/non-jupas-year-1-admission, and the catalogue /catalogue/ug/current/) answers HTTP 200 with an Imperva/Incapsula bot-challe…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): ACCESS: www.cityu.edu.hk (the Admissions Office site /admo/, including the programme pages https://www.cityu.edu.hk/admo/programmes/bsc-computer-science-0 and /admo/admissions/non-jupas-year-1-admission, and the catalogue /catalogue/ug/current/) answers HTTP 200 with an Imperva/Incapsula bot-challe…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_international",
      "key": "scholarships.department_computer_science_entrance.applicability.international",
-     "reason": "Expert did not establish it. Expert (2026-10-19): The department awards state no residency condition either way; university-level scholarships for non-local students are on the blocked /admo/ site. ACCESS: www.cityu.edu.hk (the Admissions Office site /admo/, including the programme pages https://www.cityu.edu.hk/admo/programmes/bsc-computer-scienc…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): The department awards state no residency condition either way; university-level scholarships for non-local students are on the blocked /admo/ site. ACCESS: www.cityu.edu.hk (the Admissions Office site /admo/, including the programme pages https://www.cityu.edu.hk/admo/programmes/bsc-computer-scienc…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -13944,17 +14190,23 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published for direct major admission. Latest English guide readable: https://oia.korea.ac.kr/_res/oia/etc/Application_Guide_for_Fall_2026_Freshman(ENG).pdf (cycle_stated 'Fall 2026', not the fall 2027 intake), re-read 2026-10-20: 'B. English A score report for TOEFL iBT (including Home E…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "other_year"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published for international freshman applicants; admission by document evaluation (and interview where applicable) per the application guide."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published for international freshman applicants; admission by document evaluation (and interview where applicable) per the application guide.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): https://oia.korea.ac.kr/oia2026/Tuition.do: '※ as of 2026 academic year / per semester' - Humanities & Social Sciences Approx. 5,800,000 KRW; Natural Sciences Approx. 6,700,000; Engineering Approx. 7,700,000; Art Approx. 7,800,000. The page does not say which category the College of Informatics (Co…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): https://oia.korea.ac.kr/oia2026/Tuition.do: '※ as of 2026 academic year / per semester' - Humanities & Social Sciences Approx. 5,800,000 KRW; Natural Sciences Approx. 6,700,000; Engineering Approx. 7,700,000; Art Approx. 7,800,000. The page does not say which category the College of Informatics (Co…",
+     "checked_on": "2026-10-19",
+     "kind": "other_year"
     }
    ],
    "not_applicable": [],
@@ -14244,17 +14496,23 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): Programme language still not confirmed, so the rule is not chosen. www.csie.ntu.edu.tw now answers 200 (2026-10-20), but its admissions pages (/zh_tw/Admission/Announcement12, /en/Admission/education1) state no teaching language and send international applicants to admissions.ntu.edu.tw. The per-de…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "not_researched"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum in the 2027 guidelines: eligibility is a high-school graduation certificate plus transcripts; departments review academically. No numeric threshold for the CSIE bachelor found."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum in the 2027 guidelines: eligibility is a high-school graduation certificate plus transcripts; departments review academically. No numeric threshold for the CSIE bachelor found.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -14643,12 +14901,16 @@
     {
      "question": "english",
      "key": "english_evidence.duolingo.minimum",
-     "reason": "expert value 135 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic 7.5 overall; subscores of 7.5 are 'given consideration', not a stated per-band minimum. TOEFL iBT: 'For exams taken before Jan. 21, 2026: We require at least a 102 overall score' (subscores 25 considered); 'For exams taken on or after Jan. 21, 2026: We require at least a 5 in the ove…"
+     "reason": "expert value 135 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic 7.5 overall; subscores of 7.5 are 'given consideration', not a stated per-band minimum. TOEFL iBT: 'For exams taken before Jan. 21, 2026: We require at least a 102 overall score' (subscores 25 considered); 'For exams taken on or after Jan. 21, 2026: We require at least a 5 in the ove…",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No published GPA minimum. Prose: 'Carnegie Mellon is committed to a holistic approach to admission where no single grade, score or activity guarantees or disqualifies any candidate' (standardized-testing page). SCS testing policy not recorded here."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No published GPA minimum. Prose: 'Carnegie Mellon is committed to a holistic approach to admission where no single grade, score or activity guarantees or disqualifies any candidate' (standardized-testing page). SCS testing policy not recorded here.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -14964,7 +15226,9 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -15249,22 +15513,30 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): ACCESS: every www.nyu.edu admissions page returns HTTP 403 Forbidden to the Fetcher user agent (robots.txt itself answers 403, read as 'no restrictions'; the pages, not robots, refuse us; www.nyu.edu/ home answers 200). Tried: /admissions.html, /admissions/undergraduate-admissions.html, /admissions…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): ACCESS: every www.nyu.edu admissions page returns HTTP 403 Forbidden to the Fetcher user agent (robots.txt itself answers 403, read as 'no restrictions'; the pages, not robots, refuse us; www.nyu.edu/ home answers 200). Tried: /admissions.html, /admissions/undergraduate-admissions.html, /admissions…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Admissions pages on www.nyu.edu return 403 (see english). No grade threshold found on the readable bulletins."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Admissions pages on www.nyu.edu return 403 (see english). No grade threshold found on the readable bulletins.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Deadlines are on www.nyu.edu admissions pages, which return 403 to the Fetcher user agent. Not read."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Deadlines are on www.nyu.edu admissions pages, which return 403 to the Fetcher user agent. Not read.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -15478,12 +15750,16 @@
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not determinable from official pages. The tuition tool (https://icts.kuleuven.be/apps/tuitionfees/) lists only English-taught programmes (no 'Bachelor in de informatica'); it states 'If a non-EEA student wishes to register for a Dutch-taught programme, and there is an English-taught eguivalent with…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not determinable from official pages. The tuition tool (https://icts.kuleuven.be/apps/tuitionfees/) lists only English-taught programmes (no 'Bachelor in de informatica'); it states 'If a non-EEA student wishes to register for a Dutch-taught programme, and there is an English-taught eguivalent with…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -15855,18 +16131,24 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published. Informatik is 'Örtliche Zulassungsbeschränkung' (local numerus clausus) for the 1st semester; selection by grade ranking, cut-offs not published on the pages read."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published. Informatik is 'Örtliche Zulassungsbeschränkung' (local numerus clausus) for the 1st semester; selection by grade ranking, cut-offs not published on the pages read.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
      "reason": "Expert did not establish it. Expert (2026-10-19): Not filled. https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/ still prints only '15. Juli für das Wintersemester (Ausschlussfrist)' with no year, and says the process is being redesigned from Sommersemester 2027 ('Ab Dezember 2026 finden Sie weitere Informationen z…",
-     "source_batch": "topup_round5"
+     "checked_on": "2026-10-19",
+     "source_batch": "topup_round5",
+     "kind": "undated"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -15916,6 +16198,14 @@
     "related_programme_urls": [
      "https://www.lse.ac.uk/study-at-lse/undergraduate/bsc-data-science"
     ],
+    "related_reason": {
+     "statement": "LSE offers no bachelor in Computer Science; the closest is BSc Data Science (Department of Statistics, UCAS N3UD), restated as related as batch7 recorded it.",
+     "name": "BSc Data Science (N3UD)",
+     "url": "https://www.lse.ac.uk/study-at-lse/undergraduate/bsc-data-science",
+     "verified": true,
+     "checked_on": "2026-10-19"
+    },
+    "offered": false,
     "reason": "no programme page draft"
    },
    "facts": {
@@ -16054,7 +16344,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Grade offers, not a GPA (related programme BSc Data Science): A-levels 'A*AA, with an A* in Mathematics'; IB 39 points with 766 at HL; overseas equivalencies by country dropdown (not in the readable text). The page says the standard offers are 'intended only as a guide'."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Grade offers, not a GPA (related programme BSc Data Science): A-levels 'A*AA, with an A* in Mathematics'; IB 39 points with 766 at HL; overseas equivalencies by country dropdown (not in the readable text). The page says the standard offers are 'intended only as a guide'.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -16274,7 +16566,9 @@
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No tuition amount to record; full scholarship (see scholarship answers)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No tuition amount to record; full scholarship (see scholarship answers).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -16675,7 +16969,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Kyoto iUP: document review, then interview (in English); no grade threshold published. Faculty of Engineering applicants must submit score/grade reports for mathematics, physics and chemistry. No numeric minimum."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Kyoto iUP: document review, then interview (in English); no grade threshold published. Faculty of Engineering applicants must submit score/grade reports for mathematics, physics and chemistry. No numeric minimum.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -16737,27 +17033,37 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (application requirements). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate'…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (application requirements). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate'…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (evaluation). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate' on robots.txt…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (evaluation). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate' on robots.txt…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (application schedule, Fall 2027). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certif…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (application schedule, Fall 2027). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certif…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -17033,7 +17339,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA or grade minimum: 'you should feel confident that your accomplishments would allow you to be admitted to a leading university in your own country' (https://admission.brown.edu/international/admission-criteria). Prose only."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA or grade minimum: 'you should feel confident that your accomplishments would allow you to be admitted to a leading university in your own country' (https://admission.brown.edu/international/admission-criteria). Prose only.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -17210,17 +17518,23 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -17457,12 +17771,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA. Typical offer A-level A*A*A including A* in Mathematics (contextual A*AA); TMUA required (course page)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA. Typical offer A-level A*A*A including A* in Mathematics (contextual A*AA); TMUA required (course page).",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No 2027 date on the CS pages. The Department of Computer Science FAQ says 'Equal consideration will be given to all applications received by the UCAS deadline of 14th January' (https://warwick.ac.uk/fac/sci/dcs/admissions/undergraduate/faqs/) - no year printed, and 14 January was the 2026-entry UCA…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No 2027 date on the CS pages. The Department of Computer Science FAQ says 'Equal consideration will be given to all applications received by the UCAS deadline of 14th January' (https://warwick.ac.uk/fac/sci/dcs/admissions/undergraduate/faqs/) - no year printed, and 14 January was the 2026-entry UCA…",
+     "checked_on": "2026-10-19",
+     "kind": "other_year"
     }
    ],
    "not_applicable": [],
@@ -17773,12 +18091,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): UK route: 'A*AA to include A-level Mathematics grade A' (contextual AAA). International equivalents are behind the country selector ('International entry requirements Additional requirements for select a country...') and were not readable as static text."
+     "reason": "Expert did not establish it. Expert (2026-10-19): UK route: 'A*AA to include A-level Mathematics grade A' (contextual AAA). International equivalents are behind the country selector ('International entry requirements Additional requirements for select a country...') and were not readable as static text.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "expert value 33,300 GBP unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): The international figure sits in the page's embedded data ('internationalFeesContent': stat '£33,300', description 'per year for international students for 2027/28'; header fact box 'Fees (international) £33,300') and is shown only after choosing a country; the static readable text shows the UK fig…"
+     "reason": "expert value 33,300 GBP unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): The international figure sits in the page's embedded data ('internationalFeesContent': stat '£33,300', description 'per year for international students for 2027/28'; header fact box 'Fees (international) £33,300') and is shown only after choosing a country; the static readable text shows the UK fig…",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     }
    ],
    "not_applicable": [],
@@ -18115,17 +18437,23 @@
     {
      "question": "english",
      "key": "english_evidence.toefl_ibt.minimum",
-     "reason": "expert value 100 is not in the quoted excerpt. Expert (2026-10-19): Recommended, not required: 'If you are a non-native English speaker or if you are not currently studying in an English-medium curriculum, we recommend but do not require that you take an English proficiency test.' Expected minimums if taken: TOEFL '100 on the internet-based TOEFL', Duolingo 130, PT…"
+     "reason": "expert value 100 is not in the quoted excerpt. Expert (2026-10-19): Recommended, not required: 'If you are a non-native English speaker or if you are not currently studying in an English-medium curriculum, we recommend but do not require that you take an English proficiency test.' Expected minimums if taken: TOEFL '100 on the internet-based TOEFL', Duolingo 130, PT…",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "english",
      "key": "english_evidence.duolingo.minimum",
-     "reason": "expert value 130 is not in the quoted excerpt. Expert (2026-10-19): Recommended, not required: 'If you are a non-native English speaker or if you are not currently studying in an English-medium curriculum, we recommend but do not require that you take an English proficiency test.' Expected minimums if taken: TOEFL '100 on the internet-based TOEFL', Duolingo 130, PT…"
+     "reason": "expert value 130 is not in the quoted excerpt. Expert (2026-10-19): Recommended, not required: 'If you are a non-native English speaker or if you are not currently studying in an English-medium curriculum, we recommend but do not require that you take an English proficiency test.' Expected minimums if taken: TOEFL '100 on the internet-based TOEFL', Duolingo 130, PT…",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No first-year GPA minimum. Prose: 'We look at the courses you’ve taken from what’s available to you, individual grades in academic courses, overall GPA, and class rank (when available).' (The 3.7 college GPA on the same page is for transfer applicants.)"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No first-year GPA minimum. Prose: 'We look at the courses you’ve taken from what’s available to you, individual grades in academic courses, overall GPA, and class rank (when available).' (The 3.7 college GPA on the same page is for transfer applicants.)",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -18167,6 +18495,13 @@
       "source_type": "official"
      }
     ],
+    "related_reason": {
+     "statement": "Lund has no kandidatprogram in Computer Science/Datavetenskap (re-checked by search on lu.se 2026-10-19); closest are TGDAT (computer engineering, Swedish) and EGSYS (information systems).",
+     "name": "TGDAT Högskoleingenjörsutbildning i datateknik",
+     "url": "https://www.lu.se/studera/hogskoleingenjorsutbildning-i-datateknik-TGDAT",
+     "verified": true,
+     "checked_on": "2026-10-19"
+    },
     "reason": "no programme page draft"
    },
    "facts": {
@@ -18353,7 +18688,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Selection by grades (66%) and Högskoleprovet (34%); the page lists past admission scores (Höstterminen 2026: BI 17,17) — past-cycle results, not a published minimum."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Selection by grades (66%) and Högskoleprovet (34%); the page lists past admission scores (Höstterminen 2026: BI 17,17) — past-cycle results, not a published minimum.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -18715,12 +19052,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA or grade threshold published for international first-year applicants on the pages read; holistic review."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA or grade threshold published for international first-year applicants on the pages read; holistic review.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "scholarship_international",
      "key": "scholarships.incoming.applicability.international",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No page read states whether international students are eligible for incoming-student scholarships. The TASFA mention covers Texas non-citizen residents, not international students. Not established."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No page read states whether international students are eligible for incoming-student scholarships. The TASFA mention covers Texas non-citizen residents, not international students. Not established.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -18803,17 +19144,23 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published for L1 via the DAP (Etudes en France) route; selection on file."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published for L1 via the DAP (Etudes en France) route; selection on file.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Enrolment fees 2026/2027: 'Bachelor’s degree programmes: €178' (national rate, sorbonne-universite.fr/en/education/study-sorbonne-university/enrolment-procedures-and-tuition-fees). Non-EU students are in principle liable to the national differentiated fees, whose amount is not printed on the pages…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Enrolment fees 2026/2027: 'Bachelor’s degree programmes: €178' (national rate, sorbonne-universite.fr/en/education/study-sorbonne-university/enrolment-procedures-and-tuition-fees). Non-EU students are in principle liable to the national differentiated fees, whose amount is not printed on the pages…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -19071,12 +19418,16 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): No first-year minimum published (re-read 2026-10-20). https://www.admissions.illinois.edu/international-requirements/: 'If you did not complete Grades 10–12 in an approved English‐speaking country, you must submit one of the following test scores: TOEFL IELTS Duolingo English Test ACT* SAT*' and 'T…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "not_published"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No published GPA minimum for first-year applicants; holistic review (Grainger scholarship FAQ mentions 'high school GPA and rigor' as review inputs, prose)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No published GPA minimum for first-year applicants; holistic review (Grainger scholarship FAQ mentions 'high school GPA and rigor' as review inputs, prose).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -19386,7 +19737,9 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -19466,17 +19819,23 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum. L1 MI page: 'Public visé et prérequis Bachelier.ère.s avec un bon niveau en mathématiques.' (prose, kept as notes). Capacity 90 places."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum. L1 MI page: 'Public visé et prérequis Bachelier.ère.s avec un bon niveau en mathématiques.' (prose, kept as notes). Capacity 90 places.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No exact international deadline on official university pages. Non-EU applicants without a French/European bac apply via Études en France (country-dependent, Campus France site) or via the DAP; the university page says only: 'This request must be made between the November and January preceding the a…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No exact international deadline on official university pages. Non-EU applicants without a French/European bac apply via Études en France (country-dependent, Campus France site) or via the DAP; the university page says only: 'This request must be made between the November and January preceding the a…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -19676,7 +20035,9 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "expert value 2027-01-11 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): Table 'Apply for Semester 1 by' (2027 column) for international applicants from 'All other countries'. A listed group of countries has an earlier date: '... 29 December 2025 11 May 2026 28 December 2026 24 May 2027' (Semester 1 2027: 28 December 2026). 'Dates are subject to change without notice an…"
+     "reason": "expert value 2027-01-11 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): Table 'Apply for Semester 1 by' (2027 column) for international applicants from 'All other countries'. A listed group of countries has an earlier date: '... 29 December 2025 11 May 2026 28 December 2026 24 May 2027' (Semester 1 2027: 28 December 2026). 'Dates are subject to change without notice an…",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     }
    ],
    "not_applicable": [
@@ -20177,7 +20538,9 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No closing date on the programme page or the international how-to-apply page ('Check the application closing date for your chosen degree.'); the FAQ 'When is the last date to apply?' lives on ask.adelaideuni.edu.au, whose robots.txt disallows the answer pages for our user agent (and the host is not…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No closing date on the programme page or the international how-to-apply page ('Check the application closing date for your chosen degree.'); the FAQ 'When is the last date to apply?' lives on ask.adelaideuni.edu.au, whose robots.txt disallows the answer pages for our user agent (and the host is not…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [
@@ -20366,12 +20729,16 @@
     {
      "question": "english",
      "key": "english_evidence.toefl_ibt.minimum",
-     "reason": "expert value 92 is not in the quoted excerpt. Expert (2026-10-19): Programme page, 'Entry requirements for entry in 2027'. One sitting; tests within 2 years 5 months of start; IELTS One Skill Retake accepted."
+     "reason": "expert value 92 is not in the quoted excerpt. Expert (2026-10-19): Programme page, 'Entry requirements for entry in 2027'. One sitting; tests within 2 years 5 months of start; IELTS One Skill Retake accepted.",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published on the programme page; entry is by national qualifications (A-level/SQA/IB grade offers) and the admissions guidance pages."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published on the programme page; entry is by national qualifications (A-level/SQA/IB grade offers) and the admissions guidance pages.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [],
@@ -20688,6 +21055,13 @@
       "source_type": "official"
      }
     ],
+    "related_reason": {
+     "statement": "KTH has no bachelor titled Computer Science; closest are Civilingenjör Datateknik 300 hp (5-year, Swedish) and the English-taught BSc Information and Communication Technology.",
+     "name": "Datateknik, civilingenjör, 300 hp",
+     "url": "https://www.kth.se/utbildning/civilingenjor/datateknik/datateknik-civilingenjor-300-hp-1.4116",
+     "verified": true,
+     "checked_on": "2026-10-19"
+    },
     "reason": "no programme page draft"
    },
    "facts": {
@@ -20831,7 +21205,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published. Prose: 'Admission is highly competitive, with far fewer places than qualified applicants. In 2024, 10% of eligible applicants were admitted.' Subject requirement Mathematics 4 and Physics 2 (passing grade); IB route 'International Baccalaureate Diploma with 24 points'…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published. Prose: 'Admission is highly competitive, with far fewer places than qualified applicants. In 2024, 10% of eligible applicants were admitted.' Subject requirement Mathematics 4 and Physics 2 (passing grade); IB route 'International Baccalaureate Diploma with 24 points'…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -21173,12 +21549,16 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Enrolment dates are on https://www.cbc.uba.ar/inscripciones (CBC registration), which was not read in this top-up; the UBA international office page https://www.uba.ar/internacionales/contenido.php?id=172 timed out (curl 28, 40 s, no bytes)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Enrolment dates are on https://www.cbc.uba.ar/inscripciones (CBC registration), which was not read in this top-up; the UBA international office page https://www.uba.ar/internacionales/contenido.php?id=172 timed out (curl 28, 40 s, no bytes).",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -21262,27 +21642,37 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Course and admissions pages on www.durham.ac.uk not readable. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions; the pages refuse us). Course page https:…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Course and admissions pages on www.durham.ac.uk not readable. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions; the pages refuse us). Course page https:…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Entry requirements are on the blocked course page. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions; the pages refuse us). Course page https://www.durha…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Entry requirements are on the blocked course page. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions; the pages refuse us). Course page https://www.durha…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): UCAS deadline not read from an official page that opens for us. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions; the pages refuse us). Course page http…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): UCAS deadline not read from an official page that opens for us. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions; the pages refuse us). Course page http…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): International fee on the blocked course page (a search-engine summary is discovery only, not evidence). ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): International fee on the blocked course page (a search-engine summary is discovery only, not evidence). ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -21789,12 +22179,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Entry by qualification-specific minimum scores in the 2027 international course summary table (ATAR 75, Gaokao 471, etc., columns garbled in the PDF text); the course page's lowest selection rank 80.6 is a past-intake figure (indicative). No GPA."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Entry by qualification-specific minimum scores in the 2027 international course summary table (ATAR 75, Gaokao 471, etc., columns garbled in the PDF text); the course page's lowest selection rank 80.6 is a past-intake figure (indicative). No GPA.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): Principal dates, entry dated 30 November in the 2026 calendar (the day and month are separate cells; the quote prints only the session year 2027). Applicants based in Australia: 15 January (application-dates page). Year not inferred: the quote does not print this day and month."
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): Principal dates, entry dated 30 November in the 2026 calendar (the day and month are separate cells; the quote prints only the session year 2027). Applicants based in Australia: 15 January (application-dates page). Year not inferred: the quote does not print this day and month.",
+     "checked_on": "2026-10-19",
+     "kind": "undated"
     }
    ],
    "not_applicable": [],
@@ -21858,17 +22252,23 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
+     "reason": "Expert did not establish it. Expert draft 2026-10-19.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -22210,7 +22610,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published: selection by material review 'according to high-school grades, language level and overall ability' plus written test and interview for the School of Computer Science; CSCA test required (STEM Chinese, Mathematics, Physics per the 2027 catalogue). Source: https://hwxy.n…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published: selection by material review 'according to high-school grades, language level and overall ability' plus written test and interview for the School of Computer Science; CSCA test required (STEM Chinese, Mathematics, Physics per the 2027 catalogue). Source: https://hwxy.n…",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -22385,7 +22787,9 @@
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "only the not stated fee is published, not 2027/28 (expert value 130,000 DKK per year). Expert (2026-10-19): Bachelor 'Computer Science' entry of the page's programme dropdown ('Select study level: Bachelor' -> 'Computer Science'). The text is held in an inline script object (const uddannelser = {BA: [...]}) and rendered on selection, so it is NOT in the page's readable text: the container quote check is…"
+     "reason": "only the not stated fee is published, not 2027/28 (expert value 130,000 DKK per year). Expert (2026-10-19): Bachelor 'Computer Science' entry of the page's programme dropdown ('Select study level: Bachelor' -> 'Computer Science'). The text is held in an inline script object (const uddannelser = {BA: [...]}) and rendered on selection, so it is NOT in the page's readable text: the container quote check is…",
+     "checked_on": "2026-10-19",
+     "kind": "other_year"
     }
    ],
    "not_applicable": [
@@ -22774,12 +23178,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum high-school GPA published for admission (holistic review, STARS self-reported academic record; test-optional). The 3.20 GPA in the bulletin is the entrance-to-major threshold after 29-55 Penn State credits, not an admission requirement."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum high-school GPA published for admission (holistic review, STARS self-reported academic record; test-optional). The 3.20 GPA in the bulletin is the entrance-to-major threshold after 29-55 Penn State credits, not an admission requirement.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not readable as published text: tuition.psu.edu (the Bursar's tuition schedules) answers 403 to our user agent. Penn State Global 'University Park Undergraduates: Breakout of Expenses' (https://global.psu.edu/page/university-park-undergraduates-breakout-expenses) has a table, rendered client-side (…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not readable as published text: tuition.psu.edu (the Bursar's tuition schedules) answers 403 to our user agent. Penn State Global 'University Park Undergraduates: Breakout of Expenses' (https://global.psu.edu/page/university-park-undergraduates-breakout-expenses) has a table, rendered client-side (…",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -23098,12 +23506,16 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published for first-year applicants (holistic review). The catalog's 'Minimum 2.00 cumulative GPA in all CSE courses' is a graduation rule, not admission."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published for first-year applicants (holistic review). The catalog's 'Minimum 2.00 cumulative GPA in all CSE courses' is a graduation rule, not admission.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-15). Expert (2026-10-19): First-year deadlines (no year printed; current cycle = autumn 2027 entry). International first-year students apply for autumn only; same deadline. Official domain in kb_top100_list.json is uw.edu; the official site is www.washington.edu and all pages used here are on washington.edu. Year not inferred: the quote names another intake or round ('summer')."
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-15). Expert (2026-10-19): First-year deadlines (no year printed; current cycle = autumn 2027 entry). International first-year students apply for autumn only; same deadline. Official domain in kb_top100_list.json is uw.edu; the official site is www.washington.edu and all pages used here are on washington.edu. Year not inferred: the quote names another intake or round ('summer').",
+     "checked_on": "2026-10-19",
+     "kind": "undated"
     }
    ],
    "not_applicable": [],
@@ -23490,12 +23902,16 @@
     {
      "question": "english",
      "key": "english_evidence.duolingo.minimum",
-     "reason": "expert value 125 is not in the quoted excerpt. Expert (2026-10-19): TOEFL iBT: 'most competitive' 90-100 composite with 20 in each section (new 1-6 scale from January 21, 2026: 5.0 or higher). IELTS: 'A total/overall score of 7 or higher will also satisfy BU's English Language proficiency requirement for all programs.' DET: 'most competitive ... at least 125-135'.…"
+     "reason": "expert value 125 is not in the quoted excerpt. Expert (2026-10-19): TOEFL iBT: 'most competitive' 90-100 composite with 20 in each section (new 1-6 scale from January 21, 2026: 5.0 or higher). IELTS: 'A total/overall score of 7 or higher will also satisfy BU's English Language proficiency requirement for all programs.' DET: 'most competitive ... at least 125-135'.…",
+     "checked_on": "2026-10-19",
+     "kind": "unverified_quote"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA; recommended high-school curriculum only. BU is test-optional for first-year applicants through fall 2028 (https://www.bu.edu/admissions/apply/first-year/)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA; recommended high-school curriculum only. BU is test-optional for first-year applicants through fall 2028 (https://www.bu.edu/admissions/apply/first-year/).",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [],
@@ -23619,17 +24035,23 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): Not readable. Japanese-taught; the privately-funded special screening is for April 2027 admission. The FAQ (https://www.osaka-u.ac.jp/ja/admissions/faculty/expense/files/2027tokubetsunyushi_faq.pdf/@@download/file) says some faculties set a TOEFL score as an application condition ('学部によっては、大阪大学に出願す…",
-     "source_batch": "topup_round7"
+     "checked_on": "2026-10-20",
+     "source_batch": "topup_round7",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold found; selection by EJU, TOEFL, written exam and interview (thresholds, if any, in the encrypted 2027 guideline)."
+     "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold found; selection by EJU, TOEFL, written exam and interview (thresholds, if any, in the encrypted 2027 guideline).",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): AY2027 (April 2027) Special Screening for Privately-funded International Students: the application period is only in the encrypted 2027 guideline PDF; the HTML pages (en and ja) list the procedure but no dates."
+     "reason": "Expert did not establish it. Expert (2026-10-19): AY2027 (April 2027) Special Screening for Privately-funded International Students: the application period is only in the encrypted 2027 guideline PDF; the HTML pages (en and ja) list the procedure but no dates.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -23672,27 +24094,37 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: the calendar's 'General Undergraduate Admission Requirements' (content.php?catoid=69&navoid=21510) returns an AWS WAF challenge (HTTP 202, empty); www.ualberta.ca admissions pages return HTTP 403 (CloudFront). Not bypassed."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: the calendar's 'General Undergraduate Admission Requirements' (content.php?catoid=69&navoid=21510) returns an AWS WAF challenge (HTTP 202, empty); www.ualberta.ca admissions pages return HTTP 403 (CloudFront). Not bypassed.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: 'Faculty of Science Admission Requirements' (calendar navoid=20823) returns an AWS WAF challenge; not read."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: 'Faculty of Science Admission Requirements' (calendar navoid=20823) returns an AWS WAF challenge; not read.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: www.ualberta.ca admissions deadlines pages return HTTP 403 (CloudFront); not bypassed."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: www.ualberta.ca admissions deadlines pages return HTTP 403 (CloudFront); not bypassed.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "tuition",
      "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: www.ualberta.ca tuition pages return HTTP 403 (CloudFront); not bypassed."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: www.ualberta.ca tuition pages return HTTP 403 (CloudFront); not bypassed.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     },
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish a scholarship; no scholarship keys written.",
+     "checked_on": "2026-10-19",
+     "kind": "access"
     }
    ],
    "not_applicable": [],
@@ -24031,7 +24463,9 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): The application period is in the 令和9（2027）年度 募集要項 (PDF guideline), not read; the page gives first-stage results 1月6日（水） and the written test 1月20日（水） without a year."
+     "reason": "Expert did not establish it. Expert (2026-10-19): The application period is in the 令和9（2027）年度 募集要項 (PDF guideline), not read; the page gives first-stage results 1月6日（水） and the written test 1月20日（水） without a year.",
+     "checked_on": "2026-10-19",
+     "kind": "not_researched"
     }
    ],
    "not_applicable": [
@@ -24523,7 +24957,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Local admission restriction (NC): places allocated by the FU statutes ('Satzung zur Vergabe von Studienplätzen in den Bachelorstudiengängen des Fachbereichs Mathematik und Informatik'); no published minimum grade; whether the subject is restricted is set anew each semester."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Local admission restriction (NC): places allocated by the FU statutes ('Satzung zur Vergabe von Studienplätzen in den Bachelorstudiengängen des Fachbereichs Mathematik und Informatik'); no published minimum grade; whether the subject is restricted is set anew each semester.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
@@ -24856,7 +25292,9 @@
     {
      "question": "gpa",
      "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Foreign certificates are admitted by country-specific rules (swissuniversities), not by a published grade threshold on UZH pages read."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Foreign certificates are admitted by country-specific rules (swissuniversities), not by a published grade threshold on UZH pages read.",
+     "checked_on": "2026-10-19",
+     "kind": "not_published"
     }
    ],
    "not_applicable": [
