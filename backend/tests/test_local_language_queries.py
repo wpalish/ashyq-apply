@@ -191,7 +191,10 @@ def test_no_alias_no_degree_word_or_another_level_means_no_local_family(r5, monk
     # R1's table names a bachelor's only; a master's plan is today's.
     master = intent("Norway", degree=DegreeLevel.MASTER)
     assert queries_for(master) == replace_flag_off(master)
-    # A language with an alias but no degree word (Catalan: "grau" alone is not R1's).
+    # A language with an alias but no degree word. Catalan had none until LV-1
+    # gave it R1's own "grau en" ("grau" alone is not R1's word).
+    assert page_classifier.local_bachelor_word("ca") == "grau en"
+    monkeypatch.setattr(page_classifier, "_LOCAL_BACHELOR_QUERY_WORDS", {"ca": "grau"})
     assert page_classifier.local_bachelor_word("ca") is None
     monkeypatch.setattr(page_classifier, "_LOCAL_BACHELOR_QUERY_WORDS", {})
     assert families(queries_for(intent("Norway"))) == TODAY

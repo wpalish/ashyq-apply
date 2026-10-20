@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-30.1",
+  "version": "2026-10-20.1",
   "notes": "Vocabulary for retrieval only. A strong alias is the same field under another name; a related concept is a candidate worth fetching and never an automatic match. Non-English aliases are limited to ones that are not in doubt: a guessed alias silently matches the wrong programme.",
   "fields": {
     "computer_science": {
@@ -53,7 +53,9 @@
         {"language": "zh", "alias": "計算機科學", "flag": "LOCALIZED_PAGE_IDENTITY"},
         {"language": "ko", "alias": "컴퓨터과학", "flag": "LOCALIZED_PAGE_IDENTITY"},
         {"language": "ko", "alias": "전산학", "flag": "LOCALIZED_PAGE_IDENTITY"},
-        {"language": "th", "alias": "วิทยาการคอมพิวเตอร์", "flag": "LOCALIZED_PAGE_IDENTITY"}
+        {"language": "th", "alias": "วิทยาการคอมพิวเตอร์", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "nb", "alias": "informatikk", "flag": "LEXICON_LANGUAGE_COVERAGE", "source": "Bokmålsordboka (Språkrådet and UiB), s.v. informatikk"},
+        {"language": "nn", "alias": "informatikk", "flag": "LEXICON_LANGUAGE_COVERAGE", "source": "Nynorskordboka (Språkrådet and UiB), s.v. informatikk"}
       ],
       "localized_related_not_equivalent": [
         {"language": "es", "term": "ingeniería informática", "flag": "LOCALIZED_PAGE_IDENTITY"},

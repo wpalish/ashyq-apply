@@ -121,6 +121,19 @@ LEXICON_V2 = False
 #: On since paired runs 39119685301 / 39119686849 / 39119688512 / 39119690148
 #: (dev4 rwth stable gain, 0 losses, 0 new wrong claims); False turns it off.
 LOCALIZED_PAGE_IDENTITY = True
+#: LV-1 (NEXT_CYCLES_2026-10-20 §LV-1, lexicon battery,
+#: ``tests/test_lexicon_language_coverage.py``): the rows the battery found
+#: missing for a language some development set speaks, from a dictionary,
+#: off until a replay passes: Estonian's integrated bachelor-and-master study
+#: read as a master's (``_LV1_DEGREE_WORDS``; without it the statutory name,
+#: which opens on "bakalaureuse-", reads as a bachelor's and is confirmed for
+#: a bachelor applicant), the Bokmål and Nynorsk aliases of computer science
+#: (ontology entries flagged ``LEXICON_LANGUAGE_COVERAGE``), and the local
+#: level words a URL slug writes (``live_discovery._LV1_DEGREE_SLUGS``). Rows
+#: for languages no development set speaks (ca, sk) are in the tables
+#: unflagged. The benchmark harness flips it per capture
+#: (``--lexicon-language-coverage``). False (the default) changes nothing.
+LEXICON_LANGUAGE_COVERAGE = False
 #: Plan rule FI-1 (wrong-claims analysis 2026-10-18 R-D1): part (ii) of LX-1 on
 #: its own, so the funding-gate scope can be measured without the lexicon. UNSW's
 #: own "Bachelor of Science (Computer Science)" page lists one scholarship link
@@ -421,6 +434,10 @@ _LOCALIZED_DEGREE_WORDS: tuple[tuple[str, str, frozenset[str] | None], ...] = (
     (r"大学院|修士|硕士|碩士|研究生", "master", None),  # ja/zh
     (r"석사|대학원", "master", None),  # ko
     (r"ปริญญาโท", "master", None),  # th
+    # sk: the second cycle of a technical field is "inžiniersky študijný
+    # program" (Act No. 131/2002 Coll. §53, title Ing.). Slovak spelling only:
+    # Polish "studia inżynierskie" is a first cycle (below). LV-1.
+    (r"\bin[žz]iniersk\w*", "master", frozenset({"sk"})),
     # --- bachelor's -------------------------------------------------------
     (r"\blicence\b", "bachelor", frozenset({"fr"})),
     (r"\blaurea\b(?!\s+(?:magistrale|specialistica)\b)", "bachelor", None),  # it
@@ -449,6 +466,21 @@ _LOCALIZED_DEGREE_WORDS: tuple[tuple[str, str, frozenset[str] | None], ...] = (
     (r"학부\s?(?:과정|생)|학사\s?(?:학위|과정)", "bachelor", None),  # ko
     (r"ปริญญาตรี", "bachelor", None),  # th
 )
+#: LV-1 (``LEXICON_LANGUAGE_COVERAGE``): degree words the lexicon battery found
+#: missing, as ``(pattern, level, languages)`` like R1's, read ahead of R1's
+#: table while the flag is on so that a tie goes to them. et: the Estonian
+#: Higher Education Act (Kõrgharidusseadus, RT I 2019) names among the levels
+#: of higher education "bakalaureuse- ja magistriõppe integreeritud õpe",
+#: integrated study whose graduates hold a master's degree (magistrikraad);
+#: its name opens on the bachelor's word, so without this row it reads as a
+#: bachelor's.
+_LV1_DEGREE_WORDS: tuple[tuple[str, str, frozenset[str] | None], ...] = (
+    (
+        r"\bbakalaureuse-?\s*ja\s+magistri\w*\s+integreeritud\b|\bintegreeritud\s+õp\w*",
+        "master",
+        None,
+    ),
+)
 #: Plan v3 R5 (``LOCAL_LANGUAGE_QUERIES``): the one bachelor's word a query
 #: names the level by, per language of ``languages.json``. Not a second degree
 #: table: each is a headword of the patterns above, and
@@ -457,8 +489,13 @@ _LOCALIZED_DEGREE_WORDS: tuple[tuple[str, str, frozenset[str] | None], ...] = (
 #: as a bachelor's and nothing else, so a word can never drift from what the
 #: confirm step accepts. M5's words where the probe measured one (es
 #: licenciatura, fr licence, no/da/nl bachelor, zh 本科, th ปริญญาตรี). Catalan
-#: has none: "grau" alone is not R1's "grau en", so a ca site gets no family.
+#: (LV-1): "grau" alone is not R1's "grau en", so the query word is the title's
+#: own "grau en" (DIEC2, IEC, s.v. "grau": an academic degree; Reial Decret
+#: 822/2021 art. 14, Catalan text: "títol de Graduat o Graduada en …", which
+#: Catalan universities write "Grau en …"). Spain lists es first, so no Spanish
+#: site reaches it today.
 _LOCAL_BACHELOR_QUERY_WORDS: dict[str, str] = {
+    "ca": "grau en",
     "es": "licenciatura",
     "pt": "bacharelado",
     "fr": "licence",
@@ -1323,7 +1360,12 @@ def _r1_degree_words(lang: str = "") -> tuple[tuple[str, str], ...]:
         for pattern, level, languages in _LOCALIZED_DEGREE_WORDS
         if languages is None or primary in languages
     )
-    return (*_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS, *localized)
+    lv1 = tuple(
+        (pattern, level)
+        for pattern, level, languages in _LV1_DEGREE_WORDS
+        if LEXICON_LANGUAGE_COVERAGE and (languages is None or primary in languages)
+    )
+    return (*lv1, *_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS, *localized)
 
 
 def _degree_words(lang: str = "") -> tuple[tuple[str, str], ...]:
@@ -1394,6 +1436,8 @@ def localized_alias_flags() -> frozenset[str]:
         flags.add("LEXICON_V2")
     if LOCALIZED_PAGE_IDENTITY:
         flags.update({"LEXICON_V2", "LOCALIZED_PAGE_IDENTITY"})
+    if LEXICON_LANGUAGE_COVERAGE:
+        flags.add("LEXICON_LANGUAGE_COVERAGE")
     return frozenset(flags)
 
 
@@ -1830,6 +1874,7 @@ def degree_levels_named(text: str) -> frozenset[str]:
     """
     low = (text or "").lower()
     table = (
+        *((pattern, level) for pattern, level, _ in _LV1_DEGREE_WORDS if LEXICON_LANGUAGE_COVERAGE),
         *_DEGREE_WORDS,
         *_LEXICON_V2_DEGREE_WORDS,
         *((pattern, level) for pattern, level, _languages in _LOCALIZED_DEGREE_WORDS),

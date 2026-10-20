@@ -1778,11 +1778,13 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "subpage-requirements-lead": (
         ("app.adapters.discovery.live_discovery", "SUBPAGE_REQUIREMENTS_LEAD"),
     ),
+    # Default-off (NEXT_CYCLES_2026-10-20 §LV-1, the lexicon battery's rows).
+    "lexicon-language-coverage": (("app.adapters.page_classifier", "LEXICON_LANGUAGE_COVERAGE"),),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
 DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
-    {"listing-follows-local-aliases", "subpage-requirements-lead"}
+    {"listing-follows-local-aliases", "subpage-requirements-lead", "lexicon-language-coverage"}
 )
 
 
@@ -2294,6 +2296,13 @@ def main() -> None:
         "requirements lead, read after QR-1's question links inside a free question-link slot "
         "for the deadline and English; programme scope only when its h1 names the level and "
         "subject; no query, no discovery read added",
+    )
+    parser.add_argument(
+        "--lexicon-language-coverage",
+        action="store_true",
+        help="plan item LV-1: the dictionary rows the lexicon battery found missing for "
+        "languages a development set speaks (Estonian integrated study as a master's, the "
+        "Bokmål/Nynorsk computer-science alias, local level words in URL slugs)",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2884,6 +2893,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as sp2_module
 
             sp2_module.SUBPAGE_REQUIREMENTS_LEAD = True
+        if args.lexicon_language_coverage:
+            from app.adapters import page_classifier as lv1_module
+
+            lv1_module.LEXICON_LANGUAGE_COVERAGE = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -3233,6 +3246,11 @@ def main() -> None:
                         *(
                             ["--subpage-requirements-lead"]
                             if args.subpage_requirements_lead
+                            else []
+                        ),
+                        *(
+                            ["--lexicon-language-coverage"]
+                            if args.lexicon_language_coverage
                             else []
                         ),
                         *(

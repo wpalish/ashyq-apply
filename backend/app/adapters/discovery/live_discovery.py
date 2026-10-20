@@ -609,6 +609,46 @@ _LOCALIZED_DEGREE_SLUGS: tuple[tuple[str, str], ...] = (
     ("master", r"magist(?:er|r)[a-z]*"),
     ("master", r"mestrado"),
     ("master", r"master-s"),
+    # LV-1, languages no development set speaks. ca: "grau-en-…", the slug of
+    # "Grau en …" (Reial Decret 822/2021 art. 14; "grau" alone is German
+    # "grey" and Portuguese "degree"). sk: "inžiniersky" second cycle (Act No.
+    # 131/2002 Coll. §53); Czech writes "inženýrský", Polish "inżynierskie".
+    ("bachelor", r"grau-en"),
+    ("master", r"inziniersk[a-z]*"),
+)
+#: LV-1 (``page_classifier.LEXICON_LANGUAGE_COVERAGE``): the slug forms of
+#: level words the lexicon battery found unread, for languages a development
+#: set speaks, read after every other slug table while the flag is on. One
+#: dictionary per row: fi Government Decree on University Degrees 794/2004
+#: (kandidaatin / maisterin tutkinto); pl Act of 20 July 2018 art. 64
+#: (studia pierwszego / drugiego stopnia; licencjat, inżynier as the titles);
+#: pt (BR) Houaiss s.v. "bacharelado" (a first degree); es RAE, DLE s.v.
+#: "maestría"; da Bekendtgørelse om bachelor- og kandidatuddannelser
+#: (kandidatuddannelse, a master's); et Kõrgharidusseadus (integreeritud õpe,
+#: a master's); de/nl/da/no/sv compounds as R1's text table already reads them
+#: (Bachelorstudiengang, bacheloropleiding, masterprogram). ja/zh/ko/th write
+#: their slugs in English, which ``_DEGREE_SLUGS`` already reads.
+_LV1_DEGREE_SLUGS: tuple[tuple[str, str], ...] = (
+    ("master", r"integreeritud-ope[a-z]*"),
+    (
+        "bachelor",
+        r"bachelor(?:program(?:me|ma|met)?|programm|opleiding|studium|studiengang|studier?"
+        r"|grad(?:en)?|uddannelse(?:n)?)",
+    ),
+    (
+        "master",
+        r"master(?:program(?:me|ma|met)?|programm|opleiding|studium|studiengang|studier?"
+        r"|grad(?:en)?|uddannelse(?:n)?)",
+    ),
+    ("bachelor", r"kandidaat(?:ti|in)[a-z]*"),
+    ("master", r"maisteri[a-z]*"),
+    ("bachelor", r"pierwszego-stopnia"),
+    ("bachelor", r"licencjat[a-z]*"),
+    ("bachelor", r"studia-inzynierskie"),
+    ("master", r"drugiego-stopnia"),
+    ("bachelor", r"bacharel(?:ado)?"),
+    ("master", r"maestrias?"),
+    ("master", r"kandidatuddannelse[a-z]*"),
 )
 _SWEDISH_KANDIDAT = r"kandidat[a-z]*"
 _TURKISH_ASSOCIATE = re.compile(r"(^|[/-])on-?lisans(?=[/-]|$)")
@@ -2483,6 +2523,10 @@ def _localized_degree_level(url: str, path: str) -> str | None:
     host = (urlparse(url).hostname or "").lower()
     if host.endswith(".se") and named(_SWEDISH_KANDIDAT):
         return "bachelor"
+    if _page_classifier.LEXICON_LANGUAGE_COVERAGE:
+        for level, pattern in _LV1_DEGREE_SLUGS:
+            if named(pattern):
+                return level
     return None
 
 
@@ -3220,7 +3264,8 @@ def _matches_unspaced_title(label: str, fields: list[str], filler: frozenset[str
         if not _UNSPACED_SCRIPT.search(alias) or alias not in folded:
             continue
         rest = folded.replace(alias, " ")
-        for word in _UNSPACED_DEGREE_FILLER:
+        lv1 = _LV1_UNSPACED_DEGREE_FILLER if _page_classifier.LEXICON_LANGUAGE_COVERAGE else ()
+        for word in (*lv1, *_UNSPACED_DEGREE_FILLER):
             rest = rest.replace(word, " ")
         leftover = [
             w
@@ -3250,6 +3295,11 @@ _UNSPACED_DEGREE_FILLER: tuple[str, ...] = tuple(
         reverse=True,
     )
 )
+#: LV-1 (``page_classifier.LEXICON_LANGUAGE_COVERAGE``): ja "学士課程", the
+#: bachelor's course as MEXT's Central Council for Education names it
+#: ("学士課程教育の構築に向けて", 2008; Kōjien s.v. 学士), left a "課程" over
+#: once "学士" was taken out, so "情報科学 学士課程" did not name its subject.
+_LV1_UNSPACED_DEGREE_FILLER: tuple[str, ...] = tuple(_fold(w) for w in ("学士課程", "學士課程"))
 
 
 #: LI-1: title words that carry a bachelor level or a form in another
