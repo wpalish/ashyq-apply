@@ -8,7 +8,8 @@ export default defineConfig({
   // auth-journey.spec.ts needs a backend with UNIMATCH_AUTH_ENABLED=true, so
   // it runs under playwright.auth.config.ts. Without this exclusion it would
   // be picked up here too and assert a sign-in screen that never appears.
-  testIgnore: '**/auth-journey.spec.ts',
+  // kb-journey.spec.ts needs a kb-mode backend (playwright.kb.config.ts).
+  testIgnore: ['**/auth-journey.spec.ts', '**/kb-journey.spec.ts'],
   timeout: 120_000,
   expect: { timeout: 20_000 },
   fullyParallel: false,
