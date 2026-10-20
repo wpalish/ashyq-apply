@@ -2,9 +2,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
+import { bundleBudget } from './bundle-budget';
 
 export default defineConfig({
-  plugins: [react()],
+  // bundleBudget fails `npm run build` when the gzip JS or CSS outgrows its budget (PERF-1).
+  plugins: [react(), bundleBudget()],
   resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
   server: {
     // Pin the host: Vite otherwise binds to [::1] only on this machine, and
