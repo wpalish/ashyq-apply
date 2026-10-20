@@ -23,7 +23,9 @@ with ``FetchOutcome.value`` verbatim; the walker layer uses ``program_detail``,
 since 2026-09-23, ``walker_no_signal`` for a link off the catalogue's own host
 that carries no programme signal at all, which is recorded and not read; and,
 under CC-1 (``live_discovery.COURSE_LEAD_GUARD``), ``course_page`` for a link to
-one course rather than a programme.
+one course rather than a programme; and, under FRH
+(``live_discovery.FOLLOW_REFUSED_HUB_LINK``), ``hub_link_<page_type>`` or
+``hub_link_<fetch outcome>`` for the one link read below a refused hub.
 """
 
 from __future__ import annotations
@@ -32,7 +34,7 @@ import json
 import logging
 import re
 from collections import Counter
-from collections.abc import Callable, Sequence
+from collections.abc import Awaitable, Callable, Iterable, Sequence
 from dataclasses import dataclass, field
 from functools import lru_cache
 from itertools import pairwise
@@ -49,6 +51,7 @@ from app.adapters.discovery.live_discovery import (
     canonical_url,
     declared_alternates,
     is_related_refusal,
+    label_names_other_level,
     looks_like_catalogue,
     matches_degree,
     matches_field,
@@ -187,6 +190,9 @@ class CatalogWalk:
     #: R2 (16-Q6), recording only: (url, subject) of each page refused only
     #: on the subject-head rule, a related programme.
     related: list[tuple[str, str]] = field(default_factory=list)
+    #: FRH only: ``(hub, link, verdict)`` per refused hub whose field link was
+    #: read, the verdict ``"confirmed"`` for an accepted page.
+    hub_links: list[tuple[str, str, str]] = field(default_factory=list)
 
 
 def _structural_score(url: str, label: str) -> int:
@@ -432,6 +438,60 @@ def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | No
     return score
 
 
+#: FRH: the page suffix a hub's path loses before its children are told apart
+#: (``/find/subject.html`` lists ``/find/subject/...``).
+_HUB_PAGE_SUFFIX = re.compile(r"\.(?:html?|php|aspx|jsp|cfm)$", re.IGNORECASE)
+
+
+def _hub_directory(hub_url: str) -> str:
+    """FRH: the host and path under which a hub's own children sit, ending in ``/``."""
+    parsed = urlparse(hub_url)
+    path = _HUB_PAGE_SUFFIX.sub("", (parsed.path or "/").rstrip("/"))
+    return f"{parsed.netloc.lower()}{path}/"
+
+
+def _is_hub_child(url: str, hub_directory: str) -> bool:
+    """FRH: whether ``url`` sits on the hub's host, below the hub's own path."""
+    parsed = urlparse(url)
+    return f"{parsed.netloc.lower()}{parsed.path or '/'}".startswith(hub_directory)
+
+
+def refused_hub_lead(
+    html: str,
+    page_url: str,
+    hub_url: str,
+    domain: str,
+    extra_domains: Sequence[str],
+    degree: str,
+    fields: list[str],
+    skip: Iterable[str],
+) -> WalkerLink | None:
+    """FRH: the one link a refused hub offers toward the applicant's programme.
+
+    A link is kept only when :func:`score_link` keeps it (no excluded URL, no
+    short label, no URL naming another level, no course), its label names no
+    other level, its label or its URL names a requested field, and it is not
+    in ``skip`` (read, queued, or followed already). The hub's own children
+    come first, then the higher score, then the URL. Pure: no read.
+    """
+    skipped = {canonical_url(url) for url in skip}
+    hub_directory = _hub_directory(hub_url)
+    kept: list[tuple[bool, int, str, WalkerLink]] = []
+    for link in extract_links(html, page_url, domain, extra_domains=extra_domains):
+        score = score_link(link.url, link.label, degree, fields)
+        if score is None or label_names_other_level(link.label, degree):
+            continue
+        if not (matches_field_text(link.label, fields) or matches_field(link.url, fields) > 0):
+            continue
+        if link.url in skipped:
+            continue
+        child = _is_hub_child(link.url, hub_directory)
+        kept.append((not child, -score, link.url, WalkerLink(link.url, link.label, score, "html")))
+    if not kept:
+        return None
+    return min(kept, key=lambda row: row[:3])[3]
+
+
 def _host(url: str) -> str:
     return urlparse(url).netloc.lower()
 
@@ -575,8 +635,16 @@ class CatalogWalker:
         stop: Callable[[], bool] | None = None,
         stop_when_confirmed: bool = False,
         country: str = "",
+        follow: Callable[[str, str, PageClassification], Awaitable[str | None]] | None = None,
     ) -> None:
         self.fetcher = fetcher
+        #: FRH: asked with (final URL, HTML, classification) of a lead refused
+        #: as ``reads_as_<type>``; returns the one link to read below it, or
+        #: None. The caller owns the hub test, the cap and the stop condition.
+        self.follow = follow
+        #: FRH: every catalogue, lead and followed link this walker read or
+        #: queued, so a follow never reads one of them again.
+        self.leads: set[str] = set()
         #: CG-1: the institution's country, for the campus guard.
         self.country = country
         #: SB-1: asked before each read; True ends the walk (budget spent).
@@ -653,6 +721,7 @@ class CatalogWalker:
         by the same applicant predicate the confirm stage uses.
         """
         walk = CatalogWalk(catalogue_url=catalogue_url)
+        self.leads.add(catalogue_url)
         html, payloads, catalogue_outcome = await self._read_catalogue(catalogue_url)
         if catalogue_outcome is not None:
             walk.outcomes.append((catalogue_url, catalogue_outcome))
@@ -719,6 +788,7 @@ class CatalogWalker:
             budget = [link for link in budget if id(link) in kept]
         for link in scored[top_n:]:
             walk.outcomes.append((link.url, "walker_budget_exhausted"))
+        self.leads.update(link.url for link in budget)
 
         for index, link in enumerate(budget):
             if (self.stop_when_confirmed and walk.confirmed) or (
@@ -819,6 +889,10 @@ class CatalogWalker:
                     "degree_level_mismatch" if mismatch else f"reads_as_{page.page_type.value}",
                 )
             )
+            if self.follow is not None and not mismatch and not walk.confirmed:
+                target = await self.follow(result.final_url or link.url, result.text, page)
+                if target is not None:
+                    await self._read_hub_link(link.url, target, walk)
             return
         walk.confirmed.append(link.url)
         walk.confirmed_subjects[link.url] = page.subject or ""
@@ -826,6 +900,42 @@ class CatalogWalker:
         if twins:
             walk.alternates[link.url] = twins
         walk.outcomes.append((link.url, page.page_type.value))
+
+    async def _read_hub_link(self, hub: str, url: str, walk: CatalogWalk) -> None:
+        """FRH (b): read a refused hub's one field link, judged like any lead.
+
+        One read, never retried, and the page read is never itself a hub. Its
+        outcome is ``hub_link_<page_type>`` or ``hub_link_<fetch outcome>``,
+        never ``reads_as_*``, so the descent rule does not see it.
+        """
+        self.leads.add(url)
+        result = await self.fetcher.get(url)
+        if result.ok and not same_source_site(url, result.final_url or url):
+            walk.outcomes.append((url, "hub_link_off_domain_redirect"))
+            walk.hub_links.append((hub, url, "programme redirected off the institution's site"))
+            return
+        page: PageClassification | None = None
+        if result.ok:
+            page = classify_page(url=result.final_url or url, html=result.text)
+        self._record(url, result, page)
+        if page is None:
+            walk.outcomes.append((url, f"hub_link_{result.outcome.value}"))
+            walk.hub_links.append((hub, url, f"could not be read ({result.outcome.value})"))
+            return
+        reason = profile_rejects(
+            page, self.degree, self.fields, url=result.final_url or url, country=self.country
+        )
+        walk.outcomes.append((url, f"hub_link_{page.page_type.value}"))
+        walk.hub_links.append((hub, url, reason or "confirmed"))
+        if reason is not None:
+            if is_related_refusal(reason):
+                walk.related.append((url, page.subject or ""))
+            return
+        walk.confirmed.append(url)
+        walk.confirmed_subjects[url] = page.subject or ""
+        twins = declared_alternates(result.final_url or url, result.text, self.domain)
+        if twins:
+            walk.alternates[url] = twins
 
     async def _read_catalogue(
         self, catalogue_url: str

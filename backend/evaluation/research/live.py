@@ -1808,6 +1808,10 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "sitemap-stage-cap": (("app.adapters.discovery.live_discovery", "SITEMAP_STAGE_CAP"),),
     # Default-off (NEXT_CYCLES_2026-10-22 §3, SG-1).
     "sitemap-guess-cap": (("app.adapters.discovery.live_discovery", "SITEMAP_GUESS_RULE"),),
+    # Default-off (NO_SEARCH_FLOOR_2026-10-21 §8.5, FRH).
+    "follow-refused-hub-link": (
+        ("app.adapters.discovery.live_discovery", "FOLLOW_REFUSED_HUB_LINK"),
+    ),
     # Default-off (NEXT_CYCLES_2026-10-21 item 6, LQ-2a).
     "local-query-from-evidence": (
         ("app.adapters.search.intent", "LOCAL_QUERY_FROM_PAGE_EVIDENCE"),
@@ -1823,6 +1827,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "same-site-award-links",
         "local-query-from-evidence",
         "sitemap-guess-cap",
+        "follow-refused-hub-link",
     }
 )
 
@@ -2183,6 +2188,15 @@ def main() -> None:
         help="ticket SG-1 (NEXT_CYCLES_2026-10-22 §3): when robots.txt names no sitemap, a host "
         "that asks a crawl delay of at least 5 s has only /sitemap.xml guessed, and on any host "
         "guessing the conventional sitemap locations stops after two consecutive 404s",
+    )
+    parser.add_argument(
+        "--follow-refused-hub-link",
+        action="store_true",
+        help="rule FRH (NO_SEARCH_FLOOR_2026-10-21 §8.5): a page the confirm stage or the walker "
+        "refused that reads as a listing (unknown or catalogue) and whose URL or head names a "
+        "requested field is a hub; its one best field link (the hub's own children first, then "
+        "the link score) is read next, one hop, and judged like any candidate - at most 3 "
+        "follows per case, none once a programme page is confirmed",
     )
     parser.add_argument(
         "--award-route",
@@ -2908,6 +2922,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as sg1_module
 
             sg1_module.SITEMAP_GUESS_RULE = True
+        if args.follow_refused_hub_link:
+            from app.adapters.discovery import live_discovery as frh_module
+
+            frh_module.FOLLOW_REFUSED_HUB_LINK = True
         if args.award_route:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
@@ -3341,6 +3359,7 @@ def main() -> None:
                         *(["--homepage-hop-reads"] if args.homepage_hop_reads else []),
                         *(["--sitemap-stage-cap"] if args.sitemap_stage_cap else []),
                         *(["--sitemap-guess-cap"] if args.sitemap_guess_cap else []),
+                        *(["--follow-refused-hub-link"] if args.follow_refused_hub_link else []),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-index-query"] if args.scholarship_index_query else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),

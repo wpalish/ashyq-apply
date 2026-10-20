@@ -35,7 +35,7 @@ import re
 import statistics
 import time
 import unicodedata
-from collections.abc import Awaitable, Callable, Sequence
+from collections.abc import Awaitable, Callable, Iterable, Sequence
 from dataclasses import dataclass, field
 from functools import lru_cache
 from html import unescape as html_unescape
@@ -125,6 +125,19 @@ PRECONFIRMED_RECOVERY_CHECKS = 3
 #: precision fell too, so it removed correct pages rather than junk. Turn it
 #: on only together with a capture that shows what it does.
 CONFIRM_SEARCH_PROGRAMMES = False
+#: Rule FRH "follow a refused hub's field link" (NO_SEARCH_FLOOR_2026-10-21
+#: §8), off until a paired run passes. A page the confirm stage or the walker
+#: read and refused is a *hub* when it reads as a listing (unknown or
+#: catalogue) and its URL or its head names a requested field; the hub's one
+#: best field link (:func:`catalog_walker.refused_hub_lead`: its own children
+#: first, then the link score) is read next, one hop, and judged like any
+#: candidate. One network read per follow, outside the confirm stage's
+#: ``MAX_PROGRAM_CANDIDATES_CHECKED`` but inside the stage budget, the case
+#: ledger and the case clock; at most ``FOLLOW_REFUSED_HUB_LINK_CAP`` per case,
+#: none once a programme page is confirmed, and a followed page is never a
+#: hub. The benchmark harness flips it per capture (``--follow-refused-hub-link``).
+FOLLOW_REFUSED_HUB_LINK = False
+FOLLOW_REFUSED_HUB_LINK_CAP = 3
 #: Bounded content verification with backfill, unlike the older prune-only
 #: experiment. Programme variants and unresolved degrees are rejected, and
 #: matching catalogue links share the same candidate-read bound.
@@ -3242,6 +3255,22 @@ def is_related_refusal(verdict: str | None) -> bool:
     return bool(verdict) and RELATED_PROGRAMME_VERDICT in (verdict or "")
 
 
+def is_refused_hub(page: PageClassification, url: str, fields: list[str]) -> bool:
+    """FRH: whether a page ``profile_rejects`` refused is a hub worth one follow.
+
+    It reads as a listing (identity recovery's ``_LISTING_PAGE_TYPES``: a
+    catalogue, or a page that reads as nothing in particular) and its final
+    URL or its classified head names a requested field. A page refused on
+    subject or on level is a programme page, not a hub. The caller asks this
+    only of a refused page that was not itself reached by a follow.
+    """
+    from app.adapters.requirements.web_requirements import _LISTING_PAGE_TYPES
+
+    if not fields or page.page_type not in _LISTING_PAGE_TYPES:
+        return False
+    return matches_field(url, fields) > 0 or matches_field_text(page.subject or "", fields)
+
+
 #: Plan v3 change #2(a) (loss stages v3 2026-10-18 §5 #2), off until a paired
 #: run passes. R1 reads the twin in the institution's language
 #: (``local_alternate``) of **every** refused English page, in the confirm
@@ -4249,6 +4278,10 @@ class DiscoveryTrace:
     #: TR-1: where a programme lead came from and the score it had there,
     #: for the confirm queue's rows. Internal: never serialised.
     lead_origin: dict[str, tuple[str, int | None]] = field(default_factory=dict)
+    #: FRH only (``FOLLOW_REFUSED_HUB_LINK``): per follow of a refused hub's
+    #: field link, ``(hub, link, verdict)``, the verdict ``"confirmed"`` for an
+    #: accepted page. Not serialised while empty.
+    refused_hub_links: list[tuple[str, str, str]] = field(default_factory=list)
 
     def note_keep(self, outcome: str) -> None:
         """TR-1: one ``keep`` decision of the sitemap stage, counted by outcome."""
@@ -4439,6 +4472,7 @@ class DiscoveryTrace:
             **({"confirm_queue": self.confirm_queue} if self.confirm_queue else {}),
             **({"sitemap_keep": self.sitemap_keep} if self.sitemap_keep else {}),
             **({"navigation_queue": self.navigation_queue} if self.navigation_queue else {}),
+            **({"refused_hub_links": self.refused_hub_links} if self.refused_hub_links else {}),
         }
 
 
@@ -5171,6 +5205,9 @@ class LiveDiscoveryAdapter:
         #: (the catalogue's site-identity fallback). They count in the same
         #: DEFAULT_QUERY_BUDGET, so discovery's own search gets that many fewer.
         self._queries_before_discovery = 0
+        #: FRH: the links of refused hubs this institution followed (reset per
+        #: institution); their number is what FOLLOW_REFUSED_HUB_LINK_CAP bounds.
+        self._hub_followed: list[str] = []
 
     def registry(self) -> list[dict]:
         if not self.registry_path.exists():
@@ -5325,6 +5362,120 @@ class LiveDiscoveryAdapter:
         """SB-1: whether a programme page in the slots was read and accepted."""
         return any(url in self._confirmed for url in selected[PageCategory.PROGRAM_PAGE])
 
+    def _hub_follow_open(self, confirmed: Sequence[str]) -> bool:
+        """FRH: whether this institution may still follow a refused hub's link.
+
+        The rule is on, the case has followed fewer than the cap, no programme
+        page is confirmed (``confirmed`` is the calling stage's own list) and
+        the discovery budget is not spent.
+        """
+        return (
+            FOLLOW_REFUSED_HUB_LINK
+            and len(self._hub_followed) < FOLLOW_REFUSED_HUB_LINK_CAP
+            and not confirmed
+            and not self._confirmed
+            and not self._spent()
+        )
+
+    def _hub_lead(
+        self,
+        hub: str,
+        html: str,
+        page: PageClassification,
+        trace: DiscoveryTrace,
+        level: str,
+        fields: list[str],
+        skip: Iterable[str],
+    ) -> str | None:
+        """FRH: the one link of a refused hub to read next, counted against the cap.
+
+        ``hub`` is the refused page's final URL. A page reached by a follow is
+        never a hub. ``skip`` is what the calling stage read or queued; every
+        page discovery read, and every link already followed, is skipped too.
+        """
+        from app.adapters.discovery.catalog_walker import refused_hub_lead
+
+        if hub in self._hub_followed or not is_refused_hub(page, hub, fields):
+            return None
+        taken = {
+            *skip,
+            *self._hub_followed,
+            *(url for url, _verdict in trace.pages_read),
+        }
+        link = refused_hub_lead(
+            html, hub, hub, trace.domain, trace.extra_domains, level, fields, taken
+        )
+        if link is None:
+            return None
+        self._hub_followed.append(link.url)
+        return link.url
+
+    async def _read_hub_link(
+        self, url: str, level: str, fields: list[str], trace: DiscoveryTrace
+    ) -> tuple[str | None, str]:
+        """FRH: read one followed link and judge it like a queued candidate.
+
+        One read through the stage's fetcher, never retried. Returns the
+        refusal (``None`` when accepted) and the page's classified subject.
+        """
+        result = await self.fetcher.get(url)
+        if not result.ok:
+            verdict = f"could not be read ({result.outcome.value})"
+            trace.reject(url, verdict)
+            return verdict, ""
+        if not same_source_site(url, result.final_url or url):
+            verdict = "programme redirected off the institution's site"
+            trace.reject(url, verdict)
+            return verdict, ""
+        page = classify_page(url=result.final_url or url, html=result.text)
+        reason = profile_rejects(
+            page, level, fields, url=result.final_url or url, country=trace.country
+        )
+        trace.note_read(url, result.final_url or url, result.text, reason, page.subject or "")
+        if reason is not None:
+            trace.reject(url, reason)
+        return reason, page.subject or ""
+
+    async def _follow_confirm_hub(
+        self,
+        lead: tuple[str, str],
+        html: str,
+        page: PageClassification,
+        reads: list[str],
+        confirmed: list[str],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+    ) -> None:
+        """FRH (a): the confirm stage reads a refused hub's field link at once.
+
+        ``lead`` is the queued URL and where it ended. The read is outside
+        ``MAX_PROGRAM_CANDIDATES_CHECKED``, so no queued read is displaced; an
+        accepted page is confirmed exactly like a queued candidate.
+        """
+        url, final = lead
+        if url in self._hub_followed or not self._hub_follow_open(confirmed):
+            return
+        level = str(profile.context.level)
+        fields = _public_requested_fields(profile, trace)
+        link = self._hub_lead(final, html, page, trace, level, fields, [*reads, url, final])
+        if link is None:
+            return
+        verdict, subject = await self._read_hub_link(link, level, fields, trace)
+        trace.refused_hub_links.append((url, link, verdict or "confirmed"))
+        if verdict is not None:
+            return
+        confirmed.append(link)
+        if self._budget is not None:
+            self._confirmed.add(link)
+        if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
+            _remember_field_source(
+                trace,
+                url=link,
+                subject=subject,
+                fields=fields,
+                basis="classified_programme_page",
+            )
+
     async def _discover_institution(
         self, entry: dict, profile: ApplicantProfileIn
     ) -> tuple[Candidate, DiscoveryTrace]:
@@ -5333,6 +5484,7 @@ class LiveDiscoveryAdapter:
             institution=entry["name"], domain=domain, country=str(entry.get("country") or "")
         )
         trace.search_queries_sent = self._queries_before_discovery
+        self._hub_followed = []
 
         candidate = Candidate(
             name=entry["name"],
@@ -5725,6 +5877,16 @@ class LiveDiscoveryAdapter:
                     trace.note_requirements_lead(
                         result.final_url or url, reason, page, requested_level, fields
                     )
+                if FOLLOW_REFUSED_HUB_LINK:
+                    await self._follow_confirm_hub(
+                        (url, result.final_url or url),
+                        result.text,
+                        page,
+                        reads,
+                        confirmed,
+                        trace,
+                        profile,
+                    )
                 continue
             confirmed.append(url)
             if self._budget is not None:
@@ -5878,6 +6040,21 @@ class LiveDiscoveryAdapter:
         if not catalogues:
             return
 
+        follow: Callable[[str, str, PageClassification], Awaitable[str | None]] | None = None
+        if FOLLOW_REFUSED_HUB_LINK:
+            level = str(profile.context.level)
+            fields = _public_requested_fields(profile, trace)
+
+            async def follow(hub: str, html: str, page: PageClassification) -> str | None:
+                """FRH (b): the link the walker reads next for a refused hub, if any.
+
+                The adapter owns the cap and the stop condition; the walker
+                reads the link and records its outcome as ``hub_link_*``.
+                """
+                if selected[PageCategory.PROGRAM_PAGE] or not self._hub_follow_open(()):
+                    return None
+                return self._hub_lead(hub, html, page, trace, level, fields, walker.leads)
+
         walker = CatalogWalker(
             fetcher=self.fetcher,
             domain=trace.domain,
@@ -5889,6 +6066,7 @@ class LiveDiscoveryAdapter:
             # SB-1: no read once the budget is spent, none after a confirmation.
             stop=self._walker_stop if self._budget is not None else None,
             stop_when_confirmed=self._budget is not None,
+            follow=follow,
         )
         try:
             walks = await walker.walk(catalogues[:WALKER_MAX_CATALOGS])
@@ -5921,6 +6099,7 @@ class LiveDiscoveryAdapter:
                 trace.note_alternates(url, twins)
             for url, title in walk.related:
                 trace.note_related(url, title)
+            trace.refused_hub_links.extend(walk.hub_links)
             for url in walk.confirmed:
                 if len(selected[PageCategory.PROGRAM_PAGE]) >= MAX_PAGES_PER_CATEGORY:
                     break
