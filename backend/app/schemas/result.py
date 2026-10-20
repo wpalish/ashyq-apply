@@ -319,6 +319,27 @@ class DocumentChecklist(Base):
     completeness: Literal["official", "partial", "unavailable"] = "partial"
 
 
+#: Why a KB value is unknown (``app.knowledge.UNKNOWN_KINDS``; WHY-1).
+KbUnknownKind = Literal[
+    "not_published",
+    "access",
+    "unverified_quote",
+    "undated",
+    "other_year",
+    "not_researched",
+    "unspecified",
+]
+
+
+class KbUnknown(Base):
+    """One unanswered KB question and why: not published, not readable, not yet verified."""
+
+    question: str
+    kind: KbUnknownKind = "unspecified"
+    #: The expert check that left it unknown (the draft's research day).
+    checked_on: date | None = None
+
+
 class ProgramResult(Base):
     """One row of the shortlist table."""
 
@@ -403,6 +424,9 @@ class ProgramResult(Base):
     decided_at: datetime | None = None
 
     checklist: DocumentChecklist | None = None
+    #: WHY-1, kb mode only: why each unanswered KB question is unknown. Left
+    #: out of the JSON when empty, so live, demo and earlier rows are unchanged.
+    kb_unknown: list[KbUnknown] = Field(default_factory=list, exclude_if=lambda v: not v)
 
 
 class DecisionIn(Base):

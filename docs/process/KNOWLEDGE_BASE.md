@@ -153,7 +153,14 @@ Each entry has:
   by the robots override);
 - `university`, `country`, `official_domain` and `official_domains`;
 - `programme`, with `status`, `urls`, `evidence[{url, quote, accessed_on, verified_on}]`,
-  `related_programme_urls` and `teaching_language_evidence`;
+  `related_programme_urls` and `teaching_language_evidence`. An entry with no verified programme page
+  also says why (REL-1): `related_reason` `{statement, name, url, verified, checked_on}` from its latest
+  `related` draft (the closest route: `related_programmes[0]` and `related_programme_urls[0]`;
+  `statement` is the expert's sentence after "Related, not the programme:"), and `offered: false` when a
+  draft says `programme_offered: false`. At runtime `KnowledgeEntry.programme_route` reads them as
+  `related_only` (a non-blocking question naming the closest official route), `not_offered` (a
+  statement, "… publishes no bachelor's in Computer Science (checked …)") or `unknown` (the old blocking
+  "Which official page publishes the … programme?", kept for the access cases);
 - `facts`, holding the six questions and `documents`, each a list of facts. Each fact has these fields:
   - `key`, `value` and `unit`;
   - `period`: `year` for tuition, the intake for a deadline;
@@ -164,7 +171,18 @@ Each entry has:
   - `notes`, `stale` and `stale_reasons`;
   - `award`, for scholarship facts only;
   - `source_batch`, only on a record merged in from a later dir than the entry's `source_batch`;
-- `unknown[{question, key, reason}]`;
+- `unknown[{question, key, reason, kind, checked_on}]`. `kind` (WHY-1) is one of
+  `app.knowledge.UNKNOWN_KINDS`: `not_published`, `access`, `unverified_quote`, `undated`, `other_year`,
+  `not_researched`, `unspecified`. The build takes it from the reviewed table
+  `kb_drafts.<date>/unknown_kinds.json` (`--unknown-kinds`, default `<drafts_root>/unknown_kinds.json`;
+  rows `{seed_id, question, key?, kind}`), never from the reason text; a record with no row is
+  `unspecified`. `python -m evaluation.research.expert.unknown_kinds <kb.json> <drafts_root> --out
+  <table>` seeds rows for new records with a keyword table and never rewrites a reviewed row; a person
+  reads the seeded rows before committing. `checked_on` is the draft's `researched_on`. A KB result row
+  carries `kb_unknown: [{question, kind, checked_on}]` (questions with no fact and no not-applicable
+  answer only; absent when empty), and the Requirements, Costs and Funding tabs say "not published by
+  the university, expert check …", "the official page is not readable from our servers; ask the
+  admissions office" or "not yet verified" (en/ru/kk). No question is added and nothing blocks;
 - `not_applicable[{question, key, reason, source_url, quote, verified_on}]`;
 - `known_fact_count`.
 

@@ -96,7 +96,7 @@ from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import CostBreakdown, ProgramResult, Scholarship, Tristate
+from app.schemas.result import CostBreakdown, KbUnknown, ProgramResult, Scholarship, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
 
@@ -1409,6 +1409,8 @@ class ResearchRunner:
             academic_year=self._academic_year(),
         )
         result.costs = found.costs
+        # WHY-1: an empty cell says why (not published, not readable, not yet verified).
+        result.kb_unknown = [KbUnknown.model_validate(u) for u in entry.unknown_reasons()]
         # A verified "does not apply" requirement (no English test; German
         # DSH 2 instead) has no claim type: it is said on the row, quoted.
         result.unresolved.extend(

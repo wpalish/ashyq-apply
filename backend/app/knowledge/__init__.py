@@ -46,6 +46,18 @@ CORE_QUESTIONS = (
 DOCUMENTS = "documents"
 #: Every question a KB entry answers: the six core ones, then the documents.
 QUESTIONS = (*CORE_QUESTIONS, DOCUMENTS)
+#: Why a KB value is unknown (WHY-1): an ``unknown`` record's ``kind``, set by
+#: the build from the reviewed table ``kb_drafts.<date>/unknown_kinds.json``
+#: (``evaluation.research.expert.unknown_kinds``). ``unspecified``: no row.
+UNKNOWN_KINDS = (
+    "not_published",
+    "access",
+    "unverified_quote",
+    "undated",
+    "other_year",
+    "not_researched",
+    "unspecified",
+)
 #: A fact verified longer ago than this is shown as stale, never as current.
 MAX_AGE_DAYS = 365
 #: The conventional last day (month, day) of an academic year, in the calendar
@@ -261,6 +273,32 @@ class KnowledgeEntry:
 
     def all_facts(self) -> list[tuple[str, dict[str, Any]]]:
         return [(q, f) for q in QUESTIONS for f in self.facts.get(q, [])]
+
+    def unknown_reasons(self) -> list[dict[str, Any]]:
+        """Why each unanswered question is unknown (WHY-1): ``{question, kind, checked_on}``.
+
+        Only a question with no fact and no verified "does not apply" answer
+        is listed (a missing TOEFL beside a verified IELTS leaves no empty
+        cell). One row per (question, kind); a kind outside ``UNKNOWN_KINDS``
+        or missing reads ``unspecified``; the latest ``checked_on`` is kept.
+        """
+        answered = {q for q in QUESTIONS if self.facts.get(q)} | {
+            str(n.get("question")) for n in self.not_applicable
+        }
+        rows: dict[tuple[str, str], dict[str, Any]] = {}
+        for record in self.unknown:
+            question = str(record.get("question") or "")
+            if not question or question in answered:
+                continue
+            kind = str(record.get("kind") or "")
+            kind = kind if kind in UNKNOWN_KINDS else "unspecified"
+            checked = record.get("checked_on")
+            row = rows.setdefault(
+                (question, kind), {"question": question, "kind": kind, "checked_on": checked}
+            )
+            if checked and str(checked) > str(row["checked_on"] or ""):
+                row["checked_on"] = checked
+        return list(rows.values())
 
 
 @dataclass

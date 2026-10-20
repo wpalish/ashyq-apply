@@ -368,6 +368,23 @@ export interface DocumentChecklist {
   completeness: 'official' | 'partial' | 'unavailable';
 }
 
+/** Why a KB value is unknown (WHY-1); mirrors `app.schemas.result.KbUnknownKind`. */
+export type KbUnknownKind =
+  | 'not_published'
+  | 'access'
+  | 'unverified_quote'
+  | 'undated'
+  | 'other_year'
+  | 'not_researched'
+  | 'unspecified';
+
+/** One unanswered KB question and why (kb mode only). */
+export interface KbUnknown {
+  question: string;
+  kind: KbUnknownKind;
+  checked_on: string | null;
+}
+
 export interface ProgramResult {
   id: string;
   run_id: string;
@@ -418,6 +435,8 @@ export interface ProgramResult {
   user_notes: string;
   decided_at: string | null;
   checklist: DocumentChecklist | null;
+  /** WHY-1: absent outside kb mode and when every question is answered. */
+  kb_unknown?: KbUnknown[];
 }
 
 export interface StageView {

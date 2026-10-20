@@ -193,3 +193,14 @@ def test_live_coverage_reaches_the_frontend_with_the_shape_it_declares(types_sou
     assert declared == set(payload), (
         f"types.ts declares {sorted(declared)}; the API returns {sorted(payload)}"
     )
+
+
+def test_the_kb_unknown_kind_union_matches_the_backend(types_source):
+    """WHY-1: the UI words each kind; a renamed one must not reach it unworded."""
+    from typing import get_args
+
+    from app.knowledge import UNKNOWN_KINDS
+    from app.schemas.result import KbUnknownKind
+
+    assert set(get_args(KbUnknownKind)) == set(UNKNOWN_KINDS)
+    assert parse_union(types_source, "KbUnknownKind") == set(UNKNOWN_KINDS)

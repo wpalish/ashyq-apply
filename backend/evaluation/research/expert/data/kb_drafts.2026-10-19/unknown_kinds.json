@@ -1,0 +1,1428 @@
+{
+ "format": "kb-unknown-kinds/1",
+ "about": "Why each KB value is unknown (WHY-1). Seeded by evaluation.research.expert.unknown_kinds from the v21 reasons; every row read once by a reviewer, corrected rows keep their seeded_kind and a review_note. kb_build reads this table; a record without a row is 'unspecified'.",
+ "reviewed_on": "2026-10-21",
+ "reviewed_by": "claude-opus-5 (worker, one pass)",
+ "kb_version_seeded": "2026-10-20.kb-cs-bachelor.21",
+ "kinds": [
+  "not_published",
+  "access",
+  "unverified_quote",
+  "undated",
+  "other_year",
+  "not_researched",
+  "unspecified"
+ ],
+ "rows": [
+  {
+   "seed_id": "qs2027-001",
+   "question": "english",
+   "key": "english_evidence.toefl_ibt.minimum",
+   "kind": "unverified_quote",
+   "basis": "expert value 90 is not in the quoted excerpt. Expert (2026-10-19): Published 'minimum and recommended scores' for English tests (TOEFL before 1/21/26 min 90 / r"
+  },
+  {
+   "seed_id": "qs2027-001",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum grade published. MIT: 'We do not try to convert your grades to the American system, or to find other sorts of equivalence.' and "
+  },
+  {
+   "seed_id": "qs2027-002",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-002",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-002",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-003",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum GPA is published; holistic review. The Academic Preparation page gives only curriculum recommendations: 'We want to emphasize th"
+  },
+  {
+   "seed_id": "qs2027-004",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-20): Access. Re-tried 2026-10-20 with the production Fetcher: https://www.ox.ac.uk/admissions/undergraduate/applying-to-oxford/english-language-"
+  },
+  {
+   "seed_id": "qs2027-004",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Offers are qualification-specific (A-level/IB) on the central course page, which returned 403. Department prose: 'Our standard conditional ",
+   "seeded_kind": "not_published",
+   "review_note": "offers are on the central course page, HTTP 403"
+  },
+  {
+   "seed_id": "qs2027-004",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure: course fees are published on www.ox.ac.uk (course page 'Fees' section and /students/fees-funding/fees/rates), which returns"
+  },
+  {
+   "seed_id": "qs2027-004",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "Access failure: funding pages are on www.ox.ac.uk (HTTP 403, Cloudflare challenge); not bypassed. The department pages mention TMUA 'bursary requests' (a test-f"
+  },
+  {
+   "seed_id": "qs2027-005",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum GPA or grade threshold published; holistic review. SAT or ACT required (exceptions listed on the application-requirements page),"
+  },
+  {
+   "seed_id": "qs2027-007",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No GPA minimum published. Prose only: 'Caltech admissions officers are trained to understand your education system, so there is no need to "
+  },
+  {
+   "seed_id": "qs2027-007",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "other_year",
+   "basis": "only the 2026/2027 fee is published, not 2027/28 (expert value 68,574 USD per year). Expert (2026-10-19): On-Campus Cost of Attendance, 'estimated nine-month, f"
+  },
+  {
+   "seed_id": "qs2027-008",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade minimum published by ETH: admission with a non-Swiss certificate is country- and certificate-specific (without exam, reduced or co"
+  },
+  {
+   "seed_id": "qs2027-008",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-009",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Can"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Sea"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Sea"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Sea"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Candidate source for CI:"
+  },
+  {
+   "seed_id": "qs2027-010",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-20): Access. Re-tried 2026-10-20: https://www.nus.edu.sg/oam/admissions/international-qualifications and https://www.nus.edu.sg/oam/admissions/e"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure. Target page: https://admissions.hku.hk/apply/international-qualifications/english-language-requirement. admissions.hku.hk c"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure (international qualifications page on admissions.hku.hk). admissions.hku.hk could not be read from the container: https://ad"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure (international application deadlines on admissions.hku.hk; the 2027 international pamphlet PDF https://www.admissions.hku.hk"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-012",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-012",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): No single grade minimum: NTU publishes per-qualification minimums to apply (e.g. 'German Abitur Yes An overall grade of between 1.0 and 2.0",
+   "seeded_kind": "not_published",
+   "review_note": "per-qualification minimums published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-012",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-012",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-013",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "other_year",
+   "basis": "Expert (2026-10-19): The 2026 notice says 'Tuition fee. Further notice will be given after approval.' The 2025-entry notice (https://isd.pku.edu.cn/en/detail.ph",
+   "seeded_kind": "not_researched",
+   "review_note": "only the 2025-entry fee is printed; 2026 'further notice'"
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade minimum. Eligibility page: 'Applicants should demonstrate outstanding academic performance' via transcripts, national exams (ATAR/"
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-015",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-20): No minimum published (re-read 2026-10-20). https://admissions.upenn.edu/how-to-apply/international-applicants lists the accepted tests ('We"
+  },
+  {
+   "seed_id": "qs2027-015",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Prose only: 'we do not have explicit course requirements or minimum test score requirements for admittance' (https://admissions.upenn.edu/h"
+  },
+  {
+   "seed_id": "qs2027-016",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum GPA published; Cornell reviews holistically ('when reviewed in context with other application materials—such as GPA, academic ri"
+  },
+  {
+   "seed_id": "qs2027-017",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-20): No minimum published (re-read 2026-10-20). https://admissions.yale.edu/international: a test is required of non-native speakers without two"
+  },
+  {
+   "seed_id": "qs2027-017",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum GPA published; whole-person review ('All applicants, regardless of nationality, citizenship, or country of origin, are considere"
+  },
+  {
+   "seed_id": "qs2027-018",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure: the requirements live on admission.cuhk.edu.hk (TLS chain incomplete). Department prose only: 'applicants are expected to d"
+  },
+  {
+   "seed_id": "qs2027-018",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No threshold for international first-year applicants on the pages read. Prose: 'applicants will be considered on the basis of their educati"
+  },
+  {
+   "seed_id": "qs2027-018",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure: fees for non-local students are on admission.cuhk.edu.hk (TLS chain incomplete); not read."
+  },
+  {
+   "seed_id": "qs2027-018",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "Department prose only: 'the Government and the University may provide various scholarships and financial aid schemes to support the student’s learning in CUHK' "
+  },
+  {
+   "seed_id": "qs2027-019",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-020",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum GPA published; holistic review. Official-domain note: kb_top100_list.json gives official_domain \"jh.edu\"; every JHU page read li"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production use"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production use"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production use"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production use"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "Not researched from the page: unimelb.edu.au answers every request with a bot challenge (Cloudflare 403 / Incapsula) for the production user agent. Candidate so"
+  },
+  {
+   "seed_id": "qs2027-024",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Prose only, no threshold: 'Please do not convert your grades into a 4.0 scaled grade-point average. We evaluate all transcripts based upon "
+  },
+  {
+   "seed_id": "qs2027-027",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum published. https://admission.princeton.edu/apply/international-students: 'If English is not your native language and you are att"
+  },
+  {
+   "seed_id": "qs2027-027",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No GPA or grade minimum published on the admission pages read (apply, international-students); holistic review."
+  },
+  {
+   "seed_id": "qs2027-028",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): No GPA minimum. The 2027 International Admission Guide lists indicative admission scores for B Advanced Computing: International ATAR 90, I",
+   "seeded_kind": "not_published",
+   "review_note": "indicative ATAR/IB scores published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-029",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): Threshold is an ATAR-style selection rank, not a GPA: 'Applicants with an ANU selection rank of 80 or above are guaranteed admission' / min",
+   "seeded_kind": "not_published",
+   "review_note": "selection rank published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-030",
+   "question": "english",
+   "key": "english_evidence.toefl_ibt.minimum",
+   "kind": "unverified_quote",
+   "basis": "expert value 90 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic. TOEFL for Science: 90 (120-point scale, tests up to January 20, 2026) or 4.5 "
+  },
+  {
+   "seed_id": "qs2027-030",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Could not classify the threshold: Equivalent of a B+ average on the high school record (university-wide minimum for 'Other international high schools'); most pr"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "unverified_quote",
+   "basis": "expert value 6.5 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): \"Monash Level A\". The text is in the handbook page's embedded "
+  },
+  {
+   "seed_id": "qs2027-031",
+   "question": "english",
+   "key": "ielts.subscores",
+   "kind": "unverified_quote",
+   "basis": "expert value каждая часть ≥ 6 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): \"Monash Level A\". The text is in the handbook pag"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "question": "english",
+   "key": "english_evidence.toefl_ibt.minimum",
+   "kind": "unverified_quote",
+   "basis": "expert value 79 unverified: quote not found on the page (fetch outcome ok). TOEFL iBT, 0-120. Expert (2026-10-19): \"Monash Level A\". The text is in the handbook"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): ATAR/international qualification thresholds are on the www.monash.edu course page, which could not be read: www.monash.edu (course finder, "
+  },
+  {
+   "seed_id": "qs2027-031",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" "
+  },
+  {
+   "seed_id": "qs2027-031",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" "
+  },
+  {
+   "seed_id": "qs2027-031",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge "
+  },
+  {
+   "seed_id": "qs2027-032",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-032",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum average published for international applicants on https://future.utoronto.ca/program/computer-science (per-school-system pages l"
+  },
+  {
+   "seed_id": "qs2027-032",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-033",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No published grade or GPA minimum for international qualification holders; the application asks for 'School reports from Grade 10 onwards' "
+  },
+  {
+   "seed_id": "qs2027-034",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade threshold published. Prose only: 'Quelle que soit la formation, le recrutement à Dauphine reste très sélectif ... les meilleurs ca"
+  },
+  {
+   "seed_id": "qs2027-034",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): L1 applications go through Parcoursup or, for applicants concerned by the DAP who do not hold a French baccalaureate, Etudes en France; the"
+  },
+  {
+   "seed_id": "qs2027-034",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_published",
+   "basis": "Dauphine L1 FAQ only says 'Différents dispositifs de bourses et d’aide au financement des études sont proposés aux étudiants ... sur critères sociaux et académi",
+   "seeded_kind": "not_researched",
+   "review_note": "generic bursary prose, state grants only"
+  },
+  {
+   "seed_id": "qs2027-035",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): Grades are UK/IB/country-specific offers, not a GPA: A levels 'from A*A*A* to AAB' is the range most applicants needed in recent years (ind",
+   "seeded_kind": "not_published",
+   "review_note": "A-level/IB offers published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-035",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): The degree finder's fee table (study.ed.ac.uk/programmes/undergraduate-fees?programme_code=UTBSCIS, 'Estimate your tuition fees (2027-2028 ",
+   "seeded_kind": "not_researched",
+   "review_note": "fee tables render client-side; no figure in the readable text"
+  },
+  {
+   "seed_id": "qs2027-037",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): International fee not published in the served HTML: the course page and /fees subpage render the fee block client-side; the university page",
+   "seeded_kind": "not_researched",
+   "review_note": "international fee block renders client-side"
+  },
+  {
+   "seed_id": "qs2027-037",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_published",
+   "basis": "No entry scholarship for an international undergraduate found. The King's funding database lists the Sanctuary Scholarship 2026-27 (for asylum seekers/displaced"
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade minimum published in the 2027 Spring international guide; document-based selection (transcripts, personal statement, recommendatio"
+  },
+  {
+   "seed_id": "qs2027-039",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade minimum in the 2027 外国学校卒業学生特別選考 guidelines (PDF https://www.u-tokyo.ac.jp/content/400291798.pdf): first stage is a holistic revie"
+  },
+  {
+   "seed_id": "qs2027-039",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-039",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-040",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): No GPA. Typical offers: A-level A*AA including A* in Mathematics and a science; IB 37 points with 7,6,6 at HL (course page). Not a GPA scal",
+   "seeded_kind": "not_published",
+   "review_note": "A-level/IB offers published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-041",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): The 'Minimum entry score' depends on the qualification selected in an interactive selector ('Use the minimum entry score as a guide'); no f",
+   "seeded_kind": "not_researched",
+   "review_note": "minimum entry score only in an interactive selector"
+  },
+  {
+   "seed_id": "qs2027-041",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "undated",
+   "basis": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): International (direct applicatio"
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "other_year",
+   "basis": "Expert (2026-10-20): No score published; cycle_stated '2027학년도 3월 신입학' (Spring/March 2027 entry), not the fall 2027 intake. The 2027 international-track guide ("
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade threshold published in the international guide; document-based evaluation."
+  },
+  {
+   "seed_id": "qs2027-042",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "other_year",
+   "basis": "Expert (2026-10-19): Not filled. The 2027 academic-year guide (https://www2.yonsei.ac.kr/entrance/2027/intl/2027_3_docu/2027_3_intl_plan_eng.pdf, readable on 20"
+  },
+  {
+   "seed_id": "qs2027-043",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not read: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", Clo"
+  },
+  {
+   "seed_id": "qs2027-043",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): No minimum GPA known; admissions site not readable: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.e"
+  },
+  {
+   "seed_id": "qs2027-043",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not read: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", Clo"
+  },
+  {
+   "seed_id": "qs2027-044",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Prose only: 'have an overall strong academic average', advanced mathematics and at least one advanced science course; holistic selection. N"
+  },
+  {
+   "seed_id": "qs2027-045",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-20): No minimum published (rounds 2-3: a proficiency score is required, 'no minimum score'). Re-check on 2026-10-20 was blocked: admissions.nort",
+   "seeded_kind": "access",
+   "review_note": "rounds 2-3 read 'no minimum score'; the re-check was blocked"
+  },
+  {
+   "seed_id": "qs2027-045",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No GPA minimum published; holistic review. SAT/ACT optional ('Applicants may submit a score if they wish, but scores are not required')."
+  },
+  {
+   "seed_id": "qs2027-046",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-046",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum average published on https://you.ubc.ca/programs/computer-science-vancouver-bsc/ (lists required courses only: e.g. IB Diploma w"
+  },
+  {
+   "seed_id": "qs2027-046",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-046",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade threshold published: 'Students are admitted on the basis of competitive selection according to their academic performance in senio"
+  },
+  {
+   "seed_id": "qs2027-048",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-048",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-048",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-049",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-20): No minimum published on ucla.edu (re-read 2026-10-20). https://admission.ucla.edu/apply/international-applicants: 'We look for competitive "
+  },
+  {
+   "seed_id": "qs2027-049",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Prose/indicative only: 'Grades and GPA (4.0 average unweighted GPA for Fall 2025 admits)' (https://admission.ucla.edu/apply/first-year); no"
+  },
+  {
+   "seed_id": "qs2027-051",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+  },
+  {
+   "seed_id": "qs2027-051",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+  },
+  {
+   "seed_id": "qs2027-051",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+  },
+  {
+   "seed_id": "qs2027-051",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+  },
+  {
+   "seed_id": "qs2027-051",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "Access case: umich.edu serves a Cloudflare challenge (HTTP 403) to every page request from the expert container; not researched."
+  },
+  {
+   "seed_id": "qs2027-052",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-20): Access. Re-tried 2026-10-20: https://www.cityu.edu.hk/admo/, /admo/admissions/non-jupas-year-1-admission, /admo/faq and /international/admi"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): For Year 1 international applicants: on the blocked admissions site. The department page states a CGPA rule only for senior-year entry: 'Fo"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): ACCESS: www.cityu.edu.hk (the Admissions Office site /admo/, including the programme pages https://www.cityu.edu.hk/admo/programmes/bsc-com"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "question": "scholarship_international",
+   "key": "scholarships.department_computer_science_entrance.applicability.international",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): The department awards state no residency condition either way; university-level scholarships for non-local students are on the blocked /adm"
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "other_year",
+   "basis": "Expert (2026-10-20): No minimum published for direct major admission. Latest English guide readable: https://oia.korea.ac.kr/_res/oia/etc/Application_Guide_for_"
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No GPA minimum published for international freshman applicants; admission by document evaluation (and interview where applicable) per the a"
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "other_year",
+   "basis": "Expert (2026-10-19): https://oia.korea.ac.kr/oia2026/Tuition.do: '※ as of 2026 academic year / per semester' - Humanities & Social Sciences Approx. 5,800,000 KR",
+   "seeded_kind": "not_researched",
+   "review_note": "only the 2026 academic year's per-semester bands"
+  },
+  {
+   "seed_id": "qs2027-054",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-20): Programme language still not confirmed, so the rule is not chosen. www.csie.ntu.edu.tw now answers 200 (2026-10-20), but its admissions pag"
+  },
+  {
+   "seed_id": "qs2027-054",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade minimum in the 2027 guidelines: eligibility is a high-school graduation certificate plus transcripts; departments review academica"
+  },
+  {
+   "seed_id": "qs2027-054",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-055",
+   "question": "english",
+   "key": "english_evidence.duolingo.minimum",
+   "kind": "unverified_quote",
+   "basis": "expert value 135 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic 7.5 overall; subscores of 7.5 are 'given consideration', not a stated per-ban"
+  },
+  {
+   "seed_id": "qs2027-055",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No published GPA minimum. Prose: 'Carnegie Mellon is committed to a holistic approach to admission where no single grade, score or activity"
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-058",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): ACCESS: every www.nyu.edu admissions page returns HTTP 403 Forbidden to the Fetcher user agent (robots.txt itself answers 403, read as 'no "
+  },
+  {
+   "seed_id": "qs2027-058",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Admissions pages on www.nyu.edu return 403 (see english). No grade threshold found on the readable bulletins.",
+   "seeded_kind": "not_published",
+   "review_note": "admissions pages answer HTTP 403"
+  },
+  {
+   "seed_id": "qs2027-058",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Deadlines are on www.nyu.edu admissions pages, which return 403 to the Fetcher user agent. Not read.",
+   "seeded_kind": "not_researched",
+   "review_note": "deadline pages answer HTTP 403"
+  },
+  {
+   "seed_id": "qs2027-058",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "NYU's financial aid and scholarship pages (www.nyu.edu/admissions/financial-aid-and-scholarships.html) return 403 to the Fetcher user agent. The CAS bulletin on",
+   "seeded_kind": "not_researched",
+   "review_note": "scholarship pages answer HTTP 403"
+  },
+  {
+   "seed_id": "qs2027-059",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Not determinable from official pages. The tuition tool (https://icts.kuleuven.be/apps/tuitionfees/) lists only English-taught programmes (n"
+  },
+  {
+   "seed_id": "qs2027-059",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_published",
+   "basis": "KU Leuven scholarship database (https://www.kuleuven.be/scholarships/year) filters only English-taught bachelor programmes (Business Administration, Business En",
+   "seeded_kind": "not_researched",
+   "review_note": "the scholarship database lists English-taught programmes only"
+  },
+  {
+   "seed_id": "qs2027-061",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade minimum published. Informatik is 'Örtliche Zulassungsbeschränkung' (local numerus clausus) for the 1st semester; selection by grad"
+  },
+  {
+   "seed_id": "qs2027-061",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "undated",
+   "basis": "Expert (2026-10-19): Not filled. https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/ still prints only '15. Juli für das Winters",
+   "seeded_kind": "not_researched",
+   "review_note": "'15. Juli für das Wintersemester' printed with no year"
+  },
+  {
+   "seed_id": "qs2027-061",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-062",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): Grade offers, not a GPA (related programme BSc Data Science): A-levels 'A*AA, with an A* in Mathematics'; IB 39 points with 766 at HL; over",
+   "seeded_kind": "not_published",
+   "review_note": "A-level/IB offers published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-063",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No tuition amount to record; full scholarship (see scholarship answers)."
+  },
+  {
+   "seed_id": "qs2027-064",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Kyoto iUP: document review, then interview (in English); no grade threshold published. Faculty of Engineering applicants must submit score/"
+  },
+  {
+   "seed_id": "qs2027-065",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (application requirements). Access failure: https://admission.kaist.ac.kr/ (the internatio"
+  },
+  {
+   "seed_id": "qs2027-065",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (evaluation). Access failure: https://admission.kaist.ac.kr/ (the international undergradu"
+  },
+  {
+   "seed_id": "qs2027-065",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Target: admission.kaist.ac.kr/intl-undergraduate (application schedule, Fall 2027). Access failure: https://admission.kaist.ac.kr/ (the int"
+  },
+  {
+   "seed_id": "qs2027-065",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-065",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-066",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No GPA or grade minimum: 'you should feel confident that your accomplishments would allow you to be admitted to a leading university in you"
+  },
+  {
+   "seed_id": "qs2027-067",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-067",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-067",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-068",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): No GPA. Typical offer A-level A*A*A including A* in Mathematics (contextual A*AA); TMUA required (course page).",
+   "seeded_kind": "not_published",
+   "review_note": "A-level offer published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-068",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "other_year",
+   "basis": "Expert (2026-10-19): No 2027 date on the CS pages. The Department of Computer Science FAQ says 'Equal consideration will be given to all applications received b"
+  },
+  {
+   "seed_id": "qs2027-069",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): UK route: 'A*AA to include A-level Mathematics grade A' (contextual AAA). International equivalents are behind the country selector ('Inter"
+  },
+  {
+   "seed_id": "qs2027-069",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "unverified_quote",
+   "basis": "expert value 33,300 GBP unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): The international figure sits in the page's embedded da"
+  },
+  {
+   "seed_id": "qs2027-070",
+   "question": "english",
+   "key": "english_evidence.toefl_ibt.minimum",
+   "kind": "unverified_quote",
+   "basis": "expert value 100 is not in the quoted excerpt. Expert (2026-10-19): Recommended, not required: 'If you are a non-native English speaker or if you are not curren"
+  },
+  {
+   "seed_id": "qs2027-070",
+   "question": "english",
+   "key": "english_evidence.duolingo.minimum",
+   "kind": "unverified_quote",
+   "basis": "expert value 130 is not in the quoted excerpt. Expert (2026-10-19): Recommended, not required: 'If you are a non-native English speaker or if you are not curren"
+  },
+  {
+   "seed_id": "qs2027-070",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No first-year GPA minimum. Prose: 'We look at the courses you’ve taken from what’s available to you, individual grades in academic courses,"
+  },
+  {
+   "seed_id": "qs2027-071",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Selection by grades (66%) and Högskoleprovet (34%); the page lists past admission scores (Höstterminen 2026: BI 17,17) — past-cycle results",
+   "seeded_kind": "not_researched",
+   "review_note": "past admission scores only, no minimum"
+  },
+  {
+   "seed_id": "qs2027-072",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum GPA or grade threshold published for international first-year applicants on the pages read; holistic review."
+  },
+  {
+   "seed_id": "qs2027-072",
+   "question": "scholarship_international",
+   "key": "scholarships.incoming.applicability.international",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No page read states whether international students are eligible for incoming-student scholarships. The TASFA mention covers Texas non-citiz",
+   "seeded_kind": "not_researched",
+   "review_note": "no page states international eligibility"
+  },
+  {
+   "seed_id": "qs2027-073",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade threshold published for L1 via the DAP (Etudes en France) route; selection on file."
+  },
+  {
+   "seed_id": "qs2027-073",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Enrolment fees 2026/2027: 'Bachelor’s degree programmes: €178' (national rate, sorbonne-universite.fr/en/education/study-sorbonne-universit"
+  },
+  {
+   "seed_id": "qs2027-073",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_published",
+   "basis": "No Sorbonne University scholarship for incoming international licence students was found; only the exemption policy for differentiated fees (a fee waiver decide"
+  },
+  {
+   "seed_id": "qs2027-074",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-20): No first-year minimum published (re-read 2026-10-20). https://www.admissions.illinois.edu/international-requirements/: 'If you did not comp"
+  },
+  {
+   "seed_id": "qs2027-074",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No published GPA minimum for first-year applicants; holistic review (Grainger scholarship FAQ mentions 'high school GPA and rigor' as revie"
+  },
+  {
+   "seed_id": "qs2027-075",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-076",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade minimum. L1 MI page: 'Public visé et prérequis Bachelier.ère.s avec un bon niveau en mathématiques.' (prose, kept as notes). Capac"
+  },
+  {
+   "seed_id": "qs2027-076",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No exact international deadline on official university pages. Non-EU applicants without a French/European bac apply via Études en France (c"
+  },
+  {
+   "seed_id": "qs2027-076",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_published",
+   "basis": "Only a generic statement on https://www.universite-paris-saclay.fr/en/admission/scholarships-and-financial-support: 'Full or partial scholarships ... are availa"
+  },
+  {
+   "seed_id": "qs2027-077",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "unverified_quote",
+   "basis": "expert value 2027-01-11 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): Table 'Apply for Semester 1 by' (2027 column) for inter"
+  },
+  {
+   "seed_id": "qs2027-079",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): No closing date on the programme page or the international how-to-apply page ('Check the application closing date for your chosen degree.')",
+   "seeded_kind": "not_researched",
+   "review_note": "the FAQ answer pages are disallowed by robots.txt"
+  },
+  {
+   "seed_id": "qs2027-080",
+   "question": "english",
+   "key": "english_evidence.toefl_ibt.minimum",
+   "kind": "unverified_quote",
+   "basis": "expert value 92 is not in the quoted excerpt. Expert (2026-10-19): Programme page, 'Entry requirements for entry in 2027'. One sitting; tests within 2 years 5 m"
+  },
+  {
+   "seed_id": "qs2027-080",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): No GPA minimum published on the programme page; entry is by national qualifications (A-level/SQA/IB grade offers) and the admissions guidan",
+   "seeded_kind": "not_published",
+   "review_note": "A-level/SQA/IB offers published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-082",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade threshold published. Prose: 'Admission is highly competitive, with far fewer places than qualified applicants. In 2024, 10% of eli"
+  },
+  {
+   "seed_id": "qs2027-084",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): Enrolment dates are on https://www.cbc.uba.ar/inscripciones (CBC registration), which was not read in this top-up; the UBA international of"
+  },
+  {
+   "seed_id": "qs2027-084",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-085",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Course and admissions pages on www.durham.ac.uk not readable. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Entry requirements are on the blocked course page. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFro"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): UCAS deadline not read from an official page that opens for us. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request block"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): International fee on the blocked course page (a search-engine summary is discovery only, not evidence). ACCESS: www.durham.ac.uk (and www.d"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "Scholarship pages are on www.durham.ac.uk. ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent"
+  },
+  {
+   "seed_id": "qs2027-088",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): Entry by qualification-specific minimum scores in the 2027 international course summary table (ATAR 75, Gaokao 471, etc., columns garbled i",
+   "seeded_kind": "not_published",
+   "review_note": "qualification-specific minimum scores published, not a GPA"
+  },
+  {
+   "seed_id": "qs2027-088",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "undated",
+   "basis": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): Principal dates, entry dated 30 "
+  },
+  {
+   "seed_id": "qs2027-089",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-089",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert draft 2026-10-19."
+  },
+  {
+   "seed_id": "qs2027-089",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "not_researched",
+   "basis": ""
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No grade threshold published: selection by material review 'according to high-school grades, language level and overall ability' plus writt"
+  },
+  {
+   "seed_id": "qs2027-091",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "other_year",
+   "basis": "only the not stated fee is published, not 2027/28 (expert value 130,000 DKK per year). Expert (2026-10-19): Bachelor 'Computer Science' entry of the page's prog"
+  },
+  {
+   "seed_id": "qs2027-092",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum high-school GPA published for admission (holistic review, STARS self-reported academic record; test-optional). The 3.20 GPA in t"
+  },
+  {
+   "seed_id": "qs2027-092",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Not readable as published text: tuition.psu.edu (the Bursar's tuition schedules) answers 403 to our user agent. Penn State Global 'Universi"
+  },
+  {
+   "seed_id": "qs2027-093",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No GPA minimum published for first-year applicants (holistic review). The catalog's 'Minimum 2.00 cumulative GPA in all CSE courses' is a g"
+  },
+  {
+   "seed_id": "qs2027-093",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "undated",
+   "basis": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-15). Expert (2026-10-19): First-year deadlines (no year pr"
+  },
+  {
+   "seed_id": "qs2027-094",
+   "question": "english",
+   "key": "english_evidence.duolingo.minimum",
+   "kind": "unverified_quote",
+   "basis": "expert value 125 is not in the quoted excerpt. Expert (2026-10-19): TOEFL iBT: 'most competitive' 90-100 composite with 20 in each section (new 1-6 scale from J"
+  },
+  {
+   "seed_id": "qs2027-094",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): No minimum GPA; recommended high-school curriculum only. BU is test-optional for first-year applicants through fall 2028 (https://www.bu.ed"
+  },
+  {
+   "seed_id": "qs2027-095",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-20): Not readable. Japanese-taught; the privately-funded special screening is for April 2027 admission. The FAQ (https://www.osaka-u.ac.jp/ja/ad"
+  },
+  {
+   "seed_id": "qs2027-095",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): No grade threshold found; selection by EJU, TOEFL, written exam and interview (thresholds, if any, in the encrypted 2027 guideline)."
+  },
+  {
+   "seed_id": "qs2027-095",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): AY2027 (April 2027) Special Screening for Privately-funded International Students: the application period is only in the encrypted 2027 gui"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "question": "english",
+   "key": "ielts.overall",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure: the calendar's 'General Undergraduate Admission Requirements' (content.php?catoid=69&navoid=21510) returns an AWS WAF chall"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure: 'Faculty of Science Admission Requirements' (calendar navoid=20823) returns an AWS WAF challenge; not read."
+  },
+  {
+   "seed_id": "qs2027-096",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure: www.ualberta.ca admissions deadlines pages return HTTP 403 (CloudFront); not bypassed."
+  },
+  {
+   "seed_id": "qs2027-096",
+   "question": "tuition",
+   "key": "tuition",
+   "kind": "access",
+   "basis": "Expert (2026-10-19): Access failure: www.ualberta.ca tuition pages return HTTP 403 (CloudFront); not bypassed."
+  },
+  {
+   "seed_id": "qs2027-096",
+   "question": "scholarship_exists",
+   "key": "scholarships",
+   "kind": "access",
+   "basis": "Access failure: www.ualberta.ca awards and scholarships pages return HTTP 403 (CloudFront); not bypassed."
+  },
+  {
+   "seed_id": "qs2027-097",
+   "question": "deadline",
+   "key": "deadline",
+   "kind": "not_researched",
+   "basis": "Expert (2026-10-19): The application period is in the 令和9（2027）年度 募集要項 (PDF guideline), not read; the page gives first-stage results 1月6日（水） and the written tes"
+  },
+  {
+   "seed_id": "qs2027-099",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Local admission restriction (NC): places allocated by the FU statutes ('Satzung zur Vergabe von Studienplätzen in den Bachelorstudiengängen"
+  },
+  {
+   "seed_id": "qs2027-100",
+   "question": "gpa",
+   "key": "gpa",
+   "kind": "not_published",
+   "basis": "Expert (2026-10-19): Foreign certificates are admitted by country-specific rules (swissuniversities), not by a published grade threshold on UZH pages read.",
+   "seeded_kind": "not_researched",
+   "review_note": "country-specific rules, no grade threshold"
+  }
+ ]
+}

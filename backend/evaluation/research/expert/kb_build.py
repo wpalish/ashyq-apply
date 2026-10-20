@@ -89,6 +89,7 @@ from app.knowledge import (
     KB_FILE,
     QUESTIONS,
     STANDING_FEE_POLICY_CAVEAT,
+    UNKNOWN_KINDS,
     YEAR_INFERRED_CAVEAT,
     academic_year_not_stated,
     stale_reasons,
@@ -1267,6 +1268,49 @@ def robots_override_records(entries: dict[str, Row]) -> list[Row]:
     return out
 
 
+#: The reviewed table of why each unknown is unknown (WHY-1), beside the drafts.
+UNKNOWN_KINDS_FILE = "unknown_kinds.json"
+
+
+class UnknownKinds:
+    """The reviewed ``unknown_kinds.json`` rows: ``kind`` per (seed_id, question[, key]).
+
+    A row with a ``key`` matches that record only; a record whose key has no
+    row takes its question's row. A record with no row is ``unspecified``:
+    the build never guesses a kind.
+    """
+
+    def __init__(self, rows: list[Row]) -> None:
+        self.by_key: dict[tuple[str, str, str], str] = {}
+        self.by_question: dict[tuple[str, str], str] = {}
+        for row in rows:
+            kind = str(row.get("kind") or "")
+            if kind not in UNKNOWN_KINDS:
+                raise ValueError(f"unknown_kinds row {row!r}: kind is not in UNKNOWN_KINDS")
+            seed, question = str(row.get("seed_id")), str(row.get("question"))
+            if row.get("key"):
+                self.by_key[(seed, question, str(row["key"]))] = kind
+            self.by_question.setdefault((seed, question), kind)
+
+    @classmethod
+    def load(cls, path: Path | None) -> UnknownKinds:
+        if path is None or not path.is_file():
+            return cls([])
+        return cls(list(json.loads(path.read_text(encoding="utf-8")).get("rows") or []))
+
+    def kind(self, seed_id: str, question: str, key: str | None) -> str:
+        found = self.by_key.get((seed_id, question, str(key)))
+        return found or self.by_question.get((seed_id, question), "unspecified")
+
+
+def _checked(result: CoreResult, draft: dict[str, Any], default: str) -> CoreResult:
+    """Stamp each unknown record with the day its draft was researched (WHY-1)."""
+    researched = str(draft.get("researched_on") or default)
+    for record in result[1]:
+        record.setdefault("checked_on", researched)
+    return result
+
+
 def build(
     root: Path,
     reports: list[Path],
@@ -1278,12 +1322,14 @@ def build(
     exclude_robots_override: bool = False,
     yearless_deadlines_with_caveat: bool = KB_YEARLESS_DEADLINES_WITH_CAVEAT,
     standing_fee_policy_current: bool = KB_STANDING_FEE_POLICY_CURRENT,
+    unknown_kinds: Path | None = None,
 ) -> Row:
     built_at = built_at or datetime.now(UTC).date().isoformat()
     today = date.fromisoformat(built_at)
     rows = load_list(list_path)
     resolve = Resolver(rows)
     evidence = Evidence(load_reports(reports, exclude_robots_override=exclude_robots_override))
+    kinds = UnknownKinds.load(unknown_kinds or root / UNKNOWN_KINDS_FILE)
     list_doc = json.loads(list_path.read_text(encoding="utf-8"))
 
     pages: dict[str, list[tuple[str, dict[str, Any]]]] = {}
@@ -1330,16 +1376,20 @@ def build(
                     (
                         one,
                         name,
-                        core_facts(
+                        _checked(
+                            core_facts(
+                                one,
+                                row,
+                                evidence,
+                                intake=intake,
+                                today=today,
+                                default_verified=default_verified,
+                                scope=name if len(drafts) > 1 else None,
+                                yearless_deadlines=yearless_deadlines_with_caveat,
+                                standing_fee_policy=standing_fee_policy_current,
+                            ),
                             one,
-                            row,
-                            evidence,
-                            intake=intake,
-                            today=today,
-                            default_verified=default_verified,
-                            scope=name if len(drafts) > 1 else None,
-                            yearless_deadlines=yearless_deadlines_with_caveat,
-                            standing_fee_policy=standing_fee_policy_current,
+                            default_verified,
                         ),
                     )
                     for one, name in drafts
@@ -1347,6 +1397,10 @@ def build(
             )
         else:
             unknown = [{"question": q, "key": q, "reason": "no core draft"} for q in QUESTIONS]
+        for record in unknown:
+            record["kind"] = kinds.kind(
+                str(row["seed_id"]), str(record.get("question")), record.get("key")
+            )
         programme = programme_block(
             case, pages.get(case, []), evidence, default_verified=default_verified
         )
@@ -1577,6 +1631,12 @@ def main(argv: list[str] | None = None) -> int:
         help="show a listed standing fee policy that prints no academic year as current, with "
         "a caveat (owner decision Q7, 2026-10-20; on by default)",
     )
+    parser.add_argument(
+        "--unknown-kinds",
+        type=Path,
+        help=f"the reviewed table of why each unknown is unknown (default: "
+        f"<drafts_root>/{UNKNOWN_KINDS_FILE} when it exists)",
+    )
     args = parser.parse_args(argv)
     if args.refresh:
         if args.drafts_root or len(args.evidence) != 1:
@@ -1608,6 +1668,7 @@ def main(argv: list[str] | None = None) -> int:
         exclude_robots_override=args.exclude_robots_override,
         yearless_deadlines_with_caveat=args.yearless_deadlines_with_caveat,
         standing_fee_policy_current=args.standing_fee_policy_current,
+        unknown_kinds=args.unknown_kinds,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")

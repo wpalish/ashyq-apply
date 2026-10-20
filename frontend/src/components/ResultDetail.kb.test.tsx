@@ -822,3 +822,71 @@ describe('REL-1: no standalone CS bachelor is said, not asked', () => {
     expect(block).toHaveTextContent('Example University Computer Science бакалавриатын жарияламайды');
   });
 });
+
+describe('WHY-1: an empty KB cell says why', () => {
+  afterEach(() => act(() => setLocale('en')));
+  const kbUnknown = [
+    { question: 'gpa', kind: 'not_published', checked_on: '2026-10-19' },
+    { question: 'english', kind: 'access', checked_on: '2026-10-19' },
+    { question: 'deadline', kind: 'not_researched', checked_on: '2026-10-19' },
+    { question: 'tuition', kind: 'access', checked_on: '2026-10-19' },
+    { question: 'scholarship_exists', kind: 'not_published', checked_on: '2026-10-20' },
+  ];
+  const row = () => result({ kb_unknown: kbUnknown });
+
+  it('puts each reason under the tab that owns the question', () => {
+    render(<ResultDetail result={row()} knowledgeMode="kb" />);
+    const requirements = screen.getByTestId('kb-unknown-requirements');
+    expect(requirements).toHaveTextContent('Minimum grade: not published by the university, expert check 2026-10-19.');
+    expect(requirements).toHaveTextContent(
+      'English requirement: the official page is not readable from our servers; ask the admissions office.',
+    );
+    expect(requirements).toHaveTextContent('Application deadline: not yet verified.');
+    expect(requirements).not.toHaveTextContent('Tuition fee');
+
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    expect(screen.getByTestId('kb-unknown-costs')).toHaveTextContent(
+      'Tuition fee: the official page is not readable from our servers; ask the admissions office.',
+    );
+
+    fireEvent.click(screen.getByTestId('tab-funding'));
+    expect(screen.getByTestId('kb-unknown-funding')).toHaveTextContent(
+      'Scholarships: not published by the university, expert check 2026-10-20.',
+    );
+  });
+
+  it('joins the fields that share a reason into one line', () => {
+    const shared = result({
+      kb_unknown: [
+        { question: 'english', kind: 'access', checked_on: null },
+        { question: 'gpa', kind: 'access', checked_on: null },
+      ],
+    });
+    render(<ResultDetail result={shared} knowledgeMode="kb" />);
+    const lines = screen.getByTestId('kb-unknown-requirements').querySelectorAll('p');
+    expect(lines).toHaveLength(1);
+    expect(lines[0]).toHaveTextContent('English requirement, Minimum grade: the official page is not readable');
+  });
+
+  it('shows nothing for a row without the field', () => {
+    render(<ResultDetail result={result()} knowledgeMode="kb" />);
+    expect(screen.queryByTestId('kb-unknown-requirements')).not.toBeInTheDocument();
+  });
+
+  it('says the three reasons in Russian and Kazakh', () => {
+    act(() => setLocale('ru'));
+    const { unmount } = render(<ResultDetail result={row()} knowledgeMode="kb" />);
+    let block = screen.getByTestId('kb-unknown-requirements');
+    expect(block).toHaveTextContent('Минимальный балл: университет не публикует, проверка эксперта 2026-10-19.');
+    expect(block).toHaveTextContent('Требование к английскому: официальная страница недоступна с наших серверов');
+    expect(block).toHaveTextContent('Срок подачи: пока не проверено.');
+    unmount();
+
+    act(() => setLocale('kk'));
+    render(<ResultDetail result={row()} knowledgeMode="kb" />);
+    block = screen.getByTestId('kb-unknown-requirements');
+    expect(block).toHaveTextContent('Ең төменгі балл: университет жарияламайды, сарапшы тексерген күні 2026-10-19.');
+    expect(block).toHaveTextContent('Ағылшын тілі талабы: ресми бет біздің серверлерден ашылмайды');
+    expect(block).toHaveTextContent('Өтінім беру мерзімі: әзірге тексерілмеген.');
+  });
+});

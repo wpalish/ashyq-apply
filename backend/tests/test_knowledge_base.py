@@ -2064,3 +2064,144 @@ async def test_the_three_routes_are_said_and_only_an_unsettled_one_blocks(
     if not blocking:
         assert question["suggested_contact"] == RELATED_URL
         assert "Which official page" not in question["question"]
+
+
+# ----------------------------------------------- WHY-1: why a value is unknown
+
+KINDS_TABLE = (
+    Path(kb_build.__file__).parent / "data/kb_drafts.2026-10-19" / kb_build.UNKNOWN_KINDS_FILE
+)
+
+
+def _kinds(root: Path, rows: list[dict[str, Any]]) -> None:
+    _write(root / kb_build.UNKNOWN_KINDS_FILE, {"rows": rows})
+
+
+def test_the_build_takes_the_kind_from_the_reviewed_table(tmp_path):
+    root = tmp_path / "drafts"
+    _batch(root)
+    _kinds(
+        root,
+        [
+            {"seed_id": MIT, "question": "deadline", "kind": "access"},
+            {"seed_id": MIT, "question": "gpa", "key": "gpa", "kind": "not_published"},
+        ],
+    )
+    report = _report(tmp_path / "evidence_check.ci-2026-10-20.json", [_row("english", URL)])
+    entry = kb_build.build(root, [report], built_at="2026-10-21")["entries"][MIT]
+    kinds = {u["question"]: u["kind"] for u in entry["unknown"]}
+    assert kinds["deadline"] == "access"
+    assert kinds["gpa"] == "not_published"
+    # A record the table does not list is never guessed.
+    assert kinds["tuition"] == "unspecified"
+    # Each record says when its draft was researched.
+    assert {u["checked_on"] for u in entry["unknown"]} == {"2026-10-19"}
+    # The facts are untouched.
+    assert [f["key"] for f in entry["facts"]["english"]] == ["ielts.overall"]
+
+
+def test_the_build_without_a_table_marks_every_unknown_unspecified(tmp_path):
+    _batch(tmp_path / "drafts")
+    data = kb_build.build(tmp_path / "drafts", [], built_at="2026-10-21")
+    assert {u["kind"] for u in data["entries"][MIT]["unknown"]} == {"unspecified"}
+
+
+def test_the_build_refuses_a_kind_outside_the_vocabulary(tmp_path):
+    root = tmp_path / "drafts"
+    _batch(root)
+    _kinds(root, [{"seed_id": MIT, "question": "gpa", "kind": "probably_none"}])
+    with pytest.raises(ValueError, match="UNKNOWN_KINDS"):
+        kb_build.build(root, [], built_at="2026-10-21")
+
+
+def test_the_committed_table_covers_every_unknown_of_the_committed_kb():
+    """The main session's rebuild leaves no v21 unknown ``unspecified``."""
+    from evaluation.research.expert.unknown_kinds import validate
+
+    rows = json.loads(KINDS_TABLE.read_text(encoding="utf-8"))["rows"]
+    assert validate(rows) == []
+    listed = {(r["seed_id"], r["question"]) for r in rows}
+    kb = json.loads((Path(kb_build.KB_FILE)).read_text(encoding="utf-8"))
+    missing = {
+        (seed, u["question"])
+        for seed, entry in kb["entries"].items()
+        for u in entry["unknown"]
+        if (seed, u["question"]) not in listed
+    }
+    assert missing == set()
+
+
+@pytest.mark.parametrize(
+    "reason,kind",
+    [
+        ("expert value 90 is not in the quoted excerpt.", "unverified_quote"),
+        ("The quoted date carries no year; a deadline written without a year", "undated"),
+        ("Access failure: www.example.edu returns HTTP 403 (CloudFront)", "access"),
+        ("only the 2026/2027 fee is published, not 2027/28", "other_year"),
+        ("No minimum GPA published; holistic review.", "not_published"),
+        ("Expert draft 2026-10-19.", "not_researched"),
+    ],
+)
+def test_the_seed_keyword_table(reason, kind):
+    from evaluation.research.expert.unknown_kinds import classify
+
+    assert classify(reason) == kind
+
+
+def test_a_re_seed_never_rewrites_a_reviewed_row():
+    from evaluation.research.expert.unknown_kinds import merge
+
+    reviewed = [{"seed_id": MIT, "question": "gpa", "key": "gpa", "kind": "not_researched"}]
+    seeded = [
+        {"seed_id": MIT, "question": "gpa", "key": "gpa", "kind": "not_published"},
+        {"seed_id": MIT, "question": "deadline", "key": "deadline", "kind": "access"},
+    ]
+    assert merge(reviewed, seeded) == [reviewed[0], seeded[1]]
+
+
+def _why_entry() -> dict[str, Any]:
+    entry = _mit_entry(english=[_fact("ielts.overall", 7.0, "IELTS 7.0 overall")])
+    entry["unknown"] = [
+        # A missing TOEFL beside a verified IELTS leaves no empty cell.
+        {"question": "english", "key": "english_evidence.toefl_ibt.minimum", "kind": "access"},
+        {"question": "gpa", "key": "gpa", "kind": "not_published", "checked_on": "2026-10-19"},
+        {"question": "tuition", "key": "tuition", "kind": "access", "checked_on": "2026-10-19"},
+        {"question": "deadline", "key": "deadline", "checked_on": "2026-10-20"},
+        {"question": "scholarship_exists", "key": "scholarships", "kind": "invented"},
+    ]
+    return entry
+
+
+def test_unknown_reasons_list_only_unanswered_questions(tmp_path):
+    kb = load_knowledge_base(_kb(tmp_path / "kb.json", {MIT: _why_entry()}), tmp_path / "x.json")
+    assert kb.entries[MIT].unknown_reasons() == [
+        {"question": "gpa", "kind": "not_published", "checked_on": "2026-10-19"},
+        {"question": "tuition", "kind": "access", "checked_on": "2026-10-19"},
+        {"question": "deadline", "kind": "unspecified", "checked_on": "2026-10-20"},
+        {"question": "scholarship_exists", "kind": "unspecified", "checked_on": None},
+    ]
+
+
+@pytest.mark.asyncio
+async def test_a_kb_row_carries_why_each_question_is_unknown(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    _run_, payload = await _funding_run(
+        catalogue_session, profile, settings, tmp_path, _why_entry()
+    )
+    assert payload["kb_unknown"][:2] == [
+        {"question": "gpa", "kind": "not_published", "checked_on": "2026-10-19"},
+        {"question": "tuition", "kind": "access", "checked_on": "2026-10-19"},
+    ]
+    # Nothing is asked and nothing blocks because of it.
+    assert not any("not published" in q["question"] for q in payload["unresolved"])
+
+
+@pytest.mark.asyncio
+async def test_a_row_with_every_question_answered_has_no_kb_unknown_key(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    _run_, payload = await _funding_run(
+        catalogue_session, profile, settings, tmp_path, _mit_entry()
+    )
+    assert "kb_unknown" not in payload

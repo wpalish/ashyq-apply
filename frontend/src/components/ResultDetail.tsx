@@ -18,7 +18,7 @@ import {
   localCaveat, localGapReason, localStaleChip, localStaleReason, localStep, localUnusedTuitionLines, localize,
 } from '@/lib/messages';
 import { rich, useTranslation } from '@/lib/useTranslation';
-import type { ProgramResult, UnresolvedQuestion } from '@/types';
+import type { KbUnknown, ProgramResult, UnresolvedQuestion } from '@/types';
 
 type Tab = 'requirements' | 'funding' | 'costs' | 'documents' | 'sources' | 'score';
 
@@ -106,6 +106,55 @@ function RequirementQuestions({ result, knowledgeMode }: { result: ProgramResult
   );
 }
 
+/** The tab that owns each KB question (WHY-1). Documents have their own tab and copy. */
+type KbQuestion = 'english' | 'gpa' | 'deadline' | 'tuition' | 'scholarship_exists' | 'scholarship_international';
+
+const KB_UNKNOWN_TAB: Record<KbQuestion, 'requirements' | 'costs' | 'funding'> = {
+  english: 'requirements',
+  gpa: 'requirements',
+  deadline: 'requirements',
+  tuition: 'costs',
+  scholarship_exists: 'funding',
+  scholarship_international: 'funding',
+};
+
+type KbUnknownLine = 'notPublished' | 'notPublishedUndated' | 'access' | 'notVerified';
+
+function kbUnknownLine(u: KbUnknown): KbUnknownLine {
+  if (u.kind === 'not_published') return u.checked_on ? 'notPublished' : 'notPublishedUndated';
+  if (u.kind === 'access') return 'access';
+  return 'notVerified';
+}
+
+/**
+ * Why a KB question this tab owns is unanswered: "not published by the
+ * university", "not readable from our servers" or "not yet verified" — one
+ * line per reason, naming the fields. Nothing here blocks or asks.
+ */
+function KbUnknownLines({ result, tab }: { result: ProgramResult; tab: 'requirements' | 'costs' | 'funding' }) {
+  const { t, tf } = useTranslation();
+  const rows = (result.kb_unknown ?? []).filter((u) => KB_UNKNOWN_TAB[u.question as KbQuestion] === tab);
+  if (rows.length === 0) return null;
+  const lines = new Map<string, { key: KbUnknownLine; date: string; fields: string[] }>();
+  for (const u of rows) {
+    const key = kbUnknownLine(u);
+    const date = key === 'notPublished' ? u.checked_on ?? '' : '';
+    const line = lines.get(`${key}|${date}`) ?? { key, date, fields: [] };
+    const field = t(`detail.kbUnknown.field.${u.question as KbQuestion}`);
+    if (!line.fields.includes(field)) line.fields.push(field);
+    lines.set(`${key}|${date}`, line);
+  }
+  return (
+    <div className="stack stack--tight" data-testid={`kb-unknown-${tab}`}>
+      {[...lines.values()].map((line) => (
+        <p key={`${line.key}|${line.date}`} className="xs muted" style={{ margin: 0 }}>
+          {tf(`detail.kbUnknown.${line.key}`, { fields: line.fields.join(', '), date: line.date })}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   const { t, tf } = useTranslation();
   // A deadline whose year the page did not print is shown with its caveat.
@@ -125,12 +174,14 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
           </div>
         </Notice>
         <RequirementQuestions result={result} knowledgeMode={knowledgeMode} />
+        <KbUnknownLines result={result} tab="requirements" />
       </div>
     );
   }
   return (
     <div className="stack stack--tight">
       <RequirementQuestions result={result} knowledgeMode={knowledgeMode} />
+      <KbUnknownLines result={result} tab="requirements" />
       {result.hard_filter_failures.length > 0 && (
         <Notice kind="risk">
           <div>
@@ -210,11 +261,13 @@ function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMo
             <strong>{t('detail.openQuestion')}</strong> {localize(q.question_message, q.question)}
           </p>
         ))}
+        <KbUnknownLines result={result} tab="funding" />
       </div>
     );
   }
   return (
     <div className="stack">
+      <KbUnknownLines result={result} tab="funding" />
       {result.scholarships.map((s) => (
         <div key={s.id} className="panel panel--sunken" data-testid={`scholarship-${s.name}`}>
           <div className="row" style={{ justifyContent: 'space-between', marginBottom: 8 }}>
@@ -381,6 +434,7 @@ function Costs({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode
           )}
         </dl>
       )}
+      <KbUnknownLines result={result} tab="costs" />
       {feeCaveat && (
         <p className="xs claim__stale-reason" style={{ margin: 0 }} data-testid="cost-caveat">
           {tf('detail.costCaveat', { caveat: feeCaveat })}
