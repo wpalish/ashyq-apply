@@ -24,6 +24,18 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+// This test is CPU-bound, not timer-bound: it drives 255 single-character
+// change events, each a synchronous React re-render of both full screens, plus
+// role and label queries over that DOM. That is ~2.5 s of real work on an idle
+// 4-core machine, so the 5 s default left 2x headroom: with 8 busy processes
+// competing it ran 9-15 s and timed out 20/20, with 16 it ran ~30 s. No timer
+// is awaited (the debounces cannot fire inside the synchronous typing loop), so
+// fake timers would not help; the budget scales with the work instead. The two
+// async waits poll for the real condition; their 1 s default was the next cliff
+// (mount alone takes ~1.6 s at 16 busy processes) and only matters on failure.
+const CPU_BOUND_BUDGET_MS = 60_000;
+const WAIT = { timeout: 15_000 };
+
 function typeCharacters(input: HTMLInputElement, text: string) {
   for (const character of text) {
     // Read back the rendered value after each event, like a browser does.
@@ -42,7 +54,7 @@ it('keeps typed separators and submits each complete list without inventing entr
     <ProfileScreen onNext={() => {}} />
     <PreferencesScreen onStarted={() => {}} />
   </StoreProvider>);
-  await waitFor(() => expect(screen.getByTestId('demo-toggle')).toBeEnabled());
+  await waitFor(() => expect(screen.getByTestId('demo-toggle')).toBeEnabled(), WAIT);
   fireEvent.click(screen.getByRole('button', { name: '4 Activities & achievements' }));
   fireEvent.click(screen.getByRole('button', { name: '+ Add activity' }));
   fireEvent.click(screen.getByRole('button', { name: '+ Add achievement' }));
@@ -62,7 +74,7 @@ it('keeps typed separators and submits each complete list without inventing entr
   }
   // Saving cannot rely on blur to apply the last edit to the payload.
   fireEvent.click(screen.getByTestId('save-profile'));
-  expect(await screen.findByText('Saved', { exact: true })).toBeVisible();
+  expect(await screen.findByText('Saved', { exact: true }, WAIT)).toBeVisible();
   expect(fetchRequest).toHaveBeenCalledOnce();
   const [url, request] = fetchRequest.mock.calls[0]!;
   expect(url).toBe('/api/profiles');
@@ -78,4 +90,4 @@ it('keeps typed separators and submits each complete list without inventing entr
     activities: [{ evidence_links: ['https://a.example/one', 'https://b.example/two'] }],
     achievements: [{ evidence_links: ['https://c.example/award', 'https://d.example/award'] }],
   });
-});
+}, CPU_BOUND_BUDGET_MS);
