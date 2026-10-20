@@ -1129,6 +1129,8 @@ class Fetcher:
         self._stalled_hosts: set[str] = set()
         #: HS-1: URLs a caller declared as guesses (see mark_guessed).
         self._guessed_urls: set[str] = set()
+        #: PC-1: URLs whose stall skips only themselves (see mark_stall_local).
+        self._stall_local_urls: set[str] = set()
         self._last_request: dict[str, float] = {}
         self._client: httpx.AsyncClient | None = None
         self.corpus_dir = corpus_dir
@@ -1303,6 +1305,15 @@ class Fetcher:
 
     def _is_guessed(self, url: str) -> bool:
         return GUESSED_URL_STALL_EXEMPT and url in self._guessed_urls
+
+    def mark_stall_local(self, url: str) -> None:
+        """PC-1: a stall of ``url`` skips that URL only; its host stays open.
+
+        Only the stall memory changes. The deadline, robots, pacing, the read
+        ledger, the case clock and the privacy guard apply as to any URL. Off
+        (nobody calls it), nothing changes.
+        """
+        self._stall_local_urls.add(url)
 
     def attach_renderer(self, renderer: object) -> None:
         """Give the fetcher a browser to escalate to.
@@ -2004,8 +2015,9 @@ class Fetcher:
                     return self._time_cut(timer, url, "the read was cut at the case deadline")
                 # The whole exchange overran: a server that trickles will
                 # trickle again, so this is not retried, nor is the host.
-                # HS-1: a guessed URL's stall skips only that URL.
-                if not guessed:
+                # HS-1: a guessed URL's stall skips only that URL; so does
+                # PC-1's (a sitemap document read with no search provider).
+                if not guessed and url not in self._stall_local_urls:
                     self._stalled_hosts.add(host)
                 self.stats[FetchOutcome.TIMEOUT.value] += 1
                 return FetchResult(

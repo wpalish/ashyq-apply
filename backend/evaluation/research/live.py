@@ -1804,6 +1804,8 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     ),
     # Default-off (NO_SEARCH_FLOOR_2026-10-21 §5, NS-1b).
     "homepage-hop-reads": (("app.adapters.discovery.live_discovery", "HOMEPAGE_HOP_READS"),),
+    # Default-off (NEXT_CYCLES_2026-10-22 §3, PC-1, menu entry (D)).
+    "sitemap-stage-cap": (("app.adapters.discovery.live_discovery", "SITEMAP_STAGE_CAP"),),
     # Default-off (NEXT_CYCLES_2026-10-21 item 6, LQ-2a).
     "local-query-from-evidence": (
         ("app.adapters.search.intent", "LOCAL_QUERY_FROM_PAGE_EVIDENCE"),
@@ -1818,6 +1820,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "identity-fold-marks",
         "same-site-award-links",
         "homepage-hop-reads",
+        "sitemap-stage-cap",
         "local-query-from-evidence",
     }
 )
@@ -2164,6 +2167,14 @@ def main() -> None:
         "best-scored study links (the product's link score, any host of the institution's "
         "registrable domain, at most 5, after today's leads) are read as section pages, so a "
         "field-named link on them becomes a programme lead",
+    )
+    parser.add_argument(
+        "--sitemap-stage-cap",
+        action="store_true",
+        help="ticket PC-1 (NEXT_CYCLES_2026-10-22 §3, menu entry (D)): with no search provider "
+        "configured, no sitemap document starts after 33 s of discovery, and a sitemap document "
+        "that stalls ends the sitemap stage and is skipped alone instead of closing its host, "
+        "so the navigation fallback still reads the homepage",
     )
     parser.add_argument(
         "--award-route",
@@ -2881,6 +2892,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as ns1_module
 
             ns1_module.HOMEPAGE_HOP_READS = True
+        if args.sitemap_stage_cap:
+            from app.adapters.discovery import live_discovery as pc1_module
+
+            pc1_module.SITEMAP_STAGE_CAP = True
         if args.award_route:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
@@ -3312,6 +3327,7 @@ def main() -> None:
                         ),
                         *(["--local-catalogue-entry"] if args.local_catalogue_entry else []),
                         *(["--homepage-hop-reads"] if args.homepage_hop_reads else []),
+                        *(["--sitemap-stage-cap"] if args.sitemap_stage_cap else []),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-index-query"] if args.scholarship_index_query else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),

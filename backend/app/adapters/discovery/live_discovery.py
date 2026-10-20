@@ -336,6 +336,35 @@ HOMEPAGE_HOP_READS = False
 #: NS-1: homepage links read as hop pages, at most.
 HOMEPAGE_HOP_READ_CAP = 5
 
+#: Ticket PC-1 (NEXT_CYCLES_2026-10-22 §3, menu entry (D)), off until the
+#: no-search paired runs pass. The clock that kept NS-1 off, read from
+#: thirteen dev3 no-search captures of 2026-10-20: the homepage host's one
+#: declared sitemap document took 19.6–21.4 s against the fetcher's 20 s
+#: exchange deadline. In seven columns it overran, the fetcher's stall memory
+#: closed the host for the run, the navigation fallback's homepage read was
+#: refused without a request, and the case ended at 22 s with 57 of its 60
+#: reads unused; in the six where it arrived in time, navigation ran. The size of
+#: the document (247 URLs) and the slow-host verdict (the walker skipped) cut
+#: nothing; the SB-1 deadline never fell. With no provider configured nothing
+#: else bounds the stage either: SB-1b ends it at SEARCH_LATEST_START_SECONDS
+#: only to start search, so the stage ran to the 55 s deadline on hosts with
+#: many documents. On, with no search provider configured, one flag:
+#: (i) no sitemap document starts once discovery has run
+#: SITEMAP_STAGE_MAX_SECONDS, the time SB-1b ends the stage when a provider
+#: is configured; (ii) a sitemap document whose exchange overruns the
+#: fetcher's deadline ends the sitemap stage and is skipped alone
+#: (``Fetcher.mark_stall_local``): its host is not recorded as stalled, so
+#: navigation still reads the homepage. No read is interrupted; robots,
+#: pacing, the privacy guard, the 60-read ledger and the 120 s case clock
+#: apply as before. Structural only (a time and the scope of one verdict); no
+#: word is added. With a provider configured nothing changes. The benchmark
+#: harness flips it per capture (``--sitemap-stage-cap``).
+SITEMAP_STAGE_CAP = False
+#: PC-1: discovery seconds after which no sitemap document starts.
+SITEMAP_STAGE_MAX_SECONDS = SEARCH_LATEST_START_SECONDS
+#: PC-1: the trace line a stalled sitemap document adds.
+SITEMAP_STALL_LINE = "PC-1: a sitemap document stalled; the sitemap stage ends, the host stays open"
+
 #: Plan rule SM-1 (discovery analysis 2026-10-17 §0 #1, §1.3–§1.5), off until a
 #: paired run passes. The sitemap stage read index children in file order under
 #: the MAX_SITEMAP_DOCUMENTS cap and probed every conventional location even
@@ -4633,6 +4662,8 @@ class SitemapReader:
         keep: Callable[[str], bool] | None = None,
         cost: HostCost | None = None,
         before_document: Callable[[int], Awaitable[bool]] | None = None,
+        *,
+        stall_local: bool = False,
     ) -> list[str]:
         """Page URLs the institution's sitemaps declare, deduplicated.
 
@@ -4643,6 +4674,9 @@ class SitemapReader:
 
         ``before_document`` (SB-1) is awaited before each document after the
         first with the number attempted so far; True ends the sitemap stage.
+
+        ``stall_local`` (PC-1): each document is read as stall-local, so a
+        document that stalls is skipped alone, and it ends the stage.
         """
         origin = self._origin(homepage)
         declared = await self._declared_sitemaps(origin, trace, cost)
@@ -4688,6 +4722,10 @@ class SitemapReader:
                 mark_guessed = getattr(self.fetcher, "mark_guessed", None)
                 if mark_guessed is not None:
                     mark_guessed(url)
+            if stall_local:
+                mark_stall_local = getattr(self.fetcher, "mark_stall_local", None)
+                if mark_stall_local is not None:
+                    mark_stall_local(url)
             with reading_as("sitemap"):
                 result = await (
                     self.fetcher.get(url) if cost is None else cost.get(self.fetcher, url)
@@ -4695,6 +4733,10 @@ class SitemapReader:
             trace.note_entry_read(result.ok)
             if not result.ok:
                 trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
+                if stall_local and result.outcome == FetchOutcome.TIMEOUT:
+                    # PC-1: the stall is this stage's verdict, not the host's.
+                    trace.errors.append(SITEMAP_STALL_LINE)
+                    break
                 if result.outcome == FetchOutcome.TOO_LARGE:
                     # A site-wide export exceeded the bounded page reader.
                     # More bulk siblings can exhaust the host's time budget
@@ -5196,10 +5238,22 @@ class LiveDiscoveryAdapter:
             ):
                 self._has_candidates = True
 
+        # PC-1: with no search provider configured, the sitemap stage has its
+        # own end and a stalled document closes the stage, not the host.
+        stage_cap = (
+            SITEMAP_STAGE_CAP and budget is not None and self._search_provider_or_none() is None
+        )
+
         async def before_document(attempted: int) -> bool:
             """SB-1: cut the sitemap stage when spent, or search a slow host now."""
             nonlocal searched_early, tried_early
             if self._spent() or (budget is not None and budget.sitemap_spent()):
+                return True
+            if stage_cap and budget is not None and budget.elapsed() >= SITEMAP_STAGE_MAX_SECONDS:
+                trace.errors.append(
+                    f"PC-1: sitemap stage ended at {budget.elapsed():.1f} s "
+                    f"({SITEMAP_STAGE_MAX_SECONDS:g} s with no search provider)"
+                )
                 return True
             if self._search_due():
                 # SB-1b: the first query is due; search runs after this stage.
@@ -5230,6 +5284,7 @@ class LiveDiscoveryAdapter:
                 keep,
                 cost,
                 before_document if budget is not None else None,
+                stall_local=stage_cap,
             )
         except Exception as exc:  # a malformed sitemap must not end the run
             trace.errors.append(f"sitemap discovery failed: {type(exc).__name__}: {exc}")
