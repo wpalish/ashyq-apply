@@ -265,3 +265,101 @@ For R2, fill the dev5 column with the same rows from `stage_summary`, at aggrega
 the scorer's per-claim and per-outcome fields, so on dev5 they can be read only as aggregates of a script like this
 one, run inside the leak check. If that is not cleared under 13-Q1, item 1's dev5 cell is `verdict:unlabelled ÷
 claims` alone.
+
+## Item 3, follow-up: why a costs-stage read extracts no figure (FR-3 sizing)
+
+This answers item 3's first open question on the four development sets. It also decides whether a generic fee-reader
+rule (FR-3) is worth building. The bar was set before the pages were read. A rule is built only if one cause of
+type (b) costs a **labelled** tuition claim on at least 2 sets. A labelled claim is one whose case has a tuition label
+with status `known`.
+
+### Inputs and method
+
+- **Captures.** The **on** arm (today's default) of the normal-arm runs listed under Inputs above: `aw2-{set}`, both
+  on-arm repetitions per case. Every cost-stage page outcome whose detail says "no cost figures could be extracted" is
+  counted. A page appears once per case: a trailing slash or `http`/`https` difference does not make a second page.
+  That leaves 34 pages.
+- **Labels.** The labels are `tuition` in `ground_truth.reviewed11` and in the `dev2`/`dev3`/`dev4` `.draft3` files.
+  The status, the evidence URL and the expert note were read for each development case and for no other case.
+- **Re-read.** Every page was read again on 2026-10-20 with the production `Fetcher` and its own user agent, with
+  robots honoured. The fetcher ran with `trust_env_proxy=True`, because without the proxy this sandbox cannot reach
+  any host's `robots.txt` (all 34 came back `robots_disallowed`). The production `WebCostAdapter._read_page` then ran
+  on each page with a bachelor's computer-science request, academic year 2027/28 and an international applicant.
+  - 32 of the 34 pages came back with exactly the readable-character count in the capture. The reader returned
+    `no-pattern-match` on all 32 again, so the capture's outcome reproduces.
+  - 2 pages could not be read again. One now answers HTTP 403. The other now serves a bot-challenge shell with no
+    text. Both are classified from the expert's note on the case's tuition label and are marked *inferred*.
+- **Causes.**
+  - **(a)** The page has no fee for this population, and no figure is the correct result.
+  - **(b)** The fee is on the page, in a shape the reader does not parse.
+  - **(c)** The fee is for another level or population, and the reader correctly refuses it.
+  - **(d)** Other.
+
+  Each page gets one cause. A (b) page also gets its primary shape.
+
+### Per-set causes (on arm, distinct pages)
+
+| cost-stage no-figure pages | cohort | dev2 | dev3 | dev4 | all |
+|---|---|---|---|---|---|
+| pages | 8 | 9 | 14 | 3 | 34 |
+| **(a) no fee for this population; correct** | **7** | **6** | **9** | **2** | **24** |
+| (a) fee hub or landing page; the amount is on a linked page, PDF or calculator | 5 | 3 | 4 | 1 | 13 |
+| (a) fee-topic page with no tuition amount (fee-status rules, payment timing, an application or administration fee only) | 2 | 0 | 2 | 0 | 4 |
+| (a) not a fee page at all (feedback page, research project or PDF with "cost" in the path, a funding FAQ, a server-info dump at a `fee-…` path) | 0 | 3 | 3 | 1 | 7 |
+| **(b) fee present, shape not parsed** | **1** | **3** | **4** | **1** | **9** |
+| (b) fee table with population or level **columns** | 1 | 1 | 1 | 0 | 3 |
+| (b) amount only in a script-rendered widget (dropdown or simulator; *inferred* for one) | 0 | 1 | 1 | 0 | 2 |
+| (b) per-semester sentence under a bare "Tuition fee" heading (the window stops at the line break) | 0 | 0 | 0 | 1 | 1 |
+| (b) per-semester amount in a currency the reader's money pattern lacks (*inferred*) | 0 | 0 | 1 | 0 | 1 |
+| (b) per-credit-hour amounts in a currency the money pattern lacks | 0 | 1 | 0 | 0 | 1 |
+| (b) range per population under a "fees" heading with no "tuition" word | 0 | 0 | 1 | 0 | 1 |
+| (c) another population's fee (the Home fee), correctly refused | 0 | 0 | 1 | 0 | 1 |
+| (d) other | 0 | 0 | 0 | 0 | 0 |
+| **(b) pages whose case has a `known` tuition label** | **0** | **0** | **0** | **—** (no `known` label) | **0** |
+| labelled tuition claims a (b) cause costs | 0 | 0 | 0 | 0 | 0 |
+
+The table names one primary shape per (b) page. Some secondary shapes recur across pages. The three column tables
+have these extras:
+
+- a bare `$` with no country prefix;
+- a year column older than the year asked for ("2026-2027 fees coming soon");
+- in one case, non-English row labels with a suffixed currency sign (`円`).
+
+The PDF row is empty. No costs-stage no-figure read was a fee PDF. One was a PDF, and it was a research brief.
+
+### Where the labelled tuition claims went
+
+Each set's `known` tuition labels end up in one of these places:
+
+| `known` tuition labels (on arm) | cohort | dev2 | dev3 | dev4 |
+|---|---|---|---|---|
+| known labels | 4 | 1 | 1 | 0 |
+| answered from the programme page (not the costs stage) | 1 | 0 | 1 | — |
+| answered by a costs-stage `fetched-ok` read | 1 | 1 | 0 | — |
+| not answered: the site's `robots.txt` was unreachable, so no fee page was read (fetch-failed, not no-figure) | 2 | 0 | 0 | — |
+| not answered: a costs-stage no-figure read | 0 | 0 | 0 | — |
+
+All 9 (b) pages sit on cases whose tuition label is `unknown`. The expert notes give three reasons:
+
+- the requested year, 2027/28, is not yet published;
+- the fee is per credit, per unit or per semester, which the corpus does not record as one yearly amount;
+- the fee is in an interactive widget.
+
+So a reader that parsed every (b) shape would add unlabelled tuition claims and move no scored row. Some would be
+wrong-year: three of the (b) pages print only an earlier year.
+
+### Verdict
+
+**The bar is not met.** A (b) cause costs a labelled tuition claim on 0 of 4 sets. FR-3 is not built, and
+`FEE_READERS_V3` does not exist. The column-table shape recurs on three sets. It is the only (b) shape on more than
+two. It costs nothing scorable on any of them.
+
+The no-figure rate is mostly correct behaviour: 24 of 34 pages (71%) are (a). Most of those are fee hubs whose
+amount sits one link further on, and the rest are pages that are not fee pages. The open part of item 3 is the
+stage's **reach**, not its reader:
+
+- which page the costs stage is pointed at (13 hubs, 7 pages that are not fee pages);
+- that `robots.txt` was unreachable on the 2 cohort sites whose known fee went unanswered.
+
+Neither is a reader rule. The second open question, the thin 2–3 k-character pages, is the same finding. The thin
+pages are the hubs and navigation shells in row (a).
