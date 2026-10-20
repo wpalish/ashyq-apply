@@ -155,3 +155,42 @@ and imperial's year-twin of the same award was charged as the third index. That 
 index", not S4. It is two-set on the trace row, but it has not been checked against labels: no one has shown that a
 refused page is a labelled award, and AP-1 already records the sections on a refused page. If it is worked on, it needs
 its own step 1 against the dev3/dev4 labels before any rule.
+
+## AI-1 step 1: does refusing a single-award "index" page cost a labelled claim? (2026-10-20)
+
+The paragraph above recorded a second shape: single-award pages that the classifier calls `scholarship_index` and that
+the index budget then refuses (dev3 imperial, dev4 rwth). Before a rule (AI-1: such a page is read as an award page and
+is not charged to the index budget) is built, this step asks whether a gold label cites one of those pages. The bar is
+two sets: on at least two development sets, a page refused for the index budget, or charged as an index, has to be a
+single-award page that a scholarship label cites as evidence. As above, development cases are named, URL paths are
+shown by shape only, and no award is named.
+
+**Inputs.** The same off-arm captures (`expert-recovery-39355439164`, `-39355441138`, `-39355443373`, `-39355445801`;
+run_tags `lv1-cohort`, `lv1-dev2`, `lv1-dev3`, `lv1-dev4`), two reps per case. Labels: cohort
+`ground_truth.reviewed11`, dev2 `dev2.draft3`, dev3 `dev3.draft3`, dev4 `dev4.draft3`. For each case, every
+`scholarships.*` label's evidence URL was matched, with the scheme, `www.` and the trailing slash folded, against
+every `page_outcomes` row. The rows checked were the ones refused for the budget (`index page beyond the index
+budget`) and the ones read as a funding index (`read as a funding index` with page type `scholarship_index`). The same
+match was then run the other way: what the off arm did with each gold scholarship evidence URL. Both reps read the same
+in every case.
+
+| set | single-award pages classified `scholarship_index` (per rep) | does a scholarship label cite one? | what happened to the labelled award |
+|---|---|---|---|
+| dev3 | imperial: 2 refused for the budget, both `…/scholarships-search/<award>-<year>.php`, plus 1 charged as the third index, a year-twin of another award (`…/scholarships-search/<award>-<year>.php`) | **no**. None of the three is the labelled award, and the case has a single labelled award | its own page (`…/scholarships-search/<award>-undergraduate-<year>.php`) was read as `scholarship_award` in both reps. The `exists` and `international` predictions both come from that page. Nothing was lost |
+| dev4 | rwth: 1 refused for the budget, `…/Stipendien-Foerderung/<award>/~<id>/<award>`, an award for one nationality group | **no**. The case has one labelled award, and its evidence is a costs-and-financing page under `…/Vor-dem-Studium/…` that the walk never reached | not predicted in either rep. Its own award page (`…/Stipendien-Foerderung/<award>/~<id>/<award>`) was read and classified `unknown` ("not an award page"), which is the classifier verdict of S6. It was not classified as an index |
+| cohort | none. ntu's six refused pages are loan, account and emergency-fund pages under `…/financial-aid/<slug>`, not awards | no | ntu's labelled award page was never reached (behind the client-rendered finder, S1) |
+| dev2 | none (no `index_beyond_budget` row) | no | — |
+
+Across all four sets, a gold scholarship evidence URL shows up among the index-classified pages exactly once: cohort
+ubc, `…/scholarships-awards-international-students`. That is a page of several awards, read as an index, with the
+labelled award recorded from its own section (AP-1). It is a correct index, not the single-award shape.
+
+**Verdict: 0 sets.** No page refused for the index budget is one a label cites. No single-award page charged as an
+index is either. On dev3 the labelled award is already read as an award. On dev4 the labelled award is lost to a
+different shape: a German-language award page classified `unknown` (S6), and a costs page that was never reached.
+**AI-1 is not built** (13-Q2 a). Read as award pages, the four refused or charged pages would add only `unmapped.*`
+claims, and they would spend award-budget reads.
+
+**Trigger to reopen.** A capture, on two development sets, where a page that a `scholarships.*` label cites appears
+with page type `scholarship_index` and either the detail `index page beyond the index budget` or a funding-index read
+that records none of that label's claims.
