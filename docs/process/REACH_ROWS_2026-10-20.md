@@ -195,3 +195,71 @@ claims, and they would spend award-budget reads.
 **Trigger to reopen.** A capture, on two development sets, where a page that a `scholarships.*` label cites appears
 with page type `scholarship_index` and either the detail `index page beyond the index budget` or a funding-index read
 that records none of that label's claims.
+
+## AW-1 step 1: does the award-page classifier refuse a page a scholarship label needs? (2026-10-20)
+
+S6 note 3 and the AI-1 verdict leave one question open. Is a page that a `scholarships.*` label cites ever fetched and
+then classified as not an award page? If so, which classifier test refuses it? The bar for building AW-1 is two sets:
+the same refusal cause has to cost a labelled scholarship claim on at least two development sets. As in the sections
+above, development cases are named, URL paths are shown by shape only, and no award is named.
+
+**Inputs.** The same off-arm captures (`expert-recovery-39355439164`, `-39355441138`, `-39355443373`, `-39355445801`;
+run_tags `lv1-cohort`, `lv1-dev2`, `lv1-dev3`, `lv1-dev4`), two reps per case. Labels: cohort
+`ground_truth.reviewed11`, dev2 `dev2.draft3`, dev3 `dev3.draft3`, dev4 `dev4.draft3`. Every evidence URL of a known
+`scholarships.*` label was matched against every `page_outcomes` row of every stage. URLs were folded for scheme,
+`www.`, trailing slash and `index.html`. A second pass also folded case and dropped the query. It found the same rows.
+Separately, every funding-stage row with the detail `not an award page` was listed for the cases that carry scholarship
+labels, to catch a labelled award whose own page was refused while the label cites another page. Both reps read the
+same in every case, except that rwth's rep 2 refused more unlabelled award pages than rep 1.
+
+| set | known scholarship labels (cases) | cited pages (of them PDF) | cited pages fetched | cited pages fetched and refused as not an award page | labelled award's own page refused (not the cited page) |
+|---|---|---|---|---|---|
+| cohort | 30 (6) | 9 (1) | 1: ubc's international awards page, read as an index, with the labelled award recorded from its own section (AP-1) | **0** | **0**. ntu's refused pages are the client-rendered award finder and its filtered listings, with 0 links (S1), plus process, costs and loan pages. The labelled award's detail page was never reached |
+| dev2 | 14 (7) | 11 (1) | 0 | **0** | **0**. No funding-stage `not an award page` row on any labelled case |
+| dev3 | 12 (6) | 7 (2) | 1: imperial's award page, read as `scholarship_award` (3 claims) | **0** | **0**. auckland's two refused pages are a news listing and a PDF guidebook. The labelled award's page was never reached (S4) |
+| dev4 | 5 (4) | 4 (0) | 0 | **0** | **1**: rwth, `…/Stipendien-Foerderung/<award>/~<id>/<award>-`, classified `unknown` in both reps. The label cites the costs page under `…/Vor-dem-Studium/…`, which the walk never reached (as AI-1 recorded) |
+
+**Why the one dev4 page is refused.** The capture records no classifier signal for a funding-stage refusal. Its detail
+is only `not an award page; no scholarship recorded (<link summary>)`, and no HTML is kept. To find the cause, that one
+page was read once, on 2026-10-20, through the production `Fetcher`: robots.txt first, production User-Agent, no
+override, no search call. It was then given to today's `classify_page`. That is a re-read of today's page, not the
+captured bytes.
+
+- `<html lang="de">`. The identity and title carry the funding word, so the page enters the funding branch.
+- `_award_name` accepts the identity as a named award. There is 1 award link, and no listing heading.
+- `_AWARD_SIGNALS` finds **0 of 6** signals. The verdict is `funding page with 0 substantive signals and no clear award
+  name`, and the type is `unknown`.
+- The page states a monthly amount in euros, a target group and an application route, but in German. Every pattern in
+  `_AWARD_SIGNALS` is an English word.
+
+The cause is **language**: the value, eligibility and application words exist only in English. It is not structure,
+and it is not the name test.
+
+**The same cause elsewhere: latent, not measured.** The other cited pages in a local language were never fetched:
+
+- dev2: kaznu, two `…/ru/…` pages;
+- dev2: tec, `…/es/profesional/becas`;
+- dev2: uba, a Spanish news page;
+- dev3: utokyo, `…/ja/…`;
+- dev3: msu, a Russian page;
+- dev4: rwth's costs page.
+
+Their loss is reach, not the classifier. Whether the English-only signal words would refuse them cannot be read from
+these captures.
+
+**Verdict: 0 sets on the strict reading, 1 set on the loose one.** No page a `scholarships.*` label cites was fetched
+and refused, on any set. Only one labelled award's own page was refused: dev4 rwth, for language, and the label cites
+a different page. **AW-1 is not built** (13-Q2 a). `AWARD_PAGE_RECOGNITION_V2` was not added, and no replay was
+dispatched.
+
+**Trigger to reopen.** A capture, on a second development set, where a page that a `scholarships.*` label cites, or
+the labelled award's own page, is fetched in a `languages.json` language other than English and refused with `not an
+award page`, with fewer than two `_AWARD_SIGNALS`. It is most likely to show up once reach work brings the dev2 or
+dev3 local-language pages above into the walk.
+
+To make that trigger measurable from captures, the funding-stage detail would need two additions:
+
+- the classifier's own signal (for example, `funding page with N substantive signals`), as a controlled category;
+- the page's `<html lang>`.
+
+That is an ES-1-style instrument change. It is not part of this step.
