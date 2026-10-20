@@ -1,6 +1,6 @@
 # Release checklist — Unimatch 1.0
 
-Ninety-six gates, grown from the original thirty. A release may be declared
+One hundred gates, grown from the original thirty. A release may be declared
 only when every one is green. Status is
 recorded honestly: `PASS` means verified by a command whose output is shown in
 the release report, not "implemented".
@@ -11,12 +11,17 @@ needs a person, not another phase: an external deployment, a lawyer for the
 privacy policy and terms (gate 87), and a live ApiPay account before payments
 can be switched on (gate 94).
 
-**CI on `main` is red, and has been since 2026-09-04.** One end-to-end test —
-`e2e/profile-persistence.spec.ts:26`, where `getByText('Saved')` matches two
-elements — fails on every push, first on desktop and now on mobile, and it stops
-`npm run e2e:auth` from running at all. Backend on both databases, lint, types,
-build, `pip-audit`, `npm audit` and `docker compose build` are green on the same
-commit. Gate 2 is PARTIAL until that test is fixed.
+**CI is green on the working branch; `main` is at 2026-10-07.** Recounted on
+2026-10-20 on `claude/greeting-16wj2z`. The `release-gates` workflow (`ci.yml`) is
+green on `a15bf7d4` (run [39384987326](https://github.com/wpalish/ashyq-apply/actions/runs/39384987326)) and on `7d55695f` (run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821)): backend on
+SQLite and PostgreSQL, lint, format, types, vitest, build, all three Playwright
+suites (`e2e`, `e2e:auth`, `e2e:kb`), `pip-audit`, `npm audit` and
+`docker compose build`. The 2026-09-04 red test is fixed: the `Saved` chip is
+asserted with `exact: true` in `e2e/profile-persistence.spec.ts`, so `e2e:auth`
+runs again. `main` was last merged on 2026-10-07 (`1b2a5541`, its CI run
+37592262830 green); everything since — the knowledge base (kb mode) and gates
+97–100 — is on the branch, not on `main`. One intermittent red is recorded under
+gate 2.
 
 **`docs/FIX_PLAN.md` is finished.** Phases 0–6 are done, including the optional
 sixth; gates 36–92 below record what each fix is held to. Two audit findings
@@ -28,9 +33,9 @@ Phase 6; gates 93-96 record what they are held to.
 
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 1110 + 164 + 74 (desktop and mobile) + 6 auth E2E, measured on `2be6b55`. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page) |
-| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 1110 passed on `2be6b55` — in CI on both databases (coverage 92.86%, floor 92) and again locally on Windows/SQLite, same count. `vitest` 164 passed. **`playwright` is red: 70 passed, 1 failed, 1 skipped of 74**, and `e2e:auth` never runs because the suite exits first. Historical note from the previous update: `pytest` 818 passed, **including the PostgreSQL branch** — `pgserver` does provision a cluster on this machine after all, so the 25 tests recorded as unrunnable here now run and pass (`test_jobs.py` and `test_social_models.py`, 50 tests, no skips). `vitest` 137, `playwright` 67 passed / 1 skipped (desktop + mobile). The authenticated E2E config was not re-run here: it starts its own dev server and port 5173 was held by another process on this machine |
-| 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.0 kB JS gzip |
+| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | Recounted 2026-10-20. CI run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821) on `7d55695f`: `pytest` **7407 passed** on SQLite and **7407 passed** on PostgreSQL, 0 skipped; `vitest` **320 passed** (31 files); `npm run e2e` **79 passed, 1 skipped** (desktop + mobile); `e2e:auth` **6 passed**; `e2e:kb` **8 passed**. Locally on `87453b32` (RM-1, two tests added): `pytest -q -n 4 tests` **7408 passed**, `vitest` **324 passed**. Nothing removed: `2be6b55` counted 1110 + 164 + 74 + 6 |
+| 2 | All new unit / integration / E2E / security tests green | **PASS** | `release-gates` run [39384987326](https://github.com/wpalish/ashyq-apply/actions/runs/39384987326) on `a15bf7d4` and run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821) on `7d55695f`: all four jobs `success` — backend (sqlite): ruff, `ruff format --check` (510 files), mypy (510 files), 7407 passed, coverage 95.76%; backend (postgresql): 7407 passed; frontend: typecheck, lint, vitest 320, build, e2e 79 passed / 1 skipped, e2e:auth 6 passed, e2e:kb 8 passed; security-and-containers: pip-audit, npm audit, `docker compose config` and `build` (`api`, `worker`, `web`, `migrate` Built). The old red test is fixed (`getByText('Saved', { exact: true })`, `e2e/profile-persistence.spec.ts`). **Recorded intermittent red:** run [39386144462](https://github.com/wpalish/ashyq-apply/actions/runs/39386144462) on the docs-only `6845bbee` failed one test, `[mobile] e2e/community.spec.ts:48` (strict-mode violation: the post text matched two posts; the per-run tag is not unique per project). The commits before and after it are green; a fix is queued, and a second red on it moves this gate back to PARTIAL |
+| 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | Locally on `87453b32`: `ruff check app tests` "All checks passed!", `ruff format --check` clean, `mypy app tests` "Success: no issues found in 466 source files", `tsc --noEmit` and `eslint src e2e` silent, `npm run build` built: JS **605.85 kB, 169.15 kB gzip**, CSS 96.96 kB (27.49 kB gzip); CI on `7d55695f`: JS 602.16 kB / 168.26 kB gzip. Vite warns that the one chunk is over 500 kB — a warning, not an error. The bundle has grown from 74.0 kB gzip (`2be6b55`) with the ru/kk catalogue, the community module and kb mode; no size budget is set yet (PERF-1) |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
 | 6 | No run stuck `running` with no worker | **PASS** | Worker lease + heartbeat; `retryable_failed`; startup reconciliation; API reports `stale`. 7 tests |
@@ -42,8 +47,8 @@ Phase 6; gates 93-96 record what they are held to.
 | 12 | Every material claim has an official evidence trail | **PASS** | Claim carries URL, verbatim excerpt, specificity, timestamp, status, method. Excerpt-provenance tests on both adapters |
 | 13 | No silently inferred YES | **PASS** | Positive claims require positive evidence; audited in the canary |
 | 14 | Auth and tenant isolation proven by tests | **PASS** | Opaque server sessions, `scrypt`, organizations and 404 ownership checks across every case/run/result/export endpoint; 17 security tests. Phase 1 closed the last hole: `set_decision` resolved no ownership at all, so any authenticated user could approve or reject rows on another organization's shortlist (gate 38) |
-| 15 | No critical/high security findings | **PASS** | `pip-audit` and `npm audit` clean; 81 SSRF cases, DNS pinning, redirect/body limits, CSP/HSTS/origin checks, rate limits and `SECURITY.md` |
-| 16 | No secrets or applicant data in git or logs | **PASS** | Secret scan clean; `.gitignore` hardened; audit-log leak test |
+| 15 | No critical/high security findings | **PASS** | 2026-10-20 on `87453b32`: `pip-audit -r backend/requirements.txt` "No known vulnerabilities found"; `npm audit --audit-level=high` "found 0 vulnerabilities"; the same two in CI run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821). 81 SSRF cases, DNS pinning, redirect/body limits, CSP/HSTS/origin checks, rate limits and `SECURITY.md` unchanged |
+| 16 | No secrets or applicant data in git or logs | **PASS** | 2026-10-20 on `87453b32`: `git grep -nIE` over every tracked file for AWS, GitHub, Slack, Google, OpenAI/Anthropic-style keys and PEM private keys → 0 matches; `git ls-files` holds no `.env` but the two `.env.example` files (every secret in them empty or a placeholder) and only `backend/data/.gitkeep` under `backend/data/`. No dedicated scanner (gitleaks, trufflehog) is installed here; `.gitignore` hardened; audit-log leak test |
 | 17 | Full profile editable in the UI and correct after reload | **PASS** | Tests, activities, achievements, evidence, academic record, funding and preference fields are editable; persistence/replacement covered by E2E |
 | 18 | Multiple applicant cases | **PASS** | Cases are tenant-scoped profiles with create/switch UI and `/api/cases`; blank cases do not inherit demo identity data |
 | 19 | Approve / reject / maybe and document collection work | **PASS** | Covered by E2E |
@@ -52,8 +57,8 @@ Phase 6; gates 93-96 record what they are held to.
 | 22 | Docker Compose brings up a production-like stack | **PASS** | Run for real on 2026-09-06 against Docker Desktop 4.89.0 / Engine 29.7.2 under WSL2: images built, migrations exited 0, postgres/api/web healthy, and registration plus a demo research run through nginx on :8080 returned 20 results at `awaiting_user_decision`. Two defects the run itself found are fixed in `docker-compose.yml`: the `/app/data` tmpfs was root-owned so the API died creating its cache directory, and the worker inherited an HTTP healthcheck for a port it does not serve. Evidence: `docs/DOCKER_VERIFICATION.md`. CI additionally runs `docker compose build` on every push. Earlier finding, kept: one real defect fixed: the read-only `api` had no writable `/app/data`, and `ensure_dirs()` runs at import, so the container would have died with EROFS before serving a request. The audit's other two compose findings did not reproduce — the worker's `worker-cache:/app/data` matches `BACKEND_ROOT` for the image compose builds, and `backend/Dockerfile` already carries a `curl` HEALTHCHECK. `scripts/verify_compose.sh` drives the whole stack to a finished demo run. **WRITTEN, NOT RUN: Docker is not installed on this machine.** Requires a user checkpoint |
 | 23 | Backup / restore and crash recovery verified | **PASS** | Real SIGKILL recovery plus a PostgreSQL `pg_dump`/`pg_restore` scratch-database drill: 12 tables and a synthetic probe restored identically |
 | 24 | Documentation matches actual behaviour | **PASS** | Three README overstatements corrected; status banner added |
-| 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
-| 26 | No disabled or skipped tests without written justification | **PASS** | No xfails. 25 skips, all one justified case: the PostgreSQL fixture skips when `pgserver` cannot start a cluster (its `initdb.exe` fails on Windows). The reason is in the skip message and in `conftest.py`; Linux CI provisions the real server and runs them |
+| 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → no output; piped to `wc -l` → `0` (2026-10-20, `87453b32`) |
+| 26 | No disabled or skipped tests without written justification | **PASS** | No xfails. 2026-10-20: `pytest` **0 skipped** on SQLite and PostgreSQL in CI run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821) and locally. Three conditional skips exist in code, none fired: `conftest.py` (`pgserver` cannot start a cluster) and two in `test_paywall.py` (the demo corpus produced no rows), each with its reason in the message. Playwright: **1 skipped** of 80 — `e2e/community.spec.ts:80` "every community screen is reachable on a phone" on the desktop project, `test.skip(width >= 900, 'the wrapped navigation only applies below 900px')`; it runs on mobile |
 | 27 | Demo data unmistakably synthetic | **PASS** | Fixture banner, `fixture://` scheme, UI badge, export column. Loads only on an explicit confirmed action |
 | 28 | Independent live truth audit across five canary universities | **PASS** | Ten official domains audited; 26/30 category pages, 0 zero-tolerance false positives. Programme recall remains honestly limited to 1/10; see `docs/LIVE_DISCOVERY_REPORT.md` |
 | 29 | Local release commit/tag after all gates pass | **BLOCKED** | Gates open |
@@ -127,10 +132,10 @@ Phase 6; gates 93-96 record what they are held to.
 | 76 | The repository can be contributed to | **PASS** | LICENSE (MIT), CONTRIBUTING.md, bug and feature issue templates; `LOOP_REPORT.md` moved under `docs/process/` |
 | 77 | Half an answer is never rounded up to a whole one | **PASS** | `hours_per_week` without `weeks_per_year` is named in `missing_fields` and in the explanation instead of being silently discarded; the score is unchanged, so answering cannot cost the applicant anything. The 40-weeks assumption was rejected and the reasoning is recorded in `docs/PROFILE_FIELDS.md`. 4 tests |
 | 78 | A conversion method is only offered where it applies | **PASS** | `uk_class_to_us4` is no longer offered for non-UK percentage scales; matched on word boundaries, so "Ukrainian" is not read as "UK". 3 tests |
-| 79 | Live mode says how far it reaches | **PASS** | PreferencesScreen shows the registry's own recall note and country list when demo mode is switched off — ten institutions across eight countries, not the open web. A contract test pins the API shape to the TypeScript type and was verified to fail on a renamed key. 3 unit tests + 1 contract test |
+| 79 | Live mode says how far it reaches; kb mode says what it reaches | **PASS** | Live: PreferencesScreen shows the registry's own recall note and country list when demo mode is off — today **19 curated institutions in 15 countries** (`routes_meta.registry_coverage()`), not the open web. kb (RM-1, `87453b32`): in kb mode `live_coverage` is `mode: "kb"`, `institutions` = KB entries with verified data (**95** on KB v22), their countries, `catalogue_total` and the note "The verified knowledge base answers for 95 of N catalogue universities (bachelor's in Computer Science). A university outside it, or another programme, gets 'No verified data yet'; no page is read during a run.", keyed `msg.coverage.kb` for ru/kk; the screen shows `kb-mode-notice` ("No university page is read and nothing is sent to a search provider during a run.") instead of the live notice. Tests: `test_frontend_contract.py::test_live_coverage_reaches_the_frontend_with_the_shape_it_declares`, `test_api.py::TestMeta::test_live_coverage_reads_as_before_in_demo_and_live_mode`, `test_knowledge_base.py::test_capabilities_name_the_knowledge_base_in_kb_mode`, `PreferencesScreen.test.tsx` (12 tests, kb note in en/ru/kk, live note unchanged): all green in the 7408 / 324 runs above. Not covered: a demo-mode server whose `knowledge_mode` is kb still shows the live notice when demo is unticked |
 | 80 | The authenticated path is exercised end to end | **PASS** | `npm run e2e:auth` — a second Playwright config with `UNIMATCH_AUTH_ENABLED=true` and `reuseExistingServer: false`, covering register → profile → run → sign out → sign in → data still there. 6 tests |
 | 81 | An expired session returns to sign-in | **PASS** | Found by writing gate 80: every 401 was rendered as a topbar banner on a screen the user could not leave. Guarded in the store's shared `fail`. Both the E2E case and the unit test were confirmed to fail with the guard removed. 2 tests |
-| 82 | The coverage floor means something | **PASS** | Raised from 80 to 92, the level actually measured on a green run (6010 statements, 504 uncovered) |
+| 82 | The coverage floor means something | **PASS** | Floor 92 (`--cov-fail-under=92`). CI run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821) on `7d55695f`, SQLite: "Required test coverage of 92% reached. Total coverage: 95.76%" (run on `a15bf7d4`: TOTAL 21317 statements, 903 missed, 95.76%) |
 
 
 ### Added by Phase 5 of the audit fix plan
@@ -151,7 +156,7 @@ Phase 6; gates 93-96 record what they are held to.
 | 89 | Live mode reaches beyond ten Western universities | **PASS** | Nineteen institutions, the nine new ones chosen for where Kazakh applicants apply, including Nazarbayev University. Every seed fetched and classified by the product's own classifier before being written down; a category with no verifiable page has no seed. All 52 seeds resolve. Nine canaried the day they were added: nine reached, zero blocked, **zero false positives**, programme pages 2 of 9 |
 | 90 | The canary can actually run, and its verdict can be trusted | **PASS** | Three defects in the tool, none in the product: it died on a NOT NULL constraint from the `dev-org` default Phase 4 removed; `--only` narrowed the report but not the run; and the false-positive gate read a requirement's provenance from attributes a string does not have, so it could never pass and accused Charles University of a false positive it had not made. 4 tests now hold the gate to its own contract |
 | 91 | A transcript can be read instead of retyped | **PASS** | Grade average with its scale, and the graduation date, each quoted back with the line it came from and applied only per field on request. Refuses an average with no scale, an ambiguous numeric date, and a value above its own scale. PDFs only, 10 MB, authenticated, held in memory and discarded. 17 backend tests + 4 vitest |
-| 92 | Russian and Kazakh have a foundation that does not invent terms | **PARTIAL** | The shell reads from dictionaries with English as the visible fallback, and a language selector persists the choice. Deliberately incomplete: claim, shortlist, funding gap, conditional offer and the status vocabulary are listed in `docs/i18n/GLOSSARY.md` with the question each poses, and the strings containing them stay in English until a person who advises applicants in those languages decides. 7 vitest, including one that fails if a reserved term is quietly translated |
+| 92 | Russian and Kazakh have a foundation that does not invent terms | **PARTIAL** | Recounted 2026-10-20 on `87453b32`: the results catalogue `frontend/src/lib/i18n.results.ts` holds **493 keys** (390 interface + 103 `msg.*` backend sentences; 404 when `docs/process/I18N_RESULTS_2026-10-19.md` was written), every one in ru and kk (the types are `Record`s, so a missing translation does not compile); the shell dictionary holds 194 keys, 183 in ru and kk. Still English, as I18N_RESULTS lists: the 11 shell keys with a reserved glossary term (`brand.*`, `nav.shortlist`, `nav.funding`, `nav.sources`, `nav.preferences`, `nav.export`, `nav.group.research`, `topbar.*`), the drafted admissions e-mail (on purpose), sentences not yet templated (`RequirementCheck.explanation`, scholarship `classification_reason`, `ranking.bucket_reason`, axis `reason`, `knocked_out_by`, checklist `ordered_steps`, `capabilities.currency.stale_warning`, …), and small `format.ts` tokens. PARTIAL until a person who advises applicants in those languages settles the glossary terms (`docs/i18n/GLOSSARY.md`) |
 
 ### Added after Phase 6 — ranking v2, community and payments
 
@@ -170,24 +175,30 @@ release gate document.
 
 | # | Gate | Status | Evidence |
 |---|---|---|---|
-| 97 | The kb-mode journey an applicant sees is walked in a browser on every push | **PENDING — PASS only with the CI output** | `npm run e2e:kb` (`frontend/playwright.kb.config.ts`, `e2e/kb-journey.spec.ts`; E2E-KB): the real API and worker in `UNIMATCH_KNOWLEDGE_MODE=kb`, no search provider, a scratch SQLite database at `alembic upgrade head`, the network guard with a probe that proves it blocks; nine catalogue universities, en/ru/kk, the catalogue chips and verified filter, the shortlist cards, the Requirements, Costs, Documents and Sources tabs and the Documents screen; red on any of the smokes' 13 fixes (D1–D6, U1–U6, U8), each reverted once locally to see it go red. Green locally (8 tests, 51–66 s); a step of `ci.yml`'s `frontend` job, report artifact `playwright-report-kb`. Mark PASS with the first green CI run's link |
+| 97 | The kb-mode journey an applicant sees is walked in a browser on every push | **PASS** | `npm run e2e:kb` in the `frontend` job of `release-gates`: run [39384987326](https://github.com/wpalish/ashyq-apply/actions/runs/39384987326) on `a15bf7d4` (the docker-build fix) "8 passed (40.7s)", and run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821) on `7d55695f` "8 passed (48.8s)" — the real API and worker in `UNIMATCH_KNOWLEDGE_MODE=kb`, no search provider, scratch SQLite at `alembic upgrade head`, the network guard with its probe; en/ru/kk catalogue, shortlist, the four detail tabs and the Documents screen (`frontend/playwright.kb.config.ts`, `e2e/kb-journey.spec.ts`) |
+| 98 | kb mode reads no page during a run | **PASS** | Browser: `e2e:kb` in run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821) (`7d55695f`) and run [39384987326](https://github.com/wpalish/ashyq-apply/actions/runs/39384987326) (`a15bf7d4`): "✓ the run stays in kb mode and off the network" (`pages_checked` 0, `fetch_tiers` `{fixture: 0, http: 0, browser: 0, pdf: 0}`, `settings.knowledge_mode` kb) and "✓ the browser made no external request, no page failed, and the guard blocked nothing" — the network guard's log holds `PROBE blocked`, `LOADED` for uvicorn and for `app.jobs.worker`, and no other `BLOCKED` line. Unit: the 25 `test_knowledge_base.py` tests that take the `no_network` fixture (search providers, live discovery and `Fetcher` replaced by an assertion) — `pytest tests/test_knowledge_base.py -k "<the 25>"` "27 passed, 102 deselected" on `87453b32`. The local `e2e:kb` was not re-run here: port 8099 was held by another process |
+| 99 | Every KB fact shown carries its official quote and date, re-verifiable by `verify_evidence --from-kb` | **PASS** | KB `2026-10-20.kb-cs-bachelor.22`, 2026-10-20. Offline: the merged KB the product serves holds 871 facts, **871 with `quote`, `source_url` and `verified_on`**; `load_kb_targets` turns the built file into **999 re-checkable records** (812 facts, 109 programme quotes, 78 "does not apply" statements, 403 URLs), every one with a quote and a URL. Re-verified the same day through the production `Fetcher` (`PYTHONPATH=. python scripts/verify_evidence.py --from-kb app/knowledge/kb_cs_bachelor.json --trust-env-proxy`, robots.txt honoured): "checked=999 verified=941 http_error=4 network_unavailable=3 ok=955 robots_disallowed=37" — **941 of 999 verified (94.2%)**, 44 not readable from this sandbox (37 refused by robots.txt — read once under the owner's KB exception, which this check does not use — 4 HTTP errors, 3 network), and **14 read but the quote not found**: NUS documents (6, two PDFs), CityU documents (5, one PDF), Auckland tuition (1), Paris-Saclay "no English test" (2). Those 14 go to the KB refresh queue (`kb_build --refresh` / re-draft); the report is not committed (RC-1 changes this file only) |
+| 100 | The applicant can tell which universities have verified data before a run | **PASS** | Catalogue (CAT-1): each card's `knowledge` block, `kb_total` and the verified filter — `pytest tests/test_university_catalogue.py tests/test_frontend_contract.py tests/test_api.py::TestMeta tests/test_knowledge_base.py::test_capabilities_name_the_knowledge_base_in_kb_mode -k "kb or knowledge or coverage"` "10 passed"; `vitest UniversityCatalogue.test.tsx PreferencesScreen.test.tsx` "21 passed"; `e2e:kb` "✓ en/ru/kk: the catalogue shows each university's verified knowledge and filters on it" in run [39386969821](https://github.com/wpalish/ashyq-apply/actions/runs/39386969821). Research screen (RM-1, `87453b32`): the kb-mode note names how many universities the KB answers for out of the catalogue and that any other gets "No verified data yet", in en/ru/kk (gate 79) |
 
 ## Summary
 
-Counted on `2be6b55`, over gates 1-96.
+Counted on 2026-10-20 on `claude/greeting-16wj2z` (`87453b32`; CI on `7d55695f`),
+over gates 1-100.
 
-- **PASS:** 91
-- **PARTIAL:** 3 — gate 2 (one red end-to-end test on `main`), gate 87 (the
-  privacy policy and terms are drafts no lawyer has read), gate 92 (the product
-  vocabulary is deliberately untranslated pending human review)
+- **PASS:** 96
+- **PARTIAL:** 2 — gate 87 (the privacy policy and terms are drafts no lawyer
+  has read), gate 92 (the glossary terms are deliberately untranslated pending
+  human review)
 - **FAIL:** 0
+- **PENDING:** 0
 - **BLOCKED:** 2 — gate 29 (the release tag waits on the rest) and gate 94 (a
   real payment needs a merchant account)
 
-Gate 22 moved from FAIL to PASS on work: the stack was actually run, and running
-it found two defects that no amount of reading the file would have shown. Gate 2
-moved the other way, from PASS to PARTIAL, on evidence: the end-to-end suite has
-been red on `main` since 2026-09-04 and the summary said nothing about it.
+What stays open needs a person, not another cycle: gates 87, 94 and 29. Gate 2
+moved back from PARTIAL to PASS on CI output, not on reasoning:
+the `Saved` locator is exact and two `release-gates` runs are green end to end;
+one intermittent mobile community test is recorded under it. Gate 97 moved from
+PENDING to PASS with its CI runs; 98-100 are new and kb-mode only.
 
 ## Order of work remaining
 
@@ -204,16 +215,21 @@ been red on `main` since 2026-09-04 and the summary said nothing about it.
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
 4. ~~**P4** — full onboarding forms~~ **done**
-5. **Fix the red end-to-end test** — `e2e/profile-persistence.spec.ts`, two
-   elements reading "Saved". Nothing else can be called green while `main` is
-   red, and `e2e:auth` has not run since 2026-09-04 (gate 2)
+5. ~~**Fix the red end-to-end test**~~ **done** — the `Saved` chip is asserted
+   with `exact: true`, `e2e:auth` runs on every push again (gate 2). Left: the
+   intermittent mobile community test recorded under gate 2
 6. **P5–P6** — improve programme-page classifier recall and deepen funding/document extraction
 7. ~~**P7** — run the container stack~~ **done** (gate 22). An external
    deployment is still outstanding and needs the owner
 8. ~~**P8** — canary audit across ten institutions~~ **done**
-9. **Finish ru/kk** — 184 of 378 strings are translated and only seven
-   components read from the dictionary at all, so the interface is effectively
-   English for an audience that is not (gate 92)
+9. **Finish ru/kk** — the results screens and 103 backend sentences are
+   localised (493 catalogue keys, `docs/process/I18N_RESULTS_2026-10-19.md`);
+   what is left is that note's "Still English" list — the sentences not yet
+   templated (requirement explanations, scholarship classification reasons,
+   bucket and axis reasons, checklist steps, the rate warning) and the glossary
+   terms a person has to choose (gate 92)
+10. **kb mode on `main`** — gates 97-100 hold on the working branch only; `main`
+   is at 2026-10-07
 
 ## Needs the user
 
