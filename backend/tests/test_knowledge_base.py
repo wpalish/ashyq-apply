@@ -976,9 +976,31 @@ def test_capabilities_name_the_knowledge_base_in_kb_mode(monkeypatch, settings):
     body = routes_meta.capabilities()
     assert body["knowledge_mode"] == "kb"
     assert "verified knowledge base" in body["data_origin"]
+    # CAT-1: the KB adapter is listed first and active; the registry and the
+    # five web readers are listed as inactive, ``live`` unchanged.
+    by_name = {a["name"]: a for a in body["adapters"]}
+    assert body["adapters"][0] == {
+        "name": "verified-knowledge-base",
+        "role": "discovery and verification",
+        "live": False,
+        "active": True,
+    }
+    inactive = {n for n, a in by_name.items() if a.get("active") is False}
+    assert inactive == {
+        "live-institution-registry",
+        "web-requirements",
+        "web-costs",
+        "web-scholarships",
+        "web-documents",
+        "web-government",
+    }
+    assert all(by_name[n]["live"] is True for n in inactive)
     live = settings.model_copy(update={"demo_mode": False, "knowledge_mode": "live"})
     monkeypatch.setattr(routes_meta, "get_settings", lambda: live)
     assert routes_meta.capabilities()["data_origin"] == "live official sources"
+    live_adapters = routes_meta.capabilities()["adapters"]
+    assert "verified-knowledge-base" not in {a["name"] for a in live_adapters}
+    assert all("active" not in a for a in live_adapters)
     demo = settings.model_copy(update={"demo_mode": True, "knowledge_mode": "kb"})
     monkeypatch.setattr(routes_meta, "get_settings", lambda: demo)
     assert routes_meta.capabilities()["knowledge_mode"] == "demo"

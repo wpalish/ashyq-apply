@@ -72,16 +72,7 @@ def capabilities() -> dict:
             "demo": "bundled synthetic corpus",
             "kb": "verified knowledge base (bachelor's in Computer Science); no live search",
         }.get(knowledge_mode, "live official sources"),
-        "adapters": [
-            {"name": "fixture-catalog", "role": "discovery", "live": False},
-            {"name": "fixture-rankings", "role": "ranking (discovery only)", "live": False},
-            {"name": "live-institution-registry", "role": "discovery", "live": True},
-            {"name": "web-requirements", "role": "admission requirements", "live": True},
-            {"name": "web-costs", "role": "cost of attendance (HTML + PDF)", "live": True},
-            {"name": "web-scholarships", "role": "scholarships and coverage", "live": True},
-            {"name": "web-documents", "role": "document checklist", "live": True},
-            {"name": "web-government", "role": "post-study work rules", "live": True},
-        ],
+        "adapters": adapters(knowledge_mode),
         "fetch_tiers": ["structured data", "plain HTTP", "Playwright render", "PDF parsing"],
         "currency": {
             "supported": supported_currencies(),
@@ -113,6 +104,50 @@ def capabilities() -> dict:
             "Currency rates are a dated static snapshot, not a live feed.",
         ],
     }
+
+
+#: The adapters a live run reads the web with. A kb-mode run uses none of them
+#: (no discovery, no search, no page reads), and the capabilities say so.
+WEB_ADAPTERS = frozenset(
+    {
+        "live-institution-registry",
+        "web-requirements",
+        "web-costs",
+        "web-scholarships",
+        "web-documents",
+        "web-government",
+    }
+)
+KB_ADAPTER = {
+    "name": "verified-knowledge-base",
+    "role": "discovery and verification",
+    "live": False,
+}
+
+
+def adapters(knowledge_mode: str) -> list[dict]:
+    """Every adapter this build has; in kb mode, the KB first and the web ones inactive.
+
+    ``active`` appears in kb mode only (additive): live and demo mode list the
+    adapters exactly as before. ``live`` says what an adapter is, ``active``
+    whether this deployment's runs use it.
+    """
+    rows: list[dict] = [
+        {"name": "fixture-catalog", "role": "discovery", "live": False},
+        {"name": "fixture-rankings", "role": "ranking (discovery only)", "live": False},
+        {"name": "live-institution-registry", "role": "discovery", "live": True},
+        {"name": "web-requirements", "role": "admission requirements", "live": True},
+        {"name": "web-costs", "role": "cost of attendance (HTML + PDF)", "live": True},
+        {"name": "web-scholarships", "role": "scholarships and coverage", "live": True},
+        {"name": "web-documents", "role": "document checklist", "live": True},
+        {"name": "web-government", "role": "post-study work rules", "live": True},
+    ]
+    if knowledge_mode != "kb":
+        return rows
+    return [
+        {**KB_ADAPTER, "active": True},
+        *({**r, "active": False} if r["name"] in WEB_ADAPTERS else r for r in rows),
+    ]
 
 
 @router.get("/vocabulary")

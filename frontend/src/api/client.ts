@@ -8,6 +8,7 @@
 
 import type {
   Capabilities,
+  CatalogueKnowledge,
   ApplicantCase,
   AuthPrincipal,
   AuthStatus,
@@ -152,8 +153,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  universities: (params: { q?: string; country?: string; profile_id?: string; offset?: number } = {}) =>
-    request<UniversityCatalogue>(`/api/universities${query({ ...params, offset: params.offset?.toString() })}`),
+  universities: (params: { q?: string; country?: string; profile_id?: string; offset?: number; verified?: boolean } = {}) =>
+    request<UniversityCatalogue>(`/api/universities${query({ ...params, offset: params.offset?.toString(), verified: params.verified ? 'true' : undefined })}`),
   authStatus: () => request<AuthStatus>('/api/auth/status'),
   register: (payload: { email: string; password: string; display_name: string; organization_name: string }) =>
     request<AuthPrincipal>('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
@@ -444,11 +445,15 @@ export interface UniversityCandidate {
   seed_version: string | null;
   observed_at: null;
   sources: Record<string, string>;
+  /** Verified-data coverage in kb mode; null (or absent, from an older API) otherwise. */
+  knowledge?: CatalogueKnowledge | null;
 }
 export interface UniversityCatalogue {
   items: UniversityCandidate[];
   total: number;
   catalogue_total: number;
+  /** Universities with verified data in kb mode; null in live and demo mode. */
+  kb_total?: number | null;
   seed_count: number;
   countries: string[];
 }

@@ -204,3 +204,29 @@ def test_the_kb_unknown_kind_union_matches_the_backend(types_source):
 
     assert set(get_args(KbUnknownKind)) == set(UNKNOWN_KINDS)
     assert parse_union(types_source, "KbUnknownKind") == set(UNKNOWN_KINDS)
+
+
+def _interface_keys(source: str, name: str) -> set[str]:
+    block = re.search(rf"export interface {name} \{{(.*?)\n\}}", strip_comments(source), re.DOTALL)
+    assert block, f"types.ts does not declare `{name}`"
+    return set(re.findall(r"^\s*(\w+)[?]?:", block.group(1), re.M))
+
+
+def test_catalogue_knowledge_reaches_the_frontend_with_the_shape_it_declares(types_source):
+    """CAT-1: the kb-mode coverage block on a catalogue card, key for key."""
+    from app.api.routes_universities import NO_KNOWLEDGE, PROGRAMME_PAGES
+
+    assert _interface_keys(types_source, "CatalogueKnowledge") == set(NO_KNOWLEDGE)
+    assert parse_union(types_source, "KbProgrammePage") == set(PROGRAMME_PAGES)
+    assert _interface_keys(types_source, "CatalogueKbTuition") == {
+        "amount",
+        "currency",
+        "range_low",
+        "range_high",
+        "period",
+        "academic_year",
+        "stale",
+        "stale_reasons",
+        "caveat",
+        "source_url",
+    }

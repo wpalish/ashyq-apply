@@ -92,6 +92,11 @@ class TestMeta:
         assert any("robots.txt" in g for g in body["guarantees"])
         assert any("never" in g and "outbound URL" in g for g in body["guarantees"])
         assert any("cannot predict" in limit for limit in body["limits"])
+        # The test client runs in demo mode: the adapters read as before, with
+        # no knowledge-base row and no ``active`` flag (CAT-1 is kb mode only).
+        names = [a["name"] for a in body["adapters"]]
+        assert "verified-knowledge-base" not in names and "web-costs" in names
+        assert all("active" not in a for a in body["adapters"])
 
     def test_the_vocabulary_endpoint_exposes_every_controlled_list(self, client):
         vocab = client.get("/api/vocabulary").json()

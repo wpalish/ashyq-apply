@@ -518,12 +518,47 @@ export interface ShortlistSummary {
   demo_data: boolean;
 }
 
+/** What the knowledge base says about the CS programme page (`routes_universities.PROGRAMME_PAGES`). */
+export type KbProgrammePage = 'known' | 'related_only' | 'not_offered' | 'unknown';
+
+/** A KB fee as published, judged by the run's stale and caveat rules. */
+export interface CatalogueKbTuition {
+  amount: number;
+  currency: string;
+  range_low: number | null;
+  range_high: number | null;
+  /** As published ("semester", "year"); null when the page gave none. */
+  period: string | null;
+  academic_year: string | null;
+  stale: boolean;
+  stale_reasons: string[];
+  caveat: string | null;
+  source_url: string;
+}
+
+/**
+ * A catalogue card's verified-data coverage (kb mode only; null in live and
+ * demo mode). Checked against the backend by `test_frontend_contract.py`.
+ */
+export interface CatalogueKnowledge {
+  in_kb: boolean;
+  programme_page: KbProgrammePage;
+  /** The six core questions answered: known, or verified as not applicable. */
+  core_answered: number;
+  documents: number;
+  verified_on: string | null;
+  stale_count: number;
+  review_label: string | null;
+  tuition: CatalogueKbTuition | null;
+}
+
 export interface Capabilities {
   demo_mode: boolean;
   /** Where answers come from; optional so an older API still type-checks. */
   knowledge_mode?: 'demo' | 'kb' | 'live';
   data_origin: string;
-  adapters: { name: string; role: string; live: boolean }[];
+  /** `active` appears in kb mode only: false for the web adapters a kb-mode run never uses. */
+  adapters: { name: string; role: string; live: boolean; active?: boolean }[];
   fetch_tiers: string[];
   currency: {
     supported: string[];
