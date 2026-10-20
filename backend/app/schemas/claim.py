@@ -158,6 +158,11 @@ class Conflict(Base):
         description="A ready-to-send question the applicant can email the admissions office"
     )
     unresolved: bool = True
+    #: Keys for ``subject`` and ``resolution_rule`` (I18N-2). Served, never
+    #: stored. ``question_for_admissions`` stays English on purpose: it is an
+    #: email to a foreign admissions office.
+    subject_message: MessageRef | None = Field(default=None, exclude_if=_absent)
+    resolution_message: MessageRef | None = Field(default=None, exclude_if=_absent)
 
 
 class UnresolvedQuestion(Base):

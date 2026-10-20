@@ -2,6 +2,7 @@ import { Deadline } from '@/components/Deadline';
 import { Chip, SourceLink, StatusChip, statusLabel } from '@/components/primitives';
 import { FIT_DISCLAIMER, admissionsFitTone, eligibilityTone, fundingClassTone, money, percent } from '@/lib/format';
 import { useTranslation } from '@/lib/useTranslation';
+import { localize } from '@/lib/messages';
 import type { ProgramResult } from '@/types';
 
 export function ComparePanel({ results, onRemove, onClear }: {
@@ -37,7 +38,7 @@ export function ComparePanel({ results, onRemove, onClear }: {
               {result.program_url && <SourceLink url={result.program_url} />}
               <button type="button" className="btn btn--sm" onClick={() => onRemove(result.id)}>{t('results.remove')}</button>
             </div>
-            <details><summary className="small">{t('compare.whyFit')}</summary><p className="small muted">{result.ranking?.bucket_reason ?? statusLabel(result.eligibility, tOr)}</p></details>
+            <details><summary className="small">{t('compare.whyFit')}</summary><p className="small muted">{result.ranking ? localize(result.ranking.bucket_reason_message, result.ranking.bucket_reason) : statusLabel(result.eligibility, tOr)}</p></details>
           </article>
         ))}
       </div>

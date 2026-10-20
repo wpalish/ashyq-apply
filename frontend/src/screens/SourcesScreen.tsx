@@ -96,7 +96,7 @@ export function SourcesScreen() {
                     <div className="row" style={{ justifyContent: 'space-between' }}>
                       <div>
                         <strong className="small">{result.university}</strong>
-                        <div className="xs muted">{conflict.subject}</div>
+                        <div className="xs muted">{localize(conflict.subject_message, conflict.subject)}</div>
                       </div>
                       <Chip tone="risk">{t('sources.unresolved')}</Chip>
                     </div>
@@ -113,7 +113,7 @@ export function SourcesScreen() {
                         </div>
                       ))}
                     </div>
-                    <p className="xs muted" style={{ marginTop: 'var(--space-3)' }}>{conflict.resolution_rule}</p>
+                    <p className="xs muted" style={{ marginTop: 'var(--space-3)' }}>{localize(conflict.resolution_message, conflict.resolution_rule)}</p>
                     <details style={{ marginTop: 'var(--space-3)' }}>
                       <summary className="small" style={{ cursor: 'pointer' }}>
                         {t('sources.draftQuestion')}

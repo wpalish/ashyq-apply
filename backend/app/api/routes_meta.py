@@ -18,7 +18,7 @@ from app.domain.currency import (
     rates_are_stale,
     supported_currencies,
 )
-from app.domain.message_keys import COVERAGE, match
+from app.domain.message_keys import COVERAGE, match, stale_rates_message
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent, University
 from app.schemas.claim import MessageRef
 from app.security import Principal, get_principal
@@ -71,6 +71,14 @@ def capabilities(session: Session = Depends(get_session)) -> dict:
     s = get_settings()
     # Demo mode ignores the knowledge mode (it keeps its fixtures), so does this.
     knowledge_mode = "demo" if s.demo_mode else s.knowledge_mode
+    stale_warning = (
+        f"These conversions use exchange rates from {RATE_DATE.isoformat()}, "
+        f"{rate_age_days()} days old. Treat converted amounts as indicative and "
+        f"check the current rate before relying on one."
+        if rates_are_stale()
+        else ""
+    )
+    stale_message = stale_rates_message(stale_warning)
     return {
         "demo_mode": s.demo_mode,
         "knowledge_mode": knowledge_mode,
@@ -87,12 +95,12 @@ def capabilities(session: Session = Depends(get_session)) -> dict:
             "rate_age_days": rate_age_days(),
             # The snapshot is deliberately static; saying nothing about its age
             # is what would make it dishonest.
-            "stale_warning": (
-                f"These conversions use exchange rates from {RATE_DATE.isoformat()}, "
-                f"{rate_age_days()} days old. Treat converted amounts as indicative and "
-                f"check the current rate before relying on one."
-                if rates_are_stale()
-                else ""
+            "stale_warning": stale_warning,
+            # I18N-2: its key, so ru and kk can say it; absent while fresh.
+            **(
+                {"stale_warning_message": stale_message.model_dump()}
+                if stale_message is not None
+                else {}
             ),
         },
         # Keep the scope tied to the current registry and make evidence limits visible.

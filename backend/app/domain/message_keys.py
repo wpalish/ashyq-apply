@@ -13,6 +13,15 @@ the safe one: a sentence whose wording changed and whose template was not
 updated gets no key, and the applicant reads the English, unchanged. Nothing is
 ever shown in another language that the English does not say.
 
+I18N-2 extends the same recognition to the rest of the results screens:
+requirement checks (label and explanation), an award's classification reason
+(sentence by sentence, :func:`match_sentences`), the v2 ranking's axis reasons,
+bucket reason, knock-outs and disclaimer, conflicts' subject and resolution
+rule, the /questions endpoint's conflict "why", and the exchange-rate warning.
+A parameter that is itself a keyed sentence (a requirement label inside an
+explanation, an explanation inside a knock-out) is keyed again in
+``MessageRef.parts`` (:data:`_PART_PARAMS`).
+
 Every template's English text is mirrored in
 ``frontend/src/lib/i18n.results.ts`` under ``msg.<key>``; a test keeps the
 two in step.
@@ -25,8 +34,14 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from app.schemas.claim import ClaimOut, MessageRef, UnresolvedQuestion
-from app.schemas.result import FundingGap, ProgramResult
+from app.schemas.claim import ClaimOut, Conflict, MessageRef, UnresolvedQuestion
+from app.schemas.result import (
+    FundingGap,
+    ProgramResult,
+    RankingV2,
+    RequirementCheck,
+    Scholarship,
+)
 
 _PLACEHOLDER = re.compile(r"\\\{(\w+)\\\}")
 
@@ -513,9 +528,494 @@ COVERAGE: tuple[Template, ...] = (
     ),
 )
 
-CATALOGUE: tuple[Template, ...] = (
-    QUESTIONS + WHYS + STALE_REASONS + DOCUMENT_ITEMS + FUNDING + CAVEATS + COVERAGE
+# --- I18N-2: requirement checks (``app.domain.eligibility``, ``runner._scholarship_eligibility``)
+
+#: The ``requirement`` label of a check. Also a part of the sentences that name
+#: it (``{label}``, ``{requirement}``), so ru and kk can say it inside them.
+REQUIREMENT_LABELS: tuple[Template, ...] = (
+    _t("req.intakeOpen", "Intake accepting applications"),
+    _t("req.deadline", "Admission deadline"),
+    _t("req.minGpa", "Minimum GPA"),
+    _t("req.satTotal", "SAT total"),
+    _t("req.satPolicy", "SAT policy"),
+    _t("req.portfolio", "Portfolio"),
+    _t("req.interview", "Interview"),
+    _t("req.entranceExam", "Entrance examination"),
+    _t("req.credentialEvaluation", "Credential evaluation"),
+    _t("req.requiredSubjects", "Required subjects"),
+    _t("req.academicEntry", "Academic entry requirements"),
+    _t("req.ieltsType", "Accepted IELTS test type"),
+    _t("req.englishWaiver", "English test waiver"),
+    _t("req.ieltsOverall", "IELTS overall"),
+    _t("req.ieltsBand", "IELTS {band}"),
+    _t("req.toeflTotal", "TOEFL total"),
+    _t("req.scholarshipCitizenship", "Scholarship citizenship eligibility"),
+    _t("req.scholarshipInternational", "Scholarship international eligibility"),
+    _t("req.scholarshipFaculty", "Scholarship faculty restriction"),
+    _t("req.scholarshipProgramme", "Scholarship programme restriction"),
+    _t("req.scholarshipDeadline", "Scholarship deadline"),
+    _t("req.scholarshipTest", "Scholarship {test} minimum"),
 )
+
+#: ``RequirementCheck.explanation``, for programmes and for awards. Where one
+#: sentence is the start of another, the longer one comes first: a parameter
+#: would otherwise swallow the rest of the longer sentence.
+REQUIREMENT_EXPLANATIONS: tuple[Template, ...] = (
+    _t(
+        "explain.noMinimum",
+        "No official minimum for {label} was found; not treated as a barrier.",
+    ),
+    _t("explain.notNumber", "The published {label} could not be read as a number."),
+    _t(
+        "explain.noApplicantValue",
+        "The programme publishes a minimum of {published}, but the profile has no {label} "
+        "value yet. Add it to resolve this check.",
+    ),
+    _t(
+        "explain.minimumNotMet",
+        "Published minimum {published}; applicant {applicant}. The published minimum is not met.",
+    ),
+    _t("explain.minimumMet", "Published minimum {published}; applicant {applicant}."),
+    _t(
+        "explain.intakeClosed",
+        "The programme officially states it is not accepting applications for this intake.",
+    ),
+    _t(
+        "explain.deadlineUnparsed",
+        "A deadline was published but could not be parsed into a date.",
+    ),
+    _t("explain.deadlinePassed", "The published deadline {date} has passed."),
+    _t(
+        "explain.deadlineByPopulation",
+        "Applications close {date} at the earliest; the deadline depends on your fee "
+        "population here ({deadlines}).",
+    ),
+    _t("explain.deadlineOpen", "Applications close {date}."),
+    _t("explain.allDeadlinesPassed", "Every published deadline has passed ({deadlines})."),
+    _t(
+        "explain.deadlineByPopulationPassed",
+        "The deadline depends on your fee population here ({deadlines}). The one for "
+        "{populations} has passed; confirm which applies to you.",
+    ),
+    _t(
+        "explain.gpaScale",
+        "The applicant's GPA is on the {scale} scale and the programme publishes a different "
+        "scale. No conversion is applied without a documented method, so this cannot be "
+        "decided here.",
+    ),
+    _t(
+        "explain.testOptional",
+        "The programme is test-optional, so a missing SAT score is not a barrier.",
+    ),
+    _t(
+        "explain.satPolicyNoMinimum",
+        "An SAT policy is published but no minimum score was found.",
+    ),
+    _t(
+        "explain.actionRequired",
+        "{label} is required. This is an action to complete, not a disqualification.",
+    ),
+    _t(
+        "explain.subjectsPresent",
+        "All published subject prerequisites are present in the profile.",
+    ),
+    _t(
+        "explain.subjectsMissing",
+        "Not listed in the profile: {subjects}. Add them if they were studied; otherwise this "
+        "is a genuine gap.",
+    ),
+    _t(
+        "explain.noAssessable",
+        "No assessable academic entry requirements were found. A future deadline or optional "
+        "test policy does not establish eligibility.",
+    ),
+    _t("explain.ieltsTypes", "The programme accepts {accepted}; the applicant holds {held}."),
+    _t(
+        "explain.englishWaiver",
+        "This programme publishes conditions under which the English test is not required. "
+        "Check them against your own schooling before booking a test — whether they cover "
+        "you is not something this page settles.",
+    ),
+    # Awards (``runner._scholarship_eligibility``, ``app.domain.citizenship``).
+    _t(
+        "explain.citizenshipUnreadable",
+        "The award publishes a citizenship restriction that could not be read as a list of "
+        "countries. It needs official clarification.",
+    ),
+    _t(
+        "explain.citizenshipNamed",
+        "The published restriction names {phrase}, which matches the {country} citizenship "
+        "in the profile.",
+    ),
+    _t(
+        "explain.citizenshipMember",
+        "{country} is a member of the {group}, which the award names as its restriction.",
+    ),
+    _t(
+        "explain.citizenshipGroup",
+        "The award is restricted to a group ('{restrictions}') whose membership is not "
+        "published as a list of countries. Whether {held} falls inside it cannot be settled "
+        "from the page, so it is left for the admissions office to confirm.",
+    ),
+    _t(
+        "explain.citizenshipExcluded",
+        "The award is restricted to {restrictions}. An applicant holding {held} citizenship "
+        "is not eligible.",
+    ),
+    _t(
+        "explain.internationalClosed",
+        "The award is officially closed to international students.",
+    ),
+    _t(
+        "explain.internationalOpen",
+        "The award is officially open to international students of any nationality.",
+    ),
+    _t(
+        "explain.restriction",
+        "The page limits this award to {restriction}. Whether this programme belongs to it is "
+        "not something the page settles — ask the admissions office before counting on this "
+        "award.",
+    ),
+    _t(
+        "explain.scholarshipTestMissing",
+        "The award requires {test} {minimum}; no score is in the profile.",
+    ),
+    _t(
+        "explain.scholarshipDeadlinePassed",
+        "The published scholarship deadline {date} has passed.",
+    ),
+)
+
+# --- I18N-2: why an award is classified as it is (``app.domain.funding``) ----
+
+#: ``app.adapters.applicability``'s degree-level reasons, said inside
+#: "Not applicable to this applicant's degree level: …".
+DEGREE_REASONS: tuple[Template, ...] = (
+    _t("degree.noText", "no text or no degree level to check against"),
+    _t("degree.excludes", "the page explicitly excludes {degree} applicants"),
+    _t("degree.forOther", "the page states the award is for {level} applicants, not {degree}"),
+    _t("degree.statesFor", "the page states the award is for {degree} applicants"),
+    _t(
+        "degree.onlyOthers",
+        "the page describes the award for {levels} only and never mentions {degree}",
+    ),
+    _t("degree.unstated", "the page does not state which degree levels the award applies to"),
+    _t("degree.excludesLevel", "the page excludes this level."),
+)
+
+_EXCLUDED = _t("class.excluded", "Published conditions exclude this applicant.")
+
+#: One missing category in "Tuition is confirmed as covered, but {missing} — …".
+MISSING_COVERAGE: tuple[Template, ...] = (
+    _t("missing.notCovered", "{category} is not covered"),
+    _t("missing.unknown", "{category} is unknown"),
+    _t("missing.partial", "{category} is partial"),
+)
+
+#: The sentences ``classification_reason`` is built from: the verdict
+#: (``funding.classify``), then the runner's additions (promotional wording,
+#: the shape of award the profile asked for, a cost it must cover).
+CLASSIFICATION: tuple[Template, ...] = (
+    _EXCLUDED,
+    _t("class.degreeLevel", "Not applicable to this applicant's degree level: {degreeReason}"),
+    _t(
+        "class.citizenship",
+        "The award is restricted to {restrictions}, which does not include this applicant.",
+    ),
+    _t(
+        "class.notInternational",
+        "Official source states the award is not open to international students.",
+    ),
+    _t("class.noCoverage", "No official per-category coverage information was found."),
+    _t(
+        "class.promotionalNoBreakdown",
+        "Page uses promotional wording ({words}) but publishes no breakdown.",
+    ),
+    _t(
+        "class.needBased",
+        "Award size depends on a verified financial-need assessment that has not been filed.",
+    ),
+    _t(
+        "class.fullRide",
+        "Official sources confirm coverage of tuition, mandatory fees, housing and meals or an "
+        "equivalent living stipend.",
+    ),
+    _t(
+        "class.fullTuition",
+        "Tuition is confirmed as covered, but {missing} — this is full tuition, not a full ride.",
+    ),
+    _t(
+        "class.shareUnknown",
+        "Coverage is partial but the award amount or the cost of attendance is not officially "
+        "published, so the share cannot be computed.",
+    ),
+    _t(
+        "class.largeGrant",
+        "Covers roughly {share} of published cost of attendance; a substantial portion of the "
+        "cost remains.",
+    ),
+    _t("class.partial", "Covers roughly {share} of published cost of attendance."),
+    _t(
+        "class.promotional",
+        "The page uses promotional wording such as 'full ride'; the classification here "
+        "follows the published coverage table instead.",
+    ),
+    _t(
+        "class.onlyFullRide",
+        "The profile states that only a full ride makes this affordable; this award is "
+        "classified as {classification}.",
+    ),
+    _t(
+        "class.noTuitionOnly",
+        "The profile states that a tuition-only award would not be taken up.",
+    ),
+    _t("class.noPartial", "The profile states that a partial award would not be taken up."),
+    _t(
+        "class.needDocuments",
+        "This award is need-based and the profile states that financial documents will not be "
+        "submitted, which is what a need-based application requires.",
+    ),
+    _t(
+        "class.mustCover",
+        "The profile requires {categories} to be covered; this award states it is not.",
+    ),
+)
+
+#: A bare degree reason can stand as the whole verdict ("Published conditions
+#: exclude this applicant" is replaced by the adapter's own reason).
+CLASSIFICATION_SENTENCES = CLASSIFICATION + DEGREE_REASONS[:-1]
+
+# --- I18N-2: the v2 ranking (``app.domain.ranking_v2``) ---------------------
+
+AXIS_REASONS: tuple[Template, ...] = (
+    _t(
+        "rank.academicNoMargin",
+        "All published requirements are met; there are no numeric minimums to measure a "
+        "margin against.",
+    ),
+    _t(
+        "rank.academicMargin",
+        "All published requirements are met, on average {margin} above the minimums.",
+    ),
+    _t("rank.academicPending", "Requirements are met apart from items still pending."),
+    _t("rank.academicGap", "At least one published requirement is not met."),
+    _t("rank.academicUnknown", "Published requirements could not be verified."),
+    _t("rank.fundingUnknown", "No official funding information was confirmed."),
+    _t("rank.fundingConfirmed", "Funding fit is confirmed opportunity."),
+    _t("rank.fundingCompetitive", "Funding fit is competitive opportunity."),
+    _t("rank.fundingLimited", "Funding fit is limited opportunity."),
+    _t("rank.fundingNotEligible", "Funding fit is not eligible."),
+    _t("rank.gapUnknown", "The remaining annual cost could not be computed."),
+    _t("rank.noCeiling", "No family budget ceiling was stated to compare against."),
+    _t("rank.nothingRemains", "Nothing remains to be paid."),
+    _t(
+        "rank.zeroContribution",
+        "The family states it can contribute nothing, and {gap} a year remains.",
+    ),
+    _t(
+        "rank.withinCeiling",
+        "The remaining {gap} a year is within the stated ceiling of {ceiling}.",
+    ),
+    _t(
+        "rank.timesCeiling",
+        "The remaining {gap} a year is {ratio} times the stated ceiling of {ceiling}.",
+    ),
+    _t(
+        "rank.aboveCeiling",
+        "The remaining {gap} a year is {over} above the stated ceiling of {ceiling}.",
+    ),
+    _t("rank.preferredCountry", "{country} is a preferred country."),
+    _t("rank.unpreferredCountry", "{country} is outside the preferred list."),
+    _t("rank.noRank", "No ranking position was found."),
+    _t("rank.insideBand", "Ranked {rank}, inside the requested {band}."),
+    _t("rank.outsideTop", "Ranked {rank}, outside the top {top}."),
+    _t("rank.consensus", "Consensus ranking position {rank}."),
+    _t("rank.ranked", "Ranked {rank}."),
+    _t("rank.noPreference", "No {axis} preference was stated."),
+    _t("rank.attributeUnknown", "The {axis} of this university is not known."),
+    _t("rank.attributeMatches", "{actual} matches the stated preference."),
+    _t("rank.ladderStep", "{actual} against a preference for {preferred}: {steps} step apart."),
+    _t(
+        "rank.ladderSteps",
+        "{actual} against a preference for {preferred}: {steps} steps apart.",
+    ),
+    _t("rank.ladderDiffers", "{actual} differs from the preferred {preferred}."),
+    _t("rank.careersNotPriority", "Careers were not a stated priority."),
+    _t("rank.coop", "A co-op or placement year is officially offered."),
+    _t("rank.internships", "An internship programme is officially described."),
+    _t(
+        "rank.careersPage",
+        "A careers page exists but states nothing specific enough to check.",
+    ),
+    _t("rank.noCareers", "No official careers information was found."),
+    _t("rank.pswNotPriority", "Post-study work was not a stated priority."),
+    _t("rank.pswUnknown", "Post-study work rules were not confirmed in months."),
+    _t("rank.psw", "A post-study work right of {months} months is published."),
+)
+
+#: Why a row is listed and not ranked: a confirmed hard filter, or an excluded country.
+KNOCKOUTS: tuple[Template, ...] = (
+    _t("rank.excludedCountry", "{country} is on the applicant's excluded list."),
+    _t("rank.knockoutUnmet", "{requirement}: a published requirement is not met"),
+    _t("rank.knockout", "{requirement}: {explanation}"),
+)
+
+BUCKET_REASONS: tuple[Template, ...] = (
+    _t(
+        "rank.bucketInsufficient",
+        "Too little of the published requirements could be verified to place this row.",
+    ),
+    _t(
+        "rank.bucketOutOfBudget",
+        "The remaining cost is {ratio} times the stated ceiling, past the {limit} times this "
+        "applicant said they could stretch to.",
+    ),
+    _t(
+        "rank.bucketWellPlaced",
+        "Requirements are met with room, funding is confirmed, and the remaining cost is "
+        "within the stated ceiling.",
+    ),
+    _t(
+        "rank.bucketPlausible",
+        "Requirements and funding both look reachable on published data.",
+    ),
+    _t(
+        "rank.bucketAmbitious",
+        "Either the requirements, the funding or the remaining cost makes this a stretch.",
+    ),
+)
+
+DISCLAIMERS: tuple[Template, ...] = (
+    _t(
+        "rank.disclaimer",
+        "How well this matches your stated priorities, on confirmed data. Not a probability "
+        "of admission.",
+    ),
+)
+
+# --- I18N-2: conflicts (``app.domain.conflicts``) and the /questions endpoint --
+
+#: ``conflicts._LABELS``: what two official sources disagree about.
+CONFLICT_LABELS: tuple[Template, ...] = (
+    _t("conflict.label.ieltsOverall", "the minimum overall IELTS band"),
+    _t("conflict.label.ieltsSubscore", "the minimum IELTS band per section"),
+    _t("conflict.label.minGpa", "the minimum GPA"),
+    _t("conflict.label.satTotal", "the minimum SAT total"),
+    _t("conflict.label.toeflTotal", "the minimum TOEFL total"),
+    _t("conflict.label.admissionDeadline", "the application deadline"),
+    _t("conflict.label.scholarshipDeadline", "the scholarship deadline"),
+    _t("conflict.label.tuition", "the tuition fee"),
+    _t("conflict.label.totalCost", "the total cost of attendance"),
+    _t("conflict.label.awardAmount", "the award amount"),
+    _t("conflict.label.internationalEligible", "eligibility for international students"),
+)
+
+#: ``Conflict.subject``: the label, then the subject key and the programme when known.
+CONFLICT_SUBJECTS: tuple[Template, ...] = (
+    _t("conflict.subjectFull", "{what} — {subjectKey} ({programme})"),
+    _t("conflict.subjectKeyed", "{what} — {subjectKey}"),
+    _t("conflict.subjectProgramme", "{what} ({programme})"),
+    _t("conflict.subject", "{what}"),
+)
+
+#: ``Conflict.resolution_rule``. The scope dimension is spelled out per
+#: dimension, as the backend writes it ("residencys" included): a plural
+#: built by appending "s" cannot be translated as a parameter.
+CONFLICT_RULES: tuple[Template, ...] = (
+    _t(
+        "conflict.preferSpecific",
+        "Preferring the more specific source ({specificity}); the disagreement is shown "
+        "rather than resolved.",
+    ),
+    _t(
+        "conflict.moreSpecific",
+        "Not a contradiction: a programme-specific rule and a university-wide rule can both "
+        "be true. The more specific source ({specificity}) applies to this application; the "
+        "broader rule is kept, not discarded.",
+    ),
+    _t(
+        "conflict.differentPopulation",
+        "Not a contradiction: the pages state different populations, so both values can be "
+        "correct. Neither is discarded.",
+    ),
+    _t(
+        "conflict.differentResidency",
+        "Not a contradiction: the pages state different residencys, so both values can be "
+        "correct. Neither is discarded.",
+    ),
+    _t(
+        "conflict.differentIntake",
+        "Not a contradiction: the pages state different intakes, so both values can be "
+        "correct. Neither is discarded.",
+    ),
+    _t(
+        "conflict.differentAcademicYear",
+        "Not a contradiction: the pages state different academic years, so both values can "
+        "be correct. Neither is discarded.",
+    ),
+    _t(
+        "conflict.differentDegree",
+        "Not a contradiction: the pages state different degrees, so both values can be "
+        "correct. Neither is discarded.",
+    ),
+    _t(
+        "conflict.differentQualification",
+        "Not a contradiction: the pages state different qualifications, so both values can "
+        "be correct. Neither is discarded.",
+    ),
+)
+
+#: The /questions endpoint's "why it matters" for a conflict it lists.
+CONFLICT_WHYS: tuple[Template, ...] = (
+    _t("conflict.why", "Official sources disagree on {subject}: {values}"),
+)
+
+# --- I18N-2: the exchange-rate warning (``routes_meta.capabilities``) --------
+
+CURRENCY: tuple[Template, ...] = (
+    _t(
+        "currency.staleRates",
+        "These conversions use exchange rates from {date}, {days} days old. Treat converted "
+        "amounts as indicative and check the current rate before relying on one.",
+    ),
+)
+
+CATALOGUE: tuple[Template, ...] = (
+    QUESTIONS
+    + WHYS
+    + STALE_REASONS
+    + DOCUMENT_ITEMS
+    + FUNDING
+    + CAVEATS
+    + COVERAGE
+    + REQUIREMENT_LABELS
+    + REQUIREMENT_EXPLANATIONS
+    + DEGREE_REASONS
+    + MISSING_COVERAGE
+    + CLASSIFICATION
+    + AXIS_REASONS
+    + KNOCKOUTS
+    + BUCKET_REASONS
+    + DISCLAIMERS
+    + CONFLICT_LABELS
+    + CONFLICT_SUBJECTS
+    + CONFLICT_RULES
+    + CONFLICT_WHYS
+    + CURRENCY
+)
+
+#: Parameters that are themselves keyed sentences, and the catalogue and
+#: separator to key them with (``MessageRef.parts``). ``reasons`` and
+#: ``documents`` are cut by their own rules in :func:`_with_parts`.
+_PART_PARAMS: dict[str, tuple[tuple[Template, ...], str | None]] = {
+    "label": (REQUIREMENT_LABELS, None),
+    "requirement": (REQUIREMENT_LABELS, None),
+    "explanation": (REQUIREMENT_EXPLANATIONS, None),
+    "degreeReason": ((*DEGREE_REASONS, _EXCLUDED), None),
+    "missing": (MISSING_COVERAGE, "; "),
+    "what": (CONFLICT_LABELS, None),
+    "subject": (CONFLICT_SUBJECTS, None),
+}
 
 _STALE_MARK = "Stale, not current: "
 #: ``app.knowledge.CAVEAT_MARK``: a caveat never holds a full stop.
@@ -546,7 +1046,45 @@ def _with_parts(ref: MessageRef) -> MessageRef:
     documents = ref.params.get("documents")
     if documents:
         ref.parts["documents"] = [_document_item(d) for d in documents.split("; ")]
+    for name, (templates, sep) in _PART_PARAMS.items():
+        value = ref.params.get(name)
+        if value:
+            pieces = value.split(sep) if sep else [value]
+            ref.parts[name] = [match(templates, piece) for piece in pieces]
     return ref
+
+
+def _complete(ref: MessageRef | None) -> bool:
+    """Whether ``ref`` and every part inside it, at any depth, is keyed."""
+    if ref is None:
+        return False
+    return all(_complete(part) for parts in ref.parts.values() for part in parts)
+
+
+_SENTENCE_END = re.compile(r"(?<=[.?!]) +")
+
+
+def match_sentences(templates: tuple[Template, ...], text: str) -> list[MessageRef] | None:
+    """``text`` as a run of keyed sentences, each fully keyed; None when it is not.
+
+    For a field built by appending sentences (an award's classification
+    reason). The cut with the most sentences wins, so a parameter cannot
+    swallow the sentence after it; a sentence no template knows, or one with
+    an unkeyed part, leaves the whole field in English.
+    """
+    pieces = _SENTENCE_END.split(text.strip())
+    best: list[list[MessageRef] | None] = [[]] + [None] * len(pieces)
+    for end in range(1, len(pieces) + 1):
+        for start in range(end):
+            before = best[start]
+            if before is None:
+                continue
+            ref = match(templates, " ".join(pieces[start:end]))
+            current = best[end]
+            if _complete(ref) and (current is None or len(before) + 1 > len(current)):
+                best[end] = [*before, ref]  # type: ignore[list-item]
+    found = best[-1]
+    return found or None
 
 
 def stale_reason_message(reason: str) -> MessageRef | None:
@@ -622,11 +1160,67 @@ def annotate_gap(gap: FundingGap) -> None:
     gap.warning_messages = [match(FUNDING, w) for w in gap.warnings]
 
 
+def annotate_check(check: RequirementCheck) -> None:
+    check.requirement_message = match(REQUIREMENT_LABELS, check.requirement)
+    check.explanation_message = (
+        match(REQUIREMENT_EXPLANATIONS, check.explanation) if check.explanation else None
+    )
+
+
+def annotate_scholarship(scholarship: Scholarship) -> None:
+    reason = scholarship.classification_reason
+    scholarship.classification_messages = (
+        match_sentences(CLASSIFICATION_SENTENCES, reason) if reason else None
+    )
+    for check in scholarship.eligibility_checks:
+        annotate_check(check)
+
+
+def annotate_ranking(ranking: RankingV2) -> None:
+    for axis in ranking.axes:
+        axis.reason_message = match(AXIS_REASONS, axis.reason)
+    ranking.bucket_reason_message = (
+        match(BUCKET_REASONS + KNOCKOUTS, ranking.bucket_reason) if ranking.bucket_reason else None
+    )
+    ranking.knocked_out_messages = (
+        [match(KNOCKOUTS, reason) for reason in ranking.knocked_out_by]
+        if ranking.knocked_out_by
+        else None
+    )
+    ranking.disclaimer_message = match(DISCLAIMERS, ranking.disclaimer)
+
+
+def annotate_conflict(conflict: Conflict) -> None:
+    conflict.subject_message = match(CONFLICT_SUBJECTS, conflict.subject)
+    conflict.resolution_message = (
+        match(CONFLICT_RULES, conflict.resolution_rule) if conflict.resolution_rule else None
+    )
+
+
+def conflict_why(conflict: Conflict) -> tuple[str, MessageRef | None]:
+    """The /questions endpoint's "why it matters" for a conflict, and its key."""
+    text = f"Official sources disagree on {conflict.subject}: {conflict.values}"
+    return text, match(CONFLICT_WHYS, text)
+
+
+def stale_rates_message(warning: str) -> MessageRef | None:
+    """The key of ``capabilities.currency.stale_warning``; None when there is none."""
+    return match(CURRENCY, warning) if warning else None
+
+
 def annotate_result(result: ProgramResult) -> ProgramResult:
     """Attach message keys to a result about to be served; returns it for chaining.
 
     Call it on the object the API returns, never on one about to be stored.
     """
+    for check in result.requirement_checks:
+        annotate_check(check)
+    for scholarship in result.scholarships:
+        annotate_scholarship(scholarship)
+    if result.ranking is not None:
+        annotate_ranking(result.ranking)
+    for conflict in result.conflicts:
+        annotate_conflict(conflict)
     for question in result.unresolved:
         annotate_question(question)
     for claim in result.claims:

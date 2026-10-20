@@ -112,6 +112,9 @@ export interface RequirementCheck {
    *  when the page did not say — which is not the same as "everyone", and is
    *  why this is shown as a quiet line rather than a badge. */
   published_scope: string;
+  /** Keys for `requirement` and `explanation` (I18N-2); served, never stored. */
+  requirement_message?: MessageRef | null;
+  explanation_message?: MessageRef | null;
 }
 
 export interface CoverageBreakdown {
@@ -127,6 +130,8 @@ export interface Scholarship {
   scholarship_type: ScholarshipType;
   classification: FundingClassification;
   classification_reason: string;
+  /** `classification_reason` sentence by sentence, keyed; only when every sentence is (I18N-2). */
+  classification_messages?: MessageRef[] | null;
   amount: Money | null;
   amount_is_percentage_of_tuition: number | null;
   coverage: CoverageBreakdown[];
@@ -246,6 +251,7 @@ export interface AxisScore {
   weight: number;
   reason: string;
   evidence_claim_ids: string[];
+  reason_message?: MessageRef | null;
 }
 
 export interface RankingV2 {
@@ -264,6 +270,10 @@ export interface RankingV2 {
   weights_source: 'priorities_roc' | 'weights_override';
   version: '2';
   disclaimer: string;
+  /** Keys for `bucket_reason`, `knocked_out_by` (index for index) and `disclaimer` (I18N-2). */
+  bucket_reason_message?: MessageRef | null;
+  knocked_out_messages?: (MessageRef | null)[] | null;
+  disclaimer_message?: MessageRef | null;
 }
 
 export interface ClaimOut {
@@ -303,6 +313,9 @@ export interface Conflict {
   resolution_rule: string;
   question_for_admissions: string;
   unresolved: boolean;
+  /** Keys for `subject` and `resolution_rule` (I18N-2). The drafted email stays English on purpose. */
+  subject_message?: MessageRef | null;
+  resolution_message?: MessageRef | null;
 }
 
 /**
@@ -570,6 +583,8 @@ export interface Capabilities {
     rate_age_days?: number;
     //: Empty while the snapshot is fresh; a sentence to show verbatim once it is not.
     stale_warning?: string;
+    //: Its key (I18N-2); absent while the snapshot is fresh.
+    stale_warning_message?: MessageRef;
   };
   guarantees: string[];
   limits: string[];

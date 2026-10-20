@@ -15,7 +15,8 @@ import {
   type DocumentRequirement,
 } from '@/lib/format';
 import {
-  localCaveat, localGapReason, localStaleChip, localStaleReason, localStep, localUnusedTuitionLines, localize,
+  localCaveat, localGapReason, localRequirement, localStaleChip, localStaleReason, localStep,
+  localUnusedTuitionLines, localize, localizeAll,
 } from '@/lib/messages';
 import { rich, useTranslation } from '@/lib/useTranslation';
 import type { KbUnknown, ProgramResult, UnresolvedQuestion } from '@/types';
@@ -185,7 +186,8 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
       {result.hard_filter_failures.length > 0 && (
         <Notice kind="risk">
           <div>
-            <strong>{t('detail.requirementNotMet')}</strong> {result.hard_filter_failures.join(', ')}.{' '}
+            <strong>{t('detail.requirementNotMet')}</strong>{' '}
+            {result.hard_filter_failures.map((f) => localRequirement(f, result.requirement_checks)).join(', ')}.{' '}
             {t('detail.requirementNotMetNote')}
           </div>
         </Notice>
@@ -193,7 +195,7 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
       <dl className="kv">
         {result.requirement_checks.map((c, i) => (
           <div key={i} style={{ display: 'contents' }}>
-            <dt>{c.requirement}</dt>
+            <dt>{localize(c.requirement_message, c.requirement)}</dt>
             <dd>
               <div className="row row--tight">
                 <StatusChip status={c.status} tone={eligibilityTone[c.status]} />
@@ -206,7 +208,7 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
                   <span className="num small muted">{t('detail.you')} {formatValue(c.applicant_value)}</span>
                 )}
               </div>
-              <p className="xs muted" style={{ margin: '3px 0 0' }}>{c.explanation}</p>
+              <p className="xs muted" style={{ margin: '3px 0 0' }}>{localize(c.explanation_message, c.explanation)}</p>
               {c.published_scope && (
                 <p className="xs faint" style={{ margin: '2px 0 0' }}>{c.published_scope}</p>
               )}
@@ -274,7 +276,7 @@ function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMo
             <h3 style={{ fontSize: 'var(--text-base)' }}>{s.name}</h3>
             <StatusChip status={s.classification} tone={fundingClassTone[s.classification]} />
           </div>
-          <p className="small muted">{s.classification_reason}</p>
+          <p className="small muted">{localizeAll(s.classification_messages, s.classification_reason)}</p>
 
           <dl className="kv" style={{ marginTop: 'var(--space-3)' }}>
             <dt>{t('detail.value')}</dt>
@@ -364,7 +366,7 @@ function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMo
               {s.eligibility_checks.map((c, i) => (
                 <div key={i} className="row row--tight">
                   <StatusChip status={c.status} tone={eligibilityTone[c.status]} />
-                  <span className="xs muted">{c.explanation}</span>
+                  <span className="xs muted">{localize(c.explanation_message, c.explanation)}</span>
                 </div>
               ))}
             </div>
@@ -597,19 +599,27 @@ function Axes({ result }: { result: ProgramResult }) {
   if (!r) return null;
   return (
     <div className="stack stack--tight">
-      <Notice kind="info"><div>{tOr('results.fitDisclaimer', r.disclaimer || FIT_DISCLAIMER)}</div></Notice>
+      <Notice kind="info">
+        <div>
+          {r.disclaimer_message
+            ? localize(r.disclaimer_message, r.disclaimer)
+            : tOr('results.fitDisclaimer', r.disclaimer || FIT_DISCLAIMER)}
+        </div>
+      </Notice>
       <div className="row">
         <span className="num small">{t('col.match')} <strong>{ratio(r.fit)}</strong></span>
         <span className="num small">{t('col.confirmed')} <strong>{percent(r.coverage)}</strong></span>
         <Chip tone={bucketTone[r.bucket]}>{tOr(`status.${r.bucket}`, humanize(r.bucket))}</Chip>
-        <span className="xs muted">{r.bucket_reason}</span>
+        <span className="xs muted">{localize(r.bucket_reason_message, r.bucket_reason)}</span>
       </div>
       {r.knocked_out_by.length > 0 && (
         <Notice kind="risk">
           <div>
             <strong>{t('detail.listedNotRanked')}</strong>
             <ul style={{ margin: '4px 0 0', paddingLeft: '1.1rem' }}>
-              {r.knocked_out_by.map((reason) => <li key={reason} className="small">{reason}</li>)}
+              {r.knocked_out_by.map((reason, i) => (
+                <li key={reason} className="small">{localize(r.knocked_out_messages?.[i], reason)}</li>
+              ))}
             </ul>
           </div>
         </Notice>
@@ -626,7 +636,7 @@ function Axes({ result }: { result: ProgramResult }) {
               <span className="num small">
                 {ratio(a.value)} {t('detail.weight')} {a.weight.toFixed(3)}
               </span>
-              <p className="xs muted" style={{ margin: '2px 0 0' }}>{a.reason}</p>
+              <p className="xs muted" style={{ margin: '2px 0 0' }}>{localize(a.reason_message, a.reason)}</p>
             </dd>
           </div>
         ))}
@@ -687,7 +697,7 @@ function Sources({ result }: { result: ProgramResult }) {
           <h3 style={{ fontSize: 'var(--text-base)' }}>{t('detail.disagree')}</h3>
           {result.conflicts.map((c, i) => (
             <div key={i} className="notice notice--risk" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
-              <div><strong>{c.subject}</strong></div>
+              <div><strong>{localize(c.subject_message, c.subject)}</strong></div>
               <div className="xs" style={{ marginTop: 4 }}>
                 {c.values.map((v, j) => (
                   <div key={j} className="mono">
@@ -695,7 +705,7 @@ function Sources({ result }: { result: ProgramResult }) {
                   </div>
                 ))}
               </div>
-              <div className="xs" style={{ marginTop: 6 }}>{c.resolution_rule}</div>
+              <div className="xs" style={{ marginTop: 6 }}>{localize(c.resolution_message, c.resolution_rule)}</div>
               <details style={{ marginTop: 6 }}>
                 <summary className="xs" style={{ cursor: 'pointer' }}>
                   {t('detail.askAdmissions')}

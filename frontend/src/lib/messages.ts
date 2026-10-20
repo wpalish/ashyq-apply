@@ -16,12 +16,25 @@ import type { ClaimOut, MessageRef } from '@/types';
 /** Parameters that are lists of cost categories, translated item by item. */
 const CATEGORY_PARAMS = new Set(['categories', 'category']);
 
+/**
+ * Parameters that are one of the interface's own labels (I18N-2): a ranking
+ * axis ("climate", "university size") and a funding classification enum. Said
+ * with the label the screen already shows for them; an unknown value stays as
+ * served.
+ */
+const LABEL_PARAMS: Record<string, (value: string) => string> = {
+  axis: (value) => tOr(`axis.${value.replace(/ /g, '_')}`, value),
+  classification: (value) => tOr(`status.${value}`, value),
+};
+
 function param(ref: MessageRef, name: string): string | undefined {
   const parts = ref.parts?.[name];
   if (parts && parts.length > 0 && parts.every((p) => p && translated(`msg.${p.key}`))) {
     return parts.map((p) => localize(p, '')).join('; ');
   }
   const value = ref.params[name];
+  const label = LABEL_PARAMS[name];
+  if (value !== undefined && label) return label(value);
   if (value !== undefined && CATEGORY_PARAMS.has(name)) {
     return value
       .split(', ')
@@ -44,6 +57,30 @@ export function localize(ref: MessageRef | null | undefined, english: string): s
     params[name] = value;
   }
   return fill(template, params);
+}
+
+/**
+ * A field the backend built from several sentences (an award's classification
+ * reason), keyed sentence by sentence (I18N-2). Localised only when every
+ * sentence has a translation; otherwise the served English, whole, so one
+ * paragraph never mixes two languages.
+ */
+export function localizeAll(refs: MessageRef[] | null | undefined, english: string): string {
+  if (!refs || refs.length === 0 || getLocale() === 'en') return english;
+  const said = refs.map((ref) => (translated(`msg.${ref.key}`) === undefined ? '' : localize(ref, '')));
+  return said.every(Boolean) ? said.join(' ') : english;
+}
+
+/**
+ * A requirement the result lists only by its label (`hard_filter_failures`),
+ * said with the key its own check carries (I18N-2).
+ */
+export function localRequirement(
+  label: string,
+  checks: { requirement: string; requirement_message?: MessageRef | null }[],
+): string {
+  const check = checks.find((c) => c.requirement === label);
+  return localize(check?.requirement_message, label);
 }
 
 /**

@@ -55,7 +55,7 @@ describe('key coverage', () => {
   it('never says probability or chance where Russian or Kazakh would not hedge it', () => {
     // I-rule: the fit is never a probability. The translations may *deny* it
     // (as the English does), but no other string may introduce the word.
-    const denies = new Set(['results.fitDisclaimer', 'detail.assessmentNote', 'shortlist.rankedFootnote', 'compare.lede']);
+    const denies = new Set(['results.fitDisclaimer', 'msg.rank.disclaimer', 'detail.assessmentNote', 'shortlist.rankedFootnote', 'compare.lede']);
     for (const key of KEYS) {
       if (denies.has(key)) continue;
       expect(RU_RESULTS[key], key).not.toMatch(/вероятност|шанс|%\s*поступ/i);

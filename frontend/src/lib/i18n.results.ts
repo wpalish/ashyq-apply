@@ -430,6 +430,39 @@ export const EN_RESULTS = {
     'A published requirement you do not meet, or a country you excluded. Listed, not ranked.',
   'statusMeaning.NEEDS_CLARIFICATION': 'Too little could be verified to place this row at all.',
 
+  // --- documents & deadlines (screen 08, I18N-2) ------------------------
+  'documents.eyebrow': 'Documents & deadlines',
+  'documents.title': 'Prepare with {accent}',
+  'documents.titleAccent': 'confidence.',
+  'documents.emptyLede': 'Your document checklist appears after you save programmes in Plan and collect their official requirements.',
+  'documents.emptyTitle': 'No checklists yet',
+  'documents.emptyBody': 'Choose a programme in Find, then collect documents from Plan.',
+  'documents.lede': 'Ordered by lead time, not by deadline. The items at the top depend on other people, so they are the ones that need starting first.',
+  'documents.calendarSummary': 'Calendar and deadlines across your shortlist ({n})',
+  'documents.calendarTitle': 'Every deadline across your shortlist',
+  'documents.addToCalendar': 'Add to calendar (.ics)',
+  'documents.passed': 'passed',
+  'documents.noDeadlines': 'No dated deadlines were found.',
+  'documents.admissionApplication': 'Admission application',
+  'documents.ticked': '{done} of {total} items ticked off. Generated {when}.',
+  'documents.completeness.official': 'from official pages',
+  'documents.completeness.partial': 'partially read',
+  'documents.completeness.unavailable': 'no official list found',
+  'documents.owner.thirdParty': 'A third party (translator, WES/ECE, notary)',
+  'documents.forScholarship': 'for a scholarship',
+  'documents.forAdmission': 'for admission',
+  'documents.maxWords': 'max {n} words',
+  'documents.maxPages': 'max {n} pages',
+  'documents.maxSize': 'max {n} MB',
+  'documents.translation': 'certified translation required',
+  'documents.notarisation': 'notarisation required',
+  'documents.apostille': 'apostille required',
+  'documents.credentialEvaluation': 'credential evaluation required',
+  'documents.due': 'due {date}',
+  'documents.stillToConfirm': 'Still to confirm',
+  'documents.ask': 'Ask: {contact}',
+  'documents.notice': 'Unimatch prepares this list. It does not upload documents, submit an application, sign anything on your behalf, or pay a fee. Those steps stay with you.',
+
   // --- backend sentences (app/domain/message_keys.py) ---------------------
   'msg.question.campus':
     '{university} offers {programme} on more than one campus, each a separate application. Which campus do you want?',
@@ -668,6 +701,313 @@ export const EN_RESULTS = {
     'The verified knowledge base holds no tuition fee for this programme yet, so the remaining cost is not computed.',
   'msg.gap.kbTuitionRange':
     'Tuition is published only as a range, {range}; the cost uses its upper bound, so it is not understated.',
+  // I18N-2: requirement checks, award classifications, the ranking, conflicts.
+  'msg.req.intakeOpen':
+    'Intake accepting applications',
+  'msg.req.deadline':
+    'Admission deadline',
+  'msg.req.minGpa':
+    'Minimum GPA',
+  'msg.req.satTotal':
+    'SAT total',
+  'msg.req.satPolicy':
+    'SAT policy',
+  'msg.req.portfolio':
+    'Portfolio',
+  'msg.req.interview':
+    'Interview',
+  'msg.req.entranceExam':
+    'Entrance examination',
+  'msg.req.credentialEvaluation':
+    'Credential evaluation',
+  'msg.req.requiredSubjects':
+    'Required subjects',
+  'msg.req.academicEntry':
+    'Academic entry requirements',
+  'msg.req.ieltsType':
+    'Accepted IELTS test type',
+  'msg.req.englishWaiver':
+    'English test waiver',
+  'msg.req.ieltsOverall':
+    'IELTS overall',
+  'msg.req.ieltsBand':
+    'IELTS {band}',
+  'msg.req.toeflTotal':
+    'TOEFL total',
+  'msg.req.scholarshipCitizenship':
+    'Scholarship citizenship eligibility',
+  'msg.req.scholarshipInternational':
+    'Scholarship international eligibility',
+  'msg.req.scholarshipFaculty':
+    'Scholarship faculty restriction',
+  'msg.req.scholarshipProgramme':
+    'Scholarship programme restriction',
+  'msg.req.scholarshipDeadline':
+    'Scholarship deadline',
+  'msg.req.scholarshipTest':
+    'Scholarship {test} minimum',
+  'msg.explain.noMinimum':
+    'No official minimum for {label} was found; not treated as a barrier.',
+  'msg.explain.notNumber':
+    'The published {label} could not be read as a number.',
+  'msg.explain.noApplicantValue':
+    'The programme publishes a minimum of {published}, but the profile has no {label} value yet. Add it to resolve this check.',
+  'msg.explain.minimumNotMet':
+    'Published minimum {published}; applicant {applicant}. The published minimum is not met.',
+  'msg.explain.minimumMet':
+    'Published minimum {published}; applicant {applicant}.',
+  'msg.explain.intakeClosed':
+    'The programme officially states it is not accepting applications for this intake.',
+  'msg.explain.deadlineUnparsed':
+    'A deadline was published but could not be parsed into a date.',
+  'msg.explain.deadlinePassed':
+    'The published deadline {date} has passed.',
+  'msg.explain.deadlineByPopulation':
+    'Applications close {date} at the earliest; the deadline depends on your fee population here ({deadlines}).',
+  'msg.explain.deadlineOpen':
+    'Applications close {date}.',
+  'msg.explain.allDeadlinesPassed':
+    'Every published deadline has passed ({deadlines}).',
+  'msg.explain.deadlineByPopulationPassed':
+    'The deadline depends on your fee population here ({deadlines}). The one for {populations} has passed; confirm which applies to you.',
+  'msg.explain.gpaScale':
+    'The applicant\'s GPA is on the {scale} scale and the programme publishes a different scale. No conversion is applied without a documented method, so this cannot be decided here.',
+  'msg.explain.testOptional':
+    'The programme is test-optional, so a missing SAT score is not a barrier.',
+  'msg.explain.satPolicyNoMinimum':
+    'An SAT policy is published but no minimum score was found.',
+  'msg.explain.actionRequired':
+    '{label} is required. This is an action to complete, not a disqualification.',
+  'msg.explain.subjectsPresent':
+    'All published subject prerequisites are present in the profile.',
+  'msg.explain.subjectsMissing':
+    'Not listed in the profile: {subjects}. Add them if they were studied; otherwise this is a genuine gap.',
+  'msg.explain.noAssessable':
+    'No assessable academic entry requirements were found. A future deadline or optional test policy does not establish eligibility.',
+  'msg.explain.ieltsTypes':
+    'The programme accepts {accepted}; the applicant holds {held}.',
+  'msg.explain.englishWaiver':
+    'This programme publishes conditions under which the English test is not required. Check them against your own schooling before booking a test — whether they cover you is not something this page settles.',
+  'msg.explain.citizenshipUnreadable':
+    'The award publishes a citizenship restriction that could not be read as a list of countries. It needs official clarification.',
+  'msg.explain.citizenshipNamed':
+    'The published restriction names {phrase}, which matches the {country} citizenship in the profile.',
+  'msg.explain.citizenshipMember':
+    '{country} is a member of the {group}, which the award names as its restriction.',
+  'msg.explain.citizenshipGroup':
+    'The award is restricted to a group (\'{restrictions}\') whose membership is not published as a list of countries. Whether {held} falls inside it cannot be settled from the page, so it is left for the admissions office to confirm.',
+  'msg.explain.citizenshipExcluded':
+    'The award is restricted to {restrictions}. An applicant holding {held} citizenship is not eligible.',
+  'msg.explain.internationalClosed':
+    'The award is officially closed to international students.',
+  'msg.explain.internationalOpen':
+    'The award is officially open to international students of any nationality.',
+  'msg.explain.restriction':
+    'The page limits this award to {restriction}. Whether this programme belongs to it is not something the page settles — ask the admissions office before counting on this award.',
+  'msg.explain.scholarshipTestMissing':
+    'The award requires {test} {minimum}; no score is in the profile.',
+  'msg.explain.scholarshipDeadlinePassed':
+    'The published scholarship deadline {date} has passed.',
+  'msg.degree.noText':
+    'no text or no degree level to check against',
+  'msg.degree.excludes':
+    'the page explicitly excludes {degree} applicants',
+  'msg.degree.forOther':
+    'the page states the award is for {level} applicants, not {degree}',
+  'msg.degree.statesFor':
+    'the page states the award is for {degree} applicants',
+  'msg.degree.onlyOthers':
+    'the page describes the award for {levels} only and never mentions {degree}',
+  'msg.degree.unstated':
+    'the page does not state which degree levels the award applies to',
+  'msg.degree.excludesLevel':
+    'the page excludes this level.',
+  'msg.missing.notCovered':
+    '{category} is not covered',
+  'msg.missing.unknown':
+    '{category} is unknown',
+  'msg.missing.partial':
+    '{category} is partial',
+  'msg.class.excluded':
+    'Published conditions exclude this applicant.',
+  'msg.class.degreeLevel':
+    'Not applicable to this applicant\'s degree level: {degreeReason}',
+  'msg.class.citizenship':
+    'The award is restricted to {restrictions}, which does not include this applicant.',
+  'msg.class.notInternational':
+    'Official source states the award is not open to international students.',
+  'msg.class.noCoverage':
+    'No official per-category coverage information was found.',
+  'msg.class.promotionalNoBreakdown':
+    'Page uses promotional wording ({words}) but publishes no breakdown.',
+  'msg.class.needBased':
+    'Award size depends on a verified financial-need assessment that has not been filed.',
+  'msg.class.fullRide':
+    'Official sources confirm coverage of tuition, mandatory fees, housing and meals or an equivalent living stipend.',
+  'msg.class.fullTuition':
+    'Tuition is confirmed as covered, but {missing} — this is full tuition, not a full ride.',
+  'msg.class.shareUnknown':
+    'Coverage is partial but the award amount or the cost of attendance is not officially published, so the share cannot be computed.',
+  'msg.class.largeGrant':
+    'Covers roughly {share} of published cost of attendance; a substantial portion of the cost remains.',
+  'msg.class.partial':
+    'Covers roughly {share} of published cost of attendance.',
+  'msg.class.promotional':
+    'The page uses promotional wording such as \'full ride\'; the classification here follows the published coverage table instead.',
+  'msg.class.onlyFullRide':
+    'The profile states that only a full ride makes this affordable; this award is classified as {classification}.',
+  'msg.class.noTuitionOnly':
+    'The profile states that a tuition-only award would not be taken up.',
+  'msg.class.noPartial':
+    'The profile states that a partial award would not be taken up.',
+  'msg.class.needDocuments':
+    'This award is need-based and the profile states that financial documents will not be submitted, which is what a need-based application requires.',
+  'msg.class.mustCover':
+    'The profile requires {categories} to be covered; this award states it is not.',
+  'msg.rank.academicNoMargin':
+    'All published requirements are met; there are no numeric minimums to measure a margin against.',
+  'msg.rank.academicMargin':
+    'All published requirements are met, on average {margin} above the minimums.',
+  'msg.rank.academicPending':
+    'Requirements are met apart from items still pending.',
+  'msg.rank.academicGap':
+    'At least one published requirement is not met.',
+  'msg.rank.academicUnknown':
+    'Published requirements could not be verified.',
+  'msg.rank.fundingUnknown':
+    'No official funding information was confirmed.',
+  'msg.rank.fundingConfirmed':
+    'Funding fit is confirmed opportunity.',
+  'msg.rank.fundingCompetitive':
+    'Funding fit is competitive opportunity.',
+  'msg.rank.fundingLimited':
+    'Funding fit is limited opportunity.',
+  'msg.rank.fundingNotEligible':
+    'Funding fit is not eligible.',
+  'msg.rank.gapUnknown':
+    'The remaining annual cost could not be computed.',
+  'msg.rank.noCeiling':
+    'No family budget ceiling was stated to compare against.',
+  'msg.rank.nothingRemains':
+    'Nothing remains to be paid.',
+  'msg.rank.zeroContribution':
+    'The family states it can contribute nothing, and {gap} a year remains.',
+  'msg.rank.withinCeiling':
+    'The remaining {gap} a year is within the stated ceiling of {ceiling}.',
+  'msg.rank.timesCeiling':
+    'The remaining {gap} a year is {ratio} times the stated ceiling of {ceiling}.',
+  'msg.rank.aboveCeiling':
+    'The remaining {gap} a year is {over} above the stated ceiling of {ceiling}.',
+  'msg.rank.preferredCountry':
+    '{country} is a preferred country.',
+  'msg.rank.unpreferredCountry':
+    '{country} is outside the preferred list.',
+  'msg.rank.noRank':
+    'No ranking position was found.',
+  'msg.rank.insideBand':
+    'Ranked {rank}, inside the requested {band}.',
+  'msg.rank.outsideTop':
+    'Ranked {rank}, outside the top {top}.',
+  'msg.rank.consensus':
+    'Consensus ranking position {rank}.',
+  'msg.rank.ranked':
+    'Ranked {rank}.',
+  'msg.rank.noPreference':
+    'No {axis} preference was stated.',
+  'msg.rank.attributeUnknown':
+    'The {axis} of this university is not known.',
+  'msg.rank.attributeMatches':
+    '{actual} matches the stated preference.',
+  'msg.rank.ladderStep':
+    '{actual} against a preference for {preferred}: {steps} step apart.',
+  'msg.rank.ladderSteps':
+    '{actual} against a preference for {preferred}: {steps} steps apart.',
+  'msg.rank.ladderDiffers':
+    '{actual} differs from the preferred {preferred}.',
+  'msg.rank.careersNotPriority':
+    'Careers were not a stated priority.',
+  'msg.rank.coop':
+    'A co-op or placement year is officially offered.',
+  'msg.rank.internships':
+    'An internship programme is officially described.',
+  'msg.rank.careersPage':
+    'A careers page exists but states nothing specific enough to check.',
+  'msg.rank.noCareers':
+    'No official careers information was found.',
+  'msg.rank.pswNotPriority':
+    'Post-study work was not a stated priority.',
+  'msg.rank.pswUnknown':
+    'Post-study work rules were not confirmed in months.',
+  'msg.rank.psw':
+    'A post-study work right of {months} months is published.',
+  'msg.rank.excludedCountry':
+    '{country} is on the applicant\'s excluded list.',
+  'msg.rank.knockoutUnmet':
+    '{requirement}: a published requirement is not met',
+  'msg.rank.knockout':
+    '{requirement}: {explanation}',
+  'msg.rank.bucketInsufficient':
+    'Too little of the published requirements could be verified to place this row.',
+  'msg.rank.bucketOutOfBudget':
+    'The remaining cost is {ratio} times the stated ceiling, past the {limit} times this applicant said they could stretch to.',
+  'msg.rank.bucketWellPlaced':
+    'Requirements are met with room, funding is confirmed, and the remaining cost is within the stated ceiling.',
+  'msg.rank.bucketPlausible':
+    'Requirements and funding both look reachable on published data.',
+  'msg.rank.bucketAmbitious':
+    'Either the requirements, the funding or the remaining cost makes this a stretch.',
+  'msg.rank.disclaimer':
+    'How well this matches your stated priorities, on confirmed data. Not a probability of admission.',
+  'msg.conflict.label.ieltsOverall':
+    'the minimum overall IELTS band',
+  'msg.conflict.label.ieltsSubscore':
+    'the minimum IELTS band per section',
+  'msg.conflict.label.minGpa':
+    'the minimum GPA',
+  'msg.conflict.label.satTotal':
+    'the minimum SAT total',
+  'msg.conflict.label.toeflTotal':
+    'the minimum TOEFL total',
+  'msg.conflict.label.admissionDeadline':
+    'the application deadline',
+  'msg.conflict.label.scholarshipDeadline':
+    'the scholarship deadline',
+  'msg.conflict.label.tuition':
+    'the tuition fee',
+  'msg.conflict.label.totalCost':
+    'the total cost of attendance',
+  'msg.conflict.label.awardAmount':
+    'the award amount',
+  'msg.conflict.label.internationalEligible':
+    'eligibility for international students',
+  'msg.conflict.subjectFull':
+    '{what} — {subjectKey} ({programme})',
+  'msg.conflict.subjectKeyed':
+    '{what} — {subjectKey}',
+  'msg.conflict.subjectProgramme':
+    '{what} ({programme})',
+  'msg.conflict.subject':
+    '{what}',
+  'msg.conflict.preferSpecific':
+    'Preferring the more specific source ({specificity}); the disagreement is shown rather than resolved.',
+  'msg.conflict.moreSpecific':
+    'Not a contradiction: a programme-specific rule and a university-wide rule can both be true. The more specific source ({specificity}) applies to this application; the broader rule is kept, not discarded.',
+  'msg.conflict.differentPopulation':
+    'Not a contradiction: the pages state different populations, so both values can be correct. Neither is discarded.',
+  'msg.conflict.differentResidency':
+    'Not a contradiction: the pages state different residencys, so both values can be correct. Neither is discarded.',
+  'msg.conflict.differentIntake':
+    'Not a contradiction: the pages state different intakes, so both values can be correct. Neither is discarded.',
+  'msg.conflict.differentAcademicYear':
+    'Not a contradiction: the pages state different academic years, so both values can be correct. Neither is discarded.',
+  'msg.conflict.differentDegree':
+    'Not a contradiction: the pages state different degrees, so both values can be correct. Neither is discarded.',
+  'msg.conflict.differentQualification':
+    'Not a contradiction: the pages state different qualifications, so both values can be correct. Neither is discarded.',
+  'msg.conflict.why':
+    'Official sources disagree on {subject}: {values}',
+  'msg.currency.staleRates':
+    'These conversions use exchange rates from {date}, {days} days old. Treat converted amounts as indicative and check the current rate before relying on one.',
 
   // --- the catalogue cards in kb mode (CAT-1) -------------------------------
   'catalogue.kb.coverage': '{n} of {total} universities have verified data',
@@ -1100,6 +1440,38 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'Опубликованное требование, которое вы не выполняете, или страна, которую вы исключили. В списке, но без места в рейтинге.',
   'statusMeaning.NEEDS_CLARIFICATION': 'Подтвердить удалось слишком мало, чтобы вообще распределить эту строку.',
 
+  'documents.eyebrow': 'Документы и сроки',
+  'documents.title': 'Готовьтесь {accent}',
+  'documents.titleAccent': 'уверенно.',
+  'documents.emptyLede': 'Список документов появится, когда вы сохраните программы в разделе Plan и соберёте их официальные требования.',
+  'documents.emptyTitle': 'Списков документов пока нет',
+  'documents.emptyBody': 'Выберите программу в разделе Find, затем соберите документы в разделе Plan.',
+  'documents.lede': 'Упорядочено по времени подготовки, а не по сроку. Пункты вверху зависят от других людей, поэтому начинать нужно с них.',
+  'documents.calendarSummary': 'Календарь и сроки по вашему короткому списку ({n})',
+  'documents.calendarTitle': 'Все сроки по вашему короткому списку',
+  'documents.addToCalendar': 'Добавить в календарь (.ics)',
+  'documents.passed': 'прошёл',
+  'documents.noDeadlines': 'Сроков с датой не найдено.',
+  'documents.admissionApplication': 'Заявление на поступление',
+  'documents.ticked': 'Отмечено {done} из {total}. Составлено {when}.',
+  'documents.completeness.official': 'с официальных страниц',
+  'documents.completeness.partial': 'прочитано частично',
+  'documents.completeness.unavailable': 'официальный список не найден',
+  'documents.owner.thirdParty': 'Третья сторона (переводчик, WES/ECE, нотариус)',
+  'documents.forScholarship': 'для стипендии',
+  'documents.forAdmission': 'для поступления',
+  'documents.maxWords': 'не более {n} слов',
+  'documents.maxPages': 'не более {n} стр.',
+  'documents.maxSize': 'не более {n} МБ',
+  'documents.translation': 'нужен заверенный перевод',
+  'documents.notarisation': 'нужно нотариальное заверение',
+  'documents.apostille': 'нужен апостиль',
+  'documents.credentialEvaluation': 'нужна оценка документов об образовании',
+  'documents.due': 'до {date}',
+  'documents.stillToConfirm': 'Ещё нужно уточнить',
+  'documents.ask': 'Кого спросить: {contact}',
+  'documents.notice': 'Unimatch составляет этот список. Он не загружает документы, не подаёт заявление, ничего не подписывает от вашего имени и не платит сборы. Эти шаги остаются за вами.',
+
   'msg.question.campus':
     '{university} предлагает {programme} в нескольких кампусах, и в каждый подаётся отдельная заявка. Какой кампус вам нужен?',
   'msg.question.entryRequirementsPage':
@@ -1338,6 +1710,312 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'В проверенной базе знаний пока нет платы за обучение для этой программы, поэтому оставшаяся сумма не рассчитана.',
   'msg.gap.kbTuitionRange':
     'Плата за обучение опубликована только диапазоном, {range}; в расчёте стоимости взята верхняя граница, чтобы не занизить её.',
+  'msg.req.intakeOpen':
+    'Приём заявлений на этот набор',
+  'msg.req.deadline':
+    'Срок подачи заявлений',
+  'msg.req.minGpa':
+    'Минимальный GPA',
+  'msg.req.satTotal':
+    'Общий балл SAT',
+  'msg.req.satPolicy':
+    'Правила по SAT',
+  'msg.req.portfolio':
+    'Портфолио',
+  'msg.req.interview':
+    'Собеседование',
+  'msg.req.entranceExam':
+    'Вступительный экзамен',
+  'msg.req.credentialEvaluation':
+    'Оценка документов об образовании',
+  'msg.req.requiredSubjects':
+    'Обязательные предметы',
+  'msg.req.academicEntry':
+    'Академические требования к поступлению',
+  'msg.req.ieltsType':
+    'Принимаемый вид IELTS',
+  'msg.req.englishWaiver':
+    'Освобождение от теста по английскому',
+  'msg.req.ieltsOverall':
+    'IELTS, общий балл',
+  'msg.req.ieltsBand':
+    'IELTS, раздел {band}',
+  'msg.req.toeflTotal':
+    'TOEFL, общий балл',
+  'msg.req.scholarshipCitizenship':
+    'Стипендия: требование к гражданству',
+  'msg.req.scholarshipInternational':
+    'Стипендия: доступность для иностранных студентов',
+  'msg.req.scholarshipFaculty':
+    'Стипендия: ограничение по факультету',
+  'msg.req.scholarshipProgramme':
+    'Стипендия: ограничение по программе',
+  'msg.req.scholarshipDeadline':
+    'Срок подачи на стипендию',
+  'msg.req.scholarshipTest':
+    'Стипендия: минимум {test}',
+  'msg.explain.noMinimum':
+    'Официальный минимум для «{label}» не найден; это не считается препятствием.',
+  'msg.explain.notNumber':
+    'Опубликованное значение «{label}» не удалось прочитать как число.',
+  'msg.explain.noApplicantValue':
+    'Программа публикует минимум {published}, но в профиле пока нет значения «{label}». Добавьте его, чтобы завершить эту проверку.',
+  'msg.explain.minimumNotMet':
+    'Опубликованный минимум {published}; у вас {applicant}. Опубликованный минимум не достигнут.',
+  'msg.explain.minimumMet':
+    'Опубликованный минимум {published}; у вас {applicant}.',
+  'msg.explain.intakeClosed':
+    'Программа официально сообщает, что на этот набор заявления не принимаются.',
+  'msg.explain.deadlineUnparsed':
+    'Срок опубликован, но его не удалось прочитать как дату.',
+  'msg.explain.deadlinePassed':
+    'Опубликованный срок {date} уже прошёл.',
+  'msg.explain.deadlineByPopulation':
+    'Самый ранний срок подачи — {date}; срок зависит от вашей категории оплаты в этом университете ({deadlines}).',
+  'msg.explain.deadlineOpen':
+    'Заявления принимаются до {date}.',
+  'msg.explain.allDeadlinesPassed':
+    'Все опубликованные сроки прошли ({deadlines}).',
+  'msg.explain.deadlineByPopulationPassed':
+    'Срок зависит от вашей категории оплаты в этом университете ({deadlines}). Срок для «{populations}» уже прошёл; уточните, какой относится к вам.',
+  'msg.explain.gpaScale':
+    'Ваш GPA указан по шкале {scale}, а программа публикует другую шкалу. Без документированного метода пересчёт не применяется, поэтому здесь это решить нельзя.',
+  'msg.explain.testOptional':
+    'Программа не требует тестов в обязательном порядке, поэтому отсутствие балла SAT не препятствие.',
+  'msg.explain.satPolicyNoMinimum':
+    'Правила по SAT опубликованы, но минимальный балл не найден.',
+  'msg.explain.actionRequired':
+    'Требуется: «{label}». Это шаг, который нужно выполнить, а не причина отказа.',
+  'msg.explain.subjectsPresent':
+    'Все опубликованные обязательные предметы есть в профиле.',
+  'msg.explain.subjectsMissing':
+    'Нет в профиле: {subjects}. Добавьте их, если вы их изучали; иначе это настоящий пробел.',
+  'msg.explain.noAssessable':
+    'Академические требования к поступлению, которые можно оценить, не найдены. Будущий срок подачи или необязательный тест не означают, что вы проходите по требованиям.',
+  'msg.explain.ieltsTypes':
+    'Программа принимает {accepted}; у вас {held}.',
+  'msg.explain.englishWaiver':
+    'Программа публикует условия, при которых тест по английскому не нужен. Сверьте их со своим обучением, прежде чем записываться на тест, — подходят ли они вам, эта страница не решает.',
+  'msg.explain.citizenshipUnreadable':
+    'Стипендия публикует требование к гражданству, которое не удалось прочитать как список стран. Нужно официальное уточнение.',
+  'msg.explain.citizenshipNamed':
+    'Опубликованное ограничение называет {phrase}, что совпадает с гражданством {country} в профиле.',
+  'msg.explain.citizenshipMember':
+    '{country} входит в {group}, которое стипендия называет своим ограничением.',
+  'msg.explain.citizenshipGroup':
+    'Стипендия ограничена группой («{restrictions}»), состав которой не опубликован списком стран. Входит ли в неё {held}, по странице решить нельзя, поэтому это должна подтвердить приёмная комиссия.',
+  'msg.explain.citizenshipExcluded':
+    'Стипендия ограничена: {restrictions}. Заявитель с гражданством {held} не подходит.',
+  'msg.explain.internationalClosed':
+    'Стипендия официально закрыта для иностранных студентов.',
+  'msg.explain.internationalOpen':
+    'Стипендия официально открыта для иностранных студентов любого гражданства.',
+  'msg.explain.restriction':
+    'Страница ограничивает эту стипендию: {restriction}. Относится ли к этому ваша программа, страница не решает — спросите приёмную комиссию, прежде чем рассчитывать на стипендию.',
+  'msg.explain.scholarshipTestMissing':
+    'Для стипендии нужен {test} {minimum}; в профиле нет балла.',
+  'msg.explain.scholarshipDeadlinePassed':
+    'Опубликованный срок подачи на стипендию {date} уже прошёл.',
+  'msg.degree.noText':
+    'нет текста или уровня образования для проверки',
+  'msg.degree.excludes':
+    'страница прямо исключает заявителей уровня {degree}',
+  'msg.degree.forOther':
+    'страница указывает, что стипендия для уровня {level}, а не {degree}',
+  'msg.degree.statesFor':
+    'страница указывает, что стипендия для заявителей уровня {degree}',
+  'msg.degree.onlyOthers':
+    'страница описывает стипендию только для {levels} и нигде не упоминает {degree}',
+  'msg.degree.unstated':
+    'страница не указывает, к каким уровням образования относится стипендия',
+  'msg.degree.excludesLevel':
+    'страница исключает этот уровень.',
+  'msg.missing.notCovered':
+    '{category} не покрывается',
+  'msg.missing.unknown':
+    '{category} — неизвестно',
+  'msg.missing.partial':
+    '{category} — частично',
+  'msg.class.excluded':
+    'Опубликованные условия исключают этого заявителя.',
+  'msg.class.degreeLevel':
+    'Не относится к уровню образования этого заявителя: {degreeReason}',
+  'msg.class.citizenship':
+    'Стипендия ограничена: {restrictions}, — и этот заявитель сюда не входит.',
+  'msg.class.notInternational':
+    'Официальный источник сообщает, что стипендия не открыта для иностранных студентов.',
+  'msg.class.noCoverage':
+    'Официальные данные о покрытии по статьям расходов не найдены.',
+  'msg.class.promotionalNoBreakdown':
+    'На странице есть рекламные формулировки ({words}), но разбивки нет.',
+  'msg.class.needBased':
+    'Размер стипендии зависит от проверки финансовой нуждаемости, документы на которую ещё не поданы.',
+  'msg.class.fullRide':
+    'Официальные источники подтверждают покрытие обучения, обязательных сборов, жилья и питания или равноценной стипендии на проживание.',
+  'msg.class.fullTuition':
+    'Покрытие платы за обучение подтверждено, но {missing} — это полная оплата обучения, а не полное покрытие.',
+  'msg.class.shareUnknown':
+    'Покрытие частичное, но сумма стипендии или стоимость обучения официально не опубликованы, поэтому долю рассчитать нельзя.',
+  'msg.class.largeGrant':
+    'Покрывает примерно {share} опубликованной стоимости обучения; значительная часть расходов остаётся.',
+  'msg.class.partial':
+    'Покрывает примерно {share} опубликованной стоимости обучения.',
+  'msg.class.promotional':
+    'На странице есть рекламные формулировки вроде «full ride»; классификация здесь следует опубликованной таблице покрытия.',
+  'msg.class.onlyFullRide':
+    'В профиле указано, что вариант доступен только при полном покрытии; эта стипендия классифицирована как «{classification}».',
+  'msg.class.noTuitionOnly':
+    'В профиле указано, что стипендию только на обучение вы не примете.',
+  'msg.class.noPartial':
+    'В профиле указано, что частичную стипендию вы не примете.',
+  'msg.class.needDocuments':
+    'Эта стипендия назначается по нуждаемости, а в профиле указано, что финансовые документы не будут поданы, — а именно они нужны для такой заявки.',
+  'msg.class.mustCover':
+    'Профиль требует покрытия: {categories}; эта стипендия сообщает, что не покрывает это.',
+  'msg.rank.academicNoMargin':
+    'Все опубликованные требования выполнены; числовых минимумов, по которым можно измерить запас, нет.',
+  'msg.rank.academicMargin':
+    'Все опубликованные требования выполнены, в среднем на {margin} выше минимумов.',
+  'msg.rank.academicPending':
+    'Требования выполнены, кроме пунктов, которые ещё ожидают решения.',
+  'msg.rank.academicGap':
+    'Как минимум одно опубликованное требование не выполнено.',
+  'msg.rank.academicUnknown':
+    'Опубликованные требования не удалось проверить.',
+  'msg.rank.fundingUnknown':
+    'Официальная информация о финансировании не подтверждена.',
+  'msg.rank.fundingConfirmed':
+    'Финансирование: подтверждённая возможность.',
+  'msg.rank.fundingCompetitive':
+    'Финансирование: возможность по конкурсу.',
+  'msg.rank.fundingLimited':
+    'Финансирование: ограниченная возможность.',
+  'msg.rank.fundingNotEligible':
+    'Финансирование: вы не подходите.',
+  'msg.rank.gapUnknown':
+    'Остаток к оплате за год рассчитать не удалось.',
+  'msg.rank.noCeiling':
+    'Предел семейного бюджета для сравнения не указан.',
+  'msg.rank.nothingRemains':
+    'Платить ничего не остаётся.',
+  'msg.rank.zeroContribution':
+    'Семья указала, что не может вносить ничего, а остаётся {gap} в год.',
+  'msg.rank.withinCeiling':
+    'Остаток {gap} в год укладывается в указанный предел {ceiling}.',
+  'msg.rank.timesCeiling':
+    'Остаток {gap} в год в {ratio} раза больше указанного предела {ceiling}.',
+  'msg.rank.aboveCeiling':
+    'Остаток {gap} в год на {over} выше указанного предела {ceiling}.',
+  'msg.rank.preferredCountry':
+    '{country} — предпочтительная страна.',
+  'msg.rank.unpreferredCountry':
+    '{country} не входит в список предпочтительных стран.',
+  'msg.rank.noRank':
+    'Позиция в рейтинге не найдена.',
+  'msg.rank.insideBand':
+    'Место в рейтинге {rank}, в пределах запрошенного диапазона «{band}».',
+  'msg.rank.outsideTop':
+    'Место в рейтинге {rank}, за пределами топ-{top}.',
+  'msg.rank.consensus':
+    'Сводная позиция в рейтинге: {rank}.',
+  'msg.rank.ranked':
+    'Место в рейтинге: {rank}.',
+  'msg.rank.noPreference':
+    'Предпочтение по параметру «{axis}» не указано.',
+  'msg.rank.attributeUnknown':
+    'Параметр «{axis}» этого университета неизвестен.',
+  'msg.rank.attributeMatches':
+    '{actual} совпадает с указанным предпочтением.',
+  'msg.rank.ladderStep':
+    '{actual} при предпочтении {preferred}: разница {steps} шаг.',
+  'msg.rank.ladderSteps':
+    '{actual} при предпочтении {preferred}: разница {steps} шага.',
+  'msg.rank.ladderDiffers':
+    '{actual} отличается от предпочтения {preferred}.',
+  'msg.rank.careersNotPriority':
+    'Карьера не была указана как приоритет.',
+  'msg.rank.coop':
+    'Официально предлагается co-op или год практики.',
+  'msg.rank.internships':
+    'Официально описана программа стажировок.',
+  'msg.rank.careersPage':
+    'Страница о карьере есть, но на ней нет ничего достаточно конкретного для проверки.',
+  'msg.rank.noCareers':
+    'Официальная информация о карьере не найдена.',
+  'msg.rank.pswNotPriority':
+    'Работа после учёбы не была указана как приоритет.',
+  'msg.rank.pswUnknown':
+    'Правила работы после учёбы не подтверждены в месяцах.',
+  'msg.rank.psw':
+    'Опубликовано право на работу после учёбы на {months} мес.',
+  'msg.rank.excludedCountry':
+    '{country} — в списке исключённых вами стран.',
+  'msg.rank.knockoutUnmet':
+    '{requirement}: опубликованное требование не выполнено',
+  'msg.rank.knockout':
+    '{requirement} — {explanation}',
+  'msg.rank.bucketInsufficient':
+    'Слишком мало опубликованных требований удалось проверить, чтобы определить место этого варианта.',
+  'msg.rank.bucketOutOfBudget':
+    'Остаток к оплате в {ratio} раза больше указанного предела — больше тех {limit} раза, на которые, по словам заявителя, можно выйти.',
+  'msg.rank.bucketWellPlaced':
+    'Требования выполнены с запасом, финансирование подтверждено, остаток к оплате в пределах указанного предела.',
+  'msg.rank.bucketPlausible':
+    'И требования, и финансирование выглядят достижимыми по опубликованным данным.',
+  'msg.rank.bucketAmbitious':
+    'Требования, финансирование или остаток к оплате делают этот вариант амбициозным.',
+  'msg.rank.disclaimer':
+    'Насколько вариант подходит под ваши приоритеты — по подтверждённым данным. Это не вероятность поступления.',
+  'msg.conflict.label.ieltsOverall':
+    'минимальный общий балл IELTS',
+  'msg.conflict.label.ieltsSubscore':
+    'минимальный балл IELTS по каждому разделу',
+  'msg.conflict.label.minGpa':
+    'минимальный GPA',
+  'msg.conflict.label.satTotal':
+    'минимальный общий балл SAT',
+  'msg.conflict.label.toeflTotal':
+    'минимальный общий балл TOEFL',
+  'msg.conflict.label.admissionDeadline':
+    'срок подачи заявлений',
+  'msg.conflict.label.scholarshipDeadline':
+    'срок подачи на стипендию',
+  'msg.conflict.label.tuition':
+    'плата за обучение',
+  'msg.conflict.label.totalCost':
+    'полная стоимость обучения',
+  'msg.conflict.label.awardAmount':
+    'сумма стипендии',
+  'msg.conflict.label.internationalEligible':
+    'доступность для иностранных студентов',
+  'msg.conflict.subjectFull':
+    '{what}, {subjectKey} — программа {programme}',
+  'msg.conflict.subjectKeyed':
+    '{what}, {subjectKey}',
+  'msg.conflict.subjectProgramme':
+    '{what} — программа {programme}',
+  'msg.conflict.subject':
+    '{what}',
+  'msg.conflict.preferSpecific':
+    'Предпочтение отдаётся более конкретному источнику ({specificity}); расхождение показано, а не устранено.',
+  'msg.conflict.moreSpecific':
+    'Это не противоречие: правило программы и общее правило университета могут быть верны одновременно. К этой заявке относится более конкретный источник ({specificity}); более общее правило сохранено, а не отброшено.',
+  'msg.conflict.differentPopulation':
+    'Это не противоречие: страницы говорят о разных категориях заявителей, поэтому оба значения могут быть верны. Ни одно не отброшено.',
+  'msg.conflict.differentResidency':
+    'Это не противоречие: страницы говорят о разном статусе резидентства, поэтому оба значения могут быть верны. Ни одно не отброшено.',
+  'msg.conflict.differentIntake':
+    'Это не противоречие: страницы говорят о разных наборах, поэтому оба значения могут быть верны. Ни одно не отброшено.',
+  'msg.conflict.differentAcademicYear':
+    'Это не противоречие: страницы говорят о разных учебных годах, поэтому оба значения могут быть верны. Ни одно не отброшено.',
+  'msg.conflict.differentDegree':
+    'Это не противоречие: страницы говорят о разных уровнях образования, поэтому оба значения могут быть верны. Ни одно не отброшено.',
+  'msg.conflict.differentQualification':
+    'Это не противоречие: страницы говорят о разных документах об образовании, поэтому оба значения могут быть верны. Ни одно не отброшено.',
+  'msg.conflict.why':
+    'Официальные источники расходятся в вопросе «{subject}»: {values}',
+  'msg.currency.staleRates':
+    'Пересчёт использует курсы валют на {date}, им {days} дн. Считайте пересчитанные суммы ориентировочными и проверьте текущий курс, прежде чем на них полагаться.',
 
   'catalogue.kb.coverage': 'Проверенные данные есть у {n} из {total} университетов',
   'catalogue.kb.filter': 'Только с проверенными данными',
@@ -1767,6 +2445,38 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     'Сіз орындамайтын жарияланған талап немесе сіз алып тастаған ел. Тізімде бар, бірақ рейтингте орны жоқ.',
   'statusMeaning.NEEDS_CLARIFICATION': 'Бұл жолды орналастыруға тым аз нәрсе расталды.',
 
+  'documents.eyebrow': 'Құжаттар мен мерзімдер',
+  'documents.title': '{accent} дайындалыңыз.',
+  'documents.titleAccent': 'Сеніммен',
+  'documents.emptyLede': 'Құжаттар тізімі Plan бөлімінде бағдарламаларды сақтап, олардың ресми талаптарын жинағаннан кейін пайда болады.',
+  'documents.emptyTitle': 'Құжаттар тізімі әзірге жоқ',
+  'documents.emptyBody': 'Find бөлімінде бағдарламаны таңдаңыз, содан кейін Plan бөлімінде құжаттарды жинаңыз.',
+  'documents.lede': 'Мерзім бойынша емес, дайындау уақыты бойынша реттелген. Жоғарыдағы тармақтар басқа адамдарға байланысты, сондықтан оларды бірінші бастау керек.',
+  'documents.calendarSummary': 'Қысқа тізіміңіз бойынша күнтізбе мен мерзімдер ({n})',
+  'documents.calendarTitle': 'Қысқа тізіміңіздегі барлық мерзім',
+  'documents.addToCalendar': 'Күнтізбеге қосу (.ics)',
+  'documents.passed': 'өтті',
+  'documents.noDeadlines': 'Күні көрсетілген мерзімдер табылмады.',
+  'documents.admissionApplication': 'Түсуге өтініш',
+  'documents.ticked': '{total} тармақтың {done}-і белгіленді. {when} құрастырылды.',
+  'documents.completeness.official': 'ресми беттерден',
+  'documents.completeness.partial': 'ішінара оқылды',
+  'documents.completeness.unavailable': 'ресми тізім табылмады',
+  'documents.owner.thirdParty': 'Үшінші тарап (аудармашы, WES/ECE, нотариус)',
+  'documents.forScholarship': 'стипендия үшін',
+  'documents.forAdmission': 'түсу үшін',
+  'documents.maxWords': 'ең көбі {n} сөз',
+  'documents.maxPages': 'ең көбі {n} бет',
+  'documents.maxSize': 'ең көбі {n} МБ',
+  'documents.translation': 'куәландырылған аударма қажет',
+  'documents.notarisation': 'нотариат куәландыруы қажет',
+  'documents.apostille': 'апостиль қажет',
+  'documents.credentialEvaluation': 'білім туралы құжаттарды бағалау қажет',
+  'documents.due': 'мерзімі {date}',
+  'documents.stillToConfirm': 'Әлі нақтылау керек',
+  'documents.ask': 'Кімнен сұрау керек: {contact}',
+  'documents.notice': 'Бұл тізімді Unimatch құрастырады. Ол құжаттарды жүктемейді, өтініш бермейді, сіздің атыңыздан ештеңеге қол қоймайды және алым төлемейді. Бұл қадамдар сізде қалады.',
+
   'msg.question.campus':
     '{university} {programme} бағдарламасын бірнеше кампуста ұсынады, әрқайсысына бөлек өтінім беріледі. Сізге қай кампус керек?',
   'msg.question.entryRequirementsPage':
@@ -2006,6 +2716,312 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     'Тексерілген білім базасында бұл бағдарламаның оқу ақысы әзірге жоқ, сондықтан қалған сома есептелмеді.',
   'msg.gap.kbTuitionRange':
     'Оқу ақысы тек аралықпен жарияланған, {range}; құн төмендетіп көрсетілмес үшін оның жоғарғы шегі алынды.',
+  'msg.req.intakeOpen':
+    'Осы қабылдауға өтініш қабылдау',
+  'msg.req.deadline':
+    'Өтініш беру мерзімі',
+  'msg.req.minGpa':
+    'Ең төменгі GPA',
+  'msg.req.satTotal':
+    'SAT жалпы балы',
+  'msg.req.satPolicy':
+    'SAT бойынша талап',
+  'msg.req.portfolio':
+    'Портфолио',
+  'msg.req.interview':
+    'Сұхбат',
+  'msg.req.entranceExam':
+    'Түсу емтиханы',
+  'msg.req.credentialEvaluation':
+    'Білім туралы құжаттарды бағалау',
+  'msg.req.requiredSubjects':
+    'Міндетті пәндер',
+  'msg.req.academicEntry':
+    'Түсуге қойылатын академиялық талаптар',
+  'msg.req.ieltsType':
+    'Қабылданатын IELTS түрі',
+  'msg.req.englishWaiver':
+    'Ағылшын тілі тестінен босату',
+  'msg.req.ieltsOverall':
+    'IELTS, жалпы балл',
+  'msg.req.ieltsBand':
+    'IELTS, {band} бөлімі',
+  'msg.req.toeflTotal':
+    'TOEFL, жалпы балл',
+  'msg.req.scholarshipCitizenship':
+    'Стипендия: азаматтық талабы',
+  'msg.req.scholarshipInternational':
+    'Стипендия: шетелдік студенттерге қолжетімділігі',
+  'msg.req.scholarshipFaculty':
+    'Стипендия: факультет бойынша шектеу',
+  'msg.req.scholarshipProgramme':
+    'Стипендия: бағдарлама бойынша шектеу',
+  'msg.req.scholarshipDeadline':
+    'Стипендияға өтініш беру мерзімі',
+  'msg.req.scholarshipTest':
+    'Стипендия: {test} ең төменгі шегі',
+  'msg.explain.noMinimum':
+    '«{label}» үшін ресми ең төменгі шек табылмады; бұл кедергі деп есептелмейді.',
+  'msg.explain.notNumber':
+    'Жарияланған «{label}» мәнін сан ретінде оқу мүмкін болмады.',
+  'msg.explain.noApplicantValue':
+    'Бағдарлама ең төменгі шекті {published} деп жариялайды, бірақ профильде «{label}» мәні әлі жоқ. Бұл тексеруді аяқтау үшін оны қосыңыз.',
+  'msg.explain.minimumNotMet':
+    'Жарияланған ең төменгі шек {published}; сізде {applicant}. Жарияланған ең төменгі шекке жетпейді.',
+  'msg.explain.minimumMet':
+    'Жарияланған ең төменгі шек {published}; сізде {applicant}.',
+  'msg.explain.intakeClosed':
+    'Бағдарлама бұл қабылдауға өтініштер қабылданбайтынын ресми түрде хабарлайды.',
+  'msg.explain.deadlineUnparsed':
+    'Мерзім жарияланған, бірақ оны күн ретінде оқу мүмкін болмады.',
+  'msg.explain.deadlinePassed':
+    'Жарияланған мерзім {date} өтіп кетті.',
+  'msg.explain.deadlineByPopulation':
+    'Ең ерте өтініш беру мерзімі — {date}; мерзім осы университеттегі сіздің ақы төлеу санатыңызға байланысты ({deadlines}).',
+  'msg.explain.deadlineOpen':
+    'Өтініштер {date} дейін қабылданады.',
+  'msg.explain.allDeadlinesPassed':
+    'Жарияланған барлық мерзім өтіп кетті ({deadlines}).',
+  'msg.explain.deadlineByPopulationPassed':
+    'Мерзім осы университеттегі сіздің ақы төлеу санатыңызға байланысты ({deadlines}). «{populations}» үшін мерзім өтіп кетті; сізге қайсысы қатысты екенін нақтылаңыз.',
+  'msg.explain.gpaScale':
+    'Сіздің GPA {scale} шкаласы бойынша көрсетілген, ал бағдарлама басқа шкаланы жариялайды. Құжатталған әдіссіз қайта есептеу қолданылмайды, сондықтан мұны мұнда шешу мүмкін емес.',
+  'msg.explain.testOptional':
+    'Бағдарлама тестті міндетті етпейді, сондықтан SAT балының болмауы кедергі емес.',
+  'msg.explain.satPolicyNoMinimum':
+    'SAT бойынша талап жарияланған, бірақ ең төменгі балл табылмады.',
+  'msg.explain.actionRequired':
+    'Талап етіледі: «{label}». Бұл орындалатын қадам, бас тарту себебі емес.',
+  'msg.explain.subjectsPresent':
+    'Жарияланған барлық міндетті пәндер профильде бар.',
+  'msg.explain.subjectsMissing':
+    'Профильде жоқ: {subjects}. Егер оларды оқысаңыз, қосыңыз; әйтпесе бұл нақты олқылық.',
+  'msg.explain.noAssessable':
+    'Бағалауға болатын академиялық талаптар табылмады. Алдағы мерзім немесе міндетті емес тест сіздің талаптарға сай екеніңізді білдірмейді.',
+  'msg.explain.ieltsTypes':
+    'Бағдарлама {accepted} қабылдайды; сізде {held}.',
+  'msg.explain.englishWaiver':
+    'Бағдарлама ағылшын тілі тестін тапсыру қажет емес жағдайларды жариялайды. Тестке жазылмас бұрын оларды өз оқуыңызбен салыстырыңыз — олар сізге қатысты ма, оны бұл бет шешпейді.',
+  'msg.explain.citizenshipUnreadable':
+    'Стипендия азаматтыққа қатысты талапты жариялайды, бірақ оны елдер тізімі ретінде оқу мүмкін болмады. Ресми нақтылау қажет.',
+  'msg.explain.citizenshipNamed':
+    'Жарияланған шектеу {phrase} деп атайды, бұл профильдегі {country} азаматтығына сәйкес келеді.',
+  'msg.explain.citizenshipMember':
+    '{country} {group} құрамына кіреді, оны стипендия өз шектеуі ретінде атайды.',
+  'msg.explain.citizenshipGroup':
+    'Стипендия құрамы елдер тізімі ретінде жарияланбаған топпен («{restrictions}») шектелген. {held} оған кіре ме, оны беттен шешу мүмкін емес, сондықтан мұны қабылдау комиссиясы растауы керек.',
+  'msg.explain.citizenshipExcluded':
+    'Стипендия шектелген: {restrictions}. {held} азаматтығы бар үміткер сай келмейді.',
+  'msg.explain.internationalClosed':
+    'Стипендия шетелдік студенттер үшін ресми түрде жабық.',
+  'msg.explain.internationalOpen':
+    'Стипендия кез келген азаматтығы бар шетелдік студенттер үшін ресми түрде ашық.',
+  'msg.explain.restriction':
+    'Бет бұл стипендияны шектейді: {restriction}. Сіздің бағдарламаңыз оған жата ма, оны бет шешпейді — стипендияға сенбес бұрын қабылдау комиссиясынан сұраңыз.',
+  'msg.explain.scholarshipTestMissing':
+    'Стипендия үшін {test} {minimum} қажет; профильде балл жоқ.',
+  'msg.explain.scholarshipDeadlinePassed':
+    'Стипендияға өтініш берудің жарияланған мерзімі {date} өтіп кетті.',
+  'msg.degree.noText':
+    'тексеретін мәтін немесе білім деңгейі жоқ',
+  'msg.degree.excludes':
+    'бет {degree} деңгейіндегі үміткерлерді тікелей шығарып тастайды',
+  'msg.degree.forOther':
+    'бет стипендия {degree} емес, {level} деңгейіне арналғанын көрсетеді',
+  'msg.degree.statesFor':
+    'бет стипендия {degree} деңгейіндегі үміткерлерге арналғанын көрсетеді',
+  'msg.degree.onlyOthers':
+    'бет стипендияны тек {levels} үшін сипаттайды және {degree} туралы ешқайда айтпайды',
+  'msg.degree.unstated':
+    'бет стипендия қай білім деңгейлеріне қатысты екенін көрсетпейді',
+  'msg.degree.excludesLevel':
+    'бет бұл деңгейді шығарып тастайды.',
+  'msg.missing.notCovered':
+    '{category} өтелмейді',
+  'msg.missing.unknown':
+    '{category} — белгісіз',
+  'msg.missing.partial':
+    '{category} — ішінара',
+  'msg.class.excluded':
+    'Жарияланған шарттар бұл үміткерді шығарып тастайды.',
+  'msg.class.degreeLevel':
+    'Бұл үміткердің білім деңгейіне қатысты емес: {degreeReason}',
+  'msg.class.citizenship':
+    'Стипендия шектелген: {restrictions}, — бұл үміткер оған кірмейді.',
+  'msg.class.notInternational':
+    'Ресми дереккөз стипендия шетелдік студенттерге ашық емес екенін хабарлайды.',
+  'msg.class.noCoverage':
+    'Шығын баптары бойынша өтеу туралы ресми деректер табылмады.',
+  'msg.class.promotionalNoBreakdown':
+    'Бетте жарнамалық тұжырымдар бар ({words}), бірақ бөлінісі жоқ.',
+  'msg.class.needBased':
+    'Стипендия мөлшері қаржылық мұқтаждықты тексеруге байланысты, оның құжаттары әлі тапсырылмаған.',
+  'msg.class.fullRide':
+    'Ресми дереккөздер оқу ақысын, міндетті алымдарды, тұрғын үйді және тамақты немесе оған тең тұру стипендиясын өтеуді растайды.',
+  'msg.class.fullTuition':
+    'Оқу ақысының өтелуі расталған, бірақ {missing} — бұл оқу ақысын толық өтеу, толық қамту емес.',
+  'msg.class.shareUnknown':
+    'Өтеу ішінара, бірақ стипендия сомасы немесе оқу құны ресми жарияланбаған, сондықтан үлесін есептеу мүмкін емес.',
+  'msg.class.largeGrant':
+    'Жарияланған оқу құнының шамамен {share} бөлігін өтейді; шығынның едәуір бөлігі қалады.',
+  'msg.class.partial':
+    'Жарияланған оқу құнының шамамен {share} бөлігін өтейді.',
+  'msg.class.promotional':
+    'Бетте «full ride» сияқты жарнамалық тұжырымдар бар; мұндағы жіктеу жарияланған өтеу кестесіне сүйенеді.',
+  'msg.class.onlyFullRide':
+    'Профильде мұны тек толық қамту ғана қолжетімді ететіні көрсетілген; бұл стипендия «{classification}» деп жіктелген.',
+  'msg.class.noTuitionOnly':
+    'Профильде тек оқу ақысын өтейтін стипендияны қабылдамайтыныңыз көрсетілген.',
+  'msg.class.noPartial':
+    'Профильде ішінара стипендияны қабылдамайтыныңыз көрсетілген.',
+  'msg.class.needDocuments':
+    'Бұл стипендия мұқтаждыққа қарай беріледі, ал профильде қаржылық құжаттар тапсырылмайтыны көрсетілген — ал мұндай өтінішке дәл солар қажет.',
+  'msg.class.mustCover':
+    'Профиль мыналарды өтеуді талап етеді: {categories}; бұл стипендия оларды өтемейтінін хабарлайды.',
+  'msg.rank.academicNoMargin':
+    'Жарияланған барлық талаптар орындалған; қорды өлшейтін сандық ең төменгі шектер жоқ.',
+  'msg.rank.academicMargin':
+    'Жарияланған барлық талаптар орындалған, орта есеппен ең төменгі шектерден {margin} жоғары.',
+  'msg.rank.academicPending':
+    'Әлі шешімін күтіп тұрған тармақтардан басқа талаптар орындалған.',
+  'msg.rank.academicGap':
+    'Кемінде бір жарияланған талап орындалмаған.',
+  'msg.rank.academicUnknown':
+    'Жарияланған талаптарды тексеру мүмкін болмады.',
+  'msg.rank.fundingUnknown':
+    'Қаржыландыру туралы ресми ақпарат расталмады.',
+  'msg.rank.fundingConfirmed':
+    'Қаржыландыру: расталған мүмкіндік.',
+  'msg.rank.fundingCompetitive':
+    'Қаржыландыру: конкурстық мүмкіндік.',
+  'msg.rank.fundingLimited':
+    'Қаржыландыру: шектеулі мүмкіндік.',
+  'msg.rank.fundingNotEligible':
+    'Қаржыландыру: сіз сай емессіз.',
+  'msg.rank.gapUnknown':
+    'Жылдық төленетін қалдықты есептеу мүмкін болмады.',
+  'msg.rank.noCeiling':
+    'Салыстыру үшін отбасы бюджетінің шегі көрсетілмеген.',
+  'msg.rank.nothingRemains':
+    'Төлейтін ештеңе қалмайды.',
+  'msg.rank.zeroContribution':
+    'Отбасы ештеңе төлей алмайтынын көрсеткен, ал жылына {gap} қалады.',
+  'msg.rank.withinCeiling':
+    'Жылына {gap} қалдық көрсетілген {ceiling} шегіне сыяды.',
+  'msg.rank.timesCeiling':
+    'Жылына {gap} қалдық көрсетілген {ceiling} шегінен {ratio} есе көп.',
+  'msg.rank.aboveCeiling':
+    'Жылына {gap} қалдық көрсетілген {ceiling} шегінен {over} жоғары.',
+  'msg.rank.preferredCountry':
+    '{country} — қалаулы ел.',
+  'msg.rank.unpreferredCountry':
+    '{country} қалаулы елдер тізімінде жоқ.',
+  'msg.rank.noRank':
+    'Рейтингтегі орны табылмады.',
+  'msg.rank.insideBand':
+    'Рейтингтегі орны {rank}, сұралған «{band}» ауқымының ішінде.',
+  'msg.rank.outsideTop':
+    'Рейтингтегі орны {rank}, үздік {top} қатарынан тыс.',
+  'msg.rank.consensus':
+    'Рейтингтегі жиынтық орны: {rank}.',
+  'msg.rank.ranked':
+    'Рейтингтегі орны: {rank}.',
+  'msg.rank.noPreference':
+    '«{axis}» бойынша қалау көрсетілмеген.',
+  'msg.rank.attributeUnknown':
+    'Бұл университеттің «{axis}» көрсеткіші белгісіз.',
+  'msg.rank.attributeMatches':
+    '{actual} көрсетілген қалауға сәйкес келеді.',
+  'msg.rank.ladderStep':
+    '{actual}, ал қалау {preferred}: айырмашылық {steps} қадам.',
+  'msg.rank.ladderSteps':
+    '{actual}, ал қалау {preferred}: айырмашылық {steps} қадам.',
+  'msg.rank.ladderDiffers':
+    '{actual} қалаған {preferred} нұсқасынан өзгеше.',
+  'msg.rank.careersNotPriority':
+    'Мансап басымдық ретінде көрсетілмеген.',
+  'msg.rank.coop':
+    'Co-op немесе тәжірибе жылы ресми түрде ұсынылады.',
+  'msg.rank.internships':
+    'Тағылымдама бағдарламасы ресми түрде сипатталған.',
+  'msg.rank.careersPage':
+    'Мансап туралы бет бар, бірақ онда тексеруге жететіндей нақты ештеңе жоқ.',
+  'msg.rank.noCareers':
+    'Мансап туралы ресми ақпарат табылмады.',
+  'msg.rank.pswNotPriority':
+    'Оқудан кейінгі жұмыс басымдық ретінде көрсетілмеген.',
+  'msg.rank.pswUnknown':
+    'Оқудан кейінгі жұмыс ережелері айлармен расталмаған.',
+  'msg.rank.psw':
+    'Оқудан кейін {months} ай жұмыс істеу құқығы жарияланған.',
+  'msg.rank.excludedCountry':
+    '{country} — сіз алып тастаған елдер тізімінде.',
+  'msg.rank.knockoutUnmet':
+    '{requirement}: жарияланған талап орындалмаған',
+  'msg.rank.knockout':
+    '{requirement} — {explanation}',
+  'msg.rank.bucketInsufficient':
+    'Бұл нұсқаның орнын анықтау үшін жарияланған талаптардың тым аз бөлігі тексерілді.',
+  'msg.rank.bucketOutOfBudget':
+    'Төленетін қалдық көрсетілген шектен {ratio} есе көп — үміткер шыдай алатынын айтқан {limit} еседен асады.',
+  'msg.rank.bucketWellPlaced':
+    'Талаптар қормен орындалған, қаржыландыру расталған, төленетін қалдық көрсетілген шектің ішінде.',
+  'msg.rank.bucketPlausible':
+    'Жарияланған деректер бойынша талаптар да, қаржыландыру да қолжетімді көрінеді.',
+  'msg.rank.bucketAmbitious':
+    'Талаптар, қаржыландыру немесе төленетін қалдық бұл нұсқаны батыл таңдау етеді.',
+  'msg.rank.disclaimer':
+    'Расталған деректер бойынша сіз көрсеткен басымдықтарға қаншалықты сай келетіні. Түсу ықтималдығы емес.',
+  'msg.conflict.label.ieltsOverall':
+    'IELTS ең төменгі жалпы балы',
+  'msg.conflict.label.ieltsSubscore':
+    'IELTS әр бөлімі бойынша ең төменгі балл',
+  'msg.conflict.label.minGpa':
+    'ең төменгі GPA',
+  'msg.conflict.label.satTotal':
+    'SAT ең төменгі жалпы балы',
+  'msg.conflict.label.toeflTotal':
+    'TOEFL ең төменгі жалпы балы',
+  'msg.conflict.label.admissionDeadline':
+    'өтініш беру мерзімі',
+  'msg.conflict.label.scholarshipDeadline':
+    'стипендияға өтініш беру мерзімі',
+  'msg.conflict.label.tuition':
+    'оқу ақысы',
+  'msg.conflict.label.totalCost':
+    'оқудың толық құны',
+  'msg.conflict.label.awardAmount':
+    'стипендия сомасы',
+  'msg.conflict.label.internationalEligible':
+    'шетелдік студенттерге қолжетімділік',
+  'msg.conflict.subjectFull':
+    '{what}, {subjectKey} — {programme} бағдарламасы',
+  'msg.conflict.subjectKeyed':
+    '{what}, {subjectKey}',
+  'msg.conflict.subjectProgramme':
+    '{what} — {programme} бағдарламасы',
+  'msg.conflict.subject':
+    '{what}',
+  'msg.conflict.preferSpecific':
+    'Нақтырақ дереккөзге басымдық беріледі ({specificity}); сәйкессіздік шешілмей, көрсетіледі.',
+  'msg.conflict.moreSpecific':
+    'Бұл қайшылық емес: бағдарлама ережесі мен университеттің жалпы ережесі қатар дұрыс болуы мүмкін. Бұл өтінішке нақтырақ дереккөз ({specificity}) қатысты; жалпы ереже алынып тасталмай, сақталады.',
+  'msg.conflict.differentPopulation':
+    'Бұл қайшылық емес: беттер үміткерлердің әртүрлі санаттары туралы айтады, сондықтан екі мән де дұрыс болуы мүмкін. Ешқайсысы алынып тасталмайды.',
+  'msg.conflict.differentResidency':
+    'Бұл қайшылық емес: беттер әртүрлі резиденттік мәртебе туралы айтады, сондықтан екі мән де дұрыс болуы мүмкін. Ешқайсысы алынып тасталмайды.',
+  'msg.conflict.differentIntake':
+    'Бұл қайшылық емес: беттер әртүрлі қабылдаулар туралы айтады, сондықтан екі мән де дұрыс болуы мүмкін. Ешқайсысы алынып тасталмайды.',
+  'msg.conflict.differentAcademicYear':
+    'Бұл қайшылық емес: беттер әртүрлі оқу жылдары туралы айтады, сондықтан екі мән де дұрыс болуы мүмкін. Ешқайсысы алынып тасталмайды.',
+  'msg.conflict.differentDegree':
+    'Бұл қайшылық емес: беттер әртүрлі білім деңгейлері туралы айтады, сондықтан екі мән де дұрыс болуы мүмкін. Ешқайсысы алынып тасталмайды.',
+  'msg.conflict.differentQualification':
+    'Бұл қайшылық емес: беттер білім туралы әртүрлі құжаттар туралы айтады, сондықтан екі мән де дұрыс болуы мүмкін. Ешқайсысы алынып тасталмайды.',
+  'msg.conflict.why':
+    'Ресми дереккөздер «{subject}» бойынша сәйкес келмейді: {values}',
+  'msg.currency.staleRates':
+    'Айырбастау {date} күнгі валюта бағамдарын пайдаланады, олардың жасы {days} күн. Айырбасталған сомаларды шамамен деп санаңыз және оларға сүйенбес бұрын ағымдағы бағамды тексеріңіз.',
 
   'catalogue.kb.coverage': '{total} университеттің {n}-інде тексерілген деректер бар',
   'catalogue.kb.filter': 'Тек тексерілген деректері барлар',

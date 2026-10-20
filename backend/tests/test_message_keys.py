@@ -22,25 +22,47 @@ import pytest
 
 from app.domain.conflicts import enforce_source_hierarchy
 from app.domain.costs import compute_funding_gap
-from app.domain.enums import ClaimStatus, ClaimType, CostCategory, SourceSpecificity
+from app.domain.enums import (
+    ClaimStatus,
+    ClaimType,
+    CostCategory,
+    EligibilityStatus,
+    FundingFit,
+    SourceSpecificity,
+)
 from app.domain.funding import funding_fit_for
 from app.domain.message_keys import (
+    AXIS_REASONS,
+    BUCKET_REASONS,
     CATALOGUE,
+    CLASSIFICATION_SENTENCES,
+    CONFLICT_LABELS,
+    CONFLICT_RULES,
+    CONFLICT_SUBJECTS,
     COVERAGE,
+    DEGREE_REASONS,
     DOCUMENT_ITEMS,
     FUNDING,
+    KNOCKOUTS,
     QUESTIONS,
+    REQUIREMENT_EXPLANATIONS,
+    REQUIREMENT_LABELS,
     STALE_REASONS,
     WHYS,
+    _complete,
+    annotate_conflict,
     annotate_result,
+    conflict_why,
     match,
+    match_sentences,
+    stale_rates_message,
     stale_reason_message,
     stale_reasons,
 )
 from app.knowledge import stale_reasons as kb_stale_reasons
-from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
+from app.schemas.claim import Claim, ClaimOut, MessageRef, UnresolvedQuestion
 from app.schemas.money import Money
-from app.schemas.result import CostBreakdown, FundingGap, ProgramResult
+from app.schemas.result import CostBreakdown, FundingGap, ProgramResult, Scholarship
 from tests.test_api import client, finished_run  # noqa: F401  (fixtures)
 
 FRONTEND_CATALOGUE = (
@@ -320,7 +342,28 @@ class TestTheSentencesThePipelineWritesAreRecognised:
     def test_every_template_is_recognised_by_itself_alone(self):
         # A sample filled from each template must match that template and no
         # earlier one, or the first match would hand back the wrong key.
-        for group in (QUESTIONS, WHYS, STALE_REASONS, DOCUMENT_ITEMS, FUNDING, COVERAGE):
+        from app.domain import message_keys
+
+        groups = (
+            QUESTIONS,
+            WHYS,
+            STALE_REASONS,
+            DOCUMENT_ITEMS,
+            FUNDING,
+            COVERAGE,
+            REQUIREMENT_LABELS,
+            REQUIREMENT_EXPLANATIONS,
+            DEGREE_REASONS,
+            message_keys.MISSING_COVERAGE,
+            CLASSIFICATION_SENTENCES,
+            AXIS_REASONS,
+            KNOCKOUTS,
+            BUCKET_REASONS,
+            CONFLICT_LABELS,
+            CONFLICT_SUBJECTS,
+            CONFLICT_RULES,
+        )
+        for group in groups:
             for template in group:
                 sample = re.sub(r"\{(\w+)\}", lambda m: f"<{m.group(1)}>", template.text)
                 ref = match(group, sample)
@@ -620,3 +663,538 @@ class TestTheFrontendCatalogueKeepsUp:
         for template in CATALOGUE:
             wanted = set(re.findall(r"\{(\w+)\}", template.text))
             assert by_key[template.key] == [wanted] * 3, template.key
+
+
+# --- I18N-2: requirement checks, award classifications, the ranking, conflicts
+
+
+def _req_claim(claim_type: ClaimType, value: object) -> Claim:
+    return Claim(
+        claim_type=claim_type,
+        normalized_value=value,
+        source_url="https://u.example/admissions",
+        accessed_at=datetime.now(UTC),
+        status=ClaimStatus.VERIFIED_CURRENT,
+        source_specificity=SourceSpecificity.PROGRAM,
+    )
+
+
+def _keyed(templates, text: str, key: str) -> MessageRef:
+    ref = match(templates, text)
+    assert ref is not None and ref.key == key, (text, ref)
+    assert _complete(ref), (text, ref)
+    return ref
+
+
+class TestTheRequirementChecksAreRecognised:
+    def test_every_numeric_minimum_shape(self):
+        from app.domain.eligibility import _check_numeric_minimum
+
+        gpa = _req_claim(ClaimType.MIN_GPA, 3.5)
+        cases = [
+            (_check_numeric_minimum("Minimum GPA", None, 3.0), "explain.noMinimum"),
+            (
+                _check_numeric_minimum("SAT total", _req_claim(ClaimType.MIN_GPA, "high"), 1400),
+                "explain.notNumber",
+            ),
+            (_check_numeric_minimum("IELTS overall", gpa, None), "explain.noApplicantValue"),
+            (_check_numeric_minimum("Minimum GPA", gpa, 3.0), "explain.minimumNotMet"),
+            (_check_numeric_minimum("Minimum GPA", gpa, 3.8), "explain.minimumMet"),
+            (_check_numeric_minimum("IELTS writing", gpa, 7.0), "explain.minimumMet"),
+        ]
+        for check, key in cases:
+            _keyed(REQUIREMENT_EXPLANATIONS, check.explanation, key)
+            assert _complete(match(REQUIREMENT_LABELS, check.requirement)), check.requirement
+        ref = _keyed(REQUIREMENT_EXPLANATIONS, cases[0][0].explanation, "explain.noMinimum")
+        assert ref.parts["label"][0].key == "req.minGpa"  # type: ignore[union-attr]
+        band = match(REQUIREMENT_LABELS, "IELTS writing")
+        assert band is not None and band.key == "req.ieltsBand"
+        assert band.params == {"band": "writing"}
+
+    def test_a_whole_programme_evaluation_is_keyed(self, profile):
+        from app.domain.eligibility import evaluate_program
+
+        claims = [
+            _req_claim(ClaimType.INTAKE_OPEN, False),
+            _req_claim(ClaimType.ADMISSION_DEADLINE, "2020-01-15"),
+            _req_claim(ClaimType.MIN_GPA, 3.0),
+            _req_claim(ClaimType.IELTS_MIN_OVERALL, 6.5),
+            _req_claim(ClaimType.IELTS_MIN_SUBSCORE, 6.0),
+            _req_claim(ClaimType.IELTS_ACCEPTED_TYPES, ["academic"]),
+            _req_claim(ClaimType.ENGLISH_TEST_WAIVER, "schooling in English"),
+            _req_claim(ClaimType.SAT_POLICY, "test-optional"),
+            _req_claim(ClaimType.PORTFOLIO_REQUIRED, True),
+            _req_claim(ClaimType.INTERVIEW_REQUIRED, True),
+            _req_claim(ClaimType.ENTRANCE_EXAM_REQUIRED, True),
+            _req_claim(ClaimType.CREDENTIAL_EVALUATION_REQUIRED, True),
+            _req_claim(ClaimType.REQUIRED_SUBJECTS, ["mathematics", "latin"]),
+        ]
+        outcome = evaluate_program(profile, claims, today=date(2026, 10, 20))
+        assert len(outcome.checks) >= 10
+        for check in outcome.checks:
+            assert _complete(match(REQUIREMENT_LABELS, check.requirement)), check.requirement
+            assert _complete(match(REQUIREMENT_EXPLANATIONS, check.explanation)), check.explanation
+
+    def test_the_other_deadline_and_policy_shapes(self, profile):
+        from app.domain.eligibility import _population_deadline_check, evaluate_program
+
+        rows = [
+            ("home", date(2026, 1, 1), _req_claim(ClaimType.ADMISSION_DEADLINE, "2026-01-01")),
+            ("overseas", date(2027, 1, 1), _req_claim(ClaimType.ADMISSION_DEADLINE, "2027-01-01")),
+        ]
+        for today, key in (
+            (date(2025, 6, 1), "explain.deadlineByPopulation"),
+            (date(2026, 6, 1), "explain.deadlineByPopulationPassed"),
+            (date(2027, 6, 1), "explain.allDeadlinesPassed"),
+        ):
+            check = _population_deadline_check(rows, today, None)
+            _keyed(REQUIREMENT_EXPLANATIONS, check.explanation, key)
+        for claims, key in (
+            ([_req_claim(ClaimType.ADMISSION_DEADLINE, "2030-01-15")], "explain.deadlineOpen"),
+            ([_req_claim(ClaimType.ADMISSION_DEADLINE, "03/04/2027")], "explain.deadlineUnparsed"),
+            ([_req_claim(ClaimType.SAT_POLICY, "required")], "explain.satPolicyNoMinimum"),
+            ([_req_claim(ClaimType.ADMISSION_DEADLINE, "2030-01-15")], "explain.noAssessable"),
+        ):
+            outcome = evaluate_program(profile, claims, today=date(2026, 10, 20))
+            keys = {
+                ref.key
+                for c in outcome.checks
+                if (ref := match(REQUIREMENT_EXPLANATIONS, c.explanation)) is not None
+            }
+            assert key in keys, (key, [c.explanation for c in outcome.checks])
+
+    def test_a_gpa_on_another_scale_and_all_subjects_present(self):
+        _keyed(
+            REQUIREMENT_EXPLANATIONS,
+            "All published subject prerequisites are present in the profile.",
+            "explain.subjectsPresent",
+        )
+        _keyed(
+            REQUIREMENT_EXPLANATIONS,
+            "The applicant's GPA is on the 5-point scale and the programme publishes a "
+            "different scale. No conversion is applied without a documented method, so this "
+            "cannot be decided here.",
+            "explain.gpaScale",
+        )
+
+    def test_the_award_eligibility_checks(self, profile):
+        from app.domain.citizenship import match_citizenship
+        from app.pipeline.runner import _scholarship_eligibility
+
+        seen = set()
+        for restrictions in (
+            [""],
+            ["Kazakh nationals"],
+            ["European Union"],
+            ["Central Asian nationals"],
+            ["Nigerian citizens"],
+        ):
+            _verdict, text = match_citizenship(restrictions, ["kazakhstan"])
+            ref = match(REQUIREMENT_EXPLANATIONS, text)
+            assert _complete(ref), text
+            seen.add(ref.key)  # type: ignore[union-attr]
+        assert {"explain.citizenshipUnreadable", "explain.citizenshipExcluded"} <= seen
+        award = SimpleNamespace(
+            citizenship_restrictions=[],
+            international_eligible="yes",
+            faculty_restrictions=["the Faculty of Science"],
+            program_restrictions=["BSc Data Science"],
+            min_test_scores={"ielts": 6.5, "sat": 1400.0},
+        )
+        checks = _scholarship_eligibility(award, profile)
+        closed = SimpleNamespace(**{**vars(award), "international_eligible": "no"})
+        checks += _scholarship_eligibility(closed, profile)
+        for check in checks:
+            assert _complete(match(REQUIREMENT_LABELS, check.requirement)), check.requirement
+            assert _complete(match(REQUIREMENT_EXPLANATIONS, check.explanation)), check.explanation
+        _keyed(
+            REQUIREMENT_EXPLANATIONS,
+            "The published scholarship deadline 2026-01-01 has passed.",
+            "explain.scholarshipDeadlinePassed",
+        )
+        _keyed(
+            REQUIREMENT_EXPLANATIONS,
+            "Kazakhstan is a member of the EAEU, which the award names as its restriction.",
+            "explain.citizenshipMember",
+        )
+        _keyed(
+            REQUIREMENT_EXPLANATIONS,
+            "The award requires SAT 1400.0; no score is in the profile.",
+            "explain.scholarshipTestMissing",
+        )
+
+
+def _award(**fields) -> Scholarship:
+    return Scholarship.model_validate({"id": "s", "name": "Example Award", **fields})
+
+
+class TestTheAwardClassificationIsRecognised:
+    @pytest.mark.parametrize(
+        "fields,keys",
+        [
+            ({"applicant_eligible": "no"}, ["class.excluded"]),
+            (
+                {"applicant_eligible": "no", "citizenship_restrictions": ["Nigeria"]},
+                ["class.citizenship"],
+            ),
+            (
+                {
+                    "applicant_eligible": "no",
+                    "degree_applicability": "no",
+                    "degree_applicability_reason": "the page explicitly excludes bachelor "
+                    "applicants",
+                },
+                ["class.degreeLevel"],
+            ),
+            ({"degree_applicability": "no"}, ["class.degreeLevel"]),
+            ({"international_eligible": "no"}, ["class.notInternational"]),
+            ({}, ["class.noCoverage"]),
+        ],
+    )
+    def test_each_exclusion(self, fields, keys):
+        from app.domain.funding import classify
+
+        verdict = classify(_award(**fields))
+        refs = match_sentences(CLASSIFICATION_SENTENCES, verdict.reason)
+        assert refs is not None, verdict.reason
+        assert [r.key for r in refs] == keys
+
+    def test_every_degree_reason_the_adapter_writes(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        for text in (
+            "",
+            "Master's students are not eligible for this award.",
+            "This award is open to bachelor applicants.",
+            "This award is for master students in engineering.",
+            "Scholarships for doctoral and master programmes.",
+            "A generous award.",
+        ):
+            reason = assess_degree_applicability(text, "bachelor").reason
+            assert _complete(match(DEGREE_REASONS, reason)), reason
+
+    def test_the_coverage_verdicts(self):
+        from app.domain.funding import classify
+
+        def cov(**states):
+            return [{"category": c, "covered": v} for c, v in states.items()]
+
+        full = cov(tuition="yes", mandatory_fees="yes", housing="yes", meals="yes")
+        tuition = cov(tuition="yes", housing="no", meals="unknown")
+        partial = cov(tuition="partial")
+        for award, key in (
+            (_award(coverage=full), "class.fullRide"),
+            (_award(coverage=tuition), "class.fullTuition"),
+            (_award(coverage=partial), "class.shareUnknown"),
+            (
+                _award(coverage=partial, amount={"amount": 30000, "currency": "EUR"}),
+                "class.largeGrant",
+            ),
+            (
+                _award(coverage=partial, amount={"amount": 3000, "currency": "EUR"}),
+                "class.partial",
+            ),
+            (_award(coverage=partial, scholarship_type="need_based"), "class.needBased"),
+        ):
+            reason = classify(award, total_cost_amount=40000.0).reason
+            refs = match_sentences(CLASSIFICATION_SENTENCES, reason)
+            assert refs is not None and refs[0].key == key, (key, reason)
+        refs = match_sentences(CLASSIFICATION_SENTENCES, classify(_award(coverage=tuition)).reason)
+        assert refs is not None
+        missing = refs[0].parts["missing"]
+        assert all(missing)
+        assert {m.key for m in missing if m} == {"missing.notCovered", "missing.unknown"}
+
+    def test_the_runner_additions_are_said_sentence_by_sentence(self):
+        from app.domain.funding import award_meets_shape
+
+        reason = (
+            "No official per-category coverage information was found. Page uses promotional "
+            "wording (full ride) but publishes no breakdown. The page uses promotional wording "
+            "such as 'full ride'; the classification here follows the published coverage table "
+            "instead."
+        )
+        refs = match_sentences(CLASSIFICATION_SENTENCES, reason)
+        assert [r.key for r in refs or []] == [
+            "class.noCoverage",
+            "class.promotionalNoBreakdown",
+            "class.promotional",
+        ]
+        needs = SimpleNamespace(
+            requires_full_ride=True,
+            accepts_full_tuition=False,
+            accepts_partial=False,
+            willing_to_submit_need_documents=False,
+        )
+        for classification in ("FULL_TUITION", "PARTIAL", "NEED_BASED_POSSIBLE"):
+            _ok, shape = award_meets_shape(_award(classification=classification), needs)  # type: ignore[arg-type]
+            text = (
+                f"Covers roughly 40% of published cost of attendance. {shape} The profile "
+                "requires housing, meals to be covered; this award states it is not."
+            )
+            refs = match_sentences(CLASSIFICATION_SENTENCES, text)
+            assert refs is not None and len(refs) == 3, text
+            assert refs[1].key == "class.onlyFullRide"
+        relaxed = SimpleNamespace(**{**vars(needs), "requires_full_ride": False})
+        for classification, key in (
+            ("FULL_TUITION", "class.noTuitionOnly"),
+            ("PARTIAL", "class.noPartial"),
+            ("NEED_BASED_POSSIBLE", "class.needDocuments"),
+        ):
+            _ok, shape = award_meets_shape(_award(classification=classification), relaxed)  # type: ignore[arg-type]
+            _keyed(CLASSIFICATION_SENTENCES, shape, key)
+
+    def test_an_unknown_sentence_leaves_the_whole_reason_english(self):
+        reason = "Covers roughly 40% of published cost of attendance. A sentence nobody wrote."
+        assert match_sentences(CLASSIFICATION_SENTENCES, reason) is None
+        unknown = "Not applicable to this applicant's degree level: some new reason"
+        assert match_sentences(CLASSIFICATION_SENTENCES, unknown) is None
+
+
+class TestTheRankingIsRecognised:
+    def test_every_axis_reason(self):
+        from app.domain import ranking_v2 as r
+
+        careers = [
+            r.u_career(
+                has_coop=coop,
+                has_internships=intern,
+                has_page=page,
+                values_internships=False,
+                values_coop=values,
+            )[1]
+            for coop, intern, page, values in (
+                (True, None, False, True),
+                (None, True, False, True),
+                (None, None, True, True),
+                (None, None, False, True),
+                (None, None, False, False),
+            )
+        ]
+        reasons = [
+            r.u_academic(EligibilityStatus.MET, None)[1],
+            r.u_academic(EligibilityStatus.MET, 0.12)[1],
+            r.u_academic(EligibilityStatus.PENDING, None)[1],
+            r.u_academic(EligibilityStatus.GAP, None)[1],
+            r.u_academic(EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION, None)[1],
+            *(r.u_funding(fit)[1] for fit in FundingFit),
+            r.u_affordability(None, 1000)[1],
+            r.u_affordability(1000, None)[1],
+            r.u_affordability(0, 0)[1],
+            r.u_affordability(5000, 0)[1],
+            r.u_affordability(5000, 10000)[1],
+            r.u_affordability(12000, 10000)[1],
+            r.u_affordability(30000, 10000)[1],
+            r.u_country("Netherlands", [], [])[1],
+            r.u_country("Netherlands", ["Netherlands"], [])[1],
+            r.u_country("Netherlands", ["Canada"], [])[1],
+            r.u_standing(None, "top_100")[1],
+            r.u_standing(40, "top_100")[1],
+            r.u_standing(3000, "top_100")[1],
+            r.u_standing(250, "top_100")[1],
+            r.u_ladder("climate", "warm", "any")[1],
+            r.u_ladder("university_size", None, "large")[1],
+            r.u_ladder("city", "large", "large")[1],
+            r.u_ladder("city", "large", "medium")[1],
+            r.u_ladder("city", "small", "metropolis")[1],
+            r.u_ladder("campus", "urban", "campus")[1],
+            *careers,
+            r.u_post_study_work(None, False)[1],
+            r.u_post_study_work(None, True)[1],
+            r.u_post_study_work(18, True)[1],
+        ]
+        keys = set()
+        for reason in reasons:
+            ref = match(AXIS_REASONS, reason)
+            assert _complete(ref), reason
+            keys.add(ref.key)  # type: ignore[union-attr]
+        # Every template but "Ranked {rank}." (unreachable past the anchors) is written.
+        assert {t.key for t in AXIS_REASONS} - keys == {"rank.ranked"}
+
+    def test_every_bucket_and_knockout(self):
+        from app.domain import ranking_v2 as r
+        from app.domain.enums import AdmissionsFit
+
+        reasons = [
+            r.bucket_of(AdmissionsFit.INSUFFICIENT_DATA, FundingFit.UNKNOWN, None, "important")[1],
+            r.bucket_of(AdmissionsFit.STRONGER_FIT, FundingFit.UNKNOWN, 3.0, "important")[1],
+            r.bucket_of(
+                AdmissionsFit.STRONGER_FIT, FundingFit.CONFIRMED_OPPORTUNITY, 0.5, "important"
+            )[1],
+            r.bucket_of(
+                AdmissionsFit.PLAUSIBLE_FIT, FundingFit.COMPETITIVE_OPPORTUNITY, 1.2, "important"
+            )[1],
+            r.bucket_of(AdmissionsFit.AMBITIOUS, FundingFit.UNKNOWN, None, "important")[1],
+        ]
+        assert [match(BUCKET_REASONS, x).key for x in reasons] == [  # type: ignore[union-attr]
+            t.key for t in BUCKET_REASONS
+        ]
+        with pytest.raises(r.KnockOut) as excluded:
+            r.u_country("Canada", [], ["Canada"])
+        _keyed(KNOCKOUTS, str(excluded.value), "rank.excludedCountry")
+        knockout = _keyed(
+            KNOCKOUTS,
+            "Minimum GPA: Published minimum 3.5; applicant 3. The published minimum is not met.",
+            "rank.knockout",
+        )
+        assert knockout.parts["requirement"][0].key == "req.minGpa"  # type: ignore[union-attr]
+        assert knockout.parts["explanation"][0].key == "explain.minimumNotMet"  # type: ignore[union-attr]
+        _keyed(KNOCKOUTS, "Portfolio: a published requirement is not met", "rank.knockoutUnmet")
+
+    def test_a_ranked_row_is_annotated_on_the_way_out_only(self, profile):
+        from app.domain.ranking_v2 import rank_result
+
+        row = _kb_row(
+            requirement_checks=[
+                {
+                    "requirement": "Minimum GPA",
+                    "status": "GAP",
+                    "is_hard_filter": True,
+                    "explanation": "Published minimum 3.5; applicant 3. The published minimum "
+                    "is not met.",
+                }
+            ]
+        )
+        row.ranking = rank_result(row, profile)
+        stored = row.model_dump(mode="json")
+        assert "knocked_out_messages" not in stored["ranking"]
+        assert "requirement_message" not in stored["requirement_checks"][0]
+        served = annotate_result(row).model_dump(mode="json")
+        ranking = served["ranking"]
+        assert [m["key"] for m in ranking["knocked_out_messages"]] == ["rank.knockout"]
+        assert ranking["bucket_reason_message"]["key"] == "rank.knockout"
+        assert ranking["disclaimer_message"]["key"] == "rank.disclaimer"
+        check = served["requirement_checks"][0]
+        assert check["requirement_message"]["key"] == "req.minGpa"
+        assert check["explanation_message"]["params"] == {"published": "3.5", "applicant": "3"}
+
+
+class TestTheConflictsAreRecognised:
+    def test_every_resolution_rule_and_subject(self):
+        from app.domain.conflicts import _LABELS, _why_not_a_contradiction
+        from app.domain.enums import ConflictKind
+
+        claim = _req_claim(ClaimType.MIN_GPA, 3.0)
+        for kind in ConflictKind:
+            if kind is not ConflictKind.TRUE_CONFLICT:
+                rule = _why_not_a_contradiction(kind, claim)
+                assert _complete(match(CONFLICT_RULES, rule)), kind
+        _keyed(
+            CONFLICT_RULES,
+            "Preferring the more specific source (program); the disagreement is shown rather "
+            "than resolved.",
+            "conflict.preferSpecific",
+        )
+        labels = [match(CONFLICT_LABELS, label) for label in _LABELS.values()]
+        assert {ref.key for ref in labels if ref} == {t.key for t in CONFLICT_LABELS}
+        assert all(labels)
+        for label in _LABELS.values():
+            for subject, key in (
+                (label, "conflict.subject"),
+                (f"{label} — international", "conflict.subjectKeyed"),
+                (f"{label} (Computer Science (Hons))", "conflict.subjectProgramme"),
+                (f"{label} — international (Computer Science)", "conflict.subjectFull"),
+            ):
+                ref = _keyed(CONFLICT_SUBJECTS, subject, key)
+                assert ref.params["what"] == label
+
+    def test_a_real_conflict_and_the_questions_why(self):
+        from app.domain.conflicts import find_conflicts
+
+        a = _req_claim(ClaimType.IELTS_MIN_OVERALL, 6.5)
+        b = a.model_copy(
+            update={
+                "normalized_value": 7.0,
+                "source_url": "https://u.example/other",
+                "source_specificity": SourceSpecificity.UNIVERSITY_ADMISSIONS,
+            }
+        )
+        conflicts, _claims = find_conflicts([a, b], context="Computer Science")
+        assert conflicts
+        conflict = conflicts[0]
+        assert "subject_message" not in conflict.model_dump(mode="json")
+        annotate_conflict(conflict)
+        assert _complete(conflict.subject_message)
+        assert conflict.resolution_message is not None
+        why, ref = conflict_why(conflict)
+        assert why == f"Official sources disagree on {conflict.subject}: {conflict.values}"
+        assert ref is not None and ref.key == "conflict.why" and _complete(ref)
+
+
+class TestTheExchangeRateWarning:
+    def test_the_stale_rates_sentence(self):
+        import app.api.routes_meta as meta
+
+        warning = (
+            f"These conversions use exchange rates from {meta.RATE_DATE.isoformat()}, "
+            f"{meta.rate_age_days()} days old. Treat converted amounts as indicative and "
+            "check the current rate before relying on one."
+        )
+        ref = stale_rates_message(warning)
+        assert ref is not None and ref.key == "currency.staleRates"
+        assert stale_rates_message("") is None
+
+    def test_capabilities_serve_the_key_only_when_stale(self, client, monkeypatch):  # noqa: F811
+        import app.api.routes_meta as meta
+
+        monkeypatch.setattr(meta, "rates_are_stale", lambda: False)
+        fresh = client.get("/api/capabilities").json()["currency"]
+        assert fresh["stale_warning"] == "" and "stale_warning_message" not in fresh
+        monkeypatch.setattr(meta, "rates_are_stale", lambda: True)
+        stale = client.get("/api/capabilities").json()["currency"]
+        assert stale["stale_warning"]
+        assert stale["stale_warning_message"]["key"] == "currency.staleRates"
+
+
+class TestTheDemoServesEveryResultsSentenceKeyed:
+    def test_checks_awards_ranking_and_conflicts(self, client, finished_run):  # noqa: F811
+        _profile, run = finished_run
+        results = client.get(f"/api/runs/{run['id']}/results").json()
+        checks = [c for r in results for c in r["requirement_checks"]]
+        checks += [c for r in results for s in r["scholarships"] for c in s["eligibility_checks"]]
+        assert checks
+        assert [c["requirement"] for c in checks if not c.get("requirement_message")] == []
+        unkeyed = [c["explanation"] for c in checks if not c.get("explanation_message")]
+        assert unkeyed == []
+        awards = [s for r in results for s in r["scholarships"]]
+        assert awards
+        unkeyed = [
+            s["classification_reason"] for s in awards if not s.get("classification_messages")
+        ]
+        assert unkeyed == []
+        rankings = [r["ranking"] for r in results if r.get("ranking")]
+        assert rankings
+        unkeyed = [a["reason"] for k in rankings for a in k["axes"] if not a.get("reason_message")]
+        assert unkeyed == []
+        assert all(k.get("bucket_reason_message") for k in rankings if k["bucket_reason"])
+        assert all(k.get("disclaimer_message") for k in rankings)
+        for k in rankings:
+            if k["knocked_out_by"]:
+                assert all(k["knocked_out_messages"]), k["knocked_out_by"]
+        conflicts = [c for r in results for c in r["conflicts"]]
+        assert all(c.get("subject_message") and c.get("resolution_message") for c in conflicts)
+
+        import app.db as db_module
+        from app.models import ProgramResultRow
+
+        with db_module.SessionLocal() as session:
+            rows = (
+                session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run["id"]).all()
+            )
+            stored = "".join(str(row.payload) for row in rows)
+        for field in (
+            "requirement_message",
+            "explanation_message",
+            "classification_messages",
+            "bucket_reason_message",
+            "disclaimer_message",
+            "subject_message",
+        ):
+            assert field not in stored, field
+
+        listed = client.get(f"/api/runs/{run['id']}/questions").json()
+        for item in listed:
+            if item["topic"] == "source conflict":
+                assert item["why_message"]["key"] == "conflict.why"
+        for c in client.get(f"/api/runs/{run['id']}/conflicts").json():
+            assert c["subject_message"]

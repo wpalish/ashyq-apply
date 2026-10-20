@@ -17,7 +17,12 @@ from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import Bucket, ClaimStatus, UserDecision
-from app.domain.message_keys import annotate_question, annotate_result
+from app.domain.message_keys import (
+    annotate_conflict,
+    annotate_question,
+    annotate_result,
+    conflict_why,
+)
 from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
 from app.export import calendar, tabular
 from app.jobs.source_scanner import enqueue_reextract
@@ -31,6 +36,7 @@ from app.models import (
 )
 from app.payments.entitlements import free_view, truncate_shortlist
 from app.pipeline.runner import apply_fit_labels, store_result
+from app.schemas.claim import Conflict
 from app.schemas.profile import (
     ApplicantProfileIn,
     FundingNeeds,
@@ -384,7 +390,17 @@ def list_conflicts(
 ) -> list[dict]:
     require_full_access(session, run_id, principal)
     rows = session.query(ConflictRow).filter(ConflictRow.run_id == run_id).all()
-    return [{"id": c.id, "result_id": c.result_id, **c.payload} for c in rows]
+    return [{"id": c.id, "result_id": c.result_id, **_served_conflict(c.payload)} for c in rows]
+
+
+def _served_conflict(payload: dict) -> dict:
+    """A stored conflict with its message keys beside the English (I18N-2)."""
+    conflict = Conflict.model_validate(payload)
+    annotate_conflict(conflict)
+    return {**payload, **conflict.model_dump(mode="json", include=_CONFLICT_KEYS)}
+
+
+_CONFLICT_KEYS = {"subject_message", "resolution_message"}
 
 
 @router.get("/questions")
@@ -409,6 +425,8 @@ def open_questions(
                 }
             )
         for c in result.conflicts:
+            annotate_conflict(c)
+            why, why_message = conflict_why(c)
             out.append(
                 {
                     "result_id": row.id,
@@ -416,7 +434,8 @@ def open_questions(
                     "program": result.program,
                     "topic": "source conflict",
                     "question": c.question_for_admissions,
-                    "why_it_matters": f"Official sources disagree on {c.subject}: {c.values}",
+                    "why_it_matters": why,
+                    **({"why_message": why_message.model_dump()} if why_message else {}),
                     "blocking": True,
                     "conflict": c.model_dump(mode="json"),
                 }

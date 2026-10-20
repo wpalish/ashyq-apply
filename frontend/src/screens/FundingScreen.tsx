@@ -47,7 +47,9 @@ export function FundingScreen() {
       <div className="stack stack--loose">
         {capabilities?.currency.stale_warning && (
           <Notice kind="warn">
-            <div data-testid="stale-rates">{capabilities.currency.stale_warning}</div>
+            <div data-testid="stale-rates">
+              {localize(capabilities.currency.stale_warning_message, capabilities.currency.stale_warning)}
+            </div>
           </Notice>
         )}
         <div className="row" style={{ justifyContent: 'space-between' }}>

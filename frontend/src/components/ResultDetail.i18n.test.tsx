@@ -79,3 +79,148 @@ describe('the result detail in Kazakh and Russian', () => {
     expect(screen.getByText(/Не удалось прочитать ни одного опубликованного требования/)).toBeTruthy();
   });
 });
+
+/** I18N-2: a row whose checks, award, ranking and conflict all carry keys. */
+function keyedResult(): ProgramResult {
+  return {
+    ...result(),
+    requirement_checks: [
+      {
+        requirement: 'Minimum GPA',
+        published_value: 3.5,
+        applicant_value: 3,
+        status: 'GAP',
+        is_hard_filter: true,
+        explanation: 'Published minimum 3.5; applicant 3. The published minimum is not met.',
+        claim_ids: [],
+        published_scope: '',
+        requirement_message: { key: 'req.minGpa', params: {} },
+        explanation_message: { key: 'explain.minimumNotMet', params: { published: '3.5', applicant: '3' } },
+      },
+    ],
+    hard_filter_failures: ['Minimum GPA'],
+    scholarships: [
+      {
+        id: 's1',
+        name: 'Example Award',
+        scholarship_type: 'merit',
+        classification: 'UNKNOWN',
+        classification_reason: 'No official per-category coverage information was found.',
+        classification_messages: [{ key: 'class.noCoverage', params: {} }],
+        amount: null,
+        coverage: [],
+        citizenship_restrictions: [],
+        international_eligible: 'yes',
+        application_mode: 'separate_application',
+        requires_extra_essays: false,
+        deadline: null,
+        renewable: null,
+        duration_years: null,
+        stackable: 'unknown',
+        offer_required: 'unknown',
+        financial_need_required: 'unknown',
+        published_count: null,
+        renewal_requirements: [],
+        eligibility_checks: [
+          {
+            requirement: 'Scholarship international eligibility',
+            published_value: true,
+            applicant_value: 'kazakhstan',
+            status: 'MET',
+            is_hard_filter: false,
+            explanation: 'The award is officially open to international students of any nationality.',
+            claim_ids: [],
+            published_scope: '',
+            explanation_message: { key: 'explain.internationalOpen', params: {} },
+          },
+        ],
+        source_urls: [],
+        claim_ids: [],
+      },
+    ],
+    ranking: {
+      fit: null,
+      coverage: 0,
+      sort_key: 0,
+      gamma: 1,
+      axes: [
+        {
+          axis: 'climate',
+          value: null,
+          state: 'not_applicable',
+          weight: 0.1,
+          reason: 'No climate preference was stated.',
+          evidence_claim_ids: [],
+          reason_message: { key: 'rank.noPreference', params: { axis: 'climate' } },
+        },
+      ],
+      unknown_axes: [],
+      not_applicable_axes: ['climate'],
+      knocked_out_by: ['Canada is on the applicant\'s excluded list.'],
+      knocked_out_messages: [{ key: 'rank.excludedCountry', params: { country: 'Canada' } }],
+      bucket: 'EXCLUDED',
+      bucket_reason: 'Canada is on the applicant\'s excluded list.',
+      bucket_reason_message: { key: 'rank.excludedCountry', params: { country: 'Canada' } },
+      weights_source: 'priorities_roc',
+      version: '2',
+      disclaimer: 'How well this matches your stated priorities, on confirmed data. Not a probability of admission.',
+      disclaimer_message: { key: 'rank.disclaimer', params: {} },
+    },
+    conflicts: [
+      {
+        claim_type: 'tuition',
+        subject: 'the tuition fee',
+        claim_ids: ['a', 'b'],
+        values: [2530, 2600],
+        source_urls: ['https://u.example/a', 'https://u.example/b'],
+        preferred_claim_id: 'a',
+        resolution_rule: 'Preferring the more specific source (program); the disagreement is shown rather than resolved.',
+        question_for_admissions: 'Dear Admissions Office,',
+        unresolved: true,
+        subject_message: {
+          key: 'conflict.subject',
+          params: { what: 'the tuition fee' },
+          parts: { what: [{ key: 'conflict.label.tuition', params: {} }] },
+        },
+        resolution_message: { key: 'conflict.preferSpecific', params: { specificity: 'program' } },
+      },
+    ],
+  } as unknown as ProgramResult;
+}
+
+describe('the backend\'s explanations on the results tabs (I18N-2)', () => {
+  it('are the served English in English', () => {
+    render(<ResultDetail result={keyedResult()} />);
+    expect(screen.getAllByText('Minimum GPA').length).toBeGreaterThan(0);
+    expect(screen.getByText('Published minimum 3.5; applicant 3. The published minimum is not met.')).toBeTruthy();
+    fireEvent.click(screen.getByTestId('tab-funding'));
+    expect(screen.getByText('No official per-category coverage information was found.')).toBeTruthy();
+  });
+
+  it('re-render in Russian: requirements, award, ranking and conflicts', () => {
+    render(<ResultDetail result={keyedResult()} />);
+    act(() => setLocale('ru'));
+    expect(screen.getByText('Минимальный GPA')).toBeTruthy();
+    expect(screen.getByText('Опубликованный минимум 3.5; у вас 3. Опубликованный минимум не достигнут.')).toBeTruthy();
+    expect(screen.getByText(/Минимальный GPA\./)).toBeTruthy();
+    fireEvent.click(screen.getByTestId('tab-funding'));
+    expect(screen.getByText('Официальные данные о покрытии по статьям расходов не найдены.')).toBeTruthy();
+    expect(screen.getByText('Стипендия официально открыта для иностранных студентов любого гражданства.')).toBeTruthy();
+    fireEvent.click(screen.getByTestId('tab-score'));
+    expect(screen.getByText('Предпочтение по параметру «Климат» не указано.')).toBeTruthy();
+    expect(screen.getAllByText('Canada — в списке исключённых вами стран.').length).toBe(2);
+    fireEvent.click(screen.getByTestId('tab-sources'));
+    expect(screen.getByText('плата за обучение')).toBeTruthy();
+    expect(screen.getByText(/Предпочтение отдаётся более конкретному источнику \(program\)/)).toBeTruthy();
+    expect(screen.getByText('Dear Admissions Office,')).toBeTruthy();
+  });
+
+  it('re-render in Kazakh', () => {
+    act(() => setLocale('kk'));
+    render(<ResultDetail result={keyedResult()} />);
+    expect(screen.getByText('Ең төменгі GPA')).toBeTruthy();
+    fireEvent.click(screen.getByTestId('tab-score'));
+    expect(screen.getByText(/Түсу ықтималдығы емес/)).toBeTruthy();
+    expect(screen.getByText('«Климат» бойынша қалау көрсетілмеген.')).toBeTruthy();
+  });
+});

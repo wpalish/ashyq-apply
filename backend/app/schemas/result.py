@@ -26,6 +26,11 @@ from app.schemas.claim import ClaimOut, Conflict, MessageRef, UnresolvedQuestion
 from app.schemas.money import Money
 
 
+def _absent(value: object) -> bool:
+    """Leave an unset served-only message field out of the JSON (gap B6, I18N-2)."""
+    return value is None
+
+
 class Base(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
@@ -61,6 +66,9 @@ class RequirementCheck(Base):
     #: this line exists so an applicant can see *whether* a rule is about them
     #: without opening the source.
     published_scope: str = ""
+    #: Keys for ``requirement`` and ``explanation`` (I18N-2). Served, never stored.
+    requirement_message: MessageRef | None = Field(default=None, exclude_if=_absent)
+    explanation_message: MessageRef | None = Field(default=None, exclude_if=_absent)
 
 
 class CoverageBreakdown(Base):
@@ -147,6 +155,9 @@ class Scholarship(Base):
     source_urls: list[str] = Field(default_factory=list)
     claim_ids: list[str] = Field(default_factory=list)
     last_verified: datetime | None = None
+    #: ``classification_reason`` sentence by sentence, keyed (I18N-2); set only
+    #: when every sentence is recognised. Served, never stored.
+    classification_messages: list[MessageRef] | None = Field(default=None, exclude_if=_absent)
 
 
 class CostBreakdown(Base):
@@ -233,6 +244,8 @@ class AxisScore(Base):
     weight: float = Field(ge=0.0)
     reason: str
     evidence_claim_ids: list[str] = Field(default_factory=list)
+    #: The key of ``reason`` (I18N-2). Served, never stored.
+    reason_message: MessageRef | None = Field(default=None, exclude_if=_absent)
 
 
 class RankingV2(Base):
@@ -260,6 +273,11 @@ class RankingV2(Base):
         "How well this matches your stated priorities, on confirmed data. "
         "Not a probability of admission."
     )
+    #: Keys for ``bucket_reason``, each of ``knocked_out_by`` (index for index)
+    #: and ``disclaimer`` (I18N-2). Served, never stored.
+    bucket_reason_message: MessageRef | None = Field(default=None, exclude_if=_absent)
+    knocked_out_messages: list[MessageRef | None] | None = Field(default=None, exclude_if=_absent)
+    disclaimer_message: MessageRef | None = Field(default=None, exclude_if=_absent)
 
 
 class DocumentItem(Base):
