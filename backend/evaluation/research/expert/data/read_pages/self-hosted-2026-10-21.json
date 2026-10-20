@@ -1,0 +1,983 @@
+{
+ "about": "RP-1 (NEXT_CYCLES_2026-10-21 #7): the official pages behind the knowledge base's access-class unknown cells (kb_cs_bachelor.json unknown[].kind == 'access': 63 cells on 21 universities), the 25 'blocked from this vantage point' rows of KB_REFRESH_2026-10-19.md and the two access programme pages (UCL, Alberta), for benchmark-capture.yml mode=read_pages with runner=self-hosted (the owner's computer). One row per target page. 'cells' names the KB cells the page should answer; 'source' says where the URL was recorded (draft = the kb_drafts.2026-10-19 notes or the KB unknown reason; blocked-2026-10-20 = the earlier read list; kb-refresh-2026-10-19 = the refresh queue; kb-programme = the KB entry's programme reason; web-search-2026-10-21 = found by search, not opened). No URL was opened from the container. No heldout case is listed. topic, cells and source are reading hints; read_pages.py ignores them. See README.self-hosted-2026-10-21.md beside this file.",
+ "rows": [
+  {
+   "seed_id": "qs2027-004",
+   "topic": "english",
+   "url": "https://www.ox.ac.uk/admissions/undergraduate/applying-to-oxford/english-language-requirements",
+   "cells": [
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-004",
+   "topic": "gpa",
+   "url": "https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing/computer-science",
+   "cells": [
+    "gpa",
+    "tuition"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-004",
+   "topic": "tuition",
+   "url": "https://www.ox.ac.uk/students/fees-funding/fees/rates",
+   "cells": [
+    "tuition"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-004",
+   "topic": "scholarship",
+   "url": "https://www.ox.ac.uk/admissions/undergraduate/fees-and-funding/oxford-bursaries-and-scholarships",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-004",
+   "topic": "scholarship",
+   "url": "https://www.ox.ac.uk/admissions/undergraduate/fees-and-funding/oxford-bursaries-and-scholarships/reach-oxford",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "topic": "programme",
+   "url": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/courses/computer-science-bsc",
+   "cells": [
+    "programme",
+    "gpa",
+    "tuition"
+   ],
+   "source": "kb-programme"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "topic": "programme",
+   "url": "https://www.ucl.ac.uk/prospective-students/undergraduate/degrees/computer-science-bsc-2026",
+   "cells": [
+    "programme",
+    "gpa",
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "topic": "gpa",
+   "url": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/how-apply/entry-requirements",
+   "cells": [
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "topic": "english",
+   "url": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/how-apply/english-language-requirements",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "topic": "deadline",
+   "url": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/how-apply/guidance-international-applicants",
+   "cells": [
+    "deadline"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "topic": "deadline",
+   "url": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/how-apply/ucas-explained",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "topic": "tuition",
+   "url": "https://www.ucl.ac.uk/study/student-finances/tuition-fees/fee-schedules/fee-schedules-2026-2027/undergraduate-fees-2026-2027",
+   "cells": [
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-009",
+   "topic": "scholarship",
+   "url": "https://www.ucl.ac.uk/scholarships/ucl-global-undergraduate-scholarship",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-010",
+   "topic": "english",
+   "url": "https://www.nus.edu.sg/oam/admissions/english-language-requirements",
+   "cells": [
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-010",
+   "topic": "english",
+   "url": "https://www.nus.edu.sg/oam/admissions/international-qualifications",
+   "cells": [
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-010",
+   "topic": "english",
+   "url": "https://nus.edu.sg/oam/docs/default-source/application-guide/international-qualifications-application-guide.pdf",
+   "cells": [
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "topic": "english",
+   "url": "https://admissions.hku.hk/apply/international-qualifications/english-language-requirement",
+   "cells": [
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "topic": "gpa",
+   "url": "https://admissions.hku.hk/apply/international-qualifications",
+   "cells": [
+    "gpa",
+    "deadline"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "topic": "deadline",
+   "url": "https://admissions.hku.hk/node/152",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "topic": "deadline",
+   "url": "https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf",
+   "cells": [
+    "deadline",
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "topic": "deadline",
+   "url": "https://admissions.hku.hk/sites/default/files/2026-09/HKU_General_Information_NJ_2027.pdf",
+   "cells": [
+    "deadline",
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "topic": "programme",
+   "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+   "cells": [
+    "programme (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-011",
+   "topic": "scholarship",
+   "url": "https://www.admissions.hku.hk/node/891",
+   "cells": [
+    "scholarship_exists (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-018",
+   "topic": "english",
+   "url": "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/requirements/",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-018",
+   "topic": "english",
+   "url": "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/faq/",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-018",
+   "topic": "tuition",
+   "url": "https://admission.cuhk.edu.hk/fees-financing-your-studies/fees/",
+   "cells": [
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-018",
+   "topic": "scholarship",
+   "url": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "topic": "gpa",
+   "url": "https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-science/entry-requirements/",
+   "cells": [
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "topic": "tuition",
+   "url": "https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-science/",
+   "cells": [
+    "tuition",
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "topic": "english",
+   "url": "https://study.unimelb.edu.au/how-to-apply/undergraduate-study/international-applications/entry-requirements",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "topic": "tuition",
+   "url": "https://study.unimelb.edu.au/how-to-apply/undergraduate-study/international-applications/fees-and-payments",
+   "cells": [
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "topic": "tuition",
+   "url": "https://study.unimelb.edu.au/__data/assets/pdf_file/0034/462949/2027-International-Fee-Tables.pdf",
+   "cells": [
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "topic": "deadline",
+   "url": "https://study.unimelb.edu.au/how-to-apply/undergraduate-study/international-applications/applications",
+   "cells": [
+    "deadline"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "topic": "deadline",
+   "url": "https://study.unimelb.edu.au/find/courses/undergraduate/bachelor-of-science/how-to-apply/",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-023",
+   "topic": "scholarship",
+   "url": "https://scholarships.unimelb.edu.au/awards/melbourne-international-undergraduate-scholarship",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "topic": "gpa",
+   "url": "https://www.monash.edu/study/courses/find-a-course/computer-science-c2001?international=true",
+   "cells": [
+    "gpa",
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "topic": "gpa",
+   "url": "https://www.monash.edu/study/courses/destination-degrees/destination-degrees-international-students/destination-degrees-2026-and-2027-single-degrees/information-technology",
+   "cells": [
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "topic": "english",
+   "url": "https://www.monash.edu/admissions/entry-requirements/english-language",
+   "cells": [
+    "english (unverified_quote x3)"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "topic": "tuition",
+   "url": "https://www.monash.edu/__data/assets/pdf_file/0005/3941744/undergraduate-international-course-guide.pdf",
+   "cells": [
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "topic": "deadline",
+   "url": "https://www.monash.edu/admissions/apply/international-ug",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "topic": "deadline",
+   "url": "https://www.monash.edu/study/how-to-apply/application-process/international-students",
+   "cells": [
+    "deadline"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-031",
+   "topic": "scholarship",
+   "url": "https://www.monash.edu/study/how-to-apply",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-035",
+   "topic": "tuition",
+   "url": "https://study.ed.ac.uk/programmes/undergraduate-fees?programme_code=UTBSCIS",
+   "cells": [
+    "tuition"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-037",
+   "topic": "tuition",
+   "url": "https://www.kcl.ac.uk/study/undergraduate/courses/computer-science-bsc",
+   "cells": [
+    "tuition"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-037",
+   "topic": "tuition",
+   "url": "https://www.kcl.ac.uk/study/undergraduate/courses/computer-science-bsc/fees",
+   "cells": [
+    "tuition"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-041",
+   "topic": "gpa",
+   "url": "https://study.uq.edu.au/study-options/programs/bachelor-computer-science-2559",
+   "cells": [
+    "gpa"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-043",
+   "topic": "gpa",
+   "url": "https://undergrad.admissions.columbia.edu/apply/international",
+   "cells": [
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-043",
+   "topic": "english",
+   "url": "https://undergrad.admissions.columbia.edu/apply/international/english-proficiency",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-043",
+   "topic": "deadline",
+   "url": "https://undergrad.admissions.columbia.edu/apply/firstyear",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-051",
+   "topic": "deadline",
+   "url": "https://admissions.umich.edu/apply/international-applicants/requirements-deadlines",
+   "cells": [
+    "deadline",
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-051",
+   "topic": "english",
+   "url": "https://admissions.umich.edu/apply/international-applicants/exams-visas",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-051",
+   "topic": "gpa",
+   "url": "https://admissions.umich.edu/major/computer-science-bse",
+   "cells": [
+    "gpa"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-051",
+   "topic": "tuition",
+   "url": "https://ro.umich.edu/tuition-residency/tuition-fees/2026-2027/undergraduate/full-term/college-engineering-undergraduate",
+   "cells": [
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-051",
+   "topic": "scholarship",
+   "url": "https://admissions.umich.edu/i-am/international-students",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "topic": "english",
+   "url": "https://www.cityu.edu.hk/admo/admissions/non-jupas-year-1-admission",
+   "cells": [
+    "english",
+    "gpa",
+    "deadline"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "topic": "english",
+   "url": "https://www.cityu.edu.hk/international/admissions/entrance-requirements",
+   "cells": [
+    "english",
+    "gpa"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "topic": "gpa",
+   "url": "https://www.cityu.edu.hk/admo/admissions/international-admissions",
+   "cells": [
+    "gpa",
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "topic": "deadline",
+   "url": "https://www.cityu.edu.hk/admo/programmes/bsc-computer-science-0",
+   "cells": [
+    "deadline",
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "topic": "deadline",
+   "url": "https://www.cityu.edu.hk/admo/faq",
+   "cells": [
+    "deadline"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "topic": "scholarship",
+   "url": "https://www.cityu.edu.hk/admo/entrance-scholarship-international-students",
+   "cells": [
+    "scholarship_international"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-052",
+   "topic": "scholarship",
+   "url": "https://www.cityu.edu.hk/international/fees-scholarships/scholarships",
+   "cells": [
+    "scholarship_international"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-058",
+   "topic": "english",
+   "url": "https://www.nyu.edu/admissions/undergraduate-admissions/how-to-apply/standardized-tests/english-language-testing.html",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-058",
+   "topic": "gpa",
+   "url": "https://www.nyu.edu/admissions/undergraduate-admissions/how-to-apply/international-applicants.html",
+   "cells": [
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-058",
+   "topic": "deadline",
+   "url": "https://www.nyu.edu/admissions/undergraduate-admissions/how-to-apply/all-freshmen-applicants.html",
+   "cells": [
+    "deadline"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-058",
+   "topic": "scholarship",
+   "url": "https://www.nyu.edu/admissions/financial-aid-and-scholarships.html",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-058",
+   "topic": "scholarship",
+   "url": "https://www.nyu.edu/admissions/financial-aid-and-scholarships/applying-as-a-prospective-undergraduate-student/first-year-applicants.html",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-065",
+   "topic": "english",
+   "url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02",
+   "cells": [
+    "english",
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-065",
+   "topic": "deadline",
+   "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-065",
+   "topic": "scholarship",
+   "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+   "cells": [
+    "scholarship_exists (refresh)",
+    "scholarship_international (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-065",
+   "topic": "tuition",
+   "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/coa",
+   "cells": [
+    "tuition (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-069",
+   "topic": "gpa",
+   "url": "https://www.birmingham.ac.uk/study/undergraduate/subjects/computer-science-courses/computer-science-bsc",
+   "cells": [
+    "gpa",
+    "tuition (unverified_quote)"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "topic": "programme",
+   "url": "https://www.durham.ac.uk/study/courses/computer-science-g400/",
+   "cells": [
+    "english",
+    "gpa",
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "topic": "english",
+   "url": "https://www.durham.ac.uk/study/international/entry-requirements/english-language-requirements/",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "topic": "gpa",
+   "url": "https://durham.ac.uk/study/international/entry-requirements/european-country-specific-qualifications",
+   "cells": [
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "topic": "deadline",
+   "url": "https://www.durham.ac.uk/study/undergraduate/how-to-apply/",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "topic": "deadline",
+   "url": "https://www.durham.ac.uk/study/international/application-guidance/",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "topic": "scholarship",
+   "url": "https://www.durham.ac.uk/study/scholarships/international/",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-085",
+   "topic": "scholarship",
+   "url": "https://www.durham.ac.uk/study/scholarships/international/durham-inspiring-excellence-scholarships/undergraduate/",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-092",
+   "topic": "tuition",
+   "url": "https://tuition.psu.edu/tuition-schedules",
+   "cells": [
+    "tuition"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-092",
+   "topic": "tuition",
+   "url": "https://tuition.psu.edu/rates-effective-2026-fall-semester",
+   "cells": [
+    "tuition"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-092",
+   "topic": "tuition",
+   "url": "https://tuition.psu.edu/estimated-future-tuition-and-fee-rates",
+   "cells": [
+    "tuition"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-092",
+   "topic": "tuition",
+   "url": "https://global.psu.edu/page/university-park-undergraduates-breakout-expenses",
+   "cells": [
+    "tuition"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-095",
+   "topic": "english",
+   "url": "https://www.osaka-u.ac.jp/ja/admissions/faculty/expense/files/2027shihi_guideline.pdf/@@download/file",
+   "cells": [
+    "english",
+    "gpa",
+    "deadline"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-095",
+   "topic": "english",
+   "url": "https://www.osaka-u.ac.jp/ja/admissions/faculty/expense/files/2027tokubetsunyushi_faq.pdf/@@download/file",
+   "cells": [
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "programme",
+   "url": "https://www.ualberta.ca/en/undergraduate-programs/bachelor-of-science-with-major-computing-science.html",
+   "cells": [
+    "programme",
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "programme",
+   "url": "https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=110935",
+   "cells": [
+    "programme"
+   ],
+   "source": "kb-programme"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "gpa",
+   "url": "https://www.ualberta.ca/en/admissions/how-to-apply/international-admission-requirements/index.html",
+   "cells": [
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "gpa",
+   "url": "https://www.ualberta.ca/en/science/programs/bachelor-of-science/admission-to-science/index.html",
+   "cells": [
+    "gpa"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "gpa",
+   "url": "https://calendar.ualberta.ca/content.php?catoid=69&navoid=20823",
+   "cells": [
+    "gpa"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "english",
+   "url": "https://www.ualberta.ca/en/admissions/how-to-apply/admission-requirements/language-requirements/index.html?v=international",
+   "cells": [
+    "english"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "english",
+   "url": "https://calendar.ualberta.ca/content.php?catoid=69&navoid=21510",
+   "cells": [
+    "english"
+   ],
+   "source": "draft"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "deadline",
+   "url": "https://www.ualberta.ca/admissions/international/admission/dates-and-deadlines.html",
+   "cells": [
+    "deadline"
+   ],
+   "source": "web-search-2026-10-21"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "tuition",
+   "url": "https://www.ualberta.ca/en/admissions/tuition-and-scholarships/tuition-and-fees.html",
+   "cells": [
+    "tuition"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-096",
+   "topic": "scholarship",
+   "url": "https://www.ualberta.ca/en/admissions/tuition-and-scholarships/entrance-scholarships/index.html",
+   "cells": [
+    "scholarship_exists"
+   ],
+   "source": "blocked-2026-10-20"
+  },
+  {
+   "seed_id": "qs2027-029",
+   "topic": "programme",
+   "url": "https://comp.anu.edu.au/study/bachelor/",
+   "cells": [
+    "programme (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-099",
+   "topic": "english",
+   "url": "https://www.fu-berlin.de/studium/international/studium_fu/deutschkenntnisse/index.html",
+   "cells": [
+    "english ielts.overall (refresh)",
+    "english ielts.subscores (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-059",
+   "topic": "programme",
+   "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm",
+   "cells": [
+    "programme (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-059",
+   "topic": "english",
+   "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+   "cells": [
+    "english ielts.overall (refresh)",
+    "english ielts.subscores (refresh)",
+    "gpa (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-054",
+   "topic": "programme",
+   "url": "https://www.csie.ntu.edu.tw/zh_tw/Admission/Announcement12",
+   "cells": [
+    "programme (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-038",
+   "topic": "deadline",
+   "url": "https://en.snu.ac.kr/webdata/uploads/eng/file/2026/06/Admissions_for_Undergraduate_Spring_2027.pdf",
+   "cells": [
+    "deadline (refresh)",
+    "english ielts.overall (refresh)",
+    "english toefl_ibt.minimum (refresh)",
+    "programme (refresh)",
+    "tuition (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-038",
+   "topic": "programme",
+   "url": "https://en.snu.ac.kr/academics/programs/undergraduate",
+   "cells": [
+    "programme (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-038",
+   "topic": "scholarship",
+   "url": "https://en.snu.ac.kr/admission/undergraduate/scholarships/after_admission",
+   "cells": [
+    "scholarship_exists (refresh)",
+    "scholarship_international (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-039",
+   "topic": "scholarship",
+   "url": "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_03.html",
+   "cells": [
+    "scholarship_exists (refresh)",
+    "scholarship_international (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-024",
+   "topic": "programme",
+   "url": "http://collegecatalog.uchicago.edu/thecollege/computerscience/",
+   "cells": [
+    "programme (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  },
+  {
+   "seed_id": "qs2027-047",
+   "topic": "programme",
+   "url": "http://www.en.cs.zju.edu.cn/22145/list.htm",
+   "cells": [
+    "programme (refresh)"
+   ],
+   "source": "kb-refresh-2026-10-19"
+  }
+ ]
+}

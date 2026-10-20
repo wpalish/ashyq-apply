@@ -26,6 +26,11 @@ from tests.test_verify_evidence import CASE, DISALLOW_ALL, HOST, _resolve_public
 
 WORKFLOW = Path(__file__).resolve().parents[2] / ".github/workflows/benchmark-capture.yml"
 BLOCKED_LIST = "evaluation/research/expert/data/read_pages/blocked-2026-10-20.json"
+#: Every list committed under read_pages/ (RP-1's self-hosted list among them).
+COMMITTED_LISTS = sorted(
+    p.relative_to(read_pages.BACKEND).as_posix()
+    for p in (read_pages.DATA_DIR / "read_pages").glob("*.json")
+)
 
 
 @pytest.fixture(autouse=True)
@@ -86,8 +91,16 @@ def test_a_list_outside_the_data_dir_is_refused(path: str) -> None:
         read_pages.resolve_list(path)
 
 
-def test_the_committed_list_resolves_and_parses() -> None:
-    path = read_pages.resolve_list(BLOCKED_LIST)
+def test_the_committed_lists_include_the_self_hosted_one() -> None:
+    assert BLOCKED_LIST in COMMITTED_LISTS
+    assert (
+        "evaluation/research/expert/data/read_pages/self-hosted-2026-10-21.json" in COMMITTED_LISTS
+    )
+
+
+@pytest.mark.parametrize("listed", COMMITTED_LISTS)
+def test_the_committed_list_resolves_and_parses(listed: str) -> None:
+    path = read_pages.resolve_list(listed)
     assert path.is_relative_to(read_pages.DATA_DIR)
     rows = read_pages.parse_rows(path)
     assert 0 < len(rows) <= read_pages.MAX_ROWS

@@ -136,6 +136,41 @@ answers) shows it.
 If the read fails again (the host is flaky on CI too), the owner can still sign on evidence 1–3. The risk is low,
 because the only alternative reading is "a KU Leuven page about the same named degree".
 
+#### TW-2 — the CI read (2026-10-21, from the 2026-10-20 `read_pages` run)
+
+The list above was read on the GitHub runner: workflow run `39351363847` ("research read_pages cohort manual",
+2026-10-20 01:04 UTC), artifact `read-pages-39351363847` (id `12233442472`). Both rows have `seed_id: kuleuven`; each
+was read twice with identical sha256.
+
+| URL | status | robots | final URL | chars | sha256 (16) |
+|---|---|---|---|---|---|
+| `https://www.kuleuven.be/programmes/opleidingen/bachelor-informatica` | 200 | allowed | **same** | 1396 | `f6bdbeea123994cb` |
+| `https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm` (gold) | 200 | allowed | same | 6764 | `5def2476207df319` |
+
+Conditions, checked on the stored readable text with `verify_evidence.quote_in`:
+
+- **(a) no redirect — met.** `final_url` equals the requested URL; the host is `kuleuven.be`, which is
+  `official_domains("kuleuven")`.
+- **(b) same degree — met in part.** The page's h1 is "Bachelor in de informatica", and it says "Ontdek de bachelor in
+  de informatica aan KU Leuven" and "In Leuven kun je kiezen voor de minor verbreding, wiskunde of Business &
+  Innovation." It does **not** say "180 studiepunten" or "Bachelor of Science" (both `quote_in` → false); those are on
+  the gold only ("Bachelor of Science", "Bachelor in de informatica (Leuven)", "(180 sp.)", "180 studiepunten"). The
+  page is the degree's campus hub: "Opleiding per campus … in Leuven of in Kortrijk", with "Meer over de opleiding in
+  Leuven" and "Campus Kulak Kortrijk — In Kortrijk kan je de eerste twee fasen van de opleiding volgen. Je zet je studies
+  daarna voort in Leuven." The open campus point of §2 Q2 is therefore answered: the page covers both campuses. The gold
+  catalogue entry itself lists "Leuven, Kortrijk" under its title, so the scope is the same degree; the page is a level
+  above the gold, not a sibling.
+- **(c) a quote that names the programme — met.** "Ontdek de bachelor in de informatica aan KU Leuven." → `quote_in`
+  true (also true: "Bachelor in de informatica", "Meer over de opleiding in Leuven"). CI `mode=verify_evidence` still
+  has to find it on the applied draft4, as for every quote.
+
+**TW-2 verdict.** (a) and (c) hold. (b) holds for the degree name, the university and the Leuven campus, but not for
+the "180 studiepunten or Bachelor of Science" clause as TW-1 wrote it: the www page carries neither, and it is a
+campus hub for the one degree rather than the Leuven-only catalogue entry. Q2 is therefore **not yet plain**. It is
+signable as a degree-level twin under the tcd convention (one degree, two official presentations) **if the owner
+accepts (b) without the credits/award clause**; the excerpt in §4.2 is filled for that case. If the owner holds (b) as
+written, Q2 stays `wrong` and nothing changes. Nothing is applied to any gold file.
+
 ### Q3 — tcd (dev2): `www.tcd.ie/scss/courses/undergraduate/computer-science/` vs the gold
 
 **Relation:** the same programme, verified by the same CAO course code and the same awards. The twin is not declared:
@@ -218,14 +253,14 @@ The main session applies these after the owner signs. The steps are:
     "<draft3 SC_51016742.htm evidence unchanged>",
     {
       "url": "https://www.kuleuven.be/programmes/opleidingen/bachelor-informatica",
-      "excerpt": "<quote taken from the read_pages text: the line naming 'Bachelor in de informatica' with campus Leuven and its credits/degree>",
+      "excerpt": "Ontdek de bachelor in de informatica aan KU Leuven.",
       "scope": {
         "university": "KU Leuven",
         "programme": "Bachelor in de informatica",
         "degree": "bachelor",
         "field": null, "intake": null, "population": null, "qualification": null, "academic_year": null
       },
-      "accessed_on": "<date of the CI read>",
+      "accessed_on": "2026-10-20",
       "source_type": "official",
       "excerpt_truncated": false
     }
@@ -236,7 +271,9 @@ The main session applies these after the owner signs. The steps are:
 }
 ```
 
-The excerpt is left blank on purpose. No quote is written from a page this worker could not read.
+TW-1 left the excerpt blank because the container could not read the page. TW-2 filled it from the CI read of
+2026-10-20 (run `39351363847`, `final_url` = request, `quote_in` true on the stored text). The page carries no credits
+or award line, so no such quote exists; see §2 Q2 "TW-2" for what that means for condition (b).
 
 ### 4.3 `dev2.draft4.json` — tcd
 
@@ -280,5 +317,5 @@ Alternative excerpts (all found by `quote_in` on the saved page):
 | # | question | recommendation | effect |
 |---|---|---|---|
 | Q1 | uct: keep `sit.uct.ac.za/bsc-degrees` as the gold, with `ba-informatics` and BBusSc as related? | **yes, keep** (no label change; notes line only) | uct stays `related`; the miss is CH-1's listing-head refusal (residue), not the label |
-| Q2 | kuleuven: add `www.kuleuven.be/programmes/opleidingen/bachelor-informatica` to the gold as an undeclared twin, once one CI `read_pages` run confirms it is the Leuven "Bachelor in de informatica" with no redirect? | **yes, conditionally** | the readable reps go from wrong to hit; normal-mode wrong pages fall to 0 |
+| Q2 | kuleuven: add `www.kuleuven.be/programmes/opleidingen/bachelor-informatica` to the gold as an undeclared twin? The CI read (TW-2) confirms no redirect and a quote naming "bachelor in de informatica aan KU Leuven"; the page is the degree's campus hub (Leuven and Kortrijk) and carries no "180 studiepunten" / "Bachelor of Science" line | **yes if (b) is accepted without the credits/award clause** (degree-level twin, tcd convention); otherwise keep `wrong` | the readable reps go from wrong to hit; normal-mode wrong pages fall to 0 |
 | Q3 | tcd: add `www.tcd.ie/scss/courses/undergraduate/computer-science/` (TR033) to the gold as a twin? | **yes** | the knockout guess becomes a hit on re-score (dev2 1 → 0); the normal arm is unchanged |
