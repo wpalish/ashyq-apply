@@ -175,6 +175,56 @@ as "expert-checked, quote verified".
 `(seed_id, key)`. When two facts share an identity, the more recently verified one wins, and the built
 file wins a tie. A missing file is simply skipped.
 
+## Reading pages from CI while drafting (`mode=read_pages`)
+
+The agent container's egress is refused by many university sites (HTTP 403 at UCL, Monash, Melbourne,
+Durham, Alberta, Columbia, NYU, Michigan; TLS chain errors at CUHK, KAIST, Princeton; resets at HKU,
+KU Leuven) that the GitHub Actions runner reads. A drafting worker that cannot open a page asks CI to:
+
+1. **Commit a list** under `backend/evaluation/research/expert/data/` (convention: `read_pages/<name>.json`):
+   `{"rows": [{"seed_id": "qs2027-009", "url": "https://www.ucl.ac.uk/...", "topic": "fees"}, ...]}`, or a
+   `.txt` with one `<seed_id> <url>` per line (`#` comments). Extra fields such as `topic` are ignored.
+   At most 300 URLs; duplicates are read once. The URLs come from search results, not from the
+   container. Push the branch.
+2. **Dispatch** `benchmark-capture.yml` on that branch:
+
+   ```bash
+   gh workflow run benchmark-capture.yml --ref <branch> -f mode=read_pages \
+       -f extra_args=evaluation/research/expert/data/read_pages/<name>.json
+   ```
+
+   `extra_args` is the list path relative to `backend/` and must match
+   `scripts/read_pages.py` `LIST_PATH` (checked in the step before anything runs); the only flag allowed
+   after it is `--robots-override-kb`.
+3. **Read the artifact** `read-pages-<run id>`
+   (`gh run download <run id> -n read-pages-<run id> -D <scratch dir>`):
+   - `index.tsv`: one line per URL (seed_id, status, status_code, robots, official, chars, truncated,
+     sha256, url, final_url, note), for a quick look;
+   - `pages.jsonl`: the same records plus `text`, the readable text as the production extractors give it
+     (HTML through `readable_text`, PDF through `pdf_to_text`), capped at 200,000 characters
+     (`truncated: true` when cut; `chars` and `sha256` cover the full text).
+
+   Draft quotes from `text`. The evidence check (`mode=verify_evidence`) still verifies every quote
+   afterwards; a page read here is not evidence by itself.
+
+What the script reads, and how: the production `Fetcher` built as `verify_evidence.py` builds it (our own
+user agent, robots.txt honoured, Crawl-delay waited out up to 30 s, the fetcher's size and time limits, no
+cache, no proxy). A URL whose host is not an official domain of its `seed_id` (`verify_evidence.official_domains`:
+the curated cases plus the KB list's `official_domain`, `official_site` and `extra_domains`) is never
+handed to the fetcher (`status: not_read`), and neither is any URL of a heldout case. `robots` is
+`allowed`, `disallowed`, `unreachable` (robots.txt could not be read: a full disallow), `crawl_delay`,
+`overridden`, `not_reached` (refused or failed before any answer) or `not_read`.
+
+`--robots-override-kb` uses the owner's KB exception through the same code path as
+`verify_evidence.py --robots-override-kb`: after the ordinary pass, only the official URLs robots.txt
+refused are read once more by a fresh `Fetcher` given exactly those URLs as
+`kb_evidence_robots_override_urls` (one request, no retry, Crawl-delay honoured, a redirect elsewhere
+still refused); those records carry `robots_override: true` and `robots_override_used`. AGENTS.md §6
+words the exception for the KB evidence check, so use the flag only for pages a KB draft will cite.
+
+The first list, `read_pages/blocked-2026-10-20.json`, holds 75 admissions, fees, English, scholarship and
+documents pages for the thirteen universities above.
+
 ## Build steps
 
 1. **Drafts.** Expert workers write drafts into
