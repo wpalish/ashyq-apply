@@ -212,6 +212,24 @@ def page_outcomes(run: ResearchRun) -> list[dict[str, str]]:
     return found
 
 
+def run_diagnostics(run: ResearchRun, domain: str) -> list[str]:
+    """ES-1: the run's prose diagnostics about ``domain``'s pages, page records excluded.
+
+    A stage's ``errors`` line that starts with a page URL (``"<url>: ..."``)
+    is kept for the institution that owns the URL, so ``stage_summary`` can
+    count it as a fixed category. Lines naming no page are not kept.
+    """
+    kept = []
+    for line in list(run.errors or []) + list(run.unknowns or []):
+        text = str(line)
+        if _PAGE_OUTCOME_RE.match(text):
+            continue
+        head = text.split(" ", 1)[0].rstrip(":")
+        if head.startswith(("http://", "https://")) and registrable_domain(head) == domain:
+            kept.append(text)
+    return kept[:200]
+
+
 # --- the four zero-tolerance checks --------------------------------------
 
 
@@ -558,6 +576,7 @@ async def run_canary(
         result = results.get(name)
         claims = claims_by_result.get(result_ids.get(name, ""), [])
         page_records = records_by_domain.get(domain, [])
+        notes = run_diagnostics(run, domain)
         outcome_counts = Counter(record["category"] for record in page_records)
         type_counts = Counter(
             record["page_type"] for record in page_records if record["page_type"] != "unclassified"
@@ -582,7 +601,11 @@ async def run_canary(
             "failures": runner.audit.failures.get(domain, [])[:8],
             "outcomes": dict(outcomes),
             "discovered": trace.selected if trace else {},
-            "discovery_trace": trace.as_dict() if trace else None,
+            "discovery_trace": (
+                {**trace.as_dict(), **({"run_diagnostics": notes} if notes else {})}
+                if trace
+                else None
+            ),
             "programs": [p.url for p in candidate.programs] if candidate else [],
             "program_page_found": bool(candidate and candidate.programs),
             "scholarship_page_found": bool(candidate and candidate.scholarships_url),

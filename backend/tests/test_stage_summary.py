@@ -409,3 +409,260 @@ def test_language_codes_and_claim_types_are_sanitised() -> None:
     assert stage_summary.url_language_hint("https://x.example/programmes/cs") == "none"
     assert stage_summary.claim_type("scholarships.Zq Award.exists") == "scholarships.*.exists"
     assert stage_summary.claim_type("ielts.overall") == "ielts.overall"
+
+
+# --- ES-1: evidence-reach rows ---------------------------------------------
+
+#: Details as the stages write them; the URL and the title must never surface.
+_ES1_OUTCOMES = [
+    {
+        "category": "fetched-ok",
+        "url": "https://zqalpha.example/funding",
+        "page_type": "scholarship_index",
+        "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+    },
+    {
+        "category": "fetched-ok",
+        "url": "https://zqalpha.example/funding/intl",
+        "page_type": "scholarship_index",
+        "detail": "read as a funding index; 5 award links, 3 queued within the award budget"
+        "; 2 awards read from its own sections",
+    },
+    {
+        "category": "classifier-rejected",
+        "url": "https://zqalpha.example/funding/deep",
+        "page_type": "scholarship_index",
+        "detail": "index page beyond the index budget; not followed"
+        "; 3 awards read from its own sections",
+    },
+    {
+        "category": "fetch-failed",
+        "url": "https://zqalpha.example/guide.pdf",
+        "detail": "PDF without a text layer",
+    },
+    {
+        "category": "fetched-ok",
+        "url": "https://zqalpha.example/fees-table",
+        "page_type": "costs",
+        "detail": "PDF, 4 pages",
+    },
+    {
+        # A detail quoting a URL and a title: only its category may count.
+        "category": "classifier-rejected",
+        "url": "https://zqalpha.example/zqsecret",
+        "page_type": "scholarship_award",
+        "detail": "read as a funding index; 0 award links at https://zqalpha.example/x "
+        f"'{SECRET_TITLE}'",
+    },
+]
+
+_ES1_DIAGNOSTICS = [
+    "https://zqalpha.example/funding: 4 award links on another host not followed "
+    "(1 on the same site).",
+    "https://zqalpha.example/funding: classified as scholarship_index; read as a funding index.",
+]
+
+
+def _with_es1(paths: dict[str, Path]) -> None:
+    """Add the ES-1 outcomes to zqalpha's capture, its diagnostics to its trace."""
+    root = paths["run"] / "zqalpha-off"
+    capture_path = next(root.glob("*/capture.json"))
+    capture = json.loads(capture_path.read_text())
+    capture["observations"][0]["page_outcomes"] += _ES1_OUTCOMES
+    capture_path.write_text(json.dumps(capture))
+    raw_path = next(root.glob("*/*.raw.json"))
+    raw = json.loads(raw_path.read_text())
+    raw["canary"]["institutions"][0]["discovery_trace"]["run_diagnostics"] = _ES1_DIAGNOSTICS
+    raw_path.write_text(json.dumps(raw))
+    beta = next((paths["run"] / "zqbeta-off").glob("*/*.raw.json"))
+    raw = json.loads(beta.read_text())
+    raw["canary"]["institutions"][0]["discovery_trace"]["selected"] = {
+        "scholarships": ["https://zqbeta.example/funding"]
+    }
+    beta.write_text(json.dumps(raw))
+
+
+def test_evidence_reach_categories_are_counted_from_details_and_diagnostics(
+    paths: dict[str, Path],
+) -> None:
+    _with_es1(paths)
+    evidence = _summary(paths)["evidence"]
+    assert evidence["funding_index_zero_links"] == 2
+    assert evidence["index_beyond_budget"] == 1
+    assert evidence["award_sections_read"] == 5
+    assert evidence["award_links_dropped_off_host"] == 4
+    assert evidence["award_links_dropped_off_host_same_site"] == 1
+    # zqalpha's discovery selected no scholarships page; zqbeta's did.
+    assert evidence["funding_entry_none"] == 1
+    assert evidence["pdf_met:other"] == 1
+    assert evidence["pdf_met:costs"] == 1
+    assert evidence["pages_fetched_ok:scholarships"] == 2
+
+
+def test_a_detail_with_a_url_and_a_title_prints_its_category_only(
+    paths: dict[str, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    _with_es1(paths)
+    assert stage_summary.main([str(paths["run"]), "--dataset", str(paths["corpus"])]) == 0
+    printed = capsys.readouterr().out
+    folded = printed.casefold()
+    for token in (*IDS, "http", "zqsecret", SECRET_TITLE, "funding/intl", "guide", "pdf,"):
+        assert token.casefold() not in folded, token
+    assert "| funding_index_zero_links | 2 |" in printed
+    assert "| award_links_dropped_off_host | 4 |" in printed
+
+
+def test_an_unrecognised_detail_counts_nothing() -> None:
+    assert stage_summary.evidence_categories("award page; 3 claims read") == []
+    assert stage_summary.evidence_categories(f"{SECRET_TITLE}: 12 award links") == []
+    assert stage_summary.evidence_categories(None) == []
+
+
+def _reach_dataset() -> Dataset:
+    """zqalpha knows four more labels: HTML reached through a URL variant, HTML
+    not reached, PDF-only reached, and an award's exists label not reached."""
+    raw = _dataset().model_dump(mode="json")
+    alpha = raw["cases"][0]
+    alpha["labels"] += [
+        {
+            "key": "tuition",
+            "status": "known",
+            "value": "EUR 9876",
+            "evidence": [
+                _evidence("zqalpha", "https://zqalpha.example/fees-table/index.html"),
+                _evidence("zqalpha", "https://zqalpha.example/fees-old.pdf"),
+            ],
+        },
+        {
+            "key": "ielts.overall",
+            "status": "known",
+            "value": 6.5,
+            "evidence": [_evidence("zqalpha", "https://zqalpha.example/english")],
+        },
+        {
+            "key": "gpa",
+            "status": "known",
+            "value": 3.0,
+            "evidence": [_evidence("zqalpha", "https://zqalpha.example/fees-table.pdf")],
+        },
+        {
+            "key": "scholarships.zqsecretaward.exists",
+            "status": "known",
+            "value": True,
+            "evidence": [_evidence("zqalpha", "https://zqalpha.example/award")],
+        },
+    ]
+    return Dataset.model_validate(raw)
+
+
+def test_evidence_reach_is_dataset_aware_and_keeps_pdfs_apart(
+    paths: dict[str, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    _with_es1(paths)
+    capture_path = next((paths["run"] / "zqalpha-off").glob("*/capture.json"))
+    capture = json.loads(capture_path.read_text())
+    capture["observations"][0]["page_outcomes"].append(
+        {"category": "fetched-ok", "url": "https://zqalpha.example/fees-table.pdf"}
+    )
+    capture_path.write_text(json.dumps(capture))
+    dataset = _reach_dataset()
+    column = stage_summary.summarize_run(dataset, stage_summary.load_run(paths["run"]))["columns"][
+        "off#1"
+    ]
+    evidence = column["evidence"]
+    # Both deadline labels: their fees page was fetched ok in both cases.
+    assert evidence["evidence_reach:deadline"] == "2/2"
+    # The HTML form of the fees table was fetched; the PDF beside it stays out
+    # of the HTML denominator, and a label with any HTML evidence is HTML.
+    assert evidence["evidence_reach:tuition"] == "1/1"
+    assert evidence["evidence_reach:ielts_overall"] == "0/1"
+    assert evidence["evidence_reach:scholarship_exists"] == "0/1"
+    assert evidence["evidence_reach_pdf:gpa"] == "1/1"
+    assert "evidence_reach:gpa" not in evidence
+    assert not [k for k in evidence if k.startswith("_reach_")]
+    corpus = paths["corpus"]
+    corpus.write_text(dataset.model_dump_json())
+    assert stage_summary.main([str(paths["run"]), "--dataset", str(corpus)]) == 0
+    printed = capsys.readouterr().out
+    assert "| evidence_reach:scholarship_exists | 0/1 |" in printed
+    assert "zqsecret" not in printed.casefold()
+
+
+@pytest.mark.parametrize(
+    ("key", "question"),
+    [
+        ("tuition", "tuition"),
+        ("deadline.eu_national", "deadline"),
+        ("english_evidence.toefl_ibt.minimum", "english_evidence"),
+        ("scholarships.Zq Award.exists", "scholarship_exists"),
+        ("scholarships.zq.applicability.international", "scholarship_international"),
+        ("documents.scholarship.zqsecretaward.essay.required", "other"),
+    ],
+)
+def test_reach_questions_are_a_fixed_vocabulary(key: str, question: str) -> None:
+    assert stage_summary.reach_question(key) == question
+
+
+@pytest.mark.parametrize("summary_only", [False, True])
+def test_the_scorecard_ignores_the_run_diagnostics(
+    paths: dict[str, Path], capsys: pytest.CaptureFixture[str], summary_only: bool
+) -> None:
+    from evaluation.research import scorecard
+
+    args = [str(paths["run"]), "--dataset", str(paths["corpus"])]
+    args += ["--summary-only"] if summary_only else []
+    assert scorecard.main(args) == 0
+    before = capsys.readouterr().out
+    raw_path = next((paths["run"] / "zqalpha-off").glob("*/*.raw.json"))
+    raw = json.loads(raw_path.read_text())
+    raw["canary"]["institutions"][0]["discovery_trace"]["run_diagnostics"] = _ES1_DIAGNOSTICS
+    raw_path.write_text(json.dumps(raw))
+    assert scorecard.main(args) == 0
+    assert capsys.readouterr().out == before
+
+
+def test_the_award_link_drop_is_counted_and_the_links_are_unchanged() -> None:
+    from app.adapters.scholarship import web_scholarships as ws
+
+    html = (
+        "<html><body><main>"
+        '<a href="/scholarships/merit">Merit scholarship</a>'
+        '<a href="https://awards.zqalpha.example/scholarships/global">Global scholarship</a>'
+        '<a href="https://grants.elsewhere.example/scholarships/zq">National scholarships</a>'
+        '<a href="https://awards.zqalpha.example/scholarships/global">Global again</a>'
+        '<a href="https://awards.zqalpha.example/contact">Contact</a>'
+        "</main></body></html>"
+    )
+    base = "https://www.zqalpha.example/funding"
+    links, dropped = ws._award_links_counted(html, base)
+    assert links == ws._award_links(html, base)
+    assert links == ["https://www.zqalpha.example/scholarships/merit"]
+    assert dropped == [
+        "https://awards.zqalpha.example/scholarships/global",
+        "https://grants.elsewhere.example/scholarships/zq",
+    ]
+    line = ws._off_host_line(base, dropped)
+    assert stage_summary.evidence_categories(line) == [
+        ("award_links_dropped_off_host", 2),
+        ("award_links_dropped_off_host_same_site", 1),
+    ]
+
+
+def test_the_canary_keeps_only_this_sites_prose_lines() -> None:
+    from types import SimpleNamespace
+
+    from scripts import canary_discovery
+
+    run = SimpleNamespace(
+        errors=[
+            "https://www.zqalpha.example/funding: 2 award links on another host not followed "
+            "(1 on the same site).",
+            "page fetched-ok: https://zqalpha.example/f (page_type scholarship_index): x",
+            "https://zqbeta.example/funding: 1 award links on another host not followed "
+            "(0 on the same site).",
+            "No official scholarship page is known for Zqalpha Institute",
+        ],
+        unknowns=["https://zqalpha.example/p: does not state a deadline"],
+    )
+    kept = canary_discovery.run_diagnostics(run, "zqalpha.example")  # type: ignore[arg-type]
+    assert kept == [run.errors[0], run.unknowns[0]]

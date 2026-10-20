@@ -675,11 +675,10 @@ class WebScholarshipAdapter:
                             f"{url}: classified as {classification.page_type.value}; read as a "
                             "funding index, and the awards it links are followed."
                         )
-                    links = [
-                        link
-                        for link in _award_links(page.text, url)
-                        if _page_key(link) not in seen_pages
-                    ]
+                    found, off_host = _award_links_counted(page.text, url)
+                    if off_host:
+                        out.errors.append(_off_host_line(url, off_host))
+                    links = [link for link in found if _page_key(link) not in seen_pages]
                     if AWARD_ROUTE:
                         links = self._route_filter(links, candidate, program, out)
                         if not links:
@@ -1894,11 +1893,22 @@ def _award_links(html: str, base: str) -> list[str]:
     "Menu główne" and "Skip to main content" into scholarships, so a link now
     has to look like an award in its text or its path to be followed.
     """
+    return _award_links_counted(html, base)[0]
+
+
+def _award_links_counted(html: str, base: str) -> tuple[list[str], list[str]]:
+    """``_award_links`` and the award-shaped links it dropped for their host.
+
+    ES-1: the off-host drop used to be silent; the second list is what the
+    index walk counts in one diagnostics line. The first list is exactly what
+    ``_award_links`` always returned.
+    """
     soup = parse_html(html)
     if SEARCH_FUNDING_FALLBACK:
         soup = main_content(soup)
     seen: set[str] = set()
     out: list[str] = []
+    off_host: list[str] = []
     base_host = urlparse(base).netloc
 
     for a in soup.find_all("a", href=True):
@@ -1927,8 +1937,7 @@ def _award_links(html: str, base: str) -> list[str]:
         # Share buttons carry the page's own URL in a query string, so a
         # "scholarships" link can point at facebook.com. An award page is on
         # the institution's own domain.
-        if base_host and urlparse(url).netloc != base_host:
-            continue
+        elsewhere = bool(base_host) and urlparse(url).netloc != base_host
 
         label = " ".join(a.get_text(" ", strip=True).split()).lower()
         if any(noise in label for noise in _NAV_NOISE):
@@ -1936,10 +1945,29 @@ def _award_links(html: str, base: str) -> list[str]:
         haystack = f"{label} {url.lower()}"
         if not any(hint in haystack for hint in _AWARD_HINTS):
             continue
+        if elsewhere:
+            if url not in off_host:
+                off_host.append(url)
+            continue
 
         seen.add(url)
         out.append(url)
-    return out
+    return out, off_host
+
+
+def _off_host_line(url: str, dropped: list[str]) -> str:
+    """ES-1: the one counted line for an index's award links on another host.
+
+    ``same site`` counts the hosts under the index's own registrable domain
+    (a sibling official host, SR-1 shape S5); the rest are other sites.
+    """
+    from app.adapters.discovery.live_discovery import registrable_domain
+
+    site = registrable_domain(url)
+    same = sum(1 for link in dropped if site and registrable_domain(link) == site)
+    return (
+        f"{url}: {len(dropped)} award links on another host not followed ({same} on the same site)."
+    )
 
 
 #: AR-1: how many index reads the walk may spend when each one is productive.

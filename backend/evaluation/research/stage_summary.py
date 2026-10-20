@@ -12,6 +12,13 @@ summed over every case:
 * evidence: pages read per evidence stage, claims per claim type, claims
   matched to labels, and wrong-scope claims by the scope dimension that did
   not match (``metrics.dimension_matches``);
+* evidence reach (ES-1): fixed categories read from a page outcome's
+  ``detail`` and the funding stage's diagnostics lines (a funding index with
+  0 award links, an index beyond the index budget, awards read from a page's
+  own sections, award links dropped for their host), cases where discovery
+  selected no scholarships page, PDFs met per stage, and per question the
+  known labels whose evidence page was fetched ok (``evidence_reach:<q>``,
+  HTML evidence; ``evidence_reach_pdf:<q>`` for PDF-only evidence);
 * budget and time per case, mean and max;
 * failed discovery searches (``search_failures``, by provider status, and
   their share of attempted discovery queries), so that a provider outage reads
@@ -107,6 +114,50 @@ _REFUSAL_CATEGORIES: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"^page head names a related programme \(combination"), "head_combination"),
 )
 
+#: ES-1: evidence-reach categories, read from a page outcome's ``detail`` and
+#: from the funding stage's ``errors`` lines (``run_diagnostics`` on the trace).
+#: Same discipline as the refusals: a detail quotes URLs and titles, so only the
+#: row named here is counted. With ``add`` the first group (digits only) is
+#: summed; otherwise the row counts one per matching line.
+_EVIDENCE_CATEGORIES: tuple[tuple[re.Pattern[str], str, bool], ...] = (
+    (re.compile(r"^read as a funding index; 0 award links\b"), "funding_index_zero_links", False),
+    (re.compile(r"^index page beyond the index budget"), "index_beyond_budget", False),
+    (re.compile(r"; (\d{1,4}) awards read from its own sections\b"), "award_sections_read", True),
+    (
+        re.compile(r": (\d{1,4}) award links on another host not followed\b"),
+        "award_links_dropped_off_host",
+        True,
+    ),
+    (
+        re.compile(r" award links on another host not followed \((\d{1,4}) on the same site\)"),
+        "award_links_dropped_off_host_same_site",
+        True,
+    ),
+)
+
+#: ES-1: the questions ``evidence_reach:<question>`` is reported for, by label
+#: key; any other known label is ``other``. Never a label's own key: a
+#: documents key can carry an award's name.
+_REACH_QUESTIONS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"^tuition$"), "tuition"),
+    (re.compile(r"^mandatory_fees$"), "mandatory_fees"),
+    (re.compile(r"^deadline(\.[a-z_]+)?$"), "deadline"),
+    (re.compile(r"^gpa$"), "gpa"),
+    (re.compile(r"^ielts\.overall$"), "ielts_overall"),
+    (re.compile(r"^ielts\.subscores$"), "ielts_subscores"),
+    (re.compile(r"^english_evidence\.[a-z0-9_]+\.minimum$"), "english_evidence"),
+    (re.compile(r"^programme\.exists$"), "programme_exists"),
+    (re.compile(r"^scholarships\.[^.]+\.exists$"), "scholarship_exists"),
+    (
+        re.compile(r"^scholarships\.[^.]+\.applicability\.(international|nationality)$"),
+        "scholarship_international",
+    ),
+    (re.compile(r"^scholarships\.[^.]+\.coverage\.[a-z_]+$"), "scholarship_coverage"),
+)
+
+#: A PDF met by a stage: the page outcome names it, or its path ends ``.pdf``.
+_PDF_DETAIL = re.compile(r"\bPDF\b")
+
 #: The status ``search_failure_diagnostic`` writes: "(serper; HTTP 400)".
 _FAILURE_STATUS = re.compile(r"\bHTTP (\d{3})\b")
 _IDENTITY_RECOVERY = re.compile(r"search identity recovery: checked (\d+), confirmed (\d+)")
@@ -158,6 +209,67 @@ def claim_type(key: str) -> str:
     if parts[0] == "scholarships" and len(parts) > 2:
         parts[1] = "*"
     return ".".join(_controlled(p) if p != "*" else p for p in parts)
+
+
+def evidence_categories(text: object) -> list[tuple[str, int]]:
+    """ES-1: the evidence rows one detail or diagnostics line adds to, with the amount."""
+    line = str(text or "")
+    found: list[tuple[str, int]] = []
+    for pattern, row, add in _EVIDENCE_CATEGORIES:
+        match = pattern.search(line)
+        if match:
+            found.append((row, int(match[1]) if add else 1))
+    return found
+
+
+def reach_question(key: str) -> str:
+    """ES-1: the question a label key belongs to, from a fixed table; ``other`` otherwise."""
+    return next((name for pattern, name in _REACH_QUESTIONS if pattern.match(key)), "other")
+
+
+def _is_pdf(url: object, detail: object = "") -> bool:
+    path = urlsplit(str(url)).path.casefold()
+    return path.endswith(".pdf") or bool(_PDF_DETAIL.search(str(detail or "")))
+
+
+def _evidence_stage(page_type: str) -> str:
+    return next((name for name, types in EVIDENCE_STAGES.items() if page_type in types), "other")
+
+
+def _reach_rows(evidence: Counter[str], case: Case, observation: Observation) -> None:
+    """ES-1: known labels whose evidence page was fetched ok, per question.
+
+    A label counts toward ``reach_html`` when any of its evidence URLs is an
+    HTML page, and is reached when one of those was fetched ok (up to the
+    scorer's canonical forms, ``same_programme_page``); a label whose evidence
+    is only PDFs goes to the ``reach_pdf`` pair instead (01-Q2).
+    """
+    fetched = [str(page.url) for page in observation.page_outcomes if page.category == "fetched-ok"]
+    for label in case.labels:
+        if label.status != "known":
+            continue
+        urls = [str(e.url) for e in label.evidence if e.url]
+        if not urls:
+            continue
+        question = reach_question(label.key)
+        html = [u for u in urls if not _is_pdf(u)]
+        kind, pool = ("html", html) if html else ("pdf", urls)
+        evidence[f"_reach_{kind}_known:{question}"] += 1
+        if any(same_programme_page(page, url) for url in pool for page in fetched):
+            evidence[f"_reach_{kind}_fetched:{question}"] += 1
+
+
+def _reach_ratios(evidence: Counter[str]) -> dict[str, Any]:
+    """The ``_reach_*`` counters folded into ``evidence_reach[_pdf]:<q>`` = "fetched/known"."""
+    out: dict[str, Any] = {k: v for k, v in evidence.items() if not k.startswith("_reach_")}
+    for kind, row in (("html", "evidence_reach"), ("pdf", "evidence_reach_pdf")):
+        prefix = f"_reach_{kind}_known:"
+        for key, known in evidence.items():
+            if key.startswith(prefix):
+                question = key.removeprefix(prefix)
+                reached = evidence.get(f"_reach_{kind}_fetched:{question}", 0)
+                out[f"{row}:{question}"] = f"{reached}/{known}"
+    return out
 
 
 def failure_status(diagnostic: object) -> str:
@@ -358,13 +470,22 @@ def repetition_summary(
 
         # Evidence.
         for page in observation.page_outcomes:
-            stage = next(
-                (name for name, types in EVIDENCE_STAGES.items() if page.page_type in types),
-                "other",
-            )
+            stage = _evidence_stage(page.page_type)
             evidence[f"pages:{stage}"] += 1
             if page.category == "fetched-ok":
                 evidence[f"pages_fetched_ok:{stage}"] += 1
+            # ES-1: reach categories from the detail; never the detail itself.
+            for row, amount in evidence_categories(page.detail):
+                evidence[row] += amount
+            if _is_pdf(page.url, page.detail):
+                evidence[f"pdf_met:{stage}"] += 1
+        for line in trace.get("run_diagnostics") or []:
+            for row, amount in evidence_categories(line):
+                evidence[row] += amount
+        if trace:
+            # ES-1: discovery selected no scholarships page for the candidate.
+            evidence["funding_entry_none"] += not (trace.get("selected") or {}).get("scholarships")
+        _reach_rows(evidence, case, observation)
         for phase, count in (ledger.get("by_phase") or {}).items():
             evidence[f"reads_by_phase:{_controlled(phase)}"] += int(count or 0)
         for kind, count in (ledger.get("by_kind") or {}).items():
@@ -425,7 +546,7 @@ def repetition_summary(
         "gold programme page": dict(gold),
         "refusals": dict(refusals),
         "languages": dict(languages),
-        "evidence": dict(evidence),
+        "evidence": _reach_ratios(evidence),
         "claims": dict(claims),
         "wrong scope by dimension": dict(scope),
         "budget and time": budget,
