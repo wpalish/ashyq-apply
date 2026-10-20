@@ -312,3 +312,131 @@ entry): the one `local_language` query takes its subject words from the site its
   first: puc, tec, psaclay, kaist, kaznu, msu, ntutw, tsinghua are the eight the family misses today.
 - Before any key exists, the offline half can run (regime A): the phrase each dev homepage would yield, per case,
   from captures already on disk.
+
+## 6. LQ-2a: the rule built (flag off) and the offline phrase table (2026-10-21)
+
+NEXT_CYCLES_2026-10-21 item 6. **No search provider was called and no credit was spent.** No dev5 case, no
+heldout case, no quarantine file was read.
+
+### 6.1 The rule as built
+
+`intent.LOCAL_QUERY_FROM_PAGE_EVIDENCE = False` (harness `--local-query-from-evidence`, off-form
+`--no-local-query-from-evidence` in `NEGATABLE_RULES` / `DEFAULT_OFF_NEGATABLE`). Contract line: HANDOFF §8.
+
+- **Where the phrase comes from.** Every page the navigation fallback reads before search (the homepage, its
+  catalogue leads, R4's section pages) is offered to `live_discovery.local_phrase_from_links` until one yields a
+  phrase. A page qualifies only when its `<html lang>` is a non-English language of the institution's country.
+  A link qualifies when its target is a programme page or listing (its URL categorises as one, or it sits on a
+  catalogue page, or its label is R4's study-section word) and its text names the **head** of a localized alias
+  of the field in that language: the alias's longest word without its last two letters, never under five
+  letters (`computación` → `computaci`, which also reaches «computacionales»); an unspaced-script alias whole.
+- **Refused:** a label naming another level (UC-1's label rule, the URL rule, CH-1's `degree_levels_named`),
+  a localized related form or an R2 `related` head, CH-1's unit nouns with no degree word («… laitos»,
+  «Institut für …»), the *informatio-* false friend of the *informati-* stem, and anything
+  `intent.local_query_phrase` refuses: more than 8 words (refused, not cut), any digit, a personal title
+  (Prof., Dr., Sra., проф. …), an address or URL, and `_reject_applicant_data`.
+- **Order:** a label R2 reads as the field itself, then one whose URL names the requested level, then page order.
+- **The query.** `site:<domain> "<phrase>"` + the R1 bachelor word unless the phrase already holds it, in place
+  of the alias; same third first-pass slot, same `hl`/`gl`, six queries stay six. No link phrase → the seed row's
+  `native_name` as a second phrase beside today's alias (no seed or registry row carries one today, so this
+  branch is inert) → today's words, byte for byte.
+- **Off:** byte-identical (the golden demo test and the full suite pass; `runner.py`/`scoring.py` untouched).
+  The trace gains `local_query_phrase` only while the rule is on and a phrase was found.
+
+### 6.2 The offline table (regime A)
+
+**How the pages were read:** a scratchpad script (not committed) through the production `Fetcher`: robots.txt
+first and honoured, own agent with contact `lq-2a hand-check`, `use_cache=False`, no override; direct first,
+then `trust_env_proxy=True` (every direct read was refused, as in §3). Per case: the registry homepage (seed
+`official_site`, or `https://www.<domain>/` for ub, ctu, kit, ktu, rwth, ntutw), then, when the homepage gave no
+phrase, **one hop** to its programme-listing link (the best `categorise_url` catalogue link, else R4's section
+label), read as a catalogue page. Field `computer science`, level bachelor. The hop pick is a simplification of
+the navigation walk (it took «Language courses» on warsaw and unibo and «Doktorské studium» on ctu), so a "no
+phrase" row below means *this* reading found none, not that the product's walk cannot.
+
+**Gold title shape:** the subject words of the case's local-language gold title (§1–§3 gold files); "—" where
+the gold is English only or names no subject. **Match:** the phrase contains that shape at a word boundary.
+
+| case | homepage read (lang) | phrase source | phrase the rule produces | gold title shape | phrase matches? | today's alias matches? |
+|---|---|---|---|---|---|---|
+| groningen | ok (en) | hop `/education/bachelor` (en) | — (page not in nl) | — (English) | — | — |
+| delft | ok (nl) | hop «Bekijk alle bachelors» | — (no link names *informatic-*) | — (English) | — | — |
+| aalto | ok (fi) | hop «Koulutusohjelmat» | — («Tietotekniikan laitos» refused: unit) | tietotekniikka | — | yes |
+| vienna | ok (de) | hop «Studium» | — («Information für Erstsemestrige» refused: false friend) | informatik | — | yes |
+| warsaw | ok (en, `en.uw.edu.pl`) | hop «Language courses» (en) | — | informatyka | — | yes |
+| hku | ok (en) | no listing link | — | — (English) | — | — |
+| kaist | ok (en, `/en/`) | no listing link | — | — (English) | — | — |
+| ethz | ok (de) | no listing link | — | — (English) | — | — |
+| psaclay | ok (fr) | hop «Choisir sa formation» | — (a search form; no programme links) | informatique | — | yes |
+| uppsala | ok (sv) | hop «Utbildning» | — | datavetenskap | — | yes |
+| tsinghua | ok (no `<html lang>`) | — | — (rule inert without a declared language) | — (English) | — | — |
+| tec | HTTP error (403) | — | — | tecnologías computacionales | — | **no** |
+| uba | ok (declares `lang="en"`) | hop «Carreras de Grado» (en) | — (rule inert: page not in es) | ciencias de la computación | — | yes |
+| kaznu | robots refused | — | — | компьютерные науки | — | **no** |
+| chula | ok (0 links, script-built) | — | — | — (English) | — | — |
+| kuleuven | robots refused | — | — | informatica | — | yes |
+| msu | ok (ru, 0 links) | — | — | — (generic title) | — | — |
+| ntutw | ok (zh) | hop to a course page: HTTP error | — | 資訊工程 | — | **no** |
+| **puc** | ok (es) | hop «Carreras de pregrado» → `admision.uc.cl/carreras` | **«Licenciatura en Ingeniería en Ciencia de la Computación»** | ingeniería en ciencia de la computación (singular) | **yes — the gold title verbatim** | **no** (plural) |
+| ub | HTTP error | — | — | enginyeria informàtica (ca) | — | **no** |
+| **ucph** | ok (da) | hop «Bachelor» → `/studier/bachelor` | **«Datalogi»** | datalogi | **yes** | yes |
+| uio | ok (no) | hop «Studier» | — | informatikk | — | yes |
+| usp | ok (pt) | hop «Undergraduate» (`www5`, pt) | — | ciência da computação | — | yes |
+| ctu | ok (cs) | hop «Doktorské studium» | — | informatika | — | yes |
+| **kit** | ok (de) | hop «Studiengänge» → `sle.kit.edu` | **«Informatik B.Sc.»** | informatik | **yes** | yes |
+| ktu | ok (lt) | no listing link | — | informatika | — | yes |
+| rwth | ok (en) | no listing link | — | informatik | — | yes |
+| unibo | ok (it) | hop «Corsi di lingua» | — | informatica | — | yes |
+
+**Summary: 3 of 28 phrases match the gold title shape** (puc, ucph, kit); 0 phrases produced that do not match;
+25 cases produce no phrase and keep today's words byte for byte. Of the 20 cases with a local gold title shape,
+today's alias matches 15 (it misses tec, kaznu, ntutw, puc, ub); with LQ-2 it matches 16 — **puc flips**, the
+one miss of the eight whose phrase is its gold title verbatim (M5's singular probe put puc's gold at rank 1). The
+NEXT_CYCLES bar "≥ 1 miss whose phrase equals its gold title shape" is **met** (puc). tec (403), kaznu
+(robots) and ntutw (hop failed) — the other three shape misses — get no phrase from this reading, so LQ-2 says
+nothing about them yet.
+
+**Why so few phrases.** In order: the homepage is not in the country's language or declares English (groningen,
+warsaw's registry homepage, kaist, rwth, uba's `lang="en"`, tsinghua's missing `lang`); the read is refused (tec,
+kaznu, kuleuven, ub); the listing is built by script or a search form (chula, msu, psaclay); the one-hop pick is
+not the catalogue (warsaw, ctu, unibo, ntutw). The rule only ever *replaces* the alias with the site's own words,
+so a case with no phrase cannot lose by it.
+
+**Seen-site provenance, flagged.** The first pass of this table produced three wrong phrases, and the rule was
+tightened on them before the table above was taken: «Tietotekniikan laitos» (aalto, a department) is now refused
+by CH-1's existing unit table (no new word); «Information für Erstsemestrige» (vienna) by the new
+`_HEAD_FALSE_FRIENDS = ("informatio",)` row; «Informatik B.Ed.» (kit, teacher education, listed first) now loses
+to «Informatik B.Sc.» by the URL-names-the-level tie-break. These three refinements are in-sample (aalto and
+vienna are cohort, kit is dev4); the seen-site guard (ticket 13) must treat aalto, vienna and kit as seen for LQ-2.
+
+### 6.3 Pre-registered key-day measurement (`query_probe`, 13 queries + 2)
+
+To run once a search key exists (Q6 / R1 free tiers), with Serper `hl`/`gl` as listed, top 10, gold = the dev
+gold files' programme URLs and twins (`same_programme_page`). The probe sends the **frozen phrases of §6.2**, not
+a fresh read, so page drift and phrase choice are not confounded. `scripts/probe_query_shapes.py` has no shape
+that takes a fixed text today; it needs a `--queries <file>` input (or an `f_site_phrase` shape) on key day —
+not built here.
+
+| # | case | role | query (LQ-2 on) | `hl`/`gl` | differs from R5? |
+|---|---|---|---|---|---|
+| 1 | puc | miss | `site:uc.cl "Licenciatura en Ingeniería en Ciencia de la Computación"` | es / cl | **yes** |
+| 2 | tec | miss | `site:tec.mx "ciencias de la computación" licenciatura` | es / mx | no (no phrase) |
+| 3 | psaclay | miss | `site:universite-paris-saclay.fr informatique licence` | fr / fr | no |
+| 4 | kaist | miss | `site:kaist.ac.kr 컴퓨터과학 학사과정` | ko / kr | no |
+| 5 | kaznu | miss | `site:kaznu.kz информатика бакалавр` | kk / kz | no |
+| 6 | msu | miss | `site:msu.ru информатика бакалавриат` | ru / ru | no |
+| 7 | ntutw | miss | `site:ntu.edu.tw 计算机科学与技术 本科` | zh-tw / tw | no |
+| 8 | tsinghua | miss | `site:tsinghua.edu.cn 计算机科学与技术 本科` | zh-cn / cn | no |
+| 9 | warsaw | guard | `site:uw.edu.pl informatyka licencjat` | pl / pl | no |
+| 10 | uba | guard | `site:uba.ar "ciencias de la computación" licenciatura` | es / ar | no |
+| 11 | kuleuven | guard | `site:kuleuven.be informatica bachelor` | nl / be | no |
+| 12 | uio | guard | `site:uio.no informatikk bachelor` | no / no | no |
+| 13 | ctu | guard | `site:cvut.cz informatika bakalářský` | cs / cz | no |
+| 14 | ucph | phrase, already a hit | `site:ku.dk "Datalogi" bachelor` | da / dk | yes |
+| 15 | kit | phrase, already a hit | `site:kit.edu "Informatik B.Sc." bachelor` | de / de | yes |
+
+**Bar, fixed now:** puc's gold in the top 10 for query 1 (R5's plural query returned nothing for puc in the
+store); ucph and kit keep their gold in the top 10 (they are hits today); rows 2–13 send R5's text unchanged, so
+they need no comparison beyond provider variance. Then the paired runs on cohort, dev2, dev3, dev4
+(`expert_paired`, `extra_args=--local-query-from-evidence`) with the ticket-08 bar (§5). Until then the rule is
+**built, with one case of offline evidence (puc)**, and stays off.
