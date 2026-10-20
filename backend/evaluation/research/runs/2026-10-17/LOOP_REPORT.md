@@ -1117,3 +1117,21 @@ the same.
 saving did not appear (−6 s against −20…−30 s), there is no stable gain, and dev3 shows a stable claim loss (13-Q2
 gate). Follow-up for the planner: a case that crosses the clock by a second loses every claim it had already
 extracted (unsw sits at 116–119 s with or without the rule), which is a harness fragility rather than a rule effect.
+
+### 2026-10-20 11:10 — D-F5 dev5 no-search floor (aggregates only)
+
+Run `ns-floor-dev5` (39408880008), `search_provider=none`, one column, today's defaults; read with
+`scorecard --summary-only` on `dev5.draft1 --allow-drafts`, no per-case output opened.
+
+| metric | pre-registered | measured |
+|---|---|---|
+| programme found on readable | ≤ 3/8 | **1/6** |
+| wrong programme pages | 0 | **0** |
+| cases over budget | 0 | **0** |
+| unavailable | 2 | **3** (access: BLOCKED 3, PARTIALLY_BLOCKED 1, REACHED 9) |
+| claims | — | 3 made, 1 correct, **2 wrong-scope** |
+
+Inside the pre-registration on pages (found ≤ 3, no wrong page, nothing over budget). Two departures: one more
+unavailable case than predicted, and the no-search arm makes two wrong-scope claims out of three on dev5, which the
+development sets do not show. Recorded as the first dev5 aggregate under today's defaults; the wrong-scope pair is
+an input for the next generalisation check, read only through aggregates.
