@@ -70,6 +70,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 import unicodedata
@@ -242,16 +243,20 @@ def verification(report: Report | None, case: str, item: str) -> tuple[bool, str
 
 
 def _number(value: Any) -> float | None:
+    """A draft's number, or None. ``"nan"`` and ``"inf"`` are no number (SR2-06):
+    ``float`` reads them, and the KB would carry a value JSON cannot encode."""
     if isinstance(value, bool):
         return None
     if isinstance(value, int | float):
-        return float(value)
-    if isinstance(value, str):
+        number = float(value)
+    elif isinstance(value, str):
         try:
-            return float(value.replace(",", "").strip())
+            number = float(value.replace(",", "").strip())
         except ValueError:
             return None
-    return None
+    else:
+        return None
+    return number if math.isfinite(number) else None
 
 
 def _valid_url(url: Any) -> str | None:

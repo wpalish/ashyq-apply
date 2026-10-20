@@ -9,6 +9,7 @@ stale fact (``app.knowledge.stale_reasons``) is ``POSSIBLY_STALE`` and says why.
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
@@ -546,10 +547,25 @@ def tuition_value(value: Any) -> dict[str, Any] | None:
     bounds = fee_range(value)
     if bounds is not None:
         low, high, currency = bounds
+        if not _fee_figures(low, high) or low >= high:
+            return None
         return {"amount": high, "currency": currency, "range_low": low, "range_high": high}
     if not isinstance(value, dict) or value.get("amount") is None:
         return None
-    return {"amount": float(value["amount"]), "currency": str(value["currency"])}
+    amount = float(value["amount"])
+    if not _fee_figures(amount):
+        return None
+    return {"amount": amount, "currency": str(value["currency"])}
+
+
+def _fee_figures(*numbers: float) -> bool:
+    """Whether every number is a fee figure: finite and not negative.
+
+    A KB file is reviewed data, but ``NaN`` or ``Infinity`` in it would reach
+    the catalogue and the run as a value the API's JSON encoder refuses, a 500
+    on every page that lists the university (security review 2026-10-22, SR2-06).
+    """
+    return all(math.isfinite(n) and n >= 0 for n in numbers)
 
 
 @dataclass
