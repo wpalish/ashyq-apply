@@ -17,7 +17,19 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 BACKEND="$(cd "$HERE/../../../backend" && pwd)"
 SCRATCH="${E2E_KB_DIR:?E2E_KB_DIR names the scratch directory}"
 
-rm -rf "$SCRATCH"
+# The directory is wiped below, so only a scratch directory of this journey
+# is accepted: its own name starts with e2e-kb (the default is
+# backend/data/e2e-kb). E2E_KB_DIR=backend/data, or any directory a person
+# keeps, is refused before anything is removed (security review 2026-10-22).
+case "$(basename -- "$SCRATCH")" in
+  e2e-kb*) ;;
+  *)
+    echo "serve-api.sh: E2E_KB_DIR must name a directory called e2e-kb*; refusing to wipe $SCRATCH" >&2
+    exit 64
+    ;;
+esac
+
+rm -rf -- "$SCRATCH"
 mkdir -p "$SCRATCH"
 
 export PYTHONPATH="$HERE${PYTHONPATH:+:$PYTHONPATH}"
