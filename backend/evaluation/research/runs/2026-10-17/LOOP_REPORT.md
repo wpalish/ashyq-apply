@@ -1096,7 +1096,7 @@ labels, so a page hit there never shows in it.
 
 **Verdict: NS-1b + PC-1 on by default.** No-search floor 9/39 → **12/39**, 0 wrong pages.
 
-### 2026-10-20 11:00 — SG-1 sitemap guesses on a crawl-delay host (5 runs)
+### 2026-10-20 10:45 — SG-1 sitemap guesses on a crawl-delay host (5 runs)
 
 Runs `sg1-cohort/dev2/dev3/dev4` (no search, `--sitemap-guess-cap`) and the recorded guard `rp-sg1-dev4`. Columns
 off#1, off#2, on#1, on#2. Seconds are the mean `telemetry.latency_seconds` of the two repetitions per arm.
@@ -1118,7 +1118,7 @@ saving did not appear (−6 s against −20…−30 s), there is no stable gain,
 gate). Follow-up for the planner: a case that crosses the clock by a second loses every claim it had already
 extracted (unsw sits at 116–119 s with or without the rule), which is a harness fragility rather than a rule effect.
 
-### 2026-10-20 11:10 — D-F5 dev5 no-search floor (aggregates only)
+### 2026-10-20 10:50 — D-F5 dev5 no-search floor (aggregates only)
 
 Run `ns-floor-dev5` (39408880008), `search_provider=none`, one column, today's defaults; read with
 `scorecard --summary-only` on `dev5.draft1 --allow-drafts`, no per-case output opened.
