@@ -307,10 +307,11 @@ file wins a tie. A missing file is simply skipped.
    CI-verified deadline of a past cycle. A fee per semester or for the whole programme (Lund) keeps its
    `period` as published. It becomes a claim that says so, and it enters the yearly cost table only when
    its period is a year.
-   **Two pending owner decisions (both off by default; add the flag to the build command to switch one
-   on).** Each keeps a CI-verified value that the year rules above set aside. The value is shown as
+   **Two owner decisions, both "yes" on 2026-10-20 and on by default since KB v17** (`--no-…` turns one
+   off). Each keeps a CI-verified value that the year rules above set aside. The value is shown as
    current with a `caveat`, and never as fully verified. Only a build with a flag on writes the top-level
-   `owner_flags` and `caveat_facts`. A default build is byte-identical to one made before the flags existed.
+   `owner_flags` and `caveat_facts`. v17: +28 inferred deadlines (Oxford's 15 October 2026 already
+   stale as passed) and 12 standing-policy fees current, 40 caveated facts in all.
 
    - `--yearless-deadlines-with-caveat` (`KB_YEARLESS_DEADLINES_WITH_CAVEAT`). A verified deadline whose
      quote prints the day and month but no year is kept. Its year is inferred from the intake's
@@ -329,8 +330,10 @@ file wins a tie. A missing file is simply skipped.
      - the intake is not a fall intake.
    - `--standing-fee-policy-current` (`KB_STANDING_FEE_POLICY_CURRENT`, NEXT_CYCLES Q7). A verified
      fee whose academic year is "not stated" is shown as current when its university is in
-     `STANDING_FEE_POLICIES`. That is an explicit list of 13 standing fee policies: ETH, EPFL, FU Berlin,
-     Heidelberg, UZH, KTH, Lund, IP Paris, Osaka, Nanjing, UCLA, Kyoto, ISCT. The fact carries
+     `STANDING_FEE_POLICIES`. That is an explicit list of 12 standing fee policies: ETH, EPFL, FU Berlin,
+     Heidelberg, UZH, KTH, Lund, IP Paris, Osaka, Nanjing, Kyoto, ISCT. UCLA was taken off on 2026-10-20:
+     its page reads "Updated July 2026" and "currently approved or proposed amounts", a current-year
+     table rather than a standing policy, so its fee stays stale. The fact carries
      `caveat: "fee policy page; no academic year printed"` and `standing_policy: true`, and its
      `academic_year` is cleared. Any published year text moves to `academic_year_stated`. It enters the
      yearly cost table only when its period is a year. A per-semester or whole-programme fee is listed

@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.16",
+ "version": "2026-10-19.kb-cs-bachelor.17",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -158,7 +158,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-04",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://mitadmissions.org/apply/firstyear/deadlines-requirements/",
+      "quote": "Regular Action (RA) applications are due January 4",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "First-year Regular Action deadline, year not printed (current cycle = fall 2027 entry). International applicants use the same process: 'Whether you are a domestic applicant or an international applicant does not impact when or how you apply' (https://mitadmissions.org/apply/firstyear/international/). Early Action is due November 1. The MIT catalogue (catalog.mit.edu/mit/undergraduate-education/admissions/) only says 'Regular Action (with a deadline in early January)'. Source host mitadmissions.org is MIT's Office of Admissions site (linked from mit.edu and from catalog.mit.edu 'Admissions website'); it is NOT under the kb list's official_domain mit.edu, so the official-domain check will fail unless mitadmissions.org is added for this case.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -331,15 +351,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum grade published. MIT: 'We do not try to convert your grades to the American system, or to find other sorts of equivalence.' and 'We do not have cutoff or recommended scores for the ACT or SAT' (https://mitadmissions.org/apply/firstyear/international/). SAT or ACT is required."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-04). Expert (2026-10-19): First-year Regular Action deadline, year not printed (current cycle = fall 2027 entry). International applicants use the same process: 'Whether you are a domestic applicant or an international applicant does not impact when or how you apply' (https://mitadmissions.org/apply/firstyear/international/…"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 9,
+   "known_fact_count": 10,
    "source_batches": [
     "batch1",
     "topup_round2",
@@ -587,7 +602,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-05",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admission.stanford.edu/apply/first-year/index.html",
+      "quote": "Standard Application Deadline - January 5 Common Application Deadline: January 5",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Regular Decision, first-year applicants; the international page says 'The application requirements are the same for all applicants regardless of citizenship'. Submit by 11:59 p.m. in the applicant's local timezone. The date is printed without a year (page updated September 10, 2026, i.e. the cycle for autumn 2027 entry). Restrictive Early Action: November 1.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -821,11 +856,6 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA is published; holistic review. The Academic Preparation page gives only curriculum recommendations: 'We want to emphasize that these are curriculum recommendations, not requirements.' (https://admission.stanford.edu/apply/first-year/prepare.html)."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-05). Expert (2026-10-19): Regular Decision, first-year applicants; the international page says 'The application requirements are the same for all applicants regardless of citizenship'. Submit by 11:59 p.m. in the applicant's local timezone. The date is printed without a year (page updated September 10, 2026, i.e. the cycle…"
     }
    ],
    "not_applicable": [
@@ -848,7 +878,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 10,
+   "known_fact_count": 11,
    "source_batches": [
     "batch2",
     "topup_documents3"
@@ -889,7 +919,30 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-10-15",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.cs.ox.ac.uk/admissions/undergraduate/how_to_apply/home.html",
+      "quote": "The strict submission deadline for submitted your completed UCAS application is 6pm (UK time) on 15 October",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Year not printed; for October 2027 entry the UCAS deadline is 15 October 2026 at 6pm UK time, already past on the research date. One UCAS round for all applicants including international ('All applicants apply through UCAS by the mid October deadline'). 'Late applications cannot be accepted.' TMUA registration and sitting also required.",
+      "year_inferred": 2026,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": true,
+      "stale_reasons": [
+       "deadline 2026-10-15 has passed"
+      ]
+     }
+    ],
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
@@ -974,11 +1027,6 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): Offers are qualification-specific (A-level/IB) on the central course page, which returned 403. Department prose: 'Our standard conditional offer is based on 3 A-levels' (FAQ); shortlisting uses the TMUA with 'no \"pass\" mark' (how_to_apply). No GPA threshold."
     },
     {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "only the 2026 cycle is published (expert value 2026-10-15). Expert (2026-10-19): Year not printed; for October 2027 entry the UCAS deadline is 15 October 2026 at 6pm UK time, already past on the research date. One UCAS round for all applicants including international ('All applicants apply through UCAS by the mid October deadline'). 'Late applications cannot be accepted.' TMUA…"
-    },
-    {
      "question": "tuition",
      "key": "tuition",
      "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: course fees are published on www.ox.ac.uk (course page 'Fees' section and /students/fees-funding/fees/rates), which returns HTTP 403 (Cloudflare challenge) to the normal user agent; not bypassed."
@@ -990,7 +1038,7 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3,
+   "known_fact_count": 4,
    "source_batches": [
     "batch3",
     "topup_documents4"
@@ -1030,7 +1078,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-01",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://college.harvard.edu/admissions/apply/first-year-applicants",
+      "quote": "Your portions of the application are due by January 1 at 11:59pm (your local time)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Regular Decision; the same timetable for all applicants regardless of citizenship (\"all applicants follow the same procedures and timetables\"). The year is not printed on the page; for fall 2027 entry this is 1 January 2027. Restrictive Early Action: November 1.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -1286,11 +1354,6 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA or grade threshold published; holistic review. SAT or ACT required (exceptions listed on the application-requirements page), no minimum score stated."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-01). Expert (2026-10-19): Regular Decision; the same timetable for all applicants regardless of citizenship (\"all applicants follow the same procedures and timetables\"). The year is not printed on the page; for fall 2027 entry this is 1 January 2027. Restrictive Early Action: November 1."
     }
    ],
    "not_applicable": [
@@ -1313,7 +1376,7 @@
      "verified_by": "recheck"
     }
    ],
-   "known_fact_count": 11,
+   "known_fact_count": 12,
    "source_batches": [
     "batch4",
     "topup_documents3"
@@ -2041,10 +2104,9 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Regulation in effect since autumn semester 2025: simple fee CHF 730/semester for Swiss/Liechtenstein citizens and those resident in CH/FL when obtaining their entrance qualification, and certain EU/EFTA permit holders; all others pay the threefold fee. Study fees 'include the tuition and the semester fees'. Not multiplied to a year.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true
      }
     ],
     "scholarship_exists": [],
@@ -4097,7 +4159,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-02",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+      "quote": "Application Deadlines Deadline Materials Due January 2 Application; application fee or fee waiver",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Regular Decision; year not printed on the admissions page (current cycle). Other required materials due January 19. Same deadlines for international applicants; international financial-aid (CSS Profile) deadline also 'Regular Decision: January 2, 2027' (https://finaid.cornell.edu/first-year-and-transfer-students-international). Early Decision: November 1.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -4331,15 +4413,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; Cornell reviews holistically ('when reviewed in context with other application materials—such as GPA, academic rigor...'). SAT or ACT required for first-year applicants (https://admissions.cornell.edu/policies/standardized-testing-policy)."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-02). Expert (2026-10-19): Regular Decision; year not printed on the admissions page (current cycle). Other required materials due January 19. Same deadlines for international applicants; international financial-aid (CSS Profile) deadline also 'Regular Decision: January 2, 2027' (https://finaid.cornell.edu/first-year-and-tra…"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 13,
+   "known_fact_count": 14,
    "source_batches": [
     "batch1",
     "topup_round2",
@@ -5326,7 +5403,27 @@
       "stale": false
      }
     ],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-11-30",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admissions.berkeley.edu/apply-to-berkeley/dates-deadlines/",
+      "quote": "The application filing period is October 1 – November 30. All applications must be submitted by November 30.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "University-wide, one deadline for all first-year applicants including international ('Applications for admission are available beginning in October of the year prior to the year in which you would enter'), so fall 2027 entry -> 30 November 2026. The year is NOT printed on the page; no time zone given.",
+      "year_inferred": 2026,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -5467,15 +5564,9 @@
      }
     ]
    },
-   "unknown": [
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): University-wide, one deadline for all first-year applicants including international ('Applications for admission are available beginning in October of the year prior to the year in which you would enter'), so fall 2027 entry -> 30 November 2026. The year is NOT printed on the page; no time zone giv…"
-    }
-   ],
+   "unknown": [],
    "not_applicable": [],
-   "known_fact_count": 10,
+   "known_fact_count": 11,
    "source_batches": [
     "batch5",
     "topup_documents3"
@@ -5556,7 +5647,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-04-30",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+      "quote": "Applications can be submitted from mid-November to the 30th of April to start your studies at EPFL the following September",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Same deadline for all bachelor/CMS applicants incl. foreign certificates (form validated and paid by April 30; step-2 documents by July 10). The date is printed without a year; for the September 2027 start it is 30 April 2027. Application fee CHF 150 for foreign certificates.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -5566,7 +5677,7 @@
       },
       "unit": "CHF per semester",
       "period": "semester",
-      "academic_year": "from the 2025 fall semester (no academic year stated)",
+      "academic_year": null,
       "population": "foreign students who take up residence in Switzerland for study purposes",
       "source_url": "https://www.epfl.ch/education/studies/en/rules-and-procedures/study-taxes/tuition-fee-other-fees/",
       "quote": "only the CHF 730 semester tuition fee is tripled by this measure (it is thus raised to CHF 2190 per semester)",
@@ -5576,10 +5687,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Per semester; total semester invoice CHF 2240 for these students (2190 tuition + 25 AGEPoly + 16 sports + 9 social fund). Swiss nationals and foreigners resident in Switzerland for another reason pay CHF 730. Index adaptation every four years (first in 2029). Not multiplied out.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "from the 2025 fall semester (no academic year stated)"
      }
     ],
     "scholarship_exists": [
@@ -5763,13 +5874,7 @@
      }
     ]
    },
-   "unknown": [
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-04-30). Expert (2026-10-19): Same deadline for all bachelor/CMS applicants incl. foreign certificates (form validated and paid by April 30; step-2 documents by July 10). The date is printed without a year; for the September 2027 start it is 30 April 2027. Application fee CHF 150 for foreign certificates."
-    }
-   ],
+   "unknown": [],
    "not_applicable": [
     {
      "question": "english",
@@ -5799,7 +5904,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 9,
+   "known_fact_count": 10,
    "source_batches": [
     "batch6",
     "topup_documents2"
@@ -6472,7 +6577,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-01",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admission.princeton.edu/apply/first-year-application-dates-deadlines",
+      "quote": "Jan. 1 Application with Princeton-specific Questions Due",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Regular Decision; single-choice early action Nov. 1. The table prints no year: it is the current (fall 2027 entry) cycle; 'Feb. 1 Princeton Financial Aid Application Due'. Same deadlines for international applicants (no separate round). Owner ruling: US university without a CS-specific admissions page; the university-wide undergraduate admissions page is the source, scoped to the university.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -6556,15 +6681,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No GPA or grade minimum published on the admission pages read (apply, international-students); holistic review."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-01). Expert (2026-10-19): Regular Decision; single-choice early action Nov. 1. The table prints no year: it is the current (fall 2027 entry) cycle; 'Feb. 1 Princeton Financial Aid Application Due'. Same deadlines for international applicants (no separate round). Owner ruling: US university without a CS-specific admissions p…"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 4
   },
   "qs2027-028": {
    "seed_id": "qs2027-028",
@@ -6650,7 +6770,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-12-01",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.sydney.edu.au/study/applying/application-dates.html",
+      "quote": "Application closing date Semester 1 (Feb) 1 December of the year prior to commencement",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "International students, undergraduate, applying directly to the University: Semester 1 (February 2027) closes 1 December 2026; Semester 2 (August) '29 May of the commencing year'. Students taking an Australian Year 12 or an IB diploma in Australia apply through UAC instead.",
+      "year_inferred": 2026,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -6883,16 +7023,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum. The 2027 International Admission Guide lists indicative admission scores for B Advanced Computing: International ATAR 90, IB Diploma 34 (and national equivalents such as USA - SAT 1340); 'All scores published are indicative only'. Not a published minimum."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not filled. The only official statement read is year-relative: 'Semester 1 (Feb) 1 December of the year prior to commencement' (https://www.sydney.edu.au/study/applying/application-dates.html, re-read 2026-10-19); no page read prints '1 December 2026' for Semester 1 2027. The year is not inferred.",
-     "source_batch": "topup_round5"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 13,
+   "known_fact_count": 14,
    "source_batches": [
     "batch1",
     "topup_round5",
@@ -7308,7 +7442,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-15",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.mcgill.ca/undergraduate-admissions/apply/requirements/international/other",
+      "quote": "Deadlines for admission DEADLINES Application for admission January 15",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Page 'Other international high schools'. Year not printed; applications open October 1 for Fall 2027. Major Entrance Scholarship application & documents: January 21. No timezone printed.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -7459,15 +7613,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Could not classify the threshold: Equivalent of a B+ average on the high school record (university-wide minimum for 'Other international high schools'); most programs higher"
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-15). Expert (2026-10-19): Page 'Other international high schools'. Year not printed; applications open October 1 for Fall 2027. Major Entrance Scholarship application & documents: January 21. No timezone printed."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 9,
+   "known_fact_count": 10,
    "source_batches": [
     "batch3",
     "topup_round2",
@@ -10456,7 +10605,7 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): International (direct application to UQ) route; Year 12 in Australia applies via QTAC. Semester 1 2027 start -> 30 November 2026; Semester 2 2027 -> 31 May 2027. The rule is printed without a year (relative to the year of commencement)."
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): International (direct application to UQ) route; Year 12 in Australia applies via QTAC. Semester 1 2027 start -> 30 November 2026; Semester 2 2027 -> 31 May 2027. The rule is printed without a year (relative to the year of commencement). Year not inferred: the quote names another intake or round ('semester 2')."
     }
    ],
    "not_applicable": [],
@@ -11125,7 +11274,7 @@
       },
       "unit": "EUR per year",
       "period": "year",
-      "academic_year": "not stated",
+      "academic_year": null,
       "population": "non-EU students",
       "source_url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/tuition-fees",
       "quote": "Non-EU Students €19,600 / year",
@@ -11135,10 +11284,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "'ANNUAL TUITION FEES'; EU/EEA €15,900/year. 'Tuition fees remain constant throughout the Program.' No academic year printed on the page; 'Rates are subject to change.'",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "not stated"
      }
     ],
     "scholarship_exists": [
@@ -12295,7 +12444,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-11-30",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international (all first-year applicants; same deadline)",
+      "source_url": "https://admission.ucla.edu/apply/first-year",
+      "quote": "Applications can be submitted October 1-December 1. August 1 UC application opens October 1 - November 30 Application filing period",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "UC application filing period for fall entry; same for all first-year applicants, international included. The page itself is inconsistent (prose 'October 1-December 1' vs table 'October 1 - November 30') and prints no year; both kept, the table value preferred.",
+      "year_inferred": 2026,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -12490,15 +12659,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): Prose/indicative only: 'Grades and GPA (4.0 average unweighted GPA for Fall 2025 admits)' (https://admission.ucla.edu/apply/first-year); no minimum for international applicants on ucla.edu."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): UC application filing period for fall entry; same for all first-year applicants, international included. The page itself is inconsistent (prose 'October 1-December 1' vs table 'October 1 - November 30') and prints no year; both kept, the table value preferred."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 8,
+   "known_fact_count": 9,
    "source_batches": [
     "batch8",
     "topup_documents4"
@@ -13877,7 +14041,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-04",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.cmu.edu/admission/admission/application-plans-deadlines",
+      "quote": "Regular Decision Timeline Deadline: January 4",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Year not printed (the current cycle is fall 2027 entry). International applicants use the same plans: 'For international students, the application procedure and timetables are essentially the same as for candidates applying from schools in the U.S.' (international-applicants page). Early Decision (binding): 'Deadline: November 2'. No timezone printed.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -14160,15 +14344,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No published GPA minimum. Prose: 'Carnegie Mellon is committed to a holistic approach to admission where no single grade, score or activity guarantees or disqualifies any candidate' (standardized-testing page). SCS testing policy not recorded here."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-04). Expert (2026-10-19): Year not printed (the current cycle is fall 2027 entry). International applicants use the same plans: 'For international students, the application procedure and timetables are essentially the same as for candidates applying from schools in the U.S.' (international-applicants page). Early Decision (…"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 14,
+   "known_fact_count": 15,
    "source_batches": [
     "batch3",
     "topup_round2",
@@ -14784,7 +14963,7 @@
    "source_case": "qs2027-059",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": null,
+   "verified_on": "2026-10-19",
    "verified_on_basis": "ci_evidence_check",
    "university": "KU Leuven",
    "country": "Belgium",
@@ -14802,18 +14981,33 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-02-01",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.kuleuven.be/english/apply/application-instructions/apply-to-kuleuven",
+      "quote": "For Dutch-taught programmes, the deadline for non-EEA applicants is 1 February .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "University-wide rule for Dutch-taught programmes (the CS bachelor is Dutch-taught); year not printed next to the date, but the same paragraph refers to the 2027-2028 registration deadline (22/09/2027), so 1 February 2027 for the 2027-28 intake. EEA applicants and non-EEA holders of a Belgian residence permit may apply until 22/09/2027.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
     "documents": []
    },
    "unknown": [
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-02-01). Expert (2026-10-19): University-wide rule for Dutch-taught programmes (the CS bachelor is Dutch-taught); year not printed next to the date, but the same paragraph refers to the 2027-2028 registration deadline (22/09/2027), so 1 February 2027 for the 2027-28 intake. EEA applicants and non-EEA holders of a Belgian reside…"
-    },
     {
      "question": "tuition",
      "key": "tuition",
@@ -14854,7 +15048,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 0
+   "known_fact_count": 1
   },
   "qs2027-060": {
    "seed_id": "qs2027-060",
@@ -14920,7 +15114,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-05-01",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.uva.nl/programmas/bachelors/informatica/toelating-en-inschrijven/toelating-en-inschrijven.html",
+      "quote": "Meld je voor 1 mei aan in Studielink",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Section 'Aanmelden met een buitenlands diploma' (foreign diploma): register in Studielink before 1 May. Printed without a year; the same page gives UvA Matching dates in 2027 ('uiterlijk op 15 juni 2027'), so it describes the September 2027 intake. 'Vanaf 1 oktober tot uiterlijk 1 mei kun je je inschrijven'.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -14991,13 +15205,7 @@
     ],
     "documents": []
    },
-   "unknown": [
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-05-01). Expert (2026-10-19): Section 'Aanmelden met een buitenlands diploma' (foreign diploma): register in Studielink before 1 May. Printed without a year; the same page gives UvA Matching dates in 2027 ('uiterlijk op 15 juni 2027'), so it describes the September 2027 intake. 'Vanaf 1 oktober tot uiterlijk 1 mei kun je je ins…"
-    }
-   ],
+   "unknown": [],
    "not_applicable": [
     {
      "question": "english",
@@ -15027,7 +15235,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 4
   },
   "qs2027-061": {
    "seed_id": "qs2027-061",
@@ -15718,10 +15926,9 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Fee table in the October 2027 enrollment guidelines: undergraduate course admission fee JPY 282,000 (full waiver available), tuition JPY 535,800 annual ('Full or partial waivers available'); preparatory course JPY 296,000 for 6 months. The academic year of the figure is not printed (guidelines for the October 2027 intake); fees 'subject to change without prior notice'.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true
      }
     ],
     "scholarship_exists": [
@@ -16190,7 +16397,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-05",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admission.brown.edu/first-year",
+      "quote": "Regular Decision applicants receive a decision by early April. Deadline: January 5",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Regular Decision; Early Decision November 1. Year not printed on the page (current cycle = fall 2027 entry). 'There is not a separate application for international applicants.' (admission.brown.edu/international). Owner ruling: US university without a CS-specific admissions page; the university-wide undergraduate admissions page is the source, scoped to the university.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -16336,15 +16563,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No GPA or grade minimum: 'you should feel confident that your accomplishments would allow you to be admitted to a leading university in your own country' (https://admission.brown.edu/international/admission-criteria). Prose only."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-05). Expert (2026-10-19): Regular Decision; Early Decision November 1. Year not printed on the page (current cycle = fall 2027 entry). 'There is not a separate application for international applicants.' (admission.brown.edu/international). Owner ruling: US university without a CS-specific admissions page; the university-wid…"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 9,
+   "known_fact_count": 10,
    "source_batches": [
     "batch10",
     "topup_documents2"
@@ -17146,7 +17368,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-04",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "January 4 Application for Regular Decision",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "'The information below represents the 2026-27 admission cycle requirements and deadlines.' Year not printed next to the date. 'There is no separate application for international students.' Early Decision: November 2. No timezone printed.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -17412,15 +17654,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No first-year GPA minimum. Prose: 'We look at the courses you’ve taken from what’s available to you, individual grades in academic courses, overall GPA, and class rank (when available).' (The 3.7 college GPA on the same page is for transfer applicants.)"
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-04). Expert (2026-10-19): 'The information below represents the 2026-27 admission cycle requirements and deadlines.' Year not printed next to the date. 'There is no separate application for international students.' Early Decision: November 2. No timezone printed."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 12,
+   "known_fact_count": 13,
    "source_batches": [
     "batch3",
     "topup_documents2"
@@ -17523,7 +17760,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-04-15",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.lu.se/studera/anmalan-och-antagning/viktiga-datum-anmalan-och-antagning",
+      "quote": "Sista anmälningsdag är normalt den 15 april inför höstterminen",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "National admission round (Antagning.se) — the round a non-EU applicant uses for a Swedish-taught programme; no year printed (\"normalt\"), so for autumn 2027 this is 15 April 2027 unless the 15th is a holiday. TGDAT page itself: \"Det finns inga tillfällen att söka till just nu\".",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -17533,7 +17790,7 @@
       },
       "unit": "SEK per programme (total, 3 years)",
       "period": "programme (total, 3 years)",
-      "academic_year": "not stated (latest occasion shown: Höst 2026)",
+      "academic_year": null,
       "population": "citizens outside the EU/EEA and Switzerland",
       "source_url": "https://www.lu.se/studera/hogskoleingenjorsutbildning-i-datateknik-TGDAT",
       "quote": "Totalt pris för programmet/kursen: 555 000 kr Första betalningen: 92 500 kr",
@@ -17543,10 +17800,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Total programme price; first payment 92 500 kr, paid before each semester (\"Avgiften betalas i en omgång i förväg inför varje termin\"). Application fee 900 kr. Not converted to a yearly figure. Related programme TGDAT.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "not stated (latest occasion shown: Höst 2026)"
      }
     ],
     "scholarship_exists": [],
@@ -17625,11 +17882,6 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): Selection by grades (66%) and Högskoleprovet (34%); the page lists past admission scores (Höstterminen 2026: BI 17,17) — past-cycle results, not a published minimum."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-04-15). Expert (2026-10-19): National admission round (Antagning.se) — the round a non-EU applicant uses for a Swedish-taught programme; no year printed (\"normalt\"), so for autumn 2027 this is 15 April 2027 unless the 15th is a holiday. TGDAT page itself: \"Det finns inga tillfällen att söka till just nu\"."
     }
    ],
    "not_applicable": [
@@ -17643,7 +17895,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 7,
+   "known_fact_count": 8,
    "source_batches": [
     "batch4",
     "topup_round3",
@@ -17736,7 +17988,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-12-01",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admissions.utexas.edu/apply/international-students/",
+      "quote": "Regular Decision Deadline December 1",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "International Students page, Key Dates, Summer/Fall Enrollment: Early Action October 15, Regular Decision December 1 (supplemental materials December 10). Decisions dated 2027 on the same page, so the cycle is fall 2027 entry; the deadline itself is printed WITHOUT a year. No time zone.",
+      "year_inferred": 2026,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [],
     "scholarship_exists": [
      {
@@ -17948,11 +18220,6 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA or grade threshold published for international first-year applicants on the pages read; holistic review."
     },
     {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-12-01). Expert (2026-10-19): International Students page, Key Dates, Summer/Fall Enrollment: Early Action October 15, Regular Decision December 1 (supplemental materials December 10). Decisions dated 2027 on the same page, so the cycle is fall 2027 entry; the deadline itself is printed WITHOUT a year. No time zone."
-    },
-    {
      "question": "tuition",
      "key": "tuition",
      "reason": "No single amount and currency. Expert (2026-10-19): Cost of attendance for 'the 2026-27 academic year', Fall & Spring semesters, non-resident: a RANGE, $42,554-$51,106 (varies by college/program; College of Natural Sciences adds a $500 non-resident differential per semester, included in advertised rates). No single amount; no 2027-28 figure. Interna…"
@@ -17964,7 +18231,7 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 12,
+   "known_fact_count": 13,
    "source_batches": [
     "batch5",
     "topup_documents2"
@@ -18122,7 +18389,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-05",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.admissions.illinois.edu/first-year-dates/",
+      "quote": "Regular Deadline Jan 5 Standard timeline for full consideration.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "First-year timeline, applies to international first-year applicants too; Early Action Nov 1 (non-binding). The page prints no year: 2027-01-05 is the fall 2027 cycle by inference.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -18295,15 +18582,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No published GPA minimum for first-year applicants; holistic review (Grainger scholarship FAQ mentions 'high school GPA and rigor' as review inputs, prose)."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-05). Expert (2026-10-19): First-year timeline, applies to international first-year applicants too; Early Action Nov 1 (non-binding). The page prints no year: 2027-01-05 is the fall 2027 cycle by inference."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 7,
+   "known_fact_count": 8,
    "source_batches": [
     "batch7",
     "topup_documents2"
@@ -19472,7 +19754,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-06-30",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.gla.ac.uk/undergraduate/degrees/computingscience/",
+      "quote": "Application deadlines 15 October : if including Dentistry, Medicine, Veterinary Medicine or also applying to Oxford or Cambridge 13 January : all other UK applicants (unless otherwise stated on the UCAS website) 30 June : international students.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "International students: 30 June (2027 entry page); 'We do not usually accept any applications after these deadlines.' UK applicants: 13 January. Year not printed next to the date.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -19553,15 +19855,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published on the programme page; entry is by national qualifications (A-level/SQA/IB grade offers) and the admissions guidance pages."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-06-30). Expert (2026-10-19): International students: 30 June (2027 entry page); 'We do not usually accept any applications after these deadlines.' UK applicants: 13 January. Year not printed next to the date."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5
+   "known_fact_count": 6
   },
   "qs2027-081": {
    "seed_id": "qs2027-081",
@@ -19672,7 +19969,27 @@
       "stale": false
      }
     ],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-11-30",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admissions.ucsd.edu/first-year/application-timeline.html",
+      "quote": "October 1 - November 30 Submit Your Application Submit the University of California Application by the November 30 deadline.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "UC Application filing period for fall 2027 first-year entry; the same for international applicants. Printed without a year.",
+      "year_inferred": 2026,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -19813,15 +20130,9 @@
      }
     ]
    },
-   "unknown": [
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): UC Application filing period for fall 2027 first-year entry; the same for international applicants. Printed without a year."
-    }
-   ],
+   "unknown": [],
    "not_applicable": [],
-   "known_fact_count": 10,
+   "known_fact_count": 11,
    "source_batches": [
     "batch2",
     "topup_round2",
@@ -19934,7 +20245,7 @@
       },
       "unit": "SEK per full programme (3 years)",
       "period": "full programme (3 years)",
-      "academic_year": "not stated",
+      "academic_year": null,
       "population": "non-EU/EEA/Swiss citizens, BSc Information and Communication Technology",
       "source_url": "https://www.kth.se/en/studies/bachelor/information-communication-technology/fees-1.646274",
       "quote": "The full programme tuition fee for non-EU/EEA/Swiss citizens studying the bachelor's programme in Information and Communication Technology is SEK 453,000.",
@@ -19944,10 +20255,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Published as a whole-programme figure, not per year; academic year not stated (page last changed Feb 17, 2025). Charged per semester in advance. Application fee SEK 900. Not multiplied or divided.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "not stated"
      }
     ],
     "scholarship_exists": [],
@@ -20513,7 +20824,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-07-15",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.informatik.uni-heidelberg.de/studium/bachelor",
+      "quote": "The application deadline is generally July 15 of the year in which you want to start your studies",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Faculty page; portal opens June 1. No separate international round is stated on this page (the central study finder shows deadlines only dynamically). Printed without a year; for winter semester 2027/28 it is 15 July 2027.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -20523,7 +20854,7 @@
       },
       "unit": "EUR per semester",
       "period": "semester",
-      "academic_year": "since winter semester 2017/18 (no academic year stated)",
+      "academic_year": null,
       "population": "non-EU/non-EEA students with a foreign university entrance qualification (Baden-Württemberg)",
       "source_url": "https://www.uni-heidelberg.de/en/study/management-of-studies/semester-fees/tuition-fees-for-international-students",
       "quote": "International students from non-EU (European Union) and non-EEA (European Economic Area - Iceland, Liechtenstein, Norway) countries with a foreign university entrance qualification will be required to pay a tuition fee of EUR 1500 per semester",
@@ -20533,10 +20864,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Per semester, plus the semester contribution EUR 189.80 (programme page; 'as of the 2026/27 winter semester' on the financing page). Exemptions under § 5 LHGebG. Not multiplied out.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "since winter semester 2017/18 (no academic year stated)"
      }
     ],
     "scholarship_exists": [
@@ -20587,13 +20918,7 @@
     ],
     "documents": []
    },
-   "unknown": [
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-07-15). Expert (2026-10-19): Faculty page; portal opens June 1. No separate international round is stated on this page (the central study finder shows deadlines only dynamically). Printed without a year; for winter semester 2027/28 it is 15 July 2027."
-    }
-   ],
+   "unknown": [],
    "not_applicable": [
     {
      "question": "english",
@@ -20623,7 +20948,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 4
   },
   "qs2027-088": {
    "seed_id": "qs2027-088",
@@ -20931,7 +21256,7 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): Principal dates, entry dated 30 November in the 2026 calendar (the day and month are separate cells; the quote prints only the session year 2027). Applicants based in Australia: 15 January (application-dates page)."
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): Principal dates, entry dated 30 November in the 2026 calendar (the day and month are separate cells; the quote prints only the session year 2027). Applicants based in Australia: 15 January (application-dates page). Year not inferred: the quote does not print this day and month."
     }
    ],
    "not_applicable": [],
@@ -21066,7 +21391,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-05-15",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://hwxy.nju.edu.cn/lxnd/zsxx/bkxm/sbzn/index.html",
+      "quote": "申报时间 3月1日至5月15日",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Application period 1 March - 15 May for international bachelor applicants; the guide is for 2027 entry (it cites the 2027 catalogue and age on 2027-09-01) but the date carries no year. CSCA scores also due 15 May.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -21076,7 +21421,7 @@
       },
       "unit": "CNY per year",
       "period": "year",
-      "academic_year": "not stated",
+      "academic_year": null,
       "population": "international long-term students, undergraduate, Science, Engineering & Business",
       "source_url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Costs/Tuition/index.html",
       "quote": "Undergraduate 21000 24000 42000",
@@ -21086,10 +21431,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Table 'Long-term Students (RMB/academic year)', columns Humanities & Social Sciences / Science, Engineering & Business / Medicine. The Bachelor's Programs page also lists '¥32,000 per academic year for programs of the Software Institute' - Computer Science & Technology is in the School of Computer Science, so the science rate is taken; confirm with the office.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "not stated"
      }
     ],
     "scholarship_exists": [
@@ -21328,11 +21673,6 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published: selection by material review 'according to high-school grades, language level and overall ability' plus written test and interview for the School of Computer Science; CSCA test required (STEM Chinese, Mathematics, Physics per the 2027 catalogue). Source: https://hwxy.n…"
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-05-15). Expert (2026-10-19): Application period 1 March - 15 May for international bachelor applicants; the guide is for 2027 entry (it cites the 2027 catalogue and age on 2027-09-01) but the date carries no year. CSCA scores also due 15 May."
     }
    ],
    "not_applicable": [
@@ -21355,7 +21695,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 10,
+   "known_fact_count": 11,
    "source_batches": [
     "batch8",
     "topup_documents3"
@@ -21384,7 +21724,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-03-15",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+      "quote": "The application deadline is 15 March at 12:00 Midday CET.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Year not printed; the 15 March 12:00 CET deadline is the annual quota 2 deadline for the September intake, i.e. 15 March 2027 for autumn 2027. Applicants with a non-EU/EEA/non-Nordic diploma can only apply via quota 2; documents/requirements may be completed until 5 July 12:00. Same date on https://www.ku.dk/studies/bachelor/computer-science ('before the application deadline on 15 March at 12:00').",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
@@ -21485,11 +21845,6 @@
    },
    "unknown": [
     {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-03-15). Expert (2026-10-19): Year not printed; the 15 March 12:00 CET deadline is the annual quota 2 deadline for the September intake, i.e. 15 March 2027 for autumn 2027. Applicants with a non-EU/EEA/non-Nordic diploma can only apply via quota 2; documents/requirements may be completed until 5 July 12:00. Same date on https:/…"
-    },
-    {
      "question": "tuition",
      "key": "tuition",
      "reason": "only the not stated fee is published, not 2027/28 (expert value 130,000 DKK per year). Expert (2026-10-19): Bachelor 'Computer Science' entry of the page's programme dropdown ('Select study level: Bachelor' -> 'Computer Science'). The text is held in an inline script object (const uddannelser = {BA: [...]}) and rendered on selection, so it is NOT in the page's readable text: the container quote check is…"
@@ -21529,7 +21884,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4,
+   "known_fact_count": 5,
    "source_batches": [
     "topup_imported",
     "topup_documents3"
@@ -21624,7 +21979,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-12-01",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.psu.edu/admission/undergraduate/how-to-apply",
+      "quote": "Recommended submission deadline for all applications: December 1",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Printed without a year; for Fall 2027 entry it is 1 December 2026. It is a RECOMMENDED date for all applications (international included), not a hard close. Same page: 'For Early Action: Apply by November 1 in order to receive a decision by December 24'. International application fee $75.",
+      "year_inferred": 2026,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [],
     "scholarship_exists": [
      {
@@ -21858,18 +22233,13 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum high-school GPA published for admission (holistic review, STARS self-reported academic record; test-optional). The 3.20 GPA in the bulletin is the entrance-to-major threshold after 29-55 Penn State credits, not an admission requirement."
     },
     {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-12-01). Expert (2026-10-19): Printed without a year; for Fall 2027 entry it is 1 December 2026. It is a RECOMMENDED date for all applications (international included), not a hard close. Same page: 'For Early Action: Apply by November 1 in order to receive a decision by December 24'. International application fee $75."
-    },
-    {
      "question": "tuition",
      "key": "tuition",
      "reason": "Expert did not establish it. Expert (2026-10-19): Not readable as published text: tuition.psu.edu (the Bursar's tuition schedules) answers 403 to our user agent. Penn State Global 'University Park Undergraduates: Breakout of Expenses' (https://global.psu.edu/page/university-park-undergraduates-breakout-expenses) has a table, rendered client-side (…"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 13,
+   "known_fact_count": 14,
    "source_batches": [
     "batch9",
     "topup_round2",
@@ -22189,7 +22559,7 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-15). Expert (2026-10-19): First-year deadlines (no year printed; current cycle = autumn 2027 entry). International first-year students apply for autumn only; same deadline. Official domain in kb_top100_list.json is uw.edu; the official site is www.washington.edu and all pages used here are on washington.edu."
+     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-15). Expert (2026-10-19): First-year deadlines (no year printed; current cycle = autumn 2027 entry). International first-year students apply for autumn only; same deadline. Official domain in kb_top100_list.json is uw.edu; the official site is www.washington.edu and all pages used here are on washington.edu. Year not inferred: the quote names another intake or round ('summer')."
     }
    ],
    "not_applicable": [],
@@ -22279,7 +22649,27 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-05",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.bu.edu/admissions/apply/deadlines/",
+      "quote": "First-Year Regular Admission Deadlines Application* January 5",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Year not printed (current cycle, fall 2027). Same deadline for international first-year applicants. Early Decision: November 2; ED2: January 5; some merit scholarships require applying by December 1.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -22562,15 +22952,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA; recommended high-school curriculum only. BU is test-optional for first-year applicants through fall 2028 (https://www.bu.edu/admissions/apply/first-year/)."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-05). Expert (2026-10-19): Year not printed (current cycle, fall 2027). Same deadline for international first-year applicants. Early Decision: November 2; ED2: January 5; some merit scholarships require applying by December 1."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 14,
+   "known_fact_count": 15,
    "source_batches": [
     "batch1",
     "topup_round2",
@@ -22621,7 +23006,7 @@
       },
       "unit": "JPY per year",
       "period": "year",
-      "academic_year": "not stated on the page",
+      "academic_year": null,
       "population": "all undergraduate students (national university standard fee; no separate international rate)",
       "source_url": "https://www.osaka-u.ac.jp/en/campus/tuition/tuition.html",
       "quote": "Category Tuition Fee per year Tuition Fee per half year Matriculation Fee Entrance Examination Fee Undergraduate student ¥535,800 ¥267,900 ¥282,000 ¥17,000",
@@ -22631,10 +23016,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Tuition per year ¥535,800 (per half year ¥267,900), matriculation fee ¥282,000, entrance examination fee ¥17,000. The page names no academic year.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "not stated on the page"
      }
     ],
     "scholarship_exists": [
@@ -22830,7 +23215,7 @@
       },
       "unit": "JPY per year",
       "period": "year",
-      "academic_year": "not stated (bachelor students entering on or after 2019-04-01)",
+      "academic_year": null,
       "population": "all bachelor students (no separate international rate)",
       "source_url": "https://admissions.isct.ac.jp/ja/013/student-life-and-careers/tuition",
       "quote": "学士課程 17,000 282,000 317,700 635,400",
@@ -22840,10 +23225,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Columns: 検定料 17,000 / 入学料 282,000 / 授業料(半期) 317,700 / 授業料(年間) 635,400 yen; 理工学系 bachelor (2019年4月1日以降). \"上記の額は改定されることがあります\". No academic year printed.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "not stated (bachelor students entering on or after 2019-04-01)"
      }
     ],
     "scholarship_exists": [
@@ -23446,7 +23831,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-07-15",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.mi.fu-berlin.de/inf/stud/bachelor/bachelor-mono/index.html",
+      "quote": "Für das 1. Fachsemester mit Start im WS: 01.06.-15.07.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Application period for the first semester, winter start: 1 June - 15 July; no separate international round on this page (foreign-certificate applicants need the uni-assist VPD beforehand, up to eight weeks). Printed without a year; for WS 2027/28 it is 15 July 2027.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -23456,7 +23861,7 @@
       },
       "unit": "EUR per year",
       "period": "year",
-      "academic_year": "not stated (standing policy; semester fees shown for WS 2026/27)",
+      "academic_year": null,
       "population": "all students in regular (non-continuing-education) programmes, incl. international",
       "source_url": "https://www.fu-berlin.de/studium/studieren/studienorganisation/gebuehren/index.html",
       "quote": "Die Freie Universität Berlin erhebt – außer für weiterbildende Studienangebote – keine Studiengebühren, sondern nur sogenannte „Semestergebühren und -beiträge“",
@@ -23466,10 +23871,10 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "No tuition; semester fees and contributions for new enrolment in WS 2026/27 total EUR 376.80 per semester (incl. EUR 226.80 Deutschlandsemesterticket).",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true,
+      "academic_year_stated": "not stated (standing policy; semester fees shown for WS 2026/27)"
      }
     ],
     "scholarship_exists": [],
@@ -23570,11 +23975,6 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): Local admission restriction (NC): places allocated by the FU statutes ('Satzung zur Vergabe von Studienplätzen in den Bachelorstudiengängen des Fachbereichs Mathematik und Informatik'); no published minimum grade; whether the subject is restricted is set anew each semester."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-07-15). Expert (2026-10-19): Application period for the first semester, winter start: 1 June - 15 July; no separate international round on this page (foreign-certificate applicants need the uni-assist VPD beforehand, up to eight weeks). Printed without a year; for WS 2027/28 it is 15 July 2027."
     }
    ],
    "not_applicable": [
@@ -23606,7 +24006,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 5,
+   "known_fact_count": 6,
    "source_batches": [
     "batch6",
     "topup_documents3"
@@ -23677,7 +24077,27 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-02-28",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.uzh.ch/en/studies/application/deadlines.html",
+      "quote": "Prospective students who require a visa and are therefore dependent on receiving the admission decision in a timely manner for their visa application 1 January until 28 February",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Fall semester admission, applicants with visa requirements; others 1 January until 30 April. The page prints no year.",
+      "year_inferred": 2027,
+      "caveat": "year not printed on the page; assumed current application cycle",
+      "stale": false
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -23697,10 +24117,9 @@
       "verified_on": "2026-10-19",
       "verified_by": "ci",
       "notes": "Plus 'Surcharge for foreign students at Bachelor level 500.—' per semester and CHF 59 mandatory semester contributions. Per semester, academic year not stated; not summed or multiplied.",
-      "stale": true,
-      "stale_reasons": [
-       "the academic year is not stated"
-      ]
+      "stale": false,
+      "caveat": "fee policy page; no academic year printed",
+      "standing_policy": true
      }
     ],
     "scholarship_exists": [
@@ -23889,11 +24308,6 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): Foreign certificates are admitted by country-specific rules (swissuniversities), not by a published grade threshold on UZH pages read."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-02-28). Expert (2026-10-19): Fall semester admission, applicants with visa requirements; others 1 January until 30 April. The page prints no year."
     }
    ],
    "not_applicable": [
@@ -23916,7 +24330,7 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 9,
+   "known_fact_count": 10,
    "source_batches": [
     "batch7",
     "topup_documents2"
@@ -23941,6 +24355,14 @@
    ]
   },
   {
+   "seed_id": "qs2027-004",
+   "question": "deadline",
+   "key": "deadline",
+   "reasons": [
+    "deadline 2026-10-15 has passed"
+   ]
+  },
+  {
    "seed_id": "qs2027-005",
    "question": "tuition",
    "key": "tuition",
@@ -23954,14 +24376,6 @@
    "key": "deadline",
    "reasons": [
     "deadline 2026-10-15 has passed"
-   ]
-  },
-  {
-   "seed_id": "qs2027-008",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
    ]
   },
   {
@@ -24236,14 +24650,6 @@
    "key": "tuition",
    "reasons": [
     "academic year 2026-27 (2026-27 cohort) is before the fall 2027 intake's 2027/28"
-   ]
-  },
-  {
-   "seed_id": "qs2027-022",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
    ]
   },
   {
@@ -24599,14 +25005,6 @@
    ]
   },
   {
-   "seed_id": "qs2027-044",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
-   ]
-  },
-  {
    "seed_id": "qs2027-045",
    "question": "tuition",
    "key": "tuition",
@@ -24927,14 +25325,6 @@
    ]
   },
   {
-   "seed_id": "qs2027-064",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
-   ]
-  },
-  {
    "seed_id": "qs2027-066",
    "question": "tuition",
    "key": "tuition",
@@ -24948,14 +25338,6 @@
    "key": "tuition",
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
-   ]
-  },
-  {
-   "seed_id": "qs2027-071",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
    ]
   },
   {
@@ -24991,14 +25373,6 @@
    ]
   },
   {
-   "seed_id": "qs2027-082",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
-   ]
-  },
-  {
    "seed_id": "qs2027-084",
    "question": "tuition",
    "key": "tuition",
@@ -25012,22 +25386,6 @@
    "key": "documents.secondary_diploma",
    "reasons": [
     "document list published for \"segundo cuatrimestre 2026\", not the fall 2027 intake"
-   ]
-  },
-  {
-   "seed_id": "qs2027-086",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
-   ]
-  },
-  {
-   "seed_id": "qs2027-090",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
    ]
   },
   {
@@ -25109,39 +25467,369 @@
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
    ]
+  }
+ ],
+ "unresolved_drafts": [],
+ "owner_flags": {
+  "yearless_deadlines_with_caveat": true,
+  "standing_fee_policy_current": true
+ },
+ "caveat_facts": [
+  {
+   "seed_id": "qs2027-001",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-04",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-003",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-05",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-004",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2026-10-15",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": true
+  },
+  {
+   "seed_id": "qs2027-005",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-01",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-008",
+   "question": "tuition",
+   "key": "tuition",
+   "value": {
+    "amount": 2190.0,
+    "currency": "CHF"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-016",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-02",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-021",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2026-11-30",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-022",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-04-30",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-022",
+   "question": "tuition",
+   "key": "tuition",
+   "value": {
+    "amount": 2190.0,
+    "currency": "CHF"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-027",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-01",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-028",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2026-12-01",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-030",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-15",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-044",
+   "question": "tuition",
+   "key": "tuition",
+   "value": {
+    "amount": 19600.0,
+    "currency": "EUR"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-049",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2026-11-30",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-055",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-04",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-059",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-02-01",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-060",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-05-01",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-064",
+   "question": "tuition",
+   "key": "tuition",
+   "value": {
+    "amount": 535800.0,
+    "currency": "JPY"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-066",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-05",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-070",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-04",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-071",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-04-15",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-071",
+   "question": "tuition",
+   "key": "tuition",
+   "value": {
+    "amount": 555000.0,
+    "currency": "SEK"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-072",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2026-12-01",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-074",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-05",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-080",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-06-30",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-081",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2026-11-30",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-082",
+   "question": "tuition",
+   "key": "tuition",
+   "value": {
+    "amount": 453000.0,
+    "currency": "SEK"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-086",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-07-15",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-086",
+   "question": "tuition",
+   "key": "tuition",
+   "value": {
+    "amount": 1500.0,
+    "currency": "EUR"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-05-15",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "tuition",
+   "key": "tuition",
+   "value": {
+    "amount": 24000.0,
+    "currency": "CNY"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-091",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-03-15",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-092",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2026-12-01",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-094",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-01-05",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
   },
   {
    "seed_id": "qs2027-095",
    "question": "tuition",
    "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
-   ]
+   "value": {
+    "amount": 535800.0,
+    "currency": "JPY"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
   },
   {
    "seed_id": "qs2027-097",
    "question": "tuition",
    "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
-   ]
+   "value": {
+    "amount": 635400.0,
+    "currency": "JPY"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-099",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-07-15",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
   },
   {
    "seed_id": "qs2027-099",
    "question": "tuition",
    "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
-   ]
+   "value": {
+    "amount": 0.0,
+    "currency": "EUR"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
+  },
+  {
+   "seed_id": "qs2027-100",
+   "question": "deadline",
+   "key": "deadline",
+   "value": "2027-02-28",
+   "caveat": "year not printed on the page; assumed current application cycle",
+   "stale": false
   },
   {
    "seed_id": "qs2027-100",
    "question": "tuition",
    "key": "tuition",
-   "reasons": [
-    "the academic year is not stated"
-   ]
+   "value": {
+    "amount": 720.0,
+    "currency": "CHF"
+   },
+   "caveat": "fee policy page; no academic year printed",
+   "stale": false
   }
- ],
- "unresolved_drafts": []
+ ]
 }

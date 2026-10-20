@@ -109,20 +109,34 @@ def test_the_day_and_month_the_quote_prints():
 # ------------------------------------------------------- yearless deadlines
 
 
-def test_off_by_default_a_yearless_deadline_stays_unknown(tmp_path):
+def test_off_a_yearless_deadline_stays_unknown(tmp_path):
     _draft(tmp_path / "drafts", MIT, deadline=_deadline("2027-01-15", "Apply by January 15"))
-    data = _build(tmp_path, _ci(tmp_path, MIT, "deadline", URL))
+    data = _build(
+        tmp_path,
+        _ci(tmp_path, MIT, "deadline", URL),
+        yearless_deadlines_with_caveat=False,
+        standing_fee_policy_current=False,
+    )
     entry = data["entries"][MIT]
     assert entry["facts"]["deadline"] == []
     assert any("carries no year" in u["reason"] for u in entry["unknown"])
     assert "owner_flags" not in data and "caveat_facts" not in data
-    assert kb_build.KB_YEARLESS_DEADLINES_WITH_CAVEAT is False
+
+
+def test_both_owner_flags_are_on_by_default():
+    # Owner decision 2026-10-20: yes to both.
+    assert kb_build.KB_YEARLESS_DEADLINES_WITH_CAVEAT is True
+    assert kb_build.KB_STANDING_FEE_POLICY_CURRENT is True
+    assert "qs2027-049" not in kb_build.STANDING_FEE_POLICIES  # UCLA: a dated current-year page
 
 
 def test_a_yearless_deadline_is_kept_with_the_inferred_year_and_a_caveat(tmp_path):
     _draft(tmp_path / "drafts", MIT, deadline=_deadline("2027-01-15", "Apply by January 15"))
     data = _build(
-        tmp_path, _ci(tmp_path, MIT, "deadline", URL), yearless_deadlines_with_caveat=True
+        tmp_path,
+        _ci(tmp_path, MIT, "deadline", URL),
+        yearless_deadlines_with_caveat=True,
+        standing_fee_policy_current=False,
     )
     entry = data["entries"][MIT]
     (fact,) = entry["facts"]["deadline"]
@@ -217,12 +231,14 @@ def _fee(amount: float, currency: str, period: str, year: Any, quote: str) -> di
     return {"status": "known", "value": value, "url": ETH_URL, "quote": quote}
 
 
-def test_off_by_default_a_standing_policy_fee_stays_stale(tmp_path):
+def test_off_a_standing_policy_fee_stays_stale(tmp_path):
     _draft(tmp_path / "drafts", ETH, tuition=_fee(2190, "CHF", "semester", None, "CHF 2190 / sem"))
-    data = _build(tmp_path, _ci(tmp_path, ETH, "tuition", ETH_URL))
+    data = _build(
+        tmp_path, _ci(tmp_path, ETH, "tuition", ETH_URL), standing_fee_policy_current=False
+    )
     (fee,) = data["entries"][ETH]["facts"]["tuition"]
     assert fee["stale"] and "the academic year is not stated" in fee["stale_reasons"]
-    assert "caveat" not in fee and kb_build.KB_STANDING_FEE_POLICY_CURRENT is False
+    assert "caveat" not in fee
 
 
 @pytest.mark.parametrize(

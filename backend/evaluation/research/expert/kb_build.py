@@ -128,15 +128,15 @@ _DATE = re.compile(r"(20\d\d-\d\d-\d\d)")
 
 Row = dict[str, Any]
 
-#: Owner decision pending (NEXT_CYCLES_2026-10-19 §3.2 deadlines): keep a
+#: Owner decision 2026-10-20: yes (NEXT_CYCLES_2026-10-19 §3.2 deadlines). Keep a
 #: verified deadline whose quote prints the day and month but no year, with the
 #: year inferred from the intake's application cycle and a caveat. CLI flag
 #: ``--yearless-deadlines-with-caveat``. Off: such a deadline stays unknown.
-KB_YEARLESS_DEADLINES_WITH_CAVEAT = False
-#: Owner decision pending (NEXT_CYCLES_2026-10-19 §5 Q7): show a verified fee
+KB_YEARLESS_DEADLINES_WITH_CAVEAT = True
+#: Owner decision 2026-10-20: yes (NEXT_CYCLES_2026-10-19 §5 Q7). Show a verified fee
 #: of a standing fee policy page that prints no academic year as current, with
 #: a caveat. CLI flag ``--standing-fee-policy-current``. Off: it stays stale.
-KB_STANDING_FEE_POLICY_CURRENT = False
+KB_STANDING_FEE_POLICY_CURRENT = True
 
 
 # ------------------------------------------------------------------ inputs
@@ -790,7 +790,6 @@ STANDING_FEE_POLICIES = {
     "qs2027-044": "Institut Polytechnique de Paris",
     "qs2027-095": "The University of Osaka",
     "qs2027-090": "Nanjing University",
-    "qs2027-049": "University of California, Los Angeles (UCLA)",
     "qs2027-064": "Kyoto University",
     "qs2027-097": "Institute of Science Tokyo",
 }
@@ -1445,17 +1444,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--yearless-deadlines-with-caveat",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=KB_YEARLESS_DEADLINES_WITH_CAVEAT,
         help="keep a verified day-and-month deadline with no printed year, year inferred from "
-        "the intake's application cycle, with a caveat (owner decision; off by default)",
+        "the intake's application cycle, with a caveat (owner decision 2026-10-20; on by default)",
     )
     parser.add_argument(
         "--standing-fee-policy-current",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=KB_STANDING_FEE_POLICY_CURRENT,
         help="show a listed standing fee policy that prints no academic year as current, with "
-        "a caveat (owner decision Q7; off by default)",
+        "a caveat (owner decision Q7, 2026-10-20; on by default)",
     )
     args = parser.parse_args(argv)
     if args.refresh:
