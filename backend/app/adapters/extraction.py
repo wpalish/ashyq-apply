@@ -73,21 +73,31 @@ def html_title(html: str) -> str:
     return h1.get_text(strip=True)[:200] if h1 else ""
 
 
-def pdf_to_text(data: bytes, max_pages: int = 40) -> str:
+def pdf_to_text(data: bytes, max_pages: int = 40, time_cap_s: float = 3.0) -> str:
     """Extract text from an official handbook or fee schedule.
 
     An encrypted PDF that opens without a password (an empty user password,
     common for official guides) is read; one that needs a real password, or
     any malformed file, yields ``""``. Never raises.
-    """
-    from app.adapters.pdf_document import open_reader
 
+    PDF bytes are untrusted and a page can be slow to parse, so besides the
+    page cap there is a time cap (``time_cap_s``, the same default as
+    ``pdf_document.PDF_TIME_CAP_S``): once it is spent the reading stops
+    between pages and returns the text read so far (SEC-3).
+    """
+    from app.adapters import pdf_document
+
+    started = pdf_document._clock()
     try:
-        reader = open_reader(data)
+        reader = pdf_document.open_reader(data)
         if reader is None:
             return ""
-        pages = reader.pages[:max_pages]
-        return _BLANKS.sub("\n\n", "\n".join((p.extract_text() or "") for p in pages)).strip()
+        texts: list[str] = []
+        for index, page in enumerate(reader.pages[:max_pages]):
+            if index and pdf_document._clock() - started > time_cap_s:
+                break
+            texts.append(page.extract_text() or "")
+        return _BLANKS.sub("\n\n", "\n".join(texts)).strip()
     except Exception:  # pragma: no cover - malformed PDFs are common
         return ""
 

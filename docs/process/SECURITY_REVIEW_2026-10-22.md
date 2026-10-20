@@ -29,8 +29,8 @@ The severity scale is the one SECURITY_REVIEW_2026-10-19 used:
 | SR2-06 | Low | `backend/evaluation/research/expert/core_drafts.py` `_number` (l.245); `app/knowledge/claims.py` `tuition_value` (l.538) | **Fixed** (`71c317bb`) |
 | SR2-07 | Low | `frontend/e2e/kb-env/serve-api.sh` `rm -rf "$SCRATCH"` | **Fixed** (`06a67333`) |
 | SR2-08 | Info | `frontend/e2e/kb-env/sitecustomize.py` `_ok` (l.22) | Noted |
-| SR2-09 | Info | `backend/app/adapters/search/site_search.py` l.111-113; `evaluation/research/index_ceiling.py` l.541 | Noted (unreachable or eval only) |
-| SR2-10 | Info | `backend/evaluation/research/wikidata_domains.py` `native_query` (l.695) | Noted |
+| SR2-09 | Info | `backend/app/adapters/search/site_search.py` l.111-113; `evaluation/research/index_ceiling.py` l.541 | **Fixed** in `site_search.py` (SEC-3); `index_ceiling.py` noted (eval only, 20 kB) |
+| SR2-10 | Info | `backend/evaluation/research/wikidata_domains.py` `native_query` (l.695) | **Fixed** (SEC-3) |
 | SR-07 | Info | `Fetcher._invalid_url` | Re-read: unchanged, still Info |
 | SR-08 | Info | `app/domain/message_keys.py` | Re-read with the 18 new templates: worst 18 ms; still Info |
 
@@ -275,18 +275,34 @@ The guard is not on any production path:
 - `PYTHONPATH` is set only inside `serve-api.sh`.
 - The scratch directory defaults to the ignored `backend/data/e2e-kb`.
 
-### SR2-09 (Info): the same quadratic tag patterns where nothing reaches them
+### SR2-09 (Info, fixed in `site_search.py`): the same quadratic tag patterns where nothing reaches them
 
 `site_search.py` (`_FORM`, `_ATTR`, `_SEARCH_INPUT`) has the SR2-01/02 shape: 1.6 s at 120 kB for `_FORM`, and
 21 s for `_SEARCH_INPUT` at 140 kB, although the code only applies it to a 2,000-character tail. No module imports
 `site_search`; `fusion.py` only names the string. `evaluation/research/index_ceiling.py:541` searches 20 kB, which
 is under a second, and it is evaluation only. If either becomes reachable, use the `_tags` helper above.
 
-### SR2-10 (Info): Wikidata item ids go into the next query unvalidated
+**Fixed in `site_search.py` (SEC-3, NEXT_CYCLES_2026-10-23 #8).** `_FORM` is `<form\b[^>]*+>?` with matches that
+reach the end without `>` dropped (`_form_tags`), as `live_discovery._link_tags` does. `_ATTR` tries a name once per
+run of name characters and takes it possessively, as `_attributes` does. `_SEARCH_INPUT` is replaced by
+`_search_input_names`, which reads each `<input`'s last working `name="…"` and skips every later `<input` before
+the same `>` once one fails. The discovery helpers are not imported: their attribute grammar differs (unquoted
+values, first duplicate wins, `.` in names), so importing them would change what this module matches.
+`tests/test_site_search.py` keeps the old patterns as the oracle: identical results on 25,000 generated tags and
+20,000 random markup strings, and SR2-02's three inputs plus 200 kB of `<form`, `<input` and a 50,000-character
+name each under 0.5 s through `detect_surfaces` and the three scans. `index_ceiling.py` is unchanged.
+
+### SR2-10 (Info, fixed): Wikidata item ids go into the next query unvalidated
 
 `native_query` writes `wd:{item}` for ids that `_qid` cut from the previous response's URIs. The endpoint is fixed
 and fetched over HTTPS, so only a compromised Wikidata could shape the second query, and the tool is run by hand.
-Proposal: keep only `^Q\d+$`. The SR-06 points are in place:
+Proposal: keep only `^Q\d+$`.
+
+**Fixed (SEC-3).** `_qid` returns the id only when it is `Q<digits>` (`fullmatch`), else `""`; `collect` and
+`_countries` drop a row without an id, and `native_query` writes `wd:<id>` only for a valid id. Test:
+`TestItemIds` in `test_wikidata_domains.py` (`Q1;DROP` yields no item and no query value).
+
+The SR-06 points are in place:
 
 - The owner's exception is recorded in AGENTS.md §6.
 - The body is streamed under `MAX_RESPONSE_BYTES`.
@@ -340,8 +356,10 @@ Proposal: keep only `^Q\d+$`. The SR-06 points are in place:
   - `open_reader` calls `decrypt("")` only. `NOT_DECRYPTED` returns None and an empty result; no password is
     guessed and no exception or message escapes.
   - Key derivation is constant-cost.
-  - `read_pdf` keeps its page and time caps. `extraction.pdf_to_text` keeps its 40-page cap but has no time cap; that
-    gap predates this range and is unchanged.
+  - `read_pdf` keeps its page and time caps. `extraction.pdf_to_text` kept its 40-page cap but had no time cap; that
+    gap predated this range. **Fixed (SEC-3):** `pdf_to_text(..., time_cap_s=3.0)` (the default pinned to
+    `PDF_TIME_CAP_S`) stops between pages once the cap is spent and returns what it read. Tests:
+    `TestPdfToTextTimeCap` in `test_live_extraction.py`.
 - **New dependencies:**
   - `cryptography==50.0.2` is pinned (installed 50.0.2), and `pip-audit -r backend/requirements.txt` runs in CI.
     Its transitive `cffi`/`pycparser` are unpinned, as all transitive dependencies are here.

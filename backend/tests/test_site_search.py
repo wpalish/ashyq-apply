@@ -12,10 +12,14 @@ page.
 
 from __future__ import annotations
 
+import random
+import re
+import time
 from datetime import UTC, datetime
 
 import pytest
 
+from app.adapters.search import site_search
 from app.adapters.search.site_search import (
     MAX_PAGES,
     MAX_RESPONSE_BYTES,
@@ -240,3 +244,123 @@ class TestWhatIsQuietlyIgnored:
         )
 
         assert [s.endpoint for s in surfaces] == ["https://nu.edu.kz/api/programmes/search?q=cs"]
+
+
+# ------------------------------------------------- linear tag scans (SEC-3, SR2-09)
+
+#: The patterns before SEC-3, kept as the oracle: quadratic on hostile markup,
+#: but what they matched is what the linear scans must match.
+_OLD_FORM = re.compile(r"<form\b[^>]*>", re.IGNORECASE)
+_OLD_ATTR = re.compile(r"""(\w[\w:-]*)\s*=\s*["']([^"']*)["']""")
+_OLD_SEARCH_INPUT = re.compile(
+    r"""<input\b[^>]*\bname\s*=\s*["']([^"']+)["'][^>]*>""", re.IGNORECASE
+)
+
+_PIECES = (
+    "<form",
+    "<FORM",
+    "<formx",
+    "<input",
+    "<INPUT",
+    "<inputs",
+    "<",
+    ">",
+    " ",
+    "\t",
+    "\n",
+    '"',
+    "'",
+    "=",
+    " = ",
+    "name",
+    "NAME",
+    "data-name",
+    "action",
+    "method",
+    "q",
+    "search",
+    "/",
+    "-",
+    ":",
+    "_",
+    ".",
+    "a",
+    "b",
+    "1",
+    "é",
+    "ß",
+)
+
+
+def _markup(rng: random.Random, length: int) -> str:
+    return "".join(rng.choice(_PIECES) for _ in range(length))
+
+
+def _tag(rng: random.Random) -> str:
+    """A realistic form or input tag, now and then malformed."""
+    attrs = []
+    for _ in range(rng.randint(0, 5)):
+        name = rng.choice(("action", "name", "id", "data-name", "aria-label", "x:y", "_q", "-a"))
+        quote = rng.choice(('"', "'", "", '"'))
+        value = rng.choice(("/search", "q", "a>b", "", "query", "s", "x'y", "/find?x=1"))
+        space = rng.choice(("", " ", "  "))
+        attrs.append(f"{name}{space}={space}{quote}{value}{quote}")
+    close = rng.choice((">", ">", "/>", ""))
+    return f"<{rng.choice(('form', 'input', 'FORM', 'Input'))} {' '.join(attrs)}{close}"
+
+
+def _old_and_new(text: str) -> tuple[tuple[object, ...], tuple[object, ...]]:
+    old = (
+        [(m.start(), m.end()) for m in _OLD_FORM.finditer(text)],
+        _OLD_ATTR.findall(text),
+        _OLD_SEARCH_INPUT.findall(text),
+    )
+    new = (
+        [(m.start(), m.end()) for m in site_search._form_tags(text)],
+        site_search._ATTR.findall(text),
+        site_search._search_input_names(text),
+    )
+    return old, new
+
+
+def test_the_linear_scans_match_the_old_patterns_on_generated_tags():
+    rng = random.Random(20261023)
+    for _ in range(20_000):
+        text = _tag(rng)
+        old, new = _old_and_new(text)
+        assert new == old, text
+    for _ in range(5_000):
+        text = " ".join(_tag(rng) for _ in range(rng.randint(2, 4)))
+        old, new = _old_and_new(text)
+        assert new == old, text
+
+
+def test_the_linear_scans_match_the_old_patterns_on_random_markup():
+    rng = random.Random(9)
+    for _ in range(20_000):
+        text = _markup(rng, rng.randint(0, 40))
+        old, new = _old_and_new(text)
+        assert new == old, text
+
+
+_HOSTILE = {
+    # SR2-02's three inputs, then the same shapes for this module's own tags.
+    "html": "<html " * 40_000,
+    "link": "<link " * 40_000,
+    "long-link": '<html lang="de"><link ' + "a" * 200_000 + ">",
+    "form": "<form " * 40_000,
+    "input": '<form action="/search">' + "<input " * 40_000,
+    "attr-name": '<form action="/search" ' + "a" * 50_000 + ">",
+    "name-runs": '<form action="/search"><input' + " name" * 40_000 + ">",
+}
+
+
+@pytest.mark.parametrize("label", sorted(_HOSTILE))
+def test_hostile_markup_is_read_in_linear_time(label):
+    text = _HOSTILE[label]
+    started = time.perf_counter()
+    detect_surfaces(text, "https://www.example.edu/", now=NOW)
+    site_search._form_tags(text)
+    site_search._ATTR.findall(text)
+    site_search._search_input_names(text)
+    assert time.perf_counter() - started < 0.5

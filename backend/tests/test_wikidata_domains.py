@@ -504,3 +504,36 @@ class TestNativeNames:
         assert all(
             r["seed_id"] is None and set(r) == {"seed_id", "name", "country", "city"} for r in rows
         )
+
+
+class TestItemIds:
+    """SR2-10 / SEC-3: an id cut from a response goes into the next query only as ``Q<digits>``."""
+
+    def test_only_a_q_number_is_an_item(self):
+        from evaluation.research.wikidata_domains import _qid
+
+        assert _qid(E + "Q1001") == "Q1001"
+        for uri in (
+            E + "Q1;DROP",
+            E + "Q1 } ?x ?y ?z {",
+            E + "P856",
+            E + "q12",
+            E + "Q",
+            E + "Q12\n",
+            "",
+        ):
+            assert _qid(uri) == ""
+
+    def test_a_hostile_uri_yields_no_item_and_no_query_value(self):
+        from evaluation.research.wikidata_domains import collect, native_query
+
+        found = collect(
+            [
+                {"item": E + "Q1;DROP", "itemLabel": "Injected", "site": "https://x.example/"},
+                {"item": E + "Q7", "itemLabel": "Real", "site": "https://real.example/"},
+            ]
+        )
+        assert set(found) == {"Q7"}
+        query = native_query(["Q1;DROP", "", "Q7"], ["de"])
+        assert "VALUES ?item { wd:Q7 }" in query
+        assert "DROP" not in query and "wd: " not in query

@@ -506,3 +506,51 @@ class TestPrecisionGuards:
         assert any("how-to-apply" in e for e in result.errors), (
             "the diagnostic must name the page it is about"
         )
+
+
+class TestPdfToTextTimeCap:
+    """SEC-3: ``pdf_to_text`` had a page cap but no time cap; ``read_pdf`` had both."""
+
+    @staticmethod
+    def _pdf(pages: int) -> bytes:
+        from tests.test_pdf_document import build_pdf
+
+        return build_pdf([[f"Page {n} tuition EUR {n}"] for n in range(1, pages + 1)])
+
+    def test_the_default_cap_is_the_pdf_readers(self):
+        import inspect
+
+        from app.adapters.extraction import pdf_to_text
+        from app.adapters.pdf_document import PDF_TIME_CAP_S
+
+        default = inspect.signature(pdf_to_text).parameters["time_cap_s"].default
+        assert default == PDF_TIME_CAP_S
+
+    def test_a_200_page_pdf_with_a_tiny_cap_returns_what_it_read_within_a_second(self):
+        import time
+
+        from app.adapters.extraction import pdf_to_text
+
+        data = self._pdf(200)
+        started = time.perf_counter()
+        text = pdf_to_text(data, max_pages=200, time_cap_s=0.01)
+        assert time.perf_counter() - started < 1.0
+        assert "Page 1 tuition" in text
+        assert "Page 200 tuition" not in text
+
+    def test_it_stops_between_pages_once_the_cap_is_spent(self, monkeypatch):
+        from app.adapters import pdf_document
+        from app.adapters.extraction import pdf_to_text
+
+        ticks = iter(float(n) for n in range(1000))
+        monkeypatch.setattr(pdf_document, "_clock", lambda: next(ticks))
+        # Started at 0; pages are checked at 1, 2, 3 …: pages 1-3 fit in 2.5 s.
+        text = pdf_to_text(self._pdf(10), time_cap_s=2.5)
+        assert [n for n in range(1, 11) if f"Page {n} tuition" in text] == [1, 2, 3]
+
+    def test_the_page_cap_still_holds(self):
+        from app.adapters.extraction import pdf_to_text
+
+        text = pdf_to_text(self._pdf(45))
+        assert "Page 40 tuition" in text
+        assert "Page 41 tuition" not in text

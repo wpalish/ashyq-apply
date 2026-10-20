@@ -341,8 +341,16 @@ class Candidate:
         return out
 
 
+#: A Wikidata item id. Ids are cut from the previous response's URIs and go
+#: into the next query as ``wd:<id>``, so anything else is dropped (security
+#: review 2026-10-22, SR2-10).
+_ITEM_ID = re.compile(r"Q\d+")
+
+
 def _qid(uri: str) -> str:
-    return uri.rsplit("/", 1)[-1]
+    """The item id at the end of an entity URI, or ``""`` when it is not ``Q<digits>``."""
+    item = uri.rsplit("/", 1)[-1]
+    return item if _ITEM_ID.fullmatch(item) else ""
 
 
 def _true(value: str | None) -> bool:
@@ -354,6 +362,8 @@ def collect(bindings: Iterable[dict[str, str]]) -> dict[str, Candidate]:
     found: dict[str, Candidate] = {}
     for row in bindings:
         qid = _qid(row["item"])
+        if not qid:
+            continue
         cand = found.get(qid)
         if cand is None:
             cand = found[qid] = Candidate(
@@ -377,8 +387,8 @@ def collect(bindings: Iterable[dict[str, str]]) -> dict[str, Candidate]:
 def _countries(rows: Iterable[dict[str, str]]) -> dict[str, set[str]]:
     seen: dict[str, set[str]] = {}
     for row in rows:
-        if row.get("countryLabel"):
-            seen.setdefault(_qid(row["item"]), set()).add(row["countryLabel"])
+        if row.get("countryLabel") and (qid := _qid(row["item"])):
+            seen.setdefault(qid, set()).add(row["countryLabel"])
     return seen
 
 
@@ -692,7 +702,7 @@ def _primary(lang: str) -> str:
 
 def native_query(items: Sequence[str], languages: Iterable[str]) -> str:
     """Every ``P1448`` value of ``items`` and their labels in ``languages`` (primary subtag)."""
-    values = " ".join(f"wd:{item}" for item in items)
+    values = " ".join(f"wd:{item}" for item in items if _ITEM_ID.fullmatch(item))
     langs = ", ".join(_literal(code) for code in sorted(set(languages)))
     return f"""SELECT ?item ?value ?lang ?kind WHERE {{
   VALUES ?item {{ {values} }}
