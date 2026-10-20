@@ -24,6 +24,7 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
+from app.adapters.award_lexicon import CompiledAwardWords, award_words
 from app.adapters.url_canonical import page_link
 
 logger = logging.getLogger(__name__)
@@ -189,6 +190,22 @@ AWARD_PAGE_EVIDENCE = True  # on: runs 39149288366 / 39149290043 (ubc, imperial 
 #: changes.
 # on: runs 39173608793..613552 with AN-1b (uppsala Anders Wall exists +1, scoped bachelor; 0 wrong)
 AWARD_NAME_QUALIFIER = True
+#: Rule AW-2 (REACH_ROWS_2026-10-20, AW-1 step 1 and the AW-2 section), off
+#: until a replay passes; ``--award-signals-all-languages`` flips it per
+#: capture. The funding branch's words were English only: dev4's German award
+#: page states its monthly amount, target group and application route in
+#: German, found 0 of the six ``_AWARD_SIGNALS`` and was refused as "not an
+#: award page". On: for a page whose ``<html lang>`` is a language of
+#: ``languages.json``, that language's row of ``award_lexicon.DICTIONARY``
+#: (dictionary- or statute-sourced, cited per row) is read next to the English
+#: words, never instead of them: its funding nouns join ``_SCHOLARSHIP_WORD``
+#: in the funding gate, the award name and the award-link count; its amount,
+#: coverage (tuition waiver), eligibility, application and deadline words join
+#: the ``_AWARD_SIGNALS`` of the same names; its plural listing heading makes
+#: the page an index; its news words make it news; and a heading about
+#: applying for awards (or their FAQ) is not an award name. English pages and
+#: pages with no ``lang`` are unchanged. Off: nothing changes.
+AWARD_SIGNALS_ALL_LANGUAGES = False
 #: Plan rule CL-2 (replay plan 2026-10-19 §5.3), on by default since its
 #: replay passed; the benchmark harness negates it per capture
 #: (``--no-classify-head-and-slug-identity``). Bologna's programme page
@@ -965,25 +982,45 @@ def _classify_parsed(
     # FI-1 (and LX-1): the page's own identity and title, each on its own, as
     # CL-1 does for catalogue words. Auckland's "Undergraduate study in Computer
     # Science" has an h2 "Scholarships and awards" and is not a funding page.
+    # AW-2: the funding words of the page's own language, next to the English ones.
+    local = award_words(page_language(html)) if AWARD_SIGNALS_ALL_LANGUAGES else None
     funding_heading = (
         bool(_SCHOLARSHIP_WORD.search(identity) or _SCHOLARSHIP_WORD.search(title))
         if FUNDING_IDENTITY_SCOPE or LEXICON_V2
         else bool(_SCHOLARSHIP_WORD.search(low_head))
     )
+    if local is not None and not funding_heading:
+        funding_heading = (
+            bool(local.noun.search(identity) or local.noun.search(title))
+            if FUNDING_IDENTITY_SCOPE or LEXICON_V2
+            else bool(local.noun.search(low_head))
+        )
     if funding_heading or "scholarship" in path or "financial-aid" in path:
         if _FAQ.search(low_head):
             return PageClassification(
                 PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title, funding_category="faq"
             )
+        if local is not None and local.news.search(" ".join([title, *headings[:1]])):
+            return PageClassification(
+                PageType.NEWS, 0.75, ["news markers in the title (page language)"], title
+            )
 
-        award_links = _award_link_count(soup) if soup else 0
-        present = [name for name, pattern in _AWARD_SIGNALS if pattern.search(low_body)]
-        named = _award_name(identity)
+        award_links = _award_link_count(soup, local) if soup else 0
+        present = [
+            name
+            for name, pattern in _AWARD_SIGNALS
+            if pattern.search(low_body)
+            or (
+                local is not None and name in local.signals and local.signals[name].search(low_body)
+            )
+        ]
+        named = _award_name(identity, local)
         plural_index = bool(
             _PLURAL_FUNDING_HEADING.match(identity)
             or re.search(
                 r"\b(overview of|list of|available) (scholarships|funding|grants)\b", low_body
             )
+            or (local is not None and local.listing.search(identity))
         )
 
         # AP-1: a page whose own heading is a proper award name and that files
@@ -1639,7 +1676,7 @@ _FULL_DEGREE_TITLE = re.compile(
 )
 
 
-def _award_name(identity: str) -> str | None:
+def _award_name(identity: str, local: CompiledAwardWords | None = None) -> str | None:
     name = identity
     if not name or len(name) > 160:
         return None
@@ -1650,8 +1687,14 @@ def _award_name(identity: str) -> str | None:
         r"(admission services|menu.*|search.*)", name.strip(), re.IGNORECASE
     ):
         return None
-    if not _SCHOLARSHIP_WORD.search(name) and not re.search(
-        r"\b(award|prize|fund|fellowship)\b", name, re.I
+    # AW-2: the same in the page's language, and a heading about applying for
+    # awards ("Bewerbung um ein Stipendium") is not one award's name.
+    if local is not None and (local.listing.search(name) or local.process.search(name)):
+        return None
+    if (
+        not _SCHOLARSHIP_WORD.search(name)
+        and not re.search(r"\b(award|prize|fund|fellowship)\b", name, re.I)
+        and not (local is not None and local.noun.search(name))
     ):
         return None
     return name
@@ -1841,16 +1884,20 @@ def _award_links_below(soup: BeautifulSoup | None, url: str) -> int:
     return len(below)
 
 
-def _award_link_count(soup: BeautifulSoup | None) -> int:
+def _award_link_count(soup: BeautifulSoup | None, local: CompiledAwardWords | None = None) -> int:
     if soup is None:
         return 0
     # A breadcrumb/category link and a detail link often name the same award.
     # Multiple links prove an index only when they name different awards.
+    # AW-2: a link named in the page's own language counts too.
     return len(
         {
             re.sub(r"\s+", " ", a.get_text(" ", strip=True)).casefold()
             for a in soup.find_all("a", href=True)
-            if _SCHOLARSHIP_WORD.search(a.get_text(" ", strip=True) or "")
+            if (
+                _SCHOLARSHIP_WORD.search(a.get_text(" ", strip=True) or "")
+                or (local is not None and local.noun.search(a.get_text(" ", strip=True) or ""))
+            )
             and not _FAQ.search(a.get_text(" ", strip=True) or "")
         }
     )

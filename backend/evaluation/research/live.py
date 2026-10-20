@@ -1798,6 +1798,10 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "same-site-award-links": (
         ("app.adapters.scholarship.web_scholarships", "SAME_SITE_AWARD_LINKS"),
     ),
+    # Default-off (REACH_ROWS_2026-10-20, AW-2: the award-page words of every language).
+    "award-signals-all-languages": (
+        ("app.adapters.page_classifier", "AWARD_SIGNALS_ALL_LANGUAGES"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
@@ -1807,6 +1811,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "subpage-requirements-lead",
         "identity-fold-marks",
         "same-site-award-links",
+        "award-signals-all-languages",
     }
 )
 
@@ -2216,6 +2221,14 @@ def main() -> None:
         help="reach rule SH-1: a funding index's award link on another host of the index's own "
         "registrable domain (a sibling official host) is followed like a same-host link, within "
         "the award budget; links to other registrable domains stay dropped",
+    )
+    parser.add_argument(
+        "--award-signals-all-languages",
+        action="store_true",
+        help="rule AW-2: the award-page classifier also reads the funding nouns, listing, news "
+        "and process headings and the amount, coverage, eligibility, application and deadline "
+        "words of the page's own language (<html lang>, every languages.json language; "
+        "dictionary-sourced), next to the English ones",
     )
     parser.add_argument(
         "--award-name-qualifier",
@@ -2882,6 +2895,10 @@ def main() -> None:
             from app.adapters.scholarship import web_scholarships as sh1_module
 
             sh1_module.SAME_SITE_AWARD_LINKS = True
+        if args.award_signals_all_languages:
+            from app.adapters import page_classifier as aw2_module
+
+            aw2_module.AWARD_SIGNALS_ALL_LANGUAGES = True
         if args.award_name_qualifier:
             from app.adapters import page_classifier as an1_module
 
@@ -3271,6 +3288,11 @@ def main() -> None:
                         ),
                         *(["--quoted-href-guard"] if args.quoted_href_guard else []),
                         *(["--same-site-award-links"] if args.same_site_award_links else []),
+                        *(
+                            ["--award-signals-all-languages"]
+                            if args.award_signals_all_languages
+                            else []
+                        ),
                         *(["--award-name-qualifier"] if args.award_name_qualifier else []),
                         *(
                             ["--award-coordinated-degree-scope"]
