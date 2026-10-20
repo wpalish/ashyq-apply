@@ -196,7 +196,12 @@ def test_live_coverage_reaches_the_frontend_with_the_shape_it_declares(types_sou
     assert (live["mode"], kb["mode"]) == ("live", "kb")
     assert kb["recall_message"]["key"] == "coverage.kb"
     assert live["recall_message"]["key"] == "coverage.live"
-    every = set(payload) | set(live) | set(kb)
+    # MODE-1: a demo server whose knowledge mode is kb adds ``kb_coverage``,
+    # the kb block itself (declared once in types.ts as ``KbCoverage``).
+    demo_kb = live_coverage(base.model_copy(update={"demo_mode": True, "knowledge_mode": "kb"}))
+    assert set(demo_kb) == set(payload) | {"kb_coverage"}
+    assert set(demo_kb["kb_coverage"]) == set(kb)
+    every = set(payload) | set(live) | set(kb) | set(demo_kb)
 
     block = re.search(r"live_coverage: \{(.*?)\n  \};", types_source, re.DOTALL)
     assert block, "types.ts does not declare `live_coverage` on Capabilities"
@@ -206,6 +211,8 @@ def test_live_coverage_reaches_the_frontend_with_the_shape_it_declares(types_sou
     )
     required = set(re.findall(r"^\s*(\w+):", block.group(1), re.M))
     assert required == set(payload), "only the keys every mode serves may be required"
+    assert re.search(r"^\s*kb_coverage\?: KbCoverage;", block.group(1), re.M)
+    assert _interface_keys(types_source, "KbCoverage") == set(kb)
 
 
 def test_the_kb_unknown_kind_union_matches_the_backend(types_source):

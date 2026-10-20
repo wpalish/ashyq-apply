@@ -606,7 +606,21 @@ export interface Capabilities {
     mode?: 'kb' | 'live';
     catalogue_total?: number;
     recall_message?: MessageRef;
+    //: MODE-1: a demo server whose knowledge mode is kb adds the kb block,
+    //: because unticking demo there starts a kb run, not a live one.
+    kb_coverage?: KbCoverage;
   };
+}
+
+//: The kb-mode coverage block (RM-1), as `live_coverage` serves it on a kb
+//: server and as `live_coverage.kb_coverage` on a kb-configured demo server.
+export interface KbCoverage {
+  mode: 'kb';
+  institutions: number;
+  countries: string[];
+  catalogue_total: number;
+  recall_note: string;
+  recall_message: MessageRef;
 }
 
 export interface StoredProfile {

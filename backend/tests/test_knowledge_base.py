@@ -1028,7 +1028,11 @@ def test_capabilities_name_the_knowledge_base_in_kb_mode(monkeypatch, settings, 
     monkeypatch.setattr(routes_meta, "get_settings", lambda: demo)
     demo_body = routes_meta.capabilities(catalogue_session)
     assert demo_body["knowledge_mode"] == "demo"
-    assert demo_body["live_coverage"] == routes_meta.registry_coverage()
+    # MODE-1: the registry block as before, plus the kb block (additive),
+    # because unticking demo on this server starts a kb run.
+    demo_coverage = dict(demo_body["live_coverage"])
+    assert demo_coverage.pop("kb_coverage") == coverage
+    assert demo_coverage == routes_meta.registry_coverage()
 
 
 def test_live_mode_keeps_the_live_pipeline(catalogue_session, settings, tmp_path, profile):

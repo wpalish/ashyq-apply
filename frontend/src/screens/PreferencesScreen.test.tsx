@@ -208,3 +208,60 @@ describe('the kb-mode disclosure (RM-1)', () => {
     }
   });
 });
+
+describe('a demo server configured for kb (MODE-1)', () => {
+  const KB_NOTE =
+    "The verified knowledge base answers for 95 of 501 catalogue universities (bachelor's in "
+    + "Computer Science). A university outside it, or another programme, gets 'No verified data "
+    + "yet'; no page is read during a run.";
+  const DEMO_KB_CAPABILITIES = {
+    ...CAPABILITIES,
+    demo_mode: true,
+    live_coverage: {
+      ...COVERAGE,
+      kb_coverage: {
+        mode: 'kb',
+        institutions: 95,
+        countries: ['Canada', 'Germany'],
+        catalogue_total: 501,
+        recall_note: KB_NOTE,
+        recall_message: { key: 'coverage.kb', params: { universities: '95', total: '501' } },
+      },
+    },
+  } as Capabilities;
+
+  afterEach(() => act(() => setLocale('en')));
+
+  it('shows no notice while demo mode stays on', () => {
+    capabilities = DEMO_KB_CAPABILITIES;
+    render(<PreferencesScreen onStarted={() => {}} />);
+    expect(screen.queryByTestId('kb-mode-notice')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('live-mode-notice')).not.toBeInTheDocument();
+  });
+
+  it('shows the kb notice, never the live one, when demo is unticked', async () => {
+    capabilities = DEMO_KB_CAPABILITIES;
+    renderLive();
+
+    expect(screen.queryByTestId('live-mode-notice')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('live-coverage')).not.toBeInTheDocument();
+    const notice = screen.getByTestId('kb-mode-notice');
+    expect(notice).toHaveTextContent('Research answers from the verified knowledge base.');
+    expect(notice).toHaveAccessibleName('Research answers from the verified knowledge base.');
+    // The numbers are the kb block's, not the registry's.
+    expect(screen.getByTestId('kb-coverage')).toHaveTextContent(KB_NOTE);
+    expect(notice).not.toHaveTextContent('Live mode searches 10');
+
+    fireEvent.click(screen.getByTestId('start-research'));
+    await waitFor(() => expect(startRun).toHaveBeenCalledWith(false));
+  });
+
+  it('localises the kb note in ru', () => {
+    capabilities = DEMO_KB_CAPABILITIES;
+    act(() => setLocale('ru'));
+    renderLive();
+    expect(screen.getByTestId('kb-coverage')).toHaveTextContent(
+      'Проверенная база знаний отвечает по 95 из 501 университетов каталога',
+    );
+  });
+});

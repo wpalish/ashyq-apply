@@ -5,7 +5,7 @@
  * defensible if the user can see and change what produced it.
  */
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
@@ -58,10 +58,18 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   const [showAdvancedWeights, setShowAdvancedWeights] = useState(false);
   // Subscribes to the locale so the coverage note re-renders on a switch.
   const { t } = useTranslation();
-  const coverage = capabilities?.live_coverage;
+  const liveCoverage = capabilities?.live_coverage;
   // RM-1: a kb deployment reads no page during a run; demo serves no `mode`.
-  const kbMode = coverage?.mode === 'kb';
+  // MODE-1: a demo server whose knowledge mode is kb runs kb once demo is
+  // unticked, so the kb notice and its numbers come from `kb_coverage`.
+  const kbMode = liveCoverage?.mode === 'kb'
+    || (demoMode === false && liveCoverage?.kb_coverage != null);
+  const coverage = liveCoverage?.mode !== 'kb' && kbMode
+    ? liveCoverage?.kb_coverage
+    : liveCoverage;
   const [recomputed, setRecomputed] = useState(false);
+  // The kb notice is a group named by its own title, in the reader's language.
+  const kbNoticeTitle = useId();
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -378,8 +386,8 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
 
             {demoMode === false && kbMode && coverage && (
               <Notice kind="info">
-                <div data-testid="kb-mode-notice">
-                  <strong>{t('research.kbNotice.title')}</strong> {t('research.kbNotice.body')}
+                <div data-testid="kb-mode-notice" role="group" aria-labelledby={kbNoticeTitle}>
+                  <strong id={kbNoticeTitle}>{t('research.kbNotice.title')}</strong> {t('research.kbNotice.body')}
                   {/* The numbers come from the loaded knowledge base and the catalogue. */}
                   <div className="stack stack--tight" data-testid="kb-coverage">
                     <div><strong>{localize(coverage.recall_message, coverage.recall_note)}</strong></div>

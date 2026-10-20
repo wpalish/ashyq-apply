@@ -225,12 +225,19 @@ def live_coverage(settings: Settings | None = None, session: Session | None = No
     kb mode (RM-1): the verified knowledge base, its entries with verified data
     and the catalogue they sit in — no page is read, so the registry is not the
     reach. Live mode: the institution registry, as before, plus ``mode`` and the
-    note's :class:`MessageRef`. Demo mode (or no settings): exactly as before.
+    note's :class:`MessageRef`. Demo mode (or no settings): exactly as before —
+    plus, on a demo server whose ``knowledge_mode`` is kb (MODE-1), an additive
+    ``kb_coverage`` block: unticking demo there starts a kb run
+    (``runner.kb_mode``), so the screen must show the kb notice, not the live one.
     """
     if settings is not None and not settings.demo_mode and settings.knowledge_mode == "kb":
         return kb_coverage(settings, session)
     body = registry_coverage()
-    if settings is None or settings.demo_mode:
+    if settings is None:
+        return body
+    if settings.demo_mode:
+        if settings.knowledge_mode == "kb":
+            return {**body, "kb_coverage": kb_coverage(settings, session)}
         return body
     ref = match(COVERAGE, body["recall_note"])
     return {
