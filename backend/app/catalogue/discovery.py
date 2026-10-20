@@ -20,7 +20,7 @@ from app.adapters.search.base import search_failure_diagnostic
 from app.adapters.url_canonical import page_link
 from app.catalogue.importer import canonical_name, public_domain, stable_id
 from app.catalogue.retrieval import retrieve
-from app.domain.dedupe import normalize
+from app.domain.dedupe import fold_letters, normalize
 from app.domain.site_identity import canonical_host, registrable_domain
 from app.models import University, UniversityObservation
 from app.schemas.profile import ApplicantProfileIn
@@ -43,6 +43,15 @@ from app.schemas.profile import ApplicantProfileIn
 #: 39113844090 (identity 8/10 dev2, 12/15 dev3; 0 losses) and the 6-query fix;
 #: False turns it off.
 SITE_IDENTITY_V2 = True
+
+#: NN-1b (NEXT_CYCLES_2026-10-20 §6, IG bundle; harness ``--identity-fold-marks``).
+#: ``normalize`` folds combining marks but keeps the letters NFKD leaves whole
+#: (``ı``, ``ł``, ``ø``, ``đ``, ``ß``, ``æ``, ``œ``), so a record's ASCII name
+#: never matches a Turkish, Polish or Norwegian title that spells it natively.
+#: On: R6 compares both sides through ``dedupe.fold_letters`` in the native-name
+#: branch (ii), the "names another institution" refusal and the English-name
+#: test of (iii)/(iv). A Unicode fold, no site word. False changes nothing.
+IDENTITY_FOLD_MARKS = False
 
 #: R6: registrable domains that are never an institution's own site: the
 #: encyclopaedias, rankings, study portals and social hosts the identity
@@ -226,6 +235,11 @@ _COUNTRY_LANGUAGES: dict[str, frozenset[str]] = {
 }
 
 
+def _fold(text: str) -> str:
+    """NN-1b: ``text`` with the whole letters folded when ``IDENTITY_FOLD_MARKS`` is on."""
+    return fold_letters(text) if IDENTITY_FOLD_MARKS else text
+
+
 def _third_party_host(host: str) -> bool:
     """R6: an aggregator, registry, portal or social host - never a university's site."""
     site = registrable_domain(host)
@@ -314,8 +328,8 @@ def _native_name_match(uni: University, soup: BeautifulSoup) -> bool:
     lang = str(soup.html.get("lang") or "") if soup.html else ""
     if lang.split("-")[0].lower() not in _COUNTRY_LANGUAGES.get(uni.country, frozenset()):
         return False
-    title = normalize(soup.title.get_text(" ", strip=True) if soup.title else "")
-    return any(len(n) >= 3 and n in title for n in (normalize(str(v)) for v in natives))
+    title = _fold(normalize(soup.title.get_text(" ", strip=True) if soup.title else ""))
+    return any(len(n) >= 3 and n in title for n in (_fold(normalize(str(v))) for v in natives))
 
 
 def _english_alternate(soup: BeautifulSoup, final: str) -> tuple[str, str] | None:
@@ -562,8 +576,9 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
         the English alternate. A parked page, or one that names another
         institution, establishes nothing whatever the branch.
         """
-        names = _english_names(uni)
+        names = [_fold(name) for name in _english_names(uni)]
         _, identity_text = _identity_parts(soup)
+        identity_text = _fold(identity_text)
         if _refused_page(names, soup, identity_text):
             return None
         final_host = canonical_host(final).removeprefix("www.")
@@ -585,6 +600,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             return None
         english = BeautifulSoup(page.content or page.text, "html.parser")
         raw, english_text = _identity_parts(english)
+        english_text = _fold(english_text)
         if _refused_page(names, english, english_text) or not _names_us(names, host, english_text):
             return None
         evidence["english_alternate"] = {"url": landed, "via": via, "excerpt": raw}

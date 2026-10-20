@@ -20,10 +20,11 @@ import sys
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, cast
 from unittest.mock import AsyncMock
 
 import pytest
+from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
@@ -34,6 +35,7 @@ from app.catalogue.discovery import CatalogueDiscoveryAdapter
 from app.catalogue.importer import identity_key, import_catalogue, stable_id
 from app.catalogue.retrieval import retrieve
 from app.db import create_all_for_tests
+from app.domain.dedupe import fold_letters, normalize
 from app.models import University, UniversityObservation
 from evaluation.research import live
 from evaluation.research.schema import Observation
@@ -576,5 +578,196 @@ def test_the_benchmark_flag_reaches_the_child_and_turns_the_rule_on(tmp_path, mo
     monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "none")
     child_argv = ["live", "--live", "--child", "--case", "uio", "--out", str(tmp_path / "o.json")]
     monkeypatch.setattr(sys, "argv", [*child_argv, "--site-identity-v2"])
+    live.main()
+    assert seen == [True]
+
+
+# --- NN-1b: the letters NFKD keeps whole (``IDENTITY_FOLD_MARKS``) ----------------------
+#
+# Synthetic homepages, one per language, for universities outside every case set:
+# the title spells the letter, the record does not. Turkish, Polish, Norwegian and
+# German letters (ı, ł, ø, ß) have no combining mark, so ``normalize`` keeps them and
+# the ASCII record never matches; Czech and Lithuanian letters decompose, so those
+# pages pass with or without the fold.
+
+
+@pytest.fixture(params=[False, True], ids=["fold-off", "fold-on"])
+def fold(request, monkeypatch, v2) -> bool:
+    monkeypatch.setattr(discovery, "IDENTITY_FOLD_MARKS", request.param)
+    return request.param
+
+
+def test_the_fold_is_off_by_default() -> None:
+    assert discovery.IDENTITY_FOLD_MARKS is False
+
+
+def test_fold_letters_spells_the_whole_letters_in_ascii() -> None:
+    assert fold_letters("ı ł ø đ ß æ œ Ł Ø Đ ẞ Æ Œ") == "i l o d ss ae oe L O D SS AE OE"
+    # Letters with a combining mark are normalize's job, and untouched here.
+    assert fold_letters("ü č ą ė å") == "ü č ą ė å"
+    assert fold_letters(normalize("Kırıkkale Üniversitesi")) == "kirikkale universitesi"
+    assert normalize("Kırıkkale Üniversitesi") == "kırıkkale universitesi"  # unchanged
+
+
+def synthetic(name: str, country: str, native: str | None = None) -> University:
+    record: dict[str, Any] = {"name": name, "country": country}
+    if native is not None:
+        record["native_name"] = native
+    return University(
+        id="synthetic",
+        identity_key=f"{country}::{name}",
+        name=name,
+        country=country,
+        city="",
+        aliases=[name],
+        seed_snapshot={"record": record},
+    )
+
+
+async def branch(uni: University, host: str, html: str) -> str | None:
+    gate = CatalogueDiscoveryAdapter(
+        Fetcher({}), session=cast(Session, None), university_ids=None, live_limit=0
+    )
+    soup = BeautifulSoup(html, "html.parser")
+    return await gate._identity_branch(uni, host, soup, f"https://{host}/", {})
+
+
+def homepage(lang: str, title: str) -> str:
+    return f"<html lang='{lang}'><head><title>{title}</title></head><body><p>x</p></body></html>"
+
+
+@pytest.mark.parametrize(
+    "lang,name,country,native,host,title",
+    [
+        (
+            "tr",
+            "Ondokuz Mayis University",
+            "Turkey",
+            "Ondokuz Mayis Universitesi",
+            "www.omu.edu.tr",
+            "Ondokuz Mayıs Üniversitesi",
+        ),
+        (
+            "pl",
+            "Lodz University of Technology",
+            "Poland",
+            "Politechnika Lodzka",
+            "www.p.lodz.pl",
+            "Politechnika Łódzka",
+        ),
+        (
+            "nb",
+            "Norwegian University of Life Sciences",
+            "Norway",
+            "Norges miljo- og biovitenskapelige universitet",
+            "www.nmbu.no",
+            "Norges miljø- og biovitenskapelige universitet | NMBU",
+        ),
+        (
+            "de",
+            "University of Giessen",
+            "Germany",
+            "Justus-Liebig-Universitat Giessen",
+            "www.uni-giessen.de",
+            "Justus-Liebig-Universität Gießen",
+        ),
+    ],
+)
+async def test_a_native_title_with_a_whole_letter_passes_only_with_the_fold(
+    fold, lang, name, country, native, host, title
+) -> None:
+    uni = synthetic(name, country, native)
+    expected = "native_name" if fold else None
+    assert await branch(uni, host, homepage(lang, title)) == expected
+
+
+@pytest.mark.parametrize(
+    "lang,name,country,native,host,title",
+    [
+        (
+            "cs",
+            "Technical University of Liberec",
+            "Czechia",
+            "Technicka univerzita v Liberci",
+            "www.tul.cz",
+            "Technická univerzita v Liberci",
+        ),
+        (
+            "lt",
+            "Siauliai University",
+            "Lithuania",
+            "Siauliu universitetas",
+            "www.su.lt",
+            "Šiaulių universitetas",
+        ),
+    ],
+)
+async def test_letters_with_a_combining_mark_pass_either_way(
+    fold, lang, name, country, native, host, title
+) -> None:
+    uni = synthetic(name, country, native)
+    assert await branch(uni, host, homepage(lang, title)) == "native_name"
+
+
+async def test_the_english_title_test_folds_both_sides(fold) -> None:
+    uni = synthetic("Ondokuz Mayis University", "Turkey")
+    html = homepage("en", "Ondokuz Mayıs University")
+    assert await branch(uni, "www.omu.edu.tr", html) == ("title_name" if fold else None)
+
+
+async def test_our_own_title_is_no_longer_another_institution(fold) -> None:
+    """Every distinctive word of the name carries the letter: off, the page "names another"."""
+    uni = synthetic("Kirikkale University", "Turkey")
+    html = homepage("en", "Kırıkkale University")
+    names = [discovery._fold(n) for n in discovery._english_names(uni)]
+    _, text = discovery._identity_parts(BeautifulSoup(html, "html.parser"))
+    assert discovery._names_other_institution(names, discovery._fold(text)) is not fold
+    assert await branch(uni, "www.kku.edu.tr", html) == ("title_name" if fold else None)
+
+
+async def test_the_fold_does_not_make_another_institution_ours(fold) -> None:
+    uni = synthetic("Kirikkale University", "Turkey", "Kirikkale Universitesi")
+    assert await branch(uni, "www.kocaeli.edu.tr", homepage("en", "Kocaeli University")) is None
+    html = homepage("tr", "Kocaeli Üniversitesi")
+    assert await branch(uni, "www.kocaeli.edu.tr", html) is None
+
+
+async def test_the_native_branch_still_needs_the_countrys_language(fold) -> None:
+    uni = synthetic("Lodz University of Technology", "Poland", "Politechnika Lodzka")
+    assert await branch(uni, "www.p.lodz.pl", homepage("de", "Politechnika Łódzka")) is None
+
+
+def test_the_fold_flag_is_a_default_off_negatable_rule(tmp_path, monkeypatch) -> None:
+    from tests.test_benchmark_rule_negations import _parent
+
+    result = subprocess.run(
+        [sys.executable, "-m", "evaluation.research.live", "--help"],
+        cwd=Path(__file__).resolve().parents[1],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "--identity-fold-marks" in result.stdout
+    assert "--no-identity-fold-marks" in result.stdout
+    assert live.NEGATABLE_RULES["identity-fold-marks"] == (
+        ("app.catalogue.discovery", "IDENTITY_FOLD_MARKS"),
+    )
+    assert "identity-fold-marks" in live.DEFAULT_OFF_NEGATABLE
+    commands = _parent(monkeypatch, tmp_path, "--identity-fold-marks")
+    assert "--identity-fold-marks" in commands[0]
+
+
+def test_the_child_switches_the_fold_on(monkeypatch, tmp_path) -> None:
+    seen: list[bool] = []
+
+    async def capture(case_id, output, max_pages, seconds, **kwargs):
+        seen.append(discovery.IDENTITY_FOLD_MARKS)
+
+    monkeypatch.setattr(discovery, "IDENTITY_FOLD_MARKS", False)
+    monkeypatch.setattr(live, "capture_one", capture)
+    monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "none")
+    argv = ["live", "--live", "--child", "--case", "uio", "--out", str(tmp_path / "o.json")]
+    monkeypatch.setattr(sys, "argv", [*argv, "--identity-fold-marks"])
     live.main()
     assert seen == [True]

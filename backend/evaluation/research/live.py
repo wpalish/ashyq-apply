@@ -1780,11 +1780,18 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     ),
     # Default-off (NEXT_CYCLES_2026-10-20 §LV-1, the lexicon battery's rows).
     "lexicon-language-coverage": (("app.adapters.page_classifier", "LEXICON_LANGUAGE_COVERAGE"),),
+    # Default-off (NEXT_CYCLES_2026-10-20 §6, IG bundle, NN-1b).
+    "identity-fold-marks": (("app.catalogue.discovery", "IDENTITY_FOLD_MARKS"),),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
 DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
-    {"listing-follows-local-aliases", "subpage-requirements-lead", "lexicon-language-coverage"}
+    {
+        "listing-follows-local-aliases",
+        "subpage-requirements-lead",
+        "lexicon-language-coverage",
+        "identity-fold-marks",
+    }
 )
 
 
@@ -2084,6 +2091,14 @@ def main() -> None:
         "native-script name under the country's <html lang>, or the English name on the "
         "homepage's English alternate (one read); never on a third-party host, a parked "
         "domain or a homepage naming another institution (measure on --through-identity-gate)",
+    )
+    parser.add_argument(
+        "--identity-fold-marks",
+        action="store_true",
+        help="IG bundle NN-1b: the site-identity gate (R6) also spells the letters NFKD keeps "
+        "whole (dotless i, l-stroke, o-slash, d-stroke, sharp s, ae, oe) in ASCII on both sides "
+        "of its native-name, other-institution and English-name comparisons "
+        "(measure on --through-identity-gate)",
     )
     parser.add_argument(
         "--coordinated-degree-scope",
@@ -2777,6 +2792,10 @@ def main() -> None:
             from app.catalogue import discovery as r6_module
 
             r6_module.SITE_IDENTITY_V2 = True
+        if args.identity_fold_marks:
+            from app.catalogue import discovery as nn1b_module
+
+            nn1b_module.IDENTITY_FOLD_MARKS = True
         if args.coordinated_degree_scope:
             from app.adapters.requirements import web_requirements as sc2_module
 
@@ -3190,6 +3209,7 @@ def main() -> None:
                         *(["--localized-page-identity"] if args.localized_page_identity else []),
                         *(["--subject-title-shapes"] if args.subject_title_shapes else []),
                         *(["--site-identity-v2"] if args.site_identity_v2 else []),
+                        *(["--identity-fold-marks"] if args.identity_fold_marks else []),
                         *(["--coordinated-degree-scope"] if args.coordinated_degree_scope else []),
                         *(
                             ["--sitemap-keep-evidence-sum"]
