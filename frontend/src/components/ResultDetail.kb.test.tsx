@@ -778,3 +778,47 @@ describe('U6 and U8 on the v18 KB (KB v18 smoke)', () => {
     );
   });
 });
+
+describe('REL-1: no standalone CS bachelor is said, not asked', () => {
+  afterEach(() => act(() => setLocale('en')));
+  const URL_DS = 'https://www.lse.ac.uk/study-at-lse/undergraduate/bsc-data-science';
+  const related = question({
+    topic: 'official source',
+    question: `No standalone bachelor's in Computer Science is published; the closest official route is BSc Data Science (N3UD) (official page: ${URL_DS}). Does that route suit you?`,
+    question_message: { key: 'question.programmeRelatedOnly', params: { route: 'BSc Data Science (N3UD)', url: URL_DS } },
+    why_it_matters: 'The verified knowledge base records no standalone bachelor\'s in Computer Science at Example University (expert check 2026-10-19). Whether the closest route suits you is your decision.',
+    why_message: { key: 'why.programmeRelatedOnly', params: { university: 'Example University', date: '2026-10-19' } },
+    suggested_contact: URL_DS,
+  });
+  const notOffered = question({
+    topic: 'official source',
+    question: 'Example University publishes no bachelor\'s in Computer Science (checked 2026-10-19).',
+    question_message: { key: 'question.programmeNotOffered', params: { university: 'Example University', date: '2026-10-19' } },
+    why_it_matters: `The closest official programme is BSc Data Science (N3UD) (official page: ${URL_DS}).`,
+    why_message: { key: 'why.programmeNotOffered', params: { route: 'BSc Data Science (N3UD)', url: URL_DS } },
+  });
+
+  it('shows the related route and the "not offered" statement on the Requirements tab', () => {
+    render(<ResultDetail result={result({ unresolved: [related, notOffered] })} knowledgeMode="kb" />);
+    const block = screen.getByTestId('requirement-questions');
+    expect(block).toHaveTextContent('the closest official route is BSc Data Science (N3UD)');
+    expect(block).toHaveTextContent(URL_DS);
+    expect(block).toHaveTextContent('Example University publishes no bachelor\'s in Computer Science (checked 2026-10-19).');
+    expect(block).not.toHaveTextContent('Which official page publishes');
+  });
+
+  it('says both in Russian and Kazakh', () => {
+    act(() => setLocale('ru'));
+    const { unmount } = render(<ResultDetail result={result({ unresolved: [related, notOffered] })} knowledgeMode="kb" />);
+    let block = screen.getByTestId('requirement-questions');
+    expect(block).toHaveTextContent('ближайший официальный путь — BSc Data Science (N3UD)');
+    expect(block).toHaveTextContent('Example University не публикует бакалавриат по Computer Science (проверено 2026-10-19).');
+    unmount();
+
+    act(() => setLocale('kk'));
+    render(<ResultDetail result={result({ unresolved: [related, notOffered] })} knowledgeMode="kb" />);
+    block = screen.getByTestId('requirement-questions');
+    expect(block).toHaveTextContent('ең жақын ресми жол — BSc Data Science (N3UD)');
+    expect(block).toHaveTextContent('Example University Computer Science бакалавриатын жарияламайды');
+  });
+});

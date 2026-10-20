@@ -1423,7 +1423,54 @@ class ResearchRunner:
 
         The live wording ("found through a catalogue only, nothing verified")
         would contradict the verified claims shown on the same row.
+
+        REL-1: when the KB knows *why* there is no page, it says so instead of
+        asking. ``not_offered``: a statement, no question. ``related_only``: a
+        non-blocking question that names the closest official route. Only an
+        unsettled entry (the page could not be read) keeps the blocking
+        question.
         """
+        entry = self.knowledge.get(cand.discovery_source.removeprefix(f"{KB_DISCOVERY_SOURCE}:"))
+        route = entry.programme_route if entry is not None else "unknown"
+        related = entry.programme.get("related_reason") if entry is not None else None
+        if route in ("not_offered", "related_only") and entry is not None:
+            related = related if isinstance(related, dict) else {}
+            checked = str(related.get("checked_on") or entry.verified_on or "date not recorded")
+            name, url = related.get("name"), related.get("url")
+            if route == "not_offered":
+                return UnresolvedQuestion(
+                    topic="official source",
+                    question=(
+                        f"{cand.name} publishes no bachelor's in Computer Science "
+                        f"(checked {checked})."
+                    ),
+                    why_it_matters=(
+                        f"The closest official programme is {name} (official page: {url})."
+                        if name and url
+                        else "The verified knowledge base records that no such programme is "
+                        "offered, so nothing is shown as this programme's."
+                    ),
+                    university=cand.name,
+                    program=prog.name,
+                    suggested_contact=str(url) if url else "admissions office",
+                    blocking=False,
+                )
+            return UnresolvedQuestion(
+                topic="official source",
+                question=(
+                    "No standalone bachelor's in Computer Science is published; the closest "
+                    f"official route is {name} (official page: {url}). Does that route suit you?"
+                ),
+                why_it_matters=(
+                    "The verified knowledge base records no standalone bachelor's in Computer "
+                    f"Science at {cand.name} (expert check {checked}). Whether the closest "
+                    "route suits you is your decision."
+                ),
+                university=cand.name,
+                program=prog.name,
+                suggested_contact=str(url),
+                blocking=False,
+            )
         return UnresolvedQuestion(
             topic="official source",
             question=f"Which official page publishes the {prog.name} programme?",

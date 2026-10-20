@@ -237,6 +237,24 @@ class KnowledgeEntry:
         return self.programme.get("status") == "known" and bool(self.programme.get("evidence"))
 
     @property
+    def programme_route(self) -> str:
+        """``known``, ``related_only``, ``not_offered`` or ``unknown`` (REL-1).
+
+        ``known``: a verified programme page. ``not_offered``: the expert
+        recorded that the university publishes no bachelor's in Computer
+        Science (``programme.offered`` false). ``related_only``: no standalone
+        programme, only a related route (``programme.related_reason``).
+        ``unknown``: nothing settled, e.g. the page could not be read.
+        """
+        if self.programme_known:
+            return "known"
+        if self.programme.get("offered") is False:
+            return "not_offered"
+        if isinstance(self.programme.get("related_reason"), dict):
+            return "related_only"
+        return "unknown"
+
+    @property
     def has_verified_data(self) -> bool:
         """A verified programme page or at least one verified fact."""
         return self.programme_known or any(self.facts.get(q) for q in QUESTIONS)
@@ -345,7 +363,12 @@ def merge_entries(primary: KnowledgeEntry, other: KnowledgeEntry) -> KnowledgeEn
         official_domains=tuple(dict.fromkeys((*primary.official_domains, *other.official_domains))),
         review_status=primary.review_status,
         verified_on=max((v for v in (primary.verified_on, other.verified_on) if v), default=None),
-        programme=primary.programme if primary.programme_known else other.programme,
+        # A verified page wins; then what the built file settled (a related
+        # route, "not offered") over an import that settled nothing.
+        programme=primary.programme
+        if primary.programme_known
+        or (not other.programme_known and primary.programme_route != "unknown")
+        else other.programme,
         facts=facts,
         unknown=unknown,
         not_applicable=not_applicable,

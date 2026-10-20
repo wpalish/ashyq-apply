@@ -71,13 +71,73 @@ class TestTheSentencesThePipelineWritesAreRecognised:
             assert reason is not None and reason.key == why
 
     def test_no_verified_programme_page(self):
-        cand = SimpleNamespace(name="Example University")
+        cand = SimpleNamespace(name="Example University", discovery_source="kb:x")
         prog = SimpleNamespace(name="Data Science")
-        q = _runner_method("_no_verified_programme_page")(None, cand, prog)
+        runner = SimpleNamespace(knowledge=SimpleNamespace(get=lambda _seed: None))
+        q = _runner_method("_no_verified_programme_page")(runner, cand, prog)
         ref = match(QUESTIONS, q.question)
         assert ref is not None and ref.key == "question.programmePage"
         assert ref.params == {"programme": "Data Science"}
         assert match(WHYS, q.why_it_matters).key == "why.programmePageUnverified"  # type: ignore[union-attr]
+
+    @pytest.mark.parametrize(
+        "programme,question_key,why_key",
+        [
+            (
+                {
+                    "related_reason": {
+                        "name": "BSc Data Science (N3UD)",
+                        "url": "https://x.example/ds",
+                        "checked_on": "2026-10-19",
+                    }
+                },
+                "question.programmeRelatedOnly",
+                "why.programmeRelatedOnly",
+            ),
+            (
+                {
+                    "offered": False,
+                    "related_reason": {
+                        "name": "BSc Data Science (N3UD)",
+                        "url": "https://x.example/ds",
+                        "checked_on": "2026-10-19",
+                    },
+                },
+                "question.programmeNotOffered",
+                "why.programmeNotOffered",
+            ),
+            ({"offered": False}, "question.programmeNotOffered", "why.programmeNotOfferedNoRoute"),
+        ],
+    )
+    def test_a_programme_the_kb_settled_is_said_and_keyed(self, programme, question_key, why_key):
+        from app.knowledge import KnowledgeEntry
+
+        entry = KnowledgeEntry(
+            seed_id="x",
+            university="Example University",
+            country="",
+            official_domains=(),
+            review_status="expert_checked",
+            verified_on="2026-10-20",
+            programme={"status": "unknown", "urls": [], "evidence": [], **programme},
+            facts={},
+        )
+        cand = SimpleNamespace(name="Example University", discovery_source="kb:x")
+        prog = SimpleNamespace(name="Computer Science")
+        runner = SimpleNamespace(knowledge=SimpleNamespace(get=lambda _seed: entry))
+        q = _runner_method("_no_verified_programme_page")(runner, cand, prog)
+        assert q.blocking is False
+        ref, why = match(QUESTIONS, q.question), match(WHYS, q.why_it_matters)
+        assert ref is not None and ref.key == question_key
+        assert why is not None and why.key == why_key
+        if "route" in ref.params:
+            # A name with its own parentheses is not split at them.
+            assert ref.params == {"route": "BSc Data Science (N3UD)", "url": "https://x.example/ds"}
+        else:
+            assert ref.params == {
+                "university": "Example University",
+                "date": "2026-10-19" if "related_reason" in programme else "2026-10-20",
+            }
 
     def test_an_aggregator_demotion(self):
         claim = Claim(

@@ -1913,3 +1913,154 @@ async def test_kb_mode_never_multiplies_a_per_credit_rate(
         "1,789 CAD per credit, academic year 2027/28 (published per credit (no yearly figure "
         "printed))" in reason
     )
+
+
+# ------------------------------------------- REL-1: no standalone CS bachelor
+
+LSE = "qs2027-062"
+RELATED_URL = "https://www.mit.edu/admissions/synthetic-related"
+LSE_URL = "https://www.lse.ac.uk/study/synthetic-data-science"
+
+
+def _related_batch(root: Path) -> None:
+    """MIT: a related route only (Sydney-like); LSE: not offered, with its closest programme."""
+    _write(
+        root / "batch1/programme" / f"{MIT}.0-related.json",
+        {
+            "case": MIT,
+            "note": "word for word. Related, not the programme: MIT has no bachelor titled "
+            "Computer Science; it is a major inside Course 6. More notes.",
+            "programme": {"url": RELATED_URL, "title": "Course 6-3"},
+            "related_programme_urls": [RELATED_URL],
+            "related_programmes": ["Course 6-3 (major: Computer Science)"],
+            "accessed_on": "2026-10-18",
+            "answers": {},
+        },
+    )
+    _write(
+        root / "batch1/programme" / f"{LSE}.0-related.json",
+        {
+            "case": LSE,
+            "note": "NONE: LSE offers no bachelor in Computer Science; the closest is BSc Data "
+            "Science.",
+            "programme": {"url": LSE_URL, "title": "BSc Data Science"},
+            "programme_offered": False,
+            "related_programme_urls": [LSE_URL],
+            "related_programmes": ["BSc Data Science (N3UD)"],
+            "accessed_on": "2026-10-19",
+            "answers": {},
+        },
+    )
+
+
+def test_the_build_keeps_why_there_is_no_programme_page(tmp_path):
+    _related_batch(tmp_path / "drafts")
+    report = _report(
+        tmp_path / "evidence_check.ci-2026-10-20.json",
+        [_row("programme", RELATED_URL), {**_row("programme", LSE_URL), "case": LSE}],
+    )
+    entries = kb_build.build(tmp_path / "drafts", [report], built_at="2026-10-21")["entries"]
+    mit, lse = entries[MIT]["programme"], entries[LSE]["programme"]
+    assert mit["status"] == "unknown" and "offered" not in mit
+    assert mit["related_reason"] == {
+        "statement": "MIT has no bachelor titled Computer Science; it is a major inside Course 6.",
+        "name": "Course 6-3 (major: Computer Science)",
+        "url": RELATED_URL,
+        "verified": True,
+        "checked_on": "2026-10-18",
+    }
+    assert lse["offered"] is False
+    assert lse["related_reason"]["name"] == "BSc Data Science (N3UD)"
+    assert lse["related_reason"]["statement"] == (
+        "LSE offers no bachelor in Computer Science; the closest is BSc Data Science."
+    )
+
+
+def test_an_entry_with_a_programme_page_gains_no_new_field(tmp_path):
+    _batch(tmp_path / "drafts")
+    report = _report(tmp_path / "evidence_check.ci-2026-10-20.json", [_row("programme", URL)])
+    entry = kb_build.build(tmp_path / "drafts", [report], built_at="2026-10-21")["entries"][MIT]
+    assert set(entry["programme"]) == {"status", "urls", "evidence", "related_programme_urls"}
+
+
+def _route_entry(**programme: Any) -> dict[str, Any]:
+    entry = _mit_entry(english=[_fact("ielts.overall", 6.5, "IELTS 6.5 overall")])
+    entry["programme"] = {"status": "unknown", "urls": [], "evidence": [], **programme}
+    return entry
+
+
+_REASON = {
+    "statement": "No CS bachelor.",
+    "name": "Course 6-3 (major: Computer Science)",
+    "url": RELATED_URL,
+    "verified": True,
+    "checked_on": "2026-10-18",
+}
+
+
+@pytest.mark.parametrize(
+    "programme,route",
+    [
+        ({"related_reason": _REASON}, "related_only"),
+        ({"related_reason": _REASON, "offered": False}, "not_offered"),
+        ({"offered": False}, "not_offered"),
+        ({}, "unknown"),
+    ],
+)
+def test_programme_route(tmp_path, programme, route):
+    kb = load_knowledge_base(
+        _kb(tmp_path / "kb.json", {MIT: _route_entry(**programme)}), tmp_path / "none.json"
+    )
+    assert kb.entries[MIT].programme_route == route
+    known = load_knowledge_base(
+        _kb(tmp_path / "known.json", {MIT: _mit_entry()}), tmp_path / "none.json"
+    )
+    assert known.entries[MIT].programme_route == "known"
+
+
+def test_the_import_does_not_hide_a_route_the_built_file_settled(tmp_path):
+    kb = load_knowledge_base(
+        _kb(tmp_path / "kb.json", {MIT: _route_entry(related_reason=_REASON)}),
+        _kb(tmp_path / "imported.json", {MIT: _route_entry()}),
+    )
+    assert kb.entries[MIT].programme_route == "related_only"
+    # A verified page in the import still wins over a related route.
+    kb = load_knowledge_base(
+        _kb(tmp_path / "kb2.json", {MIT: _route_entry(related_reason=_REASON)}),
+        _kb(tmp_path / "imported2.json", {MIT: _mit_entry()}),
+    )
+    assert kb.entries[MIT].programme_route == "known"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "programme,blocking,text",
+    [
+        (
+            {"related_reason": _REASON},
+            False,
+            "No standalone bachelor's in Computer Science is published; the closest official "
+            f"route is Course 6-3 (major: Computer Science) (official page: {RELATED_URL}). "
+            "Does that route suit you?",
+        ),
+        (
+            {"related_reason": _REASON, "offered": False},
+            False,
+            "Massachusetts Institute of Technology publishes no bachelor's in Computer "
+            "Science (checked 2026-10-18).",
+        ),
+        ({}, True, "Which official page publishes the"),
+    ],
+)
+async def test_the_three_routes_are_said_and_only_an_unsettled_one_blocks(
+    catalogue_session, profile, settings, tmp_path, no_network, programme, blocking, text
+):
+    _run_, payload = await _funding_run(
+        catalogue_session, profile, settings, tmp_path, _route_entry(**programme)
+    )
+    (question,) = [q for q in payload["unresolved"] if q["topic"] == "official source"]
+    assert question["blocking"] is blocking
+    assert question["question"].startswith(text)
+    if not blocking:
+        assert question["suggested_contact"] == RELATED_URL
+        assert "Which official page" not in question["question"]

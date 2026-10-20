@@ -83,8 +83,12 @@ export function ResultDetail({ result, knowledgeMode }: { result: ProgramResult;
   );
 }
 
-/** Open questions the knowledge base raises about entry requirements (kb mode). */
-const KB_REQUIREMENT_TOPICS = new Set(['language requirement', 'grade requirement', 'entry requirements']);
+/**
+ * Open questions the knowledge base raises about entry requirements (kb mode),
+ * and what it says about the programme itself (`official source`): no
+ * standalone bachelor's, the closest route, or a page it could not verify.
+ */
+const KB_REQUIREMENT_TOPICS = new Set(['language requirement', 'grade requirement', 'entry requirements', 'official source']);
 
 function RequirementQuestions({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   if (knowledgeMode !== 'kb') return null;

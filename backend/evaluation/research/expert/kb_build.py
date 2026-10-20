@@ -1030,6 +1030,55 @@ def standing_fee_policy_fact(
     return out
 
 
+#: Where a related draft's note says why the page is related and not the
+#: programme: "Related, not the programme: KTH has no bachelor's ...",
+#: "RELATED, restated as batch4 recorded it (not relabelled): Lund has no ...",
+#: "NONE: LSE offers no bachelor in Computer Science; ...".
+_RELATED_MARK = re.compile(r"\b(?:RELATED|Related|NONE)\b[^:.]*:\s*(?P<why>.+?\.)(?:\s|$)", re.S)
+
+
+def related_reason(
+    case: str, pages: list[tuple[str, dict[str, Any]]], evidence: Evidence
+) -> Row | None:
+    """Why the university has no programme page: the closest related route (REL-1).
+
+    From the latest ``related`` draft that names its closest programme
+    (``related_programmes[0]`` with ``related_programme_urls[0]``, else the
+    draft's own page and title): ``{statement, name, url, verified,
+    checked_on}``. ``statement`` is the expert's first sentence after the
+    "Related, not the programme:" mark (None when the note has none);
+    ``verified`` says whether a check found the page's quote on the official
+    site. None when no related draft exists.
+    """
+    found: Row | None = None
+    for role, draft in pages:
+        if role != "related":
+            continue
+        programme = draft.get("programme") or {}
+        names = [str(n) for n in draft.get("related_programmes") or [] if n]
+        links = [str(u) for u in draft.get("related_programme_urls") or [] if u]
+        name = names[0] if names and links else str(programme.get("title") or "")
+        url = links[0] if names and links else str(programme.get("url") or "")
+        if not name or not url:
+            continue
+        mark = _RELATED_MARK.search(str(draft.get("note") or ""))
+        row = evidence.find(case, "programme", url)
+        reason: Row = {
+            "statement": mark["why"].strip() if mark else None,
+            "name": name,
+            "url": url,
+            "verified": row is not None and _passed(row),
+            "checked_on": draft.get("accessed_on") or draft.get("researched_on"),
+        }
+        if found is None or names or reason["statement"]:
+            # A later draft restating the route wins; a bare page draft
+            # (a second related page, no names, no reason) does not.
+            if found is not None and not reason["statement"]:
+                reason["statement"] = found["statement"]
+            found = reason
+    return found
+
+
 def programme_block(
     case: str,
     pages: list[tuple[str, dict[str, Any]]],
@@ -1082,6 +1131,14 @@ def programme_block(
     }
     if language:
         block["teaching_language_evidence"] = language
+    if not quotes:
+        # REL-1: only an entry with no verified programme page says why, so
+        # every other entry is byte-identical to a build made before.
+        reason = related_reason(case, pages, evidence)
+        if reason is not None:
+            block["related_reason"] = reason
+        if any(draft.get("programme_offered") is False for _role, draft in pages):
+            block["offered"] = False
     if not quotes:
         block["reason"] = " ".join(remarks) or "no programme page draft"
     elif remarks:

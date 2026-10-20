@@ -427,6 +427,10 @@ export const EN_RESULTS = {
     'Which official page publishes entry requirements for {programme}?',
   'msg.question.programmePage':
     'Which official page publishes the {programme} programme?',
+  'msg.question.programmeNotOffered':
+    '{university} publishes no bachelor\'s in Computer Science (checked {date}).',
+  'msg.question.programmeRelatedOnly':
+    'No standalone bachelor\'s in Computer Science is published; the closest official route is {route} (official page: {url}). Does that route suit you?',
   'msg.question.noVerifiedDataInScope':
     'No verified data yet for {university}: the bachelor\'s in Computer Science.',
   'msg.question.noVerifiedDataOutOfScope':
@@ -467,6 +471,12 @@ export const EN_RESULTS = {
     'The facts shown for this university were verified on its official site, but the verified knowledge base has no verified page for this programme yet, so that the programme is offered for this intake is not confirmed.',
   'msg.why.noKbEntry':
     'Live research is switched off and this university has no entry in the verified knowledge base, so nothing about it is shown or guessed. Its official site or admissions office is the source until it is added.',
+  'msg.why.programmeNotOffered':
+    'The closest official programme is {route} (official page: {url}).',
+  'msg.why.programmeNotOfferedNoRoute':
+    'The verified knowledge base records that no such programme is offered, so nothing is shown as this programme\'s.',
+  'msg.why.programmeRelatedOnly':
+    'The verified knowledge base records no standalone bachelor\'s in Computer Science at {university} (expert check {date}). Whether the closest route suits you is your decision.',
   'msg.why.kbOutOfScope':
     'Live research is switched off and the verified knowledge base answers only for the bachelor\'s in Computer Science, so nothing about this programme is shown or guessed. Its official site or admissions office is the source until it is added.',
   'msg.why.uncoveredCosts':
@@ -1039,6 +1049,10 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'На какой официальной странице опубликованы требования для поступления на {programme}?',
   'msg.question.programmePage':
     'На какой официальной странице опубликована программа {programme}?',
+  'msg.question.programmeNotOffered':
+    '{university} не публикует бакалавриат по Computer Science (проверено {date}).',
+  'msg.question.programmeRelatedOnly':
+    'Отдельный бакалавриат по Computer Science не опубликован; ближайший официальный путь — {route} (официальная страница: {url}). Подходит ли вам этот путь?',
   'msg.question.noVerifiedDataInScope':
     'Проверенных данных по {university} пока нет: бакалавриат по Computer Science.',
   'msg.question.noVerifiedDataOutOfScope':
@@ -1079,6 +1093,12 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'Факты об этом университете проверены на его официальном сайте, но в проверенной базе знаний пока нет проверенной страницы этой программы, поэтому то, что программа открыта на этот набор, не подтверждено.',
   'msg.why.noKbEntry':
     'Живое исследование отключено, а в проверенной базе знаний этого университета нет, поэтому о нём ничего не показывается и не додумывается. Пока его не добавят, источник — его официальный сайт или приёмная комиссия.',
+  'msg.why.programmeNotOffered':
+    'Ближайшая официальная программа — {route} (официальная страница: {url}).',
+  'msg.why.programmeNotOfferedNoRoute':
+    'В проверенной базе знаний записано, что такой программы нет, поэтому ничего не показывается как данные этой программы.',
+  'msg.why.programmeRelatedOnly':
+    'В проверенной базе знаний записано, что отдельного бакалавриата по Computer Science в {university} нет (проверка эксперта {date}). Подходит ли вам ближайший путь — решать вам.',
   'msg.why.kbOutOfScope':
     'Живое исследование отключено, а проверенная база знаний отвечает только по бакалавриату Computer Science, поэтому об этой программе ничего не показывается и не додумывается. Пока её не добавят, источник — официальный сайт или приёмная комиссия.',
   'msg.why.uncoveredCosts':
@@ -1649,6 +1669,10 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     '{programme} бағдарламасына түсу талаптары қай ресми бетте жарияланған?',
   'msg.question.programmePage':
     '{programme} бағдарламасы қай ресми бетте жарияланған?',
+  'msg.question.programmeNotOffered':
+    '{university} Computer Science бакалавриатын жарияламайды (тексерілген күні {date}).',
+  'msg.question.programmeRelatedOnly':
+    'Computer Science бойынша жеке бакалавриат жарияланбаған; ең жақын ресми жол — {route} (ресми беті: {url}). Бұл жол сізге сәйкес пе?',
   'msg.question.noVerifiedDataInScope':
     '{university} бойынша әзірге тексерілген дерек жоқ: Computer Science бакалавриаты.',
   'msg.question.noVerifiedDataOutOfScope':
@@ -1689,6 +1713,12 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     'Бұл университет туралы деректер оның ресми сайтында тексерілген, бірақ тексерілген білім базасында бұл бағдарламаның тексерілген беті әлі жоқ, сондықтан бағдарламаның осы қабылдауда ашық екені расталмаған.',
   'msg.why.noKbEntry':
     'Тікелей зерттеу өшірулі, ал тексерілген білім базасында бұл университет жоқ, сондықтан ол туралы ештеңе көрсетілмейді және болжанбайды. Қосылғанша дереккөз — оның ресми сайты немесе қабылдау комиссиясы.',
+  'msg.why.programmeNotOffered':
+    'Ең жақын ресми бағдарлама — {route} (ресми беті: {url}).',
+  'msg.why.programmeNotOfferedNoRoute':
+    'Тексерілген білім базасында мұндай бағдарлама жоқ деп жазылған, сондықтан ештеңе осы бағдарламаныкі ретінде көрсетілмейді.',
+  'msg.why.programmeRelatedOnly':
+    'Тексерілген білім базасында {university} университетінде Computer Science бойынша жеке бакалавриат жоқ деп жазылған (сарапшы тексерген күні {date}). Ең жақын жол сізге сәйкес пе — оны өзіңіз шешесіз.',
   'msg.why.kbOutOfScope':
     'Тікелей зерттеу өшірулі, ал тексерілген білім базасы тек Computer Science бакалавриаты бойынша жауап береді, сондықтан бұл бағдарлама туралы ештеңе көрсетілмейді және болжанбайды. Қосылғанша дереккөз — ресми сайт немесе қабылдау комиссиясы.',
   'msg.why.uncoveredCosts':

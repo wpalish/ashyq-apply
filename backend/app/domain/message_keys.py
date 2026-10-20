@@ -76,6 +76,15 @@ QUESTIONS: tuple[Template, ...] = (
     ),
     _t("question.programmePage", "Which official page publishes the {programme} programme?"),
     _t(
+        "question.programmeNotOffered",
+        "{university} publishes no bachelor's in Computer Science (checked {date}).",
+    ),
+    _t(
+        "question.programmeRelatedOnly",
+        "No standalone bachelor's in Computer Science is published; the closest official route "
+        "is {route} (official page: {url}). Does that route suit you?",
+    ),
+    _t(
         "question.noVerifiedDataInScope",
         "No verified data yet for {university}: the bachelor's in Computer Science.",
     ),
@@ -183,6 +192,21 @@ WHYS: tuple[Template, ...] = (
         "The facts shown for this university were verified on its official site, but the "
         "verified knowledge base has no verified page for this programme yet, so that the "
         "programme is offered for this intake is not confirmed.",
+    ),
+    _t(
+        "why.programmeNotOffered",
+        "The closest official programme is {route} (official page: {url}).",
+    ),
+    _t(
+        "why.programmeNotOfferedNoRoute",
+        "The verified knowledge base records that no such programme is offered, so nothing is "
+        "shown as this programme's.",
+    ),
+    _t(
+        "why.programmeRelatedOnly",
+        "The verified knowledge base records no standalone bachelor's in Computer Science at "
+        "{university} (expert check {date}). Whether the closest route suits you is your "
+        "decision.",
     ),
     _t(
         "why.noKbEntry",
