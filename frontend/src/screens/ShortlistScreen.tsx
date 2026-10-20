@@ -11,6 +11,7 @@
 import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { ComparePanel } from '@/components/ComparePanel';
+import { Deadline } from '@/components/Deadline';
 import { UniversityCatalogue } from '@/components/UniversityCatalogue';
 import { Chip, Empty, Field, Notice, Panel, StatusChip, statusLabel } from '@/components/primitives';
 import {
@@ -452,7 +453,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                   </div>
                   <div className="find-card__facts">
                     <span><small>{t('col.remaining')}</small><strong>{gap?.computable && gap.gap ? money({ ...gap.gap, academic_year: null }) : t('results.notEnoughData')}</strong></span>
-                    <span><small>{t('col.deadline')}</small><strong>{result.admission_deadline ? date(result.admission_deadline) : t('results.notConfirmed')}</strong></span>
+                    <span><small>{t('col.deadline')}</small><strong><Deadline result={result} fallback={t('results.notConfirmed')} /></strong></span>
                   </div>
                   {(result.conflicts.length > 0 || openQuestionCount(result) > 0) && <p className="find-card__caution">{tn('results.conflictCount', result.conflicts.length)} · {tn('results.questionCount', openQuestionCount(result))}</p>}
                 </div>

@@ -469,3 +469,155 @@ describe('the Documents tab (KB v10 smoke)', () => {
     });
   });
 });
+
+describe('caveated, stale and passed facts on the v18 KB (KB v18 smoke)', () => {
+  afterEach(() => act(() => setLocale('en')));
+
+  const DOC_NOTES = 'Verified knowledge base (expert-checked, quote verified); quote found on the official page on 2026-10-19. '
+    + 'Stale, not current: document list published for "2026 Admission Information", not the fall 2027 intake.';
+
+  function checklistOf(steps: string[], items: unknown[] = []) {
+    return {
+      result_id: 'result-1', university: 'Example University', program: 'BSc Computer Science',
+      admission_documents: items, scholarship_documents: [], applicant_actions: items, school_actions: [],
+      recommender_actions: [], certification_actions: [], ordered_steps: steps,
+      unresolved: [], generated_at: '2026-10-20T03:06:21Z', completeness: 'partial',
+    };
+  }
+
+  it('U1: a fact stale for a stated reason says "not current", not its age', () => {
+    render(<ResultDetail result={result({ claims: [claim({ age_days: 1 })] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-sources'));
+    expect(screen.queryByText('1d old')).not.toBeInTheDocument();
+    expect(screen.getByText('not current')).toBeInTheDocument();
+  });
+
+  it('U1 and U5: a stale document item and the suggested order, in Russian', () => {
+    act(() => setLocale('ru'));
+    const doc = claim({
+      claim_type: 'required_document', normalized_value: 'Personal statement', academic_year: null,
+      notes: DOC_NOTES, age_days: 1, source_url: 'https://example.edu/docs',
+    });
+    const item = {
+      name: 'Personal statement', purpose: 'admission', owner: 'applicant', required: true, format_notes: '',
+      max_pages: null, max_file_size_mb: null, naming_convention: null, needs_translation: false,
+      needs_notarization: false, needs_apostille: false, needs_credential_evaluation: false, word_limit: null,
+      character_limit: null, prompt_text: null, deadline: null, deadline_timezone: null, depends_on: [],
+      lead_time_days: 14, source_url: 'https://example.edu/docs', claim_ids: ['https://example.edu/docs'],
+    };
+    const checklist = checklistOf([
+      '1. Your referee: Letter of recommendation (allow ~30 days)',
+      '2. You: Personal statement (allow ~14 days) — after Offer letter',
+      '3. A third party: Admission test result',
+    ], [item]);
+    render(<ResultDetail result={result({ claims: [doc], checklist })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+    const listed = screen.getByTestId('document-item');
+    expect(listed).toHaveTextContent('не актуально');
+    expect(listed).not.toHaveTextContent('1 дн. назад');
+    expect(screen.getByText('Ваш рекомендатель: Letter of recommendation (заложите ~30 дней)')).toBeInTheDocument();
+    expect(screen.getByText('Вы: Personal statement (заложите ~14 дней) — после: Offer letter')).toBeInTheDocument();
+    expect(screen.getByText('Третья сторона: Admission test result')).toBeInTheDocument();
+  });
+
+  it('U5: the English steps are unchanged', () => {
+    const checklist = checklistOf(['1. You: Passport identity page (copy) (allow ~1 day) — after Offer letter']);
+    render(<ResultDetail result={result({ checklist })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+    expect(screen.getByText('You: Passport identity page (copy) (allow ~1 day) — after Offer letter')).toBeInTheDocument();
+  });
+
+  it('U2: a passed deadline is said to have passed in the headline', () => {
+    render(<ResultDetail result={result({ admission_deadline: '2026-10-15', deadline_passed: true })} knowledgeMode="kb" />);
+    expect(screen.getByTestId('deadline-passed')).toHaveTextContent('deadline passed');
+  });
+
+  it('U2: an open deadline carries no such mark', () => {
+    render(<ResultDetail result={result({ admission_deadline: '2027-01-05', deadline_passed: false })} knowledgeMode="kb" />);
+    expect(screen.queryByTestId('deadline-passed')).not.toBeInTheDocument();
+  });
+
+  function costsOf(url: string, amount: number, currency: string) {
+    return {
+      items: { tuition: { amount, currency, academic_year: '2027/28', is_estimate: false, range_low: null, range_high: null, source_url: url } },
+      total: null, academic_year: '2027/28', source_urls: [url],
+    };
+  }
+
+  it('U3: a caveated yearly fee in the cost table keeps its caveat', () => {
+    const url = 'https://www.iup.kyoto-u.ac.jp/guidelines.pdf';
+    const fee = claim({
+      academic_year: null, status: 'VERIFIED_CURRENT', is_stale: false, source_url: url,
+      normalized_value: { amount: 535800, currency: 'JPY' },
+      notes: 'Verified knowledge base. Caveat: fee policy page; no academic year printed.',
+      caveat_message: { key: 'caveat.feePolicy', params: {}, parts: {} },
+    });
+    render(<ResultDetail result={result({ claims: [fee], costs: costsOf(url, 535800, 'JPY') })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    expect(screen.getByTestId('cost-caveat')).toHaveTextContent(
+      'Tuition is current with a caveat: fee policy page; no academic year printed.',
+    );
+  });
+
+  it('U3: a fee with no caveat gets no caveat line', () => {
+    const url = 'https://example.edu/fees';
+    const fee = claim({ academic_year: '2027/2028', status: 'VERIFIED_CURRENT', is_stale: false, source_url: url, notes: 'Verified knowledge base.' });
+    render(<ResultDetail result={result({ claims: [fee], costs: costsOf(url, 66720, 'USD') })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    expect(screen.queryByTestId('cost-caveat')).not.toBeInTheDocument();
+  });
+
+  it('U4: a per-semester and a per-programme fee are listed in Russian and Kazakh', () => {
+    const semester = claim({
+      id: 'eth', academic_year: null, status: 'VERIFIED_CURRENT', is_stale: false,
+      normalized_value: { amount: 2190, currency: 'CHF' },
+      notes: 'Verified knowledge base. Amount per semester, as published; not a yearly figure. '
+        + 'Caveat: fee policy page; no academic year printed.',
+    });
+    const programme = claim({
+      id: 'kth', academic_year: null, status: 'VERIFIED_CURRENT', is_stale: false,
+      normalized_value: { amount: 453000, currency: 'SEK' },
+      notes: 'Verified knowledge base. Amount per full programme (3 years), as published; not a yearly figure.',
+    });
+    const english = '2,190 CHF per semester, no academic year stated (published per semester, not as a yearly figure)';
+    const gap = {
+      computable: false, gap: null, gap_low: null, gap_high: null, total_cost: null, confirmed_aid: null,
+      stackable_aid: null, year_mismatch: false, currency_mismatch: false, category_mismatch: false,
+      cost_basis: null, missing_categories: [], warnings: [],
+      reason: `An official tuition fee was found, but not as a current yearly figure for the fall 2027 intake: ${english}. `
+        + "It is not used as this intake's cost, so the remaining cost is not computed.",
+      reason_message: { key: 'gap.feeNotYearly', params: { intake: 'fall 2027', fees: english }, parts: {} },
+    };
+    act(() => setLocale('ru'));
+    const { unmount } = render(
+      <ResultDetail result={result({ claims: [semester, programme], funding_gap: gap })} knowledgeMode="kb" />,
+    );
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    const ruLine = '2,190 CHF за семестр, учебный год не указан (опубликовано за семестр, а не как годовая сумма)';
+    expect(screen.getByTestId('unused-tuition')).toHaveTextContent(ruLine);
+    expect(screen.getByTestId('unused-tuition')).toHaveTextContent('453,000 SEK за всю программу (лет: 3), учебный год не указан');
+    expect(document.body).not.toHaveTextContent('per semester');
+    expect(document.body).toHaveTextContent(`для набора fall 2027: ${ruLine}`);
+    unmount();
+
+    act(() => setLocale('kk'));
+    render(<ResultDetail result={result({ claims: [semester], funding_gap: gap })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    expect(screen.getByTestId('unused-tuition')).toHaveTextContent(
+      'семестр үшін 2,190 CHF, оқу жылы көрсетілмеген (семестр үшін жарияланған, жылдық сома ретінде емес)',
+    );
+    expect(document.body).not.toHaveTextContent('per semester');
+  });
+
+  it('U4: a stale fee in Russian keeps its localised reason', () => {
+    act(() => setLocale('ru'));
+    const fee = claim({
+      stale_messages: [{ key: 'stale.yearBeforeIntake', params: { year: '2026/2027', intake: 'fall 2027', wanted: '2027/28' }, parts: {} }],
+    });
+    render(<ResultDetail result={result({ claims: [fee] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    expect(screen.getByTestId('unused-tuition')).toHaveTextContent(
+      '66,720 USD в год, учебный год 2026/2027 (не актуально: учебный год 2026/2027 раньше нужного для набора fall 2027 (2027/28))',
+    );
+  });
+});

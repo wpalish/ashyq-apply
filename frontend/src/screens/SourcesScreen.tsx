@@ -178,7 +178,7 @@ export function SourcesScreen() {
                       <span className="claim__type">{claim.claim_type}</span>
                       <span className="claim__value">{claimValue(claim.normalized_value)}</span>
                       <StatusChip status={claim.status} tone={claimStatusTone[claim.status]} />
-                      <Chip tone="warn">{localStaleChip(claim.age_days)}</Chip>
+                      <Chip tone="warn">{localStaleChip(claim.age_days, localStaleReason(claim) !== null)}</Chip>
                     </div>
                     {localStaleReason(claim) && (
                       <div className="xs claim__stale-reason">{tf('results.notCurrent', { reason: localStaleReason(claim) ?? '' })}</div>

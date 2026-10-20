@@ -201,6 +201,11 @@ describe('stale knowledge-base claims (KB smoke 2026-10-19)', () => {
     expect(staleChip(400)).toBe('400d old');
   });
 
+  it('never gives an age to a claim stale for a stated reason (KB v18 smoke U1)', () => {
+    expect(staleChip(1, true)).toBe('not current');
+    expect(staleChip(400, true)).toBe('not current');
+  });
+
   it('names the knowledge base in the header chip, not "Live sources"', () => {
     expect(sourceModeLabel({ demo_mode: false, knowledge_mode: 'kb' })).toBe('Verified knowledge base');
     expect(sourceModeLabel({ demo_mode: false, knowledge_mode: 'live' })).toBe('Live sources');

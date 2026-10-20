@@ -1,5 +1,6 @@
+import { Deadline } from '@/components/Deadline';
 import { Chip, SourceLink, StatusChip, statusLabel } from '@/components/primitives';
-import { FIT_DISCLAIMER, admissionsFitTone, date, eligibilityTone, fundingClassTone, money, percent } from '@/lib/format';
+import { FIT_DISCLAIMER, admissionsFitTone, eligibilityTone, fundingClassTone, money, percent } from '@/lib/format';
 import { useTranslation } from '@/lib/useTranslation';
 import type { ProgramResult } from '@/types';
 
@@ -27,7 +28,7 @@ export function ComparePanel({ results, onRemove, onClear }: {
               <dt>{t('col.admissionsFit')}</dt><dd><StatusChip status={result.admissions_fit} tone={admissionsFitTone[result.admissions_fit]} /></dd>
               <dt>{t('col.funding')}</dt><dd><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></dd>
               <dt>{t('col.remainingPerYear')}</dt><dd>{result.funding_gap?.computable && result.funding_gap.gap ? money(result.funding_gap.gap) : t('results.notEnoughData')}</dd>
-              <dt>{t('col.deadline')}</dt><dd>{result.admission_deadline ? date(result.admission_deadline) : t('results.notConfirmed')}</dd>
+              <dt>{t('col.deadline')}</dt><dd><Deadline result={result} fallback={t('results.notConfirmed')} /></dd>
               <dt title={tOr('results.fitDisclaimer', FIT_DISCLAIMER)}>{t('compare.preferenceFit')}</dt><dd>{result.ranking ? statusLabel(result.ranking.bucket, tOr) : t('compare.notAssessed')}</dd>
               <dt title={t('compare.coverageHint')}>{t('compare.coverage')}</dt><dd>{percent(result.ranking?.coverage ?? null)}</dd>
             </dl>

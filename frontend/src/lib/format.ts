@@ -256,19 +256,37 @@ const PER_PERIOD = /Amount per ([^,]+), as published/;
  * current: …)") or one not published per year. Read from the claim notes the
  * knowledge base writes, so a live read (no such notes) yields nothing.
  */
-export function unusedTuitionLines(
-  claims: { claim_type: string; normalized_value: unknown; academic_year: string | null; notes: string }[],
-): string[] {
+export function unusedTuitionLines(claims: TuitionClaim[]): string[] {
+  return unusedTuition(claims).map(({ amount, period, year, reason }) => {
+    const money = `${amount}${period ? ` per ${period}` : ' a year'}`;
+    const when = year ? `academic year ${year}` : 'no academic year stated';
+    const why = reason ? `not current: ${reason}` : `published per ${period}, not as a yearly figure`;
+    return `${money}, ${when} (${why})`;
+  });
+}
+
+type TuitionClaim = { claim_type: string; normalized_value: unknown; academic_year: string | null; notes: string };
+
+/** One verified fee the cost table does not use, in parts, so `lib/messages.ts` can word it per locale. */
+export interface UnusedTuition<C extends TuitionClaim = TuitionClaim> {
+  claim: C;
+  amount: string;
+  /** As published ("semester", "full programme (3 years)"); null for a yearly fee. */
+  period: string | null;
+  year: string | null;
+  /** The English stale reason; null for a current fee that is not per year. */
+  reason: string | null;
+}
+
+/** The fees `unusedTuitionLines` words, before they are worded. */
+export function unusedTuition<C extends TuitionClaim>(claims: C[]): UnusedTuition<C>[] {
   return claims
     .filter((c) => c.claim_type === 'tuition')
     .flatMap((c) => {
       const reason = staleReason(c.notes);
-      const period = PER_PERIOD.exec(c.notes ?? '')?.[1];
+      const period = PER_PERIOD.exec(c.notes ?? '')?.[1] ?? null;
       if (!reason && !period) return [];
-      const amount = `${claimValue(c.normalized_value)}${period ? ` per ${period}` : ' a year'}`;
-      const year = c.academic_year ? `academic year ${c.academic_year}` : 'no academic year stated';
-      const why = reason ? `not current: ${reason}` : `published per ${period}, not as a yearly figure`;
-      return [`${amount}, ${year} (${why})`];
+      return [{ claim: c, amount: claimValue(c.normalized_value), period, year: c.academic_year, reason }];
     });
 }
 
@@ -278,9 +296,14 @@ export function sourceModeLabel(c: { demo_mode: boolean; knowledge_mode?: string
   return c.knowledge_mode === 'kb' ? 'Verified knowledge base' : 'Live sources';
 }
 
-/** The chip beside a stale claim: its age when it has one, else plainly "not current". */
-export function staleChip(ageDays: number): string {
-  return ageDays > 0 ? `${ageDays}d old` : 'not current';
+/**
+ * The chip beside a stale claim: its age when age is why it is stale, else
+ * plainly "not current". A knowledge-base fact stale for a stated reason (a fee
+ * for last year, a list for another cycle) is not stale for being old: verified
+ * the day before, it read "1d old" beside "Not current: …" (KB v18 smoke U1).
+ */
+export function staleChip(ageDays: number, reasoned = false): string {
+  return ageDays > 0 && !reasoned ? `${ageDays}d old` : 'not current';
 }
 
 /**

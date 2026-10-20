@@ -7,13 +7,16 @@
  */
 
 import { useState } from 'react';
+import { Deadline } from '@/components/Deadline';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, documentRequirement,
   eligibilityTone, fundingClassTone, humanize, money, openQuestionCount, percent, ratio,
-  unusedTuitionLines, type DocumentRequirement,
+  type DocumentRequirement,
 } from '@/lib/format';
-import { localCaveat, localStaleChip, localStaleReason, localStep, localize } from '@/lib/messages';
+import {
+  localCaveat, localGapReason, localStaleChip, localStaleReason, localStep, localUnusedTuitionLines, localize,
+} from '@/lib/messages';
 import { rich, useTranslation } from '@/lib/useTranslation';
 import type { ProgramResult, UnresolvedQuestion } from '@/types';
 
@@ -49,7 +52,7 @@ export function ResultDetail({ result, knowledgeMode }: { result: ProgramResult;
       <div className="programme-facts">
         <div><span>{t('col.funding')}</span><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></div>
         <div><span>{t('col.remainingPerYear')}</span><strong>{result.funding_gap?.computable && result.funding_gap.gap ? money(result.funding_gap.gap) : t('results.notEnoughData')}</strong></div>
-        <div><span>{t('col.deadline')}</span><strong>{result.admission_deadline ? date(result.admission_deadline) : t('results.notConfirmed')}</strong></div>
+        <div><span>{t('col.deadline')}</span><strong><Deadline result={result} fallback={t('results.notConfirmed')} /></strong></div>
         <div><span>{t('detail.evidence')}</span><strong>{tn('results.conflictCount', result.conflicts.length)} · {tn('results.questionCount', openQuestionCount(result))}</strong></div>
       </div>
       <div className="tabs" role="tablist" aria-label={tf('detail.tabsAria', { university: result.university })}>
@@ -327,7 +330,16 @@ function Costs({ result }: { result: ProgramResult }) {
     ? gap.warnings.map((w, i) => localize(gap.warning_messages?.[i], w))
     : [];
   // A verified fee for another year (or not per year) was found; it is just not this intake's cost.
-  const unused = items.length === 0 ? unusedTuitionLines(result.claims) : [];
+  const unused = items.length === 0 ? localUnusedTuitionLines(result.claims) : [];
+  const reason = gap ? localGapReason(gap, result.claims) : '';
+  // The table took a current fee the page printed no year for: never shown as fully verified.
+  const tuition = result.costs.items.tuition;
+  const feeCaveat = tuition
+    ? result.claims
+      .filter((c) => c.claim_type === 'tuition' && c.status === 'VERIFIED_CURRENT' && c.source_url === tuition.source_url)
+      .map((c) => localCaveat(c))
+      .find((c) => c !== null) ?? null
+    : null;
 
   return (
     <div className="stack">
@@ -360,6 +372,11 @@ function Costs({ result }: { result: ProgramResult }) {
           )}
         </dl>
       )}
+      {feeCaveat && (
+        <p className="xs claim__stale-reason" style={{ margin: 0 }} data-testid="cost-caveat">
+          {tf('detail.costCaveat', { caveat: feeCaveat })}
+        </p>
+      )}
 
       {gap && gap.cost_basis === 'itemised_partial' && gap.total_cost ? (
         <div className="panel panel--sunken">
@@ -391,7 +408,7 @@ function Costs({ result }: { result: ProgramResult }) {
               <p className="num" style={{ fontSize: 'var(--text-xl)', fontFamily: 'var(--font-display)', margin: 0 }}>
                 {money(gap.gap)}
               </p>
-              <p className="xs muted" style={{ marginTop: 4 }}>{localize(gap.reason_message, gap.reason)}</p>
+              <p className="xs muted" style={{ marginTop: 4 }}>{reason}</p>
               <dl className="kv" style={{ marginTop: 'var(--space-3)' }}>
                 <dt>{t('detail.costOfAttendance')}</dt><dd className="num">{money(gap.total_cost)}</dd>
                 <dt>{t('detail.confirmedAid')}</dt><dd className="num">{money(gap.confirmed_aid)}</dd>
@@ -401,7 +418,7 @@ function Costs({ result }: { result: ProgramResult }) {
           ) : (
             <Notice kind="warn">
               <div>
-                <strong>{t('detail.notComputed')}</strong> {localize(gap.reason_message, gap.reason)}
+                <strong>{t('detail.notComputed')}</strong> {reason}
               </div>
             </Notice>
           )}
@@ -477,7 +494,7 @@ function Documents({ result, knowledgeMode }: { result: ProgramResult; knowledge
                 <strong>{d.name}</strong>
                 <Chip tone={requirementTone[requirement]}>{t(`detail.docs.${requirement}`)}</Chip>
                 <span className="xs muted">{t(`detail.docs.owner.${d.owner}`)}</span>
-                {claim?.is_stale && <Chip tone="warn">{localStaleChip(claim.age_days)}</Chip>}
+                {claim?.is_stale && <Chip tone="warn">{localStaleChip(claim.age_days, stale !== null)}</Chip>}
               </div>
               {condition && (
                 <div className="xs muted">{tf('detail.docs.condition', { condition: condition.replace(/\.$/, '') })}</div>
@@ -676,7 +693,7 @@ function Sources({ result }: { result: ProgramResult }) {
                   ? <Chip tone="warn">{t('results.currentWithCaveat')}</Chip>
                   : <StatusChip status={c.status} tone={claimStatusTone[c.status]} />}
                 <Chip mono>{c.source_specificity}</Chip>
-                {c.is_stale && <Chip tone="warn">{localStaleChip(c.age_days)}</Chip>}
+                {c.is_stale && <Chip tone="warn">{localStaleChip(c.age_days, localStaleReason(c) !== null)}</Chip>}
               </div>
               {c.is_stale && localStaleReason(c) && (
                 <div className="xs claim__stale-reason">{tf('results.notCurrent', { reason: localStaleReason(c) ?? '' })}</div>
