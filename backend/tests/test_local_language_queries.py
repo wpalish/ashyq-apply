@@ -721,6 +721,30 @@ def test_lq2_the_cap_and_the_privacy_check_are_the_query_sides(lq2):
     assert local_query_phrase("") is None
 
 
+@pytest.mark.parametrize(
+    "mark", ['"', "“", "”", "„", "‟", "«", "»", "＂", "〝", "〞", "〟", "″", "‶"]
+)
+def test_lq2_no_double_quote_of_any_script_leaves_the_phrase(lq2, mark):
+    """SR2-04 (security review 2026-10-22): page text cannot close the quoted phrase.
+
+    A link text is the site's, and a quote left in it would end the phrase
+    early and put the rest, operators included, outside the quotes.
+    """
+    text = f"Informática{mark} OR site:example.org {mark}x"
+    phrase = local_query_phrase(text)
+    assert phrase is not None
+    assert mark not in phrase
+    query = local_query(
+        replace(
+            intent("Chile", domain="example-uni.cl", name="Universidad Ejemplo"),
+            local_phrase=text,
+        )
+    )
+    # Exactly the two quotes the query adds around the phrase, and nothing outside them.
+    assert query.text == f'site:example-uni.cl "{phrase}" licenciatura'
+    assert sum(query.text.count(m) for m in '"“”„‟«»＂〝〞〟″‶') == 2
+
+
 def test_lq2_a_page_not_in_a_language_of_the_country_gives_nothing(lq2):
     url = "https://www.example-uni.cl/carreras/x"
     links = [(url, "Ciencia de la Computación")]

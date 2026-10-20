@@ -399,8 +399,12 @@ _PERSONAL_TITLES = frozenset(
         "교수",
     }
 )
-#: LQ-2: quote marks a phrase loses before it is quoted again.
-_PHRASE_QUOTES = re.compile('["“”„«»]')
+#: LQ-2: quote marks a phrase loses before it is quoted again. Every double
+#: quote a search engine may fold to ``"`` (fullwidth ＂, the reversed and low
+#: ‟ „, the CJK 〝〞〟, the double primes ″ ‶), not only the common ones: one left
+#: in a link text would close the phrase early and put the rest of the text,
+#: operators included, outside it (security review 2026-10-22, SR2-04).
+_PHRASE_QUOTES = re.compile('["“”„‟«»＂〝〞〟″‶]')
 #: LQ-2: separators a link text may carry around its name. Brackets and full
 #: stops stay: «Informatik (B.Sc.)» is the name as the site writes it.
 _PHRASE_EDGE = " \t-–—|·•:;,"
