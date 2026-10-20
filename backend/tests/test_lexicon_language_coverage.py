@@ -467,8 +467,9 @@ def lv1_off(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
 
 
-def test_lv1_is_off_by_default() -> None:
-    assert page_classifier.LEXICON_LANGUAGE_COVERAGE is False
+def test_lv1_is_on_by_default() -> None:
+    # On since the 2026-10-20 replay: no stable loss, no new wrong page (four sets, normal + knockout).
+    assert page_classifier.LEXICON_LANGUAGE_COVERAGE is True
 
 
 @pytest.mark.usefixtures("lv1_off")
@@ -546,9 +547,9 @@ def test_flagged_slugs_keep_their_neighbours_apart(monkeypatch, url: str) -> Non
     assert degree_level_named(url) != "master"
 
 
-def test_unflagged_rows_for_languages_no_development_set_speaks() -> None:
+def test_unflagged_rows_for_languages_no_development_set_speaks(monkeypatch) -> None:
     """ca and sk: in the tables with the flag off (no dev case reads them)."""
-    assert page_classifier.LEXICON_LANGUAGE_COVERAGE is False
+    monkeypatch.setattr(page_classifier, "LEXICON_LANGUAGE_COVERAGE", False)
     assert page_classifier.local_bachelor_word("ca") == "grau en"
     assert degree_level_named(_url("ca", "grau-en-informatica")) == "bachelor"
     assert degree_level_named(_url("sk", "inziniersky-studijny-program-informatika")) == "master"

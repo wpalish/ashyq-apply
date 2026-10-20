@@ -57,6 +57,8 @@ CS = ["computer science"]
 def r1(request, monkeypatch) -> bool:
     monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", request.param)
     monkeypatch.setattr(page_classifier, "LEXICON_V2", False)
+    # LV-1 adds informatikk under nb/nn; pinned off to isolate this rule.
+    monkeypatch.setattr(page_classifier, "LEXICON_LANGUAGE_COVERAGE", False)
     monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
     return request.param
 
@@ -447,6 +449,8 @@ def test_localized_aliases_name_computer_science(r1_on, label: str) -> None:
 def test_off_the_new_aliases_name_nothing(monkeypatch, label: str) -> None:
     monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", False)
     monkeypatch.setattr(page_classifier, "LEXICON_V2", False)
+    # LV-1 adds informatikk under nb/nn; pinned off to isolate R1 and LX-1.
+    monkeypatch.setattr(page_classifier, "LEXICON_LANGUAGE_COVERAGE", False)
     assert not matches_field_text(label, CS)
 
 

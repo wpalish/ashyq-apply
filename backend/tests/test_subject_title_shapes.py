@@ -62,6 +62,8 @@ def r1(request, monkeypatch) -> bool:
     """R2 composes with R1 either way; LX-1 stays off (R1 absorbs it)."""
     monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", request.param)
     monkeypatch.setattr(page_classifier, "LEXICON_V2", False)
+    # LV-1 adds informatikk under nb/nn; pinned off to isolate this rule.
+    monkeypatch.setattr(page_classifier, "LEXICON_LANGUAGE_COVERAGE", False)
     monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
     return request.param
 

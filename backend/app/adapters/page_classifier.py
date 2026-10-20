@@ -131,9 +131,10 @@ LOCALIZED_PAGE_IDENTITY = True
 #: (ontology entries flagged ``LEXICON_LANGUAGE_COVERAGE``), and the local
 #: level words a URL slug writes (``live_discovery._LV1_DEGREE_SLUGS``). Rows
 #: for languages no development set speaks (ca, sk) are in the tables
-#: unflagged. The benchmark harness flips it per capture
-#: (``--lexicon-language-coverage``). False (the default) changes nothing.
-LEXICON_LANGUAGE_COVERAGE = False
+#: unflagged. On by default since the 2026-10-20 replay (four sets, normal and
+#: knockout: no stable loss, no new wrong page); ``--no-lexicon-language-coverage``
+#: turns it off per capture.
+LEXICON_LANGUAGE_COVERAGE = True
 #: Plan rule FI-1 (wrong-claims analysis 2026-10-18 R-D1): part (ii) of LX-1 on
 #: its own, so the funding-gate scope can be measured without the lexicon. UNSW's
 #: own "Bachelor of Science (Computer Science)" page lists one scholarship link

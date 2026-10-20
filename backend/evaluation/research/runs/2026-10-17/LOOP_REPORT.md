@@ -1003,3 +1003,16 @@ lead never reaches it.
 | D-B cohort `--no-registry-seeds` normal + knockout | page hits unchanged (4–5/10); **3 stable claim losses** (delft:tuition, ubc major-entrance scholarship + its international applicability) in both modes | H-B partial: registry seeds carry claims (fees/scholarship pages), not programme-page hits, on cohort |
 
 ntu:deadline / SAT / programme.exists stay unstable across arms (known replay noise).
+
+## 2026-10-20 02:20 — cycle 15 (LV-1 replay, first ablations, identity-gate probe; $0)
+
+| item | result | verdict |
+|---|---|---|
+| LV-1 `--lexicon-language-coverage` normal, 4 sets | stable gains 0, losses 0; on-arm wrong pages 0 (cohort off-arm 1 and dev3 off-arm 1 = known flakes) | **on by default** (bar met: no stable loss, no new wrong page); it fixes the Estonian integrated-study level read |
+| LV-1 knockout, 4 sets | knockout wrong pages unchanged (0 / 1 / 1–2 / 1); no stable change | as above |
+| D-D ablation `--no-alias-aware-program-match` | stable loss rwth:programme.exists (dev4); others identical | load-bearing, keep |
+| D-D ablation `--no-integrated-masters-level` | stable loss uct:ielts.overall (dev2); others identical | load-bearing, keep |
+| IG-2 identity-gate probe (CI, no fallback query) | base: cohort 7/10, dev2 8/10, dev3 12/15, dev4 8/9, dev5 7/13 (counts only). Fold + proposed native names: cohort 7/10, dev2 8/10, dev3 12/15, dev4 8/9, **dev5 9/13** | +2 on dev5, no set down; pre-registered 9/9 and 11/11 not met (taltech's homepage title lacks its native name). Native names need the owner's signature on the overlay before the gate can read them |
+| LOCO-1 (ticket 08) | H-C confirmed: removing a language's own rows loses 25 % of local-language gold on the store, 28 % on pages; strictly case-made rows explain only uio (+ puc on pages) | the concrete defect is one alias per language in the local query (LQ-2, needs a search key to test); held-out provenance audit of de/it/cs/tr rows started |
+
+Next ablations running: english-readers-v2, fee-readers-v2.

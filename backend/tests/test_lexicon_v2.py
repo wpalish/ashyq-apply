@@ -81,6 +81,8 @@ UIO_HTML = (
 def _without_r1(monkeypatch) -> None:
     """LX-1 on its own: plan v3 R1 absorbs its degree and subject parts (16-Q4)."""
     monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", False)
+    # LV-1 adds informatikk under nb/nn; pinned off to isolate this rule.
+    monkeypatch.setattr(page_classifier, "LEXICON_LANGUAGE_COVERAGE", False)
 
 
 @pytest.fixture(params=[False, True], ids=["off", "on"])

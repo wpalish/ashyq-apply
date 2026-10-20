@@ -1778,7 +1778,7 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "subpage-requirements-lead": (
         ("app.adapters.discovery.live_discovery", "SUBPAGE_REQUIREMENTS_LEAD"),
     ),
-    # Default-off (NEXT_CYCLES_2026-10-20 §LV-1, the lexicon battery's rows).
+    # On by default since the 2026-10-20 replay (NEXT_CYCLES_2026-10-20 §LV-1).
     "lexicon-language-coverage": (("app.adapters.page_classifier", "LEXICON_LANGUAGE_COVERAGE"),),
     # Default-off (NEXT_CYCLES_2026-10-20 §6, IG bundle, NN-1b).
     "identity-fold-marks": (("app.catalogue.discovery", "IDENTITY_FOLD_MARKS"),),
@@ -1789,7 +1789,6 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
     {
         "listing-follows-local-aliases",
         "subpage-requirements-lead",
-        "lexicon-language-coverage",
         "identity-fold-marks",
     }
 )

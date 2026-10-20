@@ -205,6 +205,8 @@ def test_the_alias_follows_the_flags_the_confirm_step_reads(r5, monkeypatch):
     # confirm would refuse it, so the query does not name it.
     monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", False)
     monkeypatch.setattr(page_classifier, "LEXICON_V2", False)
+    # LV-1 adds informatikk under nb/nn; pinned off to isolate R1 and LX-1.
+    monkeypatch.setattr(page_classifier, "LEXICON_LANGUAGE_COVERAGE", False)
     assert local_language_terms(intent("Norway")) is None
     # A settled alias needs no flag.
     assert local_language_terms(intent("Germany", domain="tum.de")).alias == "informatik"
