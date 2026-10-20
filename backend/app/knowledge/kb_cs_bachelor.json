@@ -1,7 +1,7 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.17",
- "built_at": "2026-10-19",
+ "version": "2026-10-20.kb-cs-bachelor.18",
+ "built_at": "2026-10-20",
  "programme": "bachelor computer science",
  "applicant": "international",
  "intake": "fall 2027",
@@ -16,7 +16,7 @@
   "documents"
  ],
  "stale_policy": {
-  "as_of": "2026-10-19",
+  "as_of": "2026-10-20",
   "accessed_older_than_days": 365,
   "academic_year_past": "as_of after 31 August of the end year",
   "deadline_passed": "deadline value before as_of"
@@ -46,6 +46,7 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-20.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -1019,7 +1020,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: the University's English language requirements page (www.ox.ac.uk/admissions/undergraduate/applying-to-oxford/english-language-requirements) returns HTTP 403 (Cloudflare challenge) to the normal user agent; not bypassed. The department pages state no English test minimum."
+     "reason": "Expert did not establish it. Expert (2026-10-20): Access. Re-tried 2026-10-20 with the production Fetcher: https://www.ox.ac.uk/admissions/undergraduate/applying-to-oxford/english-language-requirements and https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing/computer-science both answer HTTP 403. The department site only defers to…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -1041,6 +1043,7 @@
    "known_fact_count": 4,
    "source_batches": [
     "batch3",
+    "topup_round7",
     "topup_documents4"
    ]
   },
@@ -2667,7 +2670,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No test minimum readable. The School of Computing FAQ only says 'the University expects applicants to meet a minimum level of English proficiency' and points to nus.edu.sg/oam (programme prerequisites), which is behind an Incapsula bot wall from this container. www.nus.edu.sg / nus.edu.sg (Office o…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): Access. Re-tried 2026-10-20: https://www.nus.edu.sg/oam/admissions/international-qualifications and https://www.nus.edu.sg/oam/admissions/english-language-requirements answer HTTP 200 with an empty body (0 readable characters, bot wall). The School of Computing CS page (200) states no English score…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "tuition",
@@ -2691,6 +2695,7 @@
    "source_batches": [
     "batch8",
     "topup_deadlines1",
+    "topup_round7",
     "topup_documents4"
    ]
   },
@@ -4045,7 +4050,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No minimum published. https://admissions.upenn.edu/how-to-apply/international-applicants: 'We accept TOEFL, IELTS Academic, and the Duolingo English Test.' and guidance only: 'Competitive applicants tend to have an overall band score of 7 or above' (IELTS), 'a composite score of 100 or above' (TOEF…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published (re-read 2026-10-20). https://admissions.upenn.edu/how-to-apply/international-applicants lists the accepted tests ('We accept TOEFL , IELTS Academic , and the Duolingo English Test') and gives only guidance: 'Competitive applicants tend to have a composite score of 5 or above'…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -4057,6 +4063,7 @@
    "known_fact_count": 13,
    "source_batches": [
     "batch10",
+    "topup_round7",
     "topup_documents2"
    ]
   },
@@ -4721,7 +4728,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): A test is required: 'N on-native English-speakers who have not taken at least two years of secondary education where English is the medium of instruction are required to submit results from any of the proficiency tests below.' (https://admissions.yale.edu/international; the page splits 'Non-native'…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published (re-read 2026-10-20). https://admissions.yale.edu/international: a test is required of non-native speakers without two years of English-medium secondary school (TOEFL, IELTS, Cambridge English Qualifications, DET, InitialView). https://admissions.yale.edu/standardized-testing g…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -4734,6 +4742,7 @@
    "source_batches": [
     "batch2",
     "topup_round6",
+    "topup_round7",
     "topup_documents4"
    ]
   },
@@ -4742,14 +4751,13 @@
    "source_case": "qs2027-018",
    "source_batch": "batch3",
    "review_status": "expert_checked",
-   "verified_on": "2026-10-19",
+   "verified_on": "2026-10-20",
    "verified_on_basis": "ci_evidence_check",
    "university": "The Chinese University of Hong Kong (CUHK)",
    "country": "Hong Kong SAR, China",
    "official_domain": "cuhk.edu.hk",
    "official_domains": [
-    "cuhk.edu.hk",
-    "cuhk.edu.cn"
+    "cuhk.edu.hk"
    ],
    "programme": {
     "status": "known",
@@ -4772,11 +4780,229 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-07",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": "2027/28",
+      "population": "international (non-local applicants, International Students Admissions Scheme)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "Applicants who are not given an advance offer will compete on equal footing with all other applicants in the regular round, the application deadline of which is 7 January 2027.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-20): CUHK Office of Admissions and Financial Aid, 'International Students Admissions Scheme (2027 Entry) Guide on Application for Admission (Full-time Undergraduate Studies)', dated October 2026 (PDF on www.cuhk.edu.hk), read on the GitHub Actions runner with the production Fetcher on 2026-10-20 (mode=r…",
+      "stale": false,
+      "source_batch": "topup_round8"
+     }
+    ],
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "Before submitting your application, please make sure that you have fully completed your application form and provided the following supporting documents, if applicable, through our Online Application System",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "conditional",
+       "condition": "if applicable (the guide asks for 'the following supporting documents, if applicable')"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "copies of your Passport, Hong Kong Identity Card, Dependant Visa, Student Visa, Entry Permit, other Identity Card / Resident Card issued by the country which you are studying in",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "For verification purposes only; deleted from the applicant's file afterwards. Uploaded under 'Identity Document(s)', which the programme assessment panels may not review.",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "if applicable (the guide asks for 'the following supporting documents, if applicable')"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "high school reports / transcripts (from secondary 1 or grade 7 to the latest academic term) and graduation certificate / diploma",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "conditional",
+       "condition": "if applicable (the guide asks for 'the following supporting documents, if applicable')"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "high school reports / transcripts (from secondary 1 or grade 7 to the latest academic term) and graduation certificate / diploma",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "if applicable (the guide asks for 'the following supporting documents, if applicable')"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "English / Chinese / other language tests results (TOEFL / IELTS / others). Validity of IELTS and TOEFL results is two years.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "transcripts and diplomas not in English or Chinese"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "Transcripts and diplomas, which are not in English or Chinese, must be accompanied by a certified translation in English.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "conditional",
+       "condition": "if applicable; the guide states it as required only for Medicine applicants (a separate 250-word personal statement)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "(iii) Personal Statement • Applicants applying to Medicine are required to submit a separate 250 -word personal statement.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "(iv) Resume / Curriculum Vitae (optional)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/28",
+      "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+      "source_url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+      "quote": "Recommendation of an academic referee via online system: • You may nominate up to three referees in the “Referee Information” section of the application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "Nominated referees get an email invitation to complete the Confidential Recommendation / Referee Report; 'You may nominate' is drafted as optional.",
+      "stale": false,
+      "source_batch": "topup_round8"
+     }
+    ]
    },
    "unknown": [
     {
@@ -4790,11 +5016,6 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): No threshold for international first-year applicants on the pages read. Prose: 'applicants will be considered on the basis of their education background and academic achievements'. The 'overall GPA ≥ 3.0 (or equivalent)' on the department page is for local Senior Year (associate degree / higher dip…"
     },
     {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: international application deadlines are on admission.cuhk.edu.hk (TLS chain incomplete); not read."
-    },
-    {
      "question": "tuition",
      "key": "tuition",
      "reason": "Expert did not establish it. Expert (2026-10-19): Access failure: fees for non-local students are on admission.cuhk.edu.hk (TLS chain incomplete); not read."
@@ -4806,7 +5027,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 0
+   "known_fact_count": 10,
+   "source_batches": [
+    "batch3",
+    "topup_round8"
+   ]
   },
   "qs2027-019": {
    "seed_id": "qs2027-019",
@@ -11000,7 +11225,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No test minimum published. 2027 AY guide (international track, all majors except medicine/dentistry/nursing/pharmacy), language requirement 'Choose One': 'Official documentation proving completion of high school courses conducted in Korean or English', KLI certificate, 'Standardized test result ind…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): No score published; cycle_stated '2027학년도 3월 신입학' (Spring/March 2027 entry), not the fall 2027 intake. The 2027 international-track guide (https://admission.yonsei.ac.kr/seoul/upload/guide/20260529144906YVFHLB.PDF, re-read 2026-10-20) asks every unit except medicine/dentistry/nursing/pharmacy for o…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -11019,6 +11245,7 @@
    "source_batches": [
     "batch3",
     "topup_round5",
+    "topup_round7",
     "topup_documents4"
    ]
   },
@@ -11626,7 +11853,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "No IELTS figure given. Expert (2026-10-19): University-wide. A proficiency score is required when the first/primary language is not English or secondary schooling was not in English; no minimum score; no superscoring of English tests."
+     "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published (rounds 2-3: a proficiency score is required, 'no minimum score'). Re-check on 2026-10-20 was blocked: admissions.northwestern.edu and catalogs.northwestern.edu robots.txt unreachable (ConnectError), which RFC 9309 treats as disallowed. Nothing new to draft.",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -11638,6 +11866,7 @@
    "known_fact_count": 11,
    "source_batches": [
     "batch6",
+    "topup_round7",
     "topup_documents2"
    ]
   },
@@ -12653,7 +12882,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No published minimum on ucla.edu: the international page says 'We look for competitive English proficiency scores, including a TOEFL iBT score of 5 or higher (with sub-scores of 5 or higher) on the revised scale (effective January 21, 2026), or above 100 (with sub-scores above 24) on the previous 1…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published on ucla.edu (re-read 2026-10-20). https://admission.ucla.edu/apply/international-applicants: 'We look for competitive English proficiency scores, including a TOEFL iBT score of 5 or higher (with sub-scores of 5 or higher) on the revised scale (effective January 21, 2026), or ab…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -12665,6 +12895,7 @@
    "known_fact_count": 9,
    "source_batches": [
     "batch8",
+    "topup_round7",
     "topup_documents4"
    ]
   },
@@ -13200,7 +13431,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): ACCESS: www.cityu.edu.hk (the Admissions Office site /admo/, including the programme pages https://www.cityu.edu.hk/admo/programmes/bsc-computer-science-0 and /admo/admissions/non-jupas-year-1-admission, and the catalogue /catalogue/ug/current/) answers HTTP 200 with an Imperva/Incapsula bot-challe…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): Access. Re-tried 2026-10-20: https://www.cityu.edu.hk/admo/, /admo/admissions/non-jupas-year-1-admission, /admo/faq and /international/admissions/entrance-requirements all answer HTTP 200 with an empty body (0 characters, bot wall); www.admo.cityu.edu.hk does not resolve. Needs the CI read of https…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -13222,6 +13454,7 @@
    "known_fact_count": 7,
    "source_batches": [
     "batch1",
+    "topup_round7",
     "topup_documents4"
    ]
   },
@@ -13642,7 +13875,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Korean-taught programme. Spring 2027 guide, '3. Language Proficiency Requirements - Please submit one of the following documents': A. Korean (TOPIK / TOPIK iBT regular test, KU KLC, IEQAS universities, King Sejong intermediate) or 'B. English A score report for TOEFL iBT (including Home Edition / E…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): No minimum published for direct major admission. Latest English guide readable: https://oia.korea.ac.kr/_res/oia/etc/Application_Guide_for_Fall_2026_Freshman(ENG).pdf (cycle_stated 'Fall 2026', not the fall 2027 intake), re-read 2026-10-20: 'B. English A score report for TOEFL iBT (including Home E…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -13659,6 +13893,7 @@
    "known_fact_count": 14,
    "source_batches": [
     "batch2",
+    "topup_round7",
     "topup_documents3"
    ]
   },
@@ -13940,7 +14175,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Programme language not confirmed, so the applicable rule is not chosen. 2027 September-entry guidelines (https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf) set university minimums: English-taught programmes 'proof of English proficiency eq…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): Programme language still not confirmed, so the rule is not chosen. www.csie.ntu.edu.tw now answers 200 (2026-10-20), but its admissions pages (/zh_tw/Admission/Announcement12, /en/Admission/education1) state no teaching language and send international applicants to admissions.ntu.edu.tw. The per-de…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -13957,6 +14193,7 @@
    "known_fact_count": 11,
    "source_batches": [
     "topup_imported",
+    "topup_round7",
     "topup_documents3"
    ]
   },
@@ -14963,7 +15200,7 @@
    "source_case": "qs2027-059",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": "2026-10-19",
+   "verified_on": "2026-10-20",
    "verified_on_basis": "ci_evidence_check",
    "university": "KU Leuven",
    "country": "Belgium",
@@ -15005,7 +15242,162 @@
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants for a Bachelor's programme at KU Leuven (university-wide 'Requested documents' list, section 'I want to apply for a Bachelor's programme'); the CS bachelor (Bachelor in de informatica) is Dutch-taught",
+      "source_url": "https://www.kuleuven.be/english/apply/requested-documents",
+      "quote": "Diploma and transcripts of academic records of your secondary education If you still need to graduate at the time of your application, you can upload your official intermediate transcripts.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants for a Bachelor's programme at KU Leuven (university-wide 'Requested documents' list, section 'I want to apply for a Bachelor's programme'); the CS bachelor (Bachelor in de informatica) is Dutch-taught",
+      "source_url": "https://www.kuleuven.be/english/apply/requested-documents",
+      "quote": "Diploma and transcripts of academic records of your secondary education",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents not officially issued in English, Dutch, French, German, Spanish, Italian, Portuguese, Bulgarian, Polish, or Ukrainian (translation into English, Dutch, French or German, by the institution or a sworn translator)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants for a Bachelor's programme at KU Leuven (university-wide 'Requested documents' list, section 'I want to apply for a Bachelor's programme'); the CS bachelor (Bachelor in de informatica) is Dutch-taught",
+      "source_url": "https://www.kuleuven.be/english/apply/requested-documents",
+      "quote": "If your documents were not officially issued in English, Dutch, French, German, Spanish, Italian, Portuguese, Bulgarian, Polish, or Ukrainian, you must provide a translation into English, Dutch, French, or German, either issued by your institution or by a sworn translator.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants for a Bachelor's programme at KU Leuven (university-wide 'Requested documents' list, section 'I want to apply for a Bachelor's programme'); the CS bachelor (Bachelor in de informatica) is Dutch-taught",
+      "source_url": "https://www.kuleuven.be/english/apply/requested-documents",
+      "quote": "The identity page of your passport If you do not have a passport, your national ID card will also suffice (front and back side).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.motivation_letter",
+      "value": {
+       "kind": "motivation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants for a Bachelor's programme at KU Leuven (university-wide 'Requested documents' list, section 'I want to apply for a Bachelor's programme'); the CS bachelor (Bachelor in de informatica) is Dutch-taught",
+      "source_url": "https://www.kuleuven.be/english/apply/requested-documents",
+      "quote": "Motivation letter (recommended length: one A4-page)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants for a Bachelor's programme at KU Leuven (university-wide 'Requested documents' list, section 'I want to apply for a Bachelor's programme'); the CS bachelor (Bachelor in de informatica) is Dutch-taught",
+      "source_url": "https://www.kuleuven.be/english/apply/requested-documents",
+      "quote": "Curriculum Vitae (CV) Proof of payment of the application fee",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "conditional",
+       "condition": "if the programme applied for requires one of these tests"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants for a Bachelor's programme at KU Leuven (university-wide 'Requested documents' list, section 'I want to apply for a Bachelor's programme'); the CS bachelor (Bachelor in de informatica) is Dutch-taught",
+      "source_url": "https://www.kuleuven.be/english/apply/requested-documents",
+      "quote": "SAT, ACT, AP Calculus or SOWISO OMPT test results If the programme you are applying for requires one of these tests, please upload your official score report",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_round8"
+     }
+    ]
    },
    "unknown": [
     {
@@ -15048,7 +15440,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 8,
+   "source_batches": [
+    "topup_imported",
+    "topup_round8"
+   ]
   },
   "qs2027-060": {
    "seed_id": "qs2027-060",
@@ -18576,7 +18972,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Test required, minimum not published for first-year applicants: 'If you did not complete Grades 10-12 in an approved English-speaking country, you must submit one of the following test scores: TOEFL IELTS Duolingo English Test ACT* SAT*' (https://www.admissions.illinois.edu/international-requiremen…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): No first-year minimum published (re-read 2026-10-20). https://www.admissions.illinois.edu/international-requirements/: 'If you did not complete Grades 10–12 in an approved English‐speaking country, you must submit one of the following test scores: TOEFL IELTS Duolingo English Test ACT* SAT*' and 'T…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -18588,6 +18985,7 @@
    "known_fact_count": 8,
    "source_batches": [
     "batch7",
+    "topup_round7",
     "topup_documents2"
    ]
   },
@@ -23074,7 +23472,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Japanese-taught programme. Selection for privately-funded international students uses EJU and TOEFL scores, a written exam and an interview. The FAQ (https://www.osaka-u.ac.jp/ja/admissions/faculty/expense/files/2027tokubetsunyushi_faq.pdf/@@download/file) says: '学部によっては、 大阪大学に出願する条件としての基準点があります。 大…"
+     "reason": "Expert did not establish it. Expert (2026-10-20): Not readable. Japanese-taught; the privately-funded special screening is for April 2027 admission. The FAQ (https://www.osaka-u.ac.jp/ja/admissions/faculty/expense/files/2027tokubetsunyushi_faq.pdf/@@download/file) says some faculties set a TOEFL score as an application condition ('学部によっては、大阪大学に出願す…",
+     "source_batch": "topup_round7"
     },
     {
      "question": "gpa",
@@ -23088,7 +23487,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 3,
+   "source_batches": [
+    "batch2",
+    "topup_round7"
+   ]
   },
   "qs2027-096": {
    "seed_id": "qs2027-096",
