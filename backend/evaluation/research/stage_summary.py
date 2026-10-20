@@ -64,7 +64,15 @@ from .metrics import (
     scored_predictions,
 )
 from .schema import Capture, Case, Dataset, Observation, PageOutcome, Scope
-from .scorecard import GOLD_STAGES, RECORDED_KINDS, Arm, _answered, gold_seen, load_run
+from .scorecard import (
+    GOLD_STAGES,
+    RECORDED_KINDS,
+    Arm,
+    _answered,
+    gold_confirm_rank,
+    gold_seen,
+    load_run,
+)
 
 #: The scope dimensions a wrong-scope claim is broken down by, reviewer order.
 DIMENSIONS = (
@@ -426,6 +434,8 @@ def repetition_summary(
         ledger = trace.get("read_ledger") or {}
         funnel["reads_in_discovery"] += int((ledger.get("by_phase") or {}).get("discovery") or 0)
         funnel["programme_candidates_read"] += len(trace.get("pages_read") or [])
+        # TR-1: the confirm queue's length, a count only.
+        funnel["confirm_queue_len"] += len(trace.get("confirm_queue") or [])
         rows = trace.get("search_results") or []
         funnel["discovery_queries"] += len(rows)
         for row in rows:
@@ -482,6 +492,12 @@ def repetition_summary(
             for tag in tags:
                 if tag.startswith("returned:"):
                     gold[f"returned_by_family:{_controlled(tag.split(':', 1)[1])}"] += 1
+            # TR-1: the gold queued for confirm and not read there (a count, no rank).
+            rank = gold_confirm_rank(case, trace)
+            if isinstance(rank, int):
+                gold["gold_queued"] += 1
+                row = (trace.get("confirm_queue") or [])[rank - 1]
+                gold["gold_queued_not_read"] += not row.get("read")
 
         # Refusals.
         for _url, why in trace.get("pages_read") or []:

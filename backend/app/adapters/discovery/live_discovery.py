@@ -106,6 +106,15 @@ MAX_PROGRAM_CANDIDATES_CHECKED = 8
 SEARCH_RESULTS_TRACE_CAP = 24
 SEARCH_RESULTS_PER_QUERY = 10
 PAGES_READ_TRACE_CAP = 200
+#: TR-1 trace bounds (measurement only; nothing reads these rows back): the
+#: confirm queue's rows (the 40 sitemap leads, three slots, read-time
+#: insertions and headroom), the navigation fallback's queued pages, and the
+#: timed reads per institution (the sitemap allowance, the read cap and the
+#: recovery reserve fit with room to spare). The sitemap stage's kept list per
+#: category is bounded by ``MAX_CANDIDATES_PER_CATEGORY`` already.
+CONFIRM_QUEUE_TRACE_CAP = 60
+NAVIGATION_QUEUE_TRACE_CAP = 40
+READ_SAMPLES_TRACE_CAP = 64
 #: QB-1b: identity-recovery reads left to QB-1's first pass when a programme
 #: page was already confirmed before it (walker, registry or sitemap). Recovery
 #: then only looks for a twin or sibling of that page; Groningen's ``?lang=en``
@@ -4219,6 +4228,63 @@ class DiscoveryTrace:
     #: SP-2 only: the process sub-page handed to the evidence stage as a
     #: requirements lead (at most one). Not serialised while empty.
     requirements_leads: list[RequirementsLead] = field(default_factory=list)
+    #: TR-1, measurement only: every programme candidate the confirm stage
+    #: queued, in queue order, as ``{"url", "score", "source", "read",
+    #: "verdict"}`` (``source``: seed / sitemap / navigation / search, or
+    #: inserted for a read-time twin, sibling or parent; ``verdict``: "" for
+    #: accepted, the refusal, or why it was not read). Not serialised while empty.
+    confirm_queue: list[dict[str, object]] = field(default_factory=list)
+    #: TR-1: what the sitemap stage's ``keep`` did with each URL it was
+    #: offered (counts), and after the stage the kept ``[score, url]`` list per
+    #: category in selection order. Not serialised while empty.
+    sitemap_keep: dict[str, object] = field(default_factory=dict)
+    #: TR-1: the pages the navigation fallback queued, as ``{"url", "score",
+    #: "reason"}`` (score ``None`` where the queue had none). Not serialised
+    #: while empty.
+    navigation_queue: list[dict[str, object]] = field(default_factory=list)
+    #: TR-1: per discovery read through the stage budget, ``{"url", "stage",
+    #: "seconds", "bytes"}``; serialised as ``host_cost.samples``, and only
+    #: when non-empty.
+    read_samples: list[dict[str, object]] = field(default_factory=list)
+    #: TR-1: where a programme lead came from and the score it had there,
+    #: for the confirm queue's rows. Internal: never serialised.
+    lead_origin: dict[str, tuple[str, int | None]] = field(default_factory=dict)
+
+    def note_keep(self, outcome: str) -> None:
+        """TR-1: one ``keep`` decision of the sitemap stage, counted by outcome."""
+        counts = self.sitemap_keep.setdefault("counts", {})
+        assert isinstance(counts, dict)
+        counts["seen"] = counts.get("seen", 0) + 1
+        counts[outcome] = counts.get(outcome, 0) + 1
+
+    def note_kept_lists(self, ranked: dict[str, list[tuple[int, str]]]) -> None:
+        """TR-1: the sitemap stage's kept leads per category, as selection orders them."""
+        kept = {
+            category: [[score, url] for score, url in pairs[:MAX_CANDIDATES_PER_CATEGORY]]
+            for category, pairs in ranked.items()
+            if pairs
+        }
+        if kept:
+            self.sitemap_keep["kept"] = kept
+
+    def note_lead(self, url: str, source: str, score: int | None) -> None:
+        """TR-1: the first stage that offered ``url`` as a programme lead."""
+        self.lead_origin.setdefault(url, (source, score))
+
+    def note_navigation_queued(self, url: str, score: int | None, reason: str) -> None:
+        """TR-1: a page the navigation fallback queued, once per URL (bounded)."""
+        if len(self.navigation_queue) >= NAVIGATION_QUEUE_TRACE_CAP:
+            return
+        if any(row["url"] == url for row in self.navigation_queue):
+            return
+        self.navigation_queue.append({"url": url, "score": score, "reason": reason})
+
+    def note_read_sample(self, url: str, stage: str, seconds: float, size: int) -> None:
+        """TR-1: one discovery read's wall time and body size (bounded)."""
+        if len(self.read_samples) < READ_SAMPLES_TRACE_CAP:
+            self.read_samples.append(
+                {"url": url, "stage": stage, "seconds": round(seconds, 3), "bytes": size}
+            )
 
     def note_requirements_lead(
         self,
@@ -4331,7 +4397,11 @@ class DiscoveryTrace:
             "kept_by_link_text": self.kept_by_link_text,
             "walker": dict(self.walker),
             **({"stage_order": self.stage_order} if self.stage_order else {}),
-            **({"host_cost": self.host_cost} if self.host_cost else {}),
+            **(
+                {"host_cost": {**self.host_cost, "samples": self.read_samples}}
+                if self.read_samples
+                else ({"host_cost": self.host_cost} if self.host_cost else {})
+            ),
             **({"unresolved": self.unresolved} if self.unresolved else {}),
             **(
                 {"discovery_query_passes": self.discovery_query_passes}
@@ -4366,6 +4436,9 @@ class DiscoveryTrace:
                 if self.requirements_leads
                 else {}
             ),
+            **({"confirm_queue": self.confirm_queue} if self.confirm_queue else {}),
+            **({"sitemap_keep": self.sitemap_keep} if self.sitemap_keep else {}),
+            **({"navigation_queue": self.navigation_queue} if self.navigation_queue else {}),
         }
 
 
@@ -4539,6 +4612,14 @@ class StageBudget:
         #: PL-1(b): recovery reads started, in time or not.
         self.recovery_reads = 0
         self._grants = 0
+        #: TR-1: why each stage ended early, first reason per stage.
+        self.stage_stops: dict[str, str] = {}
+        #: TR-1: per read made, (url, stage, seconds, bytes); bounded.
+        self.samples: list[tuple[str, str, float, int]] = []
+
+    def note_stop(self, stage: str, reason: str) -> None:
+        """TR-1: record why ``stage`` stopped, unless it already said."""
+        self.stage_stops.setdefault(stage, reason)
 
     def elapsed(self) -> float:
         return _clock() - self.started
@@ -4576,6 +4657,7 @@ class StageBudget:
             if self.stopped_by:
                 self.stopped_at = round(elapsed, 2)
                 self.stopped_in = self.stage
+                self.note_stop(self.stage, self.stopped_by)
         return bool(self.stopped_by)
 
     def count_read(self, result: FetchResult) -> None:
@@ -4631,6 +4713,7 @@ class StageBudget:
             "stopped_at": self.stopped_at,
             "stopped_in": self.stopped_in or None,
             "refused_reads": self.refused_reads,
+            **({"stage_stopped_by": dict(self.stage_stops)} if self.stage_stops else {}),
         }
 
 
@@ -4660,8 +4743,14 @@ class _BudgetedFetcher:
                 error="discovery stage budget spent",
                 final_url=url,
             )
+        stage, started = budget.stage, _clock()
         result = await self._inner.get(url, **kwargs)
-        self._budget.count_read(result)
+        budget.count_read(result)
+        if len(budget.samples) < READ_SAMPLES_TRACE_CAP:
+            # TR-1: per read, its wall time and body size (measurement only).
+            body = getattr(result, "content", b"") or getattr(result, "text", "") or ""
+            size = len(body)
+            budget.samples.append((url, stage, _clock() - started, size))
         return result
 
 
@@ -5172,6 +5261,8 @@ class LiveDiscoveryAdapter:
             self.fetcher = self.sitemaps.fetcher = inner
             self._budget = None
         trace.stage_budget = budget.as_dict()
+        for url, stage, seconds, size in budget.samples:
+            trace.note_read_sample(url, stage, seconds, size)
         if budget.stopped_by:
             trace.errors.append(
                 f"SB-1: discovery stopped at {budget.stopped_at} s in {budget.stopped_in} "
@@ -5209,7 +5300,18 @@ class LiveDiscoveryAdapter:
 
     def _walker_stop(self) -> bool:
         """SB-1: the walker stops when spent, and (SB-1b) when the first query is due."""
-        return self._spent() or self._search_due()
+        if self._spent():
+            self._note_stop("walker", "budget")
+            return True
+        if self._search_due():
+            self._note_stop("walker", "search_due")
+            return True
+        return False
+
+    def _note_stop(self, stage: str, reason: str) -> None:
+        """TR-1: why a stage ended early, when a stage budget is running."""
+        if self._budget is not None:
+            self._budget.note_stop(stage, reason)
 
     def _enter(self, stage: str) -> str:
         """SB-1: charge what follows to ``stage``; '' while the rule is off."""
@@ -5255,6 +5357,8 @@ class LiveDiscoveryAdapter:
                 trace.reject(url, "manual seed is off the institution's domain")
                 continue
             selected[category].append(canonical_url(url))
+            if category == PageCategory.PROGRAM_PAGE:
+                trace.note_lead(canonical_url(url), "seed", None)
 
         # 2. Sitemaps. Relevance is decided as each URL is read, not after the
         #    whole sitemap is collected: a university publishes far more news
@@ -5271,29 +5375,40 @@ class LiveDiscoveryAdapter:
             if category is None:
                 if SITEMAP_KEEP_EVIDENCE_SUM:
                     evidence = evidence_only_score(url, fields, degree)
-                    return evidence > 0 and hold_evidence_only(evidence_only, evidence, url)
+                    held = evidence > 0 and hold_evidence_only(evidence_only, evidence, url)
+                    trace.note_keep("evidence_only" if held else "excluded")
+                    return held
+                trace.note_keep("excluded")
                 return False
             if category in (PageCategory.PROGRAM_PAGE, PageCategory.PROGRAM_CATALOG):
                 if names_other_degree_level(url, degree):
                     trace.reject(url, f"names a degree level other than {degree}")
+                    trace.note_keep("other_level")
                     return False
                 score += matches_field(url, fields) + matches_degree(url, degree)
             elif SERVICE_PAGE_PRIORITY and category in SERVICE_CATEGORIES:
                 if names_other_degree_level(url, degree):
                     trace.reject(url, f"{category} page names a degree level other than {degree}")
+                    trace.note_keep("other_level")
                     return False
                 score += matches_degree(url, degree)
             if score <= 0:
                 trace.reject(url, "scored zero for every category")
+                trace.note_keep("zero_score")
                 return False
             if len(ranked[category]) >= MAX_CANDIDATES_PER_CATEGORY:
                 # Keep the best, not the first: a later URL may outrank the
                 # weakest one already held.
                 weakest = min(ranked[category])
                 if score <= weakest[0]:
+                    trace.note_keep("refused_by_cap")
                     return False
                 ranked[category].remove(weakest)
+                trace.note_keep("evicted_by_cap")
             ranked[category].append((score, url))
+            if category == PageCategory.PROGRAM_PAGE:
+                trace.note_lead(url, "sitemap", score)
+            trace.note_keep("kept")
             return True
 
         budget = self._budget
@@ -5337,16 +5452,22 @@ class LiveDiscoveryAdapter:
         async def before_document(attempted: int) -> bool:
             """SB-1: cut the sitemap stage when spent, or search a slow host now."""
             nonlocal searched_early, tried_early
-            if self._spent() or (budget is not None and budget.sitemap_spent()):
+            if self._spent():
+                self._note_stop("sitemap", "budget")
+                return True
+            if budget is not None and budget.sitemap_spent():
+                self._note_stop("sitemap", "sitemap_allowance")
                 return True
             if stage_cap and budget is not None and budget.elapsed() >= SITEMAP_STAGE_MAX_SECONDS:
                 trace.errors.append(
                     f"PC-1: sitemap stage ended at {budget.elapsed():.1f} s "
                     f"({SITEMAP_STAGE_MAX_SECONDS:g} s with no search provider)"
                 )
+                self._note_stop("sitemap", "stage_cap")
                 return True
             if self._search_due():
                 # SB-1b: the first query is due; search runs after this stage.
+                self._note_stop("sitemap", "search_due")
                 return True
             if tried_early or searched_early or cost is None or not cost.slow:
                 return False
@@ -5396,6 +5517,7 @@ class LiveDiscoveryAdapter:
                     break
                 if url not in selected[category]:
                     selected[category].append(url)
+        trace.note_kept_lists(ranked)
 
         # 3. Navigation, when sitemaps and seeds did not reach a programme page.
         #    An earlier version fell back only when *nothing at all* was found,
@@ -5528,27 +5650,39 @@ class LiveDiscoveryAdapter:
         requested_level = str(profile.context.level)
         fields = _public_requested_fields(profile, trace)
         reads = queued[:MAX_PROGRAM_CANDIDATES_CHECKED]
+        # TR-1, measurement only: the queue as rows, filled in as it is read.
+        rows = _confirm_queue_rows(queued, ranked, trace)
         position = 0
         while position < len(reads):
             url = reads[position]
             position += 1
             if len(confirmed) >= MAX_PAGES_PER_CATEGORY:
+                _row_verdict(rows, url, "not read: the programme slots were full", trace)
                 break
             if self._budget is not None:
                 if url in self._confirmed:
                     # SB-1: search on a slow host already read and accepted it.
+                    _row_verdict(rows, url, "", trace, accepted_by="search")
                     confirmed.append(url)
                     continue
                 if self._spent():
+                    self._note_stop("confirm", "budget")
                     for unread in reads[position - 1 :]:
                         trace.reject(unread, "not read: the discovery stage budget is spent")
+                        _row_verdict(
+                            rows, unread, "not read: the discovery stage budget is spent", trace
+                        )
                     break
             result = await self.fetcher.get(url)
             if not result.ok:
                 trace.reject(url, f"could not be read ({result.outcome.value})")
+                _row_verdict(rows, url, f"could not be read ({result.outcome.value})", trace)
                 continue
             if not same_source_site(url, result.final_url or url):
                 trace.reject(url, "programme redirected off the institution's site")
+                _row_verdict(
+                    rows, url, "programme redirected off the institution's site", trace, read=True
+                )
                 continue
             page = classify_page(url=result.final_url or url, html=result.text)
             reason = profile_rejects(
@@ -5566,6 +5700,7 @@ class LiveDiscoveryAdapter:
                     refused=local_twin_wanted(reason),
                 )
             trace.note_read(url, result.final_url or url, result.text, reason, page.subject or "")
+            _row_verdict(rows, url, reason or "", trace, read=True)
             if reason is not None:
                 trace.reject(url, reason)
                 if SUBJECT_TITLE_SHAPES and not confirmed and is_related_refusal(reason):
@@ -5603,6 +5738,8 @@ class LiveDiscoveryAdapter:
                     basis="classified_programme_page",
                     source_url=result.final_url or url,
                 )
+
+        _finish_confirm_queue(rows, reads, trace)
 
         if confirmed or selected[PageCategory.PROGRAM_PAGE]:
             # Only replace the list when something was actually checked; an
@@ -6832,6 +6969,8 @@ class LiveDiscoveryAdapter:
         # Chinese copies of the same catalogue consume the budget before the
         # walk reached the programme list.
         queue = list(selected[PageCategory.PROGRAM_CATALOG][:2])
+        for url in queue:
+            trace.note_navigation_queued(url, None, "catalogue_lead")
         walked: set[str] = set()
         scores: dict[str, int] = {}
         homepage_tried = False
@@ -6852,12 +6991,14 @@ class LiveDiscoveryAdapter:
             if selected[PageCategory.PROGRAM_PAGE]:
                 break
             if self._spent() or self._search_due():
+                self._note_stop("navigation", "budget" if self._spent() else "search_due")
                 break
             if not queue:
                 if not homepage_tried:
                     homepage_tried = True
                     queue.append(entry["homepage"])
                     hops[entry["homepage"]] = 0
+                    trace.note_navigation_queued(entry["homepage"], None, "homepage")
                 elif hop_ranked:
                     for url, score in hop_ranked:
                         if len(hop_pages) >= HOMEPAGE_HOP_READ_CAP:
@@ -6869,6 +7010,7 @@ class LiveDiscoveryAdapter:
                         hops[url] = 1
                         queue.append(url)
                         trace.homepage_hop_reads.append((url, score))
+                        trace.note_navigation_queued(url, score, "homepage_hop")
                     hop_ranked = []
                     if not queue:
                         break
@@ -7016,6 +7158,7 @@ class LiveDiscoveryAdapter:
                         queue.insert(0, canonical)
                     else:
                         queue.append(canonical)
+                    trace.note_navigation_queued(canonical, score, "catalogue_link")
                     if depth is not None and LOCAL_CATALOGUE_ENTRY:
                         hops.setdefault(canonical, depth + 1)
                 if canonical in selected[category]:
@@ -7023,6 +7166,8 @@ class LiveDiscoveryAdapter:
                 if len(selected[category]) < MAX_PAGES_PER_CATEGORY:
                     selected[category].append(canonical)
                     scores[canonical] = score
+                    if category == PageCategory.PROGRAM_PAGE:
+                        trace.note_lead(canonical, "navigation", score)
                     continue
                 # Keep the strongest leads, not the first ones. Vienna's
                 # bachelor list names "Bachelor Programmes by Topic", African
@@ -7038,6 +7183,8 @@ class LiveDiscoveryAdapter:
                     selected[category][selected[category].index(weakest)] = canonical
                     del scores[weakest]
                     scores[canonical] = score
+                    if category == PageCategory.PROGRAM_PAGE:
+                        trace.note_lead(canonical, "navigation", score)
             taken = 0
             for _tier, _order, url, label in sorted(section_leads):
                 # R4: behind every lead the URL rules queued, so the walk
@@ -7051,6 +7198,7 @@ class LiveDiscoveryAdapter:
                 section_pages.add(url)
                 hops[url] = (depth or 0) + 1
                 queue.append(url)
+                trace.note_navigation_queued(url, None, "section_link")
                 trace.kept_by_link_text.append((url, label[:80]))
             if host_leads and keep is not None and ranked is not None:
                 catalogue_host_tried = True
@@ -7263,6 +7411,76 @@ class LiveDiscoveryAdapter:
                 break
             if lead not in selected[PageCategory.PROGRAM_PAGE]:
                 selected[PageCategory.PROGRAM_PAGE].append(lead)
+
+
+def _confirm_queue_rows(
+    queued: list[str],
+    ranked: dict[str, list[tuple[int, str]]],
+    trace: DiscoveryTrace,
+) -> dict[str, dict[str, object]]:
+    """TR-1: one row per queued programme candidate, unread until a read says otherwise.
+
+    The rows are the trace's own ``confirm_queue`` entries (bounded), keyed by
+    URL so a read-time insertion is added where it is read. A candidate the
+    read cap leaves out says so; one inside it that the loop never reached is
+    settled by :func:`_finish_confirm_queue`.
+    """
+    scores = {url: score for score, url in ranked[PageCategory.PROGRAM_PAGE]}
+    rows: dict[str, dict[str, object]] = {}
+    for index, url in enumerate(queued):
+        source, score = trace.lead_origin.get(url, ("", None))
+        if not source:
+            # Neither a seed, a sitemap ``keep`` nor a navigation lead: an
+            # R3 evidence-only sitemap lead when ranked, else search's.
+            source = "sitemap" if url in scores else "search"
+        row: dict[str, object] = {
+            "url": url,
+            "score": scores.get(url, score),
+            "source": source,
+            "read": False,
+            "verdict": (
+                "not read: beyond the confirm read cap"
+                if index >= MAX_PROGRAM_CANDIDATES_CHECKED
+                else ""
+            ),
+        }
+        if len(trace.confirm_queue) < CONFIRM_QUEUE_TRACE_CAP:
+            trace.confirm_queue.append(row)
+        rows[url] = row
+    return rows
+
+
+def _row_verdict(
+    rows: dict[str, dict[str, object]],
+    url: str,
+    verdict: str,
+    trace: DiscoveryTrace,
+    *,
+    read: bool = False,
+    accepted_by: str = "",
+) -> None:
+    """TR-1: settle one confirm-queue row; a read-time insertion gets its own row."""
+    row = rows.get(url)
+    if row is None:
+        row = {"url": url, "score": None, "source": "inserted", "read": False, "verdict": ""}
+        if len(trace.confirm_queue) < CONFIRM_QUEUE_TRACE_CAP:
+            trace.confirm_queue.append(row)
+        rows[url] = row
+    row["read"] = read
+    row["verdict"] = f"accepted earlier by {accepted_by}" if accepted_by else verdict
+    row["settled"] = True
+
+
+def _finish_confirm_queue(
+    rows: dict[str, dict[str, object]], reads: list[str], trace: DiscoveryTrace
+) -> None:
+    """TR-1: name why each candidate inside the read cap was left unread."""
+    for url in reads:
+        if url not in rows:
+            _row_verdict(rows, url, "not read: the confirm stage stopped first", trace)
+    for row in rows.values():
+        if not row.pop("settled", False) and not row["verdict"]:
+            row["verdict"] = "not read: the confirm stage stopped first"
 
 
 def _first(urls: list[str]) -> str | None:

@@ -190,6 +190,46 @@ def gold_seen(
     return {"stage": stage, "seen_as": sorted(seen), "reasons": reasons[:3]}
 
 
+#: TR-1: the trace keys a discovery made since TR-1 writes (each only when
+#: non-empty); a trace with none of them predates TR-1 and has no rank.
+TR1_TRACE_KEYS = ("confirm_queue", "sitemap_keep", "navigation_queue")
+
+
+def gold_confirm_rank(case: Case, trace: dict[str, Any] | None) -> int | str | None:
+    """TR-1, evaluation only: where the gold programme page stood in the confirm queue.
+
+    The 1-based position of the first gold form or declared twin in the
+    trace's ``confirm_queue``; else ``not_queued`` when the trace saw it
+    elsewhere (a kept sitemap lead, a navigation page, a search result, a
+    read, a rejection) and ``not_seen`` when it did not. ``no_gold`` for a case
+    without a gold page; ``None`` for a trace made before TR-1. The product
+    never sees a gold URL: this reads the capture after the run.
+    """
+    if not trace or not any(key in trace for key in TR1_TRACE_KEYS):
+        return None
+    gold = {canonical_url(u) for u in case.programme_urls}
+    if not gold:
+        return "no_gold"
+    for url, twins in (trace.get("programme_url_aliases") or {}).items():
+        if any(same_programme_page(url, g) for g in set(gold)):
+            gold |= {canonical_url(t) for t in twins}
+
+    def is_gold(url: object) -> bool:
+        return any(same_programme_page(url, g) for g in gold)
+
+    for position, row in enumerate(trace.get("confirm_queue") or [], start=1):
+        if isinstance(row, dict) and is_gold(row.get("url")):
+            return position
+    kept = (trace.get("sitemap_keep") or {}).get("kept") or {}
+    elsewhere = [
+        *(pair[1] for pairs in kept.values() for pair in pairs if len(pair) > 1),
+        *(row.get("url") for row in trace.get("navigation_queue") or [] if isinstance(row, dict)),
+    ]
+    if any(is_gold(url) for url in elsewhere) or gold_seen(case, None, trace)["stage"] != "never":
+        return "not_queued"
+    return "not_seen"
+
+
 def _answered(predictions: list[Prediction]) -> list[Prediction]:
     """The predictions the scorer counts: a value, and one copy of each."""
     unique: dict[str, Prediction] = {}
@@ -941,6 +981,12 @@ def build(
                         for case in dataset.cases
                         if case.id in observed
                     },
+                    # TR-1: evaluation only, read from the capture's trace.
+                    "gold_confirm_rank": {
+                        case.id: gold_confirm_rank(case, traces.get(case.id))
+                        for case in dataset.cases
+                        if case.id in observed
+                    },
                     "programme": programme_pages(dataset, capture, report),
                     "search_health": search_health(
                         capture,
@@ -1257,6 +1303,9 @@ def render(card: dict[str, Any]) -> str:
     # repetition carried a trace; a run without traces keeps its table shape.
     traced = bool(card["arms"][last_arm].get("traced"))
     gold = rep.get("gold_seen") or {}
+    # TR-1: the gold's confirm-queue rank, shown once a case's trace has one.
+    ranks = rep.get("gold_confirm_rank") or {}
+    ranked = any(value is not None for value in ranks.values())
     # Ticket 03: why a case or its core labels left a readable denominator, and
     # the programme hit's stability over the arm's repetitions (ticket 04's input).
     readable = "readable" in rep
@@ -1268,10 +1317,12 @@ def render(card: dict[str, Any]) -> str:
         "| case | access | page | hits | core | core known | queries | reads | s |"
         + (" 1st query s |" if first_query else "")
         + (" gold seen |" if traced else "")
+        + (" gold confirm rank |" if ranked else "")
         + (" excluded | page n/N |" if readable else ""),
         "|---|---|---|---|---|---|---|---|---|"
         + ("---|" if first_query else "")
         + ("---|" if traced else "")
+        + ("---|" if ranked else "")
         + ("---|---|" if readable else ""),
     ]
     access = card["arms"][last_arm]["access"]
@@ -1290,6 +1341,11 @@ def render(card: dict[str, Any]) -> str:
             f"{row['search_calls']} | {row['http_fetches']} | {row['latency_seconds']} |"
             + (f" {row.get('t_first_query', '-')} |" if first_query else "")
             + (f" {_gold_cell(gold.get(case_id))} |" if traced else "")
+            + (
+                f" {ranks.get(case_id) if ranks.get(case_id) is not None else '-'} |"
+                if ranked
+                else ""
+            )
             + (
                 f" {_excluded_cell(rep, case_id)} | {_stability(arm_reps, case_id)} |"
                 if readable
