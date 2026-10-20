@@ -183,12 +183,32 @@ def _row(result: ProgramResult) -> dict[str, Any]:
         "preference_score": f"{a.total:.2f} / {a.max_possible:.2f}" if a else "",
         "user_status": result.user_decision.value,
         "user_notes": result.user_notes,
-        "data_origin": (
-            "DEMO FIXTURE (synthetic)"
-            if any(u.startswith("fixture://") for u in result.source_urls)
-            else "live official sources"
-        ),
+        "data_origin": data_origin(result),
     }
+
+
+#: The ``extraction_method`` every knowledge-base claim carries
+#: (``app.knowledge.claims.fact_claim``) and no live or fixture read writes:
+#: those are ``html_rule``, ``pdf_rule``, ``llm_assisted`` or ``fixture``.
+KB_EXTRACTION_METHOD = "structured"
+
+
+def data_origin(result: ProgramResult) -> str:
+    """Where a row's facts come from, decided by what the row itself records.
+
+    A fixture source is the demo corpus. A row whose claims came from the
+    verified knowledge base says so with its verification date, rather than
+    calling a quote checked on that date a live read (NEXT_CYCLES 2026-10-23,
+    EX-1). Anything else was read from official pages by this run.
+    """
+    if any(u.startswith("fixture://") for u in result.source_urls):
+        return "DEMO FIXTURE (synthetic)"
+    if any(c.extraction_method == KB_EXTRACTION_METHOD for c in result.claims):
+        checked = (
+            f", checked {result.last_verified.date().isoformat()}" if result.last_verified else ""
+        )
+        return f"verified knowledge base (official sources{checked})"
+    return "live official sources"
 
 
 def _best_scholarship(result: ProgramResult):
