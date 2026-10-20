@@ -8,6 +8,7 @@ pinned without waiting and without the network.
 from __future__ import annotations
 
 import copy
+import json
 from typing import Any, ClassVar
 from urllib.parse import parse_qs
 
@@ -22,9 +23,11 @@ from evaluation.research.wikidata_domains import (
     WikidataResponseTooLarge,
     WikidataUnavailable,
     _literal,
+    build_native_report,
     build_report,
     judge,
     name_variants,
+    off_seed_rows,
     search_texts,
 )
 
@@ -328,3 +331,176 @@ class TestTheReport:
         seed, kb = copy.deepcopy(SEED), copy.deepcopy(KB)
         build_report(polite(wikidata([]), FakeTime()), seed, kb)
         assert seed == SEED and kb == KB
+
+
+# --- NN-1a: native names (P1448 and the labels in the row's languages) --------------
+
+NATIVE_SEED: list[dict[str, Any]] = [
+    {
+        "seed_id": "qs2027-801",
+        "name": "Synthetic Technical University",
+        "country": "Türkiye",
+        "official_domain": "stu.edu.tr",
+    },
+    {
+        "seed_id": "qs2027-802",
+        "name": "Mismatch University",
+        "country": "Türkiye",
+        "official_domain": "mine.edu.tr",
+    },
+    {"seed_id": "qs2027-803", "name": "Paris Example University", "country": "France"},
+    {"seed_id": "qs2027-804", "name": "Example University", "country": "United Kingdom"},
+    {"seed_id": "qs2027-025", "name": "Heldout Row", "country": "Germany"},
+]
+OFF_SEED = [{"seed_id": None, "name": "Tallinn Example University", "country": "Estonia"}]
+
+NATIVE_LABELS = {
+    "Synthetic Technical University": ("Q1001", "https://www.stu.edu.tr/", "Turkey"),
+    "Mismatch University": ("Q1002", "https://www.other.edu.tr/", "Turkey"),
+    "Tallinn Example University": ("Q1003", "https://www.tex.ee/", "Estonia"),
+}
+NATIVE_VALUES = {
+    "Q1001": [
+        ("official", "Sentetik Teknik Üniversitesi", "tr"),
+        ("official", "Synthetic Technical University", "en"),
+        ("label", "Sentetik Teknik Üniversitesi", "tr"),
+        ("label", "Synthetic Technical University", "tr"),
+        ("label", "Synthetische Technische Universität", "de"),
+    ],
+    "Q1002": [("label", "Uyumsuz Üniversitesi", "tr")],
+    "Q1003": [("label", "Tallinna Näidisülikool", "et")],
+}
+
+
+def native_wikidata(queries: list[str]):
+    def handler(request: httpx.Request) -> httpx.Response:
+        query = query_of(request)
+        queries.append(query)
+        rows: list[dict[str, str]] = []
+        if "VALUES ?name" in query:
+            for name, (qid, site, country) in NATIVE_LABELS.items():
+                if f'"{name}"@en' in query:
+                    rows.append(
+                        {
+                            "name": name,
+                            "item": E + qid,
+                            "itemLabel": name,
+                            "site": site,
+                            "countryLabel": country,
+                            "isLabel": "true",
+                            "dissolved": "false",
+                        }
+                    )
+        elif "VALUES ?item" in query:
+            for qid, values in NATIVE_VALUES.items():
+                if f"wd:{qid}" in query:
+                    rows += [
+                        {"item": E + qid, "value": value, "lang": lang, "kind": kind}
+                        for kind, value, lang in values
+                    ]
+        return httpx.Response(200, json=sparql_json(rows))
+
+    return handler
+
+
+class TestNativeNames:
+    def run(self) -> tuple[dict[str, Any], list[str]]:
+        queries: list[str] = []
+        client = polite(native_wikidata(queries), FakeTime())
+        return build_native_report(client, NATIVE_SEED, OFF_SEED), queries
+
+    def proposals(self) -> dict[str, dict[str, Any]]:
+        report, _ = self.run()
+        return {p["name"]: p for p in report["proposals"]}
+
+    def test_held_out_and_english_only_rows_are_never_looked_up(self):
+        report, queries = self.run()
+        assert report["excluded_heldout"] == [{"seed_id": "qs2027-025", "case": "tum"}]
+        assert not any("Heldout Row" in q or '"Example University"' in q for q in queries)
+        assert report["counts"]["english_only_skipped"] == 1
+        assert report["counts"]["queried"] == 4
+        assert report["counts"]["dev_off_seed"] == 1
+        assert "Example University" not in {p["name"] for p in report["proposals"]}
+
+    def test_the_native_query_asks_for_the_official_name_and_the_rows_languages(self):
+        _, queries = self.run()
+        (native,) = [q for q in queries if "VALUES ?item" in q]
+        assert "wdt:P1448" in native and "wd:Q1001" in native and "wd:Q1003" in native
+        assert '"tr"' in native and '"et"' in native
+        assert '"en"' not in native.split("IN (")[1]
+        # Only item ids, never a row's domain, travel in that query.
+        assert "stu.edu.tr" not in native
+
+    def test_a_matched_row_gets_its_native_names_and_a_review_block(self):
+        stu = self.proposals()["Synthetic Technical University"]
+        assert stu["wikidata_item"] == "Q1001"
+        assert stu["match_confidence"] == "high"
+        assert stu["domain_check"] == "agree"
+        assert stu["languages"] == ["tr"]
+        # The English name again, a duplicate spelling and a German label are left out.
+        assert stu["proposed_native_names"] == ["Sentetik Teknik Üniversitesi"]
+        assert {"value": "Synthetic Technical University", "lang": "en"} in stu["official_names"]
+        assert all(label["lang"] == "tr" for label in stu["labels"])
+        assert stu["review"] == {"decision": None, "reviewer": None, "note": None}
+        assert stu["source"] == "catalogue"
+
+    def test_an_item_whose_site_is_not_the_rows_domain_is_capped_at_low(self):
+        row = self.proposals()["Mismatch University"]
+        assert row["domain_check"] == "disagree"
+        assert row["match_confidence"] == "low"
+        assert "official_domain" in row["reason"]
+
+    def test_an_unmatched_row_proposes_nothing(self):
+        report, queries = self.run()
+        row = {p["name"]: p for p in report["proposals"]}["Paris Example University"]
+        assert row["match_confidence"] == "none" and row["proposed_native_names"] == []
+        assert any("EntitySearch" in q and "Paris Example University" in q for q in queries)
+
+    def test_a_dev_university_outside_the_seed_is_proposed_without_a_seed_id(self):
+        row = self.proposals()["Tallinn Example University"]
+        assert row["seed_id"] is None and row["source"] == "dev_off_seed"
+        assert row["proposed_native_names"] == ["Tallinna Näidisülikool"]
+
+    def test_the_seed_is_never_written(self):
+        seed = copy.deepcopy(NATIVE_SEED)
+        build_native_report(polite(native_wikidata([]), FakeTime()), seed, OFF_SEED)
+        assert seed == NATIVE_SEED
+
+    def test_the_cli_writes_the_native_proposals(self, tmp_path, monkeypatch):
+        from evaluation.research import wikidata_domains
+
+        real_client = httpx.Client
+
+        def offline_client(**kwargs: Any) -> httpx.Client:
+            assert kwargs.get("follow_redirects") is False
+            return real_client(transport=httpx.MockTransport(native_wikidata([])))
+
+        fake = FakeTime()
+        seed = tmp_path / "seed.json"
+        seed.write_text(json.dumps({"universities": NATIVE_SEED}), encoding="utf-8")
+        monkeypatch.setattr(wikidata_domains, "SEED_PATH", seed)
+        monkeypatch.setattr(wikidata_domains.httpx, "Client", offline_client)
+        monkeypatch.setattr(
+            wikidata_domains,
+            "PoliteClient",
+            lambda http: PoliteClient(http, sleep=fake.sleep, clock=fake.clock),
+        )
+        monkeypatch.setattr(wikidata_domains, "off_seed_rows", lambda: OFF_SEED)
+        out = tmp_path / "native.json"
+        assert wikidata_domains.main(["--native-names", "--out", str(out)]) == 0
+        report = json.loads(out.read_text(encoding="utf-8"))
+        assert report["schema"] == "catalogue_native_names.proposed/1"
+        assert report["counts"]["dev_off_seed"] == 1
+        assert report["counts"]["queried"] == 4
+        assert wikidata_domains.NATIVE_OUT_PATH.name == "catalogue_native_names.proposed.json"
+
+    def test_the_off_seed_rows_are_the_dev_tables_names_only(self):
+        from evaluation.research.live import PROXY_OFF_SEED
+
+        rows = off_seed_rows()
+        assert {(r["name"], r["country"]) for r in rows} == {
+            (name, country) for name, country, _ in PROXY_OFF_SEED.values()
+        }
+        assert all(
+            r["seed_id"] is None and set(r) == {"seed_id", "name", "country", "city"} for r in rows
+        )

@@ -24,6 +24,17 @@ direct read is a recorded exception to the ``Fetcher``-only rule (AGENTS.md
 
 Held-out institutions are skipped by seed id before any query is built: they
 are listed as excluded and nothing about them is looked up.
+
+``--native-names`` (IG bundle NN-1a, NEXT_CYCLES_2026-10-20 §6) runs the same
+bounded client for every non-held-out catalogue row whose country publishes in
+a language other than English (``languages.json``), plus the dev4/dev5
+universities outside the seed (``live.PROXY_OFF_SEED``, names and countries
+only): it finds the row's item by the same name + country lookup, then asks
+for that item's official name (``P1448``) and its labels in the row's
+languages. What is *sent* is unchanged - catalogue names, countries and item
+ids. The output, ``catalogue_native_names.proposed.json``, is proposals with a
+``review`` block per row; the importer reads only a separately signed overlay
+(``app/catalogue/catalogue_native_names.signed.json``), never this file.
 """
 
 from __future__ import annotations
@@ -62,6 +73,11 @@ BACKEND = Path(__file__).resolve().parents[2]
 SEED_PATH = BACKEND / "app" / "catalogue" / "unimatch_top500_seed.json"
 KB_LIST_PATH = BACKEND / "evaluation" / "research" / "data" / "kb_top100_list.json"
 OUT_PATH = BACKEND / "evaluation" / "research" / "data" / "catalogue_official_domains.proposed.json"
+NATIVE_OUT_PATH = (
+    BACKEND / "evaluation" / "research" / "data" / "catalogue_native_names.proposed.json"
+)
+#: NN-1a: items per official-name / label query.
+NATIVE_BATCH = 50
 
 #: Held-out institutions (nu metu sabanci charles masaryk tum tartu polimi
 #: vilnius), by catalogue seed id. Nazarbayev University is not in the seed.
@@ -490,8 +506,15 @@ def search_texts(variants: dict[str, int], limit: int = SEARCHES_PER_ROW) -> lis
     return (full + short)[:limit]
 
 
+def _seed_key(row: dict[str, Any]) -> str:
+    return str(row["seed_id"])
+
+
 def lookup(
-    client: PoliteClient, rows: Sequence[dict[str, Any]], batch: int = LABEL_BATCH
+    client: PoliteClient,
+    rows: Sequence[dict[str, Any]],
+    batch: int = LABEL_BATCH,
+    key: Callable[[dict[str, Any]], str] = _seed_key,
 ) -> dict[str, Match]:
     """Label query in batches; one entity search per row the labels leave unmatched."""
     out: dict[str, Match] = {}
@@ -504,11 +527,11 @@ def lookup(
             mine = _row_variants(row)
             folded = {_fold(v) for v in mine}
             hits = [b for b in bindings if _fold(b.get("name", "")) in folded]
-            out[row["seed_id"]] = judge(
+            out[key(row)] = judge(
                 mine, row["country"], list(collect(hits).values()), countries, "label"
             )
     for row in rows:
-        previous = out[row["seed_id"]]
+        previous = out[key(row)]
         if previous.confidence != "none":
             continue
         mine = _row_variants(row)
@@ -543,7 +566,7 @@ def lookup(
                 "none",
                 previous.alternatives + found.alternatives,
             )
-        out[row["seed_id"]] = found
+        out[key(row)] = found
     return out
 
 
@@ -651,15 +674,215 @@ def build_report(
     }
 
 
+# --- NN-1a: native names (P1448 and the labels in the row's languages) ---------------
+
+
+def row_languages(country: str) -> tuple[str, ...]:
+    """The non-English ``languages.json`` languages of a catalogue country (ISO 639-1)."""
+    from app.adapters.search.ontology import country_languages
+    from app.catalogue.importer import country_name
+
+    codes = country_languages(country_name(country)) or country_languages(country)
+    return tuple(code for code in codes if code != "en")
+
+
+def _primary(lang: str) -> str:
+    return lang.split("-")[0].lower()
+
+
+def native_query(items: Sequence[str], languages: Iterable[str]) -> str:
+    """Every ``P1448`` value of ``items`` and their labels in ``languages`` (primary subtag)."""
+    values = " ".join(f"wd:{item}" for item in items)
+    langs = ", ".join(_literal(code) for code in sorted(set(languages)))
+    return f"""SELECT ?item ?value ?lang ?kind WHERE {{
+  VALUES ?item {{ {values} }}
+  {{ ?item wdt:P1448 ?value . BIND("official" AS ?kind) }}
+  UNION
+  {{
+    ?item rdfs:label ?value . BIND("label" AS ?kind)
+    FILTER(STRBEFORE(CONCAT(LANG(?value), "-"), "-") IN ({langs}))
+  }}
+  BIND(LANG(?value) AS ?lang)
+}}"""
+
+
+def native_values(
+    client: PoliteClient, wanted: dict[str, tuple[str, ...]], batch: int = NATIVE_BATCH
+) -> dict[str, dict[str, list[dict[str, str]]]]:
+    """Item -> {"official": [...], "labels": [...]}, each ``{"value", "lang"}``."""
+    out: dict[str, dict[str, list[dict[str, str]]]] = {
+        item: {"official": [], "labels": []} for item in wanted
+    }
+    items = sorted(wanted)
+    for start in range(0, len(items), batch):
+        chunk = items[start : start + batch]
+        languages = {code for item in chunk for code in wanted[item]}
+        if not languages:
+            continue
+        for row in client.sparql(native_query(chunk, languages)):
+            item = _qid(row.get("item", ""))
+            if item not in out or not row.get("value"):
+                continue
+            entry = {"value": row["value"], "lang": row.get("lang", "")}
+            kind = "official" if row.get("kind") == "official" else "labels"
+            if kind == "labels" and _primary(entry["lang"]) not in wanted[item]:
+                continue
+            if entry not in out[item][kind]:
+                out[item][kind].append(entry)
+    for found in out.values():
+        for values in found.values():
+            values.sort(key=lambda v: (v["lang"], v["value"]))
+    return out
+
+
+def proposed_native_names(
+    row: dict[str, Any], languages: Sequence[str], found: dict[str, list[dict[str, str]]]
+) -> list[str]:
+    """The names a reviewer is asked to sign: official names first, then labels.
+
+    Only values in one of the row's languages; one per spelling (accents and
+    case aside); none that is the row's English name again (R6's title test
+    already reads that) and none shorter than three letters (R6 ignores those).
+    """
+    english = {_fold(v) for v in name_variants(row["name"])}
+    ordered = [v for v in found.get("official", []) if _primary(v["lang"]) in languages]
+    ordered += found.get("labels", [])
+    names: list[str] = []
+    seen: set[str] = set()
+    for value in (v["value"].strip() for v in ordered):
+        folded = _fold(value)
+        if len(folded) < 3 or folded in english or folded in seen:
+            continue
+        seen.add(folded)
+        names.append(value)
+    return names
+
+
+def _domain_check(row: dict[str, Any], match: Match) -> str:
+    ours = registrable_domain(row.get("official_domain") or "")
+    if not ours or not match.domains:
+        return "unknown"
+    return "agree" if ours in match.domains else "disagree"
+
+
+def off_seed_rows() -> list[dict[str, Any]]:
+    """The dev4/dev5 universities outside the seed: name, country and city only."""
+    from evaluation.research.live import PROXY_OFF_SEED
+
+    return [
+        {"seed_id": None, "name": name, "country": country, "city": city}
+        for name, country, city in sorted(set(PROXY_OFF_SEED.values()))
+    ]
+
+
+def build_native_report(
+    client: PoliteClient,
+    seed: Sequence[dict[str, Any]],
+    extra_rows: Sequence[dict[str, Any]] = (),
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    from app.catalogue.importer import identity_key
+
+    # Held-out rows leave before anything else is computed for them.
+    excluded = [r for r in seed if r["seed_id"] in HELDOUT_SEED_IDS]
+    open_rows = [r for r in seed if r["seed_id"] not in HELDOUT_SEED_IDS]
+    rows = [{**r, "source": "catalogue"} for r in open_rows if row_languages(r["country"])]
+    rows += [{**r, "source": "dev_off_seed"} for r in extra_rows if row_languages(r["country"])]
+
+    def key(row: dict[str, Any]) -> str:
+        return identity_key(row["name"], row["country"])
+
+    matches = lookup(client, rows, key=key)
+    for row in rows:
+        match = matches[key(row)]
+        if match.confidence != "none" and _domain_check(row, match) == "disagree":
+            matches[key(row)] = replace(
+                match,
+                confidence="low",
+                reason=f"{match.reason}; P856 does not hold the row's official_domain",
+            )
+    wanted: dict[str, tuple[str, ...]] = {}
+    for row in rows:
+        match = matches[key(row)]
+        if match.item and match.confidence != "none":
+            wanted[match.item] = row_languages(row["country"])
+    found = native_values(client, wanted)
+    proposals = []
+    for row in rows:
+        match = matches[key(row)]
+        languages = row_languages(row["country"])
+        values = found.get(match.item or "", {}) if match.confidence != "none" else {}
+        proposals.append(
+            {
+                "seed_id": row["seed_id"],
+                "source": row["source"],
+                "identity_key": key(row),
+                "name": row["name"],
+                "country": row["country"],
+                "languages": list(languages),
+                "wikidata_item": match.item,
+                "wikidata_label": match.label or None,
+                "match_confidence": match.confidence,
+                "match_method": match.method,
+                "reason": match.reason,
+                "domain_check": _domain_check(row, match),
+                "official_names": values.get("official", []),
+                "labels": values.get("labels", []),
+                "proposed_native_names": proposed_native_names(row, languages, values),
+                "review": {"decision": None, "reviewer": None, "note": None},
+            }
+        )
+    tally: dict[str, int] = {}
+    for proposal in proposals:
+        tally[proposal["match_confidence"]] = tally.get(proposal["match_confidence"], 0) + 1
+    stamp = (now or datetime.now(UTC)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return {
+        "schema": "catalogue_native_names.proposed/1",
+        "generated_at": stamp,
+        "source": "Wikidata P1448 and labels via query.wikidata.org (CC0)",
+        "status": "proposals only - nothing in the product reads this file; the importer reads "
+        "app/catalogue/catalogue_native_names.signed.json, built from rows a reviewer marked "
+        "review.decision = accept",
+        "confidence_rule": "the item's match confidence, as for the domain proposals; a row "
+        "whose official_domain is not among the item's P856 domains is capped at low",
+        "counts": {
+            "catalogue_rows": len(seed),
+            "excluded_heldout": len(excluded),
+            "english_only_skipped": len(open_rows)
+            - sum(1 for r in rows if r["source"] == "catalogue"),
+            "queried": len(rows),
+            "dev_off_seed": sum(1 for r in rows if r["source"] == "dev_off_seed"),
+            "by_confidence": dict(sorted(tally.items())),
+            "with_native_names": sum(1 for p in proposals if p["proposed_native_names"]),
+            "requests": client.requests,
+            "throttled_responses": client.throttled,
+        },
+        "excluded_heldout": [
+            {"seed_id": r["seed_id"], "case": HELDOUT_SEED_IDS[r["seed_id"]]} for r in excluded
+        ],
+        "proposals": proposals,
+    }
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--out", type=Path, default=OUT_PATH)
+    parser.add_argument("--out", type=Path, default=None)
+    parser.add_argument(
+        "--native-names",
+        action="store_true",
+        help="NN-1a: propose native names (P1448 and labels) instead of official domains",
+    )
     args = parser.parse_args(argv)
     seed = json.loads(SEED_PATH.read_text(encoding="utf-8"))["universities"]
-    kb_rows = json.loads(KB_LIST_PATH.read_text(encoding="utf-8"))["rows"]
     with httpx.Client(timeout=90, follow_redirects=False) as http:
-        report = build_report(PoliteClient(http), seed, kb_rows)
-    args.out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        if args.native_names:
+            out = args.out or NATIVE_OUT_PATH
+            report = build_native_report(PoliteClient(http), seed, off_seed_rows())
+        else:
+            out = args.out or OUT_PATH
+            kb_rows = json.loads(KB_LIST_PATH.read_text(encoding="utf-8"))["rows"]
+            report = build_report(PoliteClient(http), seed, kb_rows)
+    out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(report["counts"], indent=2))
     return 0
 
