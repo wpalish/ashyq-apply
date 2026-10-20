@@ -478,3 +478,247 @@ reads. If the planner opens it, its step 1 is to:
 
 On khalifa the related `zmu` would still be read first unless the hub links are queued ahead of the walker's
 lower-scored candidates, so the order inside that rule matters too.
+
+## 8. FRH step 1: does following a refused hub's field-named link reach the gold? (2026-10-20)
+
+Research only: no file under `app/` changed, `live_discovery.py` untouched (another worker holds it). Question from
+§7.5: auckland and khalifa lose a gold that sits one link below a page the run read and refused, because neither
+the confirm stage nor the walker follows a refused page's links. Bar: the shape reaches the gold on **≥ 2 sets**
+with **0 predicted new wrong confirmations**.
+
+**Verdict: the bar is met, but only by a structural refinement of the plain shape.** "Follow the best field-named
+link of a refused hub" as written reaches only khalifa (dev2). On auckland (dev3) the gold's anchor is
+"Undergraduate study": the label names no field, and by link score the gold ranks 2nd of 3 behind "School of
+Computer Science". The label-only variant also confirms a wrong page there. The shape passes when:
+- the hub's own children come first (links under the hub's path, extension stripped);
+- the hub's URL or head names the field;
+- the rule stops once the case has a confirmed programme page;
+- at most 3 follows run per case.
+
+It then reaches the gold on **dev2 (khalifa) and dev3 (auckland), 5/5 no-search captures each**, with 0 non-gold
+pages confirmed on any arm. Cohort and dev4 have no reachable case: kaist's refused pages link the gold only as
+"교육" (Education), which names no field, and no dev4 refused page links a gold or labelled related page. The step-2
+spec is in §8.5.
+
+### 8.1 Inputs and method
+
+- **Captures** (artifacts `expert-recovery-<run>`, this session's own scratchpad), every case of the four
+  development sets, 569 captures in all:
+  - no-search: `ns-floor-<set>` (39350475181 / 477901 / 480488 / 483178, one column) and `ns1-<set>` (39379521311
+    / 523420 / 525547 / 527478, two on and two off columns), 217 captures;
+  - knockout: `ns1-ko-<set>` (39379529849 / 532195 / 534372 / 536854), 176 captures;
+  - guard, recorded search, default config: `aw2-<set>` (39371051329 / 053780 / 056063 / 058290), 176 captures.
+
+  Scored with `metrics.adjudicate_programme_pages` against `ground_truth.reviewed11` and `dev2/dev3/dev4.draft3`.
+- **Refused pages**: every discovery-phase read was recovered from the case log. That is the first
+  `read_ledger.by_phase.discovery` uncached `get` lines, because the walker's trace outcomes are capped at 200 and
+  drop reads on large catalogues. Each read was tagged with its stage:
+  - **confirm**: `pages_read` with a non-empty verdict;
+  - **walker**: a `walker.candidates` URL that is not a walked catalogue, with its `reads_as_*` /
+    `degree_level_mismatch` outcome. When the capped trace lost the outcome, the read is judged offline: groningen's
+    gold, for one, was accepted in the walker but has no outcome in the trace.
+
+  The result is 313 distinct refused pages on 38 cases.
+- **Re-reads**: 1 082 URLs, through the production `Fetcher`: robots honoured, our user agent, its own rate limit,
+  one read each. They were the refused pages, every rule-candidate link the simulation follows, the top 3 candidate
+  links on each missed case's refused pages, and every gold and labelled-related URL.
+  - From this sandbox a direct read finds robots.txt unreachable, so every page is `robots_disallowed`. All reads
+    therefore ran with `trust_env_proxy=True`, as in §7.
+  - 920 were read; the failures were mostly 404s and robots refusals on pages the runs had also failed on.
+  - 10 timeouts (uct `/oic/…`) were retried once, and 9 of them were then read.
+  - No refused page on a reached case failed. No search provider was called.
+- **Simulation**, offline, at `HEAD` `c7028b01`, using production functions only:
+  - `catalog_walker.extract_links` and `score_link`, `label_names_other_level`, `matches_field_text`,
+    `matches_field`;
+  - verdicts from `classify_page` + `profile_rejects` (field `computer science`, level `bachelor`).
+
+  The simulation walks each capture's refused reads in their captured order. For each refused page that passes the
+  variant's trigger, it follows the variant's chosen link if that link has not been read yet. It records the
+  followed page's class and verdict:
+  - **GOLD**: the URL, or an hreflang twin a gold page declares, is a canonical variant of a draft3 / reviewed11
+    `programme_urls` entry;
+  - **related**: a labelled `related_programme_urls` page;
+  - **other**: any other page.
+
+  On a knockout capture a followed gold is refused, as the arm refuses it. A followed page is never itself a hub
+  (one hop).
+- **Not opened**: any heldout file, capture, log or label, `scratchpad/HELDOUT_QUARANTINE_DO_NOT_OPEN`,
+  `scratchpad/DEV5_BLIND`, `DISCOVERY_ANALYSIS_2026-10-17.md`, dev5, or any other scratchpad.
+
+### 8.2 The per-case table: refused pages that link the gold, on captures that missed it
+
+"Link #" is the anchor's position among the page's same-site links, which is `extract_links` order and within
+`MAX_LINKS_SCANNED`. "Rank" is the gold's rank among the rule's candidate links, best first, by the rule's order:
+- **label**: label names the field;
+- **label/URL**: label or URL names the field, by `score_link`;
+- **child-first**: label/URL, with the hub's children first.
+
+| set | case (captures missed) | refused page (stage, verdict) | anchor to gold, link # | rank: label / label/URL / child-first | does a one-hop follow reach the gold? |
+|---|---|---|---|---|---|
+| dev2 | khalifa (related 5/5 no-search, 4/4 ko) | `/college-of-computing-and-mathematical-sciences` (walker lead 1, `reads_as_unknown`) | "Bachelor of Science in Computer Science", #110 | **1/2 / 1/7 / 1/7** | **yes**, every variant. The gold reads as `program_detail`, bachelor, accepted. The walker then stops before `zmu`. |
+| dev2 | khalifa | `/academics/undergraduate-programs` (walker lead 2, `reads_as_program_detail`, refused on subject) | same label, #105 | not a listing page | Only an any-refusal trigger fires here, and lead 1 has reached the gold already. |
+| dev3 | auckland (missed 5/5 no-search, 4/4 ko) | `find-a-study-option/computer-science.html` (confirm read 1, "reads as unknown") | "Undergraduate study", #203; the URL `…/computer-science/undergraduate.html` names the field, the label does not | **— / 2/3 / 1/3** | **Only child-first.** By score, "School of Computer Science" (24, reads unknown) comes first. The gold (`programme_urls` entry 4) is accepted as `program_detail`, bachelor. |
+| cohort | kaist (missed 5/5) | 4 pages on no-search, `content?menu=318`, `aiiscs/undergraduate`, `aiiscs/infoservice`, `bbs/ainews` (confirm / walker, unknown), and 5 more on aw2 | "교육" (Education), #59–60; URL `content?menu=188` | no candidate | **No**: neither the label nor the URL names the field. No word-free field rule reaches it. |
+| dev2 | uct (aw2 only, related 4/4) | `department-computer-science` (head names a unit), and two other-subject programme pages | "BSc degrees", #50–51 | not field-named | **No**. The rule reads `ba-informatics`, which is labelled related, and the outcome stays related. |
+| dev3 | ntutw (aw2 only, missed 4/4) | `www.csie.ntu.edu.tw/` (confirm, unknown) | "大學部招生", #49 | not field-named | **No**. The rule reads a news item, which is refused. |
+| dev3 | usp (aw2 only, 1/4 related) | `icmc…/applied-mathematics-and-scientific-computing` (confirm, refused on subject, `program_detail`) | "Computer Science", #27 | 1/1, but the page is not a listing | Only an any-refusal trigger fires, and that trigger adds wrong pages elsewhere (§8.3). |
+| dev4 | — | no refused page on any missed capture links a gold or a labelled related page | | | — |
+
+The pages were re-read on 2026-10-20, a few hours after the runs, from another vantage point.
+
+### 8.3 Variants simulated, and the bar
+
+Gains and wrong confirmations are counted over captures: 217 no-search, 176 ko, 176 aw2. A "wrong" is a newly
+confirmed page classed **other**: on a missed case it turns the outcome to wrong, and on a hit case it adds a wrong
+page.
+
+| variant (trigger → link chosen, 1 per hub) | no-search gold reached | new wrong confirmations | bar |
+|---|---|---|---|
+| refused **listing** page (unknown / catalogue) → best **label**-named link | khalifa 5/5 (dev2) | **auckland 5 ns + 4 ko + 4 aw2**: `postgraduate.html` → "Computer Science" → `study.auckland.ac.nz/…p7_code=COMP-BSc(Hons)` | fails |
+| listing → best **label- or URL**-named link | khalifa 5/5 | 0 | fails: one set |
+| listing → best 2 label/URL links | khalifa, auckland | the same BSc(Hons) page on auckland | fails |
+| **any** refusal → best label link / label-or-URL link | khalifa 5/5. usp gains 1 aw2 capture. | label link: the auckland BSc(Hons) page (5 ns + 4 ko + 4 aw2). Label-or-URL link: vienna, a hit case, 4/4 aw2, where the refused "recommended path of study" pages lead to `…/bachelor-computer-science-specialisations` and its German twin, which are accepted. | fails |
+| listing → label/URL, **hub's children first**, ≤ 3 per case | khalifa 5/5, auckland 5/5 | 0. Labelled related confirmed: `zmu` ×5 ns, ×4 ko, ×4 aw2 (khalifa still hits), `ba-informatics` ×4 aw2 (uct stays related). | passes; khalifa's gold is its 3rd follow (cap 2 loses it) |
+| **FRH**: as above, and the hub's URL or head names the field, and no follow once the case has a confirmed programme page | **khalifa 5/5, auckland 5/5** | **0**. The only non-gold page confirmed on any arm is `ba-informatics` ×4 aw2, a labelled related page; uct stays related. | **passes** |
+
+**Risk of FRH, reads and confirmations by capture group:**
+
+| arm | group | captures | follows | of which gold | non-gold reads | non-gold confirmed |
+|---|---|---:|---:|---:|---:|---:|
+| no-search | baseline hit | 46 | 10 | 0 | 10 | 0 |
+| no-search | gained (khalifa, auckland) | 10 | 10 | 10 | **0** | 0 |
+| no-search | still not hit | 161 | 24 | 0 | 24 | 0 |
+| knockout | all | 176 | 70 | 8 (refused by the arm) | 62 | 0 |
+| aw2 guard | baseline hit | 102 | 28 | 12 | 16 | 0 |
+| aw2 guard | not hit | 74 | 44 | 0 | 44 | 4 (`ba-informatics`, labelled related) |
+
+- At most 3 follows run in a capture; 449 of 569 captures follow nothing.
+- The 34 no-search non-gold reads are all refused offline. By case:
+  - taltech: 15 department pages;
+  - tcd: 10 micro-credential pages (a hit case, two per capture);
+  - vut: 5 and unibo: 3 "open science" pages, which match because the URL-field test reads "science";
+  - rwth: 1 footer page.
+- The four clock cases (uio, ctu, ubc, uppsala) follow nothing.
+
+### 8.4 Caveats
+
+- The child-first order was found by looking at auckland, so one case drives it. The knockout and recorded arms in
+  §8.5 are the guard against overfit.
+- The BSc(Hons) plan link stays on auckland's `postgraduate.html` at candidate rank ≥ 2. A variant that follows
+  more than one link per hub, or orders by score alone, confirms it as a wrong page.
+- The simulation keeps the captured read order. It does not model the clock: every follow is one network read,
+  inside `_spent()`, the 28-read discovery cap and the case clock.
+- If CO-1 step 2 (§7.4) lands first, auckland's gold is read at confirm read 4 anyway. FRH's evidence then shrinks
+  to one set (khalifa). The planner orders the two tickets with that in mind; FRH alone owns khalifa.
+
+### 8.5 FRH step 2: worker-ready spec
+
+**Rule FRH "follow a refused hub's field link".** A page the confirm stage or the walker reads as a programme
+candidate is a **hub** when all of these hold:
+- `profile_rejects` refuses it;
+- it reads as a listing (`page_type` in `{PROGRAM_CATALOG, UNKNOWN}`, identity recovery's `_LISTING_PAGE_TYPES`);
+- its final URL names a requested field (`matches_field(url, fields) > 0`), or its classified head does
+  (`matches_field_text(page.subject, fields)`).
+
+For a hub, its single best field link is read next, one hop, and judged by `profile_rejects` like any candidate.
+The rule is structural: a page class, an order and a read cap. It adds no word.
+
+- **Flag.** `FOLLOW_REFUSED_HUB_LINK = False` and `FOLLOW_REFUSED_HUB_LINK_CAP = 3` in
+  `backend/app/adapters/discovery/live_discovery.py`, beside `CONFIRM_QUEUE_SELECTION_ORDER`, with a comment citing
+  this §8.
+  - Harness: `--follow-refused-hub-link` in `backend/evaluation/research/live.py`, setting the constant as
+    `--homepage-hop-reads` does.
+  - `NEGATABLE_RULES["follow-refused-hub-link"]`, plus the stem in `DEFAULT_OFF_NEGATABLE`.
+  - One HANDOFF §8 line.
+  - Concurrency: `live_discovery.py` is held in sequence (PC-1, TR-1, CO-1 step 2). This ticket goes after them;
+    rebase on their trace rows.
+- **The link** comes from a new pure helper `refused_hub_lead(html, page_url, hub_url, domain, extra_domains,
+  degree, fields, skip) -> WalkerLink | None` in `backend/app/adapters/discovery/catalog_walker.py`. It sits next to
+  `score_link`, which both stages already import.
+  1. Take `extract_links(html, page_url, domain, extra_domains=extra_domains)`.
+  2. Keep a link only if all of these hold:
+     - `score_link(url, label, degree, fields)` is not `None`. That already drops excluded URLs, labels under 10
+       characters, URLs naming another level, and course links;
+     - `label_names_other_level(label, degree)` is false;
+     - `matches_field_text(label, fields)` or `matches_field(url, fields) > 0`;
+     - the URL is not in `skip` (read, queued for the current stage's reads, or followed already).
+  3. Order the kept links by `(not child, -score, url)`. A child is a link on the hub's host whose path starts with
+     the hub's path, minus a trailing `.html/.htm/.php/.aspx/.jsp/.cfm`, plus `/`.
+  4. Return the first. Exactly one link is read per hub.
+- **Where.**
+  - (a) `LiveDiscoveryAdapter._confirm_programs`, in the `reason is not None` branch, after the R2b / SP-1 / LI-1
+    insertions:
+    - The hub must not have been reached by a follow.
+    - When the flag is on, the case's follow count is under the cap, nothing is confirmed yet (`confirmed`,
+      `self._confirmed` and `selected[PROGRAM_PAGE]` are all empty) and `not self._spent()`, read the helper's link
+      at once.
+    - It is **outside** `MAX_PROGRAM_CANDIDATES_CHECKED`, so no queued read is displaced.
+    - Accepted, it is appended to `confirmed` and `self._confirmed`, exactly like a queued candidate.
+  - (b) `CatalogWalker._read_lead`, after a refusal recorded as `reads_as_<type>`. It takes a new optional
+    constructor argument `follow: Callable[[str, str, PageClassification], Awaitable[str | None]] | None`. The
+    adapter passes it only when the flag is on; it owns the cap and the stop condition.
+    - An accepted page goes to `walk.confirmed`, so `stop_when_confirmed` ends the walk.
+    - Its outcome is recorded as `hub_link_<page_type>` or `hub_link_<fetch outcome>`, never `reads_as_*`, so
+      `_descent_lead` is unchanged.
+  - **Not touched**: navigation fallback, identity recovery (it has its own listing follow), `keep()`, the queue
+    order, the classifier, `profile_rejects`.
+  - **Budget**: one network read per follow, through the budgeted fetcher. It counts in SB-1's read cap and deadline,
+    the 60-read ledger and the case clock. A refused fetch (robots, 403, timeout) uses its read and is not retried.
+    A followed page never triggers a follow.
+- **Trace.** `refused_hub_links: list[tuple[str, str, str]]` (hub, link, verdict or `"confirmed"`) on
+  `DiscoveryTrace`. `as_dict` writes it only when it is non-empty, so a flag-off trace is byte-identical.
+- **Tests**: new `backend/tests/test_follow_refused_hub_link.py`, synthetic hosts `www.example-uni.edu` /
+  `study.example-uni.edu`, a fake fetcher, and no development page's words.
+  1. Confirm shape (auckland), with the flag off and on:
+     - The kept queue holds `/find/field-x.html` (reads unknown). That page links `/find/field-x/undergraduate.html`,
+       labelled "Undergraduate study", a programme page at the requested level. It also links
+       `/about/school-of-field-x.html`, labelled "School of Field X", which has the higher `score_link` and reads
+       unknown.
+     - On: the child is read next and confirmed. The school page is never fetched.
+     - Off: neither is fetched (assert the fetch calls), and the trace is byte-identical to the flag-less run.
+  2. Walker shape (khalifa):
+     - The catalogue's first lead `/college-of-field-x` reads unknown and links `/program/bsc-in-field-x`, labelled
+       "Bachelor of Science in Field X".
+     - The second lead is a programme page of a related subject that `profile_rejects` accepts.
+     - On: the linked programme page is confirmed and the second lead is never fetched (`walker_stopped`).
+     - Off: unchanged.
+  3. Trigger:
+     - A refused listing page whose URL and head name no requested field is not a hub, so it causes no fetch.
+     - A page refused on subject or on degree level (not a listing) is not a hub.
+     - A page reached by a follow is never a hub.
+  4. Link filters:
+     - none of these is read: a link to another registrable domain, a label naming another level ("Master of
+       Field X"), a URL naming another level, an excluded URL, a link whose label and URL name no field;
+     - a link already read or queued is never read twice.
+  5. Order and cap:
+     - a child outranks a higher-scored non-child;
+     - four hubs make 3 follows;
+     - no follow happens once any programme page is confirmed (by a queued read, the sitemap, a seed or a follow).
+  6. A refused follow (robots, 403) costs one ledger read and is not retried. A spent stage budget means no follow.
+  7. The budget tests pass unchanged with the flag off and on: `test_case_read_ledger.py`, `test_stage_budgets.py`
+     and `test_case_time_budget.py`. The R2b / SP-1 tests also pass unchanged with the flag on.
+  8. `seed_demo.py` output is byte-identical.
+- **Dispatch** (`benchmark-capture.yml`, `expert_paired`, `columns=4`, `extra_args=--follow-refused-hub-link`):
+  - `search_provider=none`, four sets: normal `frh-<set>` and knockout `frh-ko-<set>`;
+  - the recorded guard on all four sets, `search_provider=recorded` (`rp-frh-<set>`). On aw2 the simulation fires
+    the rule on dev2, dev3 and dev4, including the hit captures of khalifa, tcd, auckland, puc, rwth and unibo (28
+    follows). It fires on no cohort case.
+- **Pre-registered expectation.**
+  - **dev2**: khalifa related → **hit** in 4/4 columns. In the walker, lead 1 → the gold; `zmu` is no longer read.
+    Every other case is unchanged.
+  - **dev3**: auckland missed → **hit** in 4/4: confirm read 1 → `…/computer-science/undergraduate.html`. Every
+    other case is unchanged; imperial and ucph keep their hits.
+  - **cohort, dev4, and every other case**: no outcome change. Follows outside the two gains are refused reads,
+    at most 3 per case: tcd (dev2); taltech, vut, unibo and rwth (dev4). None run on cohort.
+  - **Knockout**: no outcome change. khalifa stays related and auckland stays missed (their followed gold is
+    refused by the arm). `wrong_programme_pages` is unchanged.
+  - **Recorded guard**: identical outcomes. uct stays related (it may now also return `ba-informatics`, labelled
+    related). `recorded_search_misses` equal to the off arm.
+  - Expected no-search total: **+2** (one on dev2, one on dev3), 0 wrong.
+- **Bar.**
+  - No-search: no hit lost; 0 wrong pages; knockout `wrong_programme_pages` not up.
+  - A stable gain on **both** dev2 (khalifa) and dev3 (auckland), in ≥ 3 of 4 columns each.
+  - Recorded guard: identical or better, with `recorded_search_misses` equal.
+  - Then default-on. Otherwise record it in `hypotheses.json` with the §8.2 / §8.3 rows. If a run shows a page
+    confirmed through a follow that is not gold or labelled related, that is a stop: diagnose it before any default
+    change.
