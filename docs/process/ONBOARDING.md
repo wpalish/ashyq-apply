@@ -12,6 +12,15 @@
 - `backend/evaluation/research/expert/data/hypotheses.json` — реестр гипотез ER-01…ER-07 со статусами и
   доказательствами.
 - `backend/evaluation/research/README.md` — как устроена оценка.
+- `docs/process/KNOWLEDGE_BASE.md` — режим `kb`, в котором продукт работает по умолчанию (решение владельца
+  2026-10-19: живой поиск заморожен). Исследование отвечает из проверенной базы знаний
+  (`backend/app/knowledge/`), во время прогона не читается ни одна страница; университет вне базы получает
+  «No verified data yet». Две переменные окружения (`backend/app/config.py`):
+  - `UNIMATCH_KNOWLEDGE_MODE` — по умолчанию `kb`; `live` включает веб-пайплайн; демо-режим её игнорирует;
+  - `UNIMATCH_SEARCH_PROVIDER` — по умолчанию `none`; в режиме `kb` не используется.
+- Браузерный прогон режима `kb`: `npm run e2e:kb` в `frontend/` (`playwright.kb.config.ts`; API поднимает
+  `frontend/e2e/kb-env/serve-api.sh` с `UNIMATCH_DEMO_MODE=false`, `UNIMATCH_KNOWLEDGE_MODE=kb`,
+  `UNIMATCH_SEARCH_PROVIDER=none`). Он же идёт в CI на каждый push.
 
 ## 2. Что уже есть
 - **Пайплайн** `backend/app/pipeline/runner.py`, по этапам:
