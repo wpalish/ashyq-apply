@@ -51,6 +51,11 @@ cheats: it knows the gold's host. It reaches 7 / 3 / 10 / 3, which passes cohort
 
 The map quotes a stricter Serper reference (dev2 9, dev3 11–12), which only widens the gap.
 
+**Correction (2026-10-20, IC-2b).** dev2's `in_sitemap_bounded` 1 and `linked_2hops` 1 above both rested on the khalifa
+row, which does not reproduce (see "Re-measure 2026-10-20" below). Without it, run 3's dev2 row reads bounded **0**,
+linked **0**, ceiling **0**, ceiling_any **2** (was 1 / 1 / 1 / 3; uba and uct stay, listed on another host's sitemap). The GitHub-runner re-measure gives dev2 bounded 1 (tec, not khalifa),
+linked 1 (khalifa, at hop 2), ceiling 2. The verdict for 05 does not change on either number.
+
 Per case (any of the case's gold URLs). A hop of 0 means the gold is the homepage-level URL itself. "other host's
 sitemap" means the page is listed only in the sitemap of a host other than the homepage's.
 
@@ -68,7 +73,7 @@ sitemap" means the page is listed only in the sitemap of a host other than the h
 | cohort | warsaw | no | no | - | no | - |
 | dev2 | ethz | no | no (no sitemap) | - | no | - |
 | dev2 | kaznu | no | no | - | no | homepage robots, timeout |
-| dev2 | khalifa | yes | yes | 0 | no | - |
+| dev2 | khalifa | ~~yes~~ no (corrected 2026-10-20, §"Re-measure") | ~~yes~~ no | ~~0~~ 2 | no | - |
 | dev2 | psaclay | no | no | - | no | - |
 | dev2 | tcd | no | no (no sitemap) | - | no | - |
 | dev2 | tec | no | no | - | no | 403 |
@@ -191,3 +196,88 @@ engineering alias for Turkish. The 44 hold no Kazakh page, and too few Thai or C
   (`sitemap_documents_failed`), had not finished when this was written. The groningen `too_large` and unibo
   `unparseable` facts above were checked by hand through the same Fetcher.
 - The 150-document safety stop on the unbounded walk was reached on 2 KB hosts and no development host.
+
+## Re-measure 2026-10-20 on the GitHub runner: the hop-2 table, the rank reconciliation, khalifa (IC-2b)
+
+Ticket IC-2b of `NEXT_CYCLES_2026-10-23.md` §3. Run: `benchmark-capture.yml` `mode=index_ceiling`, run 39408839839, at
+`b4c0dd39` (IC-2's tool: `hop1_parent`, `hop1_anchor`, `hop1_rank`, `hop1_of`, `hop1_score`), 2026-10-20 10:34–11:17
+UTC, from the GitHub runner, not the sandbox. Same inputs as run 3 (development gold, KB). The report is committed as
+`backend/evaluation/research/data/index_ceiling.dev-2026-10-22.json` (138 records).
+
+**What was removed before the commit.** No heldout case id or domain was in the artifact (checked by a count-only
+script, by site id and by the nine domains). The one dev5 university (in the KB only) had a blind record with no rows
+and no homepage, as the tool writes it, but its `sitemap_documents_failed` still listed **28 URLs on its own host**
+(`written()` does not clear that field). They were stripped programmatically before anything was read; the record
+keeps its counts. **dev5: 1 university, counted in the KB aggregates only, no row.** The committed file was then
+checked again by the same script: 0 heldout ids, 0 heldout or dev5 domains.
+
+### Table 1 again, from the runner
+
+| set | cases with gold | in_sitemap_bounded | in_sitemap_any | linked_2hops | twin_declared | **ceiling** | ceiling_any | host_refused | run 3 ceiling |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| cohort | 10 | 1 | 2 | 2 | 2 | **2** | 4 | 4 | 3 |
+| dev2 | 10 | 1 | 3 | 1 | 0 | **2** | 4 | 3 | 1 (0 after the khalifa correction) |
+| dev3 | 14 | 3 | 9 | 3 | 2 | **5** | 10 | 2 | 6 |
+| dev4 | 5 | 0 | 1 | 1 | 3 | **1** | 3 | 0 | 1 |
+
+Every difference from run 3 is one case, and every one is a vantage-point or site change, not a tool change:
+- cohort: aalto's homepage and sitemaps are `robots_disallowed` from the runner (any and twin lost); toronto's
+  `future.utoronto.ca` sitemaps answer 403 (any lost); kaist's `cs.kaist.ac.kr` is `robots_disallowed`, so its hop-1
+  page cannot be read and the gold is not linked (linked 3 → 2).
+- dev2: tec's gold is now in the bounded sitemap (run 3: 403); khalifa is reached at hop 2 (below); uct's homepage
+  times out; uppsala no longer does.
+- dev3: puc's homepage times out from the runner, so its hop-2 reach is not measured (linked 4 → 3); ucph's gold is no
+  longer in the bounded sitemap (it is still reached at hop 2); kuleuven's robots refusal did not recur.
+- KB: 395 (entry, URL) pairs now (the KB grew since run 3), ceiling 95 (24 %), ceiling_any 180.
+
+**The verdict for 05 is unchanged**: the ceiling is 2 / 2 / 5 / 1 against bars of 7 / 6 / 9–10 / 4.
+
+### The hop-2 table: which homepage link leads to the gold
+
+`hop1_rank / hop1_of` is the hop-1 page's place among the homepage's distinct programme-ish links, best first, under
+`index_ceiling.programmeish` (`navigation._score` + 3 for a `study_section_label` + 2 for a section/admission word +
+1 for a study word in the path; ties by URL ascending). The hop-1 page recorded is the best-ranked one that links the
+gold form; a lower-ranked page may link it too. One row per gold form reached at hop 2.
+
+| set | case | gold form reached | hop-1 page | homepage anchor | rank / of | score |
+|---|---|---|---|---|---:|---:|
+| cohort | vienna | `aufnahmeverfahren.univie.ac.at/informatik` | `studieren.univie.ac.at/studienangebot/bachelor-und-diplomstudien` | Studienangebot Bachelor / Diplom | 1 / 9 | 8 |
+| cohort | ntu | `www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science` | `www.ntu.edu.sg/education/degree-programmes` | Degree Programmes | 17 / 135 | 5 |
+| dev2 | khalifa | `www.ku.ac.ae/program/bsc-in-computer-science` | `www.ku.ac.ae/academics/undergraduate-programs` | Undergraduate | 2 / 22 | 8 |
+| dev3 | auckland | `…/find-a-study-option/bachelor-of-science-bsc.html` | `www.auckland.ac.nz/en/study/study-options/find-a-study-option.html` | Find a study option | 13 / 39 | 5 |
+| dev3 | ucph | `www.ku.dk/studier/bachelor/datalogi` | `www.ku.dk/studier/bachelor` | Bachelor | 1 / 10 | 8 |
+| dev3 | iitd | `homecse.iitd.ac.in/b-tech-program/` | `www.cse.iitd.ac.in/` | Computer Science and Engineering | 3 / 23 | 6 |
+| dev4 | kit | `www.sle.kit.edu/vorstudium/bachelor-informatik.php` | `www.sle.kit.edu/vorstudium/studiengaenge.php` | Studiengänge | 5 / 22 | 3 |
+| dev4 | vut (related) | `www.vut.cz/studenti/programy/program/10326` | `www.vut.cz/studenti/programy?data[rok]=2027` | Studijní programy | 2 / 4 | 7 |
+
+Not in the table: **puc** (homepage timeout from the runner: no hop was read) and **kaist** (`cs.kaist.ac.kr` refused by
+robots from the runner: the hop-1 page and the gold were not read).
+
+### Reconciliation with NO_SEARCH_FLOOR §2's rank column (the 2026-10-20 05:30 UTC sandbox probe)
+
+| case | NO_SEARCH_FLOOR §2 (probe) | this run | same hop-1 page? | difference, and why |
+|---|---|---|---|---|
+| auckland | 17 ("Find a study option") | **13 / 39** | yes | **4 places higher.** Same page and anchor. The probe's scorer had no +1 path-word term and its tie order is not recorded; the runner's homepage may differ from the sandbox's 5 h earlier. The gold form reached also differs (this run: `bachelor-of-science-bsc.html`; the probe: the CS undergraduate page). The conclusion "outside any small hop budget" holds at 13. |
+| iitd | 3 (`www.cse.iitd.ac.in`) | **3 / 23** | yes | none |
+| puc | 4 (`admision.uc.cl/carreras`) | — | not measured | **not reproduced**: the homepage timed out from the runner, so no hop-1 page was read. The probe's rank stands as the only measurement; the floor's "never followed" cause is unaffected (it was read from the captures). |
+| kit | 5 (`sle.kit.edu/…/studiengaenge.php`) | **5 / 22** | yes | none (the probe's second parent, `bewerbung.php` rank 7, is not recorded: the tool keeps the best-ranked parent only) |
+| kaist | 2 (`cs.kaist.ac.kr`) | — | not measured | **not reproduced**: `cs.kaist.ac.kr` is `robots_disallowed` from the runner (run 3 and the probe read it). The probe's rank stands. |
+| ntu | 17 (`education/degree-programmes`, without the seed) | **17 / 135** | yes | none |
+| vienna | 1–2 | **1 / 9** | yes | consistent |
+| ucph | (no rank given) | 1 / 10 | — | new |
+
+So four of six ranks reproduce exactly (iitd, kit, ntu; vienna within the probe's range), one moves (auckland 17 → 13,
+same page), and two cannot be re-measured from this vantage point (puc, kaist). No §2 cause or §4 verdict depends on
+the difference: auckland is lost in confirm-queue order and a refused hub, not at the homepage.
+
+### The khalifa correction (CO-1, NO_SEARCH_FLOOR §7.2)
+
+Run 3's row "khalifa: bounded yes, listed yes, hop 0" **does not reproduce**. On the runner, both draft3 gold forms
+(`www.ku.ac.ae/program/bsc-in-computer-science` and its `/ar/` twin) are in **no** sitemap, bounded or unbounded,
+which is what CO-1 found by re-reading `sitemap.xml` (3 569 URLs) and `sitemap_index.xml` (3 743 URLs). The English
+form is reached at **hop 2**, through `/academics/undergraduate-programs` (anchor "Undergraduate", rank 2 / 22): one of
+the two hubs CO-1 §7.2 says link the gold and the walker refused. Both gold reads timed out from the runner
+(`host_refused` "timeout"); the reach is by link, not by read. Run 3's report was never committed, so the URL that
+row matched cannot be named; the most likely explanation stays CO-1's (matched on something other than the draft3
+gold). The per-case table above and Table 1's correction paragraph carry the corrected values with the old ones kept.
+So khalifa belongs to "reached at hop 2 through a refused hub" (FRH's class), not to "bounded, ranked out".
