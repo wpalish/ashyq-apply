@@ -10,7 +10,8 @@ import pytest
 
 from app.adapters.discovery import live_discovery
 from app.adapters.fetching import Fetcher, FetchResult
-from app.domain.enums import FetchOutcome
+from app.adapters.search.intent import DiscoveryIntent
+from app.domain.enums import DegreeLevel, FetchOutcome
 from evaluation.research import index_ceiling as ic
 from tests.test_live_discovery import StubSite, sitemap_index_xml, sitemap_xml
 
@@ -289,3 +290,142 @@ async def test_a_read_that_raises_is_recorded_not_fatal(tmp_path) -> None:
     row = records[0]["rows"][0]
     assert row["read_outcome"] == "unparseable"
     assert not row["in_sitemap_any"] and row["linked_hop"] is None
+
+
+# --- IC-2: the hop-1 parent, its anchor and its rank ------------------------------
+
+HUB = "https://www.hub.example.de"
+HUB_SITE = ic.Site(key="hub", homepage=f"{HUB}/", domain="hub.example.de", country="Germany")
+HUB_GOLD = f"{HUB}/informatik-bsc"
+HUB_HOMEPAGE_LINKS = (
+    ("/news", "News"),
+    ("/apply", "Apply"),
+    ("/studium", "Studiengänge"),
+    ("/studium", "Bachelor programmes"),  # one URL, a second (later) anchor
+    ("/faculties", "  Faculties\n   and   schools "),
+    ("/programmes", "Study programmes"),
+)
+
+
+def _hub(*, gold_on: tuple[str, ...] = ("/apply", "/studium")) -> StubSite:
+    body = "".join(f'<a href="{href}">{text}</a>' for href, text in HUB_HOMEPAGE_LINKS)
+    pages: dict[str, bytes | str] = {f"{HUB}/": _html("Hub", lang="de", body=body)}
+    for href in ("/apply", "/studium", "/programmes", "/faculties"):
+        links = f'<a href="{HUB_GOLD}">Informatik</a>' if href in gold_on else ""
+        pages[f"{HUB}{href}"] = _html(href, lang="de", body=links)
+    pages[HUB_GOLD] = _html("Informatik B.Sc.", lang="de")
+    return StubSite(pages)
+
+
+def _hub_intent() -> DiscoveryIntent:
+    return DiscoveryIntent(
+        institution=HUB_SITE.domain,
+        domain=HUB_SITE.domain,
+        degree=DegreeLevel.BACHELOR,
+        field="computer science",
+        institution_country=HUB_SITE.country,
+    )
+
+
+async def test_hop1_rank_is_the_programmeish_order_over_distinct_urls(tmp_path) -> None:
+    site = _hub()
+    async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+        site.install(fetcher)
+        crawl = await ic.crawl_two_hops(fetcher, HUB_SITE)
+    intent = _hub_intent()
+    # What the crawl sees: links_from keeps one link per URL, with its first anchor.
+    homepage = site.pages[f"{HUB}/"]
+    assert isinstance(homepage, str)
+    scored = [
+        (ic.programmeish(link.text, link.url, intent), link.url, link.text)
+        for link in ic.safe_links(homepage, f"{HUB}/")
+    ]
+    ordered = sorted(scored, key=lambda r: (-r[0], r[1]))
+    expected = list(dict.fromkeys(url for score, url, _ in ordered if score > 0))
+    assert len(expected) >= 3  # the fixture ranks several pages, not one
+    assert [url for url, _ in sorted(crawl.hop1.items(), key=lambda kv: kv[1].rank)] == expected
+    assert sorted(link.rank for link in crawl.hop1.values()) == list(range(1, len(expected) + 1))
+    assert {link.of for link in crawl.hop1.values()} == {len(expected)}
+    assert f"{HUB}/news" not in crawl.hop1  # not programme-ish: never queued, never ranked
+    # One URL behind two anchors: the homepage's first anchor is the one recorded.
+    assert crawl.hop1[f"{HUB}/studium"].anchor == "Studiengänge"
+    assert crawl.hop1[f"{HUB}/studium"].score == next(
+        score for score, url, _ in scored if url == f"{HUB}/studium"
+    )
+
+
+async def test_a_hop2_row_names_its_best_ranked_parent(tmp_path) -> None:
+    site = _hub()
+    async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+        site.install(fetcher)
+        records = await ic.measure(
+            fetcher, {"hub": HUB_SITE}, [ic.Target(HUB_GOLD, "hub", "dev4", "hub", ("gold",))]
+        )
+        crawl = await ic.crawl_two_hops(fetcher, HUB_SITE)
+    row = records[0]["rows"][0]
+    assert row["linked_hop"] == 2
+    # Two hop-1 pages link the gold; the one read first (the better rank) is its parent.
+    candidates = {url: crawl.hop1[url] for url in (f"{HUB}/apply", f"{HUB}/studium")}
+    parent = min(candidates, key=lambda url: candidates[url].rank)
+    best = candidates[parent]
+    assert row["hop1_parent"] == parent
+    assert row["hop1_anchor"] == best.anchor
+    assert (row["hop1_rank"], row["hop1_of"], row["hop1_score"]) == (
+        best.rank,
+        best.of,
+        best.score,
+    )
+
+
+async def test_hop1_fields_are_empty_unless_the_target_is_reached_at_hop_2(tmp_path) -> None:
+    record, _ = await _measure(tmp_path)
+    linked = _row(record, LINKED)
+    assert linked["hop1_parent"] == f"{ORIGIN}/study"
+    assert linked["hop1_anchor"] == "Study"
+    assert 1 <= linked["hop1_rank"] <= linked["hop1_of"]
+    for url in (GOLD, REFUSED, NOWHERE):  # in a sitemap only / hop 1 / nowhere
+        row = _row(record, url)
+        assert row["linked_hop"] != 2
+        fields = ("hop1_parent", "hop1_anchor", "hop1_rank", "hop1_of", "hop1_score")
+        assert [row[k] for k in fields] == [None] * len(fields)
+    table = ic.markdown([record])
+    assert "reached at hop 2" in table
+    assert f"| dev3 | uni | gold | {LINKED} | {ORIGIN}/study | Study |" in table
+
+
+async def test_a_parent_that_fails_to_read_links_nothing(tmp_path) -> None:
+    site = _hub(gold_on=("/studium",))
+    del site.pages[f"{HUB}/studium"]
+    async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+        site.install(fetcher)
+        records = await ic.measure(
+            fetcher, {"hub": HUB_SITE}, [ic.Target(HUB_GOLD, "hub", "dev4", "hub", ("gold",))]
+        )
+    row = records[0]["rows"][0]
+    assert row["linked_hop"] is None and row["hop1_parent"] is None
+
+
+def test_the_hop2_table_leaves_out_blind_and_kb_rows() -> None:
+    row = {
+        "url": "https://www.x.example/p",
+        "group": "dev2",
+        "case": "x",
+        "kinds": ["gold"],
+        "in_sitemap_bounded": False,
+        "in_sitemap_any": False,
+        "linked_hop": 2,
+        "twin_declared": False,
+        "host_refused": "",
+        "hop1_parent": "https://www.x.example/study",
+        "hop1_anchor": "Study | Apply",
+        "hop1_rank": 3,
+        "hop1_of": 9,
+        "hop1_score": 5,
+    }
+    seen = {"site": "x", "blind": False, "rows": [row]}
+    blind = {"site": "y", "blind": True, "rows": [{**row, "url": "https://www.y.example/p"}]}
+    kb = {"site": "z", "blind": False, "rows": [{**row, "group": "kb", "url": "https://z/p"}]}
+    table = ic.markdown([seen, blind, kb])
+    assert "| dev2 | x | gold | https://www.x.example/p | https://www.x.example/study |" in table
+    assert "Study \\| Apply | 3 / 9 | 5 |" in table
+    assert "www.y.example" not in table and "https://z/p" not in table

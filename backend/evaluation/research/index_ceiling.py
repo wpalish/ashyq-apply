@@ -13,7 +13,11 @@ base's evidence URLs, whether each target is
   other target host declares in its robots.txt - up to ``MAX_SITEMAP_URLS``;
 - ``linked_2hops``: linked from the homepage (hop 1) or from a page the
   homepage links through a study / programme / admissions anchor (hop 2),
-  reading at most ``CRAWL_BUDGET`` pages per homepage;
+  reading at most ``CRAWL_BUDGET`` pages per homepage; for a target reached at
+  hop 2 the row names the hop-1 page that links it (``hop1_parent``), that
+  page's homepage anchor text (``hop1_anchor``) and its rank among the
+  homepage's programme-ish links under ``programmeish`` (``hop1_rank`` of
+  ``hop1_of``, with ``hop1_score``) - IC-2, NEXT_CYCLES_2026-10-22 §3;
 - ``twin_declared``: an ``hreflang`` twin the target page declares is itself
   in a sitemap or linked (the index would hold the twin, and the twin names
   the target);
@@ -467,6 +471,24 @@ def programmeish(link_text: str, url: str, intent: DiscoveryIntent) -> int:
     return score
 
 
+@dataclass(frozen=True)
+class Hop1Link:
+    """A homepage link the two-hop crawl queued: what it said and where it ranked."""
+
+    #: The link's text as the homepage writes it (whitespace collapsed, capped).
+    anchor: str
+    #: 1-based place among the distinct programme-ish homepage links, best first.
+    rank: int
+    #: Its ``programmeish`` score.
+    score: int
+    #: How many distinct programme-ish links the homepage has (the queue length).
+    of: int
+
+
+#: Longest anchor text a report row keeps.
+ANCHOR_CHARS = 200
+
+
 @dataclass
 class Crawl:
     homepage_outcome: str = ""
@@ -477,6 +499,12 @@ class Crawl:
     #: Hop at which each linked URL was first met (1 = on the homepage).
     hops: dict[str, int] = field(default_factory=dict)
     index: FormIndex = field(default_factory=FormIndex)
+    #: IC-2: a URL linked from a hop-1 page -> the first hop-1 page (in read
+    #: order, so the best ranked) that links it.
+    parents: FormIndex = field(default_factory=FormIndex)
+    #: IC-2: each hop-1 page queued for reading -> its homepage anchor text and
+    #: its rank under ``programmeish`` (1 = read first; distinct URLs).
+    hop1: dict[str, Hop1Link] = field(default_factory=dict)
 
 
 def safe_links(html: str, base: str) -> tuple[NavigationLink, ...]:
@@ -515,15 +543,26 @@ async def crawl_two_hops(fetcher: Fetcher, site: Site, *, budget: int = CRAWL_BU
         institution_country=site.country,
     )
     first = safe_links(homepage.text, base)
-    ranked: list[tuple[int, str]] = []
+    ranked: list[tuple[int, str, str]] = []
     for link in first:
         crawl.index.add(link.url, "hop1")
         crawl.hops.setdefault(link.url, 1)
         score = programmeish(link.text, link.url, intent)
         if score > 0:
-            ranked.append((score, link.url))
+            ranked.append((score, link.url, link.text))
+    # The sort key is unchanged by IC-2 (score, then URL); the stable sort keeps
+    # the homepage's order among one URL's anchors, and the first is recorded.
     ranked.sort(key=lambda row: (-row[0], row[1]))
-    for _, url in ranked:
+    distinct = list(dict.fromkeys(url for _, url, _ in ranked))
+    for score, url, text in ranked:
+        if url not in crawl.hop1:
+            crawl.hop1[url] = Hop1Link(
+                anchor=" ".join(text.split())[:ANCHOR_CHARS],
+                rank=len(crawl.hop1) + 1,
+                score=score,
+                of=len(distinct),
+            )
+    for _, url, _ in ranked:
         if crawl.pages_read >= budget:
             break
         page = await fetcher.get(url)
@@ -532,13 +571,36 @@ async def crawl_two_hops(fetcher: Fetcher, site: Site, *, budget: int = CRAWL_BU
             continue
         for link in safe_links(page.text, page.final_url or url):
             crawl.index.add(link.url, "hop2")
+            crawl.parents.add(link.url, url)
             crawl.hops.setdefault(link.url, 2)
     return crawl
 
 
 # --- the target page itself -------------------------------------------------------
 
-_HTML_LANG = re.compile(r"<html\b[^>]*\blang\s*=\s*[\"']?([A-Za-z-]+)", re.IGNORECASE)
+# SR2-09: the page's <html lang>, in linear time. The pattern this replaces,
+# ``<html\b[^>]*\blang\s*=\s*["']?([A-Za-z-]+)`` searched from every ``<html``
+# start to the next ``>`` and backtracked, quadratic on a page of unclosed
+# ``<html `` tags. Its answer is the first ``<html`` tag (up to its ``>``, or the
+# end) holding a ``lang=`` at all, and in it the *rightmost* ``lang=`` (the
+# greedy ``[^>]*`` backtracks from the right). ``html_lang`` returns exactly that:
+# each tag is consumed possessively once, and every ``lang=`` start in it is
+# tried once, with a zero-width match so overlapping starts are all seen.
+_HTML_OPEN_TAG = re.compile(r"<html\b[^>]*+", re.IGNORECASE)
+_LANG_AT = re.compile(r"(?=\blang\s*=\s*[\"']?([A-Za-z-]+))", re.IGNORECASE)
+
+
+def html_lang(head: str) -> str | None:
+    """The raw ``lang`` value of the page's ``<html>`` tag, as the SR2-09 pattern found it."""
+    for tag in _HTML_OPEN_TAG.finditer(head):
+        last = None
+        for match in _LANG_AT.finditer(tag.group(0)):
+            last = match
+        if last is not None:
+            return last.group(1)
+    return None
+
+
 _UNSPACED = re.compile("[฀-๿ᄀ-ᇿ぀-ヿ㐀-䶿一-鿿가-힯]")
 
 
@@ -559,8 +621,8 @@ def names_alias(text: str, alias: str) -> bool:
 
 def title_and_h1(html: str) -> tuple[str, str, str]:
     """A page's ``<title>``, first ``<h1>`` and ``<html lang>`` (primary subtag)."""
-    match = _HTML_LANG.search(html[:20_000])
-    language = match.group(1).split("-")[0].lower() if match else ""
+    lang = html_lang(html[:20_000])
+    language = lang.split("-")[0].lower() if lang else ""
     try:
         tree = lxml_html.fromstring(html)
     except (ValueError, lxml_html.etree.ParserError):
@@ -666,6 +728,12 @@ class Ceiling:
                 None,
             )
             linked = next((crawl.index.find(url) for url in forms if crawl.index.find(url)), None)
+            parent = (
+                next((p for url in forms if (p := crawl.parents.find(url))), None)
+                if linked == "hop2"
+                else None
+            )
+            via = crawl.hop1.get(parent) if parent else None
             row: dict[str, Any] = {
                 "url": target.url,
                 "group": target.group,
@@ -684,6 +752,13 @@ class Ceiling:
                 if listed_in
                 else None,
                 "linked_hop": {"hop0": 0, "hop1": 1, "hop2": 2}.get(linked or ""),
+                # IC-2: for a target reached at hop 2, the hop-1 page that links
+                # it, that page's homepage anchor and its programmeish rank.
+                "hop1_parent": parent,
+                "hop1_anchor": via.anchor if via else None,
+                "hop1_rank": via.rank if via else None,
+                "hop1_score": via.score if via else None,
+                "hop1_of": via.of if via else None,
                 "twins": [],
                 "twin_declared": False,
                 "host_refused": _refusal_of(page) or homepage_refusal,
@@ -936,6 +1011,34 @@ def markdown(records: list[dict[str, Any]]) -> str:
                     f"- {row['group']} `{row['case']}` ({'/'.join(row['kinds'])}) {row['url']}"
                     f" - read {row['read_outcome']}{refused}"
                 )
+    hop2 = [
+        row
+        for record in records
+        if not record["blind"]
+        for row in record["rows"]
+        if row["group"] != "kb" and row["linked_hop"] == 2
+    ]
+    if hop2:
+        lines += [
+            "",
+            "## Development pages reached at hop 2: the hop-1 page, its anchor and rank",
+            "",
+            "| set | case | kind | page | hop-1 page | homepage anchor | rank / queue | score |",
+            "|---|---|---|---|---|---|---:|---:|",
+        ]
+        for row in hop2:
+            anchor = (row.get("hop1_anchor") or "").replace("|", "\\|")
+            rank = (
+                f"{row['hop1_rank']} / {row['hop1_of']}"
+                if row.get("hop1_rank") is not None
+                else "-"
+            )
+            score = row.get("hop1_score")
+            lines.append(
+                f"| {row['group']} | {row['case']} | {'/'.join(row['kinds'])} | {row['url']}"
+                f" | {row.get('hop1_parent') or '-'} | {anchor or '-'} | {rank}"
+                f" | {score if score is not None else '-'} |"
+            )
     unread = [
         (record["site"], doc)
         for record in records
