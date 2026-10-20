@@ -992,3 +992,14 @@ wrong values identical off/on (dev2 uppsala deadline, dev4 unibo programme, both
 off-column dip on dev3 (5/5 claims) is the A/A noise already recorded (≤1 case). **Verdict: SP-2 stays
 off** — no gain on any set; as recorded in HANDOFF §8, ctu's FIT page is not refused by SP-1, so the
 lead never reaches it.
+
+## 2026-10-20 01:15 — cycle 14 dispatches (NEXT_CYCLES_2026-10-20 D-F, D-A, D-B; recorded replay, $0)
+
+| item | result | verdict |
+|---|---|---|
+| D-F no-search floor (`search_provider=none`, columns 1) | hits/wrong/related/missed: cohort 4/0/0/6, dev2 2/0/1/7, dev3 3/0/0/11, dev4 0/0/0/9 → **9/39, 0 wrong** (index-ceiling bar 3/1/6/1 = 11/39; replay with search 26/39) | recorded: the live path beyond the KB finds about a third of the gold pages with no search provider, and never a wrong one |
+| D-A LL-1 `--listing-follows-local-aliases` normal | stable gains 0, losses 0 on all four sets; wrong pages unchanged (dev3 off-arm 1 = the kuleuven flake) | **stays off** (as expected; msu unchanged) |
+| D-A LL-1 knockout | knockout wrong pages unchanged (cohort 0, dev2 1, dev3 1–2, dev4 1); no stable change | stays off |
+| D-B cohort `--no-registry-seeds` normal + knockout | page hits unchanged (4–5/10); **3 stable claim losses** (delft:tuition, ubc major-entrance scholarship + its international applicability) in both modes | H-B partial: registry seeds carry claims (fees/scholarship pages), not programme-page hits, on cohort |
+
+ntu:deadline / SAT / programme.exists stay unstable across arms (known replay noise).
