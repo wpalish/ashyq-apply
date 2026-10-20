@@ -263,3 +263,145 @@ To make that trigger measurable from captures, the funding-stage detail would ne
 - the page's `<html lang>`.
 
 That is an ES-1-style instrument change. It is not part of this step.
+
+## AW-2: the award-page words of every language (2026-10-20)
+
+AW-1 step 1 found one cause behind the only refused labelled award page (dev4 rwth): every word the funding branch of
+`classify_page` reads is English. AW-2 does not wait for a second set. It applies the LV-1 precedent
+(`tests/test_lexicon_language_coverage.py`, DEGREE_ABBREVIATIONS_2026-10-19): every language-keyed table covers every
+`languages.json` language, each row is dictionary- or statute-sourced, the rows sit behind a flag, and the flag is
+measured on replay. No word comes from a university page or a site list, no page was fetched, no search provider was
+called, and no held-out file, capture, log or label was opened.
+
+**What it is.** `page_classifier.AWARD_SIGNALS_ALL_LANGUAGES` (default `False`). The harness flag is
+`--award-signals-all-languages` / `--no-award-signals-all-languages` (`NEGATABLE_RULES`, `DEFAULT_OFF_NEGATABLE`). The
+rows are `app/adapters/award_lexicon.DICTIONARY`, one per language (25; `no` and `nb` share the Bokmål row). Each row
+has nine word classes:
+
+- the funding nouns (scholarship, grant, bursary; tuition waiver where it is the award's name);
+- the plural listing heading;
+- a heading about applying for awards, or their FAQ;
+- news words;
+- the five substantive signals, under the `_AWARD_SIGNALS` names:
+  - `amount` (amount, value, per month);
+  - `coverage` (tuition waiver, tuition);
+  - `eligibility` (requirements, who can apply);
+  - `application` (application, how to apply);
+  - `deadline`.
+
+With the flag on, the row of the page's own `<html lang>` is read **next to** the English words, never instead of them:
+
+| English table | the row's word class joins it in |
+|---|---|
+| `_SCHOLARSHIP_WORD` | the funding gate (identity / title), `_award_name`, `_award_link_count` |
+| `_AWARD_SIGNALS` | `amount`, `coverage`, `eligibility`, `application`, `deadline` (same names; ≥ 2 still needed) |
+| `_PLURAL_FUNDING_HEADING` | listing heading → `scholarship_index` |
+| `_NEWS` | news words in the title or first heading → `news` (inside the funding branch only) |
+| (none in English) | a process/FAQ heading is not an award name → `unknown`, or `scholarship_index` with award links |
+
+English pages, pages with no `lang` and pages in a language outside `languages.json` are unchanged. With the flag off,
+`award_words` is never called (a test pins it), so off is the code path from before AW-2. The golden demo test passes.
+`runner.py` and `scoring.py` were not touched.
+
+News words cover only news and press releases. Notice and announcement words are left out on purpose, because local
+award calls are published as notices (Chinese 通知, Turkish duyuru, Italian avviso). Refusing those would refuse the
+award itself.
+
+**Left out, on purpose.** These are reach or extraction, not the award / not-award verdict:
+
+- `web_scholarships._AWARD_HINTS`: which links the walk follows;
+- `_AWARD_NOUN` / `proper_award_name`: AP-1's capitalised proper-name test, also used for section names;
+- `_AWARD_LINK_HINT`: only read under `proper_award_name`;
+- the path words of the gate (`scholarship`, `financial-aid`);
+- the English claim readers of `_parse_award`.
+
+A German award page read under AW-2 records `scholarship_exists` for its name. Amount, coverage and deadline values
+still need readers in that language.
+
+**Sources (one row per language).**
+
+| lang | source |
+|---|---|
+| ca | DIEC2 (IEC) s.v. beca, ajut, import, requisit, sol·licitud, termini, exempció, matrícula |
+| cs | Internetová jazyková příručka (ÚJČ AV ČR) / SSJČ; Act No. 111/1998 Coll. §58 (prominutí poplatku), §91 (stipendia) |
+| da | Den Danske Ordbog; Bekendtgørelse om fripladser og stipendier (friplads, stipendium, studieafgift) |
+| de | Duden; Stipendienprogramm-Gesetz (StipG) §§ 3–5; Studienförderungsgesetz 1992, AT (Studienbeihilfe) |
+| es | RAE, DLE; Real Decreto 1721/2007 (becas y ayudas al estudio: cuantías, requisitos, solicitudes, plazos) |
+| et | EKSS (EKI); Õppetoetuste ja õppelaenu seadus; Kõrgharidusseadus (õppetasu) |
+| fi | Kielitoimiston sanakirja (Kotus); Yliopistolaki 558/2009 §10 a (lukuvuosimaksu, apurahajärjestelmä) |
+| fr | Larousse / TLFi; Code de l'éducation art. R719-49 / R719-50 (exonération des droits d'inscription) |
+| it | Treccani; D.Lgs. 68/2012 (borse di studio, esonero dalle tasse) |
+| ja | Kōjien (広辞苑); JASSO / MEXT terminology (給付型奨学金, 授業料免除, 応募資格) |
+| kk | Қазақ әдеби тілінің сөздігі (15 vols); RK Law On Education art. 1 (білім беру гранты) |
+| ko | 표준국어대사전 (NIKL); Korea Student Aid Foundation terminology (장학금, 등록금 감면) |
+| lt | Dabartinės lietuvių kalbos žodynas (LKI); Mokslo ir studijų įstatymas art. 70, art. 82 |
+| nb, no | Bokmålsordboka; Forskrift om studieavgift (2023) |
+| nn | Nynorskordboka; Forskrift om studieavgift (2023) |
+| nl | Van Dale; WHW art. 7.45a–7.48 (collegegeld); Nuffic terminology |
+| pl | SJP PWN; Act of 20 July 2018 art. 79 (zwolnienie z opłat), art. 86 (stypendia) |
+| pt | Houaiss / Priberam; Despacho 8442-A/2012 (Regulamento de Atribuição de Bolsas de Estudo, DGES) |
+| ru | Ozhegov / БТС; Federal Law 273-FZ art. 36 (стипендии) |
+| sk | SSSJ (JÚĽŠ SAV); Act No. 131/2002 Coll. §92 (školné, odpustenie), §96 (štipendiá) |
+| sv | Svensk ordbok (Svenska Akademien); SFS 2010:543 (studieavgift); SFS 2013:871 (stipendier) |
+| th | Royal Institute Dictionary B.E. 2554 (พจนานุกรม ฉบับราชบัณฑิตยสถาน) |
+| tr | TDK Güncel Türkçe Sözlük; Law No. 2547 art. 46 (öğrenim ücreti); Law No. 5102 (KYK burs) |
+| zh | 现代汉语词典 (7th ed.); 教育部重編國語辭典 (traditional); MOE 学生资助政策 (奖学金, 助学金, 学费减免) |
+
+Two homograph guards are written into the rows:
+
+- Turkish "bursa", the dative of "burs", is excluded because it is also the city.
+- Estonian "kuus" ("six") is not an amount word on its own.
+
+**Battery** (`tests/test_award_signals_all_languages.py`, 219 tests, synthetic pages only). For every language:
+
+- the award page is `scholarship_award` with all five signals when the flag is on, and is not an award page when it is off;
+- the news page is `news` when the flag is on;
+- the process page ("how to apply for a scholarship") is `unknown` when the flag is on;
+- the listing heading is `scholarship_index` when the flag is on;
+- a page that names no award stays outside the funding family, whatever its body says;
+- the three non-award pages are not award pages when the flag is off.
+
+English award, news, process and listing pages read identically on and off, under `lang="en"`, `lang="de"` and no `lang`.
+One language's words do not count under another's `lang`. dev4's shape (a German award page with one award link) is
+`unknown` ("funding page with 0 substantive signals …") off and `scholarship_award` on. Through the funding walk it is
+recorded as an award with `scholarship_exists` only when the flag is on.
+
+**Replay dispatch (main session, after cherry-pick to `claude/greeting-16wj2z`).** Common inputs are as in
+NEXT_CYCLES_2026-10-20 §7:
+
+- `benchmark-capture.yml`, `runner=ubuntu-latest`, `mode=expert_paired`, `columns=4`;
+- `seconds_per_case=120`, `max_pages=60`, `case_parallelism=5`;
+- `search_provider=recorded`, `max_search_queries` empty;
+- `extra_args=--award-signals-all-languages`.
+
+`case` is the set's list from LOOP_PROTOCOL.
+
+| run | set | `base_args` | `run_tag` |
+|---|---|---|---|
+| normal | cohort | empty | `aw2-cohort` |
+| normal | dev2 | empty | `aw2-dev2` |
+| normal | dev3 | empty | `aw2-dev3` |
+| normal | dev4 | empty | `aw2-dev4` |
+| knockout | cohort | `--knockout-gold ground_truth.reviewed11.json` | `aw2-ko-cohort` |
+| knockout | dev2 | `--knockout-gold dev2.draft3.json` | `aw2-ko-dev2` |
+| knockout | dev3 | `--knockout-gold dev3.draft3.json` | `aw2-ko-dev3` |
+| knockout | dev4 | `--knockout-gold dev4.draft3.json` | `aw2-ko-dev4` |
+
+Score cohort on `ground_truth.reviewed11.json` and dev2/dev3/dev4 on `draft3` with `--allow-drafts`.
+
+**Pre-registered bar (written before any replay).**
+
+- AW-2 goes on by default only with:
+  - no stable claim loss on any set, normal or knockout;
+  - no new wrong claim and no new wrong page on any set;
+  - knockout `wrong_programme_pages` on the on arm not above the off arm.
+- Expected: the only possible stable gain is dev4 rwth (the labelled award's own page, refused for language in AW-1
+  step 1, now read as an award → `scholarship_exists`). Whether it scores depends on the label's subject match, because
+  the label cites the costs page. Every other set is expected to read the same: their local-language cited pages are
+  never fetched (AW-1 step 1), so their loss is reach.
+- Expected and allowed: more `unmapped.*` scholarship claims on dev4 (rwth's other German award pages, more in rep 2).
+  They are not a wrong claim unless a value contradicts a label.
+- A stable loss means a worker diagnoses it. The likely shape is a German or Spanish page titled with a news or
+  process word that English signals accepted before.
+- The gain is expected, not required: as with LV-1 (a coverage rule, not a case rule), no stable loss and no new
+  wrong claim is enough to turn it on. A new wrong claim or a stable loss keeps it off.
