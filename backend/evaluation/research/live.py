@@ -1802,6 +1802,8 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "award-signals-all-languages": (
         ("app.adapters.page_classifier", "AWARD_SIGNALS_ALL_LANGUAGES"),
     ),
+    # Default-off (NO_SEARCH_FLOOR_2026-10-21 §5, NS-1b).
+    "homepage-hop-reads": (("app.adapters.discovery.live_discovery", "HOMEPAGE_HOP_READS"),),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
@@ -1811,6 +1813,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "subpage-requirements-lead",
         "identity-fold-marks",
         "same-site-award-links",
+        "homepage-hop-reads",
     }
 )
 
@@ -2137,6 +2140,15 @@ def main() -> None:
         "programmes), local listing words are URL signals (/carreras/, /formation/, "
         "/studier/program/, /opleidingen/n/...), and a catalogue host on the same registrable "
         "domain has its own sitemap read (at most 3 documents, inside the sitemap allowance)",
+    )
+    parser.add_argument(
+        "--homepage-hop-reads",
+        action="store_true",
+        help="rule NS-1 (NO_SEARCH_FLOOR_2026-10-21 §5): once the navigation fallback has read "
+        "the homepage, its queue is empty and no programme page is selected, the homepage's "
+        "best-scored study links (the product's link score, any host of the institution's "
+        "registrable domain, at most 5, after today's leads) are read as section pages, so a "
+        "field-named link on them becomes a programme lead",
     )
     parser.add_argument(
         "--award-route",
@@ -2846,6 +2858,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as r4_module
 
             r4_module.LOCAL_CATALOGUE_ENTRY = True
+        if args.homepage_hop_reads:
+            from app.adapters.discovery import live_discovery as ns1_module
+
+            ns1_module.HOMEPAGE_HOP_READS = True
         if args.award_route:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
@@ -3271,6 +3287,7 @@ def main() -> None:
                             else []
                         ),
                         *(["--local-catalogue-entry"] if args.local_catalogue_entry else []),
+                        *(["--homepage-hop-reads"] if args.homepage_hop_reads else []),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-index-query"] if args.scholarship_index_query else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),

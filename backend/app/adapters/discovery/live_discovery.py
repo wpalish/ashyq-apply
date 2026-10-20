@@ -63,7 +63,7 @@ from app.adapters.search.ontology import (
     localized_related_terms,
 )
 from app.adapters.url_canonical import page_link, strip_invisible_host
-from app.domain.enums import FetchOutcome
+from app.domain.enums import DegreeLevel, FetchOutcome
 from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
 from app.schemas.profile import ApplicantProfileIn
@@ -310,6 +310,30 @@ _CATALOGUE_HOST_CHILD_FIRST = re.compile(
 _GRADUATE_SITEMAP_NAME = re.compile(
     r"(?<![a-z])(?:pos|post)[-_]?grad|magist|maestr|master|mestrad|doctor|doktor|phd"
 )
+
+#: Rule NS-1 "homepage hop reads" (NO_SEARCH_FLOOR_2026-10-21 §5), off until
+#: the no-search paired runs pass. With no search provider, the navigation
+#: fallback read the homepage and stopped: it queues a homepage link only when
+#: ``categorise_url`` names its URL, and the best study link often leads to
+#: another host on the institution's own registrable domain with a URL that
+#: names nothing, so 46–53 of the 60 reads went unspent. On: once the homepage
+#: was read, today's queue is empty and no programme page is selected, the
+#: homepage's links are ranked by the product's own link score
+#: (``navigation._score``, + 3 for a ``study_section_label``, + 2 for a
+#: ``_SECTION_WORDS`` / ``_ADMISSION_WORDS`` entry in the label) whatever their
+#: URL's category; links on any host of the institution's registrable domain,
+#: not excluded and naming no other degree level, are kept with a score above
+#: 0, and the best HOMEPAGE_HOP_READ_CAP (ties by URL) are read as section
+#: pages: a field-named link on them is a programme lead and a catalogue-shaped
+#: one queues as today; one that reads as news, admissions or fees is dropped.
+#: The hop reads have their own cap beside MAX_FALLBACK_PAGES and stay inside
+#: the SB-1 budget, the 60-read ledger and the 120 s case clock; a refused
+#: read is not retried. Structural only: no word is added. The trace records
+#: ``homepage_hop_reads``. The benchmark harness flips it per capture
+#: (``--homepage-hop-reads``).
+HOMEPAGE_HOP_READS = False
+#: NS-1: homepage links read as hop pages, at most.
+HOMEPAGE_HOP_READ_CAP = 5
 
 #: Plan rule SM-1 (discovery analysis 2026-10-17 §0 #1, §1.3–§1.5), off until a
 #: paired run passes. The sitemap stage read index children in file order under
@@ -4054,6 +4078,9 @@ class DiscoveryTrace:
     #: R4 only: the catalogue host whose own sitemap was read, the link that
     #: named it, the documents read and the URLs kept. Not serialised while empty.
     catalogue_host: dict[str, object] = field(default_factory=dict)
+    #: NS-1 only: the homepage links queued as hop reads, with their link
+    #: score, best first. Not serialised while empty.
+    homepage_hop_reads: list[tuple[str, int]] = field(default_factory=list)
     #: CG-1: the institution's country, for the campus guard. Never serialised.
     country: str = ""
     #: SB-1 only: seconds and reads per discovery stage, ``t_first_query`` and
@@ -4226,6 +4253,7 @@ class DiscoveryTrace:
             ),
             **({"admissions_host": self.admissions_host} if self.admissions_host else {}),
             **({"catalogue_host": self.catalogue_host} if self.catalogue_host else {}),
+            **({"homepage_hop_reads": self.homepage_hop_reads} if self.homepage_hop_reads else {}),
             **({"stage_budget": self.stage_budget} if self.stage_budget else {}),
             **({"search_results": self.search_results} if self.search_results else {}),
             **({"pages_read": self.pages_read} if self.pages_read else {}),
@@ -6656,18 +6684,38 @@ class LiveDiscoveryAdapter:
         hops: dict[str, int] = {}
         section_pages: set[str] = set()
         catalogue_host_tried = False
+        # NS-1: the homepage's links ranked by the link score, read once the
+        # queue today's rules build is empty; the pages read that way, which
+        # do not count against MAX_FALLBACK_PAGES (they have their own cap).
+        hop_ranked: list[tuple[str, int]] = []
+        hop_pages: set[str] = set()
 
-        while len(walked) < MAX_FALLBACK_PAGES:
+        while len(walked - hop_pages) < MAX_FALLBACK_PAGES:
             if selected[PageCategory.PROGRAM_PAGE]:
                 break
             if self._spent() or self._search_due():
                 break
             if not queue:
-                if homepage_tried:
+                if not homepage_tried:
+                    homepage_tried = True
+                    queue.append(entry["homepage"])
+                    hops[entry["homepage"]] = 0
+                elif hop_ranked:
+                    for url, score in hop_ranked:
+                        if len(hop_pages) >= HOMEPAGE_HOP_READ_CAP:
+                            break
+                        if url in walked or url in queue:
+                            continue
+                        hop_pages.add(url)
+                        section_pages.add(url)
+                        hops[url] = 1
+                        queue.append(url)
+                        trace.homepage_hop_reads.append((url, score))
+                    hop_ranked = []
+                    if not queue:
+                        break
+                else:
                     break
-                homepage_tried = True
-                queue.append(entry["homepage"])
-                hops[entry["homepage"]] = 0
             start = queue.pop(0)
             if start in walked:
                 continue
@@ -6695,9 +6743,14 @@ class LiveDiscoveryAdapter:
             local = bool(languages) and depth is not None and depth < LOCAL_SECTION_MAX_HOPS
             section_leads: list[tuple[int, int, str, str]] = []
             host_leads: list[tuple[int, int, str, str]] = []
-            for url, label in _harvest_links(
+            links = _harvest_links(
                 result.text, result.final_url or start, domain, trace.extra_domains
-            ):
+            )
+            if HOMEPAGE_HOP_READS and start == entry["homepage"]:
+                hop_ranked = self._homepage_hop_leads(
+                    links, entry, domain, trace, degree, fields, {start, result.final_url or start}
+                )
+            for url, label in links:
                 category, score = categorise_url(url)
                 section = (
                     self._section_label(label, languages, degree)
@@ -6831,6 +6884,74 @@ class LiveDiscoveryAdapter:
         from app.adapters.search.navigation import study_section_label
 
         return study_section_label(label, languages, degree)
+
+    @staticmethod
+    def _homepage_hop_leads(
+        links: Sequence[tuple[str, str]],
+        entry: dict,
+        domain: str,
+        trace: DiscoveryTrace,
+        degree: str,
+        fields: Sequence[str],
+        homepage: set[str],
+    ) -> list[tuple[str, int]]:
+        """NS-1: the homepage's links by the product's own link score, best first.
+
+        The score is ``navigation._score`` (best over the public requested
+        fields), + 3 when the label is a ``study_section_label`` in a language
+        of the institution's country, + 2 when it contains a section or
+        admissions word. A link counts only on a host of the institution's own
+        registrable domain (not a DI-1 admissions domain), outside the excluded
+        paths, naming no other degree level in its URL or label, and with a
+        score above 0. Ties are broken by URL. No applicant attribute is read:
+        the intent holds the institution, the requested level and the public
+        fields only.
+        """
+        from app.adapters.search.intent import DiscoveryIntent
+        from app.adapters.search.navigation import (
+            _ADMISSION_WORDS,
+            _SECTION_WORDS,
+            NavigationLink,
+            _score,
+            study_section_label,
+        )
+
+        intents: list[DiscoveryIntent] = []
+        for field_name in fields:
+            try:
+                intents.append(
+                    DiscoveryIntent(
+                        institution=registrable_domain(domain) or domain,
+                        domain=registrable_domain(domain) or domain,
+                        degree=DegreeLevel(degree),
+                        field=field_name,
+                    )
+                )
+            except ValueError:
+                continue
+        languages = country_languages(trace.country)
+        words = tuple(dict.fromkeys((*_SECTION_WORDS, *_ADMISSION_WORDS)))
+        skip = {canonical_url(url) for url in homepage}
+        skip.add(canonical_url(entry["homepage"]))
+        ranked: list[tuple[int, str]] = []
+        for url, label in links:
+            if url in skip or not on_institution_site(url, domain):
+                continue
+            if _url_excluded(urlparse(url).path or ""):
+                continue
+            if names_other_degree_level(url, degree) or label_names_other_level(label, degree):
+                continue
+            link = NavigationLink(url=url, text=label, parent_url="")
+            score = max((_score(link, intent)[0] for intent in intents), default=0)
+            if study_section_label(label, languages, degree) is not None:
+                score += 3
+            text = label.casefold()
+            if any(word in text for word in words):
+                score += 2
+            if score > 0:
+                ranked.append((score, url))
+        ranked.sort(key=lambda row: (-row[0], row[1]))
+        return [(url, score) for score, url in ranked]
 
     @staticmethod
     def _catalogue_host_lead(
