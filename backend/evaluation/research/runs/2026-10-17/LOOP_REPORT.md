@@ -1027,3 +1027,5 @@ Next ablations running: english-readers-v2, fee-readers-v2.
 No stable gain on any off arm: neither reader costs development hits or claims. Next: intake-section-deadline, parent-degree-link (dispatched).
 | `--no-intake-section-deadline` | 1 claim: auckland deadline (dev3); other sets identical | load-bearing, keep |
 | `--no-parent-degree-link` | 6 claims: ubc deadline + ielts overall/subscores (cohort), auckland deadline + ielts overall/subscores (dev3) | load-bearing on two sets, keep |
+| `--no-question-page-order` | none; all four sets identical | `no_dev_evidence` (ledger) |
+| `--no-award-page-evidence` | 4 claims: ubc major-entrance award + international (cohort), imperial Inspires award + international (dev3) | load-bearing on two sets, keep |
