@@ -1,0 +1,32 @@
+{
+ "case": "qs2027-054",
+ "seed_id": "qs2027-054",
+ "university": "National Taiwan University (NTU)",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-054",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.csie.ntu.edu.tw/zh_tw/Admission/Announcement12",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Programme language still not confirmed, so the rule is not chosen. www.csie.ntu.edu.tw now answers 200 (2026-10-20), but its admissions pages (/zh_tw/Admission/Announcement12, /en/Admission/education1) state no teaching language and send international applicants to admissions.ntu.edu.tw. The per-department requirement pages (oiasystem.ntu.edu.tw/admission/foreign/requirement/...) are disallowed by robots.txt. The 2027 guidelines set English-taught programmes at CEFR B2 and Chinese-taught at Chinese CEFR A2 (round 3).",
+   "date": "2026-10-20"
+  }
+ }
+}

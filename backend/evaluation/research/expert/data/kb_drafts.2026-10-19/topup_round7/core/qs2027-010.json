@@ -1,0 +1,31 @@
+{
+ "case": "qs2027-010",
+ "seed_id": "qs2027-010",
+ "university": "National University of Singapore (NUS)",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-010",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.comp.nus.edu.sg/programmes/ug/cs/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Access. Re-tried 2026-10-20: https://www.nus.edu.sg/oam/admissions/international-qualifications and https://www.nus.edu.sg/oam/admissions/english-language-requirements answer HTTP 200 with an empty body (0 readable characters, bot wall). The School of Computing CS page (200) states no English score. Needs the CI read of nus.edu.sg/oam.",
+   "date": "2026-10-20"
+  }
+ }
+}

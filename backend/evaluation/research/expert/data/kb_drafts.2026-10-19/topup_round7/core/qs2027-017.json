@@ -1,0 +1,32 @@
+{
+ "case": "qs2027-017",
+ "seed_id": "qs2027-017",
+ "university": "Yale University",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-017",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://catalog.yale.edu/ycps/subjects-of-instruction/computer-science/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "No minimum published (re-read 2026-10-20). https://admissions.yale.edu/international: a test is required of non-native speakers without two years of English-medium secondary school (TOEFL, IELTS, Cambridge English Qualifications, DET, InitialView). https://admissions.yale.edu/standardized-testing gives only benchmarks: 'Yale's most competitive applicants typically earn a score of 5 or higher (for tests taken after January 21, 2026) or at least 100 (for tests taken before January 21, 2026)' for TOEFL. Not a minimum.",
+   "date": "2026-10-20"
+  }
+ }
+}

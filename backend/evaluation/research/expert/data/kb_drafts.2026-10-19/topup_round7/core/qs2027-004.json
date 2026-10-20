@@ -1,0 +1,29 @@
+{
+ "case": "qs2027-004",
+ "seed_id": "qs2027-004",
+ "university": "University of Oxford",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-004",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.cs.ox.ac.uk/admissions/undergraduate/courses/cs.html",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Access. Re-tried 2026-10-20 with the production Fetcher: https://www.ox.ac.uk/admissions/undergraduate/applying-to-oxford/english-language-requirements and https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing/computer-science both answer HTTP 403. The department site only defers to the University's English language requirements (round 5), so no score is on a readable official page. Needs the CI read of the ox.ac.uk English requirements page.",
+   "date": "2026-10-20"
+  }
+ }
+}
