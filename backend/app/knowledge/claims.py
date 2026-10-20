@@ -408,6 +408,40 @@ def _statement(reason: str) -> str:
     return text + "." if text else ""
 
 
+#: A non-English language, or a test of one, as a verified statement or its
+#: quote names it: in English or in the page's own language (ETH "German C1",
+#: LMU "Deutschkenntnisse", KU Leuven "Nederlandse taalvaardigheid", UBA "país
+#: no hispanohablante", Nanjing "HSK5级"). The expert's working note is never
+#: read: Kyoto's says "No Japanese Language Proficiency Required".
+_OTHER_LANGUAGE = re.compile(
+    r"(?<![A-Za-z])(?:German|Deutsch\w*|Dutch|Nederlands\w*|French|Fran[cç]ais\w*|Danish|Dansk\w*|"
+    r"Japanese|Chinese|Mandarin|Spanish|Espa[nñ]ol\w*|Castellano|\w*hispanohablante|"
+    r"Italian\w*|Italiano|Swedish|Svenska|Norwegian|Norsk|Finnish|Suomi|Korean|Portuguese|"
+    r"Portugu[eê]s|Russian|Turkish|T[uü]rk[cç]e|Polish|Czech|Hebrew|Arabic|"
+    r"HSK|TOPIK|JLPT|EJU|DSH|TestDaF|DELF|DALF|TCF|TEF|SIELE|CELU|NT2)(?![A-Za-z])"
+    r"|日本語|中文|汉语|漢語|한국어",
+    re.IGNORECASE,
+)
+_NEGATED_BEFORE = re.compile(r"\b(?:no|not|without)\s+$", re.IGNORECASE)
+_NEGATED_AFTER = re.compile(r"^[^.;]{0,40}\b(?:required|needed|necessary|mandatory)\b", re.I)
+
+
+def names_other_language(*texts: str) -> bool:
+    """Whether a verified statement or quote names a non-English language proof.
+
+    "No Japanese language proficiency required" names a language only to say
+    it is not asked for, so a mention negated right before it, with "required"
+    (or "needed") right after it, does not count.
+    """
+    for text in texts:
+        for found in _OTHER_LANGUAGE.finditer(text):
+            before, after = text[: found.start()], text[found.end() :]
+            if _NEGATED_BEFORE.search(before) and _NEGATED_AFTER.search(after):
+                continue
+            return True
+    return False
+
+
 def requirement_statement_questions(
     entry: KnowledgeEntry, *, university: str, programme: str
 ) -> list[UnresolvedQuestion]:
@@ -418,6 +452,11 @@ def requirement_statement_questions(
     carries it, so on its own the row says "needs clarification" and nothing
     says why. Not blocking: the statement is verified; what is open is only
     whether the applicant meets what applies instead.
+
+    A language row asks what is required "instead" only when the statement or
+    its quote names another language (``names_other_language``). Where neither
+    does (Stanford: "we do not require any English proficiency exams"), it asks
+    whether any other language evidence is needed and says the KB names none.
     """
     questions: list[UnresolvedQuestion] = []
     seen: set[tuple[str, str, str]] = set()
@@ -432,9 +471,19 @@ def requirement_statement_questions(
         kind = str(row.get("question") or row.get("key") or "")
         if kind == "english" or str(row.get("key") or "").startswith("ielts"):
             topic = "language requirement"
-            ask = (
-                f"Which language certificate does {university} require instead, and do you hold it?"
-            )
+            if names_other_language(statement, quote):
+                ask = (
+                    f"Which language certificate does {university} require instead, and do "
+                    "you hold it?"
+                )
+            else:
+                # Stanford, Harvard, Kyoto: no English test, and nothing verified
+                # names another language either. Asking what is required
+                # "instead" would invent a requirement.
+                ask = (
+                    f"Does {university} ask for any other language evidence? The verified "
+                    "knowledge base names none."
+                )
         elif kind == "gpa":
             topic = "grade requirement"
             ask = (

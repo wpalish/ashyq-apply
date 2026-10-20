@@ -1566,6 +1566,119 @@ async def test_kb_mode_quotes_a_verified_does_not_apply_requirement(
     assert question["blocking"] is False
 
 
+_NO_TEST = {
+    "question": "english",
+    "key": "ielts.overall",
+    "reason": (
+        "No English language test result is required for this route. Expert (2026-10-19): "
+        "'No Japanese Language Proficiency Required' at application."
+    ),
+    "source_url": URL,
+    "quote": "Are English proficiency exams required? No, we do not require any English "
+    "proficiency exams.",
+    "verified_on": "2026-10-19",
+}
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_asks_no_instead_when_no_other_language_is_named(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    """Smoke U6 (Stanford, Harvard, Kyoto): no English test and nothing else named."""
+    entry = {**_mit_entry(), "not_applicable": [_NO_TEST]}
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    (question,) = [q for q in payload["unresolved"] if q["topic"] == "language requirement"]
+    assert "instead" not in question["question"]
+    assert question["question"] == (
+        "No English language test result is required for this route. Does Massachusetts "
+        "Institute of Technology ask for any other language evidence? The verified knowledge "
+        "base names none."
+    )
+    assert question["blocking"] is False
+
+
+@pytest.mark.parametrize(
+    ("statement", "quote", "named"),
+    [
+        # ETH: the generic statement, the quote names German C1.
+        (
+            "No English language test result is required for this route.",
+            "The German C1 language certificate must be submitted by the application deadline",
+            True,
+        ),
+        # The build's "is <language>" statement.
+        (
+            "Not an English requirement: the language requirement is Chinese.",
+            "with Chinese as the medium of instruction.",
+            True,
+        ),
+        # The page's own language: LMU, KU Leuven, UBA, Nanjing, Paris-Saclay.
+        (
+            "No English test.",
+            "Das Studium an der LMU setzt ausreichende Deutschkenntnisse voraus",
+            True,
+        ),
+        ("No English test.", "Nederlandse taalvaardigheid is B2 van het ERK", True),
+        (
+            "No English test.",
+            "Si tu título fue emitido en un país no hispanohablante , de acuerdo",
+            True,
+        ),
+        ("No English test.", "所有专业须达到HSK5级180分以上", True),
+        ("No English test.", "Langue d'enseignement Français", True),
+        # Stanford, Harvard, Kyoto: English only.
+        ("No English test.", "No, we do not require any English proficiency exams.", False),
+        (
+            "No English test.",
+            "there is no specific minimum score for the English requirement",
+            False,
+        ),
+        # A language named only to say it is not asked for.
+        ("No English test.", "No Japanese language proficiency required at application.", False),
+    ],
+)
+def test_names_other_language(statement: str, quote: str, named: bool) -> None:
+    from app.knowledge.claims import names_other_language
+
+    assert names_other_language(statement, quote) is named
+
+
+def test_committed_kb_asks_instead_only_where_another_language_is_named() -> None:
+    """Smoke U6 on the committed KB: the "instead" question follows the verified text."""
+    from app.knowledge.claims import requirement_statement_questions
+
+    kb = load_knowledge_base()
+    instead: dict[str, bool] = {}
+    for entry in kb.entries.values():
+        for q in requirement_statement_questions(
+            entry, university=entry.university, programme="CS"
+        ):
+            if q.topic == "language requirement":
+                instead[entry.university] = "instead" in q.question
+    for university in ("Stanford University", "Harvard University", "Kyoto University"):
+        assert instead[university] is False, university
+    for university in ("ETH Zurich", "KU Leuven", "University of Copenhagen", "Nanjing University"):
+        assert instead[university] is True, university
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_cost_gap_without_any_kb_fee_says_so_in_kb_words(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    """Smoke U8 (Edinburgh, Oxford): no page was read, so none "could not be verified"."""
+    _run_, payload = await _funding_run(
+        catalogue_session, profile, settings, tmp_path, _mit_entry()
+    )
+    gap = payload["funding_gap"]
+    assert gap["computable"] is False
+    assert gap["reason"] == (
+        "The verified knowledge base holds no tuition fee for this programme yet, so the "
+        "remaining cost is not computed."
+    )
+    assert not any("could not be verified" in w for w in gap["warnings"])
+    assert any("Confirm the fall 2027 fee" in w for w in gap["warnings"])
+
+
 @pytest.mark.asyncio
 async def test_kb_mode_needs_clarification_always_says_why(
     catalogue_session, profile, settings, tmp_path, no_network

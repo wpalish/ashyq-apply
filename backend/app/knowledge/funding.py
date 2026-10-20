@@ -138,19 +138,37 @@ def _fee_line(claim: ClaimOut) -> str | None:
     return f"{amount}{per}{year} ({why})"
 
 
+#: The gap's refusal in kb mode when the KB holds no fee for the row at all.
+KB_NO_FEE_REASON = (
+    "The verified knowledge base holds no tuition fee for this programme yet, so the remaining "
+    "cost is not computed."
+)
+
+
 def explain_unused_tuition(result: ProgramResult) -> None:
     """Say on the gap that a verified fee exists when it is not this intake's yearly cost.
 
     The cost table takes only a current, yearly KB fee. Without this, a stale
     2026/27 fee or a per-semester fee left the Costs tab saying no official
     cost was found and the cost pages could not be verified, beside the
-    verified fee itself. Only the refusal for an empty cost table is reworded;
-    the arithmetic and every other refusal are unchanged.
+    verified fee itself. Where the KB holds no fee at all, the refusal says
+    that in kb words (``KB_NO_FEE_REASON``): no cost page was read, so none
+    "could not be verified". Only the refusal for an empty cost table is
+    reworded; the arithmetic and every other refusal are unchanged.
     """
     gap = result.funding_gap
     if gap is None or gap.computable or result.costs.items or gap.reason != NO_COST_REASON:
         return
     fees = [c for c in result.claims if c.claim_type is ClaimType.TUITION]
+    if not fees:
+        # Edinburgh, Oxford: the KB has no fee. No cost page was read, so the
+        # live "cost pages could not be verified" would describe a read that
+        # never happened.
+        gap.reason = KB_NO_FEE_REASON
+        gap.warnings = [w for w in gap.warnings if w != NO_COST_WARNING] + [
+            f"Confirm the {result.intake} fee with the university before relying on a cost figure."
+        ]
+        return
     lines = [line for line in (_fee_line(c) for c in fees) if line]
     if not lines:
         return

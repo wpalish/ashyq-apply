@@ -621,3 +621,92 @@ describe('caveated, stale and passed facts on the v18 KB (KB v18 smoke)', () => 
     );
   });
 });
+
+describe('U6 and U8 on the v18 KB (KB v18 smoke)', () => {
+  afterEach(() => act(() => setLocale('en')));
+
+  const KB_NO_FEE =
+    'The verified knowledge base holds no tuition fee for this programme yet, so the remaining cost is not computed.';
+  const CONFIRM = 'Confirm the fall 2027 fee with the university before relying on a cost figure.';
+  const noFee = {
+    computable: false,
+    reason: KB_NO_FEE,
+    reason_message: { key: 'gap.kbNoFee', params: {}, parts: {} },
+    warnings: [CONFIRM],
+    warning_messages: [{ key: 'gap.confirmIntakeFee', params: { intake: 'fall 2027' }, parts: {} }],
+  };
+
+  function openCosts(knowledgeMode: string) {
+    const view = render(<ResultDetail result={result({ funding_gap: noFee })} knowledgeMode={knowledgeMode} />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    return view;
+  }
+
+  it('U8: with no fee in the KB, the Costs tab says so in kb words', () => {
+    openCosts('kb');
+    expect(
+      screen.getByText('No verified tuition fee in the knowledge base yet for this programme and intake.'),
+    ).toBeInTheDocument();
+    expect(document.body).toHaveTextContent(KB_NO_FEE);
+    expect(document.body).toHaveTextContent(CONFIRM);
+    expect(document.body).not.toHaveTextContent('could not be verified');
+    expect(document.body).not.toHaveTextContent('No official cost of attendance was found');
+  });
+
+  it('U8: says it in Russian and Kazakh', () => {
+    act(() => setLocale('ru'));
+    const { unmount } = openCosts('kb');
+    expect(document.body).toHaveTextContent('В проверенной базе знаний пока нет подтверждённой платы за обучение');
+    expect(document.body).toHaveTextContent('В проверенной базе знаний пока нет платы за обучение для этой программы');
+    expect(document.body).not.toHaveTextContent('knowledge base');
+    unmount();
+
+    act(() => setLocale('kk'));
+    openCosts('kb');
+    expect(document.body).toHaveTextContent(
+      'Тексерілген білім базасында бұл бағдарлама мен қабылдау үшін расталған оқу ақысы әзірге жоқ.',
+    );
+    expect(document.body).toHaveTextContent('Тексерілген білім базасында бұл бағдарламаның оқу ақысы әзірге жоқ');
+    expect(document.body).not.toHaveTextContent('knowledge base');
+  });
+
+  it('U8: keeps the live notice outside kb mode', () => {
+    openCosts('live');
+    expect(
+      screen.getByText('No official cost of attendance was found for this programme and intake.'),
+    ).toBeInTheDocument();
+  });
+
+  const STATEMENT = 'No English language test result is required for this route.';
+  const none = question({
+    topic: 'language requirement',
+    question: `${STATEMENT} Does Stanford University ask for any other language evidence? The verified knowledge base names none.`,
+    question_message: {
+      key: 'question.languageNoneRecorded',
+      params: { statement: STATEMENT, university: 'Stanford University' },
+    },
+    why_it_matters: 'Verified on the official page https://example.edu/faq: "No, we do not require any English proficiency exams."',
+  });
+
+  it('U6: no other language named, so nothing is asked "instead"', () => {
+    render(<ResultDetail result={result({ unresolved: [none] })} knowledgeMode="kb" />);
+    const questions = screen.getByTestId('requirement-questions');
+    expect(questions).toHaveTextContent('Does Stanford University ask for any other language evidence?');
+    expect(questions).not.toHaveTextContent('instead');
+  });
+
+  it('U6: asks it in Russian and Kazakh', () => {
+    act(() => setLocale('ru'));
+    const { unmount } = render(<ResultDetail result={result({ unresolved: [none] })} knowledgeMode="kb" />);
+    expect(screen.getByTestId('requirement-questions')).toHaveTextContent(
+      'Требует ли Stanford University какое-либо другое подтверждение знания языка?',
+    );
+    unmount();
+
+    act(() => setLocale('kk'));
+    render(<ResultDetail result={result({ unresolved: [none] })} knowledgeMode="kb" />);
+    expect(screen.getByTestId('requirement-questions')).toHaveTextContent(
+      'Stanford University басқа тіл білімін растайтын құжатты талап ете ме?',
+    );
+  });
+});

@@ -154,6 +154,11 @@ QUESTIONS: tuple[Template, ...] = (
     ),
     _t("question.requireInstead", "{statement} What does {university} require instead?"),
     _t(
+        "question.languageNoneRecorded",
+        "{statement} Does {university} ask for any other language evidence? The verified "
+        "knowledge base names none.",
+    ),
+    _t(
         "question.documentListCurrent",
         "Is the document list for {programme} at {university} still the one for the {intake} "
         "intake?",
@@ -442,6 +447,11 @@ FUNDING: tuple[Template, ...] = (
         "An official tuition fee was found, but not as a current yearly figure for the "
         "{intake} intake: {fees}. It is not used as this intake's cost, so the remaining cost "
         "is not computed.",
+    ),
+    _t(
+        "gap.kbNoFee",
+        "The verified knowledge base holds no tuition fee for this programme yet, so the "
+        "remaining cost is not computed.",
     ),
     _t(
         "gap.confirmIntakeFee",

@@ -203,6 +203,7 @@ export const EN_RESULTS = {
   'detail.awardsOffered': 'Awards offered',
   'detail.officiallyPublished': '{n} (officially published)',
   'detail.noCost': 'No official cost of attendance was found for this programme and intake.',
+  'detail.noCostKb': 'No verified tuition fee in the knowledge base yet for this programme and intake.',
   'detail.publishedTotal': 'Published total',
   'detail.knownSoFar': 'Cost of attendance known so far',
   'detail.lowerBound':
@@ -609,6 +610,8 @@ export const EN_RESULTS = {
     '{statement} Which grades or scores does {university} use instead, and does your record meet them?',
   'msg.question.requireInstead':
     '{statement} What does {university} require instead?',
+  'msg.question.languageNoneRecorded':
+    '{statement} Does {university} ask for any other language evidence? The verified knowledge base names none.',
   'msg.why.kbNoAward':
     'The verified knowledge base names no award for this programme, and live research is switched off, so no scholarship page was read. Funding is unknown, not confirmed absent.',
   'msg.why.kbRequirementsUnsettled':
@@ -627,6 +630,8 @@ export const EN_RESULTS = {
     'An official tuition fee was found, but not as a current yearly figure for the {intake} intake: {fees}. It is not used as this intake\'s cost, so the remaining cost is not computed.',
   'msg.gap.confirmIntakeFee':
     'Confirm the {intake} fee with the university before relying on a cost figure.',
+  'msg.gap.kbNoFee':
+    'The verified knowledge base holds no tuition fee for this programme yet, so the remaining cost is not computed.',
 } as const;
 
 export type ResultsKey = keyof typeof EN_RESULTS;
@@ -811,6 +816,7 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
   'detail.awardsOffered': 'Число стипендий',
   'detail.officiallyPublished': '{n} (по официальным данным)',
   'detail.noCost': 'Официальная стоимость обучения и проживания для этой программы и набора не найдена.',
+  'detail.noCostKb': 'В проверенной базе знаний пока нет подтверждённой платы за обучение для этой программы и набора.',
   'detail.publishedTotal': 'Опубликованный итог',
   'detail.knownSoFar': 'Известная на сейчас стоимость',
   'detail.lowerBound':
@@ -1211,6 +1217,8 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     '{statement} Какие оценки или баллы {university} учитывает вместо этого и подходят ли ваши?',
   'msg.question.requireInstead':
     '{statement} Что {university} требует вместо этого?',
+  'msg.question.languageNoneRecorded':
+    '{statement} Требует ли {university} какое-либо другое подтверждение знания языка? В проверенной базе знаний такого требования нет.',
   'msg.why.kbNoAward':
     'Проверенная база знаний не называет ни одной стипендии для этой программы, а живое исследование отключено, поэтому страницы о стипендиях не читались. Финансирование неизвестно, а не точно отсутствует.',
   'msg.why.kbRequirementsUnsettled':
@@ -1229,6 +1237,8 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'Официальная стоимость обучения найдена, но не как актуальная годовая сумма для набора {intake}: {fees}. Она не используется как стоимость этого набора, поэтому остаток к оплате не рассчитывается.',
   'msg.gap.confirmIntakeFee':
     'Прежде чем полагаться на сумму, уточните в университете стоимость для набора {intake}.',
+  'msg.gap.kbNoFee':
+    'В проверенной базе знаний пока нет платы за обучение для этой программы, поэтому оставшаяся сумма не рассчитана.',
 };
 
 /** Kazakh, on the same rule. */
@@ -1411,6 +1421,7 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
   'detail.awardsOffered': 'Стипендиялар саны',
   'detail.officiallyPublished': '{n} (ресми жарияланған)',
   'detail.noCost': 'Бұл бағдарлама мен қабылдау үшін оқу мен тұрудың ресми құны табылмады.',
+  'detail.noCostKb': 'Тексерілген білім базасында бұл бағдарлама мен қабылдау үшін расталған оқу ақысы әзірге жоқ.',
   'detail.publishedTotal': 'Жарияланған жиыны',
   'detail.knownSoFar': 'Әзірге белгілі құн',
   'detail.lowerBound':
@@ -1811,6 +1822,8 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     '{statement} Оның орнына {university} қандай бағалар мен балдарды қарайды және сіздікі оларға сай ма?',
   'msg.question.requireInstead':
     '{statement} Оның орнына {university} не талап етеді?',
+  'msg.question.languageNoneRecorded':
+    '{statement} {university} басқа тіл білімін растайтын құжатты талап ете ме? Тексерілген білім базасында ондай талап жоқ.',
   'msg.why.kbNoAward':
     'Тексерілген білім базасы бұл бағдарлама үшін бірде-бір стипендияны атамайды, ал тікелей зерттеу өшірулі, сондықтан стипендия беттері оқылмады. Қаржыландыру нақты жоқ емес, белгісіз.',
   'msg.why.kbRequirementsUnsettled':
@@ -1829,4 +1842,6 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     'Ресми оқу ақысы табылды, бірақ {intake} қабылдауы үшін өзекті жылдық сома ретінде емес: {fees}. Ол осы қабылдаудың құны ретінде қолданылмайды, сондықтан төленетін қалдық есептелмейді.',
   'msg.gap.confirmIntakeFee':
     'Сомаға сүйенбес бұрын {intake} қабылдауының ақысын университеттен нақтылаңыз.',
+  'msg.gap.kbNoFee':
+    'Тексерілген білім базасында бұл бағдарламаның оқу ақысы әзірге жоқ, сондықтан қалған сома есептелмеді.',
 };

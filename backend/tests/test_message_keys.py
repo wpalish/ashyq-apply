@@ -314,6 +314,43 @@ class TestTheKbModeWordingIsRecognised:
         assert match(QUESTIONS, q.question).key == "question.kbScholarships"  # type: ignore[union-attr]
         assert match(WHYS, q.why_it_matters).key == "why.kbNoAward"  # type: ignore[union-attr]
 
+    def test_both_language_questions_are_keyed(self):
+        from app.knowledge import KnowledgeEntry
+        from app.knowledge.claims import requirement_statement_questions
+
+        rows = [
+            {"question": "english", "key": "ielts.overall", "source_url": "https://e.edu/a",
+             "reason": "No English language test result is required for this route.",
+             "quote": "The German C1 language certificate must be submitted."},
+            {"question": "english", "key": "ielts.overall", "source_url": "https://e.edu/b",
+             "reason": "No English language test result is required for this route.",
+             "quote": "No, we do not require any English proficiency exams."},
+        ]  # fmt: skip
+        entry = KnowledgeEntry(
+            seed_id="x", university="Example University", country="X", official_domains=(),
+            review_status="expert_checked", verified_on=None, programme={}, facts={},
+            not_applicable=rows,
+        )  # fmt: skip
+        keys = [
+            match(QUESTIONS, q.question).key  # type: ignore[union-attr]
+            for q in requirement_statement_questions(
+                entry, university="Example University", programme="CS"
+            )
+        ]
+        assert keys == ["question.languageInstead", "question.languageNoneRecorded"]
+
+    def test_no_fee_in_the_kb(self):
+        from app.knowledge.funding import explain_unused_tuition
+
+        row = _kb_row()
+        row.funding_gap = compute_funding_gap(row.costs, [], "USD")
+        explain_unused_tuition(row)
+        gap = row.funding_gap
+        assert match(FUNDING, gap.reason).key == "gap.kbNoFee"  # type: ignore[union-attr]
+        assert [match(FUNDING, w).key for w in gap.warnings] == [  # type: ignore[union-attr]
+            "gap.confirmIntakeFee"
+        ]
+
     def test_an_unused_fee_for_another_year(self):
         from app.knowledge.funding import explain_unused_tuition
 

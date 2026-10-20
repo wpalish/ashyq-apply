@@ -75,7 +75,7 @@ export function ResultDetail({ result, knowledgeMode }: { result: ProgramResult;
 
       {tab === 'requirements' && <Requirements result={result} knowledgeMode={knowledgeMode} />}
       {tab === 'funding' && <Funding result={result} knowledgeMode={knowledgeMode} />}
-      {tab === 'costs' && <Costs result={result} />}
+      {tab === 'costs' && <Costs result={result} knowledgeMode={knowledgeMode} />}
       {tab === 'documents' && <Documents result={result} knowledgeMode={knowledgeMode} />}
       {tab === 'score' && <Score result={result} />}
       {tab === 'sources' && <Sources result={result} />}
@@ -322,7 +322,7 @@ function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMo
   );
 }
 
-function Costs({ result }: { result: ProgramResult }) {
+function Costs({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   const { t, tf, tOr } = useTranslation();
   const gap = result.funding_gap;
   const items = Object.entries(result.costs.items);
@@ -353,7 +353,7 @@ function Costs({ result }: { result: ProgramResult }) {
               </ul>
             </div>
           ) : (
-            <div>{t('detail.noCost')}</div>
+            <div>{t(knowledgeMode === 'kb' ? 'detail.noCostKb' : 'detail.noCost')}</div>
           )}
         </Notice>
       ) : (
