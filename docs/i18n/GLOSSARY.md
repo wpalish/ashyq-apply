@@ -49,6 +49,20 @@ English, and the fit is never called a probability or chance (a test checks this
 | match (fit) | совпадение | үйлесім |
 | conditional offer / admission offer | приглашение на учёбу | оқуға шақыру |
 
+Added by I18N-2 (2026-10-20: requirement explanations, award classifications, ranking reasons,
+conflicts, the Documents screen). Also provisional; each poses the question beside it.
+
+| Term | Russian | Kazakh | The question to answer |
+|---|---|---|---|
+| (budget) ceiling — "the stated ceiling" | указанный предел (бюджета) | көрсетілген шек | Is "предел" / "шек" how a family would say the most it can pay a year, or is "лимит" expected? |
+| fee population ("depends on your fee population here") | категория оплаты | ақы төлеу санаты | Home / EU / international fee status: is there an established term a Kazakhstani counsellor uses? |
+| full tuition (in a sentence, not the chip) | полная оплата обучения | оқу ақысын толық өтеу | Must stay visibly weaker than "Полное покрытие" / "Толық қамту"; does it? |
+| test-optional | не требует тестов в обязательном порядке | тестті міндетті етпейді | Is there a shorter accepted term for US "test-optional" in either language? |
+| need-based (award) | по нуждаемости | мұқтаждыққа қарай | Same word as the existing chip; does it read as "means-tested" to a family? |
+| credential evaluation | оценка документов об образовании | білім туралы құжаттарды бағалау | WES/ECE evaluation; is "нострификация" ever the right word (it is a different procedure)? |
+| not a contradiction / scope difference | это не противоречие | бұл қайшылық емес | Distinct from "расхождение" / "сәйкессіздік" (conflict) as the glossary requires? |
+| lead time ("allow ~30 days") | заложите ~N дней | (existing `detail.docs.leadTime`) | — |
+
 ## Settled
 
 Ordinary interface words with no product-specific meaning — Save, Cancel,
