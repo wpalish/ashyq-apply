@@ -22,7 +22,7 @@ The severity scale is the one SECURITY_REVIEW_2026-10-19 used:
 | ID | Severity | Where | Status |
 |----|----------|-------|--------|
 | SR2-01 | **High** | `backend/app/adapters/page_classifier.py` `_HTML_LANG` (was l.289; used by `page_language` l.1539 and `is_host_root` l.314) | **Fixed** (`eca8f871`) |
-| SR2-02 | **High** (pre-existing; file held by another worker) | `backend/app/adapters/discovery/live_discovery.py` l.3594-3596 `_HTML_TAG`, `_LINK_TAG`, `_ATTRIBUTE` | **Proposed patch** (below) |
+| SR2-02 | **High** (pre-existing) | `backend/app/adapters/discovery/live_discovery.py` l.3594-3596 `_HTML_TAG`, `_LINK_TAG`, `_ATTRIBUTE` | **Fixed** (`a37138a1`) |
 | SR2-03 | Medium | `.github/workflows/benchmark-capture.yml` `runner` input (l.22-25) and the RP-1 plan in `read_pages/README.self-hosted-2026-10-21.md` | **Mitigated in repo** (`fbbe8848`); the owner must act before registering a runner |
 | SR2-04 | Low | `backend/app/adapters/search/intent.py` `_PHRASE_QUOTES` (l.407) | **Fixed** (`812e6de6`) |
 | SR2-05 | Low | `backend/app/pipeline/runner.py` `_no_verified_programme_page` (l.1421-1444); `app/knowledge/__init__.py` `programme_route` | **Fixed** (`e9dd4472`, fixture `19cbea5b`) |
@@ -63,7 +63,7 @@ markups. Each hostile input now finishes in under a second, including 2 MB for `
 
 Test: `backend/tests/test_html_lang_linear.py`.
 
-### SR2-02 (High, pre-existing, proposed patch — `live_discovery.py` is held by another worker)
+### SR2-02 (High, pre-existing, fixed): the discovery tag and attribute scans were quadratic
 
 The same class of bug is in three patterns of `live_discovery.py`. All three run on attacker-controlled page text:
 
@@ -78,7 +78,41 @@ WF-17 trace is "recording only", but it is unconditional. NS-1b's hop pages are 
 containing `<link aaaa…aaaa>` therefore stalls discovery for minutes. The code predates this range (`2feafa97` and
 `a5e5512c`, 17-18 October). It is filed here because NS-1b and LQ-2 send more pages through the same walk.
 
-**Proposed patch.** Both replacements were checked against the old patterns on 20,000 and 50,000 random tags with
+**Fixed (`a37138a1`).** The applied fix is equivalent to the proposed patch below. It differs only in form:
+
+- `_HTML_TAG` / `_LINK_TAG` are now `<html\b[^>]*+>?` and `<link\b[^>]*+>?`. A tag is consumed possessively up to
+  its `>`, or to the end of the text when there is none, so the scan never restarts inside it. `_link_tags(head)` and
+  `_html_tag(head)` drop a match that reached the end without `>`. This is exactly what the old `findall` / `search`
+  returned, because with no `>` left no later start could match either.
+- `_ATTRIBUTE` is the proposed pattern with the non-name-start head and the name made possessive (`*+`). A shorter
+  name is followed by a name character, never `=`, so backtracking into it could never succeed.
+- The three call sites' loop variable is `link_tag`, since `findall`'s `Any` no longer hid the reuse of `link` for
+  `page_link(...)`.
+
+`backend/tests/test_live_discovery_tag_scan.py` keeps the old patterns as the oracle and covers four things:
+
+- **Hostile inputs**, each under 0.5 s. These are the review's three inputs, plus 150,000-character names that fit
+  inside the 200,000-character head. The review's own `'<html lang="de"><link ' + "a" * 200_000 + ">"` is truncated
+  before its `>`, so it never reaches `_attributes`. They run through `english_alternate`, `local_alternate` and
+  `declared_alternates`, and through `_attributes` / `_link_tags` / `_html_tag` on 14 shapes.
+- **Equivalence on generated input.** The groups, tags and dicts match the old patterns exactly on 60,000 generated
+  realistic tags, 20,000 random markup strings and 1,000 multi-tag heads.
+- **Equivalence on real pages.** The same holds on every tag (32,667) of the 189 HTML fixture and corpus pages.
+- **The tests catch the bug.** With the old patterns patched back in, the hostile-timing tests fail.
+
+| input | old | new |
+|---|---|---|
+| one 50,000-character attribute name | 28.1 s | 1.0 ms |
+| 50,000 `:` | 24.8 s | 0.8 ms |
+| 50,000-character name, `="`, 50,000 more, no closing quote | 76.6 s | 2.3 ms |
+| 200 kB of `<link` / `<html` with no `>` | 3.8 s / 4.1 s | 0.5 ms / 0.3 ms |
+| the review's three inputs and the 150 kB name, through all three functions | (above) | worst 2.8 ms |
+
+`seed_demo.py` on a scratch DB (`UNIMATCH_DEMO_MODE=true UNIMATCH_ENABLE_BROWSER_TIER=false`) prints output
+byte-identical to the pre-fix code, apart from the random profile/run ids. Groningen is #1, and
+`TestDemoRunIsByteIdentical` passes.
+
+**Proposed patch (as filed).** Both replacements were checked against the old patterns on 20,000 and 50,000 random tags with
 zero differences. Each now handles 200 kB in under 25 ms.
 
 ```python
