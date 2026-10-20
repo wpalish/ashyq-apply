@@ -385,7 +385,7 @@ _IELTS_SUB = re.compile(
 #: line break, or a full stop that is not a decimal point ("6.5" stays whole).
 #: This used to be one pattern, ``(?:[^.\n]|\.(?=\d))*\bIELTS\b(?:…)*``, whose
 #: unanchored leading repetition re-scanned every period-free line from each of
-#: its positions: 15 s on a 31k-character Masaryk page, synchronous, so the
+#: its positions: 15 s on a 31k-character admissions page, synchronous, so the
 #: child's own deadline could not fire. Finding "IELTS" first and widening each
 #: hit to its terminators yields the same spans in linear time.
 _IELTS_WORD = re.compile(r"\bIELTS\b", re.IGNORECASE)

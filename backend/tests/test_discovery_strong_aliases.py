@@ -72,7 +72,7 @@ def test_off_a_localized_alias_is_not_the_field(monkeypatch):
 
 
 def test_on_informatik_is_computer_science_and_its_compounds_are_not(monkeypatch):
-    """TUM's German page subject (analysis 2026-10-17 §1.2) and its neighbours."""
+    """A German page subject, "Informatik", and its one-word compounds."""
     from app.adapters.discovery import live_discovery
 
     monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)

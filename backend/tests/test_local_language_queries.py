@@ -209,7 +209,7 @@ def test_the_alias_follows_the_flags_the_confirm_step_reads(r5, monkeypatch):
     monkeypatch.setattr(page_classifier, "LEXICON_LANGUAGE_COVERAGE", False)
     assert local_language_terms(intent("Norway")) is None
     # A settled alias needs no flag.
-    assert local_language_terms(intent("Germany", domain="tum.de")).alias == "informatik"
+    assert local_language_terms(intent("Germany", domain="kit.edu")).alias == "informatik"
 
 
 def test_degree_words_are_r1s_and_every_country_has_a_region(monkeypatch):

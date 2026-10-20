@@ -1,6 +1,6 @@
 """Plan rule LI-1: localized identity in discovery.
 
-Shapes from the discovery analysis of 2026-10-17 (§1.2, §4 rule 4): a German
+Generic shapes (provenance: HELDOUT_PROVENANCE_AUDIT_2026-10-20): a German
 sitemap that lists only ``/studium/studienangebot/detail/informatik-bachelor-
 of-science-bsc``, whose page declares an ``hreflang="en-US"`` English twin, and
 a Bologna ``laurea-magistrale`` URL offered to a bachelor applicant. Offline:

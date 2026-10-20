@@ -129,7 +129,7 @@ SEARCH_BEFORE_NAVIGATION = False
 #: Plan rule SO-1 (discovery analysis 2026-10-17 §0 #2, §1.4), off until a
 #: paired run passes. Search costs no page read, yet it ran after sitemaps,
 #: navigation, confirm and the walker; on a slow host the clock ended first
-#: (METU: Crawl-delay 10 s, every read ~10 s, ``search_calls = 0`` in 8/8
+#: (one host: Crawl-delay 10 s, every read ~10 s, ``search_calls = 0`` in 8/8
 #: repetitions). On: search runs before navigation and confirm when sitemaps
 #: produced no programme candidate, or when the host is slow — robots.txt asks
 #: a crawl delay of at least SLOW_HOST_SECONDS, or the median of the first
@@ -314,10 +314,10 @@ _GRADUATE_SITEMAP_NAME = re.compile(
 #: Plan rule SM-1 (discovery analysis 2026-10-17 §0 #1, §1.3–§1.5), off until a
 #: paired run passes. The sitemap stage read index children in file order under
 #: the MAX_SITEMAP_DOCUMENTS cap and probed every conventional location even
-#: after one answered: NU's index lists post-sitemap1..24 before its page and
-#: sprogram sitemaps, so eleven post sitemaps (75 s) used the cap and the
-#: programme sitemap was never read; METU and Charles spent three reads (30 s
-#: at Crawl-delay 10) on guaranteed 404s after /sitemap.xml had answered. On:
+#: after one answered: an index that lists post-sitemap1..24 before its page
+#: and programme sitemaps had eleven post sitemaps (75 s) use the cap, and the
+#: programme sitemap was never read; hosts at Crawl-delay 10 spent three reads
+#: (30 s) on guaranteed 404s after /sitemap.xml had answered. On:
 #: the probing stops at the first conventional location that parses to a
 #: sitemap, and an index's children are read programme/study/course/page
 #: first and news/post/event last, the last group skipped when the first
@@ -364,13 +364,15 @@ def _trimmed_sitemap(url: str) -> bool:
     return bool(_SITEMAP_TRIM_NAME.search(name)) and not _SITEMAP_CHILD_FIRST.search(name)
 
 
-#: Plan rule LI-1 (discovery analysis 2026-10-17 §0 #4, §1.2, §4 rule 4), off
-#: until a paired run passes. URL scoring and field matching were English-only:
-#: TUM's sitemap lists only ``/studium/studienangebot/detail/informatik-bachelor-
-#: of-science-bsc`` and it scored zero, the page subject "Informatik" was
-#: rejected although the ontology records ``informatik`` as computer science,
-#: Polimi's ``laurea-magistrale`` was not a degree slug, and nothing followed a
-#: local-language page to its English twin. On: (i) ``with_strong_aliases``
+#: Plan rule LI-1, off until a paired run passed. Provenance: every LI-1 row
+#: is re-sourced to a dictionary or a degree law, row by row, in
+#: ``docs/process/HELDOUT_PROVENANCE_AUDIT_2026-10-20.md``. URL scoring and
+#: field matching were English-only: a German catalogue path of the shape
+#: ``/studium/studienangebot/<programme-slug>`` scored zero, the page subject
+#: "Informatik" was rejected although the ontology records ``informatik`` as
+#: computer science, an Italian ``laurea-magistrale`` slug was not a degree
+#: slug, and nothing followed a local-language page to its English twin. On:
+#: (i) ``with_strong_aliases``
 #: also returns the ontology's localized aliases (including the entries marked
 #: ``"flag": "LOCALIZED_IDENTITY"``), a few local programme-path words score as
 #: programme pages, and ``degree_level_named`` knows the local degree words
@@ -578,9 +580,16 @@ MAX_EXTRA_DOMAINS = 1
 
 #: LI-1: programme-path words of non-English catalogues, scored like the
 #: existing ``opleidingen|studiengang`` rule. Only words that name a study
-#: offer: "studienangebot" (de), "studiengaenge" (de, ASCII), "corsi-di-laurea"
-#: (it), "carreras"/"grados"/"titulaciones" (es), "formations" (fr),
-#: "utbildningar" (sv), "studijni-programy" (cs).
+#: offer, each a dictionary or degree-law word (sources re-checked in
+#: HELDOUT_PROVENANCE_AUDIT_2026-10-20): "studienangebot", "studiengaenge" /
+#: "studiengange" (de, Duden s.v. Studienangebot, Studiengang; ASCII folds of
+#: "Studiengänge"); "corsi-di-laurea" / "corso-di-laurea" (it, DM 270/2004
+#: art. 3, "corsi di laurea"); "carreras" (es, RAE DLE s.v. carrera, the
+#: studies that qualify for a profession), "grados" and "titulaciones" (es,
+#: Real Decreto 822/2021, "títulos de Grado", "titulaciones"); "formations"
+#: (fr, Larousse s.v. formation); "utbildningar" (sv, Svensk ordbok s.v.
+#: utbildning); "studijni-programy" (cs, Act No. 111/1998 Coll. §44,
+#: "studijní program").
 _LOCALIZED_PROGRAM_SIGNALS: tuple[tuple[str, int], ...] = (
     (
         r"/(studienangebot|studiengaenge|studiengange|corsi-di-laurea|corso-di-laurea"
@@ -589,7 +598,17 @@ _LOCALIZED_PROGRAM_SIGNALS: tuple[tuple[str, int], ...] = (
     ),
 )
 #: LI-1: degree words whose level is certain, as URL slugs (accents folded),
-#: matched on a segment boundary like ``_DEGREE_SLUGS``. Compounds are checked
+#: matched on a segment boundary like ``_DEGREE_SLUGS``. Each is a degree-law
+#: or dictionary word (re-checked in HELDOUT_PROVENANCE_AUDIT_2026-10-20):
+#: it laurea, laurea magistrale (DM 270/2004 art. 3), laurea triennale
+#: (Treccani s.v. laurea); tr lisans, yüksek lisans, ön lisans (Law No. 2547
+#: art. 3; YÖK Lisansüstü Eğitim ve Öğretim Yönetmeliği); cs bakalář,
+#: magisterský (Act No. 111/1998 Coll. §45-§46), ru/kk бакалавр, магистр as
+#: transliterated (Federal Law 273-FZ art. 69; RK Law On Education art. 36),
+#: et/lt bakalaureus, bakalauras (Kõrgharidusseadus; Lithuanian Law on Higher
+#: Education and Research art. 47); es grado (Real Decreto 822/2021 art. 14);
+#: pt mestrado (Decreto-Lei 74/2006 art. 15); sv kandidatexamen
+#: (Högskoleförordningen 1993:100 bilaga 2). Compounds are checked
 #: first, so ``laurea-magistrale`` (master) is never read as ``laurea``
 #: (bachelor) and ``yuksek-lisans`` (master) never as ``lisans`` (bachelor).
 #: ``on-lisans`` (Turkish associate degree) is removed before matching rather
@@ -854,9 +873,9 @@ _URL_EXCLUSIONS = re.compile(
 )
 
 #: PG-1 (``page_classifier.PROGRAMME_PAGE_GUARD``) only: research output and
-#: article pages the list above misses. TUM/Serper read
-#: ``portal.fis.tum.de/en/publications/…`` and ``ed.tum.de/…/news-single-view-
-#: start/article/…`` as programme leads; KAIST read a ``/clippings/`` page.
+#: article pages the list above misses. A Serper run read a research portal's
+#: ``/en/publications/…`` and a ``…/news-single-view-start/article/…`` page as
+#: programme leads; KAIST read a ``/clippings/`` page.
 _PG1_URL_EXCLUSIONS = re.compile(
     r"/(publications?|article|clippings)(/|$)|news-single-view", re.IGNORECASE
 )
@@ -1063,7 +1082,7 @@ _TRACKING_PARAM = re.compile(
 #: 2026-10-17. False turns it off. ``canonical_url``
 #: writes ``http://`` of a page on its default port as ``https://``, so the two
 #: schemes of one institution page are one URL everywhere the pipeline
-#: deduplicates. METU's navigation offered ``http://…/undergraduate-programs``
+#: deduplicates. One navigation offered ``http://…/undergraduate-programs``
 #: and ``https://…/undergraduate-programs`` and the run read both, 10 s each
 #: under Crawl-delay 10. ``navigation.py`` already merged the two locally (see
 #: ``scheme_free_identity``); this applies the same identity pipeline-wide and
@@ -3305,7 +3324,17 @@ _LV1_UNSPACED_DEGREE_FILLER: tuple[str, ...] = tuple(_fold(w) for w in ("学士�
 #: LI-1: title words that carry a bachelor level or a form in another
 #: language, never a subject (accents folded). Master's words are absent on
 #: purpose: a title saying "magistrale" is not let through on its subject when
-#: the classifier missed its level.
+#: the classifier missed its level. Every word is a dictionary or degree-law
+#: word, or its folded/inflected form (sources per row in
+#: HELDOUT_PROVENANCE_AUDIT_2026-10-20): it laurea, triennale, corso,
+#: programma (DM 270/2004; Treccani); tr lisans(ı), program(ı) (Law No. 2547
+#: art. 3; TDK s.v. program); cs/sk bakalář(ský), studijní / študijný (Act
+#: No. 111/1998 Coll. §44-§45; Act No. 131/2002 Coll. §51-§52); ru/kk
+#: бакалавр, бакалавриат transliterated (Federal Law 273-FZ art. 10); es
+#: grado, licenciatura, programa (Real Decreto 822/2021; RAE DLE); fr licence
+#: (Code de l'éducation art. D612-32-2); de Bachelorstudium,
+#: Bachelorstudiengang, Studiengang, Studium, Programm (Duden); sv
+#: kandidatprogram(met) (Högskoleförordningen bilaga 2, kandidatexamen).
 _LOCAL_TITLE_FILLER = frozenset(
     {
         "laurea",
@@ -3340,7 +3369,9 @@ _LOCAL_TITLE_FILLER = frozenset(
 #: ``page_classifier._LOCALIZED_DEGREE_WORDS`` as title words (accents folded),
 #: for the languages LI-1's list misses. Master's words stay out, as above.
 #: Turkish dotless "ı" does not fold to "i", so LI-1's ASCII "lisansi" and
-#: "programi" are listed again as written.
+#: "programi" are listed again as written. Each word is a form of a degree-law
+#: word cited at ``page_classifier._LOCALIZED_DEGREE_WORDS`` (re-checked in
+#: HELDOUT_PROVENANCE_AUDIT_2026-10-20).
 _LOCALIZED_DEGREE_FILLER = frozenset(
     _fold(word)
     for word in (

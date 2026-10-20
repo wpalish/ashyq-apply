@@ -67,9 +67,9 @@ DISCOVERY_QUERY_RESERVE = True
 DISCOVERY_FIRST_PASS_QUERIES = 3
 #: Plan rule QA-1 (discovery analysis 2026-10-17 §0 #3, §1.2), off until a paired
 #: run passes. The operator families quoted the applicant's own words, which a
-#: neural index reads for meaning but a keyword engine matches literally: TUM's
-#: English programme page is titled "Informatics" and never says "computer
-#: science", so Serper missed it 4/4 where Exa found it 4/4. On: the
+#: neural index reads for meaning but a keyword engine matches literally: an
+#: English programme page titled "Informatics" that never says "computer
+#: science" was missed by Serper 4/4 where Exa found it 4/4. On: the
 #: field_and_degree, programmes and undergraduate families name the field as
 #: an OR-group of the ontology's *strong* aliases — ``("computer science" OR
 #: "computing science" OR computing OR informatics)`` — never a related

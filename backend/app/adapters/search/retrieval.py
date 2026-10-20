@@ -68,8 +68,8 @@ REJECT_ARCHIVE_HOSTS = False
 #: Plan rule HP-1, off until a paired capture says otherwise: a hop entry root
 #: gets at most ``HOP_ROOT_DEADLINE_SECONDS``. A root is a supplement to search,
 #: and a dead host otherwise costs the fetcher's whole timeout and retries —
-#: Charles/Exa spent 64 of its 115 s on ``explorer.cuni.cz/`` and
-#: ``nomos.is.cuni.cz/`` refusing connections. A root cut off by the deadline
+#: one Exa run spent 64 of its 115 s on two subdomain roots refusing
+#: connections. A root cut off by the deadline
 #: counts as unreachable, exactly like one that failed.
 HOP_ROOT_DEADLINE = False
 HOP_ROOT_DEADLINE_SECONDS = 8.0

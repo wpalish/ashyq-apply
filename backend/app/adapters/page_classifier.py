@@ -31,8 +31,8 @@ logger = logging.getLogger(__name__)
 #: Plan rule PG-1 (discovery analysis 2026-10-17 §0 #5, §1.2, §4 rank 5), off
 #: until a paired run passes. Identity recovery spent its eight reads on
 #: publications, news and archives, and the classifier accepted some of that
-#: junk: TUM/Serper reported ``portal.fis.tum.de/en/publications/…/fingerprints``
-#: as its bachelor because the URL-only IRRELEVANT hint rejects only with two
+#: junk: a Serper run reported a research portal's
+#: ``/en/publications/…/fingerprints`` page as its bachelor because the URL-only IRRELEVANT hint rejects only with two
 #: research words in the body and a Pure "fingerprints" page has none; HKU
 #: reported the department root ``cs.hku.hk/``. On, one rule in three places:
 #: (i) the search prefilter drops URLs :func:`classify_url` calls IRRELEVANT,
@@ -404,6 +404,16 @@ _LEXICON_V2_DEGREE_WORDS: tuple[tuple[str, str], ...] = (
 #: as ``(pattern, level, languages)``. ``languages`` is ``None`` when the word
 #: is certain in any page, else the ``<html lang>`` primary subtags under which
 #: it counts. Master's words come first so that a tie goes to the master's.
+#: The rows in the heldout countries' languages (16-Q5) are re-sourced to their
+#: degree laws in HELDOUT_PROVENANCE_AUDIT_2026-10-20: it DM 270/2004 art. 3
+#: (laurea, laurea magistrale) and DM 509/1999 (laurea specialistica); tr Law
+#: No. 2547 art. 3 (lisans, ön lisans) and the YÖK graduate regulation (yüksek
+#: lisans); cs Act No. 111/1998 Coll. §45-§46 (bakalářský, navazující
+#: magisterský); et Kõrgharidusseadus (bakalaureuseõpe, magistriõpe); lt Law
+#: on Higher Education and Research art. 47 (bakalauras, magistrantūra);
+#: ru/kk Federal Law 273-FZ art. 10 and the RK Law On Education art. 36
+#: (бакалавриат, магистратура); de KMK Ländergemeinsame Strukturvorgaben
+#: (Bachelor, Master; Duden s.v. Masterstudium, Masterstudiengang).
 #: Dictionary words only, the same shape for every language, matched on the
 #: lowercased text (Turkish "İ" lowercases to "i" + U+0307, hence ``\u0307?``).
 _LOCALIZED_DEGREE_WORDS: tuple[tuple[str, str, frozenset[str] | None], ...] = (
