@@ -576,10 +576,17 @@ export interface Capabilities {
   //: What live mode can actually reach. Someone switching demo mode off
   //: pictures the open web; the truth is a curated registry, and the
   //: difference has to be on screen before they choose, not after.
+  //: RM-1: in kb mode the block names the knowledge base's reach instead
+  //: (`mode: 'kb'`, `institutions` = KB entries with verified data); demo
+  //: mode serves no `mode`, which reads as live. `recall_message` localises
+  //: `recall_note` (`msg.coverage.kb` / `msg.coverage.live`).
   live_coverage: {
     institutions: number;
     countries: string[];
     recall_note: string;
+    mode?: 'kb' | 'live';
+    catalogue_total?: number;
+    recall_message?: MessageRef;
   };
 }
 

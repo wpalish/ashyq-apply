@@ -545,6 +545,17 @@ export const EN_RESULTS = {
     'year not printed on the page; assumed current application cycle',
   'msg.caveat.feePolicy':
     'fee policy page; no academic year printed',
+  'msg.coverage.kb':
+    'The verified knowledge base answers for {universities} of {total} catalogue '
+    + 'universities (bachelor\'s in Computer Science). A university outside it, or another '
+    + 'programme, gets \'No verified data yet\'; no page is read during a run.',
+  'msg.coverage.live':
+    'Live mode searches {institutions} curated institutions in {countries} countries. '
+    + 'Results depend on the selected fields and which official pages can be accessed. '
+    + 'Missing or unverified evidence stays visible in the results.',
+  'research.kbNotice.title': 'Research answers from the verified knowledge base.',
+  'research.kbNotice.body':
+    'No university page is read and nothing is sent to a search provider during a run.',
   'msg.gap.mixedYears':
     'Published cost components come from different academic years ({years}). They are not summed, because a mixed-year total would misstate the real cost.',
   'msg.gap.noCost':
@@ -1203,6 +1214,18 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'год на странице не указан; принят текущий цикл приёма',
   'msg.caveat.feePolicy':
     'страница с правилами оплаты; учебный год не указан',
+  'msg.coverage.kb':
+    'Проверенная база знаний отвечает по {universities} из {total} университетов каталога '
+    + '(бакалавриат по Computer Science). Университет вне её или другая программа получает '
+    + '«Проверенных данных пока нет»; во время исследования не читается ни одна страница.',
+  'msg.coverage.live':
+    'Живой режим ищет по {institutions} отобранным учебным заведениям в {countries} странах. '
+    + 'Результаты зависят от выбранных направлений и от того, какие официальные страницы '
+    + 'доступны. Недостающие или непроверенные данные остаются видны в результатах.',
+  'research.kbNotice.title': 'Исследование отвечает по проверенной базе знаний.',
+  'research.kbNotice.body':
+    'Во время исследования не читается ни одна страница университета и ничего не '
+    + 'отправляется поисковым сервисам.',
   'msg.gap.mixedYears':
     'Опубликованные статьи расходов относятся к разным учебным годам ({years}). Они не складываются: сумма за разные годы исказила бы реальную стоимость.',
   'msg.gap.noCost':
@@ -1858,6 +1881,19 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     'бетте жыл көрсетілмеген; ағымдағы қабылдау циклі деп алынды',
   'msg.caveat.feePolicy':
     'төлем ережелері беті; оқу жылы көрсетілмеген',
+  'msg.coverage.kb':
+    'Тексерілген білім базасы каталогтағы {total} университеттің {universities} '
+    + 'университеті бойынша жауап береді (Computer Science бакалавриаты). Одан тыс '
+    + 'университет немесе басқа бағдарлама «Әзірге тексерілген дерек жоқ» деген жауап '
+    + 'алады; зерттеу барысында бірде-бір бет оқылмайды.',
+  'msg.coverage.live':
+    'Тікелей режим {countries} елдегі {institutions} іріктелген оқу орны бойынша іздейді. '
+    + 'Нәтижелер таңдалған бағыттарға және қай ресми беттер қолжетімді екеніне байланысты. '
+    + 'Жетіспейтін немесе тексерілмеген дәлелдер нәтижелерде көрінеді.',
+  'research.kbNotice.title': 'Зерттеу тексерілген білім базасы бойынша жауап береді.',
+  'research.kbNotice.body':
+    'Зерттеу барысында университеттің бірде-бір беті оқылмайды және іздеу қызметтеріне '
+    + 'ештеңе жіберілмейді.',
   'msg.gap.mixedYears':
     'Жарияланған шығын баптары әртүрлі оқу жылдарына жатады ({years}). Олар қосылмайды: әртүрлі жылдардың жиынтығы нақты құнды бұрмалайды.',
   'msg.gap.noCost':

@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 
 from app.catalogue.importer import import_catalogue
@@ -28,7 +28,7 @@ from app.knowledge import (
     stale_reasons,
 )
 from app.knowledge.claims import answer, covers
-from app.models import ClaimRow, ProgramResultRow, ResearchRun
+from app.models import ClaimRow, ProgramResultRow, ResearchRun, University
 from app.models.base import ensure_utc
 from app.pipeline.runner import ResearchRunner, _kb_claim_is_stale
 from app.pipeline.state import RunState
@@ -968,12 +968,34 @@ async def test_kb_mode_entry_without_programme_page_does_not_say_catalogue_only(
     assert "verified on its official site" in question["why_it_matters"]
 
 
-def test_capabilities_name_the_knowledge_base_in_kb_mode(monkeypatch, settings):
+def test_capabilities_name_the_knowledge_base_in_kb_mode(monkeypatch, settings, catalogue_session):
     import app.api.routes_meta as routes_meta
+    from app.api.routes_universities import _knowledge_base
 
     kb = settings.model_copy(update={"demo_mode": False, "knowledge_mode": "kb"})
     monkeypatch.setattr(routes_meta, "get_settings", lambda: kb)
-    body = routes_meta.capabilities()
+    body = routes_meta.capabilities(catalogue_session)
+    # RM-1: the coverage note names the KB's reach, read from the loaded KB and
+    # the catalogue (never a literal), and says that no page is read.
+    loaded = _knowledge_base(kb.knowledge_base_path, kb.knowledge_imported_path)
+    verified = [e for e in loaded.entries.values() if e.has_verified_data]
+    total = catalogue_session.scalar(select(func.count()).select_from(University))
+    coverage = body["live_coverage"]
+    assert coverage["mode"] == "kb"
+    assert coverage["institutions"] == len(verified) > 0
+    assert coverage["catalogue_total"] == total > len(verified)
+    assert coverage["countries"] == sorted({e.country for e in verified if e.country})
+    assert coverage["recall_note"] == (
+        f"The verified knowledge base answers for {len(verified)} of {total} catalogue "
+        "universities (bachelor's in Computer Science). A university outside it, or another "
+        "programme, gets 'No verified data yet'; no page is read during a run."
+    )
+    assert "Live mode" not in coverage["recall_note"]
+    assert coverage["recall_message"] == {
+        "key": "coverage.kb",
+        "params": {"universities": str(len(verified)), "total": str(total)},
+        "parts": {},
+    }
     assert body["knowledge_mode"] == "kb"
     assert "verified knowledge base" in body["data_origin"]
     # CAT-1: the KB adapter is listed first and active; the registry and the
@@ -997,13 +1019,16 @@ def test_capabilities_name_the_knowledge_base_in_kb_mode(monkeypatch, settings):
     assert all(by_name[n]["live"] is True for n in inactive)
     live = settings.model_copy(update={"demo_mode": False, "knowledge_mode": "live"})
     monkeypatch.setattr(routes_meta, "get_settings", lambda: live)
-    assert routes_meta.capabilities()["data_origin"] == "live official sources"
-    live_adapters = routes_meta.capabilities()["adapters"]
+    assert routes_meta.capabilities(catalogue_session)["data_origin"] == "live official sources"
+    live_adapters = routes_meta.capabilities(catalogue_session)["adapters"]
+    assert routes_meta.capabilities(catalogue_session)["live_coverage"]["mode"] == "live"
     assert "verified-knowledge-base" not in {a["name"] for a in live_adapters}
     assert all("active" not in a for a in live_adapters)
     demo = settings.model_copy(update={"demo_mode": True, "knowledge_mode": "kb"})
     monkeypatch.setattr(routes_meta, "get_settings", lambda: demo)
-    assert routes_meta.capabilities()["knowledge_mode"] == "demo"
+    demo_body = routes_meta.capabilities(catalogue_session)
+    assert demo_body["knowledge_mode"] == "demo"
+    assert demo_body["live_coverage"] == routes_meta.registry_coverage()
 
 
 def test_live_mode_keeps_the_live_pipeline(catalogue_session, settings, tmp_path, profile):

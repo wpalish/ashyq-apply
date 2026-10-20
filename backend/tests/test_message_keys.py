@@ -26,6 +26,7 @@ from app.domain.enums import ClaimStatus, ClaimType, CostCategory, SourceSpecifi
 from app.domain.funding import funding_fit_for
 from app.domain.message_keys import (
     CATALOGUE,
+    COVERAGE,
     DOCUMENT_ITEMS,
     FUNDING,
     QUESTIONS,
@@ -318,7 +319,7 @@ class TestTheSentencesThePipelineWritesAreRecognised:
     def test_every_template_is_recognised_by_itself_alone(self):
         # A sample filled from each template must match that template and no
         # earlier one, or the first match would hand back the wrong key.
-        for group in (QUESTIONS, WHYS, STALE_REASONS, DOCUMENT_ITEMS, FUNDING):
+        for group in (QUESTIONS, WHYS, STALE_REASONS, DOCUMENT_ITEMS, FUNDING, COVERAGE):
             for template in group:
                 sample = re.sub(r"\{(\w+)\}", lambda m: f"<{m.group(1)}>", template.text)
                 ref = match(group, sample)

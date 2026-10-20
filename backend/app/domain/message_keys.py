@@ -496,8 +496,25 @@ CAVEATS: tuple[Template, ...] = (
     _t("caveat.feePolicy", "fee policy page; no academic year printed"),
 )
 
+# --- what a research run reaches (``routes_meta.live_coverage``, RM-1) ------
+
+COVERAGE: tuple[Template, ...] = (
+    _t(
+        "coverage.kb",
+        "The verified knowledge base answers for {universities} of {total} catalogue "
+        "universities (bachelor's in Computer Science). A university outside it, or another "
+        "programme, gets 'No verified data yet'; no page is read during a run.",
+    ),
+    _t(
+        "coverage.live",
+        "Live mode searches {institutions} curated institutions in {countries} countries. "
+        "Results depend on the selected fields and which official pages can be accessed. "
+        "Missing or unverified evidence stays visible in the results.",
+    ),
+)
+
 CATALOGUE: tuple[Template, ...] = (
-    QUESTIONS + WHYS + STALE_REASONS + DOCUMENT_ITEMS + FUNDING + CAVEATS
+    QUESTIONS + WHYS + STALE_REASONS + DOCUMENT_ITEMS + FUNDING + CAVEATS + COVERAGE
 )
 
 _STALE_MARK = "Stale, not current: "

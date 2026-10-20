@@ -6,9 +6,10 @@
  * historical benchmark into a claim about the run someone is about to start.
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PreferencesScreen } from './PreferencesScreen';
+import { setLocale } from '@/lib/i18n';
 import type { Capabilities } from '@/types';
 
 const COVERAGE: Capabilities['live_coverage'] = {
@@ -127,5 +128,83 @@ describe('the deployment research mode', () => {
     expect((screen.getByTestId('demo-toggle') as HTMLInputElement).checked).toBe(!serverMode);
     fireEvent.click(screen.getByTestId('start-research'));
     expect(startRun).toHaveBeenCalledWith(!serverMode);
+  });
+});
+
+describe('the kb-mode disclosure (RM-1)', () => {
+  const KB_NOTE =
+    "The verified knowledge base answers for 95 of 501 catalogue universities (bachelor's in "
+    + "Computer Science). A university outside it, or another programme, gets 'No verified data "
+    + "yet'; no page is read during a run.";
+  const KB_CAPABILITIES = {
+    ...CAPABILITIES,
+    demo_mode: false,
+    live_coverage: {
+      mode: 'kb',
+      institutions: 95,
+      countries: ['Canada', 'Germany'],
+      catalogue_total: 501,
+      recall_note: KB_NOTE,
+      recall_message: { key: 'coverage.kb', params: { universities: '95', total: '501' } },
+    },
+  } as Capabilities;
+
+  afterEach(() => act(() => setLocale('en')));
+
+  it('says that no page is read and nothing is sent to a search provider', () => {
+    capabilities = KB_CAPABILITIES;
+    render(<PreferencesScreen onStarted={() => {}} />);
+
+    expect(screen.queryByTestId('live-mode-notice')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('live-coverage')).not.toBeInTheDocument();
+    const notice = screen.getByTestId('kb-mode-notice');
+    expect(notice).toHaveTextContent('Research answers from the verified knowledge base.');
+    expect(notice).toHaveTextContent(
+      'No university page is read and nothing is sent to a search provider during a run.',
+    );
+    expect(notice).not.toHaveTextContent('fetches real university websites');
+    expect(screen.getByTestId('kb-coverage')).toHaveTextContent(KB_NOTE);
+    // The country list belongs to live mode only.
+    expect(notice).not.toHaveTextContent('Germany');
+  });
+
+  it.each([
+    ['ru', 'Проверенная база знаний отвечает по 95 из 501 университетов каталога', 'поисковым сервисам'],
+    ['kk', 'каталогтағы 501 университеттің 95 университеті бойынша', 'іздеу қызметтеріне'],
+  ] as const)('renders the note and the notice in %s', (locale, note, notice) => {
+    capabilities = KB_CAPABILITIES;
+    act(() => setLocale(locale));
+    render(<PreferencesScreen onStarted={() => {}} />);
+
+    expect(screen.getByTestId('kb-coverage')).toHaveTextContent(note);
+    expect(screen.getByTestId('kb-mode-notice')).toHaveTextContent(notice);
+    expect(screen.getByTestId('kb-coverage')).not.toHaveTextContent('knowledge base answers');
+  });
+
+  it('keeps the live notice and its English note unchanged in live mode', () => {
+    const note = 'Live mode searches 19 curated institutions in 15 countries. Results depend on '
+      + 'the selected fields and which official pages can be accessed. Missing or unverified '
+      + 'evidence stays visible in the results.';
+    capabilities = {
+      ...CAPABILITIES,
+      demo_mode: false,
+      live_coverage: {
+        ...COVERAGE,
+        mode: 'live',
+        recall_note: note,
+        recall_message: { key: 'coverage.live', params: { institutions: '19', countries: '15' } },
+      },
+    } as Capabilities;
+    render(<PreferencesScreen onStarted={() => {}} />);
+
+    expect(screen.queryByTestId('kb-mode-notice')).not.toBeInTheDocument();
+    expect(screen.getByTestId('live-mode-notice')).toHaveTextContent(
+      'Live mode fetches real university websites.',
+    );
+    const panel = screen.getByTestId('live-coverage');
+    expect(panel).toHaveTextContent(note);
+    for (const country of COVERAGE.countries) {
+      expect(panel).toHaveTextContent(country);
+    }
   });
 });

@@ -98,6 +98,35 @@ class TestMeta:
         assert "verified-knowledge-base" not in names and "web-costs" in names
         assert all("active" not in a for a in body["adapters"])
 
+    def test_live_coverage_reads_as_before_in_demo_and_live_mode(self, client, monkeypatch):
+        """RM-1: kb mode gained its own coverage; demo and live did not move.
+
+        Demo serves the registry's block exactly; live serves the same block
+        plus ``mode`` and the note's key (additive, the English unchanged).
+        """
+        import app.api.routes_meta as routes_meta
+        from app.config import get_settings
+
+        before = routes_meta.registry_coverage()
+        assert set(before) == {"institutions", "countries", "recall_note"}
+        assert before["recall_note"].startswith(f"Live mode searches {before['institutions']} ")
+        assert client.get("/api/capabilities").json()["live_coverage"] == before
+
+        live = get_settings().model_copy(update={"demo_mode": False, "knowledge_mode": "live"})
+        monkeypatch.setattr(routes_meta, "get_settings", lambda: live)
+        coverage = client.get("/api/capabilities").json()["live_coverage"]
+        assert {k: coverage[k] for k in before} == before
+        assert coverage["mode"] == "live"
+        assert coverage["recall_message"] == {
+            "key": "coverage.live",
+            "params": {
+                "institutions": str(before["institutions"]),
+                "countries": str(len(before["countries"])),
+            },
+            "parts": {},
+        }
+        assert set(coverage) == {*before, "mode", "recall_message"}
+
     def test_the_vocabulary_endpoint_exposes_every_controlled_list(self, client):
         vocab = client.get("/api/vocabulary").json()
         assert "FULL_RIDE_CONFIRMED" in vocab["funding_classification"]

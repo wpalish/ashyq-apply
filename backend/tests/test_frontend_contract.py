@@ -180,6 +180,7 @@ def test_live_coverage_reaches_the_frontend_with_the_shape_it_declares(types_sou
     quietly restore the old, flattering silence rather than break loudly.
     """
     from app.api.routes_meta import live_coverage
+    from app.config import get_settings
 
     payload = live_coverage()
     assert set(payload) == {"institutions", "countries", "recall_note"}
@@ -187,12 +188,24 @@ def test_live_coverage_reaches_the_frontend_with_the_shape_it_declares(types_sou
     assert isinstance(payload["countries"], list)
     assert payload["recall_note"], "live mode must state its own recall"
 
+    # RM-1: live and kb mode add keys (``mode``, the note's key, kb's catalogue
+    # size); types.ts declares the union, the optional ones with ``?``.
+    base = get_settings().model_copy(update={"demo_mode": False})
+    live = live_coverage(base.model_copy(update={"knowledge_mode": "live"}))
+    kb = live_coverage(base.model_copy(update={"knowledge_mode": "kb"}))
+    assert (live["mode"], kb["mode"]) == ("live", "kb")
+    assert kb["recall_message"]["key"] == "coverage.kb"
+    assert live["recall_message"]["key"] == "coverage.live"
+    every = set(payload) | set(live) | set(kb)
+
     block = re.search(r"live_coverage: \{(.*?)\n  \};", types_source, re.DOTALL)
     assert block, "types.ts does not declare `live_coverage` on Capabilities"
     declared = set(re.findall(r"^\s*(\w+)[?]?:", block.group(1), re.M))
-    assert declared == set(payload), (
-        f"types.ts declares {sorted(declared)}; the API returns {sorted(payload)}"
+    assert declared == every, (
+        f"types.ts declares {sorted(declared)}; the API returns {sorted(every)}"
     )
+    required = set(re.findall(r"^\s*(\w+):", block.group(1), re.M))
+    assert required == set(payload), "only the keys every mode serves may be required"
 
 
 def test_the_kb_unknown_kind_union_matches_the_backend(types_source):
