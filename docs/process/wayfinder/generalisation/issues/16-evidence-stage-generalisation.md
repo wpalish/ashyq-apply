@@ -49,3 +49,30 @@ from cohort/dev2/dev3 by ≥ 15 pp — a candidate cause with its mechanism). H-
 
 The doc is committed; the Answer names each item dev-wide or country-dependent with numbers; 15 and 17 read it.
 Loop id: **G-16**.
+
+## Answer — item 2, H-D on the level dimension (LV-1, 2026-10-20)
+
+Source: `backend/tests/test_lexicon_language_coverage.py` (NEXT_CYCLES_2026-10-20 §LV-1). One synthetic programme
+page per language of `languages.json` (25), every word from a dictionary or a degree law cited per row; no page was
+fetched, no dev5 page read, no heldout file, capture, log or label opened. Each page went through `classify_page` +
+`profile_rejects(page, "bachelor", ["computer science"], url, country)`.
+
+| what was read | result before LV-1's rows (the tables at f0d1830e) |
+|---|---|
+| bachelor's title `<CS alias> — <bachelor word>` | read **bachelor** in 25/25; accepted in 24/25 (ja "情報科学 学士課程": level right, subject unmatched) |
+| master's title | read **master** and refused `degree_level_other` in 24/25; sk "Inžiniersky študijný program" read no level (refused as no programme page) |
+| integrated master's (it, pl, pt, no/nb/nn: read master; lt, ru, sv: no level, refused — fine) | **et "Bakalaureuse- ja magistriõppe integreeritud õpe" read bachelor and was accepted for a bachelor applicant** |
+| item 2's dev5 words, as words (bakalářský, Lisans, Laurea, bakalauras, бакалавриат) | bachelor, right; Bc. and the Italian class codes (L-31, LM-18) read no level (unset, fine; DA-2 keeps Bc. out) |
+
+**Verdict: H-D confirmed for the level dimension, narrowly, on development (dictionary) evidence** — one wrong level
+read in 25 languages, of one shape: an integrated degree whose statutory name opens on the bachelor's word, read
+first-by-position. Every other local level word reads right or reads nothing. No development case is known to show it
+(no dev case's gold is an Estonian integrated programme), so the verdict says the readers can be wrong on unseen
+countries in this shape, not that they were wrong on the nine.
+
+Closed (rows cite their source in the table comment): et integrated study → master (`_LV1_DEGREE_WORDS`, behind
+`LEXICON_LANGUAGE_COVERAGE`, default off until the 4+4 replay); sk "inžiniersky" → master (unflagged, sk only). Also
+found and closed, not level misreads: ca had no R5 query word (`"grau en"`, unflagged); nb/nn had no ontology alias of
+computer science (flagged); ja "学士課程" in a head left the subject unmatched (flagged); local level words in URL slugs
+for fi, pl, pt, es, da, sv and the de/nl/da/no/sv compounds (flagged), ca `grau-en` and sk `inziniersk…` (unflagged).
+Left open: Swedish "kandidatprogram" in a slug on a Finnish (`.fi`) host still reads no level (only `.se` reads it).
