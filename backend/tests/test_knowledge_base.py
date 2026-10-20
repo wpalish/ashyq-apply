@@ -2085,6 +2085,188 @@ def test_the_import_does_not_hide_a_route_the_built_file_settled(tmp_path):
     assert kb.entries[MIT].programme_route == "known"
 
 
+# ------------------------------------------- KB-1: merge_entries gaps (review P8)
+
+ACCESS_NOTE = "https://www.mit.edu/admissions/unreadable-programme-page"
+
+
+def _merged(tmp_path: Path, built: dict[str, Any], imported: dict[str, Any]) -> Any:
+    return load_knowledge_base(
+        _kb(tmp_path / "kb.json", {MIT: built}), _kb(tmp_path / "imported.json", {MIT: imported})
+    ).entries[MIT]
+
+
+@pytest.mark.parametrize(
+    "built_dates,import_dates,winner",
+    [
+        # P8: a fact dated only by the day its page was read competes on that day.
+        ({"verified_on": "2026-10-01"}, {"verified_on": None, "accessed_on": "2026-10-20"}, 6.0),
+        ({"verified_on": None, "accessed_on": "2026-10-20"}, {"verified_on": "2026-10-01"}, 7.0),
+        ({"verified_on": "2026-10-01"}, {"verified_on": None, "accessed_on": "2026-09-01"}, 7.0),
+        # Same verification day: the later read breaks the tie, then the built file.
+        ({"accessed_on": "2026-10-18"}, {"accessed_on": "2026-10-19"}, 6.0),
+        ({}, {}, 7.0),
+        (
+            {"verified_on": None, "accessed_on": None},
+            {"verified_on": None, "accessed_on": None},
+            7.0,
+        ),
+    ],
+)
+def test_merge_takes_the_more_recently_checked_fact(tmp_path, built_dates, import_dates, winner):
+    built = _mit_entry(english=[_fact("ielts.overall", 7.0, "IELTS 7.0", **built_dates)])
+    imported = _mit_entry(english=[_fact("ielts.overall", 6.0, "IELTS 6.0", **import_dates)])
+    assert [f["value"] for f in _merged(tmp_path, built, imported).facts["english"]] == [winner]
+
+
+def test_merge_takes_the_more_recently_checked_not_applicable_row(tmp_path):
+    older = {**_NO_AWARD, "reason": "built", "verified_on": "2026-10-01"}
+    read_later = {**_NO_AWARD, "reason": "import", "verified_on": None, "accessed_on": "2026-10-20"}
+    entry = _merged(
+        tmp_path,
+        {**_mit_entry(), "not_applicable": [older]},
+        {**_mit_entry(), "not_applicable": [read_later]},
+    )
+    assert [n["reason"] for n in entry.not_applicable] == ["import"]
+
+
+def test_merge_loses_no_fact_only_one_file_has(tmp_path):
+    keyless = [
+        {**_fact("", 1, "Keyless A"), "key": None},
+        {**_fact("", 2, "Keyless B"), "key": None},
+    ]
+    built = _mit_entry(
+        english=[_fact("ielts.overall", 7.0, "IELTS 7.0")],
+        tuition=[keyless[0]],
+    )
+    imported = _mit_entry(
+        english=[_fact("toefl.overall", 100, "TOEFL 100")],
+        deadline=[_fact("deadline", "2027-01-05", "5 Jan 2027")],
+        tuition=[keyless[1]],
+    )
+    entry = _merged(tmp_path, built, imported)
+    assert sorted(f["key"] for f in entry.facts["english"]) == ["ielts.overall", "toefl.overall"]
+    assert [f["value"] for f in entry.facts["deadline"]] == ["2027-01-05"]
+    # Two keyless facts are two facts, not one key "None".
+    assert sorted(f["value"] for f in entry.facts["tuition"]) == [1, 2]
+
+
+def test_merge_merges_documents_item_by_item(tmp_path):
+    def doc(kind: str, requirement: str, **dates: Any) -> dict[str, Any]:
+        value = {"kind": kind, "requirement": requirement, "condition": None}
+        return _fact(f"documents.{kind}", value, f"{kind} {requirement}", **dates)
+
+    built = _mit_entry(
+        documents=[
+            doc("transcript", "required"),
+            doc("photo", "required", verified_on="2026-10-01"),
+        ]
+    )
+    imported = _mit_entry(
+        documents=[doc("photo", "optional", verified_on="2026-10-20"), doc("cv", "required")]
+    )
+    docs = {
+        f["value"]["kind"]: f["value"]["requirement"]
+        for f in _merged(tmp_path, built, imported).facts["documents"]
+    }
+    # The built item stays, the import adds its own, and the newer check of a shared item wins.
+    assert docs == {"transcript": "required", "photo": "optional", "cv": "required"}
+
+
+def test_merge_keeps_each_open_unknown_once_and_drops_answered_ones(tmp_path):
+    def unknown(question: str, key: str, kind: str, checked_on: str) -> dict[str, Any]:
+        return {"question": question, "key": key, "kind": kind, "checked_on": checked_on}
+
+    built = {
+        **_mit_entry(),
+        "unknown": [
+            unknown("gpa", "gpa", "not_published", "2026-10-18"),
+            unknown("deadline", "deadline", "access", "2026-10-18"),
+            unknown("scholarship_exists", "scholarships", "not_researched", "2026-10-18"),
+        ],
+    }
+    imported = {
+        **_mit_entry(deadline=[_fact("deadline", "2027-01-05", "5 Jan 2027")]),
+        "unknown": [
+            unknown("gpa", "gpa", "not_published", "2026-10-19"),
+            unknown("gpa", "gpa", "access", "2026-10-17"),
+        ],
+        "not_applicable": [_NO_AWARD],
+    }
+    entry = _merged(tmp_path, built, imported)
+    # The deadline the import answered and the award it ruled out are no longer open.
+    assert sorted((u["kind"], u["checked_on"]) for u in entry.unknown) == [
+        ("access", "2026-10-17"),
+        ("not_published", "2026-10-19"),
+    ]
+    assert entry.unknown_reasons() == [
+        {"question": "gpa", "kind": "not_published", "checked_on": "2026-10-19"},
+        {"question": "gpa", "kind": "access", "checked_on": "2026-10-17"},
+    ]
+
+
+@pytest.mark.parametrize(
+    "built_programme,imported,route,reason",
+    [
+        # P8: the access note survives an import that settled nothing.
+        ({"reason": ACCESS_NOTE}, {}, "unknown", ACCESS_NOTE),
+        # A settled route or a verified page in the import still replaces a note.
+        ({"reason": ACCESS_NOTE}, {"related_reason": _REASON}, "related_only", None),
+        ({"reason": ACCESS_NOTE}, None, "known", None),
+        # A built route survives an import that has only a note (REL-1).
+        ({"related_reason": _REASON}, {"reason": ACCESS_NOTE}, "related_only", None),
+        ({"offered": False}, {"related_reason": _REASON}, "not_offered", None),
+        # An import note fills an empty built block.
+        ({}, {"reason": ACCESS_NOTE}, "unknown", ACCESS_NOTE),
+    ],
+)
+def test_merge_keeps_the_more_settled_programme_block(
+    tmp_path, built_programme, imported, route, reason
+):
+    other = _mit_entry() if imported is None else _route_entry(**imported)
+    entry = _merged(tmp_path, _route_entry(**built_programme), other)
+    assert entry.programme_route == route
+    assert entry.programme.get("reason") == reason
+
+
+def test_merge_takes_the_more_recently_verified_programme_page(tmp_path):
+    def page(url: str, verified_on: str) -> dict[str, Any]:
+        entry = _mit_entry()
+        entry["programme"] = {
+            "status": "known",
+            "urls": [url],
+            "evidence": [{"url": url, "quote": "BSc CS", "verified_on": verified_on}],
+        }
+        return entry
+
+    old, new = "https://www.mit.edu/old", "https://www.mit.edu/new"
+    assert _merged(tmp_path, page(old, "2026-10-01"), page(new, "2026-10-19")).programme[
+        "urls"
+    ] == [new]
+    assert _merged(tmp_path, page(new, "2026-10-19"), page(old, "2026-10-01")).programme[
+        "urls"
+    ] == [new]
+    assert _merged(tmp_path, page(old, "2026-10-19"), page(new, "2026-10-19")).programme[
+        "urls"
+    ] == [old]
+
+
+def test_the_committed_merge_loses_no_verified_fact():
+    """KB-1 bar: every fact of either committed file is in the merged view or lost to a
+    fact of its key checked no earlier; every verified programme page stays known."""
+    from app.knowledge import IMPORTED_FILE, KB_FILE, _checked_day, _entries, _read
+
+    merged = load_knowledge_base()
+    for path in (KB_FILE, IMPORTED_FILE):
+        for seed_id, entry in _entries(_read(path) or {}, path.name).items():
+            kept = merged.entries[seed_id]
+            assert kept.programme_known or not entry.programme_known
+            for question, fact in entry.all_facts():
+                same = [f for f in kept.facts[question] if f.get("key") == fact.get("key")]
+                assert len(same) == 1, (seed_id, fact.get("key"))
+                assert same[0] == fact or _checked_day(same[0]) >= _checked_day(fact)
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "programme,blocking,text",

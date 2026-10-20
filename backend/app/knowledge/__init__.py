@@ -412,36 +412,100 @@ def _entries(document: dict[str, Any], origin: str) -> dict[str, KnowledgeEntry]
     return {str(k): _entry(str(k), v, origin) for k, v in raw.items() if isinstance(v, dict)}
 
 
+def _checked_day(row: dict[str, Any]) -> tuple[str, str]:
+    """When a fact or a "does not apply" row was last checked, for the merge (P8).
+
+    ``verified_on``, else ``accessed_on`` (the date :func:`stale_reasons` ages
+    it by), then ``accessed_on`` to break a tie. A fact dated only by the day
+    its page was read no longer loses to every fact that names a verification.
+    """
+    accessed = str(row.get("accessed_on") or "")
+    return (str(row.get("verified_on") or "") or accessed, accessed)
+
+
+def _fact_identity(fact: dict[str, Any]) -> str:
+    """A fact's ``key``; a keyless fact is its page and quote, so two never collapse."""
+    key = fact.get("key")
+    return str(key) if key else f"?{fact.get('source_url')}#{fact.get('quote')}"
+
+
+def _programme_rank(entry: KnowledgeEntry) -> int:
+    """How settled ``entry.programme`` is, for the merge.
+
+    3: a verified page (``known``). 2: a settled route, ``related_only`` or
+    ``not_offered`` (REL-1). 1: ``unknown`` with something written down: a
+    ``reason`` (an access case keeps the unreadable page's URL there),
+    ``notes`` or ``urls``. 0: an empty block.
+    """
+    route = entry.programme_route
+    if route == "known":
+        return 3
+    if route != "unknown":
+        return 2
+    return 1 if any(entry.programme.get(k) for k in ("reason", "notes", "urls")) else 0
+
+
+def _programme_day(entry: KnowledgeEntry) -> str:
+    """The latest ``verified_on`` of a programme block's evidence ("" when none)."""
+    evidence = entry.programme.get("evidence") or []
+    return max(
+        (str(e.get("verified_on") or "") for e in evidence if isinstance(e, dict)), default=""
+    )
+
+
 def merge_entries(primary: KnowledgeEntry, other: KnowledgeEntry) -> KnowledgeEntry:
-    """``primary`` (the built file) merged with ``other`` (the import), fact by fact."""
+    """``primary`` (the built file) merged with ``other`` (the import), fact by fact.
+
+    - A fact's identity is its ``key`` (:func:`_fact_identity`). Of two facts
+      with one identity the more recently checked wins (:func:`_checked_day`),
+      the built file on a tie; a fact only one file has is kept. ``documents``
+      merges item by item like the other questions (``documents.<kind>``), so
+      an item only the import lists is added.
+    - A "does not apply" row follows the same date rule; a known fact of its
+      key wins over it.
+    - ``unknown`` keeps each record whose key neither file answered (a fact or
+      a "does not apply" row), once per ``(question, key, kind)`` with the
+      latest ``checked_on``.
+    - ``programme``: the more settled block wins (:func:`_programme_rank`),
+      the built file on a tie, except that of two verified pages the more
+      recently verified one wins. An import with no verified page never
+      replaces a built related route, "not offered" or access note.
+    """
     facts: dict[str, list[dict[str, Any]]] = {}
     for question in QUESTIONS:
         by_key: dict[str, dict[str, Any]] = {}
         for fact in other.facts.get(question, []):
-            by_key[str(fact.get("key"))] = fact
+            by_key[_fact_identity(fact)] = fact
         for fact in primary.facts.get(question, []):
-            key = str(fact.get("key"))
+            key = _fact_identity(fact)
             old = by_key.get(key)
-            if old is None or str(fact.get("verified_on") or "") >= str(
-                old.get("verified_on") or ""
-            ):
+            if old is None or _checked_day(fact) >= _checked_day(old):
                 by_key[key] = fact
         facts[question] = list(by_key.values())
     known_keys = {str(f.get("key")) for fs in facts.values() for f in fs}
-    unknown = [
-        u
-        for u in [*primary.unknown, *other.unknown]
-        if str(u.get("key") or u.get("question")) not in known_keys
-    ]
     # A "does not apply" answer is a fact too: the more recently verified one
     # of a key wins, the built file on a tie, and a known fact of that key wins.
     by_na: dict[str, dict[str, Any]] = {}
     for row in [*other.not_applicable, *primary.not_applicable]:
         key = str(row.get("key") or row.get("question"))
         old = by_na.get(key)
-        if old is None or str(row.get("verified_on") or "") >= str(old.get("verified_on") or ""):
+        if old is None or _checked_day(row) >= _checked_day(old):
             by_na[key] = row
     not_applicable = [n for k, n in by_na.items() if k not in known_keys]
+    answered = known_keys | set(by_na)
+    by_unknown: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for record in [*primary.unknown, *other.unknown]:
+        key = str(record.get("key") or record.get("question"))
+        if key in answered:
+            continue
+        ident = (str(record.get("question") or ""), key, str(record.get("kind") or ""))
+        old = by_unknown.get(ident)
+        if old is None or str(record.get("checked_on") or "") > str(old.get("checked_on") or ""):
+            by_unknown[ident] = record
+    rank, other_rank = _programme_rank(primary), _programme_rank(other)
+    take_other = other_rank > rank or (
+        rank == other_rank == 3 and _programme_day(other) > _programme_day(primary)
+    )
     return KnowledgeEntry(
         seed_id=primary.seed_id,
         university=primary.university or other.university,
@@ -449,14 +513,9 @@ def merge_entries(primary: KnowledgeEntry, other: KnowledgeEntry) -> KnowledgeEn
         official_domains=tuple(dict.fromkeys((*primary.official_domains, *other.official_domains))),
         review_status=primary.review_status,
         verified_on=max((v for v in (primary.verified_on, other.verified_on) if v), default=None),
-        # A verified page wins; then what the built file settled (a related
-        # route, "not offered") over an import that settled nothing.
-        programme=primary.programme
-        if primary.programme_known
-        or (not other.programme_known and primary.programme_route != "unknown")
-        else other.programme,
+        programme=other.programme if take_other else primary.programme,
         facts=facts,
-        unknown=unknown,
+        unknown=list(by_unknown.values()),
         not_applicable=not_applicable,
         origin=f"{primary.origin}+{other.origin}",
     )

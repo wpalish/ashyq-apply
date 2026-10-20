@@ -189,9 +189,32 @@ Each entry has:
 The applicant sees `human_verified` as "human verified". The applicant sees `draft` and `expert_checked`
 as "expert-checked, quote verified".
 
-**Merging** (`app.knowledge.load_knowledge_base`) works by `seed_id`. A fact's identity is
-`(seed_id, key)`. When two facts share an identity, the more recently verified one wins, and the built
-file wins a tie. A missing file is simply skipped.
+**Merging** (`app.knowledge.load_knowledge_base`, `merge_entries`) works by `seed_id`. A missing file is
+simply skipped. For a `seed_id` in both files (KB-1, code review 2026-10-19 P8):
+
+- A fact's identity is `(seed_id, key)`; a keyless fact is identified by its page and quote. When two
+  facts share an identity, the more recently checked one wins: `verified_on`, else `accessed_on` (the
+  date `stale_reasons` ages it by), then `accessed_on` as the tie-break, then the built file. Before KB-1
+  a fact dated only by `accessed_on` lost to any dated fact. A fact only one file has is always kept;
+  `documents` merges item by item (`documents.<kind>`), so an item only the import lists is added.
+- A "does not apply" row follows the same date rule; a known fact of its key wins over it.
+- `unknown` keeps a record only while neither file answered its key (a fact or a "does not apply" row),
+  once per `(question, key, kind)` with the latest `checked_on`.
+- `programme`: the more settled block wins — a verified page, then a settled route (`related_only`,
+  `not_offered`), then an `unknown` block with a note (`reason`, `notes` or `urls`; an access case keeps
+  the unreadable page's URL in `reason`), then an empty block — the built file on a tie, and of two
+  verified pages the more recently verified one. Before KB-1 an import with no verified page replaced
+  a built access note.
+
+Effect on the committed files (v22 built, 98 entries; 21-entry import, all 21 in the built file), merged
+view before → after KB-1: 98 → 98 entries, 871 → 871 facts, 89 → 89 programmes known (routes 6
+related, 1 not offered, 2 unknown, unchanged), 438 → 438 documents, 78 → 78 "does not apply" rows, 173 →
+173 unknown records (151 unknown reasons). Every fact (seed, question, key, value, `verified_on`), every
+programme block, every not-applicable row and every unknown reason is byte-identical. The 6 facts the
+two files share a key on (Imperial and Trinity tuition, two UNSW and two Trinity scholarship facts) are
+built 2026-10-19 against import 2026-10-18 with equal values, so the built fact wins under both rules;
+no verified fact is lost. `test_the_committed_merge_loses_no_verified_fact` pins that on the committed
+files: each fact of either file is in the merged view or lost to a fact of its key checked no earlier.
 
 ## Reading pages from CI while drafting (`mode=read_pages`)
 

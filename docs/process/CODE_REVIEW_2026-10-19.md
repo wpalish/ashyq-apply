@@ -34,8 +34,8 @@ No search provider was called, and no heldout case or quarantined document was o
 | P5 | low | `knowledge/claims.py:35` | `covers()` answers Software Engineering, Computer Engineering and Business Informatics applicants with CS-bachelor facts | proposed (scope) |
 | P6 | low | KB data, `kb_build.py:525` | Stored "published for academic year X, not the fall 2027 intake's" reasons name the build intake | fixed (KB v9) |
 | P7 | low | `catalog_walker.py:319` | CC-1 reads a slug of letters and a year (`fall2027`, `bsc2025`) as a course code | proposed |
-| P8 | low | `knowledge/__init__.py:212` | Two small `merge_entries` gaps | proposed |
-| P9 | info | `live_discovery.py:220`, `:1151` | The comments say "off" on two flags that are on | proposed (docs) |
+| P8 | low | `knowledge/__init__.py:212` | Two small `merge_entries` gaps | fixed (KB-1) |
+| P9 | info | `live_discovery.py:220`, `:1151` | The comments say "off" on two flags that are on | fixed (`e4cd3949`; KB-1 checked) |
 
 ### F1: a kb-mode recheck loop (fixed)
 
@@ -182,17 +182,22 @@ intake-relative reason ("is before the … intake's") stays the only one `carrie
 Such a link is hard-rejected as a course page. **Proposal:** exclude four digits that read as a
 year, which `_YEAR_SEGMENT` already does for `courses/<year>`.
 
-### P8: `merge_entries` gaps (proposed)
+### P8: `merge_entries` gaps (fixed, KB-1)
 
 - Facts are compared on `verified_on` only, so a fact dated only by `accessed_on` loses to any dated
   fact.
 - When neither file has a known programme, the import's programme block replaces the built file's,
   even when the built one holds an access-case note. No claim depends on it today.
+- **Fixed (KB-1):** facts and "does not apply" rows compare on `verified_on`, else `accessed_on`, then
+  `accessed_on`; the programme block goes to the more settled side (page > route > note > nothing), the
+  built file on a tie. Rules, tests and the before/after count of the merged view: KNOWLEDGE_BASE.md
+  "Merging".
 
-### P9: comment drift (proposed)
+### P9: comment drift (fixed)
 
 The comments say `COURSE_LEAD_GUARD` is "Off by default" and `ABSTAIN_ON_UNREADABLE_ENTRY` is "off
-until replayed", but both are `True`.
+until replayed", but both are `True`. **Fixed** in `e4cd3949`: both comments now say "on by default".
+KB-1 re-checked both (`live_discovery.py` unchanged by KB-1).
 
 ## Checked and found correct
 
