@@ -60,6 +60,7 @@ from app.adapters.search.ontology import (
     country_languages,
     load_ontology,
     localized_aliases,
+    localized_aliases_in,
     localized_related_terms,
 )
 from app.adapters.url_canonical import page_link, strip_invisible_host
@@ -4115,6 +4116,11 @@ class DiscoveryTrace:
     #: so a page the ``local_language`` family alone found can be told apart.
     #: Empty while the rule is off, and then not serialised.
     lead_found_by: dict[str, list[str]] = field(default_factory=dict)
+    #: LQ-2 only (``intent.LOCAL_QUERY_FROM_PAGE_EVIDENCE``): the phrase the
+    #: ``local_language`` query took from the site, as ``{"phrase", "source",
+    #: "link", "page"}`` (``source`` is ``link`` or ``native_name``). Empty, and
+    #: not serialised, while the rule is off or no phrase was found.
+    local_query_phrase: dict[str, str] = field(default_factory=dict)
     #: UA-1: reads of the institution's own entry points (robots.txt, sitemap
     #: probes, the homepage and the navigation fallback) that succeeded and
     #: that failed, and whether the homepage was among them. Internal: recorded
@@ -4266,6 +4272,7 @@ class DiscoveryTrace:
             **({"related_programmes": self.related_programmes} if self.related_programmes else {}),
             **({"case_time": self.case_time.as_dict()} if self.case_time is not None else {}),
             **({"lead_found_by": self.lead_found_by} if self.lead_found_by else {}),
+            **({"local_query_phrase": self.local_query_phrase} if self.local_query_phrase else {}),
             **({"entry_unreadable": True} if self.entry_unreadable else {}),
             **({"unresolved_access": self.unresolved_access} if self.unresolved_access else {}),
             **(
@@ -5761,6 +5768,8 @@ class LiveDiscoveryAdapter:
             )
             return
 
+        # LQ-2: the site's own phrase and the seed row's native name ("" while off).
+        local_phrase, native_name = _local_phrase_fields(entry, trace)
         try:
             intent = DiscoveryIntent(
                 institution=entry["name"],
@@ -5778,6 +5787,8 @@ class LiveDiscoveryAdapter:
                     if intent_module.LOCAL_LANGUAGE_QUERIES
                     else ""
                 ),
+                local_phrase=local_phrase,
+                native_name=native_name,
             )
         except ValueError:
             # A registry entry or a field the intent refuses — for instance one
@@ -5785,6 +5796,8 @@ class LiveDiscoveryAdapter:
             # this institution rather than sending it.
             trace.errors.append("search skipped: invalid public discovery intent")
             return
+        if intent_module.LOCAL_QUERY_FROM_PAGE_EVIDENCE and intent_module.LOCAL_LANGUAGE_QUERIES:
+            _note_local_phrase_plan(intent, trace)
 
         async def read(url: str) -> str:
             # The adapter's own Fetcher, so robots, rate limits, the PII guard
@@ -6746,6 +6759,29 @@ class LiveDiscoveryAdapter:
             links = _harvest_links(
                 result.text, result.final_url or start, domain, trace.extra_domains
             )
+            if (
+                _intent_module.LOCAL_QUERY_FROM_PAGE_EVIDENCE
+                and _intent_module.LOCAL_LANGUAGE_QUERIES
+                and not trace.local_query_phrase
+            ):
+                # LQ-2: the site's own name for the programme, for the one
+                # local-language query search sends after this walk.
+                country = trace.country or str(entry.get("country") or "")
+                own = local_phrase_from_links(
+                    result.text,
+                    links,
+                    languages=[code for code in country_languages(country) if code != "en"],
+                    fields=fields,
+                    degree=degree,
+                    from_catalogue=from_catalogue,
+                )
+                if own is not None:
+                    trace.local_query_phrase = {
+                        "phrase": own[0],
+                        "source": "link",
+                        "link": own[1],
+                        "page": start,
+                    }
             if HOMEPAGE_HOP_READS and start == entry["homepage"]:
                 hop_ranked = self._homepage_hop_leads(
                     links, entry, domain, trace, degree, fields, {start, result.final_url or start}
@@ -7136,6 +7172,172 @@ def _harvest_links(
         label = re.sub(r"\s+", " ", anchor.get_text(" ", strip=True))[:160]
         out.append((canonical, label))
     return out
+
+
+# --- LQ-2: the local query from the site's own words -------------------------
+
+# An alias head in R1's unspaced scripts (``_UNSPACED_SCRIPT``) is looked for
+# anywhere in a label rather than at a word's start.
+#: LQ-2: every flag a localized related form carries. A label naming one is a
+#: neighbour's programme whatever flag is in force, so it is never a phrase.
+_RELATED_FORM_FLAGS = frozenset(
+    {"LOCALIZED_IDENTITY", "LEXICON_V2", "LOCALIZED_PAGE_IDENTITY", "LEXICON_LANGUAGE_COVERAGE"}
+)
+
+
+def alias_head(alias: str) -> str:
+    """LQ-2: the stem of an alias's longest word, as a link text is searched for it.
+
+    The longest word carries the subject («computación», not «ciencias»), and
+    its stem without the last two letters reaches the word's other forms
+    («computacionales»), never fewer than five letters. A word of five letters
+    or fewer, or an unspaced script's whole alias up to that length, stays
+    whole. An alias in an unspaced script (zh, ja, ko, th) is its own head,
+    whole: those scripts do not inflect a word's end.
+    """
+    folded = unicodedata.normalize("NFC", alias).casefold()
+    if _UNSPACED_SCRIPT.search(folded):
+        return re.sub(r"\s+", "", folded)
+    words = re.findall(r"[^\W\d_]+", folded)
+    if not words:
+        return ""
+    head = max(words, key=len)
+    return head if len(head) <= 5 else head[: max(5, len(head) - 2)]
+
+
+#: LQ-2: words a head's stem reaches that name something else in every
+#: language the stem is shared by: *informati-* is also the start of
+#: "Information(en)", «información», «informação» — a page's notices, not the
+#: field (found by the offline table on a German study page, 2026-10-21).
+_HEAD_FALSE_FRIENDS = ("informatio",)
+
+
+def _names_alias_head(label: str, heads: Sequence[str]) -> bool:
+    folded = unicodedata.normalize("NFC", label).casefold()
+    for head in heads:
+        if not head:
+            continue
+        if _UNSPACED_SCRIPT.search(head):
+            if head in folded:
+                return True
+            continue
+        for found in re.finditer(rf"(?<![^\W\d_]){re.escape(head)}[^\W\d_]*", folded):
+            if not found.group(0).startswith(_HEAD_FALSE_FRIENDS):
+                return True
+    return False
+
+
+def local_phrase_from_links(
+    html: str,
+    links: Sequence[tuple[str, str]],
+    *,
+    languages: Sequence[str],
+    fields: Sequence[str],
+    degree: str,
+    from_catalogue: bool,
+) -> tuple[str, str] | None:
+    """LQ-2: the phrase one read page offers the local-language query, and its link.
+
+    The page must declare, in ``<html lang>``, a language of the institution's
+    country (``languages``, never the applicant's). A link qualifies when its
+    target is a programme page or listing — its URL categorises as one, it sits
+    on a catalogue page, or its label is R4's study-section word — and its
+    text names the head of a localized alias of the field in the page's
+    language (never a head false friend, :data:`_HEAD_FALSE_FRIENDS`).
+    Refused: a label naming another level (text or URL), a related programme
+    (a localized related form, or R2's related head), a unit (CH-1's unit
+    nouns with no degree word), and anything :func:`intent.local_query_phrase`
+    refuses. A label R2 reads as the field itself comes first, then one whose
+    URL names the requested level; otherwise the page's order decides.
+    """
+    from app.adapters.search.navigation import study_section_label
+
+    language = _page_classifier.page_language(html)
+    if not language or language not in languages or not fields:
+        return None
+    flags = _page_classifier.localized_alias_flags()
+    heads: list[str] = []
+    related: list[str] = []
+    for field_name in fields:
+        heads += [alias_head(a) for a in localized_aliases_in(field_name, language, flags=flags)]
+        related += [
+            term.casefold()
+            for term in localized_related_terms(field_name, flags=_RELATED_FORM_FLAGS)
+        ]
+    heads = [head for head in dict.fromkeys(heads) if head]
+    if not heads:
+        return None
+    units = _unit_word_pattern(tuple(sorted(_UNIT_WORDS.items())))
+    best: tuple[int, int, int, str, str] | None = None
+    for order, (url, label) in enumerate(links):
+        if not label or not _names_alias_head(label, heads):
+            continue
+        folded = unicodedata.normalize("NFC", label).casefold()
+        if any(term in folded for term in related):
+            continue
+        levels = _page_classifier.degree_levels_named(label)
+        if units is not None and units.search(_fold(label)) and not levels:
+            # CH-1's unit nouns: «Tietotekniikan laitos» is the department.
+            continue
+        if label_names_other_level(label, degree) or names_other_degree_level(url, degree):
+            continue
+        if levels - {degree}:
+            # CH-1's table, every language: «Magíster en …» is another level.
+            continue
+        if _url_excluded(urlparse(url).path or ""):
+            continue
+        category, _score = categorise_url(url)
+        if not (
+            category in (PageCategory.PROGRAM_PAGE, PageCategory.PROGRAM_CATALOG)
+            or from_catalogue
+            or study_section_label(label, [language], degree) is not None
+        ):
+            continue
+        verdict = subject_head_verdict(label, list(fields))
+        if verdict == "related":
+            continue
+        phrase = _intent_module.local_query_phrase(label)
+        if phrase is None:
+            continue
+        # The field's own title first, then a URL naming the requested level
+        # ("bachelor-informatik" before "lehramt-informatik"), then page order.
+        rank = (0 if verdict == "field" else 1, -matches_degree(url, degree), order, phrase, url)
+        if best is None or rank < best:
+            best = rank
+    return (best[3], best[4]) if best is not None else None
+
+
+def _entry_native_name(entry: dict) -> str:
+    """LQ-2: the seed row's first native name a query may carry, or ``""``."""
+    names = entry.get("native_name") or []
+    for name in [names] if isinstance(names, str) else names:
+        phrase = _intent_module.local_query_phrase(name) if isinstance(name, str) else None
+        if phrase is not None:
+            return phrase
+    return ""
+
+
+def _local_phrase_fields(entry: dict, trace: DiscoveryTrace) -> tuple[str, str]:
+    """LQ-2: the intent's ``local_phrase`` and ``native_name``; empty while the rule is off."""
+    if not (
+        _intent_module.LOCAL_QUERY_FROM_PAGE_EVIDENCE and _intent_module.LOCAL_LANGUAGE_QUERIES
+    ):
+        return "", ""
+    found = trace.local_query_phrase
+    link = found.get("phrase", "") if found.get("source") == "link" else ""
+    return link, _entry_native_name(entry)
+
+
+def _note_local_phrase_plan(intent: Any, trace: DiscoveryTrace) -> None:
+    """LQ-2: record which words the local-language query was planned with."""
+    terms = _intent_module.local_language_terms(intent)
+    if terms is None or terms.phrase is None:
+        if trace.local_query_phrase:
+            trace.local_query_phrase["planned"] = "no"
+        return
+    if terms.phrase_source == "native_name":
+        trace.local_query_phrase = {"phrase": terms.phrase, "source": "native_name"}
+    trace.local_query_phrase["planned"] = "yes"
 
 
 def registry_campuses(domain: str) -> dict[str, list[str]]:

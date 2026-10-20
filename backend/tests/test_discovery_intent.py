@@ -108,6 +108,9 @@ class TestNoApplicantDataSurvivesTheConversion:
             "population_marker",
             # R5: the institution's own country (never the applicant's), for its language.
             "institution_country",
+            # LQ-2: the institution's own link text and native name, never the applicant's.
+            "local_phrase",
+            "native_name",
         }
 
 

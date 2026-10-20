@@ -1804,6 +1804,10 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     ),
     # Default-off (NO_SEARCH_FLOOR_2026-10-21 §5, NS-1b).
     "homepage-hop-reads": (("app.adapters.discovery.live_discovery", "HOMEPAGE_HOP_READS"),),
+    # Default-off (NEXT_CYCLES_2026-10-21 item 6, LQ-2a).
+    "local-query-from-evidence": (
+        ("app.adapters.search.intent", "LOCAL_QUERY_FROM_PAGE_EVIDENCE"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
@@ -1814,6 +1818,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "identity-fold-marks",
         "same-site-award-links",
         "homepage-hop-reads",
+        "local-query-from-evidence",
     }
 )
 
@@ -2061,6 +2066,16 @@ def main() -> None:
         '(site:<domain> "<ontology alias>" <R1 bachelor word>, Serper hl/gl of that '
         "language and country) takes the third first-pass slot; programmes moves to the "
         "reserve and admissions is dropped, so six families stay six",
+    )
+    parser.add_argument(
+        "--local-query-from-evidence",
+        action="store_true",
+        help="plan rule LQ-2 (LQ-2a, LOCAL_LANGUAGE_LOCO_2026-10-20 §5): the one "
+        "local_language query takes its subject words from the site - the text of a "
+        "homepage or catalogue link to a programme page or listing, in the page's "
+        "<html lang>, naming a localized alias's head, sent as one quoted phrase (at most "
+        "8 words, no digits or personal names) in place of the alias; else the seed row's "
+        "native name beside the alias; else today's words. Same hl/gl, still one query of six",
     )
     parser.add_argument(
         "--localized-page-identity",
@@ -2829,6 +2844,10 @@ def main() -> None:
             from app.adapters.search import intent as r5_module
 
             r5_module.LOCAL_LANGUAGE_QUERIES = True
+        if args.local_query_from_evidence:
+            from app.adapters.search import intent as lq2_module
+
+            lq2_module.LOCAL_QUERY_FROM_PAGE_EVIDENCE = True
         if args.localized_page_identity:
             from app.adapters import page_classifier as r1_module
 
@@ -3276,6 +3295,11 @@ def main() -> None:
                         *(["--provider-lead-floor"] if args.provider_lead_floor else []),
                         *(["--retrieval-rank-v2"] if args.retrieval_rank_v2 else []),
                         *(["--local-language-queries"] if args.local_language_queries else []),
+                        *(
+                            ["--local-query-from-evidence"]
+                            if args.local_query_from_evidence
+                            else []
+                        ),
                         *(["--localized-page-identity"] if args.localized_page_identity else []),
                         *(["--subject-title-shapes"] if args.subject_title_shapes else []),
                         *(["--site-identity-v2"] if args.site_identity_v2 else []),

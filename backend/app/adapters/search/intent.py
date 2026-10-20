@@ -100,6 +100,30 @@ ALIAS_QUERIES = False
 LOCAL_LANGUAGE_QUERIES = (
     True  # on: runs 39127583646 / 585479 / 587124 / 588639 (uba, iitd programme pages; 0 losses)
 )
+#: Plan rule LQ-2 (LQ-2a; ``LOCAL_LANGUAGE_LOCO_2026-10-20.md`` §5), off until a
+#: search key makes it measurable (regime C: a new query text is a recorded-store
+#: miss). R5 sends one alias per language, the first in the ontology, and that
+#: alias reaches the title shape it was written from and misses its neighbours:
+#: Spanish carries uba's plural «ciencias de la computación», puc's own title is
+#: singular and tec's names neither. On, the one ``local_language`` query takes
+#: its subject words from the site before the bundled lexicon:
+#: (1) :attr:`DiscoveryIntent.local_phrase`, the text of a homepage or
+#: catalogue link the navigation read classified as a programme listing or page,
+#: in the page's ``<html lang>``, naming a localized alias's head — rendered as
+#: one quoted phrase in place of the alias (the bachelor word follows unless the
+#: phrase already holds it);
+#: (2) else :attr:`DiscoveryIntent.native_name`, the seed row's native name, as
+#: a second quoted phrase beside today's alias;
+#: (3) else today's words, byte for byte.
+#: Every phrase passes :func:`local_query_phrase` (at most
+#: LOCAL_PHRASE_MAX_WORDS words, no digit, no personal name, nothing
+#: :func:`_reject_applicant_data` refuses). Still one query of six, the same
+#: first-pass slot and the same ``hl``/``gl``. The benchmark harness flips it
+#: per capture (``--local-query-from-evidence``). False changes nothing.
+LOCAL_QUERY_FROM_PAGE_EVIDENCE = False
+#: LQ-2: the most words a page phrase may carry; a longer link text is refused,
+#: not cut (a card's run-on description is not a programme's name).
+LOCAL_PHRASE_MAX_WORDS = 8
 
 #: Population markers that may appear in a query, and only for a country's
 #: public requirements page. They describe a published policy audience, not
@@ -169,6 +193,14 @@ class DiscoveryIntent:
     #: row — never the applicant's citizenship, residence or school country.
     #: Read only by :data:`LOCAL_LANGUAGE_QUERIES`, through :attr:`languages`.
     institution_country: str = ""
+    #: LQ-2 (:data:`LOCAL_QUERY_FROM_PAGE_EVIDENCE`): the institution's own link
+    #: text naming the field (a programme or listing link on its homepage or
+    #: catalogue), already passed through :func:`local_query_phrase`. Never the
+    #: applicant's words; empty while the rule is off.
+    local_phrase: str = ""
+    #: LQ-2: the seed row's native name of the institution, checked the same
+    #: way; empty while the rule is off or the row carries none.
+    native_name: str = ""
 
     def __post_init__(self) -> None:
         if not self.institution.strip():
@@ -177,7 +209,15 @@ class DiscoveryIntent:
             raise ValueError("A discovery intent needs the institution's domain")
         if not self.field.strip():
             raise ValueError("A discovery intent needs a field of study")
-        for name in ("institution", "domain", "field", "population_marker", "institution_country"):
+        for name in (
+            "institution",
+            "domain",
+            "field",
+            "population_marker",
+            "institution_country",
+            "local_phrase",
+            "native_name",
+        ):
             _reject_applicant_data(name, getattr(self, name))
         if self.population_marker and self.population_marker not in ALLOWED_POPULATION_MARKERS:
             raise QueryPrivacyError(
@@ -268,6 +308,11 @@ class LocalQueryTerms:
     degree_word: str
     hl: str
     gl: str
+    #: LQ-2 only: the site's own words, sent as one quoted phrase.
+    phrase: str | None = None
+    #: LQ-2 only: where :attr:`phrase` came from, ``"link"`` (it replaces the
+    #: alias) or ``"native_name"`` (it is sent beside the alias).
+    phrase_source: str = ""
 
 
 #: Google's ``hl`` for a language whose primary subtag it does not take as is.
@@ -307,8 +352,87 @@ def local_language_terms(intent: DiscoveryIntent) -> LocalQueryTerms | None:
         aliases = localized_aliases_in(intent.field, language, flags=flags)
         word = page_classifier.local_bachelor_word(language)
         if aliases and word:
-            return LocalQueryTerms(language, aliases[0], word, _google_hl(language, region), region)
+            terms = LocalQueryTerms(
+                language, aliases[0], word, _google_hl(language, region), region
+            )
+            return _with_page_phrase(terms, intent) if LOCAL_QUERY_FROM_PAGE_EVIDENCE else terms
     return None
+
+
+def _with_page_phrase(terms: LocalQueryTerms, intent: DiscoveryIntent) -> LocalQueryTerms:
+    """LQ-2: the site's link phrase, else the native name, else today's terms."""
+    link = local_query_phrase(intent.local_phrase)
+    if link is not None:
+        return replace(terms, phrase=link, phrase_source="link")
+    native = local_query_phrase(intent.native_name)
+    if native is not None:
+        return replace(terms, phrase=native, phrase_source="native_name")
+    return terms
+
+
+#: LQ-2: titles that put a person's name in a link text. A link naming a
+#: professor or a dean is a staff page, and a query never carries a name.
+_PERSONAL_TITLES = frozenset(
+    {
+        "prof",
+        "professor",
+        "profesor",
+        "profesora",
+        "professeur",
+        "dr",
+        "dra",
+        "mr",
+        "mrs",
+        "ms",
+        "mme",
+        "sr",
+        "sra",
+        "herr",
+        "frau",
+        "dott",
+        "dottssa",
+        "doc",
+        "проф",
+        "профессор",
+        "академик",
+        "教授",
+        "교수",
+    }
+)
+#: LQ-2: quote marks a phrase loses before it is quoted again.
+_PHRASE_QUOTES = re.compile('["“”„«»]')
+#: LQ-2: separators a link text may carry around its name. Brackets and full
+#: stops stay: «Informatik (B.Sc.)» is the name as the site writes it.
+_PHRASE_EDGE = " \t-–—|·•:;,"
+
+
+def local_query_phrase(text: str) -> str | None:
+    """LQ-2: ``text`` as a query phrase, or ``None`` when it may not be one.
+
+    Refused: an empty text, more than LOCAL_PHRASE_MAX_WORDS words, any digit
+    (a code, a year or a score), a personal title (a name follows it), an
+    address or a URL, and anything :func:`_reject_applicant_data` refuses. The
+    text is the institution's own; the checks keep it a programme's name and
+    nothing that could be a person's.
+    """
+    phrase = re.sub(r"\s+", " ", _PHRASE_QUOTES.sub(" ", text or "")).strip(_PHRASE_EDGE)
+    if not phrase:
+        return None
+    words = phrase.split(" ")
+    if len(words) > LOCAL_PHRASE_MAX_WORDS:
+        return None
+    if any(ch.isdigit() for ch in phrase):
+        return None
+    folded = phrase.casefold()
+    if "@" in folded or "http" in folded or "www." in folded:
+        return None
+    if any(re.sub(r"[.\-]", "", word.casefold()) in _PERSONAL_TITLES for word in words):
+        return None
+    try:
+        _reject_applicant_data("local_phrase", phrase)
+    except QueryPrivacyError:
+        return None
+    return phrase
 
 
 def _quoted(term: str) -> str:
@@ -407,6 +531,14 @@ def queries_for(
         # R5 (07 Q3): the third first-pass slot, in the site's language. No
         # intake year: M5 measured the shape without one.
         text = f"{site} {_quoted(local.alias)} {_quoted(local.degree_word)}"
+        if local.phrase and local.phrase_source == "link":
+            # LQ-2: the site's own name for the programme replaces the alias.
+            text = f'{site} "{local.phrase}"'
+            if local.degree_word.casefold() not in local.phrase.casefold():
+                text += f" {_quoted(local.degree_word)}"
+        elif local.phrase:
+            # LQ-2: the institution's native name, beside today's words.
+            text = f'{site} "{local.phrase}" {_quoted(local.alias)} {_quoted(local.degree_word)}'
         _reject_applicant_data("local_language", text)
         candidates.append(DiscoveryQuery(text, "local_language", hl=local.hl, gl=local.gl))
     candidates += [

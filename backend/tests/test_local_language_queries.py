@@ -24,6 +24,8 @@ from app.adapters.discovery.live_discovery import (
     DiscoveryTrace,
     LiveDiscoveryAdapter,
     PageCategory,
+    alias_head,
+    local_phrase_from_links,
 )
 from app.adapters.search import intent as intent_module
 from app.adapters.search.base import SearchResponse, SearchResult
@@ -31,6 +33,7 @@ from app.adapters.search.intent import (
     DEFAULT_QUERY_BUDGET,
     DiscoveryIntent,
     local_language_terms,
+    local_query_phrase,
     queries_for,
 )
 from app.adapters.search.ontology import country_languages, country_region
@@ -513,3 +516,444 @@ def test_the_benchmark_flag_reaches_the_child_and_turns_the_rule_on(tmp_path, mo
     )
     live.main()
     assert seen == [True]
+
+
+# --- LQ-2a: the local query from the site's own words -------------------------
+#
+# Every site below is written for the test (``example-uni.*``); no page, label
+# or URL is a development or heldout case's. The labels are ordinary programme
+# names in each language, each chosen to exercise one rule.
+
+
+@pytest.fixture
+def lq2(r5, monkeypatch):
+    monkeypatch.setattr(intent_module, "LOCAL_QUERY_FROM_PAGE_EVIDENCE", True)
+
+
+def page(lang: str, *links: tuple[str, str]) -> str:
+    anchors = "".join(f'<li><a href="{href}">{text}</a></li>' for href, text in links)
+    return (
+        f'<html lang="{lang}"><head><title>Home</title></head>'
+        f"<body><ul>{anchors}</ul></body></html>"
+    )
+
+
+def phrase_of(html: str, links, *, languages, from_catalogue=False):
+    return local_phrase_from_links(
+        html,
+        links,
+        languages=languages,
+        fields=[FIELD],
+        degree="bachelor",
+        from_catalogue=from_catalogue,
+    )
+
+
+def local_query(value: DiscoveryIntent):
+    return next(q for q in queries_for(value) if q.family == "local_language")
+
+
+def test_lq2_is_off_by_default():
+    assert intent_module.LOCAL_QUERY_FROM_PAGE_EVIDENCE is False
+
+
+def test_lq2_off_the_query_is_todays_byte_for_byte(r5):
+    plain = intent("Chile", domain="example-uni.cl", name="Universidad Ejemplo")
+    carrying = replace(
+        plain,
+        local_phrase="Licenciatura en Ciencia de la Computación",
+        native_name="Universidad Ejemplo de Chile",
+    )
+    assert queries_for(carrying) == queries_for(plain)
+    assert local_query(carrying).text == (
+        'site:example-uni.cl "ciencias de la computación" licenciatura'
+    )
+    terms = local_language_terms(carrying)
+    assert terms == local_language_terms(plain)
+    assert terms is not None and terms.phrase is None
+
+
+SYNTHETIC_HOMEPAGES = [
+    # (country, page lang, link url, link text) -> the link text is the phrase
+    (
+        "Chile",
+        "es",
+        "https://www.example-uni.cl/carreras/computacion",
+        "Licenciatura en Ciencia de la Computación",
+    ),
+    (
+        "Mexico",
+        "es-MX",
+        "https://www.example-uni.mx/carreras/tecnologias-computacionales",
+        "Ingeniería en Tecnologías Computacionales",
+    ),
+    (
+        "France",
+        "fr",
+        "https://www.example-uni.fr/programmes/licence-informatique",
+        "Licence Informatique",
+    ),
+    (
+        "Germany",
+        "de",
+        "https://www.example-uni.de/studium/studiengaenge/informatik",
+        "Informatik (B.Sc.)",
+    ),
+    (
+        "Norway",
+        "nb",
+        "https://www.example-uni.no/programmes/informatikk",
+        "Informatikk: språk og kommunikasjon",
+    ),
+    (
+        "China",
+        "zh-CN",
+        "https://www.example-uni.cn/undergraduate/programmes/cs",
+        "计算机科学与技术专业",
+    ),
+    ("South Korea", "ko", "https://www.example-uni.kr/programmes/computing", "컴퓨터과학 학사과정"),
+    (
+        "Russia",
+        "ru",
+        "https://www.example-uni.ru/programs/computer-science",
+        "Компьютерные науки и инженерия",
+    ),
+]
+
+
+@pytest.mark.parametrize(("country", "lang", "url", "text"), SYNTHETIC_HOMEPAGES)
+def test_lq2_a_homepage_link_in_the_sites_language_gives_the_phrase(lq2, country, lang, url, text):
+    links = [("https://www.example-uni.org/news/", "News"), (url, text)]
+    html = page(lang, *links)
+    assert phrase_of(html, links, languages=intent(country).languages) == (text, url)
+
+
+def test_lq2_the_head_is_the_longest_words_stem_or_an_unspaced_alias_whole():
+    assert alias_head("ciencias de la computación") == "computaci"
+    assert alias_head("informatique") == "informatiq"
+    assert alias_head("datalogi") == "datalo"
+    assert alias_head("전산학") == "전산학"
+    assert alias_head("计算机科学与技术") == "计算机科学与技术"
+
+
+def test_lq2_a_field_title_comes_before_a_head_only_title_on_one_page(lq2):
+    links = [
+        ("https://www.example-uni.cl/carreras/a", "Ingeniería en Tecnologías Computacionales"),
+        ("https://www.example-uni.cl/carreras/b", "Ciencia de la Computación"),
+    ]
+    html = page("es", *links)
+    # A catalogue page: both links are programme leads, as the walk reads them.
+    assert phrase_of(html, links, languages=("es",), from_catalogue=True) == (
+        "Ciencia de la Computación",
+        "https://www.example-uni.cl/carreras/b",
+    )
+    # The head-only title alone is still a phrase (the second R5 shape it misses).
+    assert phrase_of(html, links[:1], languages=("es",), from_catalogue=True) == links[0][::-1]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        # More than eight words: a card's run-on text, not a name.
+        "Ciencia de la Computación para estudiantes que quieren aprender mucho más",
+        # Digits: a programme code, a year or a score.
+        "Ciencia de la Computación 2027",
+        "6B06104 Ciencia de la Computación",
+        # A personal title: a name follows it.
+        "Prof. Ana Pérez, Ciencia de la Computación",
+        "Dra Ana Computación",
+        # Another level, in any language.
+        "Magíster en Ciencia de la Computación",
+        # A related programme, not the field.
+        "Ingeniería Informática y Computación",
+        # An address.
+        "computacion@example-uni.cl",
+        # A currency sign: _reject_applicant_data's refusal.
+        "Computación € beca",
+        # A unit (CH-1's unit nouns), not a programme.
+        "Departamento de Ciencia de la Computación",
+        # The information false friend of the informati- stem.
+        "Información para estudiantes de informática",
+    ],
+)
+def test_lq2_refused_link_texts_give_no_phrase(lq2, text):
+    url = "https://www.example-uni.cl/carreras/x"
+    control = "Ciencia de la Computación"
+    # On a catalogue page, so only the label decides; the control link passes.
+    assert phrase_of(page("es"), [(url, control)], languages=("es",), from_catalogue=True)
+    html = page("es", (url, text))
+    assert phrase_of(html, [(url, text)], languages=("es",), from_catalogue=True) is None
+
+
+def test_lq2_the_information_false_friend_and_a_unit_in_german(lq2):
+    links = [
+        ("https://www.example-uni.de/studium/info", "Informationen für Erstsemester"),
+        ("https://www.example-uni.de/studium/institut", "Institut für Informatik"),
+    ]
+    html = page("de", *links)
+    assert phrase_of(html, links, languages=("de",), from_catalogue=True) is None
+    # The stem still reaches the field's own word.
+    kept = [("https://www.example-uni.de/studium/x", "Informatik")]
+    assert phrase_of(page("de", *kept), kept, languages=("de",), from_catalogue=True) == (
+        "Informatik",
+        "https://www.example-uni.de/studium/x",
+    )
+
+
+def test_lq2_a_url_naming_the_level_breaks_a_tie_between_field_titles(lq2):
+    links = [
+        ("https://www.example-uni.de/studium/lehramt-informatik", "Informatik B.Ed."),
+        ("https://www.example-uni.de/studium/bachelor-informatik", "Informatik B.Sc."),
+    ]
+    html = page("de", *links)
+    assert phrase_of(html, links, languages=("de",), from_catalogue=True) == links[1][::-1]
+
+
+def test_lq2_the_cap_and_the_privacy_check_are_the_query_sides(lq2):
+    assert local_query_phrase(" «Licenciatura en Ciencia de la Computación» ") == (
+        "Licenciatura en Ciencia de la Computación"
+    )
+    assert local_query_phrase("uno dos tres cuatro cinco seis siete ocho") is not None
+    assert local_query_phrase("uno dos tres cuatro cinco seis siete ocho nueve") is None
+    assert local_query_phrase("Informática 3.8") is None
+    assert local_query_phrase("Informática $") is None
+    assert local_query_phrase("http://example-uni.cl Informática") is None
+    assert local_query_phrase("") is None
+
+
+def test_lq2_a_page_not_in_a_language_of_the_country_gives_nothing(lq2):
+    url = "https://www.example-uni.cl/carreras/x"
+    links = [(url, "Ciencia de la Computación")]
+    assert phrase_of(page("en", *links), links, languages=("es",)) is None
+    assert phrase_of(page("pt", *links), links, languages=("es",)) is None
+    no_lang = "<html><body><a href='/carreras/x'>Ciencia de la Computación</a></body></html>"
+    assert phrase_of(no_lang, links, languages=("es",)) is None
+
+
+def test_lq2_a_link_that_is_no_programme_lead_gives_nothing_on_a_homepage(lq2):
+    url = "https://www.example-uni.cl/noticias/premio"
+    links = [(url, "Ciencia de la Computación")]
+    html = page("es", *links)
+    assert phrase_of(html, links, languages=("es",)) is None
+    # On a catalogue page the same link is a programme lead, as the walk reads it.
+    assert phrase_of(html, links, languages=("es",), from_catalogue=True) == (
+        "Ciencia de la Computación",
+        url,
+    )
+
+
+def test_lq2_the_phrase_replaces_the_alias_with_the_same_locale(lq2):
+    base = intent("Chile", domain="example-uni.cl", name="Universidad Ejemplo")
+    today = local_query(base)
+    on = replace(base, local_phrase="Ingeniería en Tecnologías Computacionales")
+    query = local_query(on)
+    assert query.text == (
+        'site:example-uni.cl "Ingeniería en Tecnologías Computacionales" licenciatura'
+    )
+    assert (query.hl, query.gl) == (today.hl, today.gl) == ("es", "cl")
+    plan = queries_for(on)
+    assert families(plan) == WITH_LOCAL
+    assert len(plan) == DEFAULT_QUERY_BUDGET
+    for mine, theirs in zip(plan, queries_for(base), strict=True):
+        if mine.family != "local_language":
+            assert mine == theirs
+
+
+def test_lq2_a_phrase_holding_the_degree_word_is_not_given_it_twice(lq2):
+    on = replace(
+        intent("Chile", domain="example-uni.cl", name="Universidad Ejemplo"),
+        local_phrase="Licenciatura en Ciencia de la Computación",
+    )
+    assert local_query(on).text == (
+        'site:example-uni.cl "Licenciatura en Ciencia de la Computación"'
+    )
+    # A one-word phrase is still quoted: it is the site's exact name.
+    one = replace(intent("Norway"), local_phrase="Informatikk")
+    assert local_query(one).text == 'site:uio.no "Informatikk" bachelor'
+
+
+def test_lq2_falls_back_to_the_native_name_then_to_todays_words(lq2):
+    base = intent("Chile", domain="example-uni.cl", name="Universidad Ejemplo")
+    native = replace(base, native_name="Universidad Ejemplo de Chile")
+    terms = local_language_terms(native)
+    assert terms is not None
+    assert (terms.phrase, terms.phrase_source) == ("Universidad Ejemplo de Chile", "native_name")
+    assert local_query(native).text == (
+        'site:example-uni.cl "Universidad Ejemplo de Chile" '
+        '"ciencias de la computación" licenciatura'
+    )
+    # The link phrase wins over the native name.
+    both = replace(native, local_phrase="Ciencia de la Computación")
+    both_terms = local_language_terms(both)
+    assert both_terms is not None and both_terms.phrase_source == "link"
+    # Neither: today's words, byte for byte.
+    assert local_query(base).text == (
+        'site:example-uni.cl "ciencias de la computación" licenciatura'
+    )
+    base_terms = local_language_terms(base)
+    assert base_terms is not None and base_terms.phrase is None
+
+
+def test_lq2_a_phrase_the_check_refuses_falls_back(lq2):
+    base = intent("Chile", domain="example-uni.cl", name="Universidad Ejemplo")
+    long = replace(base, local_phrase="uno dos tres cuatro cinco seis siete ocho nueve")
+    assert local_query(long) == local_query(base)
+
+
+def test_lq2_no_local_family_no_phrase(lq2):
+    english = replace(
+        intent("United Kingdom", domain="example-uni.ac.uk"), local_phrase="Computing"
+    )
+    assert families(queries_for(english)) == TODAY
+    master = replace(intent("Chile", degree=DegreeLevel.MASTER), local_phrase="Computación")
+    assert "local_language" not in families(queries_for(master))
+
+
+def test_lq2_a_phrase_carrying_applicant_data_cannot_build_an_intent():
+    with pytest.raises(ValueError, match="email"):
+        replace(intent("Chile"), local_phrase="someone@example.com")
+    with pytest.raises(ValueError, match="grade"):
+        replace(intent("Chile"), native_name="Universidad 3.8")
+
+
+# --- LQ-2a in discovery: the navigation read, then the search ------------------
+
+LQ2_HOME = "https://www.example-uni.cl/"
+LQ2_LINK = "https://www.example-uni.cl/carreras/ciencia-computacion"
+LQ2_HOMEPAGE = page(
+    "es",
+    ("/noticias/", "Noticias"),
+    ("/carreras/ciencia-computacion", "Licenciatura en Ciencia de la Computación"),
+)
+
+
+def lq2_adapter(provider, pages: dict[str, str]) -> LiveDiscoveryAdapter:
+    built = LiveDiscoveryAdapter(Fetcher(pages), registry_path=MISSING_REGISTRY)  # type: ignore[arg-type]
+    built._search_provider = provider
+    built._search_provider_resolved = True
+    return built
+
+
+async def lq2_discovery_run(provider) -> DiscoveryTrace:
+    built = lq2_adapter(provider, {LQ2_HOME: LQ2_HOMEPAGE})
+    trace = DiscoveryTrace(institution="Universidad Ejemplo", domain="example-uni.cl")
+    selected: dict[str, list[str]] = {category: [] for category in PageCategory.ALL}
+    entry = {"name": "Universidad Ejemplo", "country": "Chile", "homepage": LQ2_HOME}
+    await built._navigation_fallback(entry, "example-uni.cl", selected, trace, profile())
+    selected[PageCategory.PROGRAM_PAGE] = []
+    await built._add_search_results(entry, "example-uni.cl", selected, trace, profile())
+    return trace
+
+
+async def test_lq2_discovery_sends_the_homepage_phrase_and_traces_it(lq2, reserve):
+    provider = Provider()
+    trace = await lq2_discovery_run(provider)
+    localized = [call for call in provider.calls if "hl" in call]
+    assert localized == [
+        {
+            "query": 'site:example-uni.cl "Licenciatura en Ciencia de la Computación"',
+            "hl": "es",
+            "gl": "cl",
+            "domains": [],
+        }
+    ]
+    assert trace.search_queries_sent <= DEFAULT_QUERY_BUDGET
+    assert trace.local_query_phrase == {
+        "phrase": "Licenciatura en Ciencia de la Computación",
+        "source": "link",
+        "link": LQ2_LINK,
+        "page": LQ2_HOME,
+        "planned": "yes",
+    }
+    assert trace.as_dict()["local_query_phrase"]["link"] == LQ2_LINK
+
+
+async def test_lq2_off_discovery_sends_todays_words_and_traces_nothing(r5, reserve):
+    provider = Provider()
+    trace = await lq2_discovery_run(provider)
+    localized = [call["query"] for call in provider.calls if "hl" in call]
+    assert localized == ['site:example-uni.cl "ciencias de la computación" licenciatura']
+    assert trace.local_query_phrase == {}
+    assert "local_query_phrase" not in trace.as_dict()
+
+
+async def test_lq2_a_native_name_on_the_seed_row_is_the_fallback(lq2, reserve):
+    provider = Provider()
+    built = lq2_adapter(provider, {})
+    trace = DiscoveryTrace(institution="Universidad Ejemplo", domain="example-uni.cl")
+    selected: dict[str, list[str]] = {category: [] for category in PageCategory.ALL}
+    entry = {
+        "name": "Universidad Ejemplo",
+        "country": "Chile",
+        # The first carries a digit and is refused; the second is the one sent.
+        "native_name": ["Universidad Ejemplo 2026", "Universidad Ejemplo de Chile"],
+    }
+    await built._add_search_results(entry, "example-uni.cl", selected, trace, profile())
+    (localized,) = [call for call in provider.calls if "hl" in call]
+    assert localized["query"] == (
+        'site:example-uni.cl "Universidad Ejemplo de Chile" '
+        '"ciencias de la computación" licenciatura'
+    )
+    assert trace.local_query_phrase == {
+        "phrase": "Universidad Ejemplo de Chile",
+        "source": "native_name",
+        "planned": "yes",
+    }
+
+
+def test_lq2_the_harness_flag_and_its_off_form(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+
+    assert live.NEGATABLE_RULES["local-query-from-evidence"] == (
+        ("app.adapters.search.intent", "LOCAL_QUERY_FROM_PAGE_EVIDENCE"),
+    )
+    assert "local-query-from-evidence" in live.DEFAULT_OFF_NEGATABLE
+    result = subprocess.run(
+        [sys.executable, "-m", "evaluation.research.live", "--help"],
+        cwd=BACKEND,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "--local-query-from-evidence" in result.stdout
+    assert "--no-local-query-from-evidence" in result.stdout
+
+    seen = []
+
+    async def capture(case_id, output, max_pages, seconds, **kwargs):
+        seen.append(intent_module.LOCAL_QUERY_FROM_PAGE_EVIDENCE)
+
+    monkeypatch.setattr(intent_module, "LOCAL_QUERY_FROM_PAGE_EVIDENCE", False)
+    monkeypatch.setattr(live, "capture_one", capture)
+    monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "none")
+    argv = ["live", "--live", "--child", "--case", "groningen", "--out", str(tmp_path / "o.json")]
+    monkeypatch.setattr(sys, "argv", [*argv, "--local-query-from-evidence"])
+    live.main()
+    assert seen == [True]
+
+
+def test_lq2_the_parent_forwards_the_flag(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    argv = ["live", "--live", "--case", "groningen", "--out", str(tmp_path)]
+    monkeypatch.setattr(sys, "argv", [*argv, "--local-query-from-evidence"])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    commands = []
+
+    def child(command, **kwargs):
+        commands.append(command)
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="groningen").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    assert "--local-query-from-evidence" in commands[0]
