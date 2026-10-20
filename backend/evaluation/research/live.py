@@ -1471,7 +1471,7 @@ async def capture_one(
                 # exactly the case whose zero needs explaining.
                 # ES-2: the funding stage's page language and classifier
                 # category, which the outcome line does not print.
-                signals = self.outcome_signals
+                signals = getattr(self, "outcome_signals", {})
                 observation.page_outcomes = []
                 for record in canary.page_outcomes(self.run):
                     measured = signals.get((record["category"], record["url"], record["detail"]))

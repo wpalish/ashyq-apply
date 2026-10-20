@@ -181,6 +181,9 @@ class CanaryRunner(ResearchRunner):
 
     def _record_page_outcomes(self, outcomes: list[PageOutcome]) -> None:
         super()._record_page_outcomes(outcomes)
+        # A runner a test builds without ``__init__`` has no table yet.
+        if not hasattr(self, "outcome_signals"):
+            self.outcome_signals = {}
         self.outcome_signals.update(outcome_signals(outcomes))
 
     def _make_fetcher(self) -> Fetcher:
