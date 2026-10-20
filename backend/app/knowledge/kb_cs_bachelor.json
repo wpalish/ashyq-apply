@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-20.kb-cs-bachelor.19",
+ "version": "2026-10-20.kb-cs-bachelor.20",
  "built_at": "2026-10-20",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -46,6 +46,7 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-20.json",
   "evidence_check.ci-2026-10-20.json",
   "evidence_check.ci-2026-10-20.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -19443,7 +19444,7 @@
    "source_case": "qs2027-077",
    "source_batch": "batch8",
    "review_status": "expert_checked",
-   "verified_on": "2026-10-19",
+   "verified_on": "2026-10-20",
    "verified_on_basis": "ci_evidence_check",
    "university": "The University of Western Australia",
    "country": "Australia",
@@ -19534,7 +19535,29 @@
     ],
     "gpa": [],
     "deadline": [],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 54400.0,
+       "currency": "AUD"
+      },
+      "unit": "AUD per year",
+      "period": "year",
+      "academic_year": "2027",
+      "population": "international onshore undergraduate students starting in 2027, Bachelor of Advanced Computer Science (Honours), course code BH008",
+      "source_url": "https://www.fees.uwa.edu.au/Browse/BrowseCourses?feeType=INTUG&feeYear=2027",
+      "quote": "Course fees for 2027 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z B Annual Fee for Start Year Course Name Course Code Course Credit Points The minimum credit points required to complete the course Annual Credit Points The standard number of credit points taken each year by a full-time student 2027 Bachelor of Advanced Computer Science (Honours) BH008 192 48 $54,400",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "UWA fee browser (fees.uwa.edu.au, the 'fee calculator' the course pages link to), international undergraduate fee type (feeType=INTUG), 'Fees for 2027'. Table 'Course fees for 2027', column 'Annual Fee for Start Year' with the start year 2027; the row reads 'Bachelor of Advanced Computer Science (Honours) BH008 192 48 $54,400' (192 course credit points, 48 annual credit points). The page prints '$'; the currency is the Australian dollar (UWA, Perth). The year is printed as '2027', a calendar (Australian academic) year, not a 2027/28 academic year, so the build is expected to keep it stale like Auckland's 2027 figure (topup_round4 README). The same table gives the Bachelor of Science (the route of the Computer Science major page uwa.edu.au/study/courses/computer-science) the same annual fee: 'Bachelor of Science BP004 144 48 $54,400'. The course pages still say 'There is no current fee information available for this course. Please visit the fee calculator'. UWA states onshore international students are charged per credit point at a course-dependent rate and 'Fees are subject to annual indexation'. Student Services and Amenities Fee not included.",
+      "stale": false,
+      "source_batch": "topup_round10"
+     }
+    ],
     "scholarship_exists": [
      {
       "key": "scholarships.uwa_global_excellence.exists",
@@ -19588,11 +19611,6 @@
      "question": "deadline",
      "key": "deadline",
      "reason": "expert value 2027-01-11 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-19): Table 'Apply for Semester 1 by' (2027 column) for international applicants from 'All other countries'. A listed group of countries has an earlier date: '... 29 December 2025 11 May 2026 28 December 2026 24 May 2027' (Semester 1 2027: 28 December 2026). 'Dates are subject to change without notice an…"
-    },
-    {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not published for this course: the course pages say 'International Student Fees There is no current fee information available for this course. Please visit the fee calculator' (https://www.uwa.edu.au/study/courses/computer-science); the fee calculator (www.fees.uwa.edu.au/Calculator) is an interact…"
     }
    ],
    "not_applicable": [
@@ -19606,7 +19624,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4
+   "known_fact_count": 5,
+   "source_batches": [
+    "batch8",
+    "topup_round10"
+   ]
   },
   "qs2027-078": {
    "seed_id": "qs2027-078",

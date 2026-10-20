@@ -1029,3 +1029,6 @@ No stable gain on any off arm: neither reader costs development hits or claims. 
 | `--no-parent-degree-link` | 6 claims: ubc deadline + ielts overall/subscores (cohort), auckland deadline + ielts overall/subscores (dev3) | load-bearing on two sets, keep |
 | `--no-question-page-order` | none; all four sets identical | `no_dev_evidence` (ledger) |
 | `--no-award-page-evidence` | 4 claims: ubc major-entrance award + international (cohort), imperial Inspires award + international (dev3) | load-bearing on two sets, keep |
+| `--no-award-name-qualifier` | none; all four sets identical | `no_dev_evidence` (ledger) |
+| `--no-funding-identity-scope` | dev3: 9 claims (imperial deadline/ielts/tuition/Inspires award, auckland deadline/ielts) and page hits 10 → 7 on the rule-off arms; other sets identical | load-bearing, keep |
+| D3 `--no-heldout-picked-rows` (dev4 normal + knockout) | identical to the default on both | the two held-out-picked rows carry no development evidence; removing them changes nothing on dev4 (their effect is held-out-only) |
