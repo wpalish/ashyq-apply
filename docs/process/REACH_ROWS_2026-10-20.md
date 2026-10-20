@@ -114,7 +114,44 @@ On every set, `scholarship_exists` and `scholarship_international` are the lowes
 
 **Answer.** Two shapes clear the two-set bar at the level of their ES-1 trace rows:
 
-- **S4**, with `index_beyond_budget` on cohort, dev3 and dev4. The process-page half is still to be confirmed (note 1).
+- **S4**, with `index_beyond_budget` on cohort, dev3 and dev4. The process-page half shows on dev3 only, so S4 stays
+  one-set (see "S4 process-page check" below).
 - **S5**, sibling-host half only, with `award_links_dropped_off_host_same_site` on cohort and dev3.
 
 S6 and S7 have no ES-1 row. They stay one-set, and only a new instrument can lift them.
+
+## S4 process-page check (IB-1 step 1, 2026-10-20)
+
+Note 1 asked whether the index budget went to process or navigation pages before the award index was reached. This
+section answers it from the same off-arm captures (`expert-recovery-39355439164`, `-39355443373`, `-39355445801`;
+dev2 has no `index_beyond_budget` row). Unlike the tables above, it names development cases, because the check is per
+case. Note 1 allows that read. URL paths are shown by shape only, and no award is named. Both reps read the same in
+every case.
+
+How it was read: the funding walk writes one `run_diagnostics` line for each index read it charges to the budget
+(`classified as …; read as a funding index`) and one for each index it refuses (`not followed, because 3 index pages
+have already been read`). Under AP-1 the depth-0 read is not charged, so a case has three charged slots.
+
+| set | case | the 3 charged index reads (path shape) | beyond the budget (path shape) | process page in a slot? | award listing pushed out? |
+|---|---|---|---|---|---|
+| cohort | ntu | `…/fees-and-funding/financial-aid` (aid hub); `…/financial-aid/<staff-contact list>`; `…/financial-aid/<payment-scheme>` | 6 × `…/financial-aid/<loan, account or emergency-fund slug>` | one slot, a contact list | **no**. The award finder (`…/scholarships-and-awards/scholarship-opportunities`) had already been read as an award read, before any charged slot. It is client-rendered, with 0 links (S1). The six pages refused are loans and payment schemes |
+| dev3 | auckland | `…/scholarships-and-awards/scholarship-types` (hub); `…/scholarships-and-awards/scholarship-eligibility`; `…/scholarships-and-awards/how-to-apply` | 10, among them `…/scholarship-types/undergraduate-scholarships`, `…/scholarship-types/scholarships-for-international-students`, `…/undergraduate-scholarships/entry-level-and-first-year-scholarships`, `…/find-a-scholarship`, `…/applications-open-now`, and five population lists (`…/scholarships-for-<group>`) | **two slots**: eligibility and how to apply | **yes**. The undergraduate, international and first-year listings and the finder were all refused |
+| dev3 | imperial | `…/fees-and-funding/scholarships-search` (listing); `…/other-funding-sources/external-scholarships` (listing); `…/scholarships-search/<award>-<year>.php` (one award page, classified as an index) | 2 × `…/scholarships-search/<award>-<year>.php`, plus `…/fees-and-funding` (costs) | no | no. Both listings were read |
+| dev4 | rwth | `/go/id/<short id>` (listing); `…/Stipendien-Foerderung/…/Liste-von-Stipendien/?page=1` and `?page=2` | 1 × `…/Stipendien-Foerderung/<award>/~<id>/<award>` (one award page) | no | no. The paginated list was read in full |
+
+Why Auckland is the only case: all of its index candidates sit under one `…/scholarships-and-awards/` directory, so
+every one gets the same `_award_priority` (`"scholarship"` in the path, rank `(0, 0)`). The stable sort then decides
+by queue order alone, and the two process links were queued ahead of the listings. The captures hold no HTML, so this
+doc cannot say whether that came from the links' order on the page or from their depth.
+
+**Verdict.** The process-page half of S4 shows on **one set** (dev3, auckland). On cohort, one slot did go to a
+navigation page, but no award listing was pushed out. On dev4 and on dev3's imperial the budget went to the award
+listings themselves. **S4 stays one-set, and IB-1 is not built** (13-Q2 a). Its trigger is unchanged: an
+`index_beyond_budget` case on a second set whose charged slots include a process page while a listing is refused.
+
+**A different shape, recorded and not built.** On dev3 (imperial, 2 per rep) and dev4 (rwth, 1 per rep), the pages
+refused for the budget are single-award pages that the classifier calls `scholarship_index`. Their slugs name one award,
+and imperial's year-twin of the same award was charged as the third index. That shape is "an award page read as an
+index", not S4. It is two-set on the trace row, but it has not been checked against labels: no one has shown that a
+refused page is a labelled award, and AP-1 already records the sections on a refused page. If it is worked on, it needs
+its own step 1 against the dev3/dev4 labels before any rule.
