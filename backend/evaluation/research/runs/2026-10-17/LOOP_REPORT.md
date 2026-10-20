@@ -1095,3 +1095,25 @@ labels, so a page hit there never shows in it.
 | R4 + PC-1 dev3 | 3 → 4 (puc only) |
 
 **Verdict: NS-1b + PC-1 on by default.** No-search floor 9/39 → **12/39**, 0 wrong pages.
+
+### 2026-10-20 11:00 — SG-1 sitemap guesses on a crawl-delay host (5 runs)
+
+Runs `sg1-cohort/dev2/dev3/dev4` (no search, `--sitemap-guess-cap`) and the recorded guard `rp-sg1-dev4`. Columns
+off#1, off#2, on#1, on#2. Seconds are the mean `telemetry.latency_seconds` of the two repetitions per arm.
+
+| arm | hit/wrong/related/missed, off → on | claims | seconds |
+|---|---|---|---|
+| sg1-cohort | 4/0/0/6 → 4/0/0/6 | no stable change | ubc −22, ntu −15, kaist −5, rest −3…0 |
+| sg1-dev2 | 2/0/1/7 → 2/0/1/7 | no stable change | −5…+2 |
+| sg1-dev3 | 5/0/0/9 → 5/0/0/9 | **stable loss: unsw ielts.overall, ielts.subscores** | utokyo −8, most −5…0; kuleuven +27 (one repetition, three 21 s `network_unavailable` reads) |
+| sg1-dev4 | 1/0/0/8 → 1/0/0/8 | no change | **ctu −6** (bar was −20…−30); unibo +31 and rwth +14 from one 53 s / 30 s `network_unavailable` read each |
+| rp-sg1-dev4 | 5/0/1/3, 4/0/1/4 → 5/0/1/3 both | no change | ctu −7, unibo −16, rest −3…−1 |
+
+The unsw loss is the clock edge, not a wrong page: off finishes at 116 / 118 s, on at 119 / 119 s, and both on
+captures end `CAPTURE_IN_PROGRESS` under the 120 s case clock, so their claims are dropped whole. The pages it reads are
+the same.
+
+**Verdict: SG-1 stays off.** No wrong page and no hit lost, and most hosts get 2–8 s back, but the pre-registered ctu
+saving did not appear (−6 s against −20…−30 s), there is no stable gain, and dev3 shows a stable claim loss (13-Q2
+gate). Follow-up for the planner: a case that crosses the clock by a second loses every claim it had already
+extracted (unsw sits at 116–119 s with or without the rule), which is a harness fragility rather than a rule effect.
