@@ -150,7 +150,7 @@ def _stable(trace: DiscoveryTrace) -> str:
 
 
 def test_flag_is_off_by_default() -> None:
-    assert live_discovery.HOMEPAGE_HOP_READS is False
+    assert live_discovery.HOMEPAGE_HOP_READS is True  # on since the 2026-10-20 no-search replay
     assert live_discovery.HOMEPAGE_HOP_READ_CAP == 5
 
 
@@ -478,7 +478,7 @@ def test_the_flag_is_a_default_off_negatable_rule(
     assert live.NEGATABLE_RULES["homepage-hop-reads"] == (
         ("app.adapters.discovery.live_discovery", "HOMEPAGE_HOP_READS"),
     )
-    assert "homepage-hop-reads" in live.DEFAULT_OFF_NEGATABLE
+    assert "homepage-hop-reads" not in live.DEFAULT_OFF_NEGATABLE
     commands = _parent(monkeypatch, tmp_path, "--homepage-hop-reads")
     assert "--homepage-hop-reads" in commands[0]
 

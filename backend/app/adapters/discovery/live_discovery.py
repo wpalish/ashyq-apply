@@ -331,8 +331,10 @@ _GRADUATE_SITEMAP_NAME = re.compile(
 #: the SB-1 budget, the 60-read ledger and the 120 s case clock; a refused
 #: read is not retried. Structural only: no word is added. The trace records
 #: ``homepage_hop_reads``. The benchmark harness flips it per capture
-#: (``--homepage-hop-reads``).
-HOMEPAGE_HOP_READS = False
+#: (``--homepage-hop-reads``). On by default since the 2026-10-20 no-search replay
+#: with PC-1 (dev3 3→5, dev4 0→1 in both on columns; 0 wrong; knockout and the
+#: recorded guard unchanged).
+HOMEPAGE_HOP_READS = True
 #: NS-1: homepage links read as hop pages, at most.
 HOMEPAGE_HOP_READ_CAP = 5
 
@@ -358,8 +360,9 @@ HOMEPAGE_HOP_READ_CAP = 5
 #: pacing, the privacy guard, the 60-read ledger and the 120 s case clock
 #: apply as before. Structural only (a time and the scope of one verdict); no
 #: word is added. With a provider configured nothing changes. The benchmark
-#: harness flips it per capture (``--sitemap-stage-cap``).
-SITEMAP_STAGE_CAP = False
+#: harness flips it per capture (``--sitemap-stage-cap``). On by default since
+#: the 2026-10-20 no-search replay with NS-1b (same result as NS-1b's line).
+SITEMAP_STAGE_CAP = True
 #: PC-1: discovery seconds after which no sitemap document starts.
 SITEMAP_STAGE_MAX_SECONDS = SEARCH_LATEST_START_SECONDS
 #: PC-1: the trace line a stalled sitemap document adds.

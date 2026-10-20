@@ -59,6 +59,8 @@ def gold(name: str) -> str:
 @pytest.fixture(params=[False, True], ids=["off", "on"])
 def r4(request, monkeypatch) -> bool:
     monkeypatch.setattr(live_discovery, "LOCAL_CATALOGUE_ENTRY", request.param)
+    # NS-1b reaches the same study pages through hop reads; pinned off to isolate R4.
+    monkeypatch.setattr(live_discovery, "HOMEPAGE_HOP_READS", False)
     monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", True)
     return request.param
 

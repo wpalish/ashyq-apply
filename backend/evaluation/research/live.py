@@ -1819,8 +1819,6 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "subpage-requirements-lead",
         "identity-fold-marks",
         "same-site-award-links",
-        "homepage-hop-reads",
-        "sitemap-stage-cap",
         "local-query-from-evidence",
     }
 )

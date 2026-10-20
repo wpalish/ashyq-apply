@@ -195,7 +195,7 @@ def _stable(trace: DiscoveryTrace) -> str:
 
 
 def test_flag_is_off_by_default() -> None:
-    assert live_discovery.SITEMAP_STAGE_CAP is False
+    assert live_discovery.SITEMAP_STAGE_CAP is True  # on since the 2026-10-20 no-search replay
     # The time SB-1b ends the sitemap stage when a provider is configured.
     assert live_discovery.SITEMAP_STAGE_MAX_SECONDS == SEARCH_LATEST_START_SECONDS == 33.0
 
@@ -449,7 +449,7 @@ def test_the_flag_is_a_default_off_negatable_rule(
     assert live.NEGATABLE_RULES["sitemap-stage-cap"] == (
         ("app.adapters.discovery.live_discovery", "SITEMAP_STAGE_CAP"),
     )
-    assert "sitemap-stage-cap" in live.DEFAULT_OFF_NEGATABLE
+    assert "sitemap-stage-cap" not in live.DEFAULT_OFF_NEGATABLE
     commands = _parent(monkeypatch, tmp_path, "--sitemap-stage-cap")
     assert "--sitemap-stage-cap" in commands[0]
 

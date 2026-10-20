@@ -1075,3 +1075,23 @@ link on a sibling host — shared by dev3 (puc, iitd) and dev4 (kit) → NS-1b o
 **Verdict: NS-1b stays off.** The pre-registered bar needs a stable gain on both dev3 and dev4; only dev4 (kit) moved,
 and the already-built R4 rule reaches kit as well. puc is unstable under the 120 s clock (sitemap read marks the host
 slow). Recorded for a re-run when the clock rule or the slow-host rule changes.
+
+### 2026-10-20 09:15 — NS-1b + PC-1 on the no-search bench (13 runs) — and a correction
+
+**Correction:** the scorecard columns are off#1, off#2, on#1, on#2 (not ABBA). Re-read with that order, the
+2026-10-20 06:45 NS-1b run already moved dev3 3 → 4 in both on columns (puc) and dev4 0 → 1 (kit); its "puc
+unstable" verdict was a misreading. The "stable gains" line lists claims only, and dev3 has no programme.exists
+labels, so a page hit there never shows in it.
+
+| arm | off#1 / off#2 → on#1 / on#2 (hit/wrong/related/missed) |
+|---|---|
+| ns1b-cohort | 4/0/0/6 → 4/0/0/6 (unchanged) |
+| ns1b-dev2 | 2/0/1/7 → 2/0/1/7 (unchanged) |
+| ns1b-dev3 | 3/0/0/11 → **5/0/0/9** both on columns (puc, iitd) |
+| ns1b-dev4 | 0/0/0/9 → **1/0/0/8** both on columns (kit) |
+| knockout, 4 sets | identical; wrong pages not up |
+| recorded guard dev3/dev4 | identical |
+| pc1 alone dev3/dev4 | identical (as pre-registered) |
+| R4 + PC-1 dev3 | 3 → 4 (puc only) |
+
+**Verdict: NS-1b + PC-1 on by default.** No-search floor 9/39 → **12/39**, 0 wrong pages.
