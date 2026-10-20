@@ -166,6 +166,12 @@ release gate document.
 | 95 | Payments off changes nothing | **PASS** | `UNIMATCH_PAYMENTS_ENABLED=false` is the default, and `test_with_payments_disabled_everything_is_visible` in `test_entitlements.py` asserts every case stays fully open. `test_payments_config.py` pins the defaults and that secrets never render in a settings dump |
 | 96 | Community content can be moderated, and a person can leave | **PASS** | Feed, threads, private conversations with a setting that guards the first message, blocking, a report queue someone can work, and avatars stripped of their metadata. `test_social_api.py`, `test_social_messages.py`, `test_social_moderation.py`, `test_social_avatars.py`, `test_social_models.py`. Account deletion has a test for the seam with the community. **Not gated:** community rules and a moderation SLA are not written, and no gate covers what a moderator is supposed to do |
 
+### Added for the knowledge base (kb mode)
+
+| # | Gate | Status | Evidence |
+|---|---|---|---|
+| 97 | The kb-mode journey an applicant sees is walked in a browser on every push | **PENDING — PASS only with the CI output** | `npm run e2e:kb` (`frontend/playwright.kb.config.ts`, `e2e/kb-journey.spec.ts`; E2E-KB): the real API and worker in `UNIMATCH_KNOWLEDGE_MODE=kb`, no search provider, a scratch SQLite database at `alembic upgrade head`, the network guard with a probe that proves it blocks; nine catalogue universities, en/ru/kk, the catalogue chips and verified filter, the shortlist cards, the Requirements, Costs, Documents and Sources tabs and the Documents screen; red on any of the smokes' 13 fixes (D1–D6, U1–U6, U8), each reverted once locally to see it go red. Green locally (8 tests, 51–66 s); a step of `ci.yml`'s `frontend` job, report artifact `playwright-report-kb`. Mark PASS with the first green CI run's link |
+
 ## Summary
 
 Counted on `2be6b55`, over gates 1-96.
