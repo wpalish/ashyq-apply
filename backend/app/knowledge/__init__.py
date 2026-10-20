@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 log = logging.getLogger("unimatch.knowledge")
 
@@ -262,9 +263,34 @@ class KnowledgeEntry:
             return "known"
         if self.programme.get("offered") is False:
             return "not_offered"
-        if isinstance(self.programme.get("related_reason"), dict):
+        if self.related_route is not None:
             return "related_only"
         return "unknown"
+
+    @property
+    def related_route(self) -> dict[str, Any] | None:
+        """``programme.related_reason`` when it names a route on an official page; else None.
+
+        The run serves the route as "official page: <url>" and offers the URL
+        as the contact, so a name without a URL on one of this entry's
+        official domains is no route at all (security review 2026-10-22,
+        SR2-05): the build takes the URL from an expert draft, not from a
+        checked page.
+        """
+        related = self.programme.get("related_reason")
+        if not isinstance(related, dict) or not related.get("name"):
+            return None
+        return related if self.on_official_domain(related.get("url")) else None
+
+    def on_official_domain(self, url: Any) -> bool:
+        """Whether ``url`` is an http(s) page on one of this entry's official domains."""
+        parts = urlsplit(str(url or ""))
+        host = (parts.hostname or "").lower().removeprefix("www.")
+        return (
+            parts.scheme in ("http", "https")
+            and bool(host)
+            and any(host == d or host.endswith("." + d) for d in self.official_domains)
+        )
 
     @property
     def has_verified_data(self) -> bool:

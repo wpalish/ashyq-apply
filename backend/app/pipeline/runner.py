@@ -1438,7 +1438,10 @@ class ResearchRunner:
         if route in ("not_offered", "related_only") and entry is not None:
             related = related if isinstance(related, dict) else {}
             checked = str(related.get("checked_on") or entry.verified_on or "date not recorded")
-            name, url = related.get("name"), related.get("url")
+            # Named as an "official page" only with a URL on the entry's
+            # official domains (``related_route``; security review SR2-05).
+            route_named = entry.related_route is not None
+            name, url = (related.get("name"), related.get("url")) if route_named else (None, None)
             if route == "not_offered":
                 return UnresolvedQuestion(
                     topic="official source",

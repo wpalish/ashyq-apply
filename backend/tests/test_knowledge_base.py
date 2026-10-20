@@ -2052,6 +2052,12 @@ _REASON = {
         ({"related_reason": _REASON, "offered": False}, "not_offered"),
         ({"offered": False}, "not_offered"),
         ({}, "unknown"),
+        # SR2-05: a route whose page is not on an official domain is no route.
+        ({"related_reason": {**_REASON, "url": "https://studyportal.example/mit-cs"}}, "unknown"),
+        ({"related_reason": {**_REASON, "url": "https://notmit.edu/x"}}, "unknown"),
+        ({"related_reason": {**_REASON, "url": "javascript:alert(1)//mit.edu"}}, "unknown"),
+        ({"related_reason": {**_REASON, "name": ""}}, "unknown"),
+        ({"related_reason": {**_REASON, "url": "https://catalog.mit.edu/x"}}, "related_only"),
     ],
 )
 def test_programme_route(tmp_path, programme, route):
@@ -2111,6 +2117,54 @@ async def test_the_three_routes_are_said_and_only_an_unsettled_one_blocks(
     if not blocking:
         assert question["suggested_contact"] == RELATED_URL
         assert "Which official page" not in question["question"]
+
+
+NOT_OFFICIAL = "https://studyportal.example/mit-computer-science"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "programme,blocking,text",
+    [
+        (
+            {"related_reason": {**_REASON, "url": NOT_OFFICIAL}},
+            True,
+            "Which official page publishes the",
+        ),
+        (
+            {"related_reason": {**_REASON, "url": NOT_OFFICIAL}, "offered": False},
+            False,
+            "Massachusetts Institute of Technology publishes no bachelor's in Computer "
+            "Science (checked 2026-10-18).",
+        ),
+    ],
+)
+async def test_a_route_on_a_non_official_host_is_never_called_an_official_page(
+    catalogue_session, profile, settings, tmp_path, no_network, programme, blocking, text
+):
+    """SR2-05 (security review 2026-10-22): the route's URL comes from an expert draft."""
+    _run_, payload = await _funding_run(
+        catalogue_session, profile, settings, tmp_path, _route_entry(**programme)
+    )
+    (question,) = [q for q in payload["unresolved"] if q["topic"] == "official source"]
+    assert question["blocking"] is blocking
+    assert question["question"].startswith(text)
+    assert NOT_OFFICIAL not in json.dumps(payload)
+    if not blocking:
+        assert question["suggested_contact"] == "admissions office"
+        assert "official page" not in question["why_it_matters"]
+
+
+def test_every_committed_related_route_is_on_an_official_page():
+    """No REL-1 entry of the committed KB loses its route to the official-domain check."""
+    kb = load_knowledge_base()
+    routed = {
+        seed_id: entry
+        for seed_id, entry in kb.entries.items()
+        if isinstance(entry.programme.get("related_reason"), dict)
+    }
+    assert routed
+    assert all(entry.related_route is not None for entry in routed.values())
 
 
 # ----------------------------------------------- WHY-1: why a value is unknown
