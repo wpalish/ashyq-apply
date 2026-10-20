@@ -1032,3 +1032,18 @@ No stable gain on any off arm: neither reader costs development hits or claims. 
 | `--no-award-name-qualifier` | none; all four sets identical | `no_dev_evidence` (ledger) |
 | `--no-funding-identity-scope` | dev3: 9 claims (imperial deadline/ielts/tuition/Inspires award, auckland deadline/ielts) and page hits 10 → 7 on the rule-off arms; other sets identical | load-bearing, keep |
 | D3 `--no-heldout-picked-rows` (dev4 normal + knockout) | identical to the default on both | the two held-out-picked rows carry no development evidence; removing them changes nothing on dev4 (their effect is held-out-only) |
+| `--no-coordinated-degree-scope` | none stable (cohort claim counts swing 17–20 across arms = known ntu noise) | `no_dev_evidence` |
+| `--no-international-round-deadline` | none stable (cohort 13–20 swing, same noise) | `no_dev_evidence` |
+
+**D-D summary (12 default-on rules ablated on replay):** load-bearing — IM-1, alias-aware match, english-readers-v2,
+fee-readers-v2, intake-section-deadline, parent-degree-link, award-page-evidence, funding-identity-scope (the last
+the largest: 9 claims and 3 page hits on dev3). No development evidence — question-page-order, award-name-qualifier,
+coordinated-degree-scope, international-round-deadline (kept on: guards by construction, no stable gain on an off
+arm, so none is harmful). No rule costs development hits or claims.
+
+### 2026-10-20 04:15 — reach-shape step-1 checks (REACH_ROWS_2026-10-20.md)
+
+S4 (index budget spent on process pages): dev3 only → IB-1 not built. AI-1 (single award read as index): 0 sets
+cost a labelled claim → not built. AW-1 (labelled award page refused as not-award): 0 strict / 1 loose (dev4 rwth;
+cause: `_AWARD_SIGNALS` English-only) → AW-2 started as a language-coverage rule (LV-1 precedent), plus ES-2 to
+measure refusals by page language. SH-1 (sibling-host award links, cohort + dev3) built; replay running.
