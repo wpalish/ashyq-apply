@@ -1062,3 +1062,16 @@ off arm. The expected dev4 rwth award page is now read as an award, but its labe
 scored claim moves. **On by default** under the language-coverage bar (LV-1 precedent: no stable loss, no new
 wrong page). NS-1a (NO_SEARCH_FLOOR_2026-10-21.md): the no-search fallback never reads the homepage's top study
 link on a sibling host — shared by dev3 (puc, iitd) and dev4 (kit) → NS-1b opens.
+
+### 2026-10-20 06:45 — NS-1b `--homepage-hop-reads` on the no-search bench (4 sets, normal + knockout) + guards
+
+| arm | result |
+|---|---|
+| no-search normal | dev4: **kit stable gain** (programme page); dev3: puc hit in two columns only (not stable); cohort, dev2 identical; 0 wrong pages |
+| no-search knockout | identical to off on all sets; wrong pages not up |
+| recorded guard dev3/dev4 | identical (no stable change) |
+| R4 comparison `--local-catalogue-entry`, no search | the same kit stable gain on dev4; nothing else |
+
+**Verdict: NS-1b stays off.** The pre-registered bar needs a stable gain on both dev3 and dev4; only dev4 (kit) moved,
+and the already-built R4 rule reaches kit as well. puc is unstable under the 120 s clock (sitemap read marks the host
+slow). Recorded for a re-run when the clock rule or the slow-host rule changes.
