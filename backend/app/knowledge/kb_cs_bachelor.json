@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-20.kb-cs-bachelor.20",
+ "version": "2026-10-20.kb-cs-bachelor.21",
  "built_at": "2026-10-20",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -49,6 +49,7 @@
   "evidence_check.ci-2026-10-20.json",
   "evidence_check.ci-2026-10-20.json",
   "evidence_check.ci-2026-10-20.json",
+  "evidence_check.ci-2026-10-20.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -67,6 +68,7 @@
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.recheck-2026-10-20.json",
   "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
@@ -2461,7 +2463,32 @@
       ]
      }
     ],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "min": 17950.0,
+       "max": 18900.0,
+       "currency": "SGD"
+      },
+      "unit": "SGD per year",
+      "period": "year",
+      "academic_year": "not stated ('the most recently published annual tuition fees')",
+      "population": "international students receiving the MOE Tuition Grant",
+      "source_url": "https://www.comp.nus.edu.sg/admissions/faq/",
+      "quote": "For International Students: S$17,950 to S$18,900",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "A range, not a single amount; with the MOE Tuition Grant (which carries a service obligation). Same list: 'For students not receiving the MOE Tuition Grant: S$39,200'. Year not stated; 'fees for the upcoming academic year may change'; official schedule (nus.edu.sg/registrar ugtuitioncurrent.pdf) behind Incapsula.",
+      "stale": true,
+      "stale_reasons": [
+       "the academic year is not stated"
+      ]
+     }
+    ],
     "scholarship_exists": [
      {
       "key": "scholarships.computing.exists",
@@ -2674,11 +2701,6 @@
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert (2026-10-20): Access. Re-tried 2026-10-20: https://www.nus.edu.sg/oam/admissions/international-qualifications and https://www.nus.edu.sg/oam/admissions/english-language-requirements answer HTTP 200 with an empty body (0 readable characters, bot wall). The School of Computing CS page (200) states no English score…",
      "source_batch": "topup_round7"
-    },
-    {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "No single amount and currency. Expert (2026-10-19): A range, not a single amount; with the MOE Tuition Grant (which carries a service obligation). Same list: 'For students not receiving the MOE Tuition Grant: S$39,200'. Year not stated; 'fees for the upcoming academic year may change'; official schedule (nus.edu.sg/registrar ugtuitioncurrent.pdf) be…"
     }
    ],
    "not_applicable": [
@@ -2693,7 +2715,7 @@
      "source_batch": "topup_deadlines1"
     }
    ],
-   "known_fact_count": 9,
+   "known_fact_count": 10,
    "source_batches": [
     "batch8",
     "topup_deadlines1",
@@ -11900,7 +11922,7 @@
    "source_case": "qs2027-046",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": "2026-10-19",
+   "verified_on": "2026-10-20",
    "verified_on_basis": "ci_evidence_check",
    "university": "University of British Columbia",
    "country": "Canada",
@@ -11919,7 +11941,32 @@
     "english": [],
     "gpa": [],
     "deadline": [],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 1769.4,
+       "currency": "CAD"
+      },
+      "unit": "CAD per credit",
+      "period": "credit",
+      "academic_year": "2026/27",
+      "population": "international undergraduate students in Science (the Faculty of Science, which offers the Computer Science B.Sc.), column 'International per-credit rate (commenced in 2026S or later)'",
+      "source_url": "https://vancouver.calendar.ubc.ca/fees/tuition-fees/undergraduate",
+      "quote": "Science $1,769.40 $1,752.39 $1,719.01 $1,686.27 $1,654.15 $1,622.35 $1,591.15 Social Work",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "UBC Vancouver Academic Calendar, Fees > Tuition Fees > Undergraduate, table 'International Students - Program'. The first rate column is headed 'International per-credit rate (commenced in 2026S or later)', and its footnote 2 reads 'For international undergraduate students starting their degree programs in the 2026/27 academic year, tuition will increase by no more than 3% each year for the subsequent four years'. The row 'Science' reads $1,769.40 in that column (the other six columns are earlier start cohorts). The page prints a per-credit rate only: no yearly figure and no Science credit load, so nothing is multiplied out (period 'credit'). Correction to topup_round10's README: $1,789.18 is the 'Applied Science' row, not Science. The year recorded is 2026/27 (the footnote's start year); no 2027/28 rate is published, so the build keeps it stale for a fall 2027 intake. 'Tuition fees are reviewed annually by the Board of Governors.' The page prints '$' only; the currency is the Canadian dollar (UBC Vancouver). The Computer Science B.Sc. being a Science degree is from the KB's programme page (you.ubc.ca/programs/computer-science-vancouver-bsc), not from this page. Student fees are not included.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026/27 is before the fall 2027 intake's 2027/28"
+      ],
+      "source_batch": "topup_round11"
+     }
+    ],
     "scholarship_exists": [],
     "scholarship_international": [],
     "documents": [
@@ -12008,20 +12055,16 @@
      "reason": "Expert did not establish it. Expert draft 2026-10-19."
     },
     {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "only the not stated fee is published, not 2027/28 (expert value 53,082 CAD per year). Expert (2026-10-19): Value comes from the page's inline cost-estimator data (script 'pb-cost-estimator-js-extra', var costEstimatorData -> vancouver -> programs -> computer_science), which the page renders as its 'first year cost' estimate. It is NOT in the readable text, so the container quote check is expected to rep…"
-    },
-    {
      "question": "scholarship_exists",
      "key": "scholarships",
      "reason": "Expert did not establish a scholarship; no scholarship keys written."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3,
+   "known_fact_count": 4,
    "source_batches": [
     "topup_imported",
+    "topup_round11",
     "topup_documents1"
    ]
   },
@@ -17028,7 +17071,8 @@
      {
       "key": "tuition",
       "value": {
-       "amount": 49581.6,
+       "min": 49581.6,
+       "max": 60909.6,
        "currency": "NZD"
       },
       "unit": "NZD per year",
@@ -18335,7 +18379,7 @@
    "source_case": "qs2027-072",
    "source_batch": "batch5",
    "review_status": "expert_checked",
-   "verified_on": "2026-10-19",
+   "verified_on": "2026-10-20",
    "verified_on_basis": "ci_evidence_check+sandbox_recheck",
    "university": "University of Texas at Austin",
    "country": "United States of America",
@@ -18437,7 +18481,33 @@
       "stale": false
      }
     ],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "min": 42554.0,
+       "max": 51106.0,
+       "currency": "USD"
+      },
+      "unit": "USD per year",
+      "period": "year",
+      "academic_year": "2026-27",
+      "population": "non-resident full-time undergraduate, Fall & Spring semesters, based on 12-hour enrollment (university-wide range; no Computer Science figure printed)",
+      "source_url": "https://onestop.utexas.edu/managing-costs/cost-tuition-rates/cost-of-attendance/",
+      "quote": "Non-Resident Tuition $42,554-$51,106",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "recheck",
+      "notes": "Texas One Stop, Cost of Attendance, '2026-27 Estimated Costs': 'The figures below outline the estimated cost of attendance for undergraduate and graduate students to attend UT during Summer 2026 and the 2026-27 academic year.' Table 'Fall & Spring Semesters for Full-Time Undergraduate', column 'Non-Resident', row 'Tuition': $42,554-$51,106, 'Based on 12-hour enrollment'. Fall and Spring together are the academic year, so the period is a year. A range for all programmes, kept as printed; no figure inside it is chosen. No 2027-28 figure is published, so the build keeps it stale for a fall 2027 intake. The page does not say which rate international students pay; that they pay the non-resident rate is the expert's reading (batch5), not this page's text.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026-27 is before the fall 2027 intake's 2027/28"
+      ],
+      "source_batch": "topup_round11"
+     }
+    ],
     "scholarship_exists": [
      {
       "key": "scholarships.incoming.exists",
@@ -18648,20 +18718,16 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA or grade threshold published for international first-year applicants on the pages read; holistic review."
     },
     {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "No single amount and currency. Expert (2026-10-19): Cost of attendance for 'the 2026-27 academic year', Fall & Spring semesters, non-resident: a RANGE, $42,554-$51,106 (varies by college/program; College of Natural Sciences adds a $500 non-resident differential per semester, included in advertised rates). No single amount; no 2027-28 figure. Interna…"
-    },
-    {
      "question": "scholarship_international",
      "key": "scholarships.incoming.applicability.international",
      "reason": "Expert did not establish it. Expert (2026-10-19): No page read states whether international students are eligible for incoming-student scholarships. The TASFA mention covers Texas non-citizen residents, not international students. Not established."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 13,
+   "known_fact_count": 14,
    "source_batches": [
     "batch5",
+    "topup_round11",
     "topup_documents2"
    ]
   },
@@ -20791,7 +20857,7 @@
    "source_case": "qs2027-083",
    "source_batch": "batch4",
    "review_status": "expert_checked",
-   "verified_on": "2026-10-19",
+   "verified_on": "2026-10-20",
    "verified_on_basis": "ci_evidence_check",
    "university": "The University of Sheffield",
    "country": "United Kingdom",
@@ -20898,7 +20964,30 @@
       "stale": false
      }
     ],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "min": 27650.0,
+       "max": 34670.0,
+       "currency": "GBP"
+      },
+      "unit": "GBP per year",
+      "period": "year",
+      "academic_year": "2027/28",
+      "population": "new full-time overseas undergraduates, every course except Medicine and Dentistry (university-wide range; no Computer Science figure printed)",
+      "source_url": "https://www.sheffield.ac.uk/new-students/tuition-fees/undergraduate-overseas",
+      "quote": "For the 2027/28 academic year, the University of Sheffield will charge new full-time overseas undergraduates, tuition fees between £27,650 and £34,670 (except for Medicine and Dentistry courses, see below).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "'Tuition fees for undergraduate overseas students', section 'Your tuition fee'. A university-wide range for the 2027/28 academic year, not a Computer Science figure: the course page's fee block is a JavaScript look-up and the look-up tool's host (tools.sheffield.ac.uk) has an unreachable robots.txt, so the CS amount was not read (topup_round10). Kept as a printed range ({min, max}); no figure inside it is chosen. The same page: 'The tuition fee you pay in your first year will be the same for each year of your course.' The page also prints the 2026/27 range (£25,000 and £32,100), not used.",
+      "stale": false,
+      "source_batch": "topup_round11"
+     }
+    ],
     "scholarship_exists": [
      {
       "key": "scholarships.award_2027.exists",
@@ -20947,15 +21036,13 @@
     ],
     "documents": []
    },
-   "unknown": [
-    {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): The course page fills \"Course fee\" with a JavaScript fee lookup (empty div course-ug-fee-lookup in the HTML); no CS overseas amount in readable text. The overseas-fees page gives only a university-wide 2027/28 range (search index: £27,650-£34,670), not this course. Official-domain note: kb_top100_l…"
-    }
-   ],
+   "unknown": [],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 7,
+   "source_batches": [
+    "batch4",
+    "topup_round11"
+   ]
   },
   "qs2027-084": {
    "seed_id": "qs2027-084",
@@ -24851,6 +24938,14 @@
   },
   {
    "seed_id": "qs2027-010",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "the academic year is not stated"
+   ]
+  },
+  {
+   "seed_id": "qs2027-010",
    "question": "documents",
    "key": "documents.passport",
    "reasons": [
@@ -25475,6 +25570,14 @@
    ]
   },
   {
+   "seed_id": "qs2027-046",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2026/27 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
    "seed_id": "qs2027-047",
    "question": "deadline",
    "key": "deadline",
@@ -25800,6 +25903,14 @@
    "key": "tuition",
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
+   "seed_id": "qs2027-072",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2026-27 is before the fall 2027 intake's 2027/28"
    ]
   },
   {
