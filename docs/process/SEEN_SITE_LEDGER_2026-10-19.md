@@ -122,6 +122,26 @@ case named in their comments is a cohort case.
 **The award route is not on.** The ticket lists it among the rules turned on, but `AWARD_ROUTE = False`.
 AR-1 stayed off: it changes the golden demo and never gained a label.
 
+## Rules motivated by a heldout trace (HP-AUDIT D5, added 2026-10-20)
+
+`HELDOUT_PROVENANCE_AUDIT_2026-10-20.md` (`e30dd2d5`), decision D5, hands four rules to this ledger: they are not
+language rows, but their introducing commits cite the quarantined discovery analysis and their old comments named
+heldout universities (the comments are generic since `e30dd2d5`). Built from commit hashes, commit subjects and the
+current generic comments only; the quarantined analysis and no heldout file, capture, log or label were opened.
+Same columns as the ledger, plus the heldout reference. For every row the heldout look of 2026-10-19 is
+**in-sample** evidence, not out-of-sample.
+
+| # | flag / loop id | introduced (commit) | on since (runs) | motivating trace, generic shape | heldout reference | stable gains recorded, by case (set) | gains outside the motivating set? | kind | verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| 52 | PG-1's `news-single-view` exclusion (`live_discovery._PG1_URL_EXCLUSIONS`, read only under `PROGRAMME_PAGE_GUARD`) | `ae3ce135` | with PG-1 (row 3): 39067949720 / 51214; no run of its own | a CMS news-article view path, `…/news-single-view…/article/…`, offered as a programme lead | commit cites the quarantined analysis; the trace was a heldout-set run | none attributable (PG-1's gains are on other page shapes) | — | guard (excluded path) | **general** (guard, by construction), not separately measurable: its only off arm is `--no-programme-page-guard`, which removes all of PG-1 |
+| 53 | `CANONICAL_HTTP_HTTPS` CU-1 (already row 2) | `90f9da55` | 39067189351 / 90840 | one navigation offered `http://…/<listing>` and `https://…/<listing>` on a Crawl-delay 10 host, so the same page was read twice | the comment named a heldout university (now generic) | no label; dev2 reads 345→326 (D2) | set (D2 reads) | guard (dedupe) | **general** (unchanged); off arm `--no-canonical-http-https` |
+| 54 | `COST_AWARE_SEARCH_ORDER` SO-1 | `23f71b26` | **off** (no default-on run) | a slow host: Crawl-delay 10 s, every read ~10 s, search never reached (`search_calls = 0` in 8/8 repetitions) | commit cites the quarantined analysis; the comment cited heldout timings and named a heldout university (now generic) | — | — | recall (stage order) | **off — not counted**; its order code lives on inside SB-1 (row 9), so SB-1's slow-host branch inherits this provenance |
+| 55 | `SITEMAP_CHILD_PRIORITY` SM-1 | `0305b0fb` | **off** (no default-on run) | a sitemap index that lists `post-sitemap1..24` before its page and programme sitemaps, so the document cap ran out on posts; Crawl-delay 10 hosts probing conventional locations after `/sitemap.xml` answered | commit cites the quarantined analysis; the comment cited heldout timings and named a heldout university (now generic) | — | — | guard (read order) | **off — not counted**; SM-2 (row 16) shares its stop-probing rule and `_SITEMAP_CHILD_FIRST`, so that part of SM-2 inherits this provenance |
+
+Effect on the counts: none. Rows 52 and 53 sit inside rows 3 and 2, which keep their verdicts; rows 54 and 55 are off
+by default. What changes is how a heldout result reads: PG-1, CU-1 and the SO-1/SM-1 code that SB-1 and SM-2 reuse
+were designed with heldout traces in view, so dev5 (design-blind) is their only out-of-sample test.
+
 ## Counts
 
 | verdict | rules | of which |

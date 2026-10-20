@@ -597,6 +597,15 @@ _LOCALIZED_PROGRAM_SIGNALS: tuple[tuple[str, int], ...] = (
         3,
     ),
 )
+#: HP-AUDIT D3 (``HELDOUT_PICKED_ROWS`` off): the same rule without
+#: "studienangebot", the one path word a heldout page picked (audit row A6).
+_LOCALIZED_PROGRAM_SIGNALS_WITHOUT_HELDOUT_PICKED: tuple[tuple[str, int], ...] = (
+    (
+        r"/(studiengaenge|studiengange|corsi-di-laurea|corso-di-laurea"
+        r"|carreras|grados|titulaciones|formations|utbildningar|studijni-programy)/[a-z-]{4,}",
+        3,
+    ),
+)
 #: LI-1: degree words whose level is certain, as URL slugs (accents folded),
 #: matched on a segment boundary like ``_DEGREE_SLUGS``. Each is a degree-law
 #: or dictionary word (re-checked in HELDOUT_PROVENANCE_AUDIT_2026-10-20):
@@ -620,6 +629,37 @@ _LOCALIZED_DEGREE_COMPOUNDS: tuple[tuple[str, str], ...] = (
     ("master", r"yuksek-?lisans"),
     ("bachelor", r"laurea-triennale"),
 )
+#: HP-AUDIT D3: the compound a heldout page picked (audit row A17). With
+#: ``HELDOUT_PICKED_ROWS`` off it is left out, so a ``laurea-magistrale`` slug
+#: falls through to ``laurea`` (bachelor) exactly as it would had the row
+#: never been written.
+_HELDOUT_PICKED_COMPOUND = ("master", r"laurea-magistrale")
+#: HP-AUDIT D3 (``docs/process/HELDOUT_PROVENANCE_AUDIT_2026-10-20.md``): two
+#: LI-1 rows are dictionary words, but they were *selected* because a heldout
+#: page needed them, by LI-1's own comment: the German path word
+#: "studienangebot" in ``_LOCALIZED_PROGRAM_SIGNALS`` (row A6) and the Italian
+#: compound ``laurea-magistrale`` in ``_LOCALIZED_DEGREE_COMPOUNDS`` (row A17).
+#: On (default, byte-identical to before the flag): both rows are read. Off (a
+#: removal replay, ``--no-heldout-picked-rows``): both are left out, every
+#: other LI-1 row unchanged. Read only where LI-1's tables are read, so it does
+#: nothing while ``LOCALIZED_IDENTITY`` is off.
+HELDOUT_PICKED_ROWS = True
+
+
+def localized_program_signals() -> tuple[tuple[str, int], ...]:
+    """LI-1's local programme-path rules, with or without the heldout-picked word (D3)."""
+    if HELDOUT_PICKED_ROWS:
+        return _LOCALIZED_PROGRAM_SIGNALS
+    return _LOCALIZED_PROGRAM_SIGNALS_WITHOUT_HELDOUT_PICKED
+
+
+def _localized_degree_compounds() -> tuple[tuple[str, str], ...]:
+    """LI-1's compound degree slugs, with or without the heldout-picked compound (D3)."""
+    if HELDOUT_PICKED_ROWS:
+        return _LOCALIZED_DEGREE_COMPOUNDS
+    return tuple(row for row in _LOCALIZED_DEGREE_COMPOUNDS if row != _HELDOUT_PICKED_COMPOUND)
+
+
 _LOCALIZED_DEGREE_SLUGS: tuple[tuple[str, str], ...] = (
     ("bachelor", r"laurea"),
     ("bachelor", r"lisans"),
@@ -2295,7 +2335,7 @@ def score_url(url: str, category: str) -> int:
         return 0
     signals = _URL_SIGNALS[category]
     if LOCALIZED_IDENTITY and category == PageCategory.PROGRAM_PAGE:
-        signals = (*signals, *_LOCALIZED_PROGRAM_SIGNALS)
+        signals = (*signals, *localized_program_signals())
     if LOCAL_CATALOGUE_ENTRY and category in _LOCAL_LISTING_SIGNALS:
         signals = (*signals, *_LOCAL_LISTING_SIGNALS[category])
     return sum(weight for pattern, weight in signals if re.search(pattern, path))
@@ -2530,7 +2570,7 @@ def _localized_degree_level(url: str, path: str) -> str | None:
     def named(pattern: str) -> bool:
         return re.search(rf"(^|[/-]){pattern}([/-]|$)", path) is not None
 
-    for level, pattern in _LOCALIZED_DEGREE_COMPOUNDS:
+    for level, pattern in _localized_degree_compounds():
         if named(pattern):
             return level
     for level, slugs in _DEGREE_SLUGS.items():

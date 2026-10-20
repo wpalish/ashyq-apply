@@ -1782,6 +1782,9 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "lexicon-language-coverage": (("app.adapters.page_classifier", "LEXICON_LANGUAGE_COVERAGE"),),
     # Default-off (NEXT_CYCLES_2026-10-20 §6, IG bundle, NN-1b).
     "identity-fold-marks": (("app.catalogue.discovery", "IDENTITY_FOLD_MARKS"),),
+    # Default-on, entered for the removal replay of HP-AUDIT D3
+    # (HELDOUT_PROVENANCE_AUDIT_2026-10-20): the two heldout-picked LI-1 rows.
+    "heldout-picked-rows": (("app.adapters.discovery.live_discovery", "HELDOUT_PICKED_ROWS"),),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
@@ -2317,6 +2320,13 @@ def main() -> None:
         help="plan item LV-1: the dictionary rows the lexicon battery found missing for "
         "languages a development set speaks (Estonian integrated study as a master's, the "
         "Bokmål/Nynorsk computer-science alias, local level words in URL slugs)",
+    )
+    parser.add_argument(
+        "--heldout-picked-rows",
+        action="store_true",
+        help="HP-AUDIT D3 (on by default): LI-1 reads the two rows a heldout page picked, the "
+        "German path word 'studienangebot' and the Italian slug compound 'laurea-magistrale'; "
+        "--no-heldout-picked-rows leaves both out for a removal replay",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2915,6 +2925,10 @@ def main() -> None:
             from app.adapters import page_classifier as lv1_module
 
             lv1_module.LEXICON_LANGUAGE_COVERAGE = True
+        if args.heldout_picked_rows:
+            from app.adapters.discovery import live_discovery as hp_module
+
+            hp_module.HELDOUT_PICKED_ROWS = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -3272,6 +3286,7 @@ def main() -> None:
                             if args.lexicon_language_coverage
                             else []
                         ),
+                        *(["--heldout-picked-rows"] if args.heldout_picked_rows else []),
                         *(
                             ["--alias-aware-program-match"]
                             if args.alias_aware_program_match

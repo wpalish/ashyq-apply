@@ -30,12 +30,12 @@ from app.adapters import page_classifier
 from app.adapters.discovery.live_discovery import (
     _LOCAL_CATALOGUE_PATH,
     _LOCAL_LISTING_SIGNALS,
-    _LOCALIZED_PROGRAM_SIGNALS,
     PageCategory,
     canonical_url,
     degree_level_named,
     is_excluded_path,
     is_seed_host,
+    localized_program_signals,
     looks_like_catalogue,
 )
 from app.adapters.page_classifier import PageType, classify_url
@@ -420,7 +420,7 @@ def _local_catalogue_path(url: str) -> bool:
     path = urlsplit(url).path or ""
     if _LOCAL_CATALOGUE_PATH.search(path):
         return True
-    rules = (*_LOCALIZED_PROGRAM_SIGNALS, *_LOCAL_LISTING_SIGNALS[PageCategory.PROGRAM_PAGE])
+    rules = (*localized_program_signals(), *_LOCAL_LISTING_SIGNALS[PageCategory.PROGRAM_PAGE])
     return any(re.search(pattern, path, re.IGNORECASE) for pattern, _weight in rules)
 
 
