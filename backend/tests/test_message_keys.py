@@ -117,7 +117,8 @@ class TestTheSentencesThePipelineWritesAreRecognised:
             seed_id="x",
             university="Example University",
             country="",
-            official_domains=(),
+            # The route's page is on an official domain, or no route is named (SR2-05).
+            official_domains=("x.example",),
             review_status="expert_checked",
             verified_on="2026-10-20",
             programme={"status": "unknown", "urls": [], "evidence": [], **programme},
