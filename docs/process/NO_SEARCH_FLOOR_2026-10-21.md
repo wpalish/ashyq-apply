@@ -212,4 +212,269 @@ adds no word.
   ctu's crawl-delay-10 host, three guesses cost 30 s, and that case ended on the SB-1 deadline. This is a clock cause
   on one set only; it is recorded here for a later ticket.
 - The confirm-queue order cause (auckland, khalifa) is shared by dev2 and dev3, not dev4. It is the next candidate if
-  NS-1 fails its bar.
+  NS-1 fails its bar. **Corrected in §7**: only auckland is a confirm-queue order case. khalifa's gold is not in its
+  sitemap.
+
+## 7. CO-1 step 1: the confirm-queue order on auckland and khalifa (2026-10-20)
+
+Ticket CO-1 step 1 of `NEXT_CYCLES_2026-10-22.md` §3. Research only: no file under `app/` changed.
+
+**Verdict: not shared.** The confirm-queue order loses auckland's gold (dev3), and a generic order change puts it at
+read 4 of 8. It does not lose khalifa's gold (dev2). khalifa's gold is **not in `sitemap_urls_seen`** at all, so no
+order or budget split in `keep()` / `_confirm_programs` can reach it. khalifa is lost in the catalogue walker, which
+reads two hub pages that link the gold, refuses them as programme pages, and never follows their links. §2 and §4
+called khalifa "bounded (hop 0)" and "ranked out: confirm-queue order". That came from the `INDEX_CEILING` row, which
+cannot be reproduced (§7.2). Under the §3 CO-1 bar ("a stable gain on **both** dev2 and dev3"), **step 2 as written
+cannot pass.** §7.4 gives the rule anyway, worker-ready, with its one-set expectation, so the planner can decide in
+one line. §7.5 names the two-set shape that does exist (a refused hub's links are never followed) as a separate
+candidate.
+
+### 7.1 Inputs and method
+
+- **Captures**: the artifacts `expert-recovery-<run>`, downloaded into this session's own scratchpad. Six captures
+  per case:
+  - `ns-floor-dev2` 39350477901 and `ns-floor-dev3` 39350480488 (pipeline `f0d1830e`);
+  - `ns1-dev2` 39379523420 and `ns1-dev3` 39379525547 (pipeline `0bc7d6c0`), two on and two off columns each.
+
+  For the simulation over all four sets: `ns-floor-cohort` 39350475181 and `ns-floor-dev4` 39350483178. Their
+  confirm reads are stable on both cases: all 5 khalifa captures read the same 3 pages, and all 5 auckland captures
+  read the same 8.
+- **The seen list**: the captures record `sitemap_urls_seen` as a **count**, not a list, and no capture names the
+  gold. So the list was rebuilt. A probe re-read, through the production `Fetcher` (robots, crawl delay, our user
+  agent, from the sandbox proxy), exactly the documents in each case's captured `sitemaps_read`, in order. It
+  replayed `SitemapReader.collect`'s inner loop: `_resolve_loc`, `canonical_url`, dedup, `same_institution`. Checks
+  against the captures:
+
+  | case | URLs seen, probe vs capture | matched exactly? |
+  |---|---|---|
+  | khalifa | 3 569 / 3 569 | yes |
+  | auckland | 20 906 / 20 908 (the ns1 columns say 20 906) | near |
+  | delft, kaist, rwth, psaclay, unsw, warsaw, hku, taltech, ucph, uct, ktu | — | yes, or within 5 URLs |
+  | imperial, uio, uppsala | 28 093 / 28 050, 76 591 / 76 584, 133 760 / 133 729 | drift ≤ 0.2 % |
+  | chula | 649 / 1 527 | no |
+  | boun | 1 768 / 2 471 (four documents `robots_disallowed` from this vantage point) | no |
+  | tec | 0 / 1 150 (`http_error`) | no |
+- **keep() and the queue, offline**: the production functions are imported read-only: `categorise_url`,
+  `matches_field`, `matches_degree`, `names_other_degree_level`, `_prefer_exact_field`,
+  `MAX_CANDIDATES_PER_CATEGORY` = 40, `MAX_PAGES_PER_CATEGORY` = 3 and `MAX_PROGRAM_CANDIDATES_CHECKED` = 8, at
+  `HEAD` `7d55695f`. Defaults apply: `SITEMAP_KEEP_EVIDENCE_SUM` and `SERVICE_PAGE_PRIORITY` are off, as the captures
+  ran them. Two closures are replicated line for line:
+  - the `keep()` closure in `_discover_institution`;
+  - the queue build at the top of `_confirm_programs`. That build takes `selected` (the selection loop's top 3 by
+    `(-score, len(url))`, then `_prefer_exact_field`), then `sorted(ranked, reverse=True)`, then
+    `_prefer_exact_field`.
+
+  The fields are `["computer science"]` and the degree is `bachelor`.
+- **Validation**: the simulated first 8 reads match the captured confirm reads, in order:
+  - auckland: 6/6 successful reads, plus the two `http_error` reads at positions 6 and 8 in the log;
+  - khalifa 3/3, taltech 8/8, uct 8/8, uio 8/8, unsw 3/3;
+  - imperial 7/8: the 8th read is R2b's inserted `computing-beng`;
+  - ucph 5/8: the other three are R1 local hreflang twins inserted at read time. The trace logs four such
+    insertions.
+- **Pages read beyond the sitemaps**, all through `Fetcher`, each once, to name the cause and to predict verdicts
+  with `classify_page` + `profile_rejects`:
+  - khalifa: the gold, `/academics/undergraduate-programs` and `/college-of-computing-and-mathematical-sciences`
+    (the first attempt was `robots_disallowed`, because robots.txt was unreachable from this vantage point; the
+    retry read them);
+  - auckland: `find-a-study-option/computer-science.html`, the gold `…/computer-science/undergraduate.html`, and the
+    five pages a variant newly queues;
+  - imperial: the two pages a variant newly queues.
+
+  There were no search provider calls.
+- **Not opened**: any heldout file, capture, log or label, `scratchpad/HELDOUT_QUARANTINE_DO_NOT_OPEN`,
+  `scratchpad/DEV5_BLIND`, `DISCOVERY_ANALYSIS_2026-10-17.md`, dev5, or any other scratchpad.
+
+### 7.2 The per-case rank table
+
+| case | gold form (draft3 `programme_urls`) | in `sitemap_urls_seen`? | `keep()` | score (structure + field + level) | queue rank / length | read? |
+|---|---|---|---|---|---|---|
+| auckland | `…/find-a-study-option/computer-science/undergraduate.html` | yes | kept | 19 = 3 + 16 + **0** | **26 / 40** | no: reads 1–8 are ranks 1–8 |
+| auckland | `…/find-a-study-option/bachelor-of-science-bsc.html` | yes | kept, then **evicted** from the 40 by `…/BSc-degree-planners.html` (17) | 15 = 3 + 8 + 4 | — | no |
+| auckland | `…/computer-science/undergraduate/bsc-compsci-from-2019.html` | no | — | — | — | — |
+| auckland | `study.auckland.ac.nz/ords/…?p7_code=COMP-BSc` | no (another host) | — | — | — | — |
+| khalifa | `www.ku.ac.ae/program/bsc-in-computer-science` (and its `/ar/` twin) | **no**: `sitemap.xml` has 3 569 URLs and no `/program/` path; `sitemap_index.xml` (3 743 URLs, never read: SM-1 drops the other guesses once `/sitemap.xml` answers) has none either | — | it would score 29 = 9 + 16 + 4, the top of the queue | **not queued** | no |
+
+**auckland, what outranks the gold, and why.**
+1. Every computer-science page under `find-a-study-option/` scores 19: structure 3 + field 16. The level bonus is 0
+   for all of them. `degree_level_named` reads a level only as a slug word bounded by `([/-]|$)`, so a trailing
+   `.html` hides it:
+   - `…/computer-science/doctoral.html` reads no level (`…/doctoral` without the extension reads `phd`);
+   - so does `…/postgraduate.html` (`…/postgraduate-study-options.html` reads `master`);
+   - so does the gold `…/undergraduate.html`.
+   So the doctoral and postgraduate siblings are neither refused by `names_other_degree_level` nor penalised.
+   The gold earns no +4.
+2. 26 candidates tie at 19:
+   - the hub `computer-science.html`, its doctoral, postgraduate and undergraduate children;
+   - 21 conjoint pages under `undergraduate-study-options/conjoint-programmes/`, each 7 + 8 + 4. "science" scores
+     8 in `bachelor-science-bachelor-laws`, and "bachelor" scores 4;
+   - `professional-development-and-short-courses/science-computing-and-mathematics.html`.
+3. The two sorts disagree on ties:
+   - The selection loop (`scored.sort(key=(-score, len(url)))`) puts the shortest URLs first. That fills
+     `selected` with the hub, `doctoral.html` and `postgraduate.html`, which are queue ranks 1–3.
+   - `_confirm_programs` then appends the rest by `sorted(ranked, reverse=True)`, which breaks a tie on the **URL
+     string, descending**. So `undergraduate-study-options/…` (u) comes before `professional-development…` (p),
+     which comes before `find-a-study-option/…` (f).
+   - The gold, the next-shortest URL of the tie, drops from rank 4 to rank 26, behind the 21 conjoint pages.
+4. Reads 4–8 went to conjoint pages: three were refused on subject, two were `http_error`.
+
+None of the three sources the ticket asked about inserted these pages:
+- `_queue_english_alternate`: the site is English, so there is no twin;
+- `_queue_field_sibling`: no read was a related verdict;
+- `_queue_subpage_parent`: no read was a sub-page refusal.
+
+`keep()` queued all eight.
+
+The hub `computer-science.html` itself links the gold ("Undergraduate study"). Confirm read it at rank 1 and refused
+it as `unknown`.
+
+**khalifa, what was read instead.** The program-page category kept only three URLs, so the confirm stage read all
+three. The 8-read budget was not binding.
+
+| rank | page | score (structure + field + level) | captured verdict |
+|---:|---|---|---|
+| 1 | `/bsc-math-alumni-participate-in-women-in-data-science-2021` (news) | 17 = 5 + 8 + 4 | "reads as irrelevant" |
+| 2 | `/academics/undergraduate-programs/minor-in-nuclear-engineering` | 8 = 4 + 0 + 4 | "reads as unknown" |
+| 3 | `/academics/undergraduate-programs/minor-in-unmanned-aerial-vehicles` | 8 = 4 + 0 + 4 | "reads as unknown" |
+
+The walker then walked the sitemap's first catalogue pick, `/bachelor/accelerated-master-of-science-program`. It read
+its candidates as programme pages:
+- `college-of-computing-and-mathematical-sciences` (16): `reads_as_unknown`;
+- `academics/undergraduate-programs` (15): `reads_as_program_detail`;
+- `undergraduate-admissions` (13);
+- `zmu` (12, "BSc in Computer Science program"): accepted, so `walker_stopped`. The draft3 labels mark it related.
+
+The two hub pages both link the gold as "Bachelor of Science in Computer Science" (read on 2026-10-20). The walker
+does not harvest a refused candidate's links, so the gold was one hop away and never read.
+
+The `INDEX_CEILING_2026-10-19` row "khalifa bounded yes, hop 0" does not reproduce. `read_bounded` runs the same
+`SitemapReader.collect`, and neither sitemap document lists the gold today. The capture's seen count is identical to
+today's, so the row was most likely matched on something other than the draft3 gold. IC-2 should re-measure it.
+
+### 7.3 Candidate changes, simulated over the four sets
+
+Which cases a confirm-queue order can touch: only those where the queue is longer than the 8 reads (`confirm` = 8 in
+the capture). That is auckland, imperial, ucph and uio on dev3, uct on dev2, and taltech on dev4. No cohort case
+qualifies. Every other case reads its whole queue, so an order change cannot change which pages it reads. All six
+were probed and simulated.
+
+Variants:
+- **V1, order**: the queue continues in the selection loop's own order, `(-score, len(url))`, then
+  `_prefer_exact_field`, instead of `sorted(ranked, reverse=True)`.
+- **V2, exclusion**: `keep()` reads the level on the URL with its trailing file extension removed (`.html`, `.htm`,
+  `.php`, `.asp(x)`, `.jsp`). That is the existing `names_other_degree_level` / `matches_degree`, applied before
+  ranking.
+- **V3**: V1 and V2 together.
+- **V4, budget split**: at most 2 of the 8 reads per URL directory.
+
+| case (set) | base: gold rank / queue | V1 | V2 | V3 | V4 | new non-gold page in the first 8 (V1) and its offline verdict |
+|---|---|---|---|---|---|---|
+| auckland (dev3) | 26 / 40 (missed) | **4** | **1** | **1** | 28 | after the gold: `science-computing-and-mathematics.html` (unknown), conjoint BA/BSc and BMus/BSc (subject refused). V3 adds BN/BSc (unknown) and BCom/BSc (subject). **0 would be confirmed** |
+| imperial (dev3) | 13 / 40 (hit via R2b after read 1) | 12 | 13 | 12 | 13 | R2b still fires on read 1, so the hit is unchanged. `apply-to-study-materials-science` (general_admissions) and `materials-science-career-prospects` (subject refused): **0 confirmed** |
+| ucph (dev3) | 1 / 40 (hit) | 1 | 1 | 1 | 1 | none |
+| uio (dev3) | not queued (clock case) | — | — | — | — | none; the first 8 are identical |
+| uct (dev2) | not queued | — | — | — | — | none; the first 8 are identical |
+| taltech (dev4) | related not queued | — | — | — | — | none; the first 8 are identical |
+| khalifa (dev2) | **not seen** | — | — | — | — | none (3-URL queue) |
+| unsw (dev3, queue not binding) | 2 / 40 (hit) | 2 | 2 | 2 | 2 | none |
+
+**Gold in the confirm budget** across the 39 development cases:
+- statically, base 2 (ucph, unsw) plus imperial through R2b, so 3;
+- with V1, V2 or V3, 3 + auckland, so **4**;
+- with V4, 3.
+
+New non-gold pages that would be confirmed: **0** under every variant. No change reaches khalifa.
+
+### 7.4 CO-1 step 2: worker-ready spec (the rule; the planner decides whether it is built under a one-set bar)
+
+**Rule CO-1 "confirm queue in selection order".** `_confirm_programs` continues its queue in the order the selection
+loop already uses: score descending, then shorter URL, then `_prefer_exact_field`. It no longer re-sorts by
+`(score, url)` descending, which breaks ties alphabetically.
+- **Structural**: one sort key. No word, no read added, no budget changed.
+- **Off**: byte-identical.
+- **What it repairs**: a self-inconsistency between two sorts of the same list. The selection loop's tie rule is the
+  shorter, hub-closer URL. The queue's tie rule is reverse alphabetical, which carries no information.
+- **V2 stays out of this ticket.** It is a second flag (`LEVEL_SLUG_IGNORES_EXTENSION` in `keep()` only), to open
+  only if V1 fails its bar. It changes which URLs `keep()` refuses, so it needs its own knockout look.
+
+- **Flag.**
+  - `CONFIRM_QUEUE_SELECTION_ORDER = False` in `backend/app/adapters/discovery/live_discovery.py`, beside
+    `CONFIRM_REJECTS_SUBPAGE_HEAD`, with a comment citing this §7.
+  - Harness: `--confirm-queue-selection-order` in `backend/evaluation/research/live.py`, where it sets the constant
+    as `--homepage-hop-reads` does.
+  - `NEGATABLE_RULES["confirm-queue-selection-order"]`, plus the stem in `DEFAULT_OFF_NEGATABLE`.
+  - One HANDOFF §8 line.
+- **Where.** `LiveDiscoveryAdapter._confirm_programs`, the `for _score, url in _prefer_exact_field(sorted(ranked[…],
+  reverse=True), …)` line only. When the flag is on, it uses
+  `sorted(ranked[PageCategory.PROGRAM_PAGE], key=lambda p: (-p[0], len(p[1]), p[1]))`. The final URL key makes a
+  full tie deterministic.
+  - `selected` (the first 3) is unchanged.
+  - The reads cap, the R2b / SP-1 / LI-1 insertions, `_spent()` and the ledger are unchanged.
+  - **Not touched**: `keep()`, the selection loop, navigation, the walker, `profile_rejects`.
+  - Concurrency note: `live_discovery.py` is held in sequence (PC-1, then TR-1, then CO-1 step 2). Rebase on TR-1's
+    `confirm_queue` rows, and record the rank under both orders there when the flag is on.
+- **Tests**: new `backend/tests/test_confirm_queue_order.py`, with synthetic host `www.example-uni.edu`, a fake
+  fetcher and no development page's words.
+  1. A sitemap lists `/find/field-x.html` (hub, reads unknown), `/find/field-x/doctoral.html`,
+     `/find/field-x/postgraduate.html` and `/find/field-x/undergraduate.html` (a programme page at the requested
+     level). It also lists six longer tied URLs under `/zz-options/combined/…` that sort after `/find/` in reverse
+     and read as other-subject programmes. Every score must tie. Assert the ties through `categorise_url` and
+     `matches_field` in the test, not by hand.
+     - On: the undergraduate page is read within the 8 and confirmed.
+     - Off: it is never fetched (assert the fake fetcher's calls), and the trace is byte-identical to the
+       flag-less run.
+  2. A queue of 8 or fewer: the same set of reads with the flag on and off (order only).
+  3. `selected` (the first 3) is identical on and off.
+  4. R2b still inserts the field sibling right after a related verdict with the flag on (an imperial-shaped synthetic
+     case).
+  5. The budget tests pass unchanged with the flag off and on: `test_case_read_ledger.py`, `test_stage_budgets.py`
+     and `test_case_time_budget.py`.
+  6. `seed_demo.py` output byte-identical.
+- **Dispatch** (`NEXT_CYCLES_2026-10-22` §4, the CO-1 row):
+  - `search_provider=none`, `columns=4`, `extra_args=--confirm-queue-selection-order`: four sets normal
+    (`co1-<set>`) and knockout (`co1-ko-<set>`);
+  - the recorded guard on dev2 and dev3 (`rp-co1-<set>`).
+- **Pre-registered expectation** (no-search arms):
+  - **dev3**: auckland missed → **hit** in 4/4 columns (gold at read 4, accepted offline as `program_detail`,
+    bachelor, "Undergraduate study in Computer Science"). Reads 5–8 are refused, which is 0 new confirmed pages.
+    imperial stays a hit (R2b on read 1). ucph and unsw are unchanged. uio is unchanged.
+  - **dev2**: **no change**. khalifa stays related, because its gold is never queued. uct's first 8 are identical.
+  - **dev4**: no change (taltech's first 8 are identical).
+  - **cohort**: no change (no case is cap-bound).
+  - Expected total, no-search: **+1** (auckland). Knockout: unchanged, since an order cannot add a page that is not
+    already queued, and on the knockout arms the gold is hidden anyway. Recorded guard: identical.
+- **Bar.** The §3 bar's "stable gain on both dev2 and dev3" **cannot be met by this rule, by measurement.** The
+  planner chooses one of two paths:
+  - (a) build it under a one-set bar. The 13-Q2 (a) answer: the mechanism is two sorts of one list disagreeing, so
+    it is dev-wide by construction. It changes the reads of every cap-bound queue with ties, which is 2 of the 6 on
+    the development sets. Then "no hit lost; 0 wrong; knockout not up; auckland hit in 4/4; recorded guard
+    identical" means default-on.
+  - (b) do not build it and record it in `hypotheses.json` with this table.
+
+### 7.5 The two-set shape that does exist (a candidate, not built)
+
+Both cases lose a gold that sits **one link below a page the pipeline read and refused**:
+- **auckland**: the hub `computer-science.html` was read in confirm and refused as unknown. It links the gold as
+  "Undergraduate study".
+- **khalifa**: `college-of-computing-and-mathematical-sciences` and `academics/undergraduate-programs` were read in
+  the walker and refused. Both link the gold as "Bachelor of Science in Computer Science".
+
+The two cases differ in where the hub was read:
+
+| case | stage that read the hub | what is missing |
+|---|---|---|
+| auckland | confirm | that stage has no link follow |
+| khalifa | walker | the walker harvests only its catalogue's links, not a refused candidate's |
+
+A rule of the shape "a read page refused as unknown, or as a programme of another subject, whose URL or head names
+the requested field, is read once as a catalogue: its links that name the field, and no other level, are queued
+within the existing caps" would cover both. It would cost at most one extra harvest per refused hub and no extra
+read beyond the queued links.
+
+It is not simulated here, because simulating it needs the hub pages' links on every development case, which means
+reads. If the planner opens it, its step 1 is to:
+- list every refused-hub read on the four sets' floor captures;
+- count how many link a gold or a related page;
+- check the knockout arms for a page it would newly confirm.
+
+On khalifa the related `zmu` would still be read first unless the hub links are queued ahead of the walker's
+lower-scored candidates, so the order inside that rule matters too.
