@@ -36,7 +36,7 @@ on:
         required: false
         default: '60'
       mode:
-        description: 'benchmark (default), expert_baseline, expert_actions, expert_paired, verify_evidence (check expert draft quotes with the production fetcher; extra_args = drafts path), read_pages (read a committed list of official URLs with the production fetcher for KB drafting; extra_args = evaluation/research/expert/data/<list>.json or .txt, optionally followed by --robots-override-kb), or query_probe (v3-M5 Serper query-shape probe, at most 300 queries; extra_args = probe flags, e.g. --cases uba puc), or index_ceiling (free-search 04: dev gold and KB evidence URLs in sitemaps / two hops; no search provider; extra_args = tool flags, e.g. --refused-from <report.json>)'
+        description: 'benchmark (default), expert_baseline, expert_actions, expert_paired, verify_evidence (check expert draft quotes with the production fetcher; extra_args = drafts path), read_pages (read a committed list of official URLs with the production fetcher for KB drafting; extra_args = evaluation/research/expert/data/<list>.json or .txt, optionally followed by --robots-override-kb), or query_probe (v3-M5 Serper query-shape probe, at most 300 queries; extra_args = probe flags, e.g. --cases uba puc), or index_ceiling (free-search 04: dev gold and KB evidence URLs in sitemaps / two hops; no search provider; extra_args = tool flags, e.g. --refused-from <report.json>), or identity_gate (IG-2: the R6 identity gate on every development homepage, no fallback query, no provider; dev5 as counts only; extra_args empty or --fold-letters and/or --native-names evaluation/research/data/catalogue_native_names.proposed.json)'
         required: false
         default: 'benchmark'
       plan:
@@ -1179,5 +1179,75 @@ jobs:
         with:
           name: index-ceiling-${{ github.run_id }}
           path: artifacts/index-ceiling/
+          if-no-files-found: error
+          retention-days: 14
+
+  # IG bundle, IG-2 (NEXT_CYCLES_2026-10-20 §6): production's identity gate
+  # (R6) on every development homepage, read through the production Fetcher
+  # (our user agent, robots.txt; nothing retried around a refusal). The
+  # identity fallback query is never sent: no search provider and no secret.
+  # The cohort and dev2-dev4 are written per case, dev5 as counts only.
+  # mode=identity_gate; extra_args is empty, or --fold-letters and/or
+  # --native-names <a catalogue_native_names.{proposed,signed}.json path>. The
+  # input arrives through env and is checked word by word before anything
+  # runs (SR-05).
+  identity_gate:
+    if: inputs.mode == 'identity_gate'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      UNIMATCH_DEMO_MODE: 'false'
+      UNIMATCH_SEARCH_PROVIDER: none
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+      - name: Probe the identity gate
+        env:
+          GATE_ARGS: ${{ inputs.extra_args }}
+        run: |
+          set -euo pipefail
+          pattern='^(evaluation/research/data|app/catalogue)/catalogue_native_names\.(proposed|signed)\.json$'
+          read -r -a words <<< "$GATE_ARGS"
+          flags=()
+          i=0
+          while [ "$i" -lt "${#words[@]}" ]; do
+            word="${words[$i]}"
+            if [ "$word" = "--fold-letters" ]; then
+              flags+=(--fold-letters)
+            elif [ "$word" = "--native-names" ]; then
+              i=$((i + 1))
+              path="${words[$i]:-}"
+              if ! [[ "$path" =~ $pattern ]]; then
+                echo "--native-names takes a file matching $pattern"
+                exit 1
+              fi
+              flags+=(--native-names "$path")
+            else
+              echo "identity_gate takes only --fold-letters and --native-names <file>"
+              exit 1
+            fi
+            i=$((i + 1))
+          done
+          mkdir -p ../artifacts/identity-gate
+          .venv/bin/python -m evaluation.research.identity_gate_probe \
+            --out ../artifacts/identity-gate/report.json \
+            --markdown ../artifacts/identity-gate/tables.md ${flags[@]+"${flags[@]}"} \
+            | tee ../artifacts/identity-gate/run.log
+          cat ../artifacts/identity-gate/tables.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: identity-gate-${{ github.run_id }}
+          path: artifacts/identity-gate/
           if-no-files-found: error
           retention-days: 14
