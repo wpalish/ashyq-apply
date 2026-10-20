@@ -16,6 +16,7 @@ from app.api.tenancy import owned_profile
 from app.catalogue.retrieval import retrieve
 from app.config import Settings, get_settings
 from app.db import get_session
+from app.domain.message_keys import CAVEATS, match, stale_reason_message
 from app.knowledge import (
     CORE_QUESTIONS,
     DOCUMENTS,
@@ -215,6 +216,11 @@ class KnowledgeCoverage:
             if value is None or not fact.get("source_url"):
                 continue
             reasons = fact_stale_reasons(fact, self.today, self.intake)
+            caveat = fact_caveat(fact)
+            # Keyed beside the English, as on a served claim
+            # (``message_keys.annotate_claim``), so ru and kk can say them.
+            stale_messages = [stale_reason_message(r) for r in reasons]
+            caveat_message = match(CAVEATS, caveat) if caveat else None
             return {
                 "amount": value["amount"],
                 "currency": value["currency"],
@@ -224,7 +230,9 @@ class KnowledgeCoverage:
                 "academic_year": fact.get("academic_year") or None,
                 "stale": bool(reasons),
                 "stale_reasons": reasons,
-                "caveat": fact_caveat(fact),
+                "stale_messages": [m.model_dump() if m else None for m in stale_messages],
+                "caveat": caveat,
+                "caveat_message": caveat_message.model_dump() if caveat_message else None,
                 "source_url": str(fact["source_url"]),
             }
         return None

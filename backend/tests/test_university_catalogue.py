@@ -520,7 +520,9 @@ def test_kb_mode_cards_carry_the_verified_coverage(paid_client, kb_mode):
             "academic_year": None,
             "stale": False,
             "stale_reasons": [],
+            "stale_messages": [],
             "caveat": "fee policy page; no academic year printed",
+            "caveat_message": {"key": "caveat.feePolicy", "params": {}, "parts": {}},
             "source_url": KB_URL,
         },
     }
@@ -552,6 +554,8 @@ def test_kb_mode_filters_to_verified_rows_and_counts_them(paid_client, kb_mode, 
     assert mine["tuition"]["stale_reasons"] == [
         "academic year 2026/27 is before the fall 2027 intake's 2027/28"
     ]
+    # Keyed beside the English, so the card can say it in ru and kk.
+    assert [m["key"] for m in mine["tuition"]["stale_messages"]] == ["stale.yearBeforeIntake"]
 
 
 def test_kb_mode_shows_no_kb_data_for_a_request_the_kb_does_not_answer(paid_client, kb_mode):

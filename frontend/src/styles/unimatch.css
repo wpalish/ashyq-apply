@@ -445,6 +445,9 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
 .catalogue-card dl { display: grid; gap: 10px; margin: 18px 0; }
 .catalogue-card dl div { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
 .catalogue-card dd { margin: 0; }
+.catalogue-tools .catalogue-verified { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; min-width: 0; min-height: 44px; }
+.catalogue-tools .catalogue-verified input { width: auto; min-height: 0; }
+.catalogue-kb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .catalogue-card details { border-top: 1px solid #edf0f4; padding-top: 12px; }
 .catalogue-card summary { cursor: pointer; font-size: 13px; }
 .catalogue-pagination { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 24px; }

@@ -103,7 +103,7 @@ export function localStep(step: string): string {
 }
 
 /** A fee period as published, said in the reader's language when it is a known one. */
-function localPeriod(period: string): string {
+export function localPeriod(period: string): string {
   if (period === 'semester') return t('detail.fee.period.semester');
   if (period === 'credit') return t('detail.fee.period.credit');
   const programme = /^full programme \((\d+) years?\)$/.exec(period);

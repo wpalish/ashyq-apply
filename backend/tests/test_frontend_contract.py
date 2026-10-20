@@ -227,6 +227,8 @@ def test_catalogue_knowledge_reaches_the_frontend_with_the_shape_it_declares(typ
         "academic_year",
         "stale",
         "stale_reasons",
+        "stale_messages",
         "caveat",
+        "caveat_message",
         "source_url",
     }

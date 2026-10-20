@@ -532,7 +532,10 @@ export interface CatalogueKbTuition {
   academic_year: string | null;
   stale: boolean;
   stale_reasons: string[];
+  /** `stale_reasons` keyed, one per reason (null for an unknown shape), for ru and kk. */
+  stale_messages: (MessageRef | null)[];
   caveat: string | null;
+  caveat_message: MessageRef | null;
   source_url: string;
 }
 
