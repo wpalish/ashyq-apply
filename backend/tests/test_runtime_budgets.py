@@ -38,6 +38,9 @@ from app.knowledge import (
 from app.models import University
 
 #: Generous on CI; the measured values are ~0.2 s and ~0.02 s.
+# Budgets are CPU seconds of this process (time.process_time), so a loaded
+# machine (parallel suites, CI neighbours) does not trip them; a real
+# slowdown of the code still does.
 CATALOGUE_WALK_BUDGET_SECONDS = 1.0
 KB_LOAD_BUDGET_SECONDS = 0.5
 #: The route's own cap on ``limit``.
@@ -162,7 +165,7 @@ def kb_catalogue(paid_client, monkeypatch):
 
 
 def _walk(client, extra: str = "") -> tuple[float, int]:
-    started = time.perf_counter()
+    started = time.process_time()
     seen = 0
     offset = 0
     while True:
@@ -172,7 +175,7 @@ def _walk(client, extra: str = "") -> tuple[float, int]:
         offset += PAGE
         if offset >= body["total"]:
             break
-    return time.perf_counter() - started, seen
+    return time.process_time() - started, seen
 
 
 def test_the_whole_kb_catalogue_reads_within_its_budget(kb_catalogue) -> None:
@@ -220,9 +223,9 @@ def test_a_catalogue_page_costs_a_fixed_number_of_queries(kb_catalogue) -> None:
 def test_the_knowledge_base_loads_within_its_budget() -> None:
     times = []
     for _ in range(3):
-        started = time.perf_counter()
+        started = time.process_time()
         kb = load_knowledge_base()
-        times.append(time.perf_counter() - started)
+        times.append(time.process_time() - started)
     assert sum(e.has_verified_data for e in kb.entries.values()) >= 90
     median = statistics.median(times)
     assert median < KB_LOAD_BUDGET_SECONDS, (
