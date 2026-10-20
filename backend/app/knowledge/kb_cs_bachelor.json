@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-20.kb-cs-bachelor.18",
+ "version": "2026-10-20.kb-cs-bachelor.19",
  "built_at": "2026-10-20",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -46,6 +46,7 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-20.json",
   "evidence_check.ci-2026-10-20.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -11382,7 +11383,7 @@
    "source_case": "qs2027-044",
    "source_batch": "batch5",
    "review_status": "expert_checked",
-   "verified_on": "2026-10-19",
+   "verified_on": "2026-10-20",
    "verified_on_basis": "ci_evidence_check",
    "university": "Institut Polytechnique de Paris",
    "country": "France",
@@ -11519,28 +11520,52 @@
     ],
     "scholarship_exists": [
      {
-      "key": "scholarships.excellence.exists",
+      "key": "scholarships.need_tuition_fee_waiver.exists",
       "value": true,
       "unit": null,
       "period": null,
       "academic_year": null,
       "population": null,
       "source_url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/scholarships-and-financial-aid",
-      "quote": "The Excellence Scholarship amounts to 4,800 Euros in total per year, for 3 years.",
+      "quote": "All other candidates, i.e. international, European and French students not entitled to the CROUS bursary, may benefit from need-based financial aid proposed directly by Ecole Polytechnique and by the Foundation of Ecole Polytechnique, in the form of: a tuition fee waiver granted by Ecole Polytechnique and/or an interest-free loan supported by Ecole Polytechnique Foundation.",
       "quote_truncated": false,
       "source_type": "official",
-      "accessed_on": "2026-10-19",
-      "verified_on": "2026-10-19",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
       "verified_by": "ci",
-      "notes": "Excellence Scholarship (Bachelor of Science, École Polytechnique). Expert (2026-10-19): Merit-based, only for students admitted with honors; competitive; number depends on funds. PARTIAL (tuition is €19,600). Also: need-based aid, and a Full Scholarship Scheme for International Olympiad medalists (max 87,900 EUR per non-EU/EEA student, tuition waived except the 1,500 EUR annual admini…",
+      "notes": "Need-based tuition fee waiver (École Polytechnique Bachelor of Science). Expert (2026-10-20): NEED_BASED_POSSIBLE, partial: same page, 'Any need-based financial aid that may be awarded will only partially cover fees or expenses.' and 'The total amount of need-based financial aid will depend on the family's resources.' Waivers are deducted from tuition; 'The exact number of tuition fee waive…",
       "award": {
-       "subject": "Excellence Scholarship (Bachelor of Science, École Polytechnique)",
+       "subject": "Need-based tuition fee waiver (École Polytechnique Bachelor of Science)",
        "source_url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/scholarships-and-financial-aid"
       },
-      "stale": false
+      "stale": false,
+      "source_batch": "topup_round9"
      }
     ],
-    "scholarship_international": [],
+    "scholarship_international": [
+     {
+      "key": "scholarships.need_tuition_fee_waiver.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/scholarships-and-financial-aid",
+      "quote": "All other candidates, i.e. international, European and French students not entitled to the CROUS bursary, may benefit from need-based financial aid proposed directly by Ecole Polytechnique and by the Foundation of Ecole Polytechnique, in the form of: a tuition fee waiver granted by Ecole Polytechnique and/or an interest-free loan supported by Ecole Polytechnique Foundation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-20",
+      "verified_on": "2026-10-20",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-20): The page names international students as eligible for the Ecole Polytechnique need-based tuition fee waiver (CROUS bursaries are for French and assimilated students). No citizenship restriction is printed.",
+      "award": {
+       "subject": "Need-based tuition fee waiver (École Polytechnique Bachelor of Science)",
+       "source_url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/scholarships-and-financial-aid"
+      },
+      "stale": false,
+      "source_batch": "topup_round9"
+     }
+    ],
     "documents": []
    },
    "unknown": [
@@ -11548,15 +11573,14 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): Prose only: 'have an overall strong academic average', advanced mathematics and at least one advanced science course; holistic selection. No numeric threshold."
-    },
-    {
-     "question": "scholarship_international",
-     "key": "scholarships.excellence.applicability.international",
-     "reason": "Expert did not establish it. Expert (2026-10-19): The Excellence Scholarship section states no nationality condition, and the page says the school admits students 'from all over the world using a need-blind admissions process', but no sentence says the Excellence Scholarship is open to international students. The Olympiad scheme is explicitly size…"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 7,
+   "source_batches": [
+    "batch5",
+    "topup_round9"
+   ]
   },
   "qs2027-045": {
    "seed_id": "qs2027-045",
@@ -14897,17 +14921,24 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert draft 2026-10-19."
-    },
+    }
+   ],
+   "not_applicable": [
     {
      "question": "scholarship_exists",
      "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "No institutional scholarship for incoming bachelor applicants. Expert (2026-10-20): UM's undergraduate international admission FAQ (Academic Services Department) states that UM offers no scholarship to undergraduate international students. The undergraduate financial-aid listing (https://aasd.um.edu.my/financial-aid-for-undergraduate, last update 14/10/2026) lists only government,…",
+     "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "Do you have scholarship for Undergraduate International Students? We do not offer scholarship to the Undergraduate International Students.",
+     "verified_on": "2026-10-20",
+     "verified_by": "ci",
+     "source_batch": "topup_round9"
     }
    ],
-   "not_applicable": [],
    "known_fact_count": 11,
    "source_batches": [
     "topup_imported",
+    "topup_round9",
     "topup_documents3"
    ]
   },
@@ -22246,11 +22277,6 @@
      "question": "tuition",
      "key": "tuition",
      "reason": "only the not stated fee is published, not 2027/28 (expert value 130,000 DKK per year). Expert (2026-10-19): Bachelor 'Computer Science' entry of the page's programme dropdown ('Select study level: Bachelor' -> 'Computer Science'). The text is held in an inline script object (const uddannelser = {BA: [...]}) and rendered on selection, so it is NOT in the page's readable text: the container quote check is…"
-    },
-    {
-     "question": "scholarship_exists",
-     "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
     }
    ],
    "not_applicable": [
@@ -22280,11 +22306,22 @@
      "quote": "For exams from outside EU/EEA countries and others, it is not possible to calculate the grade point average. That means that you can only apply in quota 2 , and you have to participate in the quota 2-test.",
      "verified_on": "2026-10-19",
      "verified_by": "ci"
+    },
+    {
+     "question": "scholarship_exists",
+     "key": "scholarships",
+     "reason": "No institutional scholarship for incoming bachelor applicants. Expert (2026-10-20): UCPH's bachelor admission page (section 'Tuition fee, scholarships and code of conduct') states that UCPH offers no financial support or scholarships to foreign students and refers to the Danish Agency for Science and Higher Education (ufm.dk). The Danish Government Scholarship at UCPH requires bei…",
+     "source_url": "https://www.ku.dk/studies/admission/bachelor",
+     "quote": "Scholarships The University of Copenhagen does not offer financial support or scholarships to foreign students.",
+     "verified_on": "2026-10-20",
+     "verified_by": "ci",
+     "source_batch": "topup_round9"
     }
    ],
    "known_fact_count": 5,
    "source_batches": [
     "topup_imported",
+    "topup_round9",
     "topup_documents3"
    ]
   },

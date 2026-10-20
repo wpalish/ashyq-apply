@@ -1025,3 +1025,5 @@ Next ablations running: english-readers-v2, fee-readers-v2.
 | `--no-fee-readers-v2` | 3 claims: imperial tuition, tcd tuition, ubc deadline; dev4 identical | load-bearing on three sets, keep |
 
 No stable gain on any off arm: neither reader costs development hits or claims. Next: intake-section-deadline, parent-degree-link (dispatched).
+| `--no-intake-section-deadline` | 1 claim: auckland deadline (dev3); other sets identical | load-bearing, keep |
+| `--no-parent-degree-link` | 6 claims: ubc deadline + ielts overall/subscores (cohort), auckland deadline + ielts overall/subscores (dev3) | load-bearing on two sets, keep |
