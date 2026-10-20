@@ -1798,7 +1798,7 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "same-site-award-links": (
         ("app.adapters.scholarship.web_scholarships", "SAME_SITE_AWARD_LINKS"),
     ),
-    # Default-off (REACH_ROWS_2026-10-20, AW-2: the award-page words of every language).
+    # On by default since the 2026-10-20 replay (REACH_ROWS_2026-10-20, AW-2).
     "award-signals-all-languages": (
         ("app.adapters.page_classifier", "AWARD_SIGNALS_ALL_LANGUAGES"),
     ),
@@ -1811,7 +1811,6 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "subpage-requirements-lead",
         "identity-fold-marks",
         "same-site-award-links",
-        "award-signals-all-languages",
     }
 )
 

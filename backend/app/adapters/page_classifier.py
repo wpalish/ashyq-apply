@@ -204,8 +204,9 @@ AWARD_NAME_QUALIFIER = True
 #: the ``_AWARD_SIGNALS`` of the same names; its plural listing heading makes
 #: the page an index; its news words make it news; and a heading about
 #: applying for awards (or their FAQ) is not an award name. English pages and
-#: pages with no ``lang`` are unchanged. Off: nothing changes.
-AWARD_SIGNALS_ALL_LANGUAGES = False
+#: pages with no ``lang`` are unchanged. On by default since the 2026-10-20
+#: replay (four sets, normal + knockout: no stable loss, no new wrong page).
+AWARD_SIGNALS_ALL_LANGUAGES = True
 #: Plan rule CL-2 (replay plan 2026-10-19 §5.3), on by default since its
 #: replay passed; the benchmark harness negates it per capture
 #: (``--no-classify-head-and-slug-identity``). Bologna's programme page

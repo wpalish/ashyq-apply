@@ -863,10 +863,13 @@ _GERMAN = "Das Stipendium beträgt monatlich 300 Euro. Bewerben können sich Stu
     ],
 )
 def test_the_classifier_records_which_funding_test_settled_it(
-    url: str, lang: str, title: str, body: str, category: str
+    url: str, lang: str, title: str, body: str, category: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    from app.adapters import page_classifier
     from app.adapters.page_classifier import PageType, classify_page
 
+    # The English-only reading (AW-2 off) is what this category check pins.
+    monkeypatch.setattr(page_classifier, "AWARD_SIGNALS_ALL_LANGUAGES", False)
     page = classify_page(url=url, html=_PAGE.format(lang=lang, title=title, body=body))
     assert page.funding_category == category
     if category.startswith(("signals", "no_award_name")):
@@ -889,6 +892,10 @@ async def test_the_funding_stage_records_lang_and_category_but_prints_neither(
     from scripts import canary_discovery
 
     monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_LEVEL_SCOPE", False)
+    from app.adapters import page_classifier
+
+    # The German award page must be refused (English-only reading, AW-2 off).
+    monkeypatch.setattr(page_classifier, "AWARD_SIGNALS_ALL_LANGUAGES", False)
     root = tmp_path / "site" / "uni"
     root.mkdir(parents=True)
     (root / "scholarships.html").write_text(

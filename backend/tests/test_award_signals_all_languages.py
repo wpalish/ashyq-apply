@@ -404,8 +404,9 @@ def test_english_and_pages_without_a_language_have_no_row() -> None:
     assert award_lexicon.award_words("de-AT") is award_lexicon.award_words("de")
 
 
-def test_the_rule_is_off_by_default() -> None:
-    assert page_classifier.AWARD_SIGNALS_ALL_LANGUAGES is False
+def test_the_rule_is_on_by_default() -> None:
+    # On since the 2026-10-20 replay: no stable loss, no new wrong page (four sets, normal + knockout).
+    assert page_classifier.AWARD_SIGNALS_ALL_LANGUAGES is True
 
 
 # --- the battery, flag on ----------------------------------------------------------
@@ -606,7 +607,7 @@ async def test_the_walk_records_the_german_award_only_with_the_rule(tmp_path, mo
 # --- the harness flag ----------------------------------------------------------------
 
 
-def test_the_flag_is_a_default_off_negatable_rule(tmp_path, monkeypatch) -> None:
+def test_the_flag_is_a_negatable_rule(tmp_path, monkeypatch) -> None:
     from tests.test_benchmark_rule_negations import _parent
 
     result = subprocess.run(
@@ -622,7 +623,7 @@ def test_the_flag_is_a_default_off_negatable_rule(tmp_path, monkeypatch) -> None
     assert live.NEGATABLE_RULES["award-signals-all-languages"] == (
         ("app.adapters.page_classifier", "AWARD_SIGNALS_ALL_LANGUAGES"),
     )
-    assert "award-signals-all-languages" in live.DEFAULT_OFF_NEGATABLE
+    assert "award-signals-all-languages" not in live.DEFAULT_OFF_NEGATABLE  # on since 2026-10-20
     commands = _parent(monkeypatch, tmp_path, "--award-signals-all-languages")
     assert "--award-signals-all-languages" in commands[0]
 

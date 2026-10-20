@@ -1054,3 +1054,11 @@ The rule fired (on arms: cohort 18 sibling-host award links kept, dev3 10), but 
 any set, normal or knockout; wrong pages unchanged. The followed sibling pages hold no labelled award. **Verdict:
 stays off** (13-Q2 needs a stable gain); recorded, ready for a set where a label sits on a sibling host.
 AW-2 (`--award-signals-all-languages`) replay dispatched.
+
+### 2026-10-20 05:20 — AW-2 `--award-signals-all-languages` replay (4 sets, normal + knockout, $0)
+
+No stable gain, no stable loss on any set; on-arm wrong pages unchanged and knockout on-arm wrong pages not above the
+off arm. The expected dev4 rwth award page is now read as an award, but its label cites the costs page, so no
+scored claim moves. **On by default** under the language-coverage bar (LV-1 precedent: no stable loss, no new
+wrong page). NS-1a (NO_SEARCH_FLOOR_2026-10-21.md): the no-search fallback never reads the homepage's top study
+link on a sibling host — shared by dev3 (puc, iitd) and dev4 (kit) → NS-1b opens.
