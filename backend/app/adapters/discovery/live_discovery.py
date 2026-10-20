@@ -3517,13 +3517,13 @@ def english_alternate(url: str, html: str, domain: str) -> str | None:
     no language is not followed: it may already be the English page.
     """
     head = html[:200_000]
-    tag = _HTML_TAG.search(head)
-    lang = (_attributes(tag.group(0)).get("lang") or "").strip().lower() if tag else ""
+    tag = _html_tag(head)
+    lang = (_attributes(tag).get("lang") or "").strip().lower() if tag else ""
     if not lang or lang == "en" or lang.startswith("en-"):
         return None
     here = canonical_url(url)
-    for link in _LINK_TAG.findall(head):
-        attrs = _attributes(link)
+    for link_tag in _link_tags(head):
+        attrs = _attributes(link_tag)
         if "alternate" not in (attrs.get("rel") or "").lower().split():
             continue
         hreflang = (attrs.get("hreflang") or "").strip().lower()
@@ -3559,13 +3559,13 @@ def local_alternate(url: str, html: str, domain: str, country: str) -> str | Non
     if not languages:
         return None
     head = html[:200_000]
-    tag = _HTML_TAG.search(head)
-    lang = (_attributes(tag.group(0)).get("lang") or "").strip().lower() if tag else ""
+    tag = _html_tag(head)
+    lang = (_attributes(tag).get("lang") or "").strip().lower() if tag else ""
     if not (lang == "en" or lang.startswith("en-")):
         return None
     here = canonical_url(url)
-    for link in _LINK_TAG.findall(head):
-        attrs = _attributes(link)
+    for link_tag in _link_tags(head):
+        attrs = _attributes(link_tag)
         if "alternate" not in (attrs.get("rel") or "").lower().split():
             continue
         hreflang = (attrs.get("hreflang") or "").strip().lower().split("-")[0]
@@ -3598,8 +3598,8 @@ def declared_alternates(url: str, html: str, domain: str) -> list[str]:
     head = (html or "")[:200_000]
     here = canonical_url(url)
     found: list[str] = []
-    for link in _LINK_TAG.findall(head):
-        attrs = _attributes(link)
+    for link_tag in _link_tags(head):
+        attrs = _attributes(link_tag)
         if "alternate" not in (attrs.get("rel") or "").lower().split():
             continue
         hreflang = (attrs.get("hreflang") or "").strip().lower()
@@ -3623,9 +3623,39 @@ def declared_alternates(url: str, html: str, domain: str) -> list[str]:
     return found
 
 
-_HTML_TAG = re.compile(r"<html\b[^>]*>", re.IGNORECASE)
-_LINK_TAG = re.compile(r"<link\b[^>]*>", re.IGNORECASE)
-_ATTRIBUTE = re.compile(r"""([a-zA-Z_:][-\w:.]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))""")
+# SR2-02: these run on every page read for identity, on up to 200,000
+# characters an attacker writes, so each must be linear in its input. The
+# plain forms (``<link\b[^>]*>``; an attribute name ``[-\w:.]*`` that may
+# start anywhere) restarted a full scan at every ``<link`` with no ``>``
+# after it and at every character of a long name with no ``=``: quadratic,
+# about 35 s for one 50,000-character name. What they match is unchanged.
+#
+# A tag is consumed possessively up to its ``>`` or, when there is none, to
+# the end of the text, so the scan never restarts inside it; a match that
+# reached the end without ``>`` is not a tag and is dropped.
+_HTML_TAG = re.compile(r"<html\b[^>]*+>?", re.IGNORECASE)
+_LINK_TAG = re.compile(r"<link\b[^>]*+>?", re.IGNORECASE)
+# An attribute name is tried once per run of name characters ``[-\w:.]``, from
+# the run's start: the leading characters that cannot begin a name (``-``,
+# ``.``, digits, non-ASCII letters) are skipped possessively, and the name is
+# taken possessively to the run's end. The old pattern found the same name,
+# because a later start in the same run meets the same end and fails the same
+# way, and a shorter name is followed by a name character, never ``=``.
+_ATTRIBUTE = re.compile(
+    r"""(?<![-\w:.])(?:[-.]|(?![a-zA-Z_:])\w)*+([a-zA-Z_:][-\w:.]*+)\s*+=\s*+"""
+    r"""(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))"""
+)
+
+
+def _link_tags(head: str) -> list[str]:
+    """Every complete ``<link …>`` tag in ``head``, in order."""
+    return [tag for tag in _LINK_TAG.findall(head) if tag.endswith(">")]
+
+
+def _html_tag(head: str) -> str | None:
+    """The page's first complete ``<html …>`` tag, if it has one."""
+    match = _HTML_TAG.search(head)
+    return match.group(0) if match and match.group(0).endswith(">") else None
 
 
 def _attributes(tag: str) -> dict[str, str]:
