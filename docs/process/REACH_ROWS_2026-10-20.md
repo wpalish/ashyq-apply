@@ -187,7 +187,8 @@ labelled award recorded from its own section (AP-1). It is a correct index, not 
 
 **Verdict: 0 sets.** No page refused for the index budget is one a label cites. No single-award page charged as an
 index is either. On dev3 the labelled award is already read as an award. On dev4 the labelled award is lost to a
-different shape: a German-language award page classified `unknown` (S6), and a costs page that was never reached.
+different shape: its own award page, with a German slug, was classified `unknown` (S6's verdict; the captures record
+no page language), and the costs page the label cites was never reached.
 **AI-1 is not built** (13-Q2 a). Read as award pages, the four refused or charged pages would add only `unmapped.*`
 claims, and they would spend award-budget reads.
 
