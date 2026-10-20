@@ -51,6 +51,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.adapters.base import PageOutcome
 from app.adapters.discovery.live_discovery import (
     REGISTRY_PATH,
     LiveDiscoveryAdapter,
@@ -174,6 +175,13 @@ class CanaryRunner(ResearchRunner):
         super().__init__(*args, **kwargs)
         self.audit = FetchAudit()
         self.discovery_instances: list[LiveDiscoveryAdapter] = []
+        #: ES-2: the structured fields an outcome line does not print, by
+        #: (category, url, detail); read back by the benchmark capture.
+        self.outcome_signals: dict[tuple[str, str, str], tuple[str, str]] = {}
+
+    def _record_page_outcomes(self, outcomes: list[PageOutcome]) -> None:
+        super()._record_page_outcomes(outcomes)
+        self.outcome_signals.update(outcome_signals(outcomes))
 
     def _make_fetcher(self) -> Fetcher:
         return self.audit.install(super()._make_fetcher())
@@ -195,6 +203,19 @@ _PAGE_OUTCOME_RE = re.compile(
     r"^page (?P<category>[a-z-]+): (?P<url>\S+) "
     r"\(page_type (?P<page_type>[a-z_]+)(?:, (?P<characters>\d+) chars)?\): (?P<detail>.*)$"
 )
+
+
+def outcome_signals(outcomes: list[PageOutcome]) -> dict[tuple[str, str, str], tuple[str, str]]:
+    """ES-2: each recorded outcome's (html_lang, classifier_signal), by its line's fields.
+
+    Only outcomes that carry both (the funding stage's classified pages) are
+    kept; the key is what ``page_outcomes`` parses back out of the line.
+    """
+    return {
+        (o.category, o.url, o.detail): (o.html_lang, o.classifier_signal)
+        for o in outcomes
+        if o.html_lang is not None and o.classifier_signal is not None
+    }
 
 
 def page_outcomes(run: ResearchRun) -> list[dict[str, str]]:

@@ -19,6 +19,11 @@ summed over every case:
   selected no scholarships page, PDFs met per stage, and per question the
   known labels whose evidence page was fetched ok (``evidence_reach:<q>``,
   HTML evidence; ``evidence_reach_pdf:<q>`` for PDF-only evidence);
+* ES-2, on captures that record them: funding-stage pages refused as "not
+  an award page", by the page's ``<html lang>`` (``funding_refused_by_lang``),
+  by the classifier's category (``funding_refused_by_signal``), and those
+  with fewer than two award signals (``funding_refused_signals_lt2``), by
+  language; a capture made before ES-2 has none of these rows;
 * budget and time per case, mean and max;
 * failed discovery searches (``search_failures``, by provider status, and
   their share of attempted discovery queries), so that a provider outage reads
@@ -58,7 +63,7 @@ from .metrics import (
     same_programme_page,
     scored_predictions,
 )
-from .schema import Capture, Case, Dataset, Observation, Scope
+from .schema import Capture, Case, Dataset, Observation, PageOutcome, Scope
 from .scorecard import GOLD_STAGES, RECORDED_KINDS, Arm, _answered, gold_seen, load_run
 
 #: The scope dimensions a wrong-scope claim is broken down by, reviewer order.
@@ -161,6 +166,12 @@ _REACH_QUESTIONS: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"^scholarships\.[^.]+\.coverage\.[a-z_]+$"), "scholarship_coverage"),
 )
 
+#: ES-2: the classifier's count-carrying funding categories (``signals:<n>``,
+#: ``no_award_name:<n>``); every other category is a controlled word.
+_FUNDING_SIGNAL = re.compile(r"(signals|no_award_name):(\d{1,2})")
+#: ES-2: the funding stage's refusal detail.
+_NOT_AN_AWARD = re.compile(r"^not an award page\b")
+
 #: A PDF met by a stage: the page outcome names it, or its path ends ``.pdf``.
 _PDF_DETAIL = re.compile(r"\bPDF\b")
 
@@ -226,6 +237,33 @@ def evidence_categories(text: object) -> list[tuple[str, int]]:
         if match:
             found.append((row, int(match[1]) if add else 1))
     return found
+
+
+def funding_signal(value: object) -> tuple[str, int | None]:
+    """ES-2: a classifier category from a fixed shape, and its signal count if it has one."""
+    text = str(value or "").strip()
+    match = _FUNDING_SIGNAL.fullmatch(text)
+    if match:
+        return f"{match[1]}:{int(match[2])}", int(match[2])
+    return _controlled(text), None
+
+
+def _funding_refusal_rows(evidence: Counter[str], page: PageOutcome) -> None:
+    """ES-2: one funding-stage "not an award page" refusal, by language and category.
+
+    Counted only where the capture recorded the classifier's category, so a
+    capture made before ES-2 adds no row.
+    """
+    if page.classifier_signal is None or page.category != "classifier-rejected":
+        return
+    if not _NOT_AN_AWARD.match(page.detail or ""):
+        return
+    lang = language_code(page.html_lang) if page.html_lang else "none"
+    category, count = funding_signal(page.classifier_signal)
+    evidence[f"funding_refused_by_lang:{lang}"] += 1
+    evidence[f"funding_refused_by_signal:{category}"] += 1
+    if count is not None and count < 2:
+        evidence[f"funding_refused_signals_lt2:{lang}"] += 1
 
 
 def reach_question(key: str) -> str:
@@ -485,6 +523,7 @@ def repetition_summary(
                 evidence[row] += amount
             if _is_pdf(page.url, page.detail):
                 evidence[f"pdf_met:{stage}"] += 1
+            _funding_refusal_rows(evidence, page)
         for line in trace.get("run_diagnostics") or []:
             for row, amount in evidence_categories(line):
                 evidence[row] += amount

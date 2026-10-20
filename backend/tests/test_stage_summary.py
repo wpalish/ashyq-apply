@@ -666,3 +666,277 @@ def test_the_canary_keeps_only_this_sites_prose_lines() -> None:
     )
     kept = canary_discovery.run_diagnostics(run, "zqalpha.example")  # type: ignore[arg-type]
     assert kept == [run.errors[0], run.unknowns[0]]
+
+
+# --- ES-2: page language and classifier category of funding refusals -------
+
+_REFUSED = "not an award page; no scholarship recorded (2 links, https://zqalpha.example/zqsecret)"
+_ES2_OUTCOMES = [
+    # A named award refused on 0 signals, in German: both rows.
+    {
+        "category": "classifier-rejected",
+        "url": "https://zqalpha.example/stipendien/zqsecretaward",
+        "page_type": "unknown",
+        "detail": _REFUSED,
+        "html_lang": "de",
+        "classifier_signal": "signals:0",
+    },
+    # No award name, one signal, no declared language: both rows, as "none".
+    {
+        "category": "classifier-rejected",
+        "url": "https://zqalpha.example/scholarships/money",
+        "page_type": "unknown",
+        "detail": _REFUSED,
+        "html_lang": "",
+        "classifier_signal": "no_award_name:1",
+    },
+    # Refused, but outside the funding branch: by language, not by signals.
+    {
+        "category": "classifier-rejected",
+        "url": "https://zqalpha.example/scholarships/costs",
+        "page_type": "news",
+        "detail": _REFUSED,
+        "html_lang": "de",
+        "classifier_signal": "not_funding",
+    },
+    # An index and a refusal of another kind: never a funding refusal.
+    {
+        "category": "fetched-ok",
+        "url": "https://zqalpha.example/scholarships",
+        "page_type": "scholarship_index",
+        "detail": "read as a funding index; 2 award links, 2 queued within the award budget",
+        "html_lang": "de",
+        "classifier_signal": "index",
+    },
+    {
+        "category": "classifier-rejected",
+        "url": "https://zqalpha.example/scholarships/deep",
+        "page_type": "scholarship_index",
+        "detail": "index page beyond the index budget; not followed",
+        "html_lang": "en",
+        "classifier_signal": "index",
+    },
+    # A "not an award page" refusal on a capture without ES-2: not counted.
+    {
+        "category": "classifier-rejected",
+        "url": "https://zqalpha.example/scholarships/old",
+        "page_type": "unknown",
+        "detail": _REFUSED,
+    },
+]
+
+
+def _add_outcomes(paths: dict[str, Path], outcomes: list[dict[str, Any]]) -> None:
+    capture_path = next((paths["run"] / "zqalpha-off").glob("*/capture.json"))
+    capture = json.loads(capture_path.read_text())
+    capture["observations"][0]["page_outcomes"] += outcomes
+    capture_path.write_text(json.dumps(capture))
+
+
+def test_funding_refusals_are_counted_by_language_and_signal(paths: dict[str, Path]) -> None:
+    _add_outcomes(paths, _ES2_OUTCOMES)
+    evidence = _summary(paths)["evidence"]
+    es2 = {k: v for k, v in evidence.items() if k.startswith("funding_refused")}
+    assert es2 == {
+        "funding_refused_by_lang:de": 2,
+        "funding_refused_by_lang:none": 1,
+        "funding_refused_by_signal:signals:0": 1,
+        "funding_refused_by_signal:no_award_name:1": 1,
+        "funding_refused_by_signal:not_funding": 1,
+        "funding_refused_signals_lt2:de": 1,
+        "funding_refused_signals_lt2:none": 1,
+    }
+
+
+def test_the_es2_rows_print_counts_only_and_pass_the_guard(
+    paths: dict[str, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    _add_outcomes(paths, _ES2_OUTCOMES)
+    assert stage_summary.main([str(paths["run"]), "--dataset", str(paths["corpus"])]) == 0
+    printed = capsys.readouterr().out
+    folded = printed.casefold()
+    for token in (*IDS, "http", "zqsecret", "stipendien", "money", "links,"):
+        assert token.casefold() not in folded, token
+    assert "| funding_refused_by_lang:de | 2 |" in printed
+    assert "| funding_refused_signals_lt2:de | 1 |" in printed
+
+
+def test_a_capture_without_es2_fields_prints_what_it_printed_before(
+    paths: dict[str, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The fields are absent on every capture made before ES-2: no row, and the
+    outcome serialises exactly as it did."""
+    from evaluation.research.schema import PageOutcome
+
+    old = [o for o in _ES2_OUTCOMES if "classifier_signal" not in o]
+    _add_outcomes(paths, old)
+    assert stage_summary.main([str(paths["run"]), "--dataset", str(paths["corpus"])]) == 0
+    assert "funding_refused" not in capsys.readouterr().out
+    assert set(json.loads(PageOutcome(**old[0]).model_dump_json())) == {
+        "category",
+        "url",
+        "page_type",
+        "detail",
+        "characters",
+    }
+
+
+@pytest.mark.parametrize("summary_only", [False, True])
+def test_the_scorecard_ignores_the_es2_fields(
+    paths: dict[str, Path], capsys: pytest.CaptureFixture[str], summary_only: bool
+) -> None:
+    from evaluation.research import scorecard
+
+    args = [str(paths["run"]), "--dataset", str(paths["corpus"])]
+    args += ["--summary-only"] if summary_only else []
+    capture_path = next((paths["run"] / "zqalpha-off").glob("*/capture.json"))
+    original = capture_path.read_text()
+    # The same outcomes without the ES-2 fields, then with them.
+    bare = [
+        {k: v for k, v in o.items() if k not in {"html_lang", "classifier_signal"}}
+        for o in _ES2_OUTCOMES
+    ]
+    _add_outcomes(paths, bare)
+    assert scorecard.main(args) == 0
+    before = capsys.readouterr().out
+    capture_path.write_text(original)
+    _add_outcomes(paths, _ES2_OUTCOMES)
+    assert scorecard.main(args) == 0
+    assert capsys.readouterr().out == before
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("signals:0", ("signals:0", 0)),
+        ("no_award_name:3", ("no_award_name:3", 3)),
+        ("index", ("index", None)),
+        ("signals:https://x", ("other", None)),
+        ("Zqsecret Award", ("other", None)),
+        (None, ("other", None)),
+    ],
+)
+def test_classifier_categories_are_a_fixed_shape(value: object, expected: object) -> None:
+    assert stage_summary.funding_signal(value) == expected
+
+
+_PAGE = (
+    "<html{lang}><head><title>{title}</title></head>"
+    "<body><main><h1>{title}</h1><p>{body}</p></main></body></html>"
+)
+_GERMAN = "Das Stipendium beträgt monatlich 300 Euro. Bewerben können sich Studierende. " * 10
+
+
+@pytest.mark.parametrize(
+    ("url", "lang", "title", "body", "category"),
+    [
+        # A named award whose signal words are all German (AW-1's dev4 page).
+        (
+            "https://zq.example/stipendien/zqmeyer",
+            ' lang="de-DE"',
+            "Zqmeyer-Stipendium",
+            _GERMAN,
+            "signals:0",
+        ),
+        (
+            "https://zq.example/scholarships/money",
+            "",
+            "Student money matters",
+            "General text about money and how to apply online. The amount is 300 euros. " * 20,
+            "no_award_name:2",
+        ),
+        (
+            "https://zq.example/scholarships/zqmeyer",
+            ' lang="en"',
+            "Zqmeyer Scholarship",
+            "The scholarship is worth 300 euros per month. Eligibility: first-year students. "
+            "How to apply: apply online by the deadline. " * 10,
+            "award",
+        ),
+        (
+            "https://zq.example/study/cs",
+            ' lang="en"',
+            "BSc Computer Science",
+            "Study computer science with us. Entry requirements apply. " * 30,
+            "",
+        ),
+    ],
+)
+def test_the_classifier_records_which_funding_test_settled_it(
+    url: str, lang: str, title: str, body: str, category: str
+) -> None:
+    from app.adapters.page_classifier import PageType, classify_page
+
+    page = classify_page(url=url, html=_PAGE.format(lang=lang, title=title, body=body))
+    assert page.funding_category == category
+    if category.startswith(("signals", "no_award_name")):
+        # The verdict is the one it always was.
+        assert page.page_type is PageType.UNKNOWN
+        assert page.signals[0].startswith("funding page with ")
+
+
+@pytest.mark.asyncio
+async def test_the_funding_stage_records_lang_and_category_but_prints_neither(
+    settings: Any, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from types import SimpleNamespace
+
+    from app.adapters.base import Candidate, CandidateProgram, PageOutcome
+    from app.adapters.fetching import Fetcher
+    from app.adapters.scholarship import web_scholarships
+    from app.domain.enums import DegreeLevel
+    from app.pipeline.runner import _page_outcome_line
+    from scripts import canary_discovery
+
+    monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_LEVEL_SCOPE", False)
+    root = tmp_path / "site" / "uni"
+    root.mkdir(parents=True)
+    (root / "scholarships.html").write_text(
+        "<html><head><title>Scholarships</title></head><body><h1>Scholarships</h1>"
+        "<p>Overview of scholarships available to our students.</p><ul>"
+        '<li><a href="zqmeyer-scholarship.html">Zqmeyer Scholarship</a></li>'
+        '<li><a href="other-scholarship.html">Other Scholarship</a></li></ul></body></html>',
+        encoding="utf-8",
+    )
+    (root / "zqmeyer-scholarship.html").write_text(
+        _PAGE.format(lang=' lang="de"', title="Zqmeyer-Stipendium", body=_GERMAN),
+        encoding="utf-8",
+    )
+    candidate = Candidate(
+        name="Test University",
+        country="Testland",
+        city="Test",
+        scholarships_url="fixture://uni/scholarships.html",
+    )
+    program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+    async with Fetcher(settings.cache_dir, offline=True, corpus_dir=tmp_path / "site") as f:
+        _, result = await web_scholarships.WebScholarshipAdapter(f, "2026/27").find(
+            candidate, program, None
+        )
+    by_name = {o.url.rsplit("/", 1)[-1]: o for o in result.page_outcomes}
+    refused = by_name["zqmeyer-scholarship.html"]
+    assert refused.category == "classifier-rejected"
+    assert refused.detail.startswith("not an award page; no scholarship recorded (")
+    assert (refused.html_lang, refused.classifier_signal) == ("de", "signals:0")
+    index = by_name["scholarships.html"]
+    assert (index.html_lang, index.classifier_signal) == ("", "index")
+    # The page that failed to fetch was never classified.
+    assert by_name["other-scholarship.html"].classifier_signal is None
+    # The run's outcome line, which the product shows and the capture parses,
+    # is the line the same outcome printed before ES-2.
+    line = _page_outcome_line(refused)
+    assert line == _page_outcome_line(
+        PageOutcome(
+            url=refused.url,
+            category=refused.category,
+            page_type=refused.page_type,
+            detail=refused.detail,
+            readable_chars=refused.readable_chars,
+        )
+    )
+    assert "signals" not in line
+    # The canary keeps the fields under the parsed line's own key.
+    signals = canary_discovery.outcome_signals(result.page_outcomes)
+    run = SimpleNamespace(errors=[line], unknowns=[])
+    record = canary_discovery.page_outcomes(run)[0]  # type: ignore[arg-type]
+    assert signals[(record["category"], record["url"], record["detail"])] == ("de", "signals:0")

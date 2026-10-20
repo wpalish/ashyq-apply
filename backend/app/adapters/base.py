@@ -103,6 +103,13 @@ class PageOutcome:
     page_type: str = ""
     detail: str = ""
     readable_chars: int = 0
+    #: ES-2 (measurement only, funding stage): the page's ``<html lang>``
+    #: primary subtag (``""`` when it declares none) and the classifier's
+    #: ``funding_category`` (``"not_funding"`` outside the funding branch).
+    #: ``None`` where not recorded. The runner's outcome line never prints
+    #: them; only the evaluation capture reads them.
+    html_lang: str | None = None
+    classifier_signal: str | None = None
 
 
 @dataclass

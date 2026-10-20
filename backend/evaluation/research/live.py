@@ -1469,16 +1469,25 @@ async def capture_one(
                 # Read here rather than after the run, so a case killed by its
                 # budget still records what it managed to read — which is
                 # exactly the case whose zero needs explaining.
-                observation.page_outcomes = [
-                    PageOutcome(
-                        category=record["category"],
-                        url=record["url"],
-                        page_type=record.get("page_type") or "",
-                        detail=record.get("detail") or "",
-                        characters=int(record["characters"]) if record.get("characters") else None,
+                # ES-2: the funding stage's page language and classifier
+                # category, which the outcome line does not print.
+                signals = self.outcome_signals
+                observation.page_outcomes = []
+                for record in canary.page_outcomes(self.run):
+                    measured = signals.get((record["category"], record["url"], record["detail"]))
+                    observation.page_outcomes.append(
+                        PageOutcome(
+                            category=record["category"],
+                            url=record["url"],
+                            page_type=record.get("page_type") or "",
+                            detail=record.get("detail") or "",
+                            characters=(
+                                int(record["characters"]) if record.get("characters") else None
+                            ),
+                            html_lang=measured[0] if measured else None,
+                            classifier_signal=measured[1] if measured else None,
+                        )
                     )
-                    for record in canary.page_outcomes(self.run)
-                ]
                 runners.append(self)
                 self.record_claims()
 

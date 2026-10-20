@@ -214,6 +214,13 @@ class PageOutcome(Strict):
     page_type: str = ""
     detail: str = ""
     characters: int | None = Field(default=None, ge=0)
+    #: ES-2: on a funding-stage page the classifier read, the page's
+    #: ``<html lang>`` primary subtag (``""``: none declared) and the
+    #: classifier's category (``index``, ``award``, ``faq``, ``signals:<n>``,
+    #: ``no_award_name:<n>``, ``not_funding``). Absent elsewhere and on
+    #: captures made before ES-2, and then not written.
+    html_lang: str | None = Field(default=None, exclude_if=lambda value: value is None)
+    classifier_signal: str | None = Field(default=None, exclude_if=lambda value: value is None)
 
 
 class SiteIdentity(Strict):

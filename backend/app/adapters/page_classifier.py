@@ -371,6 +371,12 @@ class PageClassification:
     #: CH-1: the level a labelled field of the main content states ("Degree:
     #: BSc", ``_DEGREE_FIELD_LABELS``), or ``None``. No verdict depends on it.
     labelled_degree_level: str | None = None
+    #: ES-2 (measurement only): which funding-branch test settled the verdict,
+    #: ``faq`` / ``index`` / ``award``, or, for a funding page refused as
+    #: ``unknown``, ``signals:<n>`` (a named award with fewer than two
+    #: ``_AWARD_SIGNALS``) or ``no_award_name:<n>``. ``""`` outside the
+    #: funding branch. No verdict depends on it.
+    funding_category: str = ""
 
     def accepts(self, extractor: str) -> bool:
         return self.page_type in ACCEPTS.get(extractor, frozenset())
@@ -966,7 +972,9 @@ def _classify_parsed(
     )
     if funding_heading or "scholarship" in path or "financial-aid" in path:
         if _FAQ.search(low_head):
-            return PageClassification(PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title)
+            return PageClassification(
+                PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title, funding_category="faq"
+            )
 
         award_links = _award_link_count(soup) if soup else 0
         present = [name for name, pattern in _AWARD_SIGNALS if pattern.search(low_body)]
@@ -1001,6 +1009,7 @@ def _classify_parsed(
                 subject=named,
                 degree_level=_degree_level(f"{head} {body[:2500]}", lang),
                 academic_year=_academic_year(body),
+                funding_category="award",
             )
         # A listing heading, or several links out to named awards, or links out
         # with no award identity of its own.
@@ -1011,7 +1020,11 @@ def _classify_parsed(
                 "no award identity of its own" if named is None else "",
             ]
             return PageClassification(
-                PageType.SCHOLARSHIP_INDEX, 0.8, [s for s in signals if s], title
+                PageType.SCHOLARSHIP_INDEX,
+                0.8,
+                [s for s in signals if s],
+                title,
+                funding_category="index",
             )
         # A named award plus at least two substantive signals.
         if named and len(present) >= 2:
@@ -1023,12 +1036,14 @@ def _classify_parsed(
                 subject=named,
                 degree_level=_degree_level(f"{head} {body[:2500]}", lang),
                 academic_year=_academic_year(body),
+                funding_category="award",
             )
         return PageClassification(
             PageType.UNKNOWN,
             0.3,
             [f"funding page with {len(present)} substantive signals and no clear award name"],
             title,
+            funding_category=f"{'signals' if named else 'no_award_name'}:{len(present)}",
         )
 
     if _DOCUMENTS.search(low_head):

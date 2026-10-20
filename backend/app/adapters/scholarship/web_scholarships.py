@@ -45,6 +45,7 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
     main_content,
+    page_language,
     proper_award_name,
 )
 from app.adapters.pdf_document import PdfDocument
@@ -604,6 +605,10 @@ class WebScholarshipAdapter:
             else:
                 classification = classify_page(url=url, html=page.text)
                 page_type = classification.page_type.value
+                # ES-2: measurement only. Carried on the outcome, never printed
+                # in its line, and no branch below reads it.
+                html_lang = page_language(page.text)
+                classifier_signal = classification.funding_category or "not_funding"
                 if depth > 0:
                     out.page_types.append((url, classification.page_type.value))
 
@@ -769,6 +774,8 @@ class WebScholarshipAdapter:
                             url=url,
                             category="fetched-ok",
                             page_type=page_type,
+                            html_lang=html_lang,
+                            classifier_signal=classifier_signal,
                             detail=(
                                 f"read as a funding index; {len(links)} award links, "
                                 f"{queued} queued within the award budget"
@@ -811,6 +818,8 @@ class WebScholarshipAdapter:
                             url=url,
                             category="classifier-rejected",
                             page_type=page_type,
+                            html_lang=html_lang,
+                            classifier_signal=classifier_signal,
                             detail="index page beyond the index budget; not followed"
                             + (f"; {on_page} awards read from its own sections" if on_page else ""),
                         )
@@ -826,6 +835,8 @@ class WebScholarshipAdapter:
                             url=url,
                             category="classifier-rejected",
                             page_type=page_type,
+                            html_lang=html_lang,
+                            classifier_signal=classifier_signal,
                             detail=f"award out of scope: {out_of_scope}",
                         )
                     )
@@ -854,6 +865,8 @@ class WebScholarshipAdapter:
                             url=url,
                             category="fetched-ok" if claims else "no-pattern-match",
                             page_type=page_type,
+                            html_lang=html_lang,
+                            classifier_signal=classifier_signal,
                             detail=f"award page; {len(claims)} claims read",
                         )
                     )
@@ -870,6 +883,8 @@ class WebScholarshipAdapter:
                             url=url,
                             category="classifier-rejected",
                             page_type=page_type,
+                            html_lang=html_lang,
+                            classifier_signal=classifier_signal,
                             detail=(
                                 "not an award page; no scholarship recorded "
                                 f"({_award_link_summary(page.text, url)})"
