@@ -1,0 +1,39 @@
+{
+ "case": "qs2027-091",
+ "seed_id": "qs2027-091",
+ "university": "University of Copenhagen",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-091",
+  "round": "topup_round9"
+ },
+ "questions_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [],
+ "programme": {
+  "title": null,
+  "page_url": null,
+  "notes": "Programme as recorded in the merged KB (Danish-taught BSc in Computer Science; not re-researched in this top-up)."
+ },
+ "answers": {
+  "scholarship_exists": {
+   "status": "not_applicable",
+   "url": "https://www.ku.dk/studies/admission/bachelor",
+   "quote": "Scholarships The University of Copenhagen does not offer financial support or scholarships to foreign students.",
+   "date": "2026-10-20",
+   "page_language": "en",
+   "notes": "UCPH's bachelor admission page (section 'Tuition fee, scholarships and code of conduct') states that UCPH offers no financial support or scholarships to foreign students and refers to the Danish Agency for Science and Higher Education (ufm.dk). The Danish Government Scholarship at UCPH requires being 'admitted to a master's degree programme at the University of Copenhagen' (https://www.ku.dk/studies/admission/scholarships-for-full-degree-students, read 2026-10-20). The Faculty of Health and Medical Sciences' 2nd-year scholarship on that page is for students who have completed the first year at that faculty, not for an incoming CS applicant. New page since round 5, which found no statement."
+  },
+  "scholarship_international": {
+   "status": "not_applicable",
+   "url": "https://www.ku.dk/studies/admission/bachelor",
+   "quote": "Scholarships The University of Copenhagen does not offer financial support or scholarships to foreign students.",
+   "date": "2026-10-20",
+   "page_language": "en",
+   "notes": "No UCPH scholarship for foreign bachelor students, so there is none to be eligible for."
+  }
+ }
+}
