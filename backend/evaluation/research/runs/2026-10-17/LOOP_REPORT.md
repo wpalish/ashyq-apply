@@ -1047,3 +1047,10 @@ S4 (index budget spent on process pages): dev3 only → IB-1 not built. AI-1 (si
 cost a labelled claim → not built. AW-1 (labelled award page refused as not-award): 0 strict / 1 loose (dev4 rwth;
 cause: `_AWARD_SIGNALS` English-only) → AW-2 started as a language-coverage rule (LV-1 precedent), plus ES-2 to
 measure refusals by page language. SH-1 (sibling-host award links, cohort + dev3) built; replay running.
+
+### 2026-10-20 04:40 — SH-1 `--same-site-award-links` replay (4 sets, normal + knockout, $0)
+
+The rule fired (on arms: cohort 18 sibling-host award links kept, dev3 10), but no stable gain and no stable loss on
+any set, normal or knockout; wrong pages unchanged. The followed sibling pages hold no labelled award. **Verdict:
+stays off** (13-Q2 needs a stable gain); recorded, ready for a set where a label sits on a sibling host.
+AW-2 (`--award-signals-all-languages`) replay dispatched.
