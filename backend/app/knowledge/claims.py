@@ -49,6 +49,10 @@ KB_DISCOVERY_SOURCE = "knowledge-base"
 #: Tuition periods the cost table (a yearly figure) can take as they are. A
 #: per-semester or whole-programme figure stays a claim, published as it is.
 _ANNUAL = frozenset({"year", "annual", "per year", "academic year", "yearly"})
+#: Periods that are a unit of study, not a stretch of time: the page printed a
+#: rate (UBC: per credit) and no yearly figure, and the load is not ours to
+#: guess, so the rate is never multiplied out. ``app.knowledge.funding`` says so.
+PER_UNIT_PERIODS = frozenset({"credit", "credit hour", "unit", "point", "credit point", "course"})
 NO_VERIFIED_DATA = "no verified data yet"
 #: The KB value of a "does not apply" fact ("no scholarship for bachelor's").
 NOT_APPLICABLE = "not_applicable"
@@ -519,6 +523,35 @@ def kb_today() -> date:
     return datetime.now(UTC).date()
 
 
+#: The claim note of a fee the page printed only as a range.
+TUITION_RANGE_NOTE = "Published as a range, not a single figure."
+
+
+def fee_range(value: Any) -> tuple[float, float, str] | None:
+    """(low, high, currency) of a KB fee printed as a range (``{min, max, currency}``)."""
+    if not isinstance(value, dict) or value.get("min") is None or value.get("max") is None:
+        return None
+    return float(value["min"]), float(value["max"]), str(value["currency"])
+
+
+def tuition_value(value: Any) -> dict[str, Any] | None:
+    """A KB fee as the tuition claim's value, the shape a live fee read gives.
+
+    A single amount is ``{amount, currency}``. A printed range is the live
+    range shape (``app.adapters.structured_costs``): ``amount`` is the upper
+    bound, so whatever reads only ``amount`` never understates the fee, and
+    ``range_low``/``range_high`` carry the range as printed. None when the
+    fact holds neither.
+    """
+    bounds = fee_range(value)
+    if bounds is not None:
+        low, high, currency = bounds
+        return {"amount": high, "currency": currency, "range_low": low, "range_high": high}
+    if not isinstance(value, dict) or value.get("amount") is None:
+        return None
+    return {"amount": float(value["amount"]), "currency": str(value["currency"])}
+
+
 @dataclass
 class KnowledgeAnswer:
     """What the KB says for one programme row: claims, cost table, stale flags."""
@@ -564,6 +597,8 @@ def fact_claim(
     period = fact.get("period")
     if claim_type is ClaimType.TUITION and period and str(period).lower() not in _ANNUAL:
         notes.append(f"Amount per {period}, as published; not a yearly figure.")
+    if claim_type is ClaimType.TUITION and fee_range(fact.get("value")) is not None:
+        notes.append(TUITION_RANGE_NOTE)
     caveat = fact_caveat(fact)
     if caveat:
         # Current, but never shown as fully verified: the page did not
@@ -667,9 +702,9 @@ def answer(
         if str(value).lower() == NOT_APPLICABLE and _is_scholarship(fact):
             continue  # below, as the "no institutional scholarship" claim
         if claim_type is ClaimType.TUITION:
-            if not isinstance(value, dict) or value.get("amount") is None:
+            value = tuition_value(value)
+            if value is None:
                 continue
-            value = {"amount": float(value["amount"]), "currency": str(value["currency"])}
         claim = add(
             claim_type,
             value,
@@ -685,12 +720,17 @@ def answer(
             and claim.status is ClaimStatus.VERIFIED_CURRENT
             and str(fact.get("period") or "year").lower() in _ANNUAL
         ):
+            # A printed range enters only as a range, at its upper bound (the
+            # live path's rule, ``web_costs``): the cost is never understated.
             costs.items[CostCategory.TUITION] = Money(
                 amount=value["amount"],
                 currency=value["currency"],
                 academic_year=fact.get("academic_year") or academic_year,
                 source_url=claim.source_url,
+                range_low=value.get("range_low"),
+                range_high=value.get("range_high"),
             )
+            costs.is_range = costs.is_range or "range_low" in value
             costs.source_urls.append(claim.source_url)
     for row in none_offered_rows(entry):
         # "No scholarship exists" for this applicant, with no award named: the

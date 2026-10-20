@@ -454,6 +454,11 @@ FUNDING: tuple[Template, ...] = (
         "remaining cost is not computed.",
     ),
     _t(
+        "gap.kbTuitionRange",
+        "Tuition is published only as a range, {range}; the cost uses its upper bound, so it "
+        "is not understated.",
+    ),
+    _t(
         "gap.confirmIntakeFee",
         "Confirm the {intake} fee with the university before relying on a cost figure.",
     ),

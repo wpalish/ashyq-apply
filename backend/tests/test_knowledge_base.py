@@ -1726,3 +1726,190 @@ def test_covers_answers_computer_science_and_its_ontology_aliases(profile, field
 def test_covers_does_not_answer_a_neighbouring_field_with_cs_facts(profile, field) -> None:
     """Review P5: a field that merely contains a CS word is another programme."""
     assert not covers(_with_fields(profile, [field]))
+
+
+# ------------------------------------------- two honest fee shapes (round 11)
+
+
+def _fee_draft(root: Path, value: dict[str, Any], quote: str) -> None:
+    _write(
+        root / "batch2/core" / f"{MIT}.json",
+        {
+            "case": MIT,
+            "researched_on": "2026-10-19",
+            "answers": {
+                "tuition": {"status": "known", "value": value, "url": URL, "quote": quote},
+            },
+        },
+    )
+
+
+@pytest.mark.parametrize(
+    "bounds",
+    [
+        {"min": 27650, "max": 34670},
+        {"amount_min": 27650, "amount_max": 34670},
+        {"amount": 27650, "amount_max": 34670},  # the Auckland draft's spelling
+    ],
+)
+def test_converter_keeps_a_printed_range_as_a_range(tmp_path, bounds):
+    root = tmp_path / "drafts"
+    _fee_draft(
+        root,
+        {**bounds, "currency": "GBP", "academic_year": "2027/28", "period": "year"},
+        "For the 2027/28 academic year, tuition fees between £27,650 and £34,670",
+    )
+    ci = _report(tmp_path / "evidence_check.ci-2026-10-19.json", [_row("tuition", URL)])
+    entry = kb_build.build(root, [ci], built_at="2026-10-19")["entries"][MIT]
+    (fee,) = entry["facts"]["tuition"]
+    # Never the low bound alone (the Auckland fact before round 11), never a midpoint.
+    assert fee["value"] == {"min": 27650.0, "max": 34670.0, "currency": "GBP"}
+    assert fee["period"] == "year" and fee["unit"] == "GBP per year"
+    assert not fee["stale"] and not any(u["key"] == "tuition" for u in entry["unknown"])
+
+
+def test_converter_keeps_a_past_year_range_as_stale(tmp_path):
+    root = tmp_path / "drafts"
+    _fee_draft(
+        root,
+        {"min": 42554, "max": 51106, "currency": "USD", "academic_year": "2026-27"},
+        "Non-Resident Tuition $42,554-$51,106",
+    )
+    ci = _report(tmp_path / "evidence_check.ci-2026-10-19.json", [_row("tuition", URL)])
+    (fee,) = kb_build.build(root, [ci], built_at="2026-10-19")["entries"][MIT]["facts"]["tuition"]
+    assert fee["value"] == {"min": 42554.0, "max": 51106.0, "currency": "USD"}
+    assert fee["stale"] and fee["academic_year"] == "2026-27"
+
+
+@pytest.mark.parametrize(
+    ("value", "problem"),
+    [
+        ({"min": 27650, "max": 34999}, "range bound 34999 is not printed in the quote"),
+        ({"min": 34670, "max": 27650}, "are not a low and a higher bound"),
+        ({"max": 34670}, "a range needs both bounds and a currency"),
+    ],
+)
+def test_converter_refuses_a_range_the_quote_does_not_bear_out(tmp_path, value, problem):
+    root = tmp_path / "drafts"
+    _fee_draft(
+        root,
+        {**value, "currency": "GBP", "academic_year": "2027/28"},
+        "tuition fees between £27,650 and £34,670",
+    )
+    ci = _report(tmp_path / "evidence_check.ci-2026-10-19.json", [_row("tuition", URL)])
+    entry = kb_build.build(root, [ci], built_at="2026-10-19")["entries"][MIT]
+    assert entry["facts"]["tuition"] == []
+    (unknown,) = [u for u in entry["unknown"] if u["key"] == "tuition"]
+    assert problem in unknown["reason"]
+
+
+def test_converter_keeps_a_per_credit_rate_unmultiplied(tmp_path):
+    root = tmp_path / "drafts"
+    _fee_draft(
+        root,
+        {"amount": 1789.18, "currency": "CAD", "academic_year": "2027/28", "period": "credit"},
+        "Science $1,789.18",
+    )
+    ci = _report(tmp_path / "evidence_check.ci-2026-10-19.json", [_row("tuition", URL)])
+    (fee,) = kb_build.build(root, [ci], built_at="2026-10-19")["entries"][MIT]["facts"]["tuition"]
+    assert fee["value"] == {"amount": 1789.18, "currency": "CAD"}
+    assert fee["period"] == "credit" and fee["unit"] == "CAD per credit"
+    assert not fee["stale"]
+
+
+def test_converter_keeps_a_published_range_out_of_a_container_check(tmp_path):
+    root = tmp_path / "drafts"
+    _fee_draft(
+        root,
+        {"min": 27650, "max": 34670, "currency": "GBP", "academic_year": "2027/28"},
+        "tuition fees between £27,650 and £34,670",
+    )
+    container = _report(
+        tmp_path / "evidence_check.container-2026-10-20.json", [_row("tuition", URL)]
+    )
+    entry = kb_build.build(root, [container], built_at="2026-10-19")["entries"][MIT]
+    assert entry["facts"]["tuition"] == []
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_takes_a_printed_range_at_its_upper_bound_and_says_so(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = _mit_entry(
+        tuition=[
+            _fact(
+                "tuition",
+                {"min": 27650.0, "max": 34670.0, "currency": "GBP"},
+                "tuition fees between £27,650 and £34,670",
+                period="year",
+                academic_year="2027/28",
+            )
+        ]
+    )
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    tuition = payload["costs"]["items"]["tuition"]
+    assert (tuition["amount"], tuition["range_low"], tuition["range_high"]) == (
+        34670.0,
+        27650.0,
+        34670.0,
+    )
+    assert tuition["currency"] == "GBP" and payload["costs"]["is_range"] is True
+    (claim,) = [c for c in payload["claims"] if c["claim_type"] == "tuition"]
+    assert claim["normalized_value"] == {
+        "amount": 34670.0,
+        "currency": "GBP",
+        "range_low": 27650.0,
+        "range_high": 34670.0,
+    }
+    assert "Published as a range, not a single figure." in claim["notes"]
+    assert claim["status"] == "VERIFIED_CURRENT"
+    assert (
+        "Tuition is published only as a range, 27,650–34,670 GBP; the cost uses its upper "
+        "bound, so it is not understated."
+    ) in payload["funding_gap"]["warnings"]
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_names_a_stale_range_as_published_range(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = _mit_entry(
+        tuition=[
+            _fact(
+                "tuition",
+                {"min": 42554.0, "max": 51106.0, "currency": "USD"},
+                "Non-Resident Tuition $42,554-$51,106",
+                period="year",
+                academic_year="2026-27",
+            )
+        ]
+    )
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    assert payload["costs"]["items"] == {}
+    reason = payload["funding_gap"]["reason"]
+    assert "published range 42,554–51,106 USD a year, academic year 2026-27 (not current:" in reason
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_never_multiplies_a_per_credit_rate(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = _mit_entry(
+        tuition=[
+            _fact(
+                "tuition",
+                {"amount": 1789.18, "currency": "CAD"},
+                "Science $1,789.18",
+                period="credit",
+                academic_year="2027/28",
+            )
+        ]
+    )
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    assert payload["costs"]["items"] == {} and payload["costs"]["total"] is None
+    reason = payload["funding_gap"]["reason"]
+    assert payload["funding_gap"]["computable"] is False
+    assert (
+        "1,789 CAD per credit, academic year 2027/28 (published per credit (no yearly figure "
+        "printed))" in reason
+    )

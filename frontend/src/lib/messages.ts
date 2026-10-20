@@ -10,7 +10,7 @@
  */
 
 import { fill, getLocale, t, tf, tn, translated, tOr, type MessageKey } from '@/lib/i18n';
-import { caveatText, staleChip, staleReason, unusedTuition, unusedTuitionLines } from '@/lib/format';
+import { caveatText, isPerUnit, staleChip, staleReason, unusedTuition, unusedTuitionLines } from '@/lib/format';
 import type { ClaimOut, MessageRef } from '@/types';
 
 /** Parameters that are lists of cost categories, translated item by item. */
@@ -105,6 +105,7 @@ export function localStep(step: string): string {
 /** A fee period as published, said in the reader's language when it is a known one. */
 function localPeriod(period: string): string {
   if (period === 'semester') return t('detail.fee.period.semester');
+  if (period === 'credit') return t('detail.fee.period.credit');
   const programme = /^full programme \((\d+) years?\)$/.exec(period);
   if (programme) return tf('detail.fee.period.programme', { n: programme[1] ?? '' });
   return period;
@@ -117,14 +118,17 @@ function localPeriod(period: string): string {
  */
 export function localUnusedTuitionLines(claims: ClaimOut[]): string[] {
   if (getLocale() === 'en') return unusedTuitionLines(claims);
-  return unusedTuition(claims).map(({ claim, amount, period, year, reason }) => {
+  return unusedTuition(claims).map(({ claim, amount, range, period, year, reason }) => {
+    const shown = range ? tf('detail.fee.range', { range }) : amount;
     const money = period
-      ? tf('detail.fee.perPeriod', { amount, period: localPeriod(period) })
-      : tf('detail.fee.perYear', { amount });
+      ? tf('detail.fee.perPeriod', { amount: shown, period: localPeriod(period) })
+      : tf('detail.fee.perYear', { amount: shown });
     const when = year ? tf('detail.fee.year', { year }) : t('detail.fee.noYear');
     const why = reason
       ? tf('detail.fee.notCurrent', { reason: localStaleReason(claim) ?? reason })
-      : tf('detail.fee.notYearly', { period: localPeriod(period ?? '') });
+      : isPerUnit(period)
+        ? tf('detail.fee.perUnit', { period: localPeriod(period ?? '') })
+        : tf('detail.fee.notYearly', { period: localPeriod(period ?? '') });
     return `${money}, ${when} (${why})`;
   });
 }

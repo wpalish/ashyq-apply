@@ -16,10 +16,18 @@ applicant gets a question to confirm the award is still offered.
 from __future__ import annotations
 
 import re
+from typing import Any
 
 from app.adapters.applicability import assess_degree_applicability
 from app.domain.costs import NO_COST_REASON, NO_COST_WARNING
-from app.domain.enums import ClaimStatus, ClaimType, FundingClassification, FundingFit
+from app.domain.enums import (
+    ClaimStatus,
+    ClaimType,
+    CostCategory,
+    FundingClassification,
+    FundingFit,
+)
+from app.knowledge.claims import PER_UNIT_PERIODS
 from app.schemas.claim import ClaimOut, UnresolvedQuestion
 from app.schemas.result import ProgramResult, Scholarship, Tristate
 
@@ -116,19 +124,34 @@ def kb_scholarships(result: ProgramResult) -> tuple[list[Scholarship], list[Unre
 _PER_PERIOD = re.compile(r"Amount per ([^,]+), as published")
 
 
+def fee_amount_text(value: dict[str, Any]) -> str:
+    """ "66,720 USD", or "published range 27,650–34,670 GBP" for a printed range."""
+    currency = str(value.get("currency") or "")
+    low, high = value.get("range_low"), value.get("range_high")
+    if low is not None and high is not None:
+        return f"published range {float(low):,.0f}–{float(high):,.0f} {currency}".rstrip()
+    return f"{float(value['amount']):,.0f} {currency}".rstrip()
+
+
 def _fee_line(claim: ClaimOut) -> str | None:
-    """One unused tuition claim as "66,720 USD a year, academic year 2026/2027 (why)"."""
+    """One unused tuition claim as "66,720 USD a year, academic year 2026/2027 (why)".
+
+    A per-credit (per-unit) rate says the page printed no yearly figure; it is
+    never multiplied out, since the credit load is not ours to guess.
+    """
     value = claim.normalized_value
     if not isinstance(value, dict) or value.get("amount") is None:
         return None
     period = _PER_PERIOD.search(claim.notes or "")
     if claim.status is ClaimStatus.POSSIBLY_STALE:
         why = f"not current: {_stale_reason(claim)}"
+    elif period and period.group(1).lower() in PER_UNIT_PERIODS:
+        why = f"published per {period.group(1)} (no yearly figure printed)"
     elif period:
         why = f"published per {period.group(1)}, not as a yearly figure"
     else:
         return None
-    amount = f"{float(value['amount']):,.0f} {value.get('currency') or ''}".rstrip()
+    amount = fee_amount_text(value)
     per = f" per {period.group(1)}" if period else " a year"
     year = (
         f", academic year {claim.academic_year}"
@@ -155,9 +178,25 @@ def explain_unused_tuition(result: ProgramResult) -> None:
     that in kb words (``KB_NO_FEE_REASON``): no cost page was read, so none
     "could not be verified". Only the refusal for an empty cost table is
     reworded; the arithmetic and every other refusal are unchanged.
+
+    A fee the page printed only as a range enters the cost table at its upper
+    bound (``app.knowledge.claims.tuition_value``); a warning says so on the
+    gap, whatever its outcome, so neither the cost nor a remaining cost reads
+    as one printed figure.
     """
     gap = result.funding_gap
-    if gap is None or gap.computable or result.costs.items or gap.reason != NO_COST_REASON:
+    if gap is None:
+        return
+    tuition = result.costs.items.get(CostCategory.TUITION)
+    if tuition is not None and tuition.range_low is not None and tuition.range_high is not None:
+        # The cost table took a printed range at its upper bound; say so, so a
+        # cost or remaining cost is never read as the page's single figure.
+        printed = fee_amount_text(tuition.model_dump()).removeprefix("published range ")
+        gap.warnings.append(
+            f"Tuition is published only as a range, {printed}; the cost uses its upper "
+            "bound, so it is not understated."
+        )
+    if gap.computable or result.costs.items or gap.reason != NO_COST_REASON:
         return
     fees = [c for c in result.claims if c.claim_type is ClaimType.TUITION]
     if not fees:

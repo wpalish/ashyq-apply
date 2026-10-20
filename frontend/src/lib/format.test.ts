@@ -219,6 +219,24 @@ describe('stale knowledge-base claims (KB smoke 2026-10-19)', () => {
     expect(claimValue(false)).toBe('no');
   });
 
+  it('formats a printed fee range as the range, not its upper bound', () => {
+    expect(claimValue({ amount: 34670, currency: 'GBP', range_low: 27650, range_high: 34670 })).toBe('27,650–34,670 GBP');
+  });
+
+  it('lists a stale printed range and a per-credit rate in their own words', () => {
+    const fee = (normalized_value: unknown, academic_year: string | null, extra: string) => ({
+      claim_type: 'tuition', normalized_value, academic_year, notes: `Verified knowledge base. ${extra}`,
+    });
+    expect(unusedTuitionLines([
+      fee({ amount: 51106, currency: 'USD', range_low: 42554, range_high: 51106 }, '2026-27',
+        "Published as a range, not a single figure. Stale, not current: academic year 2026-27 is before the fall 2027 intake's 2027/28."),
+      fee({ amount: 1789.18, currency: 'CAD' }, '2027/28', 'Amount per credit, as published; not a yearly figure.'),
+    ])).toEqual([
+      "published range 42,554–51,106 USD a year, academic year 2026-27 (not current: academic year 2026-27 is before the fall 2027 intake's 2027/28)",
+      '1,789.18 CAD per credit, academic year 2027/28 (published per credit (no yearly figure printed))',
+    ]);
+  });
+
   it('labels a stale claim "Possibly outdated", not "Ageing"', () => {
     expect(STATUS_LABEL.POSSIBLY_STALE).toBe('Possibly outdated');
   });

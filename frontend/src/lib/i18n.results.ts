@@ -597,7 +597,10 @@ export const EN_RESULTS = {
   'detail.fee.noYear': 'no academic year stated',
   'detail.fee.notCurrent': 'not current: {reason}',
   'detail.fee.notYearly': 'published per {period}, not as a yearly figure',
+  'detail.fee.perUnit': 'published per {period} (no yearly figure printed)',
+  'detail.fee.range': 'published range {range}',
   'detail.fee.period.semester': 'semester',
+  'detail.fee.period.credit': 'credit',
   'detail.fee.period.programme': 'full programme ({n} years)',
   'detail.costCaveat': 'Tuition is current with a caveat: {caveat}.',
   'msg.question.kbScholarships':
@@ -632,6 +635,8 @@ export const EN_RESULTS = {
     'Confirm the {intake} fee with the university before relying on a cost figure.',
   'msg.gap.kbNoFee':
     'The verified knowledge base holds no tuition fee for this programme yet, so the remaining cost is not computed.',
+  'msg.gap.kbTuitionRange':
+    'Tuition is published only as a range, {range}; the cost uses its upper bound, so it is not understated.',
 } as const;
 
 export type ResultsKey = keyof typeof EN_RESULTS;
@@ -1204,7 +1209,10 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
   'detail.fee.noYear': 'учебный год не указан',
   'detail.fee.notCurrent': 'не актуально: {reason}',
   'detail.fee.notYearly': 'опубликовано за {period}, а не как годовая сумма',
+  'detail.fee.perUnit': 'опубликовано за {period} (годовая сумма не указана)',
+  'detail.fee.range': 'опубликованный диапазон {range}',
   'detail.fee.period.semester': 'семестр',
+  'detail.fee.period.credit': 'кредит',
   'detail.fee.period.programme': 'всю программу (лет: {n})',
   'detail.costCaveat': 'Стоимость обучения актуальна, с оговоркой: {caveat}.',
   'msg.question.kbScholarships':
@@ -1239,6 +1247,8 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'Прежде чем полагаться на сумму, уточните в университете стоимость для набора {intake}.',
   'msg.gap.kbNoFee':
     'В проверенной базе знаний пока нет платы за обучение для этой программы, поэтому оставшаяся сумма не рассчитана.',
+  'msg.gap.kbTuitionRange':
+    'Плата за обучение опубликована только диапазоном, {range}; в расчёте стоимости взята верхняя граница, чтобы не занизить её.',
 };
 
 /** Kazakh, on the same rule. */
@@ -1809,7 +1819,10 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
   'detail.fee.noYear': 'оқу жылы көрсетілмеген',
   'detail.fee.notCurrent': 'өзекті емес: {reason}',
   'detail.fee.notYearly': '{period} үшін жарияланған, жылдық сома ретінде емес',
+  'detail.fee.perUnit': '{period} үшін жарияланған (жылдық сома көрсетілмеген)',
+  'detail.fee.range': 'жарияланған аралық {range}',
   'detail.fee.period.semester': 'семестр',
+  'detail.fee.period.credit': 'кредит',
   'detail.fee.period.programme': 'бүкіл бағдарлама ({n} жыл)',
   'detail.costCaveat': 'Оқу ақысы өзекті, ескертпемен: {caveat}.',
   'msg.question.kbScholarships':
@@ -1844,4 +1857,6 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     'Сомаға сүйенбес бұрын {intake} қабылдауының ақысын университеттен нақтылаңыз.',
   'msg.gap.kbNoFee':
     'Тексерілген білім базасында бұл бағдарламаның оқу ақысы әзірге жоқ, сондықтан қалған сома есептелмеді.',
+  'msg.gap.kbTuitionRange':
+    'Оқу ақысы тек аралықпен жарияланған, {range}; құн төмендетіп көрсетілмес үшін оның жоғарғы шегі алынды.',
 };

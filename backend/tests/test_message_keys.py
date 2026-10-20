@@ -378,6 +378,40 @@ class TestTheKbModeWordingIsRecognised:
         explain_unused_tuition(row)
         assert match(FUNDING, row.funding_gap.reason).key == "gap.feeNotYearly"  # type: ignore[union-attr]
 
+    def test_a_per_credit_rate_says_no_yearly_figure_was_printed(self):
+        from app.knowledge.funding import explain_unused_tuition
+
+        per_credit = _tuition(
+            ClaimStatus.VERIFIED_CURRENT, "Amount per credit, as published; not a yearly figure."
+        )
+        row = _kb_row(claims=[per_credit.model_dump(mode="json")])
+        row.funding_gap = compute_funding_gap(row.costs, [], "USD")
+        explain_unused_tuition(row)
+        reason = match(FUNDING, row.funding_gap.reason)
+        assert reason is not None and reason.key == "gap.feeNotYearly"
+        assert "2,530 EUR per credit" in reason.params["fees"]
+        assert "(published per credit (no yearly figure printed))" in reason.params["fees"]
+
+    def test_a_published_range_in_the_cost_table_is_said_and_keyed(self):
+        from app.knowledge.funding import explain_unused_tuition
+
+        row = _kb_row(
+            costs={
+                "items": {
+                    "tuition": {
+                        "amount": 34670, "currency": "GBP", "academic_year": "2027/28",
+                        "range_low": 27650, "range_high": 34670,
+                    }
+                },
+                "is_range": True,
+            }
+        )  # fmt: skip
+        row.funding_gap = compute_funding_gap(row.costs, [], "GBP")
+        explain_unused_tuition(row)
+        refs = [match(FUNDING, w) for w in row.funding_gap.warnings]
+        (ref,) = [r for r in refs if r is not None and r.key == "gap.kbTuitionRange"]
+        assert ref.params["range"] == "27,650–34,670 GBP"
+
     def test_why_a_kb_row_needs_clarification(self):
         from app.domain.enums import EligibilityStatus
         from app.pipeline.runner import _kb_clarification_question

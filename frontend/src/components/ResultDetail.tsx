@@ -11,7 +11,7 @@ import { Deadline } from '@/components/Deadline';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, documentRequirement,
-  eligibilityTone, fundingClassTone, humanize, money, openQuestionCount, percent, ratio,
+  eligibilityTone, feeRange, fundingClassTone, humanize, money, openQuestionCount, percent, ratio,
   type DocumentRequirement,
 } from '@/lib/format';
 import {
@@ -361,7 +361,12 @@ function Costs({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode
           {items.map(([cat, m]) => (
             <div key={cat} style={{ display: 'contents' }}>
               <dt>{tOr(`cost.${cat}`, humanize(cat))}</dt>
-              <dd className="num">{money(m ?? null)}</dd>
+              <dd className="num">
+                {/* A fee printed only as a range is shown as that range, never as one figure. */}
+                {cat === 'tuition' && feeRange(m)
+                  ? `${tf('detail.fee.range', { range: feeRange(m) ?? '' })}${m?.academic_year ? ` · ${m.academic_year}` : ''}`
+                  : money(m ?? null)}
+              </dd>
             </div>
           ))}
           {result.costs.total && (

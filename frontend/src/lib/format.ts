@@ -207,6 +207,18 @@ export function sourceLabel(url: string): string {
   }
 }
 
+/**
+ * A fee printed only as a range ("27,650–34,670 GBP"), from a money value or a
+ * tuition claim's value (`range_low`/`range_high`); null when it is one figure.
+ */
+export function feeRange(v: unknown): string | null {
+  if (!v || typeof v !== 'object') return null;
+  const o = v as { range_low?: unknown; range_high?: unknown; currency?: unknown };
+  if (typeof o.range_low !== 'number' || typeof o.range_high !== 'number' || o.range_low === o.range_high) return null;
+  const n = (x: number) => Math.round(x).toLocaleString('en-US');
+  return `${n(o.range_low)}–${n(o.range_high)} ${String(o.currency ?? '')}`.trim();
+}
+
 /** A claim's normalised value as text: money as "66,720 USD", objects as "key: value" pairs. */
 export function claimValue(v: unknown): string {
   if (v === null || v === undefined) return '—';
@@ -214,6 +226,8 @@ export function claimValue(v: unknown): string {
   if (Array.isArray(v)) return v.map(claimValue).join(', ');
   if (typeof v === 'object') {
     const o = v as Record<string, unknown>;
+    const range = feeRange(o);
+    if (range) return range;
     if ('amount' in o && 'currency' in o) return `${Number(o.amount).toLocaleString('en-US')} ${o.currency}`;
     return Object.entries(o).map(([k, val]) => `${k}: ${claimValue(val)}`).join(', ');
   }
@@ -251,16 +265,31 @@ export function caveatText(notes: string | null | undefined): string | null {
 const PER_PERIOD = /Amount per ([^,]+), as published/;
 
 /**
+ * Periods that are a unit of study (`app.knowledge.claims.PER_UNIT_PERIODS`): the
+ * page printed a rate and no yearly figure, and nothing multiplies it out.
+ */
+export const PER_UNIT_PERIODS = new Set(['credit', 'credit hour', 'unit', 'point', 'credit point', 'course']);
+
+export function isPerUnit(period: string | null): boolean {
+  return period !== null && PER_UNIT_PERIODS.has(period.toLowerCase());
+}
+
+/**
  * Verified tuition the cost table does not use, one line each: a fee for
  * another academic year ("66,720 USD a year, academic year 2026/2027 (not
  * current: …)") or one not published per year. Read from the claim notes the
  * knowledge base writes, so a live read (no such notes) yields nothing.
  */
 export function unusedTuitionLines(claims: TuitionClaim[]): string[] {
-  return unusedTuition(claims).map(({ amount, period, year, reason }) => {
-    const money = `${amount}${period ? ` per ${period}` : ' a year'}`;
+  return unusedTuition(claims).map(({ amount, range, period, year, reason }) => {
+    const shown = range ? `published range ${range}` : amount;
+    const money = `${shown}${period ? ` per ${period}` : ' a year'}`;
     const when = year ? `academic year ${year}` : 'no academic year stated';
-    const why = reason ? `not current: ${reason}` : `published per ${period}, not as a yearly figure`;
+    const why = reason
+      ? `not current: ${reason}`
+      : isPerUnit(period)
+        ? `published per ${period} (no yearly figure printed)`
+        : `published per ${period}, not as a yearly figure`;
     return `${money}, ${when} (${why})`;
   });
 }
@@ -271,6 +300,8 @@ type TuitionClaim = { claim_type: string; normalized_value: unknown; academic_ye
 export interface UnusedTuition<C extends TuitionClaim = TuitionClaim> {
   claim: C;
   amount: string;
+  /** "27,650–34,670 GBP" when the page printed only a range; null for one figure. */
+  range: string | null;
   /** As published ("semester", "full programme (3 years)"); null for a yearly fee. */
   period: string | null;
   year: string | null;
@@ -286,7 +317,8 @@ export function unusedTuition<C extends TuitionClaim>(claims: C[]): UnusedTuitio
       const reason = staleReason(c.notes);
       const period = PER_PERIOD.exec(c.notes ?? '')?.[1] ?? null;
       if (!reason && !period) return [];
-      return [{ claim: c, amount: claimValue(c.normalized_value), period, year: c.academic_year, reason }];
+      const range = feeRange(c.normalized_value);
+      return [{ claim: c, amount: claimValue(c.normalized_value), range, period, year: c.academic_year, reason }];
     });
 }
 

@@ -357,6 +357,33 @@ documents pages for the thirteen universities above.
    CI-verified deadline of a past cycle. A fee per semester or for the whole programme (Lund) keeps its
    `period` as published. It becomes a claim that says so, and it enters the yearly cost table only when
    its period is a year.
+
+   **Two fee shapes with no single yearly figure (round 11).** Some pages print no yearly fee, and the KB
+   does not invent one:
+   - *Per credit (per unit).* A draft `value: {amount, currency, period: "credit"}` with the printed rate
+     (UBC: "Science $1,769.40" per credit) is kept as a fact with `period: "credit"`, `unit` "CAD per
+     credit". Nothing multiplies it out (no credit load is assumed). The claim notes say "Amount per
+     credit, as published; not a yearly figure."; it never enters the cost table, and the Costs tab lists
+     it as "… per credit, academic year … (published per credit (no yearly figure printed))". The periods
+     read as a unit of study are `app.knowledge.claims.PER_UNIT_PERIODS` (`credit`, `credit hour`,
+     `unit`, `point`, `credit point`, `course`).
+   - *A printed range.* A draft `value: {min, max, currency, period, academic_year, population}` (also
+     spelled `amount_min`/`amount_max`, or `amount`/`amount_max` as the Auckland draft has it) becomes a
+     fact whose `value` is `{min, max, currency}` (`kb_build.tuition_range`). The build keeps it only when
+     both bounds are printed in the verified quote and `min < max`; otherwise the fee stays `unknown`
+     with the reason ("range bound … is not printed in the quote"). The low bound never stands in for the
+     fee. Year and period rules apply as for any fee. At runtime the claim takes the live range shape
+     (`{amount: max, currency, range_low, range_high}`, as `structured_costs` gives it) with the note
+     "Published as a range, not a single figure.". A current yearly range enters the cost table only as a
+     range: `Money(amount=max, range_low=min, range_high=max)`, `is_range: true`. **Gap rule: the upper
+     bound.** Cost, affordability and any remaining cost use the upper bound, as the live path does
+     for a fee published per population (`web_costs`), so the cost is never understated, and the gap
+     carries the warning "Tuition is published only as a range, X–Y CUR; the cost uses its upper bound,
+     so it is not understated." (`gap.kbTuitionRange`). The Costs tab shows the row as "published range
+     X–Y CUR"; a stale or non-yearly range is listed as "published range X–Y CUR a year, academic year …
+     (not current: …)".
+   The committed KB was not rebuilt for this. On the next rebuild Auckland's 2027 row ("NZ$49,581.60 -
+     $60,909.60", today the low bound as a single figure) and NUS's MOE-grant row become ranges.
    **Two owner decisions, both "yes" on 2026-10-20 and on by default since KB v17** (`--no-…` turns one
    off). Each keeps a CI-verified value that the year rules above set aside. The value is shown as
    current with a `caveat`, and never as fully verified. Only a build with a flag on writes the top-level

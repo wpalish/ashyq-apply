@@ -93,6 +93,74 @@ describe('the Costs tab', () => {
   });
 });
 
+describe('the two honest fee shapes (round 11): a per-credit rate and a printed range', () => {
+  afterEach(() => act(() => setLocale('en')));
+  const RANGE_URL = 'https://www.sheffield.ac.uk/fees';
+  const range = claim({
+    id: 'range', academic_year: '2027/28', status: 'VERIFIED_CURRENT', is_stale: false, source_url: RANGE_URL,
+    normalized_value: { amount: 34670, currency: 'GBP', range_low: 27650, range_high: 34670 },
+    notes: 'Verified knowledge base. Published as a range, not a single figure.',
+  });
+  const rangeCosts = {
+    items: { tuition: { amount: 34670, currency: 'GBP', academic_year: '2027/28', is_estimate: false, range_low: 27650, range_high: 34670, source_url: RANGE_URL } },
+    total: null, academic_year: '2027/28', source_urls: [RANGE_URL], is_range: true,
+  };
+  const warning = 'Tuition is published only as a range, 27,650–34,670 GBP; the cost uses its upper bound, so it is not understated.';
+  const rangeGap = {
+    computable: false, gap: null, gap_low: null, gap_high: null, total_cost: null, confirmed_aid: null,
+    stackable_aid: null, year_mismatch: false, currency_mismatch: false, category_mismatch: false,
+    cost_basis: 'itemised_partial', missing_categories: [], reason: 'x', warnings: [warning],
+    warning_messages: [{ key: 'gap.kbTuitionRange', params: { range: '27,650–34,670 GBP' }, parts: {} }],
+  };
+  const perCredit = claim({
+    id: 'ubc', academic_year: '2026/27', status: 'VERIFIED_CURRENT', is_stale: false,
+    normalized_value: { amount: 1789.18, currency: 'CAD' },
+    notes: 'Verified knowledge base. Amount per credit, as published; not a yearly figure.',
+  });
+
+  it('shows a printed range in the cost table as that range, never as one figure', () => {
+    render(<ResultDetail result={result({ claims: [range], costs: rangeCosts, funding_gap: rangeGap })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+
+    expect(document.body).toHaveTextContent('published range 27,650–34,670 GBP · 2027/28');
+    expect(document.body).toHaveTextContent(warning);
+  });
+
+  it('lists a per-credit rate as published per credit, with no yearly figure', () => {
+    render(<ResultDetail result={result({ claims: [perCredit] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+
+    expect(screen.getByTestId('unused-tuition')).toHaveTextContent(
+      '1,789.18 CAD per credit, academic year 2026/27 (published per credit (no yearly figure printed))',
+    );
+  });
+
+  it('says both shapes in Russian and Kazakh', () => {
+    act(() => setLocale('ru'));
+    const { unmount } = render(<ResultDetail result={result({ claims: [perCredit] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    expect(screen.getByTestId('unused-tuition')).toHaveTextContent(
+      '1,789.18 CAD за кредит, учебный год 2026/27 (опубликовано за кредит (годовая сумма не указана))',
+    );
+    unmount();
+
+    const { unmount: unmountRange } = render(
+      <ResultDetail result={result({ claims: [range], costs: rangeCosts, funding_gap: rangeGap })} knowledgeMode="kb" />,
+    );
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    expect(document.body).toHaveTextContent('опубликованный диапазон 27,650–34,670 GBP · 2027/28');
+    expect(document.body).toHaveTextContent('Плата за обучение опубликована только диапазоном, 27,650–34,670 GBP');
+    unmountRange();
+
+    act(() => setLocale('kk'));
+    render(<ResultDetail result={result({ claims: [perCredit] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+    expect(screen.getByTestId('unused-tuition')).toHaveTextContent(
+      'кредит үшін 1,789.18 CAD, 2026/27 оқу жылы (кредит үшін жарияланған (жылдық сома көрсетілмеген))',
+    );
+  });
+});
+
 describe('the Funding tab with no award', () => {
   it('says in kb mode that no page was read, and shows the open question', () => {
     render(<ResultDetail result={result({ unresolved: [question({})] })} knowledgeMode="kb" />);

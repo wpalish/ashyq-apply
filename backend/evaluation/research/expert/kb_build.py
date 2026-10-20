@@ -334,6 +334,48 @@ def load_programme_pages(directory: Path) -> dict[str, list[tuple[str, dict[str,
 # ------------------------------------------------------------------ facts
 
 
+#: A number as printed in a quote, its thousands separators dropped ("£27,650"
+#: -> 27650, "NZ$49,581.60" -> 49581.6).
+_PRINTED_NUMBER = re.compile(r"\d{1,3}(?:[,\u00a0\u202f ]\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?")
+
+
+def _printed_numbers(quote: str) -> set[float]:
+    return {
+        float(re.sub(r"[,\u00a0\u202f ]", "", m.group())) for m in _PRINTED_NUMBER.finditer(quote)
+    }
+
+
+def tuition_range(raw: Any, quote: str) -> tuple[Row | None, str | None]:
+    """(``{min, max, currency}``, problem) of a draft fee printed as a range.
+
+    A page that prints only a range ("tuition fees between £27,650 and
+    £34,670") gives no single yearly figure, and the KB must not invent one:
+    the range is kept as printed. The draft spells the bounds ``min``/``max``
+    (also ``amount_min``/``amount_max``, or ``amount``/``amount_max`` as the
+    Auckland draft does). ``(None, None)`` when the value is not a range. A
+    range is kept only when both bounds are printed in the verified quote and
+    the low bound is below the high one; otherwise the problem says why and
+    the fee stays unknown (no bound is guessed, the low one never stands in
+    for the fee).
+    """
+    if not isinstance(raw, dict):
+        return None, None
+    high = _number(raw.get("max", raw.get("amount_max")))
+    if high is None:
+        return None, None
+    low = _number(raw.get("min", raw.get("amount_min", raw.get("amount"))))
+    currency = str(raw.get("currency") or "").upper()
+    if low is None or not re.fullmatch(r"[A-Z]{3}", currency):
+        return None, "a range needs both bounds and a currency"
+    if not 0 < low < high:
+        return None, f"range bounds {low:g} and {high:g} are not a low and a higher bound"
+    printed = _printed_numbers(quote)
+    missing = [f"{b:g}" for b in (low, high) if not any(abs(b - n) < 0.005 for n in printed)]
+    if missing:
+        return None, f"range bound {' and '.join(missing)} is not printed in the quote"
+    return {"min": low, "max": high, "currency": currency}, None
+
+
 def _question(item: str, key: str) -> str:
     if item == "scholarship":
         exists = key == "scholarships" or key.endswith(".exists")  # "scholarships": none offered
@@ -459,6 +501,10 @@ def core_facts(
         (exists.get("value") or {}).get("name") if isinstance(exists.get("value"), dict) else None
     )
     award = {"subject": name, "source_url": exists.get("url")} if name else None
+    tuition_answer = answers.get("tuition") or {}
+    fee_range, range_problem = tuition_range(
+        tuition_answer.get("value"), str(tuition_answer.get("quote") or "")
+    )
     for item in items:
         for p in item.proposals:
             question = _question(item.question, p.key)
@@ -466,19 +512,23 @@ def core_facts(
             p.notes = p.notes.replace(CORE_DRAFT_DATE, researched)
             used = report.get((str(draft["case"]), _answer_name(question)))
             verified_on = _checked_on(used, default_verified) if used else default_verified
-            if p.status == "known":
-                facts[question].append(
-                    fact_from(
-                        p,
-                        question,
-                        answer,
-                        verified_on=verified_on,
-                        today=today,
-                        intake=intake,
-                        award=award,
-                        checked_by=verified_by(used),
-                    )
+            if p.status == "known" and p.key == "tuition" and range_problem:
+                # A range the quote does not bear out: no bound stands in for the fee.
+                unknown.append({"question": question, "key": p.key, "reason": range_problem})
+            elif p.status == "known":
+                fact = fact_from(
+                    p,
+                    question,
+                    answer,
+                    verified_on=verified_on,
+                    today=today,
+                    intake=intake,
+                    award=award,
+                    checked_by=verified_by(used),
                 )
+                if p.key == "tuition" and fee_range is not None:
+                    fact["value"] = fee_range  # as printed, never its low bound alone
+                facts[question].append(fact)
             elif p.status == "not_applicable":
                 ev = p.evidence or {}
                 not_applicable.append(
@@ -538,6 +588,13 @@ def core_facts(
         if stale_fact is not None:
             facts[question].append(stale_fact)
             unknown = [u for u in unknown if u["key"] != question]
+        elif question == "tuition" and range_problem:
+            unknown = [
+                {**u, "reason": f"{u['reason']} Range not kept: {range_problem}."}
+                if u["key"] == question and range_problem not in u["reason"]
+                else u
+                for u in unknown
+            ]
     if note:
         unknown.append({"question": "scholarship_exists", "key": "scholarships", "reason": note})
     found, missing = document_facts(
@@ -698,8 +755,10 @@ def year_ruled_fact(
     published value silently; it is kept instead, with its year and period as
     published, and shown as stale with the reason. A per-semester or
     whole-programme fee whose year matches is kept current, its period as
-    published. A deadline whose quote prints no year stays unknown: its year
-    would be ours, not the page's.
+    published; so is a per-credit (or per-unit) rate, ``period: "credit"``,
+    which nothing multiplies out. A fee printed only as a range is kept as
+    ``{min, max, currency}`` (:func:`tuition_range`). A deadline whose quote
+    prints no year stays unknown: its year would be ours, not the page's.
     """
     if row is None or not _passed(row) or answer.get("status") != "known":
         return None
@@ -712,10 +771,15 @@ def year_ruled_fact(
     if question == "tuition":
         if not isinstance(raw, dict):
             return None
+        fee_range, problem = tuition_range(raw, quote)
         amount, currency = _number(raw.get("amount")), str(raw.get("currency") or "").upper()
-        if amount is None or not re.fullmatch(r"[A-Z]{3}", currency):
+        if problem or not re.fullmatch(r"[A-Z]{3}", currency):
             return None
-        value: Any = {"amount": amount, "currency": currency}
+        value: Any = fee_range
+        if value is None:
+            if amount is None:
+                return None
+            value = {"amount": amount, "currency": currency}
         year = raw.get("academic_year")
         start = requested_year(request)
         # A calendar-year system (Australia, NZ, Korea) publishes "2027" for the
