@@ -542,18 +542,18 @@ for (const locale of LOCALES) {
       await close();
     }
 
-    // ---- The Documents screen (English-only copy): the kb chip (D3) and "~1 day" (D4).
+    // ---- The Documents screen, in the locale (I18N-2): the kb chip (D3) and "~1 day" (D4).
     await page.getByTestId('nav-documents').click();
     const withChecklists = Object.values(rows).filter((r) => r.checklist);
     for (const row of withChecklists) await expect(page.getByTestId(`doc-tab-${row.id}`)).toBeVisible();
     await expect(page.getByTestId(`doc-tab-${rows.sheffield.id}`)).toHaveCount(0);
     await page.getByTestId(`doc-tab-${rows.fudan.id}`).click();
-    await expect(page.locator('main')).toContainText('verified, some items not current');
+    await expect(page.locator('main')).toContainText(w.t('detail.docs.kb.partial'));
     await page.getByTestId(`doc-tab-${rows.edinburgh.id}`).click();
-    await expect(page.locator('main')).toContainText('from the verified knowledge base');
-    await expect(page.locator('main')).toContainText('allow ~1 day');
+    await expect(page.locator('main')).toContainText(w.t('detail.docs.kb.official'));
+    await expect(page.locator('main')).toContainText(w.tn('detail.docs.leadTime', 1));
     const screen = await text(page.locator('main'));
-    expect(screen).not.toContain('partially read');
+    expect(screen).not.toContain(w.t('documents.completeness.partial'));
     expect(screen).not.toContain('~1 days');
     await page.context().close();
   });
