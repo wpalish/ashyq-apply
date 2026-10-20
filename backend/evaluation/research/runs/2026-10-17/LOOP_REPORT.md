@@ -1016,3 +1016,12 @@ ntu:deadline / SAT / programme.exists stay unstable across arms (known replay no
 | LOCO-1 (ticket 08) | H-C confirmed: removing a language's own rows loses 25 % of local-language gold on the store, 28 % on pages; strictly case-made rows explain only uio (+ puc on pages) | the concrete defect is one alias per language in the local query (LQ-2, needs a search key to test); held-out provenance audit of de/it/cs/tr rows started |
 
 Next ablations running: english-readers-v2, fee-readers-v2.
+
+### 2026-10-20 02:55 — D-D ablations, evidence readers ($0 replay)
+
+| ablation | stable losses with the rule off | verdict |
+|---|---|---|
+| `--no-english-readers-v2` | 8 claims: tcd ielts/toefl/duolingo (4), imperial ielts overall + subscores (2), delft toefl (1); dev4 identical | load-bearing on three sets, keep |
+| `--no-fee-readers-v2` | 3 claims: imperial tuition, tcd tuition, ubc deadline; dev4 identical | load-bearing on three sets, keep |
+
+No stable gain on any off arm: neither reader costs development hits or claims. Next: intake-section-deadline, parent-degree-link (dispatched).
