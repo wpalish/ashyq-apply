@@ -116,8 +116,21 @@ What the owner needs before the run:
 3. **The owner's decision on 01-Q4.** The sites see the owner's home IP. Every read is still the production
    `Fetcher`: our user agent, robots.txt honoured, Crawl-delay waited out up to 30 s, one request per URL, no cache.
 4. **The ref to dispatch must contain this list.** Push the branch first.
-5. **No fork pull requests on the self-hosted runner.** The workflow is `workflow_dispatch` only, but keep the
-   repository setting that requires approval for fork pull requests.
+5. **The runner runs whatever the dispatched ref says** (security review 2026-10-22, SR2-03). The repository is
+   public and the job's steps come from the branch named in `--ref`, so anyone who can push a branch and dispatch
+   a workflow (the owner and both AI agents) can run any command on that computer, and a pull request that edits
+   `ci.yml` to say `runs-on: self-hosted` would run there too. A runner label does not prevent either. Before
+   registering:
+   - set *Settings → Actions → General → Fork pull request workflows* to **require approval for all outside
+     collaborators**;
+   - register the runner **ephemeral** (`./config.sh --ephemeral …`): it takes exactly one job and unregisters.
+     Start it only for the dispatch, after `gh run list --status queued` shows nothing else waiting;
+   - run it as a dedicated user, or in a VM or container, with no access to the owner's files, SSH keys, browser
+     profiles or password stores, and preferably no route to the home network (the production `Fetcher` refuses
+     private addresses, but a modified workflow would not use it);
+   - remove it when RP-1's reads are done.
+   `tests/test_workflow_runners.py` keeps every push-, pull-request- or schedule-started job on a GitHub-hosted
+   image, so no workflow in this repository picks the runner up by itself.
 
 `--robots-override-kb` (the owner's KB exception, AGENTS.md §6) may be appended to `extra_args`. It only re-reads URLs
 whose robots.txt refused them, which on this list are the robots-unreachable hosts. Leave it off on the first run, so

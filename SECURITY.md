@@ -186,6 +186,15 @@ attests, pays, uploads to a portal or impersonates a recommender.
   necessarily the one connected to, and a DNS-rebinding host could reach the
   proxy's own network. `ProxySettings.from_env` therefore refuses to start
   when `UNIMATCH_ENVIRONMENT` is `production`/`prod`.
+- A self-hosted Actions runner (RP-1's reads from the owner's computer) runs
+  whatever the dispatched ref says, and the repository is public: anyone who
+  can push and dispatch, or a pull request no one has to approve, can run
+  commands on that machine. No such runner is registered today. Every job a
+  push, a pull request or a schedule starts names a GitHub-hosted image
+  (`tests/test_workflow_runners.py`); a runner for a `workflow_dispatch` read
+  must be ephemeral, isolated from the owner's files and network, and started
+  only for that dispatch (`backend/evaluation/research/expert/data/read_pages/
+  README.self-hosted-2026-10-21.md`).
 - Live extraction is conservative but not authoritative. A sourced result is a
   statement about a page, never a guarantee of admission or funding.
 - The container stack is defined and CI builds it, but it has not been run on
