@@ -286,7 +286,38 @@ def programme_structure_signals(text: str) -> list[str]:
     return [name for name, pattern in _PROGRAMME_STRUCTURE if pattern.search(text or "")]
 
 
-_HTML_LANG = re.compile(r"<html[^>]*\blang\s*=\s*[\"']?([a-z]{2})", re.I)
+#: The opening of an ``<html`` tag, and its attributes up to the last ``lang=``
+#: (matched from the tag's start, never searched): together what
+#: ``<html[^>]*\blang\s*=\s*["']?([a-z]{2})`` found, in linear time.
+_HTML_OPEN = re.compile(r"<html", re.I)
+_LAST_LANG_ATTR = re.compile(r"[^>]*\blang\s*=\s*[\"']?([a-z]{2})", re.I)
+
+
+def html_lang_attr(html: str) -> str | None:
+    """The two letters the first ``<html …>`` tag with a ``lang`` attribute starts it with.
+
+    Exactly what ``re.search(r"<html[^>]*\\blang\\s*=\\s*[\"']?([a-z]{2})", html, re.I)``
+    found (the last ``lang=`` inside the earliest such tag), without its
+    quadratic cost: searched, that pattern restarted ``[^>]*`` at every
+    ``<html`` and scanned to the next ``>`` each time, so a hostile page of
+    40,000 unclosed ``<html`` took a minute of the event loop (security review
+    2026-10-22, SR2-01). Here each tag's text is matched once, from its first
+    ``<html``: a later ``<html`` before the same ``>`` sees a suffix of it, so it
+    cannot match where the first did not, and with no ``>`` left nothing after
+    can either.
+    """
+    pos, end = 0, len(html)
+    while (start := _HTML_OPEN.search(html, pos)) is not None:
+        close = html.find(">", start.end())
+        found = _LAST_LANG_ATTR.match(html, start.end(), end if close < 0 else close)
+        if found is not None:
+            return found.group(1)
+        if close < 0:
+            return None
+        pos = close + 1
+    return None
+
+
 #: Two-letter language codes that are also programme abbreviations in a URL
 #: (computer science, IT, AI, information systems, machine learning, electrical,
 #: civil, mechanical engineering). Without the page's own lang attribute they
@@ -311,9 +342,9 @@ def is_host_root(url: str, html: str = "") -> bool:
     if not segment:
         return True
     code = segment.group(1).lower()
-    lang = _HTML_LANG.search(html or "")
+    lang = html_lang_attr(html or "")
     if lang:
-        return lang.group(1).lower() == code
+        return lang.lower() == code
     return code not in _SUBJECT_LIKE_CODES
 
 
@@ -1507,8 +1538,8 @@ def localized_alias_flags() -> frozenset[str]:
 
 def page_language(html: str) -> str:
     """The primary language subtag a page's ``<html lang>`` declares, or ``""``."""
-    found = _HTML_LANG.search((html or "")[:200_000])
-    return found.group(1).lower() if found else ""
+    found = html_lang_attr((html or "")[:200_000])
+    return found.lower() if found else ""
 
 
 def _degree_level(text: str, lang: str = "") -> str | None:
