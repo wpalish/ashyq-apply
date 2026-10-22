@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[apple-editorial] Holder: gpt-6-astra; since 2026-10-22T10:39:09.018279+00:00; baseline32ac2e89 clean/origin exact, one Alembic head. Fresh owner explicitly selects Apple website as base and Eleken design collection as inspiration. This supersedes rigid book-only visual fidelity for this design increment; preserve Unimatch identity/product truth/recovery. Two read-only reference reviewers; root sole code/Git writer.
+
 [apple-motion LOCAL IMPLEMENTATION COMPLETE 2026-10-22T05:48:06.141819+00:00] Holder: nobody; released. Implementation1385e610 plus final funding wrapper gap preservation; branch pushed to existing PR89. Current1053frontend/112files PASS, types/buildPASS, lint0errors9inherited; focused4PASS and finalbuild repeated after test cleanup/final CSS. Native visual review remains PENDING because browser protocol policy denied old service-error tab; owner reload requested, no workaround. Serving owned synthetic preview18140/API18141. No deployment or application/backend/data command changes. Historical stops remain.
 
 [apple-motion] Holder: gpt-6-astra; since 2026-10-22T05:36:36.945211+00:00. Fresh owner asks for many Apple-like transitions in existing UI. Baseline84bce712 clean and origin exact; root sole writer. Prior deployment completed; no concurrent task in this checkout. Keep original UI-book visual system and all recovery/data contracts. No deployment/search/backend/provider/evaluation/security/heldout work.
@@ -429,6 +431,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+[apple-editorial] IN_PROGRESS. Research official Apple + supplied Eleken collection; implement coherent public product story and shared app visual hierarchy. Preserve search/profile/requirements/documents/application flows, routes and saves. No new admissions/provider/data claims or backend work. No deployment.
 
 [apple-motion] IMPLEMENTED / AUTOMATED_GATES_PASS / NATIVE_REVIEW_PENDING. Sixteen motion scenarios documented in docs/design/ui-book/fidelity/motion-contract.md. Existing PR89 carries the change; no main/production promotion. Current browser screenshot/timing/mobile/performance review is not claimed.
 
@@ -2669,6 +2673,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[apple-editorial WRITE-AHEAD] PublicLanding.tsx + new presentation components, shared editorial CSS and existing motion primitives; illustrative journey, prominent working search, readable product story and optional preparation. Tune shared type/neutral surfaces/navigation/focus/mobile under existing semantics. Update DESIGN.md/PRODUCT.md for fresh owner authority/source mapping. Search-intent/tour/reduced-motion/cleanup tests; full FE/types/lint/build; native browser responsive review if normal HTTP tab restored (old data-error URL denied; no workaround).
 
 [apple-motion NEXT] Implementation and local automated gates pass. Native visual review pending: owner must reload previously failed http://127.0.0.1:18140/#/home browser tab; current page observation was denied by browser URL policy, no workaround. Once normal HTTP page is available, inspect rapid programme/funding tab changes, menu Escape, profile draft and390/1440 layouts; capture current evidence. No production deployment authorised by this motion task.
 
@@ -7358,6 +7364,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+[apple-editorial 2026-10-22T10:39:09.018279+00:00] gpt-6-astra takes32ac2e89 for Apple/Eleken design request. Reference research delegated read-only; root sole writer, no deploy.
 
 [apple-motion release 2026-10-22T05:48:06.141819+00:00] gpt-6-astra:84bce712→1385e610 plus final CSS/doc handoff. Root sole writer, implementation complete; native review pending owner reload. No further automatic research/deploy/notifications or historical stopped work.
 
