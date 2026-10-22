@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[apple-motion] Holder: gpt-6-astra; since 2026-10-22T05:36:36.945211+00:00. Fresh owner asks for many Apple-like transitions in existing UI. Baseline84bce712 clean and origin exact; root sole writer. Prior deployment completed; no concurrent task in this checkout. Keep original UI-book visual system and all recovery/data contracts. No deployment/search/backend/provider/evaluation/security/heldout work.
+
 [owner-deploy COMPLETE 2026-10-19T08:24:13.472643+00:00] Holder: nobody; released. Explicit human deployment completed to https://ashyq-apply-alisher.fly.dev/; existing Fly release7/app+worker on immutable02afeab8... from Git66935473 plus public deployment.json receipt. Full managedPG backup20261019-081721F completed before9forward revisions d8e412c6a901→a1b26e902028; no schema downgrade. Idempotent production identity import500seed/501universities/0new observations; local synthetic DB/profiles NOT uploaded. Public HTTPS root/receipt/health/auth/assets200, anonymouscatalogue401; native newRUhomepage/signin observed. No production logged-in applicant journey or provider/search/model/evaluation/reset/security probes. Existing secrets/auth/robots/provider/resource settings retained; no hosting purchase/IP allocation. Fly IP-warning retained despite functional DNS/native+HTTPS. Finite16deploymentproofmembers+INDEX in docs/design/public-deploy-2026-10-19 and outputs/unimatch-fly-deploy-2026-10-19. Public deployment is complete, full500programme data14records/9universities and search/legal/security/platform quality acceptance remainOPEN. All historical STOPs persist; no automatic further deployment/research/implementation/tests/messages fromheartbeat without fresh human direction; no repeat notification.
 
 [owner-deploy 2026-10-19T08:15:57.583779+00:00] Holder: gpt-6-astra. Fresh human explicitly requested public deployment of current UI/app. Baseline66935473 clean/origin exact, one Alembic head a1b26e902028. Existing owner Fly app ashyq-apply-alisher release6 is running an older image; database revision d8e412c6a901, PostgreSQL external secret already deployed. Write-ahead: immutable sparse stage from66935473, remote build, verified DB backup and forward-only migration review, deploy existing app/worker without scaling or changing secrets/provider settings, import idempotent500identity seed only, public HTTPS/health/auth/catalogue/asset verification. Do not copy local synthetic database/profiles. No search/provider/model/evaluation/reset/security collector/purchase or real application submission. Historical stops remain; deploying does not establish full500programme coverage or quality/release acceptance. Preserve old image for rollback; no lossy schema downgrade.
@@ -425,6 +427,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+[apple-motion] IN_PROGRESS. Add cohesive, bounded motion across navigation, programme tabs, disclosures, buttons, selection and marketing surfaces. Preserve immediate keyboard/focus semantics, reduced motion, stable form/store identity and real save states.
 
 [ui-book/fidelity final local review] LOCAL_RU_UI_REVIEWED / OWNER_REVIEW_PENDING / RELEASE_OPEN.40contexts,80nativepairs; current reportdocs/design/ui-book/fidelity/REPORT.html and rootdesign-qa.md. This supersedes prior rejected visual acceptance. Backend/search/production unchanged.
 
@@ -2657,6 +2661,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[apple-motion WRITE-AHEAD] Inspect existing CSS/BookMotion; implement shared input-modality gate, motion tokens and composited CSS transitions; enhance programme tab indicator/presentation without rekeying data stores/forms. Tests: keyboard/reduced-motion changes and teardown, rapid tab reversal/state continuity; full frontend tests/types/lint/build, native desktop/mobile review at owned local preview. Do not start old stopped workflows or deploy.
 
 [owner-deploy] Public deployment complete. Await owner review; no automatic redeploy/tests/search or security acceptance from this deployment. Full500programme data remains partial; prior exact editorial continuation applies only to a fresh human instruction.
 
@@ -7340,6 +7346,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+[apple-motion 2026-10-22T05:36:36.945211+00:00] gpt-6-astra takes baton at84bce712 for fresh owner motion request. Prior tree/origin clean; only frontend/presentation/docs intended.
 
 [ui-book] 2026-10-18T12:25:54.874240+00:00: gpt-6-astra root solo → nobody; source156bf3c0 pushed, local40-screen review/evidence complete; release/search readiness remains open; awaiting owner command.
 
