@@ -5,6 +5,9 @@
   --duration-panel: 220ms;
   --duration-screen: 280ms;
 }
+.book-transition { min-width: 0; }
+.book-funding > .book-transition { display: grid; gap: 22px; }
+@media (max-width: 640px) { .book-funding > .book-transition { gap: 16px; } }
 
 .book-tab-rail { position: relative; }
 .book-tab-rail__indicator {

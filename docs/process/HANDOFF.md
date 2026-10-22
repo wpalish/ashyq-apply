@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[apple-motion LOCAL IMPLEMENTATION COMPLETE 2026-10-22T05:48:06.141819+00:00] Holder: nobody; released. Implementation1385e610 plus final funding wrapper gap preservation; branch pushed to existing PR89. Current1053frontend/112files PASS, types/buildPASS, lint0errors9inherited; focused4PASS and finalbuild repeated after test cleanup/final CSS. Native visual review remains PENDING because browser protocol policy denied old service-error tab; owner reload requested, no workaround. Serving owned synthetic preview18140/API18141. No deployment or application/backend/data command changes. Historical stops remain.
+
 [apple-motion] Holder: gpt-6-astra; since 2026-10-22T05:36:36.945211+00:00. Fresh owner asks for many Apple-like transitions in existing UI. Baseline84bce712 clean and origin exact; root sole writer. Prior deployment completed; no concurrent task in this checkout. Keep original UI-book visual system and all recovery/data contracts. No deployment/search/backend/provider/evaluation/security/heldout work.
 
 [owner-deploy COMPLETE 2026-10-19T08:24:13.472643+00:00] Holder: nobody; released. Explicit human deployment completed to https://ashyq-apply-alisher.fly.dev/; existing Fly release7/app+worker on immutable02afeab8... from Git66935473 plus public deployment.json receipt. Full managedPG backup20261019-081721F completed before9forward revisions d8e412c6a901→a1b26e902028; no schema downgrade. Idempotent production identity import500seed/501universities/0new observations; local synthetic DB/profiles NOT uploaded. Public HTTPS root/receipt/health/auth/assets200, anonymouscatalogue401; native newRUhomepage/signin observed. No production logged-in applicant journey or provider/search/model/evaluation/reset/security probes. Existing secrets/auth/robots/provider/resource settings retained; no hosting purchase/IP allocation. Fly IP-warning retained despite functional DNS/native+HTTPS. Finite16deploymentproofmembers+INDEX in docs/design/public-deploy-2026-10-19 and outputs/unimatch-fly-deploy-2026-10-19. Public deployment is complete, full500programme data14records/9universities and search/legal/security/platform quality acceptance remainOPEN. All historical STOPs persist; no automatic further deployment/research/implementation/tests/messages fromheartbeat without fresh human direction; no repeat notification.
@@ -428,6 +430,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+[apple-motion] IMPLEMENTED / AUTOMATED_GATES_PASS / NATIVE_REVIEW_PENDING. Sixteen motion scenarios documented in docs/design/ui-book/fidelity/motion-contract.md. Existing PR89 carries the change; no main/production promotion. Current browser screenshot/timing/mobile/performance review is not claimed.
+
 [apple-motion] IN_PROGRESS. Add cohesive, bounded motion across navigation, programme tabs, disclosures, buttons, selection and marketing surfaces. Preserve immediate keyboard/focus semantics, reduced motion, stable form/store identity and real save states.
 
 [ui-book/fidelity final local review] LOCAL_RU_UI_REVIEWED / OWNER_REVIEW_PENDING / RELEASE_OPEN.40contexts,80nativepairs; current reportdocs/design/ui-book/fidelity/REPORT.html and rootdesign-qa.md. This supersedes prior rejected visual acceptance. Backend/search/production unchanged.
@@ -774,6 +778,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+[apple-motion 1385e610] Shared modality gate, stable WAAPI content transitions and measured tab rail;16 CSS interaction families;4 behaviour tests plus current1053full frontend PASS. Final CSS preserves original funding22px/16px rhythm inside the new stable wrapper.
 
 [apple-motion implementation] Added shared pointer/keyboard motion gate; stable WAAPI presentation surface; responsive measured tab underline for programmes/funding; composited CSS motion across route headings, native profile panels, menus, evidence disclosures, controls, cards, notices/modals and public artwork. No new dependencies or application/server commands. Motion contract docs/design/ui-book/fidelity/motion-contract.md records exact timings/boundaries.
 
@@ -7352,6 +7358,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+[apple-motion release 2026-10-22T05:48:06.141819+00:00] gpt-6-astra:84bce712→1385e610 plus final CSS/doc handoff. Root sole writer, implementation complete; native review pending owner reload. No further automatic research/deploy/notifications or historical stopped work.
 
 [apple-motion 2026-10-22T05:36:36.945211+00:00] gpt-6-astra takes baton at84bce712 for fresh owner motion request. Prior tree/origin clean; only frontend/presentation/docs intended.
 
