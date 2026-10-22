@@ -16,7 +16,7 @@ export function PublicLanding() {
   return <div className="landing book-window editorial-landing">
     <a className="skip-link" href="#public-main-content" onClick={event => { event.preventDefault(); main.current?.focus(); }}>{ru ? 'К содержимому' : 'Skip to content'}</a>
     <header className="landing__header">
-      <a className="landing__brand" href="#/welcome" aria-label="Unimatch home"><img src="/brand/unimatch-orbit.svg" alt=""/>unimatch</a>
+      <a className="landing__brand" href="#/welcome" aria-label="Unimatch home" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}><img src="/brand/unimatch-orbit.svg" alt=""/>unimatch</a>
       <nav aria-label="Public navigation"><a href="#how-it-works">{ru ? 'Как это работает' : 'How it works'}</a><a href="#why-unimatch">{ru ? 'Почему источники' : 'Why evidence'}</a></nav>
       <label className="book-language"><span className="visually-hidden">{ru ? 'Язык' : 'Language'}</span><select value={locale} onChange={event => setLocale(event.target.value as Locale)}><option value="ru">Рус</option><option value="kk">Қаз</option><option value="en">Eng</option></select></label>
       <a className="landing__sign-in" href="#/sign-in">{ru ? 'Войти' : 'Sign in'}</a><a className="btn btn--primary landing__start" href="#/sign-in?create=1">{ru ? 'Начать' : 'Start'}</a>
