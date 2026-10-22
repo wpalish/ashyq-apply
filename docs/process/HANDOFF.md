@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[apple-editorial checkpoint 2026-10-22T11:06:11.906086+00:00] Root retains baton. Public Apple-led hero/search/product tour/evidence/plan/FAQ and shared editorial type/surfaces implemented. Source is ready for finite visual review: earlier113files1057frontendPASS, focused8PASS, currenttypes/buildPASS, lint0errors9inherited. Final full suite running after accessibility copy/type cleanup and grouped field-focus polish. Native1280desktop home/find/programme/documents/profile and390mobile profile/landing/search observed; public search->registration and tour reversal observed. Initial local logout403 was runtime CORS port mismatch; explicit loopback18140 configured, logout then completed, auth protection retained. No new account/profile/data commands. No deployment or backend code. REVIEW.md/final finite evidence and release metadata pending.
+
 [apple-editorial] Holder: gpt-6-astra; since 2026-10-22T10:39:09.018279+00:00; baseline32ac2e89 clean/origin exact, one Alembic head. Fresh owner explicitly selects Apple website as base and Eleken design collection as inspiration. This supersedes rigid book-only visual fidelity for this design increment; preserve Unimatch identity/product truth/recovery. Two read-only reference reviewers; root sole code/Git writer.
 
 [apple-motion LOCAL IMPLEMENTATION COMPLETE 2026-10-22T05:48:06.141819+00:00] Holder: nobody; released. Implementation1385e610 plus final funding wrapper gap preservation; branch pushed to existing PR89. Current1053frontend/112files PASS, types/buildPASS, lint0errors9inherited; focused4PASS and finalbuild repeated after test cleanup/final CSS. Native visual review remains PENDING because browser protocol policy denied old service-error tab; owner reload requested, no workaround. Serving owned synthetic preview18140/API18141. No deployment or application/backend/data command changes. Historical stops remain.
@@ -5531,6 +5533,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+[apple-editorial checkpoint 2026-10-22T11:06:11.906086+00:00] Root retains baton. Public Apple-led hero/search/product tour/evidence/plan/FAQ and shared editorial type/surfaces implemented. Source is ready for finite visual review: earlier113files1057frontendPASS, focused8PASS, currenttypes/buildPASS, lint0errors9inherited. Final full suite running after accessibility copy/type cleanup and grouped field-focus polish. Native1280desktop home/find/programme/documents/profile and390mobile profile/landing/search observed; public search->registration and tour reversal observed. Initial local logout403 was runtime CORS port mismatch; explicit loopback18140 configured, logout then completed, auth protection retained. No new account/profile/data commands. No deployment or backend code. REVIEW.md/final finite evidence and release metadata pending.
+
 [apple-motion 2026-10-22T05:46:17.423127+00:00] Baseline1049/111FE PASS. Current1053/112FE PASS; focused4PASS; TypeScript/buildPASS; lint0errors9inherited; git diff--checkPASS. Browser service-error-page protocol denial prevents current native observation; owner reload requested. No current native/performance/OSreducedmotion claim. Existing synthetic API18141/Vite18140 restarted; no backend code/schema/deploy/provider changes.
 
 [official-programmes current]1049frontend/111PASS; TypeScript productionbuildPASS; lint0errors9inherited; focusedcatalogue53PASS/1warning; data14current+13archived snapshots and1000degree-slot matrix verified. Native manual synthetic only. Fullbackend/mypy/auth NOT_RERUN; inherited release golden failure remains open, not greened by these gates.
@@ -7364,6 +7368,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+[apple-editorial checkpoint 2026-10-22T11:06:11.906086+00:00] Root retains baton. Public Apple-led hero/search/product tour/evidence/plan/FAQ and shared editorial type/surfaces implemented. Source is ready for finite visual review: earlier113files1057frontendPASS, focused8PASS, currenttypes/buildPASS, lint0errors9inherited. Final full suite running after accessibility copy/type cleanup and grouped field-focus polish. Native1280desktop home/find/programme/documents/profile and390mobile profile/landing/search observed; public search->registration and tour reversal observed. Initial local logout403 was runtime CORS port mismatch; explicit loopback18140 configured, logout then completed, auth protection retained. No new account/profile/data commands. No deployment or backend code. REVIEW.md/final finite evidence and release metadata pending.
 
 [apple-editorial 2026-10-22T10:39:09.018279+00:00] gpt-6-astra takes32ac2e89 for Apple/Eleken design request. Reference research delegated read-only; root sole writer, no deploy.
 

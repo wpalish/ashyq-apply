@@ -1,6 +1,6 @@
 # Motion contract — 22 October 2026
 
-The original UI book remains the visual authority. This owner-requested increment adds motion to the existing UI; it does not change colours, typography, page topology, API commands or save semantics.
+The22October owner request subsequently selects Apple/Eleken as the visual foundation (see root DESIGN.md). This motion contract remains the behavioural reference. Motion does not control API commands or save semantics; the later editorial layer changes presentation only.
 
 ## Interaction matrix
 

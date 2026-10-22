@@ -1,52 +1,59 @@
 ---
 name: Unimatch
-visual-authority: original UNIMATCH_UI_BOOK.pdf, owner18October2026
+visual-authority: owner22October2026, Apple website base with selected Eleken inspiration
 colors:
   primary: "#0951FF"
   primary-text: "#1349D3"
-  primary-soft: "#EAF0FF"
-  paper: "#F6F8FC"
+  paper: "#F5F6F8"
   surface: "#FFFFFF"
-  ink: "#0A153D"
-  muted: "#536D99"
-  rule: "#E2EAF5"
+  ink: "#172138"
+  muted: "#5C6577"
+  rule: "#E0E4EB"
 ---
 
-# Unimatch — original book implementation
+# Unimatch — Apple foundation, evidence-first product
 
-The owner's original41page PDF (cover plus40contexts), SHA3339016d022229212739ea7f7444216fe838e27c7403e5581b09e401d3ad9145, is the visual authority. The earlier18October implementation was rejected and its visual acceptance is superseded. Do not use the Apple/V2 concept or the old yellow mascot direction.
+## Current authority
 
-## Layout and typography
+On22October2026 the owner explicitly requested the Apple website as the base and the Eleken website-design collection as inspiration. This replaces strict book-only visual fidelity for this increment. The18October UI book remains historical context for the connected product and its navigation; the old yellow robot and earlier unrelated Apple/V2 concept are not the new target. The new implementation is an original Unimatch design derived from the references below.
 
-- Cool porcelain paper, white panels, navy Inter, cobalt primary actions, circular orbit mark and airy dotted globe. No alternative identity.
-- Desktop window max1392px with24px side gutters and28px outer margin at1440×1024. Horizontal navigation and72px header. Route content generally28–32px padding; dense source/result rows and profile rail follow the book.
-- At900px and below: compact header and five labelled bottom destinations with safe-area padding. At640px:20px route padding, stacked forms, source cards and two-programme comparison fitting the viewport. Three-programme comparison scrolls in a labelled local region.
-- Inter400/500/600/700/800 is self-hosted with Latin/Cyrillic/extended coverage. Caveat400 is confined to short handwritten annotations; JetBrains Mono is retained for actual IDs/data. No display serif.
-- Route headings roughly42–54px desktop and29–36px mobile, body14–17px, dense metadata11–13px. Tracking-0.035em, clear focus and spacing. Native date inputs retain their semantics; editable mobile text fields use16px.
-- Panels12–16px radius, native fields9–11px, source primary actions are pill-shaped. Fine tonal borders; broad menu shadows only. Phosphor icons are consistent with the source.
+- Apple: clear hierarchy, short product chapters, large visual focus, restrained materials and two levels of navigation.
+- Adidas Arena via Eleken: oversized type and a few layered hero elements, adapted to the existing orbit/globe identity.
+- Pitch: explain a product through its own journey. The public four-step tour is a labelled guide, not fabricated applicant or research data.
+- UNITED24 via Eleken: source transparency and visible uncertainty. No decorative achievement metrics or admissions probability.
+- Stripe Press: a strong relationship between an object and its detail, interpreted through the existing programme identity and return navigation.
 
-## Component inventory
+Source links and observed/proposed boundaries: docs/design/apple-editorial-2026-10-22/RESEARCH.md.
 
-BookUI: orbit/wordmark, static globe, intake, help, footer, workflow and profile progress. BookAuthShell:02–05stable forms. BookAcademics/Activities/Preferences preserve existing editing. BookProgramme/Comparison/Funding/Sources present owned result evidence. Plan/Today/Calendar/Documents/Applications present personal actions and exact internal targets. BookPracticeView/SavedReview preserve immutable attempts. Export/Share/Settings/Billing reuse original controllers. Community/Legal/Recovery retain original permissions and recovery semantics. Full40route/component/API matrix:docs/design/ui-book/fidelity/inventory.json.
+## Roles and typography
 
-## Truth and state
+- Marketing: Persuade. Spacious opening, one primary action to the editable search, interactive product guide, evidence explanation, a dark route chapter, readable FAQ and sign-up.
+- Workspace: Operate. Stable form/command layout; stronger grouping, calm neutral surfaces and less decoration around requirements and financial data.
+- Native Apple system font on Apple devices; existing self-hosted Inter is the cross-platform fallback. No redistributed SF webfont. Optical sizing enabled. Existing mono remains reserved for IDs/actual data.
+- Display36–78px, tracking−.03 to−.035em, leading1.065–1.1. Workspace section titles remain compact and font weight650–700. Body15–20px, leading1.5–1.6. Small dense research metadata raised to12px.
+- Brand remains orbit wordmark/cobalt. Blue is for action/selection; evidence colours retain semantic meaning.
 
-The book is illustrative, not university, price, legal or API truth. Preserve actual source scopes, unknowns, demo labels, costs/currencies and personal versus institutional state. DOB/gender examples are explicitly read-only because the current API does not persist them. No admissions probabilities, fake file uploads, payments, complete courses or university decisions. Registration keeps the required workspace field even though the source omits it.
+## Surfaces and layout
 
-StoreProvider and forms remain mounted and unkeyed by route/animation. ACK, current dirty draft, immutable original operation,409and unknown accepted outcome are distinct. Adoption applies a comparison to the draft; saving remains explicit. Public cards exclude applicant identity by default and cancel stale rendering when disclosure/case changes.
+- Full-width public site with1200px content measure and20–32px gutters. Desktop public header68px, compact64px. No framed screenshot-like outer chrome.
+- White and neutral gray distinguish chapters. One fixed navy content chapter is deliberately dark; it does not override user theme or evidence colours.
+- Workspace is at most1440px, horizontal desktop navigation and existing labelled mobile bottom navigation. No form/provider identity changes.
+- Cards/panels use12–16px radii. Pills are controls. No nested glass content. Only the public sticky navigation has12px backdrop blur with solid, reduced-transparency and high-contrast fallbacks.
+- Desktop product tour has a rail and one stable presentation surface. Mobile uses four native buttons in a2×2grid above the surface.
+- Narrow layouts stack search, story and evidence. Interactive mobile search topics and primary actions have44px+targets. No horizontal story scroller or drag-only navigation.
 
-## Motion and performance
+## Motion
 
-Motion14.3.0 with LazyMotion/domAnimation and reducedMotion=user. Programme tab content alone uses180ms opacity/y4; useReducedMotion removes displacement and duration. Buttons use120ms colour feedback. Focus is immediate. No route transition controls persistence or research timing. The globe is an illustrative raster with zero canvas/WebGL/RAF loop, so hidden/offscreen/unmount has no ongoing globe renderer to stop. PDF.js uses a finite local lazy worker and explicit cleanup.
+Keep one motion language from frontend/src/styles/motion.css. Composite-only CSS/WAAPI, finite entrances and interruptible feedback. Keyboard actions are immediate; reduced motion disables displacement. Tab surfaces do not rekey forms or stores; animations never send commands or imply an ACK. Exact16interaction matrix in docs/design/ui-book/fidelity/motion-contract.md.
 
-Current bundle: public478.84KB/140.87KB gzip; private188.04KB/53.35KB gzip; preparation125.44KB/34.95KB gzip; lazy PDF486.27KB/146.10KB gzip. CPU/GPUtrace,OSreducedmotion and screenreader are not native-qualified through the available tool. See motion-contract.md for exact scope.
+## Product truth and integration
 
-## Accessibility and language
+Preserve source scopes, degree/intake, unknowns, sample/demo labels, currency and period. No admission probabilities, scholarship guarantees, fake completed documents, fake uploads/payments, invented achievements or current-coverage claims.
 
-Labelled navigation, source regions, native form labels, immediate visible focus, Escape/focus restoration for menus, and semantic status colours with words. Profile source actions form a compact two-button mobile group; Back/save feedback are outside it and fields scroll clear of it. Mobile rules contents collapse. Native76axe snapshots have0violations; manual focus/contrast checks complement them. This is not a WCAGconformance claim.
+The public tour and hero layers explain concepts. The form keeps the existing tab-scoped search-intent contract; availability of storage is conditional, and applying preferences to a personal profile is explicit. Preparation remains optional.
 
-The selected book is Russian. Kazakh has partial RU/ENfallback, and English retains existing analytical presentations. Switching all three locales at360px was checked without horizontal clipping. Do not describe this as a complete three-language translation.
+StoreProvider, immutable original commands, dirty draft,409and uncertain accepted outcome retain their existing lifecycle. No new backend/API/schema/provider/evaluation changes belong to this design increment.
 
-## Verification and handoff
+## Verification
 
-Current local review:docs/design/ui-book/fidelity/REPORT.html,80native viewport baselines and their source pairs. Source images are losslessWebP equivalents of the exact PNGcrops, not regenerated UI screenshots. No numerical pixel-perfect claim. Separate API/corpus deviations and tool-unavailable checks from visual defects. Frontend999tests pass; backend unchanged with its documented inherited golden failure. No main merge, production deployment, hosted workflow or external message belongs to this UI handoff.
+Current evidence and limitations live in docs/design/apple-editorial-2026-10-22/REVIEW.md. Previous80book viewport comparisons qualify their original snapshot only. This change does not inherit those as new visual evidence. Production remains the separately recorded19October deployment until an explicitly authorised future deployment.
