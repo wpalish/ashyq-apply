@@ -21,6 +21,7 @@ import './styles/components.css';
 import './styles/unimatch.css';
 import './styles/book.css';
 import './styles/workspace.css';
+import './styles/motion.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

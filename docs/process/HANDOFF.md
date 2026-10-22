@@ -775,6 +775,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+[apple-motion implementation] Added shared pointer/keyboard motion gate; stable WAAPI presentation surface; responsive measured tab underline for programmes/funding; composited CSS motion across route headings, native profile panels, menus, evidence disclosures, controls, cards, notices/modals and public artwork. No new dependencies or application/server commands. Motion contract docs/design/ui-book/fidelity/motion-contract.md records exact timings/boundaries.
+
 [owner-deploy] aee0ddec took baton for source66935473; Flyrelease7 actualcompleted image02afeab8/backup081721F/migrations/import/public checks sealed in current metadata successor.
 
 [official-programmes] c064cd18 preserved first12/7 and discovery; current successor commit preserves final14/9, Plan/document/calendar/notes/intake/context fixes and finite proof. Completion is bounded local UI, not full500 data.
@@ -2661,6 +2663,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[apple-motion NEXT] Implementation and local automated gates pass. Native visual review pending: owner must reload previously failed http://127.0.0.1:18140/#/home browser tab; current page observation was denied by browser URL policy, no workaround. Once normal HTTP page is available, inspect rapid programme/funding tab changes, menu Escape, profile draft and390/1440 layouts; capture current evidence. No production deployment authorised by this motion task.
 
 [apple-motion WRITE-AHEAD] Inspect existing CSS/BookMotion; implement shared input-modality gate, motion tokens and composited CSS transitions; enhance programme tab indicator/presentation without rekeying data stores/forms. Tests: keyboard/reduced-motion changes and teardown, rapid tab reversal/state continuity; full frontend tests/types/lint/build, native desktop/mobile review at owned local preview. Do not start old stopped workflows or deploy.
 
@@ -5514,6 +5518,8 @@ The steps codex left, unchanged and still next after this review:
 **[preparation-learning-path] Visual readability correction, 2026-10-11T17:06:02.870276+00:00.** Bothfullbackend4883sameIDsPASS/95.54828&95.54211%,604maps stable; originalnativeDemo97PASS+1oldskip/Auth8PASS407maps stable, but actual320table image fragments formulas into multiple narrow lines. Write-ahead: ONLY unimatch.css table minimum inline size30rem insideexistingoverflow-x region + existingnewlearning-path.spec native ArrowRight positivehorizontalmovement/ArrowLeftreturn0 (no old native test change). Fullfreshstatic7/frontendwhole and sequentialnativeDemo/Auth required. Backend604consumed bytes remain identical, so retain exact closed fullgates with current-source binder instead of duplicate unaffected18minrun. Preserve firstnative/screenshots and exact pre/post visualdelta. Existinghelpers.ts already namespaces6newDemoPNGs byproject; rootinitial overwriteassumption was wrong, guardedcopy creatednothing. Root owns source/Git, no grading/API/content/calendar/quota changes.
 
 ## 6. Gate status at last run
+
+[apple-motion 2026-10-22T05:46:17.423127+00:00] Baseline1049/111FE PASS. Current1053/112FE PASS; focused4PASS; TypeScript/buildPASS; lint0errors9inherited; git diff--checkPASS. Browser service-error-page protocol denial prevents current native observation; owner reload requested. No current native/performance/OSreducedmotion claim. Existing synthetic API18141/Vite18140 restarted; no backend code/schema/deploy/provider changes.
 
 [official-programmes current]1049frontend/111PASS; TypeScript productionbuildPASS; lint0errors9inherited; focusedcatalogue53PASS/1warning; data14current+13archived snapshots and1000degree-slot matrix verified. Native manual synthetic only. Fullbackend/mypy/auth NOT_RERUN; inherited release golden failure remains open, not greened by these gates.
 

@@ -1,0 +1,133 @@
+/* Motion sits above the book/workspace styles without changing their layout.
+   No looping decoration, delayed interactions or animated dimensions. */
+:root {
+  --duration-press: 120ms;
+  --duration-panel: 220ms;
+  --duration-screen: 280ms;
+}
+
+.book-tab-rail { position: relative; }
+.book-tab-rail__indicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent-text);
+  transform-origin: left center;
+  pointer-events: none;
+}
+.book-tab-rail[data-ready='false'] .book-tab-rail__indicator { visibility: hidden; }
+.book-tab-rail[data-ready='true'] button[aria-current] { border-bottom-color: transparent; }
+
+@keyframes book-screen-in { from { opacity: .72; } to { opacity: 1; } }
+@keyframes book-surface-in {
+  from { opacity: .65; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes book-menu-in {
+  from { opacity: .4; transform: translateY(-5px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes book-dialog-in {
+  from { opacity: .5; transform: translateY(10px) scale(.975); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes book-art-in {
+  from { opacity: .35; transform: translateY(14px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Fade the route, translate only its heading. Transforming the entire route
+     would change the containing block of fixed save bars and overlays. */
+  :root:not([data-motion-input='keyboard']) .screen {
+    animation: book-screen-in var(--duration-panel) var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.screen__head, .book-page-heading, .home-hero__copy, .find-hero > .screen__title, .book-programme__identity) {
+    animation: book-surface-in var(--duration-screen) var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) .profile-step-content:not([hidden]) {
+    animation: book-surface-in var(--duration-panel) var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.landing__hero-copy, .book-auth__intro, .book-auth .auth-card) {
+    animation: book-surface-in 360ms var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.landing__hero .book-globe, .book-auth__intro .book-globe) {
+    animation: book-art-in 480ms var(--ease-out-expo);
+  }
+
+  /* Pointer press and release retarget from their current position. */
+  :root:not([data-motion-input='keyboard']) :is(.btn, .book-text-action, .landing__cta, .landing__secondary, .decision-btn, .home-shortcuts > button, .book-programme__tabs button, .book-documents-list__tabs > button) {
+    transition: transform var(--duration-press) var(--ease-interaction),
+      background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.btn, .book-text-action, .landing__cta, .landing__secondary, .decision-btn, .home-shortcuts > button, .book-programme__tabs button, .book-documents-list__tabs > button):active:not(:disabled) {
+    transform: scale(.975);
+  }
+  :root:not([data-motion-input='keyboard']) .book-tab-rail[data-ready='true'] .book-tab-rail__indicator {
+    transition: transform 240ms var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.nav__item, .profile-steps button, .programme-journey a, .workspace-section-nav a, .section-nav .btn, .auth-languages button) {
+    transition: background-color var(--duration-normal), color var(--duration-normal), transform var(--duration-fast) var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) .nav__item > svg {
+    transition: transform var(--duration-panel) var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) .nav__item[aria-current='page'] > svg { transform: scale(1.08); }
+
+  /* Native details still close immediately and return focus with Escape. */
+  :root:not([data-motion-input='keyboard']) :is(.journey-menu, .case-menu)[open] > :not(summary) {
+    transform-origin: top right;
+    animation: book-menu-in 190ms var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.book-programme__claim, .book-programme__raw, .catalogue-expand, .catalogue-card details, .official-programme-library details, .home-today-details)[open] > :not(summary) {
+    animation: book-surface-in 180ms var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.book-programme__rejection, .journey-context, .book-recovery, .notice, .save-feedback > *) {
+    animation: book-surface-in 180ms var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) .modal-overlay {
+    animation: book-screen-in 180ms var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) .modal-overlay > :first-child {
+    animation: book-dialog-in 240ms var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) .book-share__option input[role='switch']::before {
+    transition: transform 180ms var(--ease-out-expo);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  :root:not([data-motion-input='keyboard']) :is(.home-shortcuts > button, .catalogue-card, .find-card, .book-plan__programme, .workspace-agenda a, .book-applications__card) {
+    transition: transform var(--duration-panel) var(--ease-out-expo), border-color var(--duration-fast), background-color var(--duration-fast);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.home-shortcuts > button, .catalogue-card, .find-card, .book-plan__programme, .book-applications__card):hover {
+    transform: translateY(-2px);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.book-text-action, .home-shortcuts > button, .programme-next-action .btn) > svg:last-child {
+    transition: transform var(--duration-panel) var(--ease-out-expo);
+  }
+  :root:not([data-motion-input='keyboard']) :is(.book-text-action, .home-shortcuts > button, .programme-next-action .btn):hover > svg:last-child {
+    transform: translateX(3px);
+  }
+}
+
+/* These also override inherited workspace motion when a keyboard or an OS
+   preference interrupts an animation already in progress. */
+:root[data-motion-input='keyboard'] :is(.screen, .screen *, .journey-menu *, .case-menu *, .book-auth *, .landing *, .modal-overlay, .modal-overlay *) {
+  animation: none !important;
+  transition: none !important;
+}
+:root[data-motion-input='keyboard'] :is(.btn, .nav__item, .decision-btn, .home-shortcuts > button, .find-card, .catalogue-card, .book-plan__programme, .book-applications__card) {
+  transform: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.screen, .screen *, .journey-menu *, .case-menu *, .book-auth *, .landing *, .modal-overlay, .modal-overlay *) {
+    animation: none !important;
+    transition: none !important;
+  }
+  :is(.btn, .nav__item, .decision-btn, .home-shortcuts > button, .find-card, .catalogue-card, .book-plan__programme, .book-applications__card) { transform: none !important; }
+  html { scroll-behavior: auto; }
+}
