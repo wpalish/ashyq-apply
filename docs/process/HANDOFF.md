@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[ui-completion COMPLETE 2026-10-23T06:28:01.347403+00:00] Holder: nobody; released for owner review. Main executable repair b0f7b9f1 plus final auth-return normalization/regression in this release. Final115files1076FE PASS, TS/buildPASS, lint0errors9inherited; current full native logout/login ends #/home without false notice.14defect groups addressed.514publicimages fully validated;23available private routes at986x1164 and21mobile observations390x844, public auth forms and local corrupt-file recovery observed. Final report docs/design/ui-completion-2026-10-23/REPORT.html with finite source/proof manifests; exact source pinned. PR89 updated; no merge/deploy. Full platform/search/backend/role/language/device acceptance remainsOPEN. Existing API/recovery/owner/logout-intent guards retained, no applicant edits/sends/uploads/newaccounts/payments. Owned synthetic preview18140/API18141left running, light theme and normal viewport restored. Historical STOPs persist; await fresh owner direction.
+
 [ui-completion checkpoint 2026-10-23T06:08:39.315532+00:00] Root retains baton for finite evidence/last native route checks. Current115files1070frontend PASS, TS/buildPASS, lint0errors9inherited; exact code includes final avatar preview ACK refresh and logout/unknown-route presentation guards. Fixed complete Melbourne SVG (XML+embedded1080x933PNG validated), Avatar IDs/reset/preview,16px icon upscaling, hidden own posts, community retries vs empty, query-empty reset/Enter, failed deletes/blocks, local decodeerror, menu-close, unknown route and failed signout. No underlying auth/command guards weakened.514public image assets fully decoded; all500directory references/633aliases local. Native18desktop routes baseline and18mobile after plus settings/billing/catalogue/card/conversation and local malformed-image recovery observed; all measured viewports no horizontal overflow. Final report/manifests and owner-facing preview pending. No backend/search/provider/eval/heldout/production/newaccount/realapplicant edits.
 
 [ui-completion] Holder: gpt-6-astra; since 2026-10-23T05:30:32.039100+00:00; branch task/unimatch-ui-book, baseline6bf34976 clean/origin exact, one migration head a1b26e902028. Fresh owner asks to finish broken images, empty/dead areas throughout the site. Root sole source/Git writer; two read-only helpers inspect assets and route/action holes. Handoff checker nobody-semicolon age warning is a parser false positive; prior release is explicit. Preserve Apple/orbit/cobalt and source truth/recovery, no backend/search/provider/eval/heldout/security/default/production changes.
@@ -440,7 +442,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-[ui-completion] IN_PROGRESS. Repair actual frontend asset/render/route/action/empty-state gaps across public and private surfaces; owner asks broad completion, not another redesign. Keep unknown data honest and unsupported actions explained.
+[ui-completion] READY-FOR-REVIEW (PR89). Found frontend gaps repaired and current frontend gates green. Review REPORT.html and local preview; search/platform/production acceptance remains open.
 
 [apple-editorial COMPLETE] Local design increment delivered; see de721dc3/REVIEW.md. Owner visual acceptance and production remain pending. Historical write-ahead:  Research official Apple + supplied Eleken collection; implement coherent public product story and shared app visual hierarchy. Preserve search/profile/requirements/documents/application flows, routes and saves. No new admissions/provider/data claims or backend work. No deployment.
 
@@ -792,6 +794,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+[ui-completion] b0f7b9f1: restored complete Melbourne source, identity-aware avatars and owner preview, intrinsic small icons, own posts, manual retries/honest empty/query states, Enter filters, failed action feedback, corrupt local image recovery, unknown-route affordance, settings menu/failed signout presentation. Final authenticated public-route return fix and6regressions included with this release; source-manifest.json pins final bytes. All1076frontend tests/types/buildPASS,0lint errors9old warnings. Native23routes+21mobile observations and auth return verified. Report/proof supplied; no backend/deployment work.
 
 [apple-editorial 57fff2df + de721dc3] Integrated Apple-led public story, original globe layers, tour, honest source states, existing search intent, shared editorial hierarchy and native polish; current1057FE/type/buildPASS. Finite review/source/proof manifests in docs/design/apple-editorial-2026-10-22.
 
@@ -2685,6 +2689,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[ui-completion NEXT] Await owner visual review at http://127.0.0.1:18140/#/home and docs/design/ui-completion-2026-10-23/REPORT.html. No automatic implementation/research/deploy/messages. For a future authorized change fetch/reconcile branches and known platform gates first. This UI repair is local, not full product launch acceptance.
+
+[ui-completion AUTH-RETURN WRITE-AHEAD 2026-10-23] Final native logout→forgot→signin→login exposed a false missing-route notice: AuthGate returns with #/sign-in, while App only normalizes welcome/root. In App.tsx initial route normalization include known public auth addresses after authenticated mount; keep genuinely invalid paths and in-page anchors distinct. Add App.initialRun.test.tsx regression for known auth routes and initial unknown route; scoped gate then refreshed full FE/types/lint/build because source changes. No AuthGate/login/logout/marker contract changes.
 
 [ui-completion WRITE-AHEAD] Inventory App.tsx/routes/components/public asset references; native traverse all available routes on owned synthetic local preview18140/API18141. Add resilient image/media display and useful empty/error/retry/navigation affordances where reproduction proves gaps. Targeted meaningful regressions, current fullfrontend/type/lint/build, desktop+mobile route/asset coverage and finite before/after report. Preserve command/revision/recovery contracts. No real applicant edits, external applications/messages/new accounts/payment or deployment. Existing synthetic login may be used. UI snapshot acceptance does not close search/platform gates.
 
@@ -5547,6 +5555,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+[ui-completion FINAL]115files1076frontend PASS (final source); TypeScriptPASS, buildPASS with inherited601kB catalogue warning; lint0errors9inherited; auth-return focused13PASS; gitdiffcheckPASS. Detector[] on visual repairs, before final nonvisual auth normalization.514image validationPASS; native44route observations(23desktop986x1164 +21mobile390x844), authforms/logout/login and targeted actions. Source-review no confirmed P1/P2. No backend/full40language-role/device/production/provider gates rerun. Logs, source/proof manifests and REVIEW.md are finite current evidence.
+
 [ui-completion checkpoint 2026-10-23T06:08:39.315532+00:00] Root retains baton for finite evidence/last native route checks. Current115files1070frontend PASS, TS/buildPASS, lint0errors9inherited; exact code includes final avatar preview ACK refresh and logout/unknown-route presentation guards. Fixed complete Melbourne SVG (XML+embedded1080x933PNG validated), Avatar IDs/reset/preview,16px icon upscaling, hidden own posts, community retries vs empty, query-empty reset/Enter, failed deletes/blocks, local decodeerror, menu-close, unknown route and failed signout. No underlying auth/command guards weakened.514public image assets fully decoded; all500directory references/633aliases local. Native18desktop routes baseline and18mobile after plus settings/billing/catalogue/card/conversation and local malformed-image recovery observed; all measured viewports no horizontal overflow. Final report/manifests and owner-facing preview pending. No backend/search/provider/eval/heldout/production/newaccount/realapplicant edits.
 
 [apple-editorial COMPLETE 2026-10-22T11:12:41.235897+00:00] Holder: nobody; released for owner visual review. Source57fff2df + final logo-return/evidence de721dc3 pushed to existing OPEN PR89 (base main, no merge). Apple-led public story/tour/search/evidence/plan/FAQ and shared editorial hierarchy implemented. Final113files1057FE PASS, TS/build PASS, lint0errors9inherited; mechanical detector[] once before final nonvisual logo handler. Native1280desktop/390mobile public RU/EN and synthetic home/find/programme/documents/profile observed.19finite proof members and804frontend source pins in docs/design/apple-editorial-2026-10-22; REVIEW.md records exact coverage/limits. Local explicit CORS origin18140 corrected test setup; auth remained enabled, logout completed. No backend/schema/provider/evaluation/heldout/security/default/real user save/new account/deployment work. OSpreferences/dark/kk/devicefps/full40screen new qualification NOT_RUN. All historical STOPs persist; await owner direction, no automatic further implementation/deploy/messages.
@@ -6485,6 +6495,8 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+[ui-completion LIMITS] Local frontend repair ready for visual review; payment/schoolcode/consultation support, legal approval, complete500programme data, search-quality, actual moderator and published logged-in acceptance remain open.14official programme records/9universities is not500complete dossiers.9old lint and chunk-size warnings remain. No claim all40contexts/alllanguages/physicaldevices/FPS tested fresh.
 
 **G2 bounded local blocker: none; review remains.** Draft87 created; app attachment/open tools could not load, direct GitHub/file links available. No successful appattachment or independent newpostpublication review claimed. Production/legal/operator/fullcourses/freshsearch acceptance remain pending, not bypassed by local gates.
 
@@ -7744,3 +7756,6 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 [full-journey-500 release 2026-10-19T06:33:21.707403+00:00] Final saved evidence/source hashes verified. Working UI slice delivered; full platform/release remains OPEN. Await fresh human direction; no heartbeat implementation or repeated notifications.
 
 [official-programmes relay 2026-10-19T07:57:07.400952+00:00] gpt-6-astra:32d0585b→partial14/9 programme library/working plan. Root sole writer; no agents; baton released, full500data/release OPEN.
+
+
+[ui-completion COMPLETE 2026-10-23T06:28:01.347403+00:00] Holder: nobody; released for owner review. Main executable repair b0f7b9f1 plus final auth-return normalization/regression in this release. Final115files1076FE PASS, TS/buildPASS, lint0errors9inherited; current full native logout/login ends #/home without false notice.14defect groups addressed.514publicimages fully validated;23available private routes at986x1164 and21mobile observations390x844, public auth forms and local corrupt-file recovery observed. Final report docs/design/ui-completion-2026-10-23/REPORT.html with finite source/proof manifests; exact source pinned. PR89 updated; no merge/deploy. Full platform/search/backend/role/language/device acceptance remainsOPEN. Existing API/recovery/owner/logout-intent guards retained, no applicant edits/sends/uploads/newaccounts/payments. Owned synthetic preview18140/API18141left running, light theme and normal viewport restored. Historical STOPs persist; await fresh owner direction.

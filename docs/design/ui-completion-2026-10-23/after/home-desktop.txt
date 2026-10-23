@@ -1,0 +1,84 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Главная" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - heading "Тестовый, за дело" [level=1]
+  - paragraph: Открой ближайшую задачу, обнови профиль или продолжи работу с программами.
+  - strong: Поступление 2027
+  - generic: Осень
+  - region "С чего начнём?":
+    - heading "С чего начнём?" [level=2]
+    - paragraph: Личные задачи и сроки из твоего плана.
+    - link "Весь план":
+      - /url: "#/approved"
+      - text: Весь план
+    - status: Читаем твой план…
+    - link "Документы и задачи":
+      - /url: "#/documents"
+    - link "Заявки и статусы":
+      - /url: "#/applications"
+    - link "Календарь сроков":
+      - /url: "#/calendar"
+    - button "Обновить задачи" [disabled]:
+      - text: Обновляем…
+  - region "Подготовь документы для поступления":
+    - heading "Подготовь документы для поступления" [level=2]
+    - paragraph: Открой требования выбранных программ. Прочитанный список ещё не означает, что документы готовы.
+    - button "Открыть документы":
+      - text: Открыть документы
+  - navigation "Рабочие разделы":
+    - link "Редактировать профиль":
+      - /url: "#/profile"
+      - text: Редактировать профиль
+    - link "Подбор · 20 программ":
+      - /url: "#/shortlist"
+      - text: Подбор · 20 программ
+    - link "Открыть план":
+      - /url: "#/approved"
+      - text: Открыть план
+  - heading "Выбранные программы 1" [level=2]:
+    - text: Выбранные программы
+    - generic: "1"
+  - button "Перейти к подбору":
+    - text: Перейти к подбору
+  - article:
+    - heading "KU Leuven" [level=3]
+    - paragraph: BSc Informatics
+    - generic: Требования
+    - generic: Проверь источники
+    - generic: Крайний срок
+    - strong: 01 мар. 2027 г.
+    - link "Открыть KU Leuven":
+      - /url: "#/approved?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1"
+      - text: Открыть
+  - generic "Дополнительная подготовка"
+  - paragraph: Практика по желанию. Поиск вузов, документы и план заявок доступны без наших материалов IELTS и SAT. Официальные требования выбранной программы к экзаменам сохраняются.Synthetic demonstration data.
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

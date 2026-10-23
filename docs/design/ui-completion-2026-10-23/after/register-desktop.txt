@@ -1,0 +1,60 @@
+- banner:
+  - link "unimatch":
+    - /url: "#/welcome"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - link "На сайт":
+    - /url: "#/welcome"
+    - text: На сайт
+- main:
+  - complementary:
+    - heading "Образование открывает больше горизонтов" [level=2]:
+      - text: Образование
+      - text: открывает
+      - text: больше горизонтов
+    - paragraph:
+      - text: Поступай в международные университеты вместе с Unimatch. Подбор программ,
+      - text: сроки, документы — мы рядом
+      - text: на каждом этапе.
+    - generic: Гронинген
+    - generic: Токио
+    - generic: Астана
+    - paragraph:
+      - text: Больше возможностей
+      - text: для твоего завтра
+    - list:
+      - text: Программы
+      - text: разных стран
+      - text: Понятные сроки
+      - text: и требования
+      - text: Твой план
+      - text: на каждом этапе
+  - heading "Создай аккаунт" [level=1]
+  - paragraph: Начни путь к международному образованию с Unimatch.
+  - generic: Имя
+  - textbox "Имя"
+  - generic: Название рабочего пространства
+  - textbox "Название рабочего пространства"
+  - generic: Почта
+  - textbox "Почта": <redacted>
+  - generic: Пароль
+  - textbox "Пароль": <redacted>
+  - button "Показать пароль":
+  - generic: Не короче 12 символов.
+  - group "Язык интерфейса":
+    - button "Русский" [pressed]
+    - button "Қазақша"
+    - button "English"
+  - button "Создать аккаунт":
+    - text: Создать аккаунт
+  - button "Уже есть аккаунт? Войти" [active]
+  - generic "Как используются данные"
+  - link "Конфиденциальность и правила · Проект на юридической проверке":
+    - /url: "#/legal"
+- contentinfo:
+  - generic: Твои решения — с опорой на источники.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

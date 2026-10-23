@@ -1,0 +1,148 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Календарь сроков" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - link "К подбору":
+    - /url: "#/shortlist"
+    - text: К подбору
+  - heading "Календарь сроков" [level=1]
+  - paragraph: Следи за важными датами выбранных программ. Добавляй свои напоминания и не пропускай следующие шаги. Даты без часового пояса не задают точное время закрытия приёма.
+  - complementary:
+    - heading "Синхронизируй свой путь" [level=2]
+    - paragraph: Добавляй личные напоминания по документам и подаче заявок.
+    - link "Добавить напоминание":
+      - /url: "#/documents"
+      - text: Добавить напоминание
+  - region "Календарь":
+    - button "Предыдущий месяц":
+    - heading "октябрь 2026 г." [level=2]
+    - button "Следующий месяц":
+    - generic: Пн
+    - generic: Вт
+    - generic: Ср
+    - generic: Чт
+    - generic: Пт
+    - generic: Сб
+    - generic: Вс
+    - generic: "28"
+    - generic: "29"
+    - generic: "30"
+    - button "01 окт. 2026 г.":
+      - generic: "1"
+    - button "02 окт. 2026 г.":
+      - generic: "2"
+    - button "03 окт. 2026 г.":
+      - generic: "3"
+    - button "04 окт. 2026 г.":
+      - generic: "4"
+    - button "05 окт. 2026 г.":
+      - generic: "5"
+    - button "06 окт. 2026 г.":
+      - generic: "6"
+    - button "07 окт. 2026 г.":
+      - generic: "7"
+    - button "08 окт. 2026 г.":
+      - generic: "8"
+    - button "09 окт. 2026 г.":
+      - generic: "9"
+    - button "10 окт. 2026 г.":
+      - generic: "10"
+    - button "11 окт. 2026 г.":
+      - generic: "11"
+    - button "12 окт. 2026 г.":
+      - generic: "12"
+    - button "13 окт. 2026 г.":
+      - generic: "13"
+    - button "14 окт. 2026 г.":
+      - generic: "14"
+    - button "15 окт. 2026 г.":
+      - generic: "15"
+    - button "16 окт. 2026 г.":
+      - generic: "16"
+    - button "17 окт. 2026 г.":
+      - generic: "17"
+    - button "18 окт. 2026 г.":
+      - generic: "18"
+    - button "19 окт. 2026 г.":
+      - generic: "19"
+    - button "20 окт. 2026 г.":
+      - generic: "20"
+    - button "21 окт. 2026 г.":
+      - generic: "21"
+    - button "22 окт. 2026 г.":
+      - generic: "22"
+    - button "23 окт. 2026 г." [pressed]:
+      - generic: "23"
+    - button "24 окт. 2026 г.":
+      - generic: "24"
+    - button "25 окт. 2026 г.":
+      - generic: "25"
+    - button "26 окт. 2026 г.":
+      - generic: "26"
+    - button "27 окт. 2026 г.":
+      - generic: "27"
+    - button "28 окт. 2026 г.":
+      - generic: "28"
+    - button "29 окт. 2026 г.":
+      - generic: "29"
+    - button "30 окт. 2026 г.":
+      - generic: "30"
+    - button "31 окт. 2026 г.":
+      - generic: "31"
+    - generic: "1"
+    - generic: Выбранная дата
+    - generic: Есть события
+    - button "К сегодняшней дате"
+  - region "Выбранная дата":
+    - heading "23 окт. 2026 г." [level=2]
+    - generic: Часовой пояс указан у каждого события
+    - heading "На эту дату нет запланированных дел" [level=3]
+    - paragraph: Можно проверить прогресс и добавить личное напоминание. Отсутствие даты не означает, что подача заявок открыта.
+    - link "Добавить напоминание":
+      - /url: "#/documents"
+      - text: Добавить напоминание
+    - heading "Ближайшие даты" [level=3]
+    - button "01 февр. Science@Leuven Scholarship KU Leuven Дата из исследования · часовой пояс неизвестен":
+      - strong: "01"
+      - generic: февр.
+      - strong: Science@Leuven Scholarship
+      - generic: KU Leuven
+      - generic: Дата из исследования · часовой пояс неизвестен
+      - generic: ›
+    - button "01 март Дедлайн подачи KU Leuven · BSc Informatics Дата из исследования · CET":
+      - strong: "01"
+      - generic: март
+      - strong: Дедлайн подачи
+      - generic: KU Leuven · BSc Informatics
+      - generic: Дата из исследования · CET
+      - generic: ›
+  - generic "Все известные даты (2)"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

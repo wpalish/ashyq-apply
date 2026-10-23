@@ -60,6 +60,18 @@ it('explains an invalid address without replacing the current editor', async () 
   await act(async () => { window.location.hash = '#/profile'; window.dispatchEvent(new HashChangeEvent('hashchange')); });
   expect(screen.queryByTestId('missing-route-notice')).toBeNull();
 });
+it.each(['#/welcome', '#/sign-in', '#/sign-in?create=1', '#/forgot', '#/reset?token=synthetic-token'])(
+  'opens the authenticated workspace after returning from %s without a false missing-page notice', async (hash) => {
+    window.location.hash = hash; render(<App/>); await flush();
+    expect(location.hash).toBe('#/home');
+    expect(screen.queryByTestId('missing-route-notice')).toBeNull();
+  },
+);
+it('still explains a genuinely unknown initial address', async () => {
+  window.location.hash = '#/missing-section'; render(<App/>); await flush();
+  expect(screen.getByTestId('missing-route-notice')).toHaveTextContent('This page does not exist');
+  expect(location.hash).toBe('#/missing-section');
+});
 it('keeps the workspace open and explains a failed sign-out without automatically retrying', async () => {
   const logout = vi.spyOn(api, 'logout').mockRejectedValue(new Error('Synthetic connection failure'));
   render(<App/>); await flush();

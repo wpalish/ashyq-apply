@@ -1,0 +1,130 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Заявки" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - heading "Заявки" [level=1]
+  - paragraph: Здесь твои заявки в университеты. Отслеживай статусы и обновляй личные сведения вручную.
+  - button "Создать заявку":
+    - text: Создать заявку
+  - navigation "Работа с поступлением":
+    - link "Подбор программ":
+      - /url: "#/shortlist"
+    - link "Документы":
+      - /url: "#/documents"
+    - link "Календарь сроков":
+      - /url: "#/calendar"
+    - link "Мой план":
+      - /url: "#/approved"
+  - navigation "Статус заявки":
+    - button "Все 3" [pressed]:
+      - text: Все
+      - generic: "3"
+    - button "Планирую 2":
+      - text: Планирую
+      - generic: "2"
+    - button "Готовлю 1":
+      - text: Готовлю
+      - generic: "1"
+    - button "Подача · по вашему заявлению 0":
+      - text: Подача · по вашему заявлению
+      - generic: "0"
+    - button "Отзыв · по вашему заявлению 0":
+      - text: Отзыв · по вашему заявлению
+      - generic: "0"
+  - combobox "Порядок заявок":
+    - option "По последнему изменению" [selected]
+    - option "По названию"
+    - option "По личному сроку"
+  - article:
+    - button "University of St Andrews Data Science — Online MSc Местоположение не подтверждено · January2027 Планирую":
+      - heading "University of St Andrews" [level=2]
+      - paragraph: Data Science — Online MSc
+      - text: Местоположение не подтверждено · January2027
+      - generic: Планирую
+    - list:
+      - text: Подготовка документов
+      - generic: 0 из 0 личных отметок
+      - text: Подача заявки
+      - generic: Ещё не записана
+      - text: Рассмотрение
+      - generic: Неизвестно
+      - text: Решение
+      - generic: Неизвестно
+    - generic: Личный срок не указан
+    - link "Документы заявки":
+      - /url: "#/documents?case=8f86257ecca249c7a1339cd78d1be5b9&application=a0d811037d684573ad10dc7397386ec1"
+      - text: Документы заявки
+    - button "Указать срок и заметки"
+  - article:
+    - button "University of Oxford MSc in Advanced Computer Science Местоположение не подтверждено · 2027–28 Планирую":
+      - heading "University of Oxford" [level=2]
+      - paragraph: MSc in Advanced Computer Science
+      - text: Местоположение не подтверждено · 2027–28
+      - generic: Планирую
+    - list:
+      - text: Подготовка документов
+      - generic: 0 из 1 личных отметок
+      - text: Подача заявки
+      - generic: Ещё не записана
+      - text: Рассмотрение
+      - generic: Неизвестно
+      - text: Решение
+      - generic: Неизвестно
+    - generic: Личный срок не указан
+    - link "Документы заявки":
+      - /url: "#/documents?case=8f86257ecca249c7a1339cd78d1be5b9&application=6ec828566d334dd1a7271728a7ec52b8"
+      - text: Документы заявки
+    - button "Указать срок и заметки"
+  - article:
+    - button "KU Leuven BSc Informatics Leuven, Belgium · fall 2027 Готовлю":
+      - heading "KU Leuven" [level=2]
+      - paragraph: BSc Informatics
+      - text: Leuven, Belgium · fall 2027
+      - generic: Готовлю
+    - list:
+      - text: Подготовка документов
+      - generic: 0 из 1 личных отметок
+      - text: Подача заявки
+      - generic: Ещё не записана
+      - text: Рассмотрение
+      - generic: Неизвестно
+      - text: Решение
+      - generic: Неизвестно
+    - generic: "Личный срок: 25 окт. 2026 г."
+    - link "Документы заявки":
+      - /url: "#/documents?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1&application=730985b98790405da029e24be09cfc13"
+      - text: Документы заявки
+    - button "Указать срок и заметки"
+  - button "Создать ещё одну заявку Выбери программу и начни подготовку":
+    - strong: Создать ещё одну заявку
+    - generic: Выбери программу и начни подготовку
+  - generic "Восстановление сохранения"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

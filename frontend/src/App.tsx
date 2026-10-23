@@ -358,7 +358,9 @@ export default function App() {
     // Stamp the hash on first load so Back has somewhere to return to, and
     // check a deep link before rendering the screen it names.
     if (screenFromHash()) openFromHash();
-    else if (['', '#', '#/', '#/welcome'].includes(window.location.hash)) window.location.replace(`#/${screen}`);
+    // AuthGate has already authenticated this tree. Its public address can
+    // remain after login/registration/recovery; it is not a broken deep link.
+    else if (['', '#', '#/', '#/welcome', '#/sign-in', '#/forgot', '#/reset'].includes(window.location.hash.split('?')[0] ?? '')) window.location.replace(`#/${screen}`);
     else setInvalidLink(true);
     return () => window.removeEventListener('hashchange', openFromHash);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,0 +1,486 @@
+{
+  "schema": "1.0",
+  "mode": "Finite evidence; synthetic local state, no runtime database",
+  "files": [
+    {
+      "path": "REPORT.html",
+      "bytes": 16748,
+      "sha256": "3dfe64f4dd929504db7ca38b8799010cc7d57edbc11901d80f1f4fec73891ada"
+    },
+    {
+      "path": "REVIEW.md",
+      "bytes": 16915,
+      "sha256": "48c1d410287c6239b3fa9cbf076455bde2779d3991c0ada696934b00033b808d"
+    },
+    {
+      "path": "after/applications-desktop.txt",
+      "bytes": 6216,
+      "sha256": "15b8dbd6cad53a84dbfbb4c5537783136c40b362dda996fae6f6f6f9ee9b1aba"
+    },
+    {
+      "path": "after/applications-mobile.txt",
+      "bytes": 5418,
+      "sha256": "d8eab5a303a6e1ae5569493a300b2b0f941cd162a469f9dc5d12ef7721550794"
+    },
+    {
+      "path": "after/approved-desktop.txt",
+      "bytes": 3962,
+      "sha256": "323c82764b6fc123f5d48999b710c0967f09e6841c16591b6e2cfe934c0b81a3"
+    },
+    {
+      "path": "after/approved-mobile.txt",
+      "bytes": 3632,
+      "sha256": "67a4e23ed14ec6506e7e9ff60ab1603fc96f3fa40c2cb59bef348a142e5c6db1"
+    },
+    {
+      "path": "after/auth-return-desktop.txt",
+      "bytes": 5823,
+      "sha256": "654025987873f6e7237a633016c3258c1de56197b6dc9c6f828919905ff68cf7"
+    },
+    {
+      "path": "after/billing-desktop.txt",
+      "bytes": 5358,
+      "sha256": "4d4b690a886ed7ac715ca657f20548c231a2d0d316c8ae0f438ea13f9dfb9da7"
+    },
+    {
+      "path": "after/billing-mobile.txt",
+      "bytes": 5250,
+      "sha256": "c1089cda06a650dd22ac5939d863c9c38561b4302c33d9ee8ca8a5af8d84968d"
+    },
+    {
+      "path": "after/calendar-desktop.txt",
+      "bytes": 6017,
+      "sha256": "b5e8dbbaa493f5aa59368dfd9dd23e7a82008bb4d58c7b919d57d2a9914f9b5b"
+    },
+    {
+      "path": "after/calendar-mobile.txt",
+      "bytes": 4147,
+      "sha256": "e43373c225c9cdfe2de401ebb0beb4ac47557669999b5e66f4be5b08c25bd100"
+    },
+    {
+      "path": "after/conversation-desktop.jpg",
+      "bytes": 63921,
+      "sha256": "58e503833a46af6e4effffacb37ee7dfddfe2c1f2e48feaee256e126875ce04d"
+    },
+    {
+      "path": "after/corrupt-image-mobile.jpg",
+      "bytes": 43545,
+      "sha256": "b00c045e3f7e075f52a7819fb1907d2c40be2f0fa73de05402be089943f0700d"
+    },
+    {
+      "path": "after/corrupt-image-mobile.txt",
+      "bytes": 5506,
+      "sha256": "de91f66c6d3fb532751d3d8fd1358e8e6a5aff928f11df69193b76a966369b25"
+    },
+    {
+      "path": "after/discover-desktop.txt",
+      "bytes": 2407,
+      "sha256": "3d44af805dbad1767e70a472977db4c234f6d0f88aa4e5d5ca20068e0ae90350"
+    },
+    {
+      "path": "after/discover-mobile.txt",
+      "bytes": 2099,
+      "sha256": "2c404475aa5f9e0b4a46325ca5f78a7737aae0376e3c39f3cf64b9394c526f74"
+    },
+    {
+      "path": "after/discovery-enter-desktop.txt",
+      "bytes": 2667,
+      "sha256": "41f73daddd67da906a3b4076a6f733f3667f185d4e1286e775aef2daef2f831c"
+    },
+    {
+      "path": "after/documents-desktop.txt",
+      "bytes": 4487,
+      "sha256": "bec3f9b8f8cb81bb493c42a47522832f87ce956f432b4e17566f0a1fd7d6126f"
+    },
+    {
+      "path": "after/documents-mobile.jpg",
+      "bytes": 37854,
+      "sha256": "89da1dba090bccdf69198327a1123e423a51fa2c0a7f2e727cafff93ada6bc6f"
+    },
+    {
+      "path": "after/documents-mobile.txt",
+      "bytes": 3810,
+      "sha256": "3b8fe62218a2c3b738a3cbb3a6ca6baf1fe6a9535838ac565923a852d775bf75"
+    },
+    {
+      "path": "after/export-desktop.txt",
+      "bytes": 4864,
+      "sha256": "8a2e50a70d1911a5302cf401c199d51728111221c165feca20f3435c85435be4"
+    },
+    {
+      "path": "after/export-mobile.txt",
+      "bytes": 4756,
+      "sha256": "e4124143ba707f40f93b6767ed92b69d98346aba1c5e90052e43ddfc1c997ee3"
+    },
+    {
+      "path": "after/feed-desktop.txt",
+      "bytes": 3340,
+      "sha256": "629d3e4aaab8f69f0e7f0ad0c36b1018d5ffc951c3800bc6c0ab7ea8ff412f65"
+    },
+    {
+      "path": "after/feed-mobile.txt",
+      "bytes": 2801,
+      "sha256": "e2a6c4541a0bef1a1de356e331e5e2442219a21809be5295923386dd60653ba1"
+    },
+    {
+      "path": "after/forgot-desktop.txt",
+      "bytes": 1215,
+      "sha256": "5c33febb431dc5bc482e95db38350d59f2b760ad16f498e1fd51a158af4180fa"
+    },
+    {
+      "path": "after/funding-desktop.txt",
+      "bytes": 3495,
+      "sha256": "1873aa24ebfa6448afa40e9783a84e1509bc61c5ca6ff6bdd0b1555fb72f0b41"
+    },
+    {
+      "path": "after/funding-mobile.txt",
+      "bytes": 3174,
+      "sha256": "8d5543f1ecd578c717ebe53868e7b46d22b11b8dad06d5ba606f813ddefe872c"
+    },
+    {
+      "path": "after/home-desktop.txt",
+      "bytes": 4230,
+      "sha256": "2b439a6acd128c0caec365dbc46fc3e2de8d0257f1655f49630295011dfc86e4"
+    },
+    {
+      "path": "after/home-final-desktop.png",
+      "bytes": 86027,
+      "sha256": "d98bf6df55d048ab112432752ee62cba8f5e2f55f850d0122b0d44baba47d527"
+    },
+    {
+      "path": "after/legal-desktop.txt",
+      "bytes": 9895,
+      "sha256": "fe8c0fd50a9ffd19b17561830972f0f131c5d26f83e47bb886325308b9d00a39"
+    },
+    {
+      "path": "after/legal-mobile.txt",
+      "bytes": 8939,
+      "sha256": "76f183161820c5230a009e1ee9cac1225491e170f70b4145b4e2958c894ba3ad"
+    },
+    {
+      "path": "after/me-desktop.txt",
+      "bytes": 5947,
+      "sha256": "4d85dc26d48ff1c7b6b13bd5145c91dc4ea2d850a517838483c5ae07fac69b3f"
+    },
+    {
+      "path": "after/me-mobile.jpg",
+      "bytes": 41338,
+      "sha256": "41dc3e005a3fd388a7120221705df2946a374d1bd6d50ed9ba1f5ece4d9e1282"
+    },
+    {
+      "path": "after/me-mobile.txt",
+      "bytes": 5228,
+      "sha256": "e3fc49c1f2bf0f039b6d9e39104a0c2c5c2d1beb7e18ee1fc3706faf302dc8b4"
+    },
+    {
+      "path": "after/melbourne-mobile.jpg",
+      "bytes": 48854,
+      "sha256": "96bf2bcc9e40b5155cc991b0087e8f344f0c4046a6b15d539aa30b738d80de84"
+    },
+    {
+      "path": "after/melbourne-mobile.txt",
+      "bytes": 4331,
+      "sha256": "8ecbaf98191af3a24b5a8e048a83c76e15aa1dd82e48a172fe8119820607822c"
+    },
+    {
+      "path": "after/message-search-empty-desktop.jpg",
+      "bytes": 56419,
+      "sha256": "40911587a8c397cc8c5fd94d54e5f7d8dbf0b1eaa9ca6c0932f5782882412ee8"
+    },
+    {
+      "path": "after/messages-desktop.txt",
+      "bytes": 2054,
+      "sha256": "0f672448cb4a80fc01b9f6b24937fc89531c1e63425123d619ee8e300de547d8"
+    },
+    {
+      "path": "after/messages-mobile.jpg",
+      "bytes": 21746,
+      "sha256": "a73976d678d9c0a8a8f43c9859c6755507e0526b3bc4157baeec536e95a1823e"
+    },
+    {
+      "path": "after/messages-mobile.txt",
+      "bytes": 1667,
+      "sha256": "693edf8e1a107e8ad0ff8de3b9822b3da70099d8307f64e9785a8a07f85ea1ce"
+    },
+    {
+      "path": "after/own-profile-desktop.jpg",
+      "bytes": 149730,
+      "sha256": "c79004a81172f7c7fede1937b17857cd992bebf42b0a38f4b924407da3cb7cc1"
+    },
+    {
+      "path": "after/person-desktop.jpg",
+      "bytes": 69747,
+      "sha256": "fed5e58b5271bd4c725ee277e2ed40b567501a2f5ff93f987ab25601fda7a3f9"
+    },
+    {
+      "path": "after/person-desktop.txt",
+      "bytes": 2745,
+      "sha256": "0ba5569942901864f105d51d434d7347ceaca9dd6bb61c66d44e16bd2db128b1"
+    },
+    {
+      "path": "after/preferences-desktop.txt",
+      "bytes": 9062,
+      "sha256": "55f61c7db288eff503e33ce821ac0e726ff758f4e24f0b1033d4275b3a16370c"
+    },
+    {
+      "path": "after/preferences-mobile.txt",
+      "bytes": 7358,
+      "sha256": "0afa9b744b6c4802beb44a4d4b86bd4e5919e301d674a551dda36645a94c5104"
+    },
+    {
+      "path": "after/preparation-desktop.txt",
+      "bytes": 2308,
+      "sha256": "d4b8c4de733a6147685894bd2a9791db27ee8f553c733b073b3fb273b27a5c3c"
+    },
+    {
+      "path": "after/preparation-mobile.txt",
+      "bytes": 1911,
+      "sha256": "e311a49966318ad221a3cbf261b620e9125a9edc07dc9bd09729c3b9a67e05bd"
+    },
+    {
+      "path": "after/profile-desktop.txt",
+      "bytes": 4414,
+      "sha256": "a77d9e0157401964fbbc03403c1d258d08451eb3ce43e0670b5c6d7d3351c18d"
+    },
+    {
+      "path": "after/profile-mobile.txt",
+      "bytes": 3926,
+      "sha256": "6caf76272651cb1dd7400046582bce64c62bef908e7c9625f375de0cfba7ef43"
+    },
+    {
+      "path": "after/progress-desktop.txt",
+      "bytes": 6071,
+      "sha256": "02d38e0d3dd4d13004b0aeba48ca705d62807303f21c044e0d1364f004bcc075"
+    },
+    {
+      "path": "after/register-desktop.txt",
+      "bytes": 2468,
+      "sha256": "5c76e2ee5068e1891fc398ec2dea87895f6de6a2485b70f46710a5443fd0a642"
+    },
+    {
+      "path": "after/routes-all.json",
+      "bytes": 14994,
+      "sha256": "53e9206cccbda7633f11d154c0a6bbe69d69575189205ae1d80b912ef4bf5582"
+    },
+    {
+      "path": "after/routes-mobile.json",
+      "bytes": 7198,
+      "sha256": "afb61e09141410197176f2ff32e92ef62237c8b4e17150c6b38095e8a1aead3f"
+    },
+    {
+      "path": "after/settings-dark-mobile.jpg",
+      "bytes": 39536,
+      "sha256": "5527ccd8b074ee9170cdd69a163f36c52c19109ba4e7000b66fcefaada3656de"
+    },
+    {
+      "path": "after/settings-desktop.txt",
+      "bytes": 3788,
+      "sha256": "856468e4b13a26e65cfcf4e909d85fd757d4808eb500fe2287464540759188eb"
+    },
+    {
+      "path": "after/settings-mobile.txt",
+      "bytes": 3680,
+      "sha256": "897c0228e069161ae8ba80ae7b72b8968b21e7acd8042055015492a6a9624474"
+    },
+    {
+      "path": "after/share-desktop.txt",
+      "bytes": 3848,
+      "sha256": "00c71d3e8a775ec4af312941d3f6430e8deda0ad6a1e050a9fb2ebdfdec5f4f3"
+    },
+    {
+      "path": "after/share-mobile.txt",
+      "bytes": 3529,
+      "sha256": "771c1a78c17484fb630796a20d7aca592d0ad8cdabe52d8db50d835af8f202a6"
+    },
+    {
+      "path": "after/shortlist-desktop.txt",
+      "bytes": 7487,
+      "sha256": "467de5d8d9b1404673277f4cc55bf98d5ec6082d018c00366c92cefa53986c8d"
+    },
+    {
+      "path": "after/shortlist-mobile.txt",
+      "bytes": 6909,
+      "sha256": "d3ba78d878cd3cb92959b50fbb11bb1cbea21b5275c0e7c3c3438dc1c492d95a"
+    },
+    {
+      "path": "after/signin-desktop.png",
+      "bytes": 87797,
+      "sha256": "c1dada91d5fefde762b4f499b2d72483249fc89887a6772a098473883750b0a2"
+    },
+    {
+      "path": "after/signin-desktop.txt",
+      "bytes": 2040,
+      "sha256": "cb73635a4b2958a6704b946e68164bf58404ce1733274b41934033c17f6dc447"
+    },
+    {
+      "path": "after/sources-desktop.txt",
+      "bytes": 12462,
+      "sha256": "88ac124e67f173aa49ea04c22770f36cba1d462021b8fa0cad3111ec01c7fae2"
+    },
+    {
+      "path": "after/sources-mobile.txt",
+      "bytes": 12354,
+      "sha256": "6186abb164e1f7dfd0eee63861273c2a715dd9ae38783be66b5b235e76f5b14a"
+    },
+    {
+      "path": "after/today-desktop.txt",
+      "bytes": 2644,
+      "sha256": "6f0da3d9557c8315d63e0262f797658ebfbdf43f815dbfd895ed36dc3c1bfc24"
+    },
+    {
+      "path": "after/today-mobile.txt",
+      "bytes": 2536,
+      "sha256": "b1b5567dfc51798c1e477904a66658d5a58ccd6e401af72227ebb786fc40e156"
+    },
+    {
+      "path": "after/ui-actions.json",
+      "bytes": 1061,
+      "sha256": "e6bcf1936854c4abcb2ecc1e9b1a8b059d8428ce5e98e055c65505de4ab6469c"
+    },
+    {
+      "path": "after/unknown-route-desktop.jpg",
+      "bytes": 125082,
+      "sha256": "d5f450b1ed7f6fa6c069c65b9b0fd9bc422443356b094e111f06a94d8ac6d4a4"
+    },
+    {
+      "path": "asset-validation.json",
+      "bytes": 120634,
+      "sha256": "8b0ff51a8a1902c5c19bbd475bdacdbdcbe48d98ec599fe55783fa694263c175"
+    },
+    {
+      "path": "before/applications.txt",
+      "bytes": 6216,
+      "sha256": "15b8dbd6cad53a84dbfbb4c5537783136c40b362dda996fae6f6f6f9ee9b1aba"
+    },
+    {
+      "path": "before/approved.txt",
+      "bytes": 3962,
+      "sha256": "323c82764b6fc123f5d48999b710c0967f09e6841c16591b6e2cfe934c0b81a3"
+    },
+    {
+      "path": "before/calendar.txt",
+      "bytes": 6017,
+      "sha256": "b5e8dbbaa493f5aa59368dfd9dd23e7a82008bb4d58c7b919d57d2a9914f9b5b"
+    },
+    {
+      "path": "before/discover.txt",
+      "bytes": 3307,
+      "sha256": "f42efb0358e73c0639a666f59935fa5d69a68cc862901b58633d58cf736e1705"
+    },
+    {
+      "path": "before/documents.txt",
+      "bytes": 4487,
+      "sha256": "bec3f9b8f8cb81bb493c42a47522832f87ce956f432b4e17566f0a1fd7d6126f"
+    },
+    {
+      "path": "before/export.txt",
+      "bytes": 4864,
+      "sha256": "8a2e50a70d1911a5302cf401c199d51728111221c165feca20f3435c85435be4"
+    },
+    {
+      "path": "before/feed.txt",
+      "bytes": 4161,
+      "sha256": "b3cf12a35a919db195f72b960709baef686806a45306e643b311d154662d059f"
+    },
+    {
+      "path": "before/funding.txt",
+      "bytes": 3495,
+      "sha256": "1873aa24ebfa6448afa40e9783a84e1509bc61c5ca6ff6bdd0b1555fb72f0b41"
+    },
+    {
+      "path": "before/legal.txt",
+      "bytes": 9895,
+      "sha256": "fe8c0fd50a9ffd19b17561830972f0f131c5d26f83e47bb886325308b9d00a39"
+    },
+    {
+      "path": "before/me.txt",
+      "bytes": 5465,
+      "sha256": "efb9567862c0e36c106794dcb97cd1b8fef9f58bdcd868e955b1e6788271324e"
+    },
+    {
+      "path": "before/messages.txt",
+      "bytes": 2240,
+      "sha256": "b38c75fc46c52c92a92df2f6f6e3f9a12f8a5dd70832465e66af6bd3c42d3d21"
+    },
+    {
+      "path": "before/preferences.txt",
+      "bytes": 9062,
+      "sha256": "55f61c7db288eff503e33ce821ac0e726ff758f4e24f0b1033d4275b3a16370c"
+    },
+    {
+      "path": "before/preparation.txt",
+      "bytes": 7816,
+      "sha256": "fbe560e6e9f0d8beeded58061782debf07a64d8c1e2fb83d3cbbb9594c6be809"
+    },
+    {
+      "path": "before/profile.txt",
+      "bytes": 4414,
+      "sha256": "a77d9e0157401964fbbc03403c1d258d08451eb3ce43e0670b5c6d7d3351c18d"
+    },
+    {
+      "path": "before/routes-desktop.json",
+      "bytes": 40405,
+      "sha256": "1a4c6d8ef02aee199cdb2c6be2efa7a338a69a1ada90e3091c4fe7ead9387feb"
+    },
+    {
+      "path": "before/settings.txt",
+      "bytes": 1600,
+      "sha256": "33f7d22eed5215da0103f6e8e1854817e0e22351aa0f50114a802315a01183d2"
+    },
+    {
+      "path": "before/share.txt",
+      "bytes": 3848,
+      "sha256": "00c71d3e8a775ec4af312941d3f6430e8deda0ad6a1e050a9fb2ebdfdec5f4f3"
+    },
+    {
+      "path": "before/shortlist.txt",
+      "bytes": 7487,
+      "sha256": "467de5d8d9b1404673277f4cc55bf98d5ec6082d018c00366c92cefa53986c8d"
+    },
+    {
+      "path": "before/sources.txt",
+      "bytes": 12462,
+      "sha256": "88ac124e67f173aa49ea04c22770f36cba1d462021b8fa0cad3111ec01c7fae2"
+    },
+    {
+      "path": "before/today.txt",
+      "bytes": 2644,
+      "sha256": "6f0da3d9557c8315d63e0262f797658ebfbdf43f815dbfd895ed36dc3c1bfc24"
+    },
+    {
+      "path": "logs/auth-return-focused.log",
+      "bytes": 371,
+      "sha256": "4ca81cbdea2438e865d461de90f87156b00a2d326c993ef0d455487be9cab9aa"
+    },
+    {
+      "path": "logs/build.log",
+      "bytes": 13110,
+      "sha256": "88bcb8e2087452f0d51e375026a70c0fd43882fcca2b99cfae965e324a2e1f0f"
+    },
+    {
+      "path": "logs/frontend-tests.log",
+      "bytes": 57305,
+      "sha256": "063b8d8e16e2f66bc453412f3ab06286d5329936aaf01a05228fc255f5ce4667"
+    },
+    {
+      "path": "logs/lint.log",
+      "bytes": 3801,
+      "sha256": "c37331794436e820f24c3573d6565607f6678e0a360d3f5c1d84b516c4c465d6"
+    },
+    {
+      "path": "logs/mechanical-detector.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "logs/types.log",
+      "bytes": 53,
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    {
+      "path": "source-manifest.json",
+      "bytes": 144414,
+      "sha256": "b08b508127c86a818b33af74a0781ac15961ab2529805293746dbfcc56e87bc4"
+    }
+  ]
+}

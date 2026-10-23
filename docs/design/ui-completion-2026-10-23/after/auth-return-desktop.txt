@@ -1,0 +1,101 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Главная":
+  - generic "Состояние исследования и ограничения источников"
+  - heading "Тестовый, за дело" [level=1]
+  - paragraph: Открой ближайшую задачу, обнови профиль или продолжи работу с программами.
+  - strong: Поступление 2027
+  - generic: Осень
+  - region "С чего начнём?":
+    - heading "С чего начнём?" [level=2]
+    - paragraph: Личные задачи и сроки из твоего плана.
+    - link "Весь план":
+      - /url: "#/approved"
+      - text: Весь план
+    - link "Тестовый путь 500 — KU Leuven 25 окт. 2026 г. Нужна проверка источника Asia/Almaty":
+      - /url: "#/applications?case=8f86257ecca249c7a1339cd78d1be5b9&kind=application&id=730985b98790405da029e24be09cfc13"
+      - heading "Тестовый путь 500 — KU Leuven" [level=3]
+      - text: 25 окт. 2026 г.
+      - generic: Нужна проверка источника
+      - generic: Asia/Almaty
+    - link "Register three referees; submit the supporting academic documents required in the application instructions. Без личного срока Личная задача Часовой пояс не подтверждён":
+      - /url: "#/documents?case=8f86257ecca249c7a1339cd78d1be5b9&kind=document_task&id=31d95dd388944815a86a99a677e86f7e"
+      - heading "Register three referees; submit the supporting academic documents required in the application instructions." [level=3]
+      - text: Без личного срока
+      - generic: Личная задача
+      - generic: Часовой пояс не подтверждён
+    - link "Secondary school diploma (certified copy) Без личного срока Нужна проверка источника Часовой пояс не подтверждён":
+      - /url: "#/documents?case=8f86257ecca249c7a1339cd78d1be5b9&kind=document_task&id=39f4b1db599c4751bae42cf6981ac1f2"
+      - heading "Secondary school diploma (certified copy)" [level=3]
+      - text: Без личного срока
+      - generic: Нужна проверка источника
+      - generic: Часовой пояс не подтверждён
+    - link "Документы и задачи":
+      - /url: "#/documents"
+    - link "Заявки и статусы":
+      - /url: "#/applications"
+    - link "Календарь сроков":
+      - /url: "#/calendar"
+    - button "Обновить задачи":
+      - text: Обновить
+  - region "Подготовь документы для поступления":
+    - heading "Подготовь документы для поступления" [level=2]
+    - paragraph: Открой требования выбранных программ. Прочитанный список ещё не означает, что документы готовы.
+    - button "Открыть документы":
+      - text: Открыть документы
+  - navigation "Рабочие разделы":
+    - link "Редактировать профиль":
+      - /url: "#/profile"
+      - text: Редактировать профиль
+    - link "Подбор · 20 программ":
+      - /url: "#/shortlist"
+      - text: Подбор · 20 программ
+    - link "Открыть план":
+      - /url: "#/approved"
+      - text: Открыть план
+  - heading "Выбранные программы 1" [level=2]:
+    - text: Выбранные программы
+    - generic: "1"
+  - button "Перейти к подбору":
+    - text: Перейти к подбору
+  - article:
+    - heading "KU Leuven" [level=3]
+    - paragraph: BSc Informatics
+    - generic: Требования
+    - generic: Проверь источники
+    - generic: Крайний срок
+    - strong: 01 мар. 2027 г.
+    - link "Открыть KU Leuven":
+      - /url: "#/approved?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1"
+      - text: Открыть
+  - generic "Дополнительная подготовка"
+  - paragraph: Практика по желанию. Поиск вузов, документы и план заявок доступны без наших материалов IELTS и SAT. Официальные требования выбранной программы к экзаменам сохраняются.Synthetic demonstration data.
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра
