@@ -1,0 +1,125 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Ход исследования" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - paragraph: Подбор программ
+  - heading "Проверь найденные программы" [level=1]
+  - paragraph: Это демонстрационный подбор из синтетического корпуса. Официальные сайты в этом режиме не читаются; условия в примерах не являются реальными требованиями вузов.
+  - generic: Гронинген
+  - generic: Токио
+  - generic: Астана
+  - paragraph:
+    - text: Больше возможностей
+    - text: для твоего завтра
+  - generic: Текущий этап
+  - heading "Исследование завершено" [level=2]
+  - paragraph: Проверяй подтверждения и открытые вопросы в результатах.
+  - button "Посмотреть найденное":
+    - text: Посмотреть найденное
+  - navigation "Путь поступления":
+    - button "Профиль Твои данные и цели":
+      - strong: Профиль
+      - generic: Твои данные и цели
+    - button "2 Подбор 20 программ":
+      - generic: "2"
+      - strong: Подбор
+      - generic: 20 программ
+    - button "3 План Сроки и задачи":
+      - generic: "3"
+      - strong: План
+      - generic: Сроки и задачи
+    - button "4 Заявки Следующие шаги":
+      - generic: "4"
+      - strong: Заявки
+      - generic: Следующие шаги
+  - heading "Тестовые источники" [level=2]
+  - paragraph: Показаны учебные примеры страниц и результатов чтения. Сетевых обращений к вузам нет.
+  - generic: Ранние наблюдения о страницах пока не зафиксированы. Счётчики и журнал этапов доступны ниже.
+  - note:
+    - generic: Подтверждённая страница программы ещё не означает, что все требования прочитаны или что профиль им соответствует.
+  - generic "Research activity and page counts"
+  - paragraph:
+    - text: "Pages that could not be read:"
+    - strong: "15"
+    - text: . Any facts depending on them remain unknown and are never guessed.
+  - text: "Next automatic re-check of this evidence:"
+  - strong: 2026-11-18T06:18:18.725500
+  - text: .
+  - button "Re-verify now"
+  - heading "Stages" [level=2]
+  - generic: Checking your profile
+  - generic: "1 gaps found: 0 blocking, 0 high-impact. Research can run; results affected by the gaps above will be marked."
+  - generic: done
+  - generic: Finding candidate universities
+  - generic: 40 candidates from fixture-catalog; 16 have an official page to verify.
+  - generic: 40/40
+  - generic: done
+  - generic: Reading official programme pages
+  - generic: 20 programmes checked across 63 pages (12 unreadable).
+  - generic: 20/20
+  - generic: done
+  - generic: Reading official scholarship pages
+  - generic: Funding checked for 20 programmes.
+  - generic: 20/20
+  - generic: done
+  - generic: Comparing your profile against what was published
+  - generic: 20 programmes assessed on eligibility, admissions fit and funding fit.
+  - generic: 20/20
+  - generic: done
+  - generic: Waiting for your decisions
+  - generic: Shortlist ready; waiting for the applicant's decisions.
+  - generic: done
+  - generic: Collecting documents for approved programmes
+  - generic: Checklists built for 1 approved programmes.
+  - generic: 1/1
+  - generic: done
+  - generic: Finished
+  - generic: Research and document collection complete.
+  - generic: done
+  - heading "What could not be confirmed" [level=2]
+  - paragraph: 125 facts were not published on the pages that were read. This is normal, and none of them was guessed — each stays unknown in the results.
+  - generic "Unconfirmed facts · 125":
+    - strong: Unconfirmed facts
+    - text: · 125
+  - heading "Research failures" [level=2]
+  - paragraph: 31 issues limited this research. Affected information remains unknown.
+  - generic "Page could not be interpreted · 30":
+    - strong: Page could not be interpreted
+    - text: · 30
+  - generic "Search service unavailable · 1":
+    - strong: Search service unavailable
+    - text: · 1
+  - note:
+    - strong: 3 pages are queued for a re-check.
+    - text: They failed transiently (timeout, rate limit, or a server error) rather than being missing.
+  - button "Re-run everything"
+  - button "View 20 results →"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

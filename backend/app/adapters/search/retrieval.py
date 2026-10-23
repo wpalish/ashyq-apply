@@ -31,6 +31,7 @@ from app.adapters.discovery.live_discovery import (
     looks_like_catalogue,
 )
 from app.adapters.page_classifier import PageType, classify_url
+from app.adapters.search import _is_explicit_rate_limit
 from app.adapters.search.base import (
     SearchProvider,
     SearchResult,
@@ -42,6 +43,7 @@ from app.adapters.search.intent import DiscoveryIntent, DiscoveryQuery, queries_
 from app.adapters.search.navigation import navigation_candidates
 from app.adapters.search.ontology import degree_aliases, ontology_version, retrieval_candidates
 from app.adapters.search.prefilter import PrefilterOutcome, prefilter
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 
 #: How many of the best search results to open and read the navigation of.
 #: A hop is a supplement to search, not a crawl: each one costs a fetch, and
@@ -167,6 +169,8 @@ class RetrievalReport:
     """What one discovery run did, in the shape telemetry and a benchmark want."""
 
     candidates: tuple[RankedCandidate, ...]
+    #: Query families whose search-seam call was attempted; includes local
+    #: wrapper refusal and is not a count of vendor HTTP requests.
     queries_run: tuple[str, ...]
     provider: str
     ontology_version: str
@@ -182,10 +186,9 @@ class RetrievalReport:
     #: opened pages and the cause was a refused connection, not an empty
     #: shortlist; two different facts deserve two counters.
     hop_entry_points_unreachable: int = 0
-    #: True when the provider answered with a rate limit. A 429 is an answer,
-    #: not a failure to ask again: the remaining query families are
-    #: rephrasings of the same question, and sending them spends the quota that
-    #: has already refused. The caller must stop rather than continue.
+    #: True on explicit HTTP 429 or the fixed typed RATE_LIMITED reason.
+    #: Remaining query families stay unattempted after this refusal; it does
+    #: not establish payment or quota exhaustion, or an empty search result.
     throttled: bool = False
     #: Safe provider/status messages for presentation; never vendor error text.
     failure_diagnostics: tuple[str, ...] = ()
@@ -363,10 +366,11 @@ async def discover_candidates(
     top_k: int = 20,
     fetch: FetchPage | None = None,
     hop_entry_points: int = DEFAULT_HOP_ENTRY_POINTS,
+    on_query_attempt: Callable[[], None] | None = None,
 ) -> RetrievalReport:
     """Queries → provider → prefilter → ranking, bounded at every step.
 
-    A provider failure on one query does not abort the run: the other queries
+    A non-rate-limit provider failure does not abort the run: the other queries
     are still worth asking, and the failure is reported rather than folded into
     a smaller result set.
     """
@@ -392,11 +396,17 @@ async def discover_candidates(
     # SearchResult: a provider reports what it returned, and which of our
     # queries asked for it is our bookkeeping, not part of its contract.
     families: dict[str, list[str]] = {}
-    #: The families actually sent. A 429 stops the loop, and reporting the
-    #: planned families as run overstated the queries spent (V6b audit).
+    #: Families attempted at the search seam, charged before the call. A
+    #: wrapper may reject locally, so these do not prove vendor dispatch.
+    #: An explicit rate limit stops the loop; unattempted families stay uncharged.
     sent: list[str] = []
     for query in queries:
         sent.append(query.family)
+        # Reserve the attempt before an ordinary SearchError or cancellation
+        # can escape without a report. This proves no vendor HTTP dispatch
+        # and remains in-memory bookkeeping.
+        if on_query_attempt is not None:
+            on_query_attempt()
         try:
             response = await provider.search(
                 query=query.text,
@@ -411,11 +421,10 @@ async def discover_candidates(
             failed.append(query.family)
             if diagnostic not in failures:
                 failures.append(diagnostic)
-            if exc.http_status == 429:
-                # The endpoint has said no for this window. Six rephrasings
-                # would be six more requests against a quota that already
-                # refused — the loop this project's own rules ban — so stop
-                # here and let the caller record the stop.
+            if _is_explicit_rate_limit(exc):
+                # An explicit rate limit ends this search. Unattempted
+                # rephrasings would ask the same refused endpoint again;
+                # leave them uncharged and let the caller record the stop.
                 throttled = True
                 break
             continue
@@ -460,6 +469,8 @@ async def discover_candidates(
         for candidate in _entry_points(ranked, hop_entry_points, intent):
             try:
                 html = await fetch(candidate)
+            except (UniversityReadStopped, RunCancelled, LeaseLost):
+                raise
             except Exception:
                 html = ""
             if not html:

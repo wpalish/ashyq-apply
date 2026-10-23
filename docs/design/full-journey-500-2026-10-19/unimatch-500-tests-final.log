@@ -1,0 +1,1168 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend
+
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at navigateFetch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+    at exports.navigate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+    at LocationImpl.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:225:5)
+    at Location.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/Location.js:102:36)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/store.tsx:329:23
+    at Object.startRun (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/store.tsx:1026:61) undefined
+stderr | src/screens/ShortlistScreen.test.tsx > book result controls > shows the nested programme from the same row and reports a refused decision
+Warning: An update to ShortlistScreen inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at ShortlistScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/screens/ShortlistScreen.tsx:50:28)
+Warning: An update to Requirements inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Requirements (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResultDetail.tsx:245:25)
+    at div
+    at ResultDetail (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResultDetail.tsx:28:25)
+    at details
+    at div
+    at BookProgramme (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/BookProgramme.tsx:14:26)
+    at ShortlistScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/screens/ShortlistScreen.tsx:50:28)
+Warning: An update to ShortlistScreen inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at ShortlistScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/screens/ShortlistScreen.tsx:50:28)
+
+ ❯ src/screens/ShortlistScreen.test.tsx (50 tests | 1 failed) 3017ms
+   ❯ book result controls (2)
+     × shows the nested programme from the same row and reports a refused decision 191ms
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at navigateFetch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+    at exports.navigate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+    at LocationImpl.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:225:5)
+    at Location.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/Location.js:102:36)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/store.tsx:329:23
+    at Object.switchCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/store.tsx:512:9) undefined
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [Error: render exploded]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: render exploded
+    at Bomb (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ErrorBoundary.test.tsx:10:9)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+Error: Uncaught [Error: render exploded]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: render exploded
+    at Bomb (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ErrorBoundary.test.tsx:10:9)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at navigateFetch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+    at exports.navigate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+    at LocationImpl.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:225:5)
+    at Location.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/Location.js:102:36)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/store.tsx:329:23
+    at Object.saveProfile (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/store.tsx:928:49)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/lib/store.securityMerge.test.tsx:108:78 undefined
+Error: Uncaught [Error: render exploded]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: render exploded
+    at Bomb (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ErrorBoundary.test.tsx:10:9)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+Error: Uncaught [Error: render exploded]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: render exploded
+    at Bomb (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/src/components/ErrorBoundary.test.tsx:10:9)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/screens/ShortlistScreen.test.tsx > book result controls > shows the nested programme from the same row and reports a refused decision
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Подбор › Результаты › University of Groningen"
+
+Here are the accessible roles:
+
+  button:
+
+  Name "К результатам подбора":
+  [36m<button[39m
+    [33mclass[39m=[32m"book-text-action book-programme__back"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Добавить в сравнение":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"btn btn--sm"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Добавить в план":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn btn--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Возможно":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Не подходит":
+  [36m<button[39m
+    [33mclass[39m=[32m"btn"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Обзор":
+  [36m<button[39m
+    [33maria-current[39m=[32m"page"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Требования":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Стоимость":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Документы":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Источники":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Проверить источники":
+  [36m<button[39m
+    [33mclass[39m=[32m"book-text-action"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"book-programme__hero"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"programme-hero"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  presentation:
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33mheight[39m=[32m"36"[39m
+    [33mloading[39m=[32m"lazy"[39m
+    [33msrc[39m=[32m"/universities/qs2027-157.png"[39m
+    [33mwidth[39m=[32m"36"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "University of Groningen":
+  [36m<h1[39m
+    [33mid[39m=[32m"book-programme-title"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m/>[39m
+
+  Name "Ключевая информация":
+  [36m<h2 />[39m
+
+  Name "О программе":
+  [36m<h2 />[39m
+
+  Name "Следующие шаги":
+  [36m<h2 />[39m
+
+  Name "University of Groningen":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"small muted"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"small muted"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"programme-hero__programme"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"programme-hero__place"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  alert:
+
+  Name "":
+  [36m<p[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Разделы программы":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"Разделы программы"[39m
+    [33mclass[39m=[32m"book-programme__tabs"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  term:
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  --------------------------------------------------
+  definition:
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ol[39m
+    [33mclass[39m=[32m"book-programme__next"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"book-programme__raw"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  tablist:
+
+  Name "University of Groningen details":
+  [36m<div[39m
+    [33maria-label[39m=[32m"University of Groningen details"[39m
+    [33mclass[39m=[32m"tabs"[39m
+    [33mrole[39m=[32m"tablist"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tab:
+
+  Name "Requirements":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mclass[39m=[32m"tab"[39m
+    [33mdata-testid[39m=[32m"tab-requirements"[39m
+    [33mrole[39m=[32m"tab"[39m
+  [36m/>[39m
+
+  Name "Funding":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mclass[39m=[32m"tab"[39m
+    [33mdata-testid[39m=[32m"tab-funding"[39m
+    [33mrole[39m=[32m"tab"[39m
+  [36m/>[39m
+
+  Name "Costs":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mclass[39m=[32m"tab"[39m
+    [33mdata-testid[39m=[32m"tab-costs"[39m
+    [33mrole[39m=[32m"tab"[39m
+  [36m/>[39m
+
+  Name "Documents":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mclass[39m=[32m"tab"[39m
+    [33mdata-testid[39m=[32m"tab-documents"[39m
+    [33mrole[39m=[32m"tab"[39m
+  [36m/>[39m
+
+  Name "Why this order":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mclass[39m=[32m"tab"[39m
+    [33mdata-testid[39m=[32m"tab-score"[39m
+    [33mrole[39m=[32m"tab"[39m
+  [36m/>[39m
+
+  Name "Sources & evidence":
+  [36m<button[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mclass[39m=[32m"tab"[39m
+    [33mdata-testid[39m=[32m"tab-sources"[39m
+    [33mrole[39m=[32m"tab"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  note:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"notice notice--warn"[39m
+    [33mrole[39m=[32m"note"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"book-programme"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"book-text-action book-programme__back"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33mfill[39m=[32m"currentColor"[39m
+          [33mheight[39m=[32m"17"[39m
+          [33mviewBox[39m=[32m"0 0 256 256"[39m
+          [33mwidth[39m=[32m"17"[39m
+          [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+        [36m>[39m
+          [36m<path[39m
+            [33md[39m=[32m"M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mК результатам подбора[0m
+      [36m</button>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"book-programme__hero"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"book-programme__identity"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"book-university-logo "[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m""[39m
+              [33mheight[39m=[32m"36"[39m
+              [33mloading[39m=[32m"lazy"[39m
+              [33msrc[39m=[32m"/universities/qs2027-157.png"[39m
+              [33mwidth[39m=[32m"36"[39m
+            [36m/>[39m
+          [36m</span>[39m
+          [36m<div>[39m
+            [36m<h1[39m
+              [33mid[39m=[32m"book-programme-title"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+            [36m>[39m
+              [0mUniversity of Groningen[0m
+            [36m</h1>[39m
+            [36m<p>[39m
+              [0mBSc Computing Science[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"book-programme__tags"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mNetherlands[0m
+          [36m</span>[39m
+          [36m<span>[39m
+            [0mПрограмма бакалавриата[0m
+          [36m</span>[39m
+          [36m<span>[39m
+            [0mЯзык уточняется[0m
+          [36m</span>[39m
+          [36m<span>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"15"[39m
+              [33mviewBox[39m=[32m"0 0 256 256"[39m
+              [33mwidth[39m=[32m"15"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0m [0m
+            [0mfall 2027[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<p>[39m
+          [0mСравни подтверждённые условия программы со своим профилем. Открытые вопросы требуют проверки.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"book-globe book-globe--compact"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mheight[39m=[32m"1254"[39m
+            [33msrc[39m=[32m"/book/globe.webp"[39m
+            [33mwidth[39m=[32m"1254"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"book-globe__place book-globe__place--groningen"[39m
+          [36m>[39m
+            [0mГронинген[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"book-globe__place book-globe__place--tokyo"[39m
+          [36m>[39m
+            [0mТокио[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"book-globe__place book-globe__place--astana"[39m
+          [36m>[39m
+            [0mАстана[0m
+          [36m</span>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"book-handnote"[39m
+          [36m>[39m
+            [0mБольше возможностей[0m
+            [36m<br />[39m
+            [0mдля твоего завтра[0m
+            [36m<span />[39m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mclass[39m=[32m"btn btn--sm"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mДобавить в сравнение[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"book-programme__decisions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn btn--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mviewBox[39m=[32m"0 0 256 256"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mДобавить в план[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mviewBox[39m=[32m"0 0 256 256"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mВозможно[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"currentColor"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mviewBox[39m=[32m"0 0 256 256"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mНе подходит[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [0mDecision refused[0m
+        [36m</p>[39m
+      [36m</header>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Разделы программы"[39m
+        [33mclass[39m=[32m"book-programme__tabs"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mОбзор[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mТребования[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mСтоимость[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mДокументы[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mИсточники[0m
+        [36m</button>[39m
+      [36m</nav>[39m
+      [36m<div[39m
+        [33mstyle[39m=[32m"opacity: 1; transform: none;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"book-programme__grid"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"panel book-programme__facts"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mКлючевая информация[0m
+            [36m</h2>[39m
+            [36m<dl>[39m
+              [36m<dt>[39m
+                [0mСтепень[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mbachelor[0m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mЯзык преподавания[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mУточняется[0m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mНачало программы[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mfall 2027[0m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mСрок подачи заявки[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mСрок уточняется[0m
+              [36m</dd>[39m
+              [36m<dt>[39m
+                [0mЧасовой пояс срока[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mНе указан[0m
+              [36m</dd>[39m
+            [36m</dl>[39m
+          [36m</section>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"panel"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mО программе[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"small muted"[39m
+            [36m>[39m
+              [0mBSc Computing Science[0m
+              [0m. [0m
+              [0mGroningen[0m
+              [0m, [0m
+              [0mNetherlands[0m
+              [0m.[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"small muted"[39m
+            [36m>[39m
+              [0mОфициальное описание и применимость к твоему периоду поступления проверяй в источнике.[0m
+            [36m</p>[39m
+          [36m</section>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"panel"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mСледующие шаги[0m
+            [36m</h2>[39m
+            [36m<ol[39m
+              [33mclass[39m=[32m"book-programme__next"[39m
+            [36m>[39m
+              [36m<li>[39m
+                [0mПроверь требования и открытые вопросы.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mСобери личные документы.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mУточни сроки подачи на сайте вуза.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mДобавь программу в свой план.[0m
+              [36m</li>[39m
+            [36m</ol>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"book-text-action"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mПроверить источники [0m
+              [36m<svg[39m
+                [33mfill[39m=[32m"currentColor"[39m
+                [33mheight[39m=[32m"16"[39m
+                [33mviewBox[39m=[32m"0 0 256 256"[39m
+                [33mwidth[39m=[32m"16"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</section>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<details[39m
+        [33mclass[39m=[32m"book-programme__raw"[39m
+      [36m>[39m
+        [36m<summary>[39m
+          [0mВсе расчёты, условия финансирования и исходные свидетельства[0m
+        [36m</summary>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"detail"[39m
+          [33mdata-testid[39m=[32m"detail-result-1"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"programme-hero"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"home-eyebrow"[39m
+              [36m>[39m
+                [0mPROGRAMME DETAILS · [0m
+                [0mNetherlands[0m
+              [36m</span>[39m
+              [36m<h2>[39m
+                [0mUniversity of Groningen[0m
+              [36m</h2>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"programme-hero__programme"[39m
+              [36m>[39m
+                [0mBSc Computing Science[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"programme-hero__place"[39m
+              [36m>[39m
+                [0mGroningen[0m
+                [0m, [0m
+                [0mNetherlands[0m
+                [0m · Bachelor[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"programme-hero__status"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"home-eyebrow"[39m
+              [36m>[39m
+                [0mYOUR ASSESSMENT[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"chip chip--ok "[39m
+                [33mtitle[39m=[32m"Every published requirement that could be checked is satisfied."[39m
+              [36m>[39m
+                [0mMet[0m
+              [36m</span>[39m
+              [36m<p>[39m
+                [0mEligibility is separate from admissions fit. Neither is a probability of admission.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"programme-facts"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<span>[39m
+                [0mFunding[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"chip  "[39m
+                [33mtitle[39m=[32m"NO_AWARD_FOUND"[39m
+              [36m>[39m
+                [0mNo award found[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<span>[39m
+                [0mRemaining per year[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0mNot enough comparable data[0m
+              [36m</strong>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<span>[39m
+                [0mDeadline[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0mNot confirmed[0m
+              [36m</strong>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<span>[39m
+                [0mEvidence[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0m0[0m
+                [0m conflict[0m
+                [0ms[0m
+                [0m · [0m
+                [0m0[0m
+                [0m open question[0m
+                [0ms[0m
+              [36m</strong>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"University of Groningen details"[39m
+            [33mclass[39m=[32m"tabs"[39m
+            [33mrole[39m=[32m"tablist"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mclass[39m=[32m"tab"[39m
+              [33mdata-testid[39m=[32m"tab-requirements"[39m
+              [33mrole[39m=[32m"tab"[39m
+            [36m>[39m
+              [0mRequirements[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"tab"[39m
+              [33mdata-testid[39m=[32m"tab-funding"[39m
+              [33mrole[39m=[32m"tab"[39m
+            [36m>[39m
+              [0mFunding[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"tab"[39m
+              [33mdata-testid[39m=[32m"tab-costs"[39m
+              [33mrole[39m=[32m"tab"[39m
+            [36m>[39m
+              [0mCosts[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"tab"[39m
+              [33mdata-testid[39m=[32m"tab-documents"[39m
+              [33mrole[39m=[32m"tab"[39m
+            [36m>[39m
+              [0mDocuments[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"tab"[39m
+              [33mdata-testid[39m=[32m"tab-score"[39m
+              [33mrole[39m=[32m"tab"[39m
+            [36m>[39m
+              [0mWhy this order[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"tab"[39m
+              [33mdata-testid[39m=[32m"tab-sources"[39m
+              [33mrole[39m=[32m"tab"[39m
+            [36m>[39m
+              [0mSources & evidence[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notice notice--warn"[39m
+            [33mrole[39m=[32m"note"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [0mNo published requirements could be read for this programme, so nothing has been compared against your profile. This is reported as unknown, not as a pass.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</details>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/ShortlistScreen.test.tsx:570:28
+    568|     expect(screen.getByRole('button',{name:'Добавить в план'})).toBeEn…
+    569|     expect(screen.queryByRole('button',{name:/В твоём плане/})).not.to…
+    570|     fireEvent.click(screen.getByRole('button',{name:'Подбор › Результа…
+       |                            ^
+    571|     expect(screen.getByTestId('card-expand-result-1')).toHaveFocus();
+    572|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 107 passed (108)
+      Tests  1 failed | 1032 passed (1033)
+   Start at  11:25:58
+   Duration  25.07s (import 51%, tests 24%, environment 18%, transform 3%, setup 3%)
+
+     Import  223 modules were evaluated 1439 times · 108.22s total, 51% of tracked time
+             ~6.05s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

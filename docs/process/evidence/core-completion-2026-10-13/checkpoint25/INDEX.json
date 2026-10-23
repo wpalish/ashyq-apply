@@ -1,0 +1,45 @@
+{
+  "status": "LOCAL_CORE_ALL_REQUIRED_LOCAL_GATES_GREEN_NOT_DEPLOYED_OR_COMMERCIALLY_ACCEPTED",
+  "members": {
+    "evidence/seed-final25/synthetic-environment.json": {
+      "sha256": "90a1ad6a4519ed065e51844aa3152675cd99714ed006ad0da75e1239a9bb7477",
+      "bytes": 1552
+    },
+    "evidence/seed-final25/result.json": {
+      "sha256": "8b875376882d9f43d630fbaf073564e5a7ac8417b510cbf93acb300b2359876c",
+      "bytes": 3820
+    },
+    "evidence/seed-final25/source-before.json": {
+      "sha256": "2664f2f4344438fb5afb4c3b3ed7e0104dc5825aa996eb696c427aa29206e728",
+      "bytes": 55489
+    },
+    "evidence/seed-final25/source-after.json": {
+      "sha256": "2664f2f4344438fb5afb4c3b3ed7e0104dc5825aa996eb696c427aa29206e728",
+      "bytes": 55489
+    },
+    "evidence/seed-final25/seed.log": {
+      "sha256": "977bc08d854e28ce0877881fb2439b0f4167c29ca4303c63bbc21a80499d267e",
+      "bytes": 2569
+    },
+    "evidence/seed-final25/migrate.log": {
+      "sha256": "9751338f6338ad4dd75ea0c29d0a0fc22b7cad3661b1bed8bbb704d7932da1ef",
+      "bytes": 3818
+    },
+    "LOCAL_CORE_25_QUALIFICATION.json": {
+      "sha256": "7ef3b56552db30b23969dbd5438733263a6150302c96fdd2bd02bf688b9e4ebd",
+      "bytes": 582
+    },
+    "run_seed_final.py": {
+      "sha256": "8a5cca5ecfcb21d82b4ec917fa2d92dca7982444fc9f4b3f56cbac053c31e88c",
+      "bytes": 4009
+    },
+    "qualify_seed25.py": {
+      "sha256": "86271e30e23493671395c801883cd71dbc89c0931780b1e15f5bc3e2f5209486",
+      "bytes": 5145
+    }
+  },
+  "original_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core",
+  "qualification": "LOCAL_CORE_25_QUALIFICATION.json",
+  "predecessor": "../checkpoint24/INDEX.json",
+  "excluded": "Own synthetic SQLite/corpus/cache directory remains external original; script/logs/source maps/actual measured rows copied."
+}

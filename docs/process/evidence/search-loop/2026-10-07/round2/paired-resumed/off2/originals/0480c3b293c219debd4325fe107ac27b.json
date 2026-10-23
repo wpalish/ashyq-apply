@@ -1,0 +1,103 @@
+{
+  "case_id": "0480c3b293c219debd4325fe107ac27b",
+  "programme_urls": [
+    "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+    "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences"
+  ],
+  "ranked_urls": [],
+  "predictions": [
+    {
+      "key": "programme.exists",
+      "value": true,
+      "evidence": {
+        "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+        "excerpt": "Computer Science Major - Bachelor of Computer and Information Sciences Study computer science and gain the skills to develop sophisticated software solutions, solve complex problems and use the power of computing technologies i",
+        "scope": {
+          "university": "Auckland University of Technology",
+          "programme": "Computer Science Major - Bachelor of Computer and Information Sciences",
+          "degree": "bachelor",
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-07",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    },
+    {
+      "key": "programme.exists",
+      "value": true,
+      "evidence": {
+        "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+        "excerpt": "Data Science Major - Bachelor of Computer and Information Sciences Study data science and develop the skills for a career as data analyst, data scientist or data engineer; careers that are in high demand all over the world.",
+        "scope": {
+          "university": "Auckland University of Technology",
+          "programme": "Data Science Major - Bachelor of Computer and Information Sciences",
+          "degree": "bachelor",
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-07",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    }
+  ],
+  "telemetry": {
+    "http_fetches": 25,
+    "browser_fetches": 0,
+    "pdf_fetches": 1,
+    "search_calls": 6,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 46.01086854201276,
+    "cost_usd": null,
+    "human_review_required": null,
+    "document_reads": null,
+    "document_seconds": null,
+    "document_stop": null
+  },
+  "page_outcomes": [
+    {
+      "category": "fetch-failed",
+      "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+      "page_type": "unclassified",
+      "detail": "http_error — HTTP 403",
+      "characters": null
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/computer-science-major-bachelor-of-computer-and-information-sciences",
+      "page_type": "program_detail",
+      "detail": "1 claims read from this page",
+      "characters": 5684
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+      "page_type": "program_detail",
+      "detail": "1 claims read from this page",
+      "characters": 6971
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.aut.ac.nz/study/study-options/engineering-computer-and-mathematical-sciences/courses/bachelor-of-computer-and-information-sciences/data-science-major-bachelor-of-computer-and-information-sciences",
+      "page_type": "program_detail",
+      "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+      "characters": null
+    }
+  ],
+  "error": null
+}

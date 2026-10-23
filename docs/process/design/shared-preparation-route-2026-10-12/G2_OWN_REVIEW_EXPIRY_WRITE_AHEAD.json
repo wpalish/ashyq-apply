@@ -1,0 +1,10 @@
+{
+  "at_utc": "2026-10-12T02:05:27.397117+00:00",
+  "status": "BEFORE_SOURCE_EDIT_NOT_RUN",
+  "finding": "Expired learning access improperly blocks read-only own attempt-review action; lessons remain gated.",
+  "allowed_paths": {
+    "frontend/src/screens/SharedRoutePanel.tsx": "fdc16aedc9af24f0db7072797cf2ff713b57020744baf733a976dabca29ccca6",
+    "frontend/src/screens/SharedRoutePanel.test.tsx": "38fc84d0c783c5289eed6ad52b73a6062c632f086cf86953224f329ef6260142"
+  },
+  "change": "Gate only lesson actions by learning term; all saved actions still require exact available current status. Add current/historical own-review enabled and missing status disabled controls."
+}

@@ -1,0 +1,17 @@
+{
+  "cases": [
+    "factory-meta-native",
+    "factory-meta-no-retry",
+    "retrieval-meta-native",
+    "retrieval-meta-no-retry",
+    "meta.factory-created-after-refusal"
+  ],
+  "filesystem_support_change": {
+    "old": "REPO=B.parents[1]/'ashyq-apply/backend'",
+    "new": "REPO=Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend')"
+  },
+  "source_before": "c81b6a9147db49df8c67c56f9b913700d9f456a0e802a4ece09dfd760a972de6",
+  "source_after": "18f72f2fe064e2be8ec37a9c9b38db30e04925b2ee13200e8f608fe594ae14d1",
+  "original_tests_expectations_unchanged": true,
+  "policy": "Each case fresh subprocess; actual native client methods and factory, only MockTransport/fake clock/synthetic DNS; no reset/STOP writes"
+}

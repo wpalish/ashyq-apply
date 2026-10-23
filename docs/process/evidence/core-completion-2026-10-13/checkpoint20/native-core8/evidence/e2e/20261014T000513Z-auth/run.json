@@ -1,0 +1,30 @@
+{
+  "suite": "auth",
+  "runtime": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/native-core8/evidence/e2e/20261014T000513Z-auth",
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/native-core8/e2e/loopback-only.sb",
+    "/Users/wpalish/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/node_modules/@playwright/test/cli.js",
+    "test",
+    "--config",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/native-core8/evidence/e2e/20261014T000513Z-auth/playwright.config.mts"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/native-core8/evidence/e2e/20261014T000513Z-auth/frontend",
+  "native_config": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/playwright.auth.config.ts",
+  "source_count": 484,
+  "mock_routes_or_apis": false,
+  "providers": "none",
+  "demo_lifespan_and_worker": true,
+  "network_fault_controls": {
+    "lost_ack": "one actual committed native receipt, UI delivery aborted; exact original UUID/body replay",
+    "cas": "two real browser edits from same accepted revision, one409",
+    "journal": "64 physically recorded own entries/65th noHTTP/selectedACKcleanup/pending preserved",
+    "storage": "exact owned index null corruption, no product overwrite"
+  },
+  "runner_pid": 91795,
+  "exit_code": 0,
+  "source_unchanged": true,
+  "ports_clear_after": true
+}

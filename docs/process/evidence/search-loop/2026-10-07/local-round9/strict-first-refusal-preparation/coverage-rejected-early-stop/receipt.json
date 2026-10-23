@@ -1,0 +1,32 @@
+{
+  "status": "SEALED_REJECTED_STOPPING_HYPOTHESIS_PARTIAL_RETENTION_CONTRACT_ONLY",
+  "source_sha256": {
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/discovery/catalog_walker.py": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+    "app/catalogue/discovery.py": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+    "app/adapters/page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "app/adapters/search/ontology.py": "d63e4c6320c5154d60b5c6009615ae63ef5c95b4ed337eb7e9d0ec70ea895f35",
+    "app/adapters/search/ontology.json": "2cb1026c2c3fdcccfd66c828102a0bfdde58533e9961125677ed85ef83f3d373",
+    "app/pipeline/control.py": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+    "app/adapters/scope_reader.py": "169136aadc489f886f362a4bd703b4968933939257af1dd2e7867a26c2ff0304",
+    "app/pipeline/runner.py": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "app/models/source_page.py": "82c165045449cd8f4283800aca20b3c3fa5d9d7b3a252e26509dc549038b82de",
+    "app/schemas/profile.py": "b15ba3a8b4ee3519cee207caf2eb8504f22e1cb4b1039436ba4ce792850beff1"
+  },
+  "exact_get_prefix32": true,
+  "pre_walk_gets": 5,
+  "post_walk_gets": 32,
+  "walker_catalogs": 5,
+  "walker_programs_confirmed": 1,
+  "native_metadata_callbacks": 21,
+  "CS_get_index": 28,
+  "year_first_match_is_not_whole_programme_year": true,
+  "Gron_requested2027_scope": "not covered by global classifier/read_scope; local dated rows retained separately",
+  "AUT_wrong_first_and_exact_second_reproduced": true,
+  "control_groups": 6,
+  "unavailable_saved_body": "Mathematics",
+  "proposal_diff_created": false,
+  "fenced_durable_partial_storage_tested": false,
+  "gain_or_score_claimed": false,
+  "network_provider_model_calls": 0
+}

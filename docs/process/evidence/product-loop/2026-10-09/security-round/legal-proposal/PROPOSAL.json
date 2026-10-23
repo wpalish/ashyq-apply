@@ -1,0 +1,62 @@
+{
+  "recorded_at": "2026-10-09T00:10:34.525580+00:00",
+  "author": "root",
+  "status": "PROPOSED_NOT_APPLIED",
+  "source_before": {
+    "frontend/src/screens/LegalScreen.tsx": "71780319c717b4644af9eac837857418333d2913f39a99c45dab816647a891fd",
+    "frontend/src/screens/LegalScreen.test.tsx": "74ae8fb2d8b3e821a9146c33ad6d20be0a62e2135f36e92eb086b599e13c47f8"
+  },
+  "files": {
+    "CONSENT_SPEC_RU.md": {
+      "sha256": "7f922c0c4880c8ff7dafc4701fbf26a394eabcc1d99f027e3c4d906eec3c754b",
+      "bytes": 7904
+    },
+    "DATA_RETENTION_AND_RIGHTS.md": {
+      "sha256": "bab30498960dbe79262c125775fd58afaea078a007639cbf5b30abd8e58fb606",
+      "bytes": 6225
+    },
+    "INCIDENT_RESPONSE.md": {
+      "sha256": "77f68ee2bd50e8f2f6de4861b8ce6861af941d357b34bfd20580f67cc8452d29",
+      "bytes": 4708
+    },
+    "LegalScreen.privacy.test.tsx": {
+      "sha256": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+      "bytes": 2492
+    },
+    "LegalScreen.tsx": {
+      "sha256": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+      "bytes": 14729
+    },
+    "PRIVACY_POLICY_RU.md": {
+      "sha256": "c689944cce6548f97d1ab3bd299a1b647984971cafe3301bbba17fa324cfee58",
+      "bytes": 16899
+    },
+    "PROCESSORS_AND_TRANSFERS.md": {
+      "sha256": "df3121c743d53b91f0167c686b2b3c33bc92956f5c5656c5da22a86b33697da9",
+      "bytes": 5381
+    },
+    "README.md": {
+      "sha256": "fe4a21f33b8d792f2efec7173890e6b268c73936a3f3645344ac706f2c685ed7",
+      "bytes": 4234
+    },
+    "RELEASE_READINESS.md": {
+      "sha256": "aa76ad4db864ee95dda23cc9ce1cf0784a7bc4d9bb3bac0dc0c59b9370a38ce4",
+      "bytes": 3929
+    },
+    "SECURITY.md": {
+      "sha256": "15d79555b2028a66147f4b33b22c52791cf2c68c732b2b0316243c32e3ae9a74",
+      "bytes": 13740
+    },
+    "TERMS_RU.md": {
+      "sha256": "9664a3a5ad6e061a2f7ee9884f68474bb8defc52fceb17dc84e23778cbf9393a",
+      "bytes": 8552
+    },
+    "operator-facts.json": {
+      "sha256": "c25e56dc795fc3aa85583d8fbdb4ff31d3db5e65397f1d6ac7d07c29f3c20526",
+      "bytes": 1075
+    }
+  },
+  "qualification": "Truthful legal/public notice source proposal; operator facts unknown; source/data audit independent review required. New tests are semantic privacy claim controls, no backend/consent implementation.",
+  "updated_at": "2026-10-09T00:17:43.959115+00:00",
+  "correction": "Explicit optional TypeSafe capability; audit operation/error details not blanket data-free; queries may derive degree/field/intake from profile preferences."
+}

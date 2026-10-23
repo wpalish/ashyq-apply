@@ -1,0 +1,40 @@
+{
+  "steps": [
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.7965117079999997
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.8249923750000003
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/applications-frontend-4b2/frontend-junit.xml"
+      ],
+      "exit_code": 1,
+      "seconds": 9.528351999999998
+    }
+  ],
+  "before_after_equal": true,
+  "status": "FAIL_OR_INCOMPLETE"
+}

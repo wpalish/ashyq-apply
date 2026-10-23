@@ -1,0 +1,17 @@
+{
+  "created_at": "2026-10-08T23:59:31.040549+00:00",
+  "task": "Read-only backend security/privacy/consent readiness and actual data-flow mapping",
+  "repository": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "constraints": [
+    "No primary/Git/runtime/DB/account/provider/university/model/production calls",
+    "No secrets values, .env or auth configuration read",
+    "Immutable provider STOP remains",
+    "Findings only confirmed source path + lines + exploit preconditions; candidate minimal fix and meaningful offline test sketch"
+  ],
+  "steps": [
+    "Read AGENTS/current auth and security middleware",
+    "Trace tenant/case/export/delete authority and lifecycle",
+    "Inspect sensitive logs and configured external egress/minimization/retention",
+    "Record source hashes/data-flow map, limitations, concrete confirmed findings"
+  ]
+}

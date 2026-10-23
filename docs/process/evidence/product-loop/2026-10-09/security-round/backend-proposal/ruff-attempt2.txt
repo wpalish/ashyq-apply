@@ -1,0 +1,21 @@
+tests/test_security.py:607:17: F821 Undefined name `io`
+    |
+605 |         )
+606 |         assert joined.status_code == 200
+607 |         image = io.BytesIO()
+    |                 ^^ F821
+608 |         Image.new("RGB", (2, 2), "white").save(image, format="PNG")
+609 |         uploaded = client.put(
+    |
+
+tests/test_security.py:608:9: F821 Undefined name `Image`
+    |
+606 |         assert joined.status_code == 200
+607 |         image = io.BytesIO()
+608 |         Image.new("RGB", (2, 2), "white").save(image, format="PNG")
+    |         ^^^^^ F821
+609 |         uploaded = client.put(
+610 |             "/api/social/me/avatar",
+    |
+
+Found 3 errors (1 fixed, 2 remaining).

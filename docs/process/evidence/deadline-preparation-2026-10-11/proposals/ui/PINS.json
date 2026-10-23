@@ -1,0 +1,75 @@
+{
+  "captured_at_utc": "2026-10-11T14:50:26.451561+00:00",
+  "status": "EXTERNAL_PROPOSAL_GATES_NOT_RUN",
+  "input_source_reads": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/CONTRACT.md",
+      "sha256": "69af1120e0f6d91598f78e3b77426582fbb78ec74bd5b40884cd13c9d83b3edf",
+      "bytes": 4560
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/types.ts",
+      "sha256": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4",
+      "bytes": 24494
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/api/client.ts",
+      "sha256": "8db9654816c8c692e75d91f6ad119bdd735aa9680f9ea3f2d55982a6fd091f0a",
+      "bytes": 23868
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "4c1245463393efc9b0b6a6bffa81b70392a126cecd5bb4f5c5802bbc575a31b5",
+      "bytes": 23805
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/PreparationScreen.test.tsx",
+      "sha256": "74b0794cb51948890e993f295e8c4cb26e67af52e8da41de2724b0c42fd5e502",
+      "bytes": 21794
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/api/client.preparation.test.ts",
+      "sha256": "439d40c141d5780b339f3be85edb8544681d3dfa35fc0dde30d990aff9565eff",
+      "bytes": 7541
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/components/primitives.tsx",
+      "sha256": "ef745e6002023398e5d69f6e6227c719d879bc10997c94f179b15d67747a676b",
+      "bytes": 5217
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/tsconfig.json",
+      "sha256": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928",
+      "bytes": 725
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/package.json",
+      "sha256": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb",
+      "bytes": 1322
+    }
+  ],
+  "proposal_files": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/proposals/ui/files/frontend/src/screens/StudySchedulePanel.tsx",
+      "sha256": "4ab269b839d680e9cae152c8f78136b466b6c8d48bd61ef0f422c561e472735c",
+      "bytes": 23398
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/proposals/ui/files/frontend/src/screens/StudySchedulePanel.test.tsx",
+      "sha256": "6336ebd24c33e2123a03a0b9feeaf0f956d26ec03b66cd5e526ed1720514b309",
+      "bytes": 15427
+    }
+  ],
+  "patch": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/proposals/ui/study-schedule-ui.patch",
+    "sha256": "fb5ecbe0b3bf0ac8abcef02c083a0f62822788d4ff549b50af97046dde272caa",
+    "bytes": 39736
+  },
+  "design_report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/audits/ui-plan-design.md",
+    "sha256": "f9e3fd667c729638215fdff57673e524e652d93e4811543897bac103dc9c92a5",
+    "bytes": 6494
+  },
+  "test_definitions": 12,
+  "root_additive_requirement": "GeneratedSchedule.latest_safe_exam_on required in current root types and explicit instruction; any omission in contract field list is documentation drift."
+}

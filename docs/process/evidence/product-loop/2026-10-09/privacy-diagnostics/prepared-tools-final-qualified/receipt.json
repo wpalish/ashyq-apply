@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-09T04:11:49.052879+00:00",
+  "status": "QUALIFIED_PREPARED_TOOL_SCOPE_ACCEPT_NOT_EXECUTED",
+  "final_tools": {
+    "integration-plan.json": "80c63a44c35fd262eca8ff4720c18b1e3d31ab11fcd89dfcd37bf12f8495a02b",
+    "apply_sources.py": "057a2496b7d22c731520928d39cc4cd9b4cc127b4676efed5545f372e0fa41c2",
+    "check_queue.py": "e5d7c351b882fed0c6096a88058972e867f937e945c0c125aeb6a5666cf741f2"
+  },
+  "initial_READY_sha256": "58de4b366a285f59937ce0279cf0ede8f95c06a2cde4d92ccfd87a231f3a56e6",
+  "selected_source_checks_sha256": "3c24534f11a2db98f3b46a312d27dbdf92abfa0b6ec4dd1eb2e166eb071b081b",
+  "four_reported_guards_present_in_final_source": true,
+  "14before_proposed_hash_and_length_checks_match": true,
+  "20prior_disjoint34union": true,
+  "root_approval_SHA": "f4af612d22fb22d94db3dce0472bbdb84b9dd8c8d4615ccc611ebc135b467074",
+  "root_peer_READY_SHA": "60cc8f31dc9038e3a8678028341f97708fea415b96ca026cd444b13252784a30",
+  "future_execution_inputs_pending": {
+    "integration-pre-apply-head.txt": false,
+    "application-receipt.json": false,
+    "applied-source-pins.json": false,
+    "applied-head.txt": false,
+    "native-queue": false
+  },
+  "tests_servers_containers_network_primary_git_mutations": 0,
+  "application_acceptance": false,
+  "full_runtime_production_quality_legal_acceptance": false,
+  "reset_scope_excluded": true
+}

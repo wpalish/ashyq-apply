@@ -1,0 +1,133 @@
+{
+  "status": "EXTERNAL_CORRECTED_PROPOSAL_NOT_APPLIED",
+  "supersedes_proposal_not_history": "C9a26 material regression; original450/READY unchanged",
+  "source_reference": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "test_sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+  "same_final_bodies_three_modes": true,
+  "source_semantic_correction_paths": [
+    "backend/app/adapters/requirements/web_requirements.py",
+    "backend/app/adapters/documents/web_documents.py"
+  ],
+  "proposal_total_files": 13,
+  "paths_changed_from_C9": 7,
+  "native_final": {
+    "C9_off": "1 semantic ordinary regression FAIL / 5 PASS",
+    "corrected_on": "6 PASS",
+    "original_privacy_baseline": "5 semantic privacy FAIL / 1 PASS",
+    "ordinary_control_matches": "Original baseline and corrected ON: both offsite+all5doc failures exact expected; C9 fresh error/stale target/all5detail mismatch"
+  },
+  "native_all_runs": [
+    {
+      "file": "logs/baseline-execution.json",
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "returncode": 1,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 1.075328208
+    },
+    {
+      "file": "logs/off-execution.json",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "returncode": 1,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.852303959
+    },
+    {
+      "file": "logs/on-execution.json",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "returncode": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.853419959
+    },
+    {
+      "file": "logs/pre-backend-grouping/baseline-execution.json",
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "returncode": 1,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.782975208
+    },
+    {
+      "file": "logs/pre-backend-grouping/off-execution.json",
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "returncode": 1,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.805650333
+    },
+    {
+      "file": "logs/pre-backend-grouping/on-execution.json",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "returncode": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.852537083
+    }
+  ],
+  "group_count": 6,
+  "group_executions_total": 36,
+  "group_pass_total": 24,
+  "group_fail_total": 12,
+  "P4_branches": {
+    "privacy_refusal_seams": 9,
+    "ordinary_offsite_seams": 2,
+    "ordinary_documents_seams": 5
+  },
+  "backend_quality": {
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/runtime/on/backend",
+    "normal_configs_exact": true,
+    "ruff13": "PASS",
+    "format13": "PASS",
+    "mypy154": "PASS",
+    "import_normalization_alias_nonimport_AST13": "PASS"
+  },
+  "SQL_API": "NOT_RUN_C_native assignments/call args only; A independent SQL/API proof belongs to its own packet and must rebind corrected source",
+  "original_package_verified_pre_and_post": true,
+  "primary_app154_current20_unchanged": true,
+  "reset_scope": "NOT_READ_NOT_EXECUTED",
+  "integration": "Independent corrected-source peer/new root task only; no primary/Git apply"
+}

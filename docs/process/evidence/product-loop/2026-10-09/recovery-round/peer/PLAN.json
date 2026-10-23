@@ -1,0 +1,21 @@
+{
+  "scope": "Independent recovery contract preflight, then exact sealed B peer",
+  "current_app_source_checkpoint": "74928d73",
+  "no_primary_edits": true,
+  "steps": [
+    "Read native stopped/empty/active/done flow and callbacks",
+    "Pin current source/STOP",
+    "Await B READY; verify exact copied source/test pins",
+    "Bounded isolated frontend-only controls if useful; no full/ports",
+    "Seal concise acceptance/rejection bound to exact files"
+  ],
+  "prohibited": [
+    "primary edits",
+    "Git",
+    "ports",
+    "SQL",
+    "network/provider/model",
+    "gold/labels/scorer",
+    "auto-retry or returned-result erase"
+  ]
+}

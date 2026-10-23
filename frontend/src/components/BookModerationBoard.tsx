@@ -1,0 +1,13 @@
+import type { ReactNode } from 'react';
+import { Lock, ShieldCheck } from '@phosphor-icons/react';
+import { BookHelp, BookPageHeading } from './BookUI';
+import { Empty, Loading, Notice } from './primitives';
+import { when } from './social';
+import { useTranslation } from '@/lib/useTranslation';
+import type { ReportStatus, ReportView } from '@/types';
+
+/** Queue presentation only. Permissions, reads and mutations stay in its caller. */
+export function BookModerationBoard({items,tab,onTab,selectedId,onSelect,loading=false,error='',detail}:{items:ReportView[];tab:ReportStatus;onTab:(tab:ReportStatus)=>void;selectedId:string|null;onSelect:(id:string)=>void;loading?:boolean;error?:string;detail:ReactNode}) {
+ const {t}=useTranslation();const selected=items.find(item=>item.id===selectedId)??items[0];
+ return <div className="book-moderation"><div className="book-heading-help"><div><span className="book-moderation__badge"><Lock size={17}/>Только модераторам</span><BookPageHeading title="Модерация">Проверяй жалобы на контент. Принимай решения в соответствии с правилами сообщества.</BookPageHeading></div><BookHelp><ShieldCheck size={25}/><strong>Безопасное сообщество</strong><br/>Жалобы рассматриваются вручную. Автоматическая рассылка уведомлений о решении не подтверждена.</BookHelp></div>{error&&<Notice kind="risk">{error}</Notice>}{loading&&<Loading label={t('moderation.loading')}/>}<div className="book-moderation__grid"><section className="book-card"><h2>Жалобы ({items.length})</h2><label className="field"><span className="visually-hidden">Статус жалобы</span><select value={tab} onChange={event=>onTab(event.target.value as ReportStatus)}>{(['open','actioned','dismissed'] as const).map(status=><option key={status} value={status}>{t(`moderation.${status}` as never)}</option>)}</select></label><nav aria-label="Жалобы">{items.map(report=><button type="button" key={report.id} aria-current={selected?.id===report.id?'page':undefined} onClick={()=>onSelect(report.id)}><strong>{t(`report.${report.reason}` as never)}</strong><small>{t(({post:'moderation.subjectPost',reply:'moderation.subjectReply',message:'moderation.subjectMessage',profile:'moderation.subjectProfile'} as const)[report.subject_type])} · {when(report.created_at).label}</small><span>{t(`moderation.${report.status}` as never)}</span></button>)}</nav>{!loading&&!items.length&&<Empty title={t('moderation.empty')}>{t('moderation.emptyHint')}</Empty>}</section><section className="book-card book-moderation__detail">{detail??<p>Выбери жалобу, чтобы увидеть контекст и доступные действия.</p>}</section></div></div>;
+}

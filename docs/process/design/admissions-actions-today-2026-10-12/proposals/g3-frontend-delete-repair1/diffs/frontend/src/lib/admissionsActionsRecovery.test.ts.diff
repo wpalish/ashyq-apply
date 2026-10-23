@@ -1,0 +1,125 @@
+--- a/frontend/src/lib/admissionsActionsRecovery.test.ts
++++ b/frontend/src/lib/admissionsActionsRecovery.test.ts
+@@ -225,6 +225,122 @@
+     expect(await readAdmissionsActionsRecovery(binding)).toEqual({ ok: false, reason: 'deleted' });
+     expect(openAdmissionsActionsRecovery(undefined, 'case-a', 1, () => live)).toEqual({ ok: false, reason: 'deleted' });
+   });
++  it('cleans captured authenticated case A after its successful DELETE while live case B and its epoch remain active', async () => {
++    const status: AuthStatus = { enabled: true, authenticated: true, registration_enabled: false,
++      principal: { user_id: 'a', organization_id: 'org-a', email: 'synthetic@example.test', display_name: 'Synthetic',
++        organization_name: 'Synthetic', role: 'owner', local_development: false } };
++    bindApplicantOwner(status); const scope = '["a","org-a"]';
++    const capturedA = opened('case-a', scope); const originalA = await saved(capturedA);
++    const ack = await receipt(command());
++    live = { scope, profile_id: 'case-b', case_epoch: 2 };
++    const activeB = value(openAdmissionsActionsRecovery(scope, 'case-b', 2, () => live));
++    await saved(activeB, command(secondUuid));
++    const keysB = [`${activeB.family}fence`, indexKey(activeB), entryKey(activeB, secondUuid)];
++    const bytesB = keysB.map(key => localStorage.getItem(key));
++    const legacyKey = `ashyq.owner.${encodeURIComponent(capturedA.owner_binding)}.ashyq.docsDone`;
++    const legacyRaw = '{"a::Transcript":true,"b::CV":true,"unrelated::Other":false}';
++    localStorage.setItem(legacyKey, legacyRaw); localStorage.setItem('unrelated-app', 'keep exactly');
++    // Current-case guards stay strict for ordinary hydration, journaling, retry and command ACK.
++    expect(await readAdmissionsActionsRecovery(capturedA)).toEqual({ ok: false, reason: 'case' });
++    expect(await journalAdmissionsAction(capturedA, command(secondUuid), 2)).toEqual({ ok: false, reason: 'case' });
++    expect(await admissionsActionRetryBody(capturedA, firstUuid, originalA.raw)).toEqual({ ok: false, reason: 'case' });
++    expect(await acknowledgeAdmissionsAction(capturedA, command(), ack)).toEqual({ ok: false, reason: 'case' });
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-b')).toMatchObject({ tombstoned: false, reason: 'ack' });
++    expect(localStorage.getItem(`${capturedA.family}tombstone`)).toBeNull();
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-a')).toEqual({ tombstoned: true, cleanup: 'completed_best_effort', reason: null });
++    expect(localStorage.getItem(entryKey(capturedA))).toBeNull(); expect(localStorage.getItem(indexKey(capturedA))).toBeNull();
++    expect(keysB.map(key => localStorage.getItem(key))).toEqual(bytesB);
++    expect(localStorage.getItem(legacyKey)).toBe(legacyRaw); expect(localStorage.getItem('unrelated-app')).toBe('keep exactly');
++    expect(live).toEqual({ scope, profile_id: 'case-b', case_epoch: 2 });
++    expect((await readAdmissionsActionsRecovery(activeB)).ok).toBe(true);
++    live = { scope, profile_id: 'case-a', case_epoch: 3 };
++    expect(openAdmissionsActionsRecovery(scope, 'case-a', 3, () => live)).toEqual({ ok: false, reason: 'deleted' });
++  });
++  it('refuses captured case DELETE after the native owner changes even when its captured scope callback stays unchanged', async () => {
++    const capturedA = opened(); const original = await saved(capturedA);
++    live = { scope: undefined, profile_id: 'case-b', case_epoch: 2 };
++    owner('auth:["b","org-b"]');
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-a')).toEqual({ tombstoned: false, cleanup: 'residual_unknown', reason: 'owner' });
++    expect(localStorage.getItem(entryKey(capturedA))).toBe(original.raw);
++    expect(localStorage.getItem(indexKey(capturedA))).toBe(original.index_raw);
++    expect(localStorage.getItem(`${capturedA.family}tombstone`)).toBeNull();
++  });
++  it.each(['foreign-fence', 'changed-generation', 'malformed-fence', 'foreign-tombstone', 'malformed-tombstone'])('preserves %s deletion authority bytes without overwriting or adopting them', async corruption => {
++    const capturedA = opened(); const original = await saved(capturedA);
++    live = { scope: undefined, profile_id: 'case-b', case_epoch: 2 };
++    const key = `${capturedA.family}${corruption.includes('tombstone') ? 'tombstone' : 'fence'}`;
++    const fence = JSON.parse(localStorage.getItem(`${capturedA.family}fence`)!) as Record<string, unknown>;
++    if (corruption === 'foreign-fence') fence.owner_binding = 'auth:foreign';
++    if (corruption === 'changed-generation') fence.generation = secondUuid;
++    if (corruption === 'foreign-tombstone') { fence.profile_id = 'case-b'; fence.deleted = true; }
++    const corruptRaw = corruption.startsWith('malformed') ? '{unreadable' : JSON.stringify(fence);
++    localStorage.setItem(key, corruptRaw);
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-a')).toMatchObject({ tombstoned: false, cleanup: 'residual_unknown' });
++    expect(localStorage.getItem(key)).toBe(corruptRaw); expect(localStorage.getItem(entryKey(capturedA))).toBe(original.raw);
++    expect(localStorage.getItem(indexKey(capturedA))).toBe(original.index_raw);
++  });
++  it.each(['foreign-entry', 'foreign-index', 'generation-entry', 'malformed-entry'])('tombstones the deleted captured family but retains %s for investigation', async corruption => {
++    const capturedA = opened(); const original = await saved(capturedA);
++    live = { scope: undefined, profile_id: 'case-b', case_epoch: 2 };
++    const entry = JSON.parse(original.raw) as Record<string, unknown>;
++    const index = JSON.parse(original.index_raw) as Record<string, unknown>;
++    if (corruption === 'foreign-entry') entry.owner_binding = 'foreign';
++    if (corruption === 'generation-entry') entry.generation = secondUuid;
++    if (corruption === 'foreign-index') index.profile_id = 'case-b';
++    const entryRaw = corruption === 'malformed-entry' ? '{' : JSON.stringify(entry);
++    const indexRaw = JSON.stringify(index);
++    localStorage.setItem(entryKey(capturedA), entryRaw); localStorage.setItem(indexKey(capturedA), indexRaw);
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-a')).toEqual({ tombstoned: true, cleanup: 'residual_unknown', reason: 'invalid' });
++    expect(localStorage.getItem(entryKey(capturedA))).toBe(entryRaw); expect(localStorage.getItem(indexKey(capturedA))).toBe(indexRaw);
++    live = { scope: undefined, profile_id: 'case-a', case_epoch: 3 };
++    expect(openAdmissionsActionsRecovery(undefined, 'case-a', 3, () => live)).toEqual({ ok: false, reason: 'deleted' });
++  });
++  it('rechecks native owner during the deletion-only family scan before writing any tombstone', async () => {
++    const capturedA = opened(); const original = await saved(capturedA); const originalKey = Storage.prototype.key; let changed = false;
++    live = { scope: undefined, profile_id: 'case-b', case_epoch: 2 };
++    vi.spyOn(Storage.prototype, 'key').mockImplementation(function (this: Storage, index: number) {
++      const result = originalKey.call(this, index);
++      if (!changed) { changed = true; owner('auth:["b","org-b"]'); }
++      return result;
++    });
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-a')).toMatchObject({ tombstoned: false, cleanup: 'residual_unknown', reason: 'owner' });
++    expect(localStorage.getItem(entryKey(capturedA))).toBe(original.raw); expect(localStorage.getItem(`${capturedA.family}tombstone`)).toBeNull();
++  });
++  it('refuses a changed captured generation after an entry read during deletion preparation', async () => {
++    const capturedA = opened(); const original = await saved(capturedA); const originalGet = Storage.prototype.getItem; let changed = false;
++    live = { scope: undefined, profile_id: 'case-b', case_epoch: 2 };
++    const fenceKey = `${capturedA.family}fence`;
++    const replacement = { ...JSON.parse(localStorage.getItem(fenceKey)!) as Record<string, unknown>, generation: secondUuid };
++    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(function (this: Storage, key: string) {
++      const result = originalGet.call(this, key);
++      if (key === entryKey(capturedA) && !changed) { changed = true; localStorage.setItem(fenceKey, JSON.stringify(replacement)); }
++      return result;
++    });
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-a')).toMatchObject({ tombstoned: false, cleanup: 'residual_unknown', reason: 'generation' });
++    expect(localStorage.getItem(entryKey(capturedA))).toBe(original.raw); expect(localStorage.getItem(`${capturedA.family}tombstone`)).toBeNull();
++  });
++  it('retains an interleaved replacement intent and reports unknown residuals instead of clearing newer bytes', async () => {
++    const capturedA = opened(); const original = await saved(capturedA); const originalSet = Storage.prototype.setItem;
++    const replacement = JSON.stringify({ ...original.entry, draft_generation: 2, entry_revision: 1 });
++    live = { scope: undefined, profile_id: 'case-b', case_epoch: 2 };
++    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (this: Storage, key: string, raw: string) {
++      originalSet.call(this, key, raw);
++      if (key === `${capturedA.family}tombstone`) originalSet.call(this, entryKey(capturedA), replacement);
++    });
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-a')).toEqual({ tombstoned: true, cleanup: 'residual_unknown', reason: 'changed' });
++    expect(localStorage.getItem(entryKey(capturedA))).toBe(replacement);
++  });
++  it('stops cleanup after the native owner changes during a tombstone write and preserves captured intent bytes', async () => {
++    const capturedA = opened(); const original = await saved(capturedA); const originalSet = Storage.prototype.setItem;
++    live = { scope: undefined, profile_id: 'case-b', case_epoch: 2 };
++    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (this: Storage, key: string, raw: string) {
++      originalSet.call(this, key, raw);
++      if (key === `${capturedA.family}tombstone`) owner('auth:["b","org-b"]');
++    });
++    expect(acknowledgeAdmissionsCaseDeletion(capturedA, 'case-a')).toMatchObject({ cleanup: 'residual_unknown', reason: 'owner' });
++    expect(localStorage.getItem(entryKey(capturedA))).toBe(original.raw); expect(localStorage.getItem(indexKey(capturedA))).toBe(original.index_raw);
++    expect(localStorage.getItem(`${capturedA.family}tombstone`)).not.toBeNull();
++  });
+   it('blocks a late intent write after the tombstone even if residual bytes arrive after cleanup', async () => {
+     const binding = opened(); const originalSet = Storage.prototype.setItem; let deleted = false;
+     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (this: Storage, key: string, raw: string) {

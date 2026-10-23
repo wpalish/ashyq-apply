@@ -1,0 +1,1027 @@
+/**
+ * Contracts mirroring the backend Pydantic schemas.
+ *
+ * The unions below are the same controlled vocabularies the API exposes at
+ * /api/vocabulary. A backend test parses this file and fails if the two drift
+ * apart, so a renamed status cannot silently reach the UI as an unstyled chip.
+ */
+
+export type EligibilityStatus =
+  | 'MET' | 'PENDING' | 'GAP' | 'NOT_APPLICABLE' | 'NEEDS_OFFICIAL_CLARIFICATION';
+
+export type AdmissionsFit =
+  | 'STRONGER_FIT' | 'PLAUSIBLE_FIT' | 'AMBITIOUS' | 'INSUFFICIENT_DATA';
+
+export type FundingFit =
+  | 'CONFIRMED_OPPORTUNITY' | 'COMPETITIVE_OPPORTUNITY' | 'LIMITED_OPPORTUNITY'
+  | 'NOT_ELIGIBLE' | 'UNKNOWN';
+
+export type FundingClassification =
+  | 'FULL_RIDE_CONFIRMED' | 'FULL_TUITION' | 'LARGE_GRANT' | 'PARTIAL'
+  | 'NEED_BASED_POSSIBLE' | 'NOT_ELIGIBLE' | 'UNKNOWN';
+
+export type ClaimStatus =
+  | 'VERIFIED_CURRENT' | 'POSSIBLY_STALE' | 'CONFLICTING' | 'UNVERIFIED'
+  | 'NOT_FOUND' | 'NEEDS_OFFICIAL_CLARIFICATION'
+  /** Historical record, kept forever: the page no longer says this (see backend enum). */
+  | 'SUPERSEDED';
+
+export type SourceSpecificity =
+  | 'program_intake' | 'program' | 'university_admissions' | 'application_portal'
+  | 'scholarship_administrator' | 'government' | 'admissions_office_reply'
+  | 'aggregator' | 'unknown';
+
+export type UserDecision = 'undecided' | 'approved' | 'maybe' | 'rejected';
+
+/**
+ * Where a row sits in a balanced list.
+ *
+ * Deliberately not "safety / match / reach": *safety* reads as a promise, and
+ * nothing here predicts an admission.
+ */
+export type Bucket =
+  | 'WELL_PLACED' | 'PLAUSIBLE' | 'AMBITIOUS' | 'OUT_OF_BUDGET'
+  | 'NEEDS_CLARIFICATION' | 'EXCLUDED';
+
+/** The six groups the applicant ranks; their order becomes the axis weights. */
+export type PriorityGroup =
+  | 'funding' | 'academic' | 'country' | 'city_climate' | 'career' | 'campus_life';
+
+export type JobStatus =
+  | 'queued' | 'running' | 'succeeded'
+  /** Failed but retryable: it will be picked up again after its backoff. */
+  | 'failed'
+  /** Attempts exhausted. Needs a human decision; never retried automatically. */
+  | 'dead'
+  | 'cancelled';
+
+export type PipelineStage =
+  | 'queued' | 'profile_validation' | 'candidate_discovery' | 'program_verification'
+  | 'funding_discovery' | 'assessment' | 'awaiting_user_decision'
+  | 'document_collection' | 'completed' | 'failed'
+  /** The worker holding the run stopped without finishing; the work itself did not fail. */
+  | 'retryable_failed'
+  | 'cancelled';
+
+export type CostCategory =
+  | 'tuition' | 'mandatory_fees' | 'housing' | 'meals' | 'health_insurance'
+  | 'books' | 'travel' | 'visa' | 'personal';
+
+export type ScholarshipType =
+  | 'merit' | 'need_based' | 'automatic' | 'competitive' | 'departmental'
+  | 'honors' | 'government' | 'external' | 'unknown';
+
+export type ApplicationMode = 'automatic' | 'separate' | 'nomination' | 'unknown';
+
+export type DocumentOwner = 'applicant' | 'school' | 'recommender' | 'third_party';
+
+export type DegreeLevel = 'foundation' | 'bachelor' | 'master' | 'phd';
+
+export type Coverage = 'yes' | 'no' | 'partial' | 'unknown';
+
+/** A three-valued answer. Nothing in this product defaults to "yes". */
+export type Tristate = 'yes' | 'no' | 'unknown';
+
+export interface Money {
+  amount: number;
+  currency: string;
+  academic_year: string | null;
+  as_of?: string | null;
+  is_estimate: boolean;
+  range_low: number | null;
+  range_high: number | null;
+  source_url?: string | null;
+}
+
+export interface RankingEntry {
+  source: string;
+  year: number;
+  position: string;
+  url: string | null;
+}
+
+export interface RequirementCheck {
+  requirement: string;
+  published_value: unknown;
+  applicant_value: unknown;
+  status: EligibilityStatus;
+  is_hard_filter: boolean;
+  explanation: string;
+  claim_ids: string[];
+  /** Who the publishing page said the rule is for, in its own terms. Empty
+   *  when the page did not say — which is not the same as "everyone", and is
+   *  why this is shown as a quiet line rather than a badge. */
+  published_scope: string;
+}
+
+export interface CoverageBreakdown {
+  category: CostCategory;
+  covered: Coverage;
+  amount: Money | null;
+  claim_ids: string[];
+}
+
+export interface Scholarship {
+  id: string;
+  name: string;
+  scholarship_type: ScholarshipType;
+  classification: FundingClassification;
+  classification_reason: string;
+  amount: Money | null;
+  amount_is_percentage_of_tuition: number | null;
+  coverage: CoverageBreakdown[];
+  // Eligibility, one question per field. These were previously collapsed,
+  // which let "an award exists" stand in for "this applicant can apply".
+  international_eligible: Tristate;
+  citizenship_restrictions: string[];
+  residency_restrictions: string[];
+  program_restrictions: string[];
+  degree_applicability: Tristate;
+  degree_applicability_reason: string;
+  applies_to_degrees: string[];
+  application_mode: ApplicationMode;
+  requires_extra_essays: boolean | null;
+  deadline: string | null;
+  deadline_timezone: string | null;
+  deadline_raw: string | null;
+  renewable: boolean | null;
+  duration_years: number | null;
+  renewal_requirements: string[];
+  min_test_scores: Record<string, number>;
+  stackable: Tristate;
+  /** Whether an admission offer must be held before applying. "unknown" is
+   *  the common answer: most award pages never say. */
+  offer_required: Tristate;
+  /** Whether the award is decided on demonstrated financial need. */
+  financial_need_required: Tristate;
+  published_count: number | null;
+
+  // Availability, decomposed. A missing deadline is not availability.
+  opportunity_exists: boolean;
+  currently_available: Tristate;
+  applicant_eligible: Tristate;
+  application_window_open: Tristate;
+  deadline_known: boolean;
+  deadline_passed: boolean;
+  award_current_for_intake: Tristate;
+  /** Derived from the fields above; never set directly. */
+  available_this_intake: Tristate;
+  eligibility_checks: RequirementCheck[];
+  source_urls: string[];
+  claim_ids: string[];
+  last_verified: string | null;
+}
+
+export interface CostBreakdown {
+  items: Partial<Record<CostCategory, Money>>;
+  total: Money | null;
+  academic_year: string | null;
+  source_urls: string[];
+  is_range: boolean;
+}
+
+/** What the cost figure rests on; null when no cost basis was established. */
+export type CostBasis = 'published_total' | 'itemised_complete' | 'itemised_partial';
+
+export interface FundingGap {
+  computable: boolean;
+  gap: Money | null;
+  gap_low: number | null;
+  gap_high: number | null;
+  total_cost: Money | null;
+  confirmed_aid: Money | null;
+  stackable_aid: Money | null;
+  reason: string;
+  year_mismatch: boolean;
+  currency_mismatch: boolean;
+  category_mismatch: boolean;
+  cost_basis: CostBasis | null;
+  /** Core categories the cost table omits; non-empty only for itemised_partial. */
+  missing_categories: CostCategory[];
+  warnings: string[];
+}
+
+export interface ScoreComponent {
+  name: string;
+  raw: number;
+  weight: number;
+  weighted: number;
+  explanation: string;
+  data_present: boolean;
+}
+
+export interface ExplainableScore {
+  total: number;
+  max_possible: number;
+  components: ScoreComponent[];
+  missing_data_penalty: number;
+  missing_fields: string[];
+  disclaimer: string;
+}
+
+export interface RerankIn {
+  priorities?: PriorityGroup[];
+  weights?: Record<string, number>;
+  gamma?: number;
+  /** Off by default: trying an ordering out must not rewrite the profile. */
+  persist?: boolean;
+}
+
+export interface BalancedShortlist {
+  chosen: ProgramResult[];
+  /** What the quotas could not fill, said out loud rather than hidden. */
+  notes: string[];
+  quotas: Record<string, number>;
+}
+
+export interface AxisScore {
+  axis: string;
+  /** null whenever `state` is not 'known'. */
+  value: number | null;
+  /** 'unknown' lowers coverage; 'not_applicable' is ignored by both numbers. */
+  state: 'known' | 'unknown' | 'not_applicable';
+  weight: number;
+  reason: string;
+  evidence_claim_ids: string[];
+}
+
+export interface RankingV2 {
+  /** Match against the stated priorities, 0-1. Never a probability. */
+  fit: number | null;
+  /** Share of the weight that rests on verified data. */
+  coverage: number;
+  sort_key: number;
+  gamma: number;
+  axes: AxisScore[];
+  unknown_axes: string[];
+  not_applicable_axes: string[];
+  knocked_out_by: string[];
+  bucket: Bucket;
+  bucket_reason: string;
+  weights_source: 'priorities_roc' | 'weights_override';
+  version: '2';
+  disclaimer: string;
+}
+
+/** Optional recorded scope from ClaimOut; an absent dimension does not mean everyone. */
+export interface ClaimScope {
+  university: string | null; faculty: string | null; programme: string | null; degree: string | null;
+  intake: string | null; academic_year: string | null; population: string | null;
+  nationality: string | null; residency: string | null; qualification: string | null;
+}
+export interface ClaimOut {
+  scope?: ClaimScope | null;
+  claim_type: string;
+  normalized_value: unknown;
+  original_text_excerpt: string;
+  source_url: string;
+  page_title: string;
+  relevant_section: string;
+  official_domain: boolean;
+  program: string | null;
+  subject_key: string | null;
+  intake: string | null;
+  academic_year: string | null;
+  accessed_at: string;
+  source_specificity: SourceSpecificity;
+  confidence: number;
+  status: ClaimStatus;
+  extraction_method: string;
+  notes: string;
+  id: string;
+  is_stale: boolean;
+  age_days: number;
+}
+
+export interface Conflict {
+  claim_type: string;
+  subject: string;
+  claim_ids: string[];
+  values: unknown[];
+  source_urls: string[];
+  preferred_claim_id: string | null;
+  resolution_rule: string;
+  question_for_admissions: string;
+  unresolved: boolean;
+}
+
+export interface UnresolvedQuestion {
+  topic: string;
+  question: string;
+  why_it_matters: string;
+  university: string | null;
+  program: string | null;
+  suggested_contact: string | null;
+  blocking: boolean;
+}
+
+export interface DocumentItem {
+  name: string;
+  purpose: 'admission' | 'scholarship' | 'both';
+  owner: DocumentOwner;
+  required: boolean;
+  format_notes: string;
+  max_pages: number | null;
+  max_file_size_mb: number | null;
+  naming_convention: string | null;
+  needs_translation: boolean;
+  needs_notarization: boolean;
+  needs_apostille: boolean;
+  needs_credential_evaluation: boolean;
+  word_limit: number | null;
+  character_limit: number | null;
+  prompt_text: string | null;
+  deadline: string | null;
+  deadline_timezone: string | null;
+  depends_on: string[];
+  lead_time_days: number | null;
+  source_url: string | null;
+  claim_ids: string[];
+}
+
+export interface DocumentChecklist {
+  result_id: string;
+  university: string;
+  program: string;
+  admission_documents: DocumentItem[];
+  scholarship_documents: DocumentItem[];
+  applicant_actions: DocumentItem[];
+  school_actions: DocumentItem[];
+  recommender_actions: DocumentItem[];
+  certification_actions: DocumentItem[];
+  ordered_steps: string[];
+  unresolved: UnresolvedQuestion[];
+  generated_at: string | null;
+  completeness: 'official' | 'partial' | 'unavailable';
+}
+
+export interface ProgramResult {
+  id: string;
+  run_id: string;
+  university: string;
+  university_id: string;
+  country: string;
+  city: string;
+  program: string;
+  program_url: string | null;
+  degree: DegreeLevel;
+  intake: string;
+  rankings: RankingEntry[];
+  eligibility: EligibilityStatus;
+  admissions_fit: AdmissionsFit;
+  funding_fit: FundingFit;
+  best_funding_classification: FundingClassification;
+  requirement_checks: RequirementCheck[];
+  missing_prerequisites: string[];
+  hard_filter_failures: string[];
+  scholarships: Scholarship[];
+  costs: CostBreakdown;
+  funding_gap: FundingGap | null;
+  preference_score: ExplainableScore | null;
+  ranking: RankingV2 | null;
+  catalog_attributes: Record<string, string>;
+  catalog_attributes_source: string;
+  admission_deadline: string | null;
+  admission_deadline_timezone: string | null;
+  admission_deadline_raw: string | null;
+  deadline_passed: boolean;
+  previous_cycle_deadline?: string | null;
+  climate_fit: string;
+  city_fit: string;
+  workload_fit: string;
+  size_fit: string;
+  campus_fit: string;
+  career_notes: string;
+  post_study_work: string;
+  work_during_study: string;
+  conflicts: Conflict[];
+  unresolved: UnresolvedQuestion[];
+  claims: ClaimOut[];
+  source_urls: string[];
+  last_verified: string | null;
+  verification_completeness: number;
+  user_decision: UserDecision;
+  user_decision_reason: string;
+  user_notes: string;
+  decided_at: string | null;
+  checklist: DocumentChecklist | null;
+}
+
+export interface StageView {
+  stage: string;
+  status: 'pending' | 'running' | 'done' | 'failed' | 'skipped';
+  detail: string;
+  error: string;
+  items_done: number;
+  items_total: number;
+  started_at: string | null;
+  finished_at: string | null;
+}
+
+export interface RunView {
+  id: string;
+  profile_id: string;
+  stage: PipelineStage;
+  demo_mode: boolean;
+  cancelled: boolean;
+  progress: number;
+  candidates_found: number;
+  programs_verified: number;
+  pages_checked: number;
+  pages_failed: number;
+  claims_recorded: number;
+  results_count: number;
+  decided_count: number;
+  stages: StageView[];
+  errors: string[];
+  //: Diagnostics that mean 'the page was read and does not say'. Absent on
+  //: runs made before the two were separated.
+  unknowns?: string[];
+  retry_urls: string[];
+  settings: Record<string, unknown>;
+  created_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+  job_running: boolean;
+  job_error: string;
+  /** The durable job backing this run, if one exists. */
+  job_id: string | null;
+  /** queued | running | succeeded | failed | dead | cancelled */
+  job_status: JobStatus | null;
+  job_attempts: number;
+  candidate_limit: number;
+  verify_limit: number;
+  fetch_tiers: Record<string, number>;
+  /** The run claims to be working but its worker has gone silent. */
+  stale: boolean;
+  worker_id: string | null;
+  heartbeat_at: string | null;
+  recovery_count: number;
+  //: When the evidence is next re-read automatically (ISO 8601), if ever.
+  next_recheck_at?: string | null;
+}
+
+export interface ProfileGap {
+  field_path: string;
+  status: string;
+  severity: 'blocking' | 'high' | 'medium' | 'low';
+  impact: string;
+  suggested_action: string | null;
+}
+
+export interface ProfileValidationReport {
+  gaps: ProfileGap[];
+  can_proceed: boolean;
+  blocking_count: number;
+  summary: string;
+}
+
+export interface ShortlistSummary {
+  total: number;
+  by_eligibility: Record<string, number>;
+  by_funding: Record<string, number>;
+  by_decision: Record<string, number>;
+  with_conflicts: number;
+  with_open_questions: number;
+  demo_data: boolean;
+}
+
+export interface Capabilities {
+  demo_mode: boolean;
+  data_origin: string;
+  adapters: { name: string; role: string; live: boolean }[];
+  fetch_tiers: string[];
+  currency: {
+    supported: string[];
+    rate_date: string;
+    rate_source: string;
+    rate_age_days?: number;
+    //: Empty while the snapshot is fresh; a sentence to show verbatim once it is not.
+    stale_warning?: string;
+  };
+  guarantees: string[];
+  limits: string[];
+  //: What live mode can actually reach. Someone switching demo mode off
+  //: pictures the open web; the truth is a curated registry, and the
+  //: difference has to be on screen before they choose, not after.
+  live_coverage: {
+    institutions: number;
+    countries: string[];
+    recall_note: string;
+  };
+}
+
+export interface StoredProfile {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  display_name: string;
+  [key: string]: unknown;
+}
+
+export interface AuthPrincipal {
+  user_id: string;
+  email: string;
+  display_name: string;
+  organization_id: string;
+  organization_name: string;
+  role: string;
+  local_development: boolean;
+}
+
+export interface AuthStatus {
+  enabled: boolean;
+  registration_enabled: boolean;
+  password_reset_enabled?: boolean;
+  authenticated: boolean;
+  principal: AuthPrincipal | null;
+}
+
+export interface ApplicantCase {
+  id: string;
+  profile_id: string;
+  display_name: string;
+  status: string;
+  run_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export type PaymentMethod = 'phone' | 'qr';
+
+export interface Pricing {
+  case_unlock_price_kzt: number;
+  currency: string;
+  payments_enabled: boolean;
+  includes: string[];
+}
+
+export interface EntitlementView {
+  profile_id: string;
+  full_access: boolean;
+  /** Cases left on the current subscription; null when there is none. */
+  subscription_cases_left: number | null;
+  /** Bought-but-not-started subscriptions waiting behind it. */
+  subscription_queued: number;
+  /** Missing on older servers: it does not grant preparation access. */
+  preparation_access?: PreparationAccess | null;
+}
+
+export interface OrderView {
+  id: string;
+  profile_id: string;
+  status: 'created' | 'pending' | 'paid' | 'cancelled' | 'expired' | 'failed';
+  method: PaymentMethod;
+  amount_kzt: number;
+  phone_masked: string;
+  qr_payload: string;
+  qr_expires_at: string | null;
+  created_at: string;
+}
+
+/* --- Community ---------------------------------------------------------
+ *
+ * `status` is nullable everywhere it appears. Null means the person has not
+ * said, which the interface shows as "not stated" — never as waitlist.
+ */
+
+export type ApplicantStatus = 'accepted' | 'waitlist';
+
+/** Who may open a conversation with you. */
+export type DirectMessagePolicy = 'anyone' | 'threads' | 'nobody';
+
+export interface PersonCard {
+  user_id: string;
+  display_name: string;
+  status: ApplicantStatus | null;
+  target_city: string;
+  target_major: string;
+  universities: string[];
+  /** How this person can be reached — never anything about them. */
+  dm_policy: DirectMessagePolicy;
+  bio: string;
+  can_message?: boolean | null;
+}
+
+export interface MyProfile {
+  joined: boolean;
+  profile: PersonCard | null;
+}
+
+export interface ProfileInput {
+  status: ApplicantStatus | null;
+  target_city: string;
+  target_major: string;
+  bio: string;
+  universities: string[];
+  dm_policy: DirectMessagePolicy;
+}
+
+export interface MessageView {
+  id: string;
+  body: string;
+  created_at: string;
+  /** Whose side of the conversation this is: the screen places the line by it. */
+  mine: boolean;
+}
+
+export interface ConversationView {
+  person: PersonCard;
+  last_message: string;
+  last_message_at: string;
+  unread: number;
+}
+
+export interface MessagePage {
+  person: PersonCard;
+  items: MessageView[];
+  next_cursor: string | null;
+}
+
+export interface AuthorRef {
+  user_id: string;
+  display_name: string;
+  status: ApplicantStatus | null;
+}
+
+export interface PostView {
+  id: string;
+  author: AuthorRef;
+  body: string;
+  tags: string[];
+  reply_count: number;
+  created_at: string;
+}
+
+export interface ReplyView {
+  id: string;
+  post_id: string;
+  author: AuthorRef;
+  body: string;
+  created_at: string;
+}
+
+/** A keyset page. `next_cursor` is null on the last one. */
+export interface Page<T> {
+  items: T[];
+  next_cursor: string | null;
+}
+
+export interface PeopleFilters {
+  city?: string;
+  university?: string;
+  major?: string;
+  status?: string;
+}
+
+export interface FeedFilters {
+  tag?: string;
+  author?: string;
+  city?: string;
+  university?: string;
+  status?: string;
+}
+
+/**
+ * One value read off an applicant's transcript, with the words it came from.
+ *
+ * `field` is the dotted path into the profile form, so a suggestion can be
+ * applied without a second mapping table drifting out of step with the API.
+ * Nothing here is applied until the applicant says so.
+ */
+export interface TranscriptSuggestion {
+  field: string;
+  label: string;
+  value: unknown;
+  excerpt: string;
+}
+
+export interface TranscriptReading {
+  suggestions: TranscriptSuggestion[];
+  /** Why the list is empty, when it is. A scan of paper carries no text. */
+  note: string;
+}
+
+/* --- Moderation -------------------------------------------------------- */
+
+export type ReportReason =
+  | 'harassment'
+  | 'personal_information'
+  | 'impersonation'
+  | 'spam'
+  | 'misleading_advice'
+  | 'other';
+
+export type ReportTarget = 'post' | 'reply' | 'message' | 'profile';
+
+export type ReportStatus = 'open' | 'actioned' | 'dismissed';
+
+export interface ReporterRef {
+  user_id: string;
+  display_name: string;
+}
+
+export interface ReportView {
+  id: string;
+  reporter: ReporterRef;
+  subject_type: ReportTarget;
+  subject_id: string;
+  subject_author: ReporterRef | null;
+  reason: ReportReason;
+  note: string;
+  /** What the content said when it was reported, kept for after it is gone. */
+  excerpt: string;
+  status: ReportStatus;
+  created_at: string;
+  resolved_by: string | null;
+  resolution_note: string;
+}
+
+/* Original starter preparation: practice correctness is not an official exam score. */
+export interface PreparationAccess {
+  allowed: boolean;
+  reason: string;
+  subscription_id: string | null;
+  starts_at: string | null;
+  ends_at: string | null;
+  development_only: boolean;
+}
+export interface PreparationExam {
+  id: 'ielts_academic' | 'digital_sat' | 'toefl_ibt' | 'det' | 'hsk_hskk' | 'csca';
+  title: string; role: 'language' | 'academic'; course_status: 'starter' | 'planned';
+  track_ids: string[]; official_info_urls: string[]; official_practice_urls: string[];
+  notice: string; checked_date: string;
+}
+export interface PreparationCatalogue {
+  version: string;
+  exams: PreparationExam[];
+  tracks: { id: string; title: string; lesson_ids: string[] }[];
+  lessons: { id: string; track_id: string; title: string; question_count: number; version?: string }[];
+  notice: string;
+}
+export interface PreparationChoiceQuestion {
+  id: string; prompt: string; choices: { id: string; text: string }[];
+}
+export interface PreparationShortQuestion {
+  id: string; prompt: string; answer_format: 'short_answer'; max_words: number;
+}
+export type PreparationQuestion = PreparationChoiceQuestion | PreparationShortQuestion;
+export interface PreparationLesson {
+  id: string; track_id: string; title: string; version: string; introduction: string; unofficial: true;
+  questions: PreparationQuestion[];
+}
+export type PreparationAnswer = { question_id: string; choice_id: string } | { question_id: string; text: string };
+export type PreparationFeedback = {
+  question_id: string; selected_choice_id: string; correct_choice_id: string; correct: boolean; explanation: string;
+} | {
+  question_id: string; selected_text: string; accepted_answers: string[]; correct: boolean; explanation: string;
+};
+export interface PreparationAttemptInput {
+  attempt_id: string; lesson_id: string; version: string; answers: PreparationAnswer[];
+}
+export interface StudyAttempt extends PreparationAttemptInput {
+  id: string; profile_id: string; correct: number; total: number; created_at: string;
+  feedback: PreparationFeedback[];
+}
+export interface PreparationAttemptReview {
+  attempt: StudyAttempt; lesson: PreparationLesson | null; notice: string;
+}
+export interface PreparationProgress {
+  profile_id: string; attempt_count: number; correct: number; answered: number;
+  completed_lesson_ids: string[]; attempts: StudyAttempt[];
+  /** Present only in the opt-in learning catalogue; submission is not mastery. */
+  catalogue_version?: string; completed_lessons?: { lesson_id: string; version: string }[];
+}
+export type PreparationEvidenceState = 'unknown' | 'locked' | 'current' | 'stale' | 'conflicted';
+export interface PreparationCheck {
+  requirement_check: RequirementCheck; evidence_state: PreparationEvidenceState;
+  policy: 'required' | 'optional' | 'waiver_check' | 'alternatives_unresolved' | 'unknown';
+  claims: ClaimOut[]; claim_ids: string[]; source_urls: string[]; lesson_ids: string[];
+}
+export interface PreparationPlan {
+  profile_id: string; result_id: string | null; research_access: boolean;
+  evidence_state: PreparationEvidenceState; checks: PreparationCheck[]; notice: string;
+}
+
+/* Add to frontend/src/types.ts after PreparationPlan. G1 is a read-only DTO. */
+export type GraphReasonCode =
+  | 'research_locked' | 'evidence_unavailable' | 'evidence_partial' | 'checks_missing'
+  | 'non_exam_checks_not_projected' | 'claim_reference_unresolved' | 'legacy_url_ambiguous'
+  | 'scope_unrecorded' | 'scope_unknown' | 'scope_mismatch' | 'evidence_unknown'
+  | 'evidence_stale' | 'evidence_conflicted' | 'policy_unknown'
+  | 'alternatives_unresolved' | 'waiver_requires_review' | 'exam_family_unestablished'
+  | 'exam_identity_unestablished' | 'scholarship_checks_missing'
+  | 'scholarship_subject_unestablished' | 'requirement_purpose_unestablished'
+  | 'checklist_missing' | 'checklist_partial' | 'checklist_unavailable'
+  | 'checklist_unresolved' | 'document_exact_proof_required'
+  | 'document_predicate_not_projected' | 'document_scope_unknown'
+  | 'document_scope_mismatch' | 'dependency_missing' | 'dependency_ambiguous'
+  | 'dependency_scope_unresolved' | 'dependency_cycle' | 'dependency_blocked';
+
+export type GraphProjectionState = 'projected' | 'partial' | 'unavailable' | 'locked';
+export type GraphPolicy = 'required' | 'optional' | 'waiver_check' | 'alternatives_unresolved' | 'unknown';
+export type GraphFamily = 'ielts' | 'sat' | 'toefl' | 'duolingo' | 'unknown';
+export type GraphMetric = 'overall' | 'total' | 'listening' | 'reading' | 'writing'
+  | 'speaking' | 'math' | 'reading_writing' | 'policy' | 'accepted_type' | 'unknown';
+export type GraphChecklistLocation = 'admission_documents' | 'scholarship_documents'
+  | 'applicant_actions' | 'school_actions' | 'recommender_actions' | 'certification_actions';
+
+export type GraphRequestedScope = ClaimScope;
+export interface GraphScopeProof {
+  requested: GraphRequestedScope; published: ClaimScope | null;
+  verdict: 'yes' | 'no' | 'unknown'; gaps: string[]; contradictions: string[];
+}
+export interface GraphClaimProof { claim: ClaimOut; scope: GraphScopeProof }
+export interface GraphRequirementAtom {
+  id: string; result_id: string; source_check_index: number;
+  purpose: 'admission' | 'scholarship'; scholarship_id: string | null;
+  scholarship_subject: string | null; original_check: RequirementCheck;
+  evidence_state: PreparationEvidenceState; policy: GraphPolicy;
+  family: GraphFamily; metric: GraphMetric;
+  original_reference_ids: string[]; resolved_claim_ids: string[];
+  proofs: GraphClaimProof[]; source_urls: string[]; lesson_id_hints: string[];
+  unresolved_reasons: GraphReasonCode[];
+}
+export interface GraphPolicyGroup {
+  id: string; result_id: string; purpose: 'admission' | 'scholarship';
+  scholarship_id: string | null;
+  kind: 'waiver_check' | 'alternatives_unresolved' | 'unresolved';
+  requirement_ids: string[]; context_proofs: GraphClaimProof[];
+  unresolved_reasons: GraphReasonCode[];
+}
+export interface GraphExamWorkstream {
+  id: string; family: Exclude<GraphFamily, 'unknown'>;
+  grouping: 'family_only'; identity_state: 'unknown'; edition: null;
+  requirement_ids: string[]; contributing_result_ids: string[];
+  missing_identity_dimensions: ('edition' | 'accepted_variant' | 'retake_policy' | 'route')[];
+}
+export interface GraphDocumentDependency {
+  original_name: string; target_document_id: string | null;
+  resolution: 'linked' | 'missing' | 'ambiguous' | 'scope_unresolved' | 'cycle';
+  fulfillment_state: 'untracked';
+}
+export interface GraphDocumentItem extends DocumentItem { scope?: ClaimScope | null }
+export interface GraphDocumentAction {
+  id: string; result_id: string; original_item: GraphDocumentItem;
+  original_items: GraphDocumentItem[]; source_locations: GraphChecklistLocation[];
+  scope: GraphScopeProof; proofs: GraphClaimProof[];
+  evidence_state: PreparationEvidenceState; fulfillment_state: 'untracked';
+  action_state: 'requires_review'; dependencies: GraphDocumentDependency[];
+  unresolved_reasons: GraphReasonCode[];
+}
+export interface GraphProgrammeProjection {
+  result_id: string; run_id: string | null; user_decision: UserDecision;
+  university: string | null; programme: string | null;
+  requested_scope: GraphRequestedScope | null; research_access: boolean;
+  evidence_state: PreparationEvidenceState; projection_state: GraphProjectionState;
+  requirement_ids: string[]; document_action_ids: string[];
+  unprojected_checks: RequirementCheck[]; unresolved_questions: UnresolvedQuestion[];
+  unresolved_reasons: GraphReasonCode[]; notice: string;
+}
+export interface GraphSourceManifest {
+  result_id: string; run_id: string | null;
+  result_snapshot_digest: string | null; authoritative_evidence_digest: string | null;
+  resolved_claim_ids: string[];
+}
+export interface PreparationGraph {
+  schema_version: 'preparation-graph-v1'; profile_id: string;
+  requested_result_ids: string[]; selected_result_ids: string[];
+  selection_source: 'server_verified_owned_explicit';
+  programmes: GraphProgrammeProjection[]; requirements: GraphRequirementAtom[];
+  policy_groups: GraphPolicyGroup[]; exam_workstreams: GraphExamWorkstream[];
+  document_actions: GraphDocumentAction[]; source_manifest: GraphSourceManifest[];
+  source_fingerprint: string; evidence_state: PreparationEvidenceState;
+  projection_state: GraphProjectionState; notice: string;
+}
+
+/* Applicant-entered planning dates and self-reported task completion; no score forecast. */
+export interface ScheduleSettings {
+  exam: 'ielts_academic' | 'digital_sat'; starts_on: string; certificate_deadline: string;
+  first_exam_on: string; retake_on: string | null; result_wait_days: number;
+  delivery_days: number; safety_days: number; timezone: string; weekly_minutes: number;
+  study_days: number[]; target_scores: Record<string, number>; baseline_scores: Record<string, number>;
+  baseline_on: string | null; confirmed_planning_dates: true; completed_task_ids: string[];
+}
+export interface ScheduleTask {
+  id: string; due_on: string; title: string;
+  kind: 'diagnostic' | 'skill' | 'review' | 'timed_practice' | 'mock' | 'exam' | 'results' | 'delivery' | 'submit';
+  skill: string | null; minutes: number; lesson_id: string | null; completed: boolean; overdue: boolean;
+}
+export interface GeneratedSchedule {
+  as_of: string; latest_exam_on: string; latest_safe_exam_on: string; result_expected_on: string; delivery_expected_on: string;
+  study_minutes_remaining: number; remaining_study_days: number; diagnostic_required: boolean;
+  readiness: 'not_assessed'; timing: 'within_entered_buffers' | 'at_risk' | 'deadline_passed';
+  warnings: string[]; tasks: ScheduleTask[];
+}
+export interface StudyScheduleOut {
+  profile_id: string; revision: number; settings: ScheduleSettings | null;
+  schedule: GeneratedSchedule | null; updated_at: string | null;
+}
+export interface ScheduleWrite { expected_revision: number; settings: ScheduleSettings }
+
+/* Explicit opt-in calendar: original ticks stay in its separate legacy snapshot. */
+export type LearningTaskRef =
+  | { kind: 'lesson'; id: string; lesson_id: string; content_version: string }
+  | { kind: 'attempt_review'; id: string; attempt_id: string; lesson_id: string; content_version: string }
+  | { kind: 'assessment' | 'external_resource'; id: string; version: string };
+export interface LearningPathSettings {
+  planner_version: 'schedule-v2'; catalogue_version: string; schedule_settings: ScheduleSettings;
+  lessons: { ref: Extract<LearningTaskRef, { kind: 'lesson' }>; skill: string; title: string; planned_minutes: 20 }[];
+  reviews: Extract<LearningTaskRef, { kind: 'attempt_review' }>[];
+}
+export interface LearningTask extends ScheduleTask {
+  learning_ref: LearningTaskRef | null; availability: 'available' | 'unavailable';
+  unavailable_reason: 'no_local_content' | 'attempt_required' | 'not_implemented' | 'version_unavailable' | null;
+  submitted_attempt_id: string | null;
+}
+export interface LearningPathDraft { plan: LearningPathSettings; planned_on: string; fingerprint: string }
+export interface LearningPathSnapshot {
+  draft: LearningPathDraft; schedule: Omit<GeneratedSchedule, 'tasks'> & { tasks: LearningTask[]; unallocated_lesson_ids: string[]; unallocated_review_ids: string[] };
+  legacy_settings: ScheduleSettings; legacy_fingerprint: string;
+}
+export interface LearningPathOut {
+  profile_id: string; revision: number; legacy_fingerprint: string | null; learning_path: LearningPathSnapshot | null;
+  needs_review: boolean; updated_at: string | null;
+}
+export interface LearningPathWrite { expected_revision: number; legacy_fingerprint: string; draft: LearningPathDraft }
+
+/* G2 personal shared route: reference-only accepted allocation, separate from G1 evidence and legacy calendars. */
+export type SharedExam = 'ielts_academic' | 'digital_sat';
+export type SharedLearningRef = Extract<LearningTaskRef, { kind: 'lesson' | 'attempt_review' }>;
+export interface SharedExamChoice {
+  exam: SharedExam; priority: number; first_exam_on: string; retake_on: string | null;
+  certificate_deadline: string; result_wait_days: number; delivery_days: number; safety_days: number;
+  personal_targets: Partial<Record<'overall' | 'listening' | 'reading' | 'writing' | 'speaking' | 'total' | 'math' | 'reading_writing', number>> | null;
+  confirmed_exam_dates_and_buffers: true;
+}
+export interface SharedOwnReview { ref: Extract<LearningTaskRef, { kind: 'attempt_review' }>; exam: SharedExam; planned_minutes: number }
+export interface SharedRouteInputV1 {
+  schema_version: 'shared-route-v1'; selected_result_ids: string[]; starts_on: string; timezone: string;
+  study_days: number[]; shared_weekly_minutes: number; exam_choices: SharedExamChoice[];
+  own_reviews: SharedOwnReview[]; confirmed_shared_planning_inputs: true;
+}
+export interface SharedDatedSlot {
+  occurrence_id: string; action_id: string; ref: SharedLearningRef; exam: SharedExam;
+  kind: 'lesson' | 'attempt_review'; local_date: string; planned_minutes: number;
+  origin: 'personal_practice'; completion: 'not_projected';
+}
+export interface SharedUnallocatedAction {
+  action_id: string; ref: SharedLearningRef; exam: SharedExam; requested_minutes: number;
+  reason: 'insufficient_capacity' | 'window_elapsed' | 'too_long_for_day' | 'too_long_for_week' | 'slot_limit' | 'version_unavailable';
+}
+export interface SharedWeekCapacity {
+  iso_week_monday: string; weekly_budget_minutes: number; allocated_minutes: number; remaining_minutes: number;
+}
+export interface SharedExamTiming {
+  exam: SharedExam; first_exam_on: string; retake_on: string | null; certificate_deadline: string;
+  result_wait_days: number; delivery_days: number; safety_days: number; latest_safe_exam_on: string;
+  timing: 'within_buffers' | 'at_risk' | 'deadline_passed';
+}
+export interface SharedAllocationV1 {
+  planner_version: 'shared-route-allocator-v1'; planned_on: string; timezone: string;
+  ordered_exam_choices: SharedExamChoice[]; lessons: Extract<LearningTaskRef, { kind: 'lesson' }>[];
+  slots: SharedDatedSlot[]; capacity: SharedWeekCapacity[]; unallocated: SharedUnallocatedAction[];
+  exam_timing: SharedExamTiming[]; readiness: 'not_assessed'; programme_applicability: 'unknown'; digest: string;
+}
+export interface SharedLegacyAnchor {
+  technical_revision: number; structural_fingerprint: string | null; imported_learning_refs_fingerprint: string | null;
+}
+export interface SharedRoutePreviewRequestV1 { applicant_input: SharedRouteInputV1; expected_revision: number }
+export interface SharedReviewReason {
+  code: 'goal_decision_changed' | 'goal_result_unavailable' | 'goal_research_locked' | 'goal_source_changed'
+    | 'goal_evidence_unknown' | 'legacy_structure_changed' | 'legacy_structure_unknown' | 'imported_refs_changed'
+    | 'imported_refs_unknown' | 'content_version_unavailable' | 'own_review_unavailable' | 'content_unknown';
+  result_id?: string | null; action_id?: string | null;
+}
+export interface SharedRoutePreviewOutV1 {
+  profile_id: string; expected_shared_revision: number; legacy_anchor: SharedLegacyAnchor;
+  planned_on: string; expires_on_local_date: string; requested_result_ids: string[]; selected_result_ids: string[];
+  selection_source: 'server_verified_owned_explicit'; source_fingerprint: string;
+  allocation: SharedAllocationV1; preview_fingerprint: string; review_reasons: SharedReviewReason[]; saved: false;
+}
+export interface SharedRouteWriteV1 {
+  applicant_input: SharedRouteInputV1; expected_revision: number; client_write_uuid: string;
+  preview_fingerprint: string; source_fingerprint: string; legacy_anchor: SharedLegacyAnchor; planned_on: string;
+}
+export interface SharedRouteWriteReceiptV1 {
+  schema_version: 'shared-route-v1'; profile_id: string; revision: number; expected_revision: number; client_write_uuid: string;
+  canonical_request_digest: string; accepted_at: string; selected_result_ids: string[];
+  applicant_input: SharedRouteInputV1; accepted_planned_on: string; catalogue_version: string;
+  planner_version: 'shared-route-allocator-v1';
+  catalogue_snapshot: { version: 'learning-pack-2026-10-11-v1'; lessons: { ref: Extract<LearningTaskRef, { kind: 'lesson' }>; track: string; available: boolean }[] };
+  owned_review_snapshot: { ref: Extract<LearningTaskRef, { kind: 'attempt_review' }>; exam: SharedExam; available: boolean }[];
+  allocation: SharedAllocationV1; allocation_digest: string;
+  source_fingerprint: string; source_reference_digests: { result_id: string; reference_digest: string | null }[];
+  preview_fingerprint: string; legacy_anchor: SharedLegacyAnchor; snapshot_digest: string;
+}
+export interface SharedRouteStatusV1 {
+  as_of: string;
+  goal_statuses: { result_id: string; state: 'eligible' | 'decision_changed' | 'result_unavailable' | 'research_locked' | 'source_changed' | 'evidence_unknown'; safe_reason_code: string | null }[];
+  legacy_structure: 'unchanged' | 'changed' | 'unknown'; imported_refs: 'not_used' | 'unchanged' | 'changed' | 'unknown';
+  content_statuses: { action_id: string; state: 'available' | 'version_unavailable' | 'review_unavailable' | 'unknown' }[];
+  preparation_access: 'active' | 'expired' | 'unknown'; needs_review: boolean; review_reasons: SharedReviewReason[];
+}
+export interface SharedRouteViewV1 {
+  receipt: SharedRouteWriteReceiptV1; current_status: SharedRouteStatusV1; visible_evidence: PreparationGraph[];
+}
+export interface SharedRouteCurrentOutV1 { profile_id: string; revision: number; view: SharedRouteViewV1 | null }

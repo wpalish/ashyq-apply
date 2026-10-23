@@ -1,0 +1,99 @@
+{
+  "schema_version": "external-finite-source-review-seal-v1",
+  "created_at_utc": "2026-10-12 14:16:34 UTC",
+  "status": [
+    "SOURCE_ONLY",
+    "FOUR_SOURCE_FINDINGS_CLOSED",
+    "TWO_PENDING_IN_REPAIR1",
+    "NOT_APPLIED",
+    "NOT_IMPORTED",
+    "NOT_RUN"
+  ],
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_PURE_REPAIR1_INDEPENDENT_REVIEW.md",
+    "sha256": "e5456cf54f627752411e9d065534a5524e9c0e4c69ef2004013b85c5f478ec47"
+  },
+  "packet": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-pure-source-repair1",
+    "seal_sha256": "f19f2c775ed89ad4f8d9beee5d50c6717f9ead2c912d8f702dbfe41422fe187f",
+    "member_count": 11,
+    "all_members_hash_verified_before_read": true
+  },
+  "member_hashes": {
+    "PREIMAGES.json": "d7a9179ee2b83397bc4163632fb35655999feef1eed6289b7ec3ab546ec99ea3",
+    "README.md": "15384a47c8d40fd36880ee954b2ad3f5ac4eabf4c02f70033745919f903e1a14",
+    "diffs/backend/app/domain/admissions_actions.py.diff": "bcaabab27c5f48a5311bf063158194e8380c16049ee62cc7c16edfd234525303",
+    "diffs/backend/app/schemas/admissions_actions.py.diff": "a068e9df98c7b3a49086a4226b37f130991cb2bebb348c7dd86aea88acf60232",
+    "diffs/backend/tests/test_admissions_actions.py.diff": "7749d122358784f8f414e544543fb6fad55615632bb81981acff453c012ca033",
+    "files/backend/app/domain/admissions_actions.py": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585",
+    "files/backend/app/schemas/admissions_actions.py": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629",
+    "files/backend/tests/test_admissions_actions.py": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa",
+    "original/backend/app/domain/admissions_actions.py": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86",
+    "original/backend/app/schemas/admissions_actions.py": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d",
+    "original/backend/tests/test_admissions_actions.py": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896"
+  },
+  "source_closed": [
+    "F1",
+    "F2",
+    "F3",
+    "F4"
+  ],
+  "pending_in_this_packet": [
+    "F5",
+    "F6"
+  ],
+  "predecessor_copy_cmp": {
+    "schema": 0,
+    "domain": 0,
+    "tests": 0
+  },
+  "test_diff_text_reconstruction": {
+    "file": "backend/tests/test_admissions_actions.py",
+    "hunks": [
+      {
+        "old_start": 122,
+        "old_count": 14,
+        "new_start": 122,
+        "new_count": 32
+      },
+      {
+        "old_start": 237,
+        "old_count": 6,
+        "new_start": 255,
+        "new_count": 69
+      },
+      {
+        "old_start": 499,
+        "old_count": 6,
+        "new_start": 580,
+        "new_count": 9
+      },
+      {
+        "old_start": 506,
+        "old_count": 6,
+        "new_start": 590,
+        "new_count": 24
+      }
+    ],
+    "errors": [],
+    "reconstructed_equals_postimage": true,
+    "source_line_counts": {
+      "original": 646,
+      "post": 748
+    },
+    "method": "pure text reconstruction in functions JavaScript; no disk patch/app import/runtime"
+  },
+  "controls": {
+    "original_test_definition_names_preserved": 42,
+    "repair1_test_definition_names": 47,
+    "counts_are_not_collection_or_pass": true
+  },
+  "execution": {
+    "app_import": false,
+    "ast_import": false,
+    "collection": false,
+    "tests": false,
+    "app_git_handoff_helpers_edits": false,
+    "network_db_browser": false
+  }
+}

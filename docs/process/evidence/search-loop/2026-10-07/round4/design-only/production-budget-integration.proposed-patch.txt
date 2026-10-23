@@ -1,0 +1,72 @@
+ILLUSTRATIVE PATCH MAP — not apply-ready, not applied, clock choice still open.
+No provider/Fetcher internals need a new architecture.
+
+1. app/pipeline/research_budget.py (new small pipeline helper)
+   - OWNER_MAX_FETCHER_CALLS = 60; OWNER_MAX_UNIVERSITY_MS = 120000.
+   - one typed BudgetStopped(reason), validated JSON envelope, immutable episode.
+   - scope(identity, stage): remaining timer; A absolute OR B focused/reservation.
+   - guard_get(original, url, kwargs): active identity required -> cancel check ->
+     pre-I/O durable call reservation via runner._save -> cancel/remaining check ->
+     original(url, **kwargs). No cold-cache toggle, hostname key, transport retry.
+   - read/time mutation shares one envelope owner with B query state (max6).
+   - cancellation/lease exceptions pass through; generic diagnostic text fixed.
+
+2. app/pipeline/runner.py
+   __init__:
+     self.research_budget = ResearchBudget.load(
+       snapshot=run.settings_snapshot, episode=job_id or f"{run.id}:decision",
+       check_cancelled=self._check_cancelled,
+       checkpoint=self._save, policy=EXPLICITLY_CHOSEN_A_OR_B)
+   _save:
+     run.settings_snapshot = {**run.settings_snapshot,
+       "university_research_budget_v1": self.research_budget.dump_json()}
+     existing stage dump + fenced heartbeat/commit; no new commit bypass.
+   run_to_decision:
+     preserve envelope before replacing the settings dict; record limits/policy/
+     measurement basis; activate guarded source-work mode only for intended job.
+   _make_fetcher:
+     get = fetcher.get
+     async def guarded_get(url, **kwargs):
+       return await self.research_budget.guard_get(get, url, kwargs)
+     fetcher.get = guarded_get   # only owned research mode; demo/docs unchanged
+   _make_discovery_adapter:
+     pass optional research_scope and cancellation hooks, without circular app
+     pipeline imports into adapters (callback protocol/context manager).
+   _stage_verify/_stage_funding:
+     scopes use matched Candidate's stable key, never programme/result/URL host.
+     completed outputs live in workspace outside each cancellable await; typed
+     stop collects unresolved, preserves earlier evidence, then safe checkpoint.
+     include parse/result/persistence time in measured scope; define bounded
+     finalization reserve inside120 separately. Do not wipe claims on empty stop.
+
+3. app/adapters/base.py + catalogue/discovery.py + live_discovery.py
+   Candidate.catalogue_id: str | None = None (internal, no DB/API migration).
+   Catalogue sets it on local and enriched candidate. Its entire _enrich is in
+   research_scope("catalogue:" + uni.id), including _identify_site.
+   Curated entry is in same optional scope with explicit stable legacy identity.
+   existing300 timer cannot enlarge selected120: use min(300, scope.remaining)
+   or retain legacy300 only when hook absent. Capture currently frozen untouched.
+   typed BudgetStopped/RunCancelled/LeaseLost escape broad except Exception,
+   particularly sitemap discovery and walker/render recovery paths.
+
+4. No quiet extra allowance on retry/recheck/docs
+   - same job recovery retains envelope; attempt token changes fence only.
+   - named episode reset only at verified explicit new job boundary; retain old
+     summary, never infer fresh budget merely from missing stage state/errors.
+   - documents/recheck scope policy recorded independently before activation.
+
+5. Integration regressions root must add against actual source (draft is not these)
+   - ResearchRunner + real Fetcher mocked transport: selected, ordinary catalogue,
+     curated fallback; verify 61st original get never starts across programmes.
+   - snapshot roundtrip/restart and run_to_decision reconstruction retain charges.
+   - pre-I/O _save fence failure means0 actual transport; in-flight crash/time
+     reservation cannot be refunded by reaped/stale worker.
+   - two universities staged discovery→verify→funding measure A/B chosen semantics.
+   - cancellation inside second sitemap/read and direct renderer await propagates.
+   - budget stop preserves completed req/cost/funding facts, without fabricated
+     programme absence, scholarship nonavailability, HTTP error or empty overwrite.
+   - exact diagnostic split is unknown; missing identity fails closed.
+   - query state B and read/time updates never clobber one another.
+   - cache.get vs adapter memo; government different domain; direct browser route
+     separately measured. Source get count is not HTTP network request count.
+   - hard CPU/DB serialization overrun limitation measured and reported separately.

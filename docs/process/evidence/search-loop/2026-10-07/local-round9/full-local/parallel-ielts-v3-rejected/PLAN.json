@@ -1,0 +1,26 @@
+{
+  "status": "WRITEAHEAD_OFFLINE_INDEPENDENT_ACTUAL_CALLER_REVIEW",
+  "at_utc": "2026-10-08T00:02:58.747375+00:00",
+  "proposal_manifest_sha256": "6c1b368f41ef349a796db8f5d96e5a016d4a964e5c5961114a790ca9ae01d990",
+  "proposal_helper_sha256": "17ad707ef3851d671a13ab3f8b5cdce9f432402bae812491c9871e41ac111942",
+  "verified_manifest_entries": 83,
+  "actual_app_dependency_hashes": {
+    "app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "app/adapters/extraction.py": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf",
+    "app/adapters/page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "app/adapters/requirements/section_scope.py": "8b2c8da32b7595f95aab817d97b90f7900aca93bab21060499a39ecfc83a2f79",
+    "app/adapters/scope_reader.py": "169136aadc489f886f362a4bd703b4968933939257af1dd2e7867a26c2ff0304",
+    "app/adapters/document_ir.py": "c8c3f15da74f8f891f4f79fd8bfd52e937b57898edfdc3ac1a59e7d44bce9f0f",
+    "app/adapters/html_parse.py": "62f9c0c30c4b88ad1b7d23907f9019204e424891d361608d92aaac9551ac5d81",
+    "app/domain/claim_verifier.py": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249"
+  },
+  "scope": "Independent new synthetic HTML and immutable retained original controls through actual WebRequirementsAdapter.verify; no page-class override/permission changes; UNKNOWN expected unchanged. Spec-load only pinned proposal extraction/helper/caller; all other normal imports from actual repo. Compare OFF then ON; save contiguous source snippets and observed claim/scope/year/hash. Do not import author control expectation/output as test logic.",
+  "denials": [
+    "network",
+    "DNS",
+    "provider/model",
+    "process spawning inside control runtime"
+  ],
+  "mutations_allowed": "this new review folder only",
+  "no_repo_proposal_gold_git_stop_changes": true
+}

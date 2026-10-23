@@ -1,0 +1,21 @@
+import { ChartBar, DownloadSimple, FileText, GraduationCap, Info, ShieldCheck, User } from '@phosphor-icons/react';
+import { BookHelp, BookPageHeading } from './BookUI';
+
+export function BookExportControls({ count, names, scope, setScope, includeName, setIncludeName, hasName, format, setFormat, onPreview, onCSV, disabled }: {
+  count:number; names:string[]; scope:string;setScope:(value:string)=>void;includeName:boolean;setIncludeName:(value:boolean)=>void;hasName:boolean;
+  format:'pdf'|'csv';setFormat:(value:'pdf'|'csv')=>void;onPreview:()=>void;onCSV?:()=>void;disabled:boolean;
+}) {
+  return <div className="book-export">
+    <a className="book-back" href="#/shortlist">← К подбору</a>
+    <div className="book-heading-help"><BookPageHeading title="Экспорт отчёта">Выбери, какую информацию включить в отчёт. Сохрани доступные результаты для обсуждения и самостоятельной проверки.</BookPageHeading><BookHelp><strong>Удобно для подачи и обсуждения</strong><br/>Отчёт не отправляется университетам и не является заявкой.</BookHelp></div>
+    <div className="book-export__grid"><div className="stack">
+      <section className="book-card book-export__options"><h2>1. Выбери, что включить в отчёт</h2>
+        <div className="book-export__option"><GraduationCap size={26}/><div><strong>Программы ({count})</strong><p>{names.slice(0,2).join(', ') || 'Нет выбранных программ'}</p><label className="field"><span className="visually-hidden">Программы в отчёте</span><select value={scope} disabled={format==='csv'} onChange={event=>setScope(event.target.value)}><option value="saved">Выбранные программы</option><option value="all">Все результаты исследования</option></select></label></div></div>
+        <label className="book-export__option"><input type="checkbox" checked={includeName} disabled={!hasName || format==='csv'} onChange={event=>setIncludeName(event.target.checked)}/><User size={26}/><div><strong>Имя из профиля</strong><p>Не включено по умолчанию. Оценки, бюджет и личные файлы не добавляются.</p></div></label>
+        <div className="book-export__option is-unavailable"><input type="checkbox" aria-label="Документы и личные задачи недоступны" disabled/><FileText size={26}/><div><strong>Документы и личные задачи</strong><p>Объединение личных документов в этот отчёт пока недоступно. Локальный просмотр файла не загружает его на сервер.</p></div></div>
+        <div className="book-export__option is-unavailable"><input type="checkbox" aria-label="План и сравнение недоступны" disabled/><ChartBar size={26}/><div><strong>План, сроки и сравнение</strong><p>Печатный отчёт содержит только загруженный снимок программ и источников. Отдельный календарь доступен в разделе «План».</p></div></div>
+      </section>
+      <section className="book-card"><h2>2. Формат файла</h2><div className="book-export__formats"><label className={format==='pdf'?'is-selected':''}><input type="radio" name="book-report-format" checked={format==='pdf'} onChange={()=>setFormat('pdf')}/><FileText size={26}/><span><strong>PDF</strong><small>Через окно печати браузера</small></span></label><label className={format==='csv'?'is-selected':''}><input type="radio" name="book-report-format" checked={format==='csv'} disabled={!onCSV} onChange={()=>{setFormat('csv');setScope('all');setIncludeName(false);}}/><FileText size={26}/><span><strong>CSV</strong><small>Все результаты и источники</small></span></label></div></section>
+    </div><aside className="book-card book-export__preview"><h2>Предварительный просмотр <Info size={20}/></h2><dl><div><dt><GraduationCap/>Программы</dt><dd>{count}</dd></div><div><dt><User/>Имя</dt><dd>{includeName?'Включено':'Не включено'}</dd></div><div><dt><FileText/>Личные файлы</dt><dd>Не включены</dd></div><div><dt>Формат</dt><dd>{format.toUpperCase()}</dd></div></dl><BookHelp><ShieldCheck size={24}/><strong>Только выбранная информация</strong><br/>Отчёт формируется по текущему снимку. Неизвестные данные остаются неизвестными.</BookHelp><button type="button" className="btn btn--primary" disabled={disabled} onClick={format==='pdf'?onPreview:onCSV}><DownloadSimple size={20}/>{format==='pdf'?'Предпросмотр и сохранение PDF':'Скачать отчёт CSV'}</button><p className="book-muted">PDF откроется для просмотра. Затем выбери «Печать / Сохранить PDF». Скачивание не означает отправку заявки.</p></aside></div>
+  </div>;
+}

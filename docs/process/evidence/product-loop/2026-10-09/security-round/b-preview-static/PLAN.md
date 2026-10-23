@@ -1,0 +1,5 @@
+# Auth-preview static peer preparation
+
+Root source WIPa0fc4a7b38162a7af7d438b8b148c49592e0563c;19 applied app/test paths. C prepares verifier/recipe, not launcher. No imports/execute/ports/DB/CUA/tests or primary/Git/network mutation in this review. Wait exact immutable C ready; all file hashes before reading. Check full13/sourceHEAD+physical frozen snapshot/applied19/current+declared output delta; actual recipe auth enabled/register synthetic, provider none, no worker process, no .env or inherited credentials; fresh owned DB/cache/source and synthetic-only fixtures; root separate shared-lock/process-group cleanup lifecycle and explicitGO. Preflight output must not itself confer runtime admission or launch. UI controls finite owner-change/draft/reload/docs/no-run export/delete/legal semantics; no research/start/collect/accountreal/purchases/universities.
+
+GO and full13 remain pending. Actual auth/provider/worker/ports/cleanup/UI outcomes require separate root-owned runtime evidence after admission. Read-only verifier may be accepted statically while launch recipe remains unexecuted. No old raw bytes normalized.

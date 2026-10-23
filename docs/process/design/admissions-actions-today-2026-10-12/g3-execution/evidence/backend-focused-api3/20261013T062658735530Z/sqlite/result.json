@@ -1,0 +1,80 @@
+{
+  "phase": "sqlite",
+  "runtime": "/private/tmp/um-full-9uiicoy5",
+  "mode": "FOCUSED_DIAGNOSTIC_NOT_FULL",
+  "scope": "Focused native harness controls; NOT a full gate or coverage proof",
+  "os_probe": {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/network.sb",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+      "-I",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/api-focused-repair1/os_network_probe.py",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/os-network-probe.json"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_seconds": 0.086,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "pytest": {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/network.sb",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/api-focused-repair1/pytest_full.py",
+      "tests/test_admissions_actions_api.py",
+      "tests/test_today.py",
+      "tests/test_admissions_actions_concurrency.py",
+      "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/junit.xml",
+      "--tb=short",
+      "--basetemp=/private/tmp/um-full-9uiicoy5/tmp/pytest",
+      "-p",
+      "no:cacheprovider",
+      "-p",
+      "pytest_cov.plugin",
+      "-p",
+      "pytest_asyncio.plugin",
+      "-p",
+      "mock_endpoint_plugin"
+    ],
+    "exit_code": 1,
+    "timed_out": false,
+    "duration_seconds": 82.536,
+    "log_sha256": "be83bbd20e4af9dfbcfaea18e603b674d2a5e3212d66f14ec9c5ad4a60d5bcc1"
+  },
+  "junit": {
+    "tests": 192,
+    "failures": 2,
+    "errors": 0,
+    "skips": 0,
+    "sha256": "d2d9e6dac74dcb83d72d4dde68f5265eb8198f4b8924a674c99689dc532a699b"
+  },
+  "coverage_percent": null,
+  "outside_attempts": [],
+  "guard_startup_failures": [],
+  "guard_receipts": 1,
+  "pg_connection_events": 326,
+  "ipv6_trait_restored": true,
+  "app_preimported": false,
+  "status": "FOCUSED_DIAGNOSTIC_FAIL_NOT_FULL",
+  "source_unchanged_during_gate": true,
+  "owned_cluster_cleanup": [],
+  "active_cluster_markers": [],
+  "shutdown_confirmed": true,
+  "runtime_removed": true,
+  "evidence_hashes": {
+    "pytest.log": "be83bbd20e4af9dfbcfaea18e603b674d2a5e3212d66f14ec9c5ad4a60d5bcc1",
+    "source-before.json": "751b632719b7e84acb01f51f07ae79a5c00f170c593672aedd57a7e3b9921df3",
+    "private-pg-probe.json": "62bfb7f77057785835195f67e134a70383aa4ae15ce82c51be83b4e8cfc4ab4e",
+    "source-after.json": "751b632719b7e84acb01f51f07ae79a5c00f170c593672aedd57a7e3b9921df3",
+    "os-network-probe.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+    "os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+    "network.sb": "d4c1c60709a799cdeb3fcf86ae5f613e16134541e70ffd9c185f096858240c9a",
+    "junit.xml": "d2d9e6dac74dcb83d72d4dde68f5265eb8198f4b8924a674c99689dc532a699b",
+    "guard-7830.json": "7de72746717566ab10f7b7a5589195e1e31a558310197c4bf685a0012f15ea3f"
+  }
+}

@@ -1,3 +1,4 @@
+import { profileAck } from '@/lib/profileWriteFixtures';
 /**
  * Draft lifecycle and case isolation regressions (T09 / FE01-FE03).
  *
@@ -46,6 +47,7 @@ const EDIT_MARKER = 'Georgia';
 
 const PROFILE_A: StoredProfile = {
   ...structuredClone(DEFAULT_PROFILE),
+    revision:1,
   id: 'A',
   created_at: '2026-08-01T00:00:00Z',
   updated_at: '2026-08-02T00:00:00Z',
@@ -58,6 +60,7 @@ const PROFILE_A: StoredProfile = {
 
 const PROFILE_B: StoredProfile = {
   ...structuredClone(DEFAULT_PROFILE),
+    revision:1,
   id: 'B',
   created_at: '2026-08-01T00:00:00Z',
   updated_at: '2026-08-02T00:00:00Z',
@@ -293,11 +296,11 @@ describe('a rejected save keeps the draft and reports the error', () => {
 
     // Retry succeeds: the draft is saved, dirty clears, the error clears and
     // the now-merged draft slot retires — the saved profile is the baseline.
-    update.mockResolvedValue({
+    update.mockImplementation(async(_id,_body,command)=>profileAck({
       ...structuredClone(PROFILE_A),
       updated_at: '2026-08-03T00:00:00Z',
       context: { ...(structuredClone(PROFILE_A).context as object), citizenship: EDIT_MARKER },
-    } as unknown as StoredProfile);
+    } as unknown as StoredProfile,command));
     await act(async () => { screen.getByText('save').click(); });
     await flush();
 

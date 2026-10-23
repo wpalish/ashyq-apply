@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_security.py::TestTenantIsolation::test_another_tenant_cannot_read_or_decide_a_result_row",
+    "tests/test_security.py::TestErrorsAndHeaders::test_the_export_filename_cannot_be_injected",
+    "--basetemp=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/owned-tmp/affected-v2",
+    "--junitxml=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/affected-v2.junit.xml"
+  ],
+  "env": {
+    "PATH": "/usr/bin:/bin",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/runtime/backend:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/guard",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "AUDIT_NETWORK_LOG": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/affected-v2.network.json",
+    "UNIMATCH_DATABASE_URL": "sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/bootstrap.db",
+    "UNIMATCH_CACHE_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/cache",
+    "UNIMATCH_EXPORT_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/exports",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    "UNIMATCH_SEARCH_PROVIDER": "none",
+    "UNIMATCH_ENVIRONMENT": "development"
+  },
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/runtime/backend",
+  "executable_sha": "bc9a27bd52c265e86fcd73ef1d4165ec8a47695cffb7624cb0ee618dca83e6c0",
+  "started_at": "2026-10-09T00:25:47.773908+00:00"
+}

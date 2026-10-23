@@ -1,0 +1,19 @@
+--- /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/e2e/run-native.py
++++ /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/e2e/run-native-recovery.py
+@@ -126,6 +126,16 @@
+            'cwd': str(runtime / 'frontend'), 'native_config': str(native_config),
+            'source_count': len(before), 'mock_routes_or_apis': False,
+            'providers': 'none', 'demo_lifespan_and_worker': True}
++if suite == 'demo':
++    # One explicitly labelled fault control forwards the actual loopback PUT,
++    # records its real accepted receipt, then hides only that UI response.
++    receipt['network_fault_control'] = {
++        'scope': 'one owned shared-route PUT in native Demo recovery test',
++        'forwarded_actual_loopback_api': True,
++        'fault': 'abort UI delivery after observed real server receipt',
++        'fabricated_response_or_receipt': False,
++        'automatic_client_PUT_retry_permitted': False,
++    }
+ if suite == 'ux':
+     receipt['count_scope'] = 'separate diagnostic observations; not native E2E'
+     receipt['mock_routes_or_apis'] = 'save diagnostic only: imposed delay forwards real API; injected abort explicitly labelled'

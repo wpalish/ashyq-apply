@@ -1,0 +1,29 @@
+--- first/backend/tests/test_admissions_actions_concurrency.py
++++ repair1/backend/tests/test_admissions_actions_concurrency.py
+@@ -123,7 +123,7 @@
+         "revision": receipt.revision,
+         "schema_version": receipt.schema_version,
+         "kind": receipt.kind,
+-        "client_write_uuid": receipt.client_write_uuid,
++        "client_write_uuid": str(receipt.client_write_uuid),
+         "request_digest": receipt.canonical_request_digest,
+         "receipt_digest": receipt.receipt_digest,
+         "accepted_at": receipt.accepted_at,
+@@ -568,7 +568,7 @@
+     elif violation == "event_profile_revision":
+         receipt["revision"] = first.receipt.revision
+     elif violation == "event_profile_uuid":
+-        receipt["client_write_uuid"] = first.receipt.client_write_uuid
++        receipt["client_write_uuid"] = str(first.receipt.client_write_uuid)
+     elif violation.endswith("revision_zero"):
+         (current if violation.startswith("current") else receipt)["revision"] = 0
+     elif violation.endswith("revision_overflow"):
+@@ -636,7 +636,7 @@
+                 sql.lstrip().startswith("update admissions_actions_current ") for sql in statements
+             )
+             collision = event_values(following.receipt)
+-            collision["client_write_uuid"] = receipts[0].client_write_uuid
++            collision["client_write_uuid"] = str(receipts[0].client_write_uuid)
+             session.add(AdmissionsActionsEventRow(**collision))
+             with pytest.raises(IntegrityError):
+                 session.flush()

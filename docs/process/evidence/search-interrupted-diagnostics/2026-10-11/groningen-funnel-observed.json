@@ -1,0 +1,35 @@
+{
+  "case": "groningen",
+  "status": "PARTIAL_UNSCORED_SOURCE_DEADLINE",
+  "source_head": "7c8e23a723b639a8824d9b9119352e0beff7e514",
+  "query_seam_attempts": 6,
+  "provider_returned_url_count": null,
+  "provider_unique_candidates": null,
+  "fetcher_calls": 35,
+  "distinct_attempted_fetch_urls": 22,
+  "repeated_fetch_attempts": 13,
+  "recorded_outcomes": {
+    "ok": 32,
+    "too_large": 1,
+    "robots_disallowed": 1
+  },
+  "completed_fetch_results": 34,
+  "pending_fetch_attempts": 1,
+  "active_elapsed_ms": 119033,
+  "stop_reason": "source_work_deadline_exhausted",
+  "provider_failure": null,
+  "program_results_emitted": 0,
+  "job_status": "running",
+  "job_done": 0,
+  "trace_saved": false,
+  "cached_programme_page_offline_classifier_admits": {
+    "source_url": "https://www.rug.nl/bachelors/computing-science",
+    "page_type": "intake_specific_program",
+    "subject": "Computing Science",
+    "degree_level": "bachelor",
+    "profile_rejects": null,
+    "cached_body_sha256": "d553fc12515d574b5ebcb49849399a8d71f4a7e23cdf8e9ae8b1a4fa5fc57ac8",
+    "source": "Own completed single-smoke public-page cache, read offline; no new university request"
+  },
+  "limits": "Distinct fetched URLs are NOT unique search results. Cached classifier admission is NOT verified intake/year/citizenship/cost/funding/deadline or complete research. Capture child exit0 is NOT completed Job."
+}

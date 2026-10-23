@@ -1,0 +1,1697 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 2561,
+    "sha256": "36d63f7670166a257a75bd2b98a34072d770721e470668f18cd1be625521b106"
+  },
+  {
+    "path": "archive_checkpoint.py",
+    "bytes": 9735,
+    "sha256": "a22c871e828e0e59135c7ad3f5d30e86139ee0d89dd26a3405ce9cc88ad85dd1"
+  },
+  {
+    "path": "aut-applied.parent.log",
+    "bytes": 1079,
+    "sha256": "0adc6d99c7008e57835a4e09c72cab1add07de636fe569a9e7fa58b73cd97c6a"
+  },
+  {
+    "path": "aut-major.reader-replay.offline.json",
+    "bytes": 5804,
+    "sha256": "5e035c57a45e04c47e571bb2b042ec3be871beca278e4e86a162819847954000"
+  },
+  {
+    "path": "aut-major.reader-replay.parent-applied.json",
+    "bytes": 11610,
+    "sha256": "41f321b6d9306ab6a2952ef5d7cf26e73efb7841c3ec609d3ce562a0caff0567"
+  },
+  {
+    "path": "aut-major.reader-replay.parent.log",
+    "bytes": 236,
+    "sha256": "19e3ef8c59deb9e8d8c76d06fb0ec894bd3cb6ab5945443db8dd492ea31c0db5"
+  },
+  {
+    "path": "aut-major.reader-replay.parent2.log",
+    "bytes": 1436,
+    "sha256": "11180bf5628dd4fac0a31b9303e93fb530dc5661025e4daeecf4d9c1a3e11168"
+  },
+  {
+    "path": "aut-major.reader-replay.parent3.log",
+    "bytes": 541,
+    "sha256": "314679f92f2324312a14ca629e2775a9f98b9ed7f30614adc2167f9ed7c5da38"
+  },
+  {
+    "path": "aut-unrequested-major.candidate-diagnosis.json",
+    "bytes": 658,
+    "sha256": "1fc84896d6c0a11cd9d96d36327c20a498bf2d9acbb4962841b75e9a371f7ef0"
+  },
+  {
+    "path": "gates/alembic-heads.log",
+    "bytes": 20,
+    "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+  },
+  {
+    "path": "gates/backend-gates.json",
+    "bytes": 1675,
+    "sha256": "b13bfd8f2759761fc4ed0da8bd5ea5d7b67befc5070b3fffd8ebd901ce1f89c2"
+  },
+  {
+    "path": "gates/backend-pytest.log",
+    "bytes": 16457,
+    "sha256": "6e3942981195b0dc5936dd24ad7ba9ed5be6cf3fcf897f3c445868b19d244d61"
+  },
+  {
+    "path": "gates/demo-comparison.json",
+    "bytes": 487,
+    "sha256": "b730ec04687bebaf643fdeec5a75daddade2cfd4a945bff45af07e18933ebcaa"
+  },
+  {
+    "path": "gates/demo-migration.log",
+    "bytes": 2642,
+    "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a"
+  },
+  {
+    "path": "gates/demo.log",
+    "bytes": 2569,
+    "sha256": "3c1fde49fea1a8daa8481d6a09fb498bb2538f28d80df29834619ffeedb30b58"
+  },
+  {
+    "path": "gates/format.log",
+    "bytes": 28,
+    "sha256": "64a4fa60ca2bda7893c1e4b8ea53a24a76e4ea49ffc3d32207015731000ca7cc"
+  },
+  {
+    "path": "gates/frontend-build.log",
+    "bytes": 7315,
+    "sha256": "ca6533bcfc3e97a6b4c1af4e4425814947a9dc91b9d7e4af5198c7b01afb291d"
+  },
+  {
+    "path": "gates/frontend-gates.json",
+    "bytes": 717,
+    "sha256": "19befa74d03c0503b8b04db11b47c2182752820d89244440ff5b55ebf948e78b"
+  },
+  {
+    "path": "gates/frontend-lint.log",
+    "bytes": 65,
+    "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+  },
+  {
+    "path": "gates/frontend-tests.log",
+    "bytes": 14546,
+    "sha256": "95f410079f1efa4aabd5b8a718558c83dd9322a890a70b70a2f0c61a125a005a"
+  },
+  {
+    "path": "gates/frontend-typecheck.log",
+    "bytes": 53,
+    "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+  },
+  {
+    "path": "gates/historical-import-format/backend-gates.json",
+    "bytes": 895,
+    "sha256": "49ae1fe12bcdd8bb79a4eb784646546ca61aed2c3c2e3cbb396d05e7d8422cde"
+  },
+  {
+    "path": "gates/historical-import-format/ruff.log",
+    "bytes": 563,
+    "sha256": "0873ab304f81c026508be7a3f0af8c212b1d6d77a3e9049e8a049734dc173193"
+  },
+  {
+    "path": "gates/mypy.log",
+    "bytes": 8737,
+    "sha256": "b6657413e69a07b3e2af7714a7adce30d9f2e4c5a5169eeeb37edbd3d747becd"
+  },
+  {
+    "path": "gates/ruff.log",
+    "bytes": 19,
+    "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  {
+    "path": "parent-focused-final.log",
+    "bytes": 240,
+    "sha256": "e9e1f68b9f269e046af176d8ed22e4cb0a6b513b897cd9b4ed3306aaab4dc4c4"
+  },
+  {
+    "path": "parent-focused.log",
+    "bytes": 76,
+    "sha256": "585e58708c7db9d43d40a2441e7f7b189d4cc8fd60334e7d355d6a5393795b5a"
+  },
+  {
+    "path": "pr-body.md",
+    "bytes": 3285,
+    "sha256": "ac3f8a9670cfc920e69045d854cb3ec480bf7d750438a93995c773d1a108e590"
+  },
+  {
+    "path": "replay_aut_applied.py",
+    "bytes": 3315,
+    "sha256": "08a8dcdb0bdf692ab592eda379dbbcba06c1d4d0bc1f923537bd152f1ee6781c"
+  },
+  {
+    "path": "replay_aut_major.py",
+    "bytes": 3254,
+    "sha256": "3bf6e8a6513be45a49fd22a72726525b24bd421fd5515f43cdf55e822d1fa3ee"
+  },
+  {
+    "path": "reviews/expert_a/aut-subject-phrase.reader-replay.attempt1.stderr.txt",
+    "bytes": 1695,
+    "sha256": "a61692e55686ec66ac26e2cb5f11a0e997e3280b14a81f7b7b9dfd41a783962f"
+  },
+  {
+    "path": "reviews/expert_a/aut-subject-phrase.reader-replay.attempt1.stdout.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/aut-subject-phrase.reader-replay.offline.json",
+    "bytes": 45767,
+    "sha256": "6c01ce02049642332e32ca8310a7b616cd83abbdd149eb4bc8e366e420b84e51"
+  },
+  {
+    "path": "reviews/expert_a/aut-subject-phrase.reader-replay.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/aut-subject-phrase.reader-replay.stdout.txt",
+    "bytes": 1735,
+    "sha256": "adc9788291db515bd586fc31af8d9f2ee7fcbb40f40fea639f7a72f74af3f635"
+  },
+  {
+    "path": "reviews/expert_a/conftest.py",
+    "bytes": 607,
+    "sha256": "0bdf61343a3ac9fd0f1e9a3e58c3dbcd8c37940338e58b4eca38b015fdc2fbe1"
+  },
+  {
+    "path": "reviews/expert_a/existing-regression/test_discovery_strong_aliases.py",
+    "bytes": 2482,
+    "sha256": "eaeb5fa50e5573a673336d1691cfa9e4f9eebbf9064399661213969e110e8cbd"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/conftest.py",
+    "bytes": 1271,
+    "sha256": "beb923b3c5866f332254fbbb91e0dad337a16dc948678766a96247cc5a2c0a14"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-controls.offline.json",
+    "bytes": 81297,
+    "sha256": "4eacd5d9296bd87d6e157f214e0d2bcbe2c3104fbd0fc2f1496d284b31fb2b94"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.receipt.json",
+    "bytes": 5753,
+    "sha256": "c5ac1bc4cf6399e90b788f060c4eabd2c4f4bf744bce0d9a1988293878379b04"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.ru.md",
+    "bytes": 5761,
+    "sha256": "a19a2ab63af37c58b65febcd2c7d0738bc57b54708daee73146b97f5ad1c2d50"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.start.json",
+    "bytes": 905,
+    "sha256": "aa498250d32d234b0ace607d9210c5822224aefd669924a4ab879de96efc5926"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.tests.attempt1.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.tests.attempt1.stdout.txt",
+    "bytes": 39893,
+    "sha256": "4e9f782722debf8e2a656c902c24d1eae81f0460b3eed7334efcfc4618287e42"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.tests.attempt2.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.tests.attempt2.stdout.txt",
+    "bytes": 30953,
+    "sha256": "eca91a265f7ec656833e14e9241c896a164ef51651addf4e4a06b14a9ba500e3"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.tests.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/harness-review.tests.stdout.txt",
+    "bytes": 99,
+    "sha256": "079f65ace248916b5be98b2823715910b8d62da94028c47d892837b87c065f62"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective0/run/20261007T201822Z/capture.json",
+    "bytes": 2582,
+    "sha256": "3222e4cdf684d641e529b9c52b2ac9a209a83c64967c00961cc9512c33acb22b"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective0/run/20261007T201822Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective0/run/20261007T201822Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective0/run/20261007T201822Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective1/run/20261007T201822Z/capture.json",
+    "bytes": 2582,
+    "sha256": "c56122d55cc5c0bc0d630198295e2b530f83408681377ad79259e79a180107b1"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective1/run/20261007T201822Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective1/run/20261007T201822Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective1/run/20261007T201822Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective10/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective10/run/20261007T201822Z/capture.json",
+    "bytes": 710,
+    "sha256": "fcd8808962d16290a1eafa9dec5b13565e886fb9bdc11ab43238b099e0d80651"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective11/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective11/run/20261007T201822Z/capture.json",
+    "bytes": 709,
+    "sha256": "9d143cfe586f897920b5751effd5be2deefbcb651917146dff93aec673ebc916"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective2/run/20261007T201822Z/capture.json",
+    "bytes": 2582,
+    "sha256": "804337a05b6692bbdabccbf97ec1c8d8e468108c8bfc2e8b65506330ce6657b1"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective2/run/20261007T201822Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective2/run/20261007T201822Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective2/run/20261007T201822Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective3/run/20261007T201822Z/capture.json",
+    "bytes": 2581,
+    "sha256": "27f9dcc31fd54be83b96f97004a74d4bfff1e35c6451d5b92c5ed68d975a8290"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective3/run/20261007T201822Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective3/run/20261007T201822Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective3/run/20261007T201822Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective4/run/20261007T201822Z/capture.json",
+    "bytes": 2582,
+    "sha256": "ce0c807941ba6df62d49a67f1a06a64061e83ad4d02234d00e8e07c08e136310"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective4/run/20261007T201822Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective4/run/20261007T201822Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective4/run/20261007T201822Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective5/run/20261007T201822Z/capture.json",
+    "bytes": 2581,
+    "sha256": "a303983997584d57d135eae860cb7a4e0816dfcde2fb78cc4729ff987ab0eb01"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective5/run/20261007T201822Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective5/run/20261007T201822Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective5/run/20261007T201822Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective6/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective6/run/20261007T201822Z/capture.json",
+    "bytes": 711,
+    "sha256": "076825cf2871bd029395879a43b875f4646dabaf657f036a4086a1037a988829"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective7/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective7/run/20261007T201822Z/capture.json",
+    "bytes": 710,
+    "sha256": "89b6c6336c9a599043303a71fe6c411fe4f28901393e609efdac71302a7aec40"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective8/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective8/run/20261007T201822Z/capture.json",
+    "bytes": 710,
+    "sha256": "fcd8808962d16290a1eafa9dec5b13565e886fb9bdc11ab43238b099e0d80651"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective9/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_capture_records_effective9/run/20261007T201822Z/capture.json",
+    "bytes": 709,
+    "sha256": "9d143cfe586f897920b5751effd5be2deefbcb651917146dff93aec673ebc916"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_pre_start_refusal_records0/synthetic-STOP.json",
+    "bytes": 40,
+    "sha256": "7a86513a85204e63a17d9a4ae2fb3b31c5d8f3c7652a70f5e9ea14ff29608025"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final/test_pre_start_refusal_records1/synthetic-STOP.json",
+    "bytes": 40,
+    "sha256": "7a86513a85204e63a17d9a4ae2fb3b31c5d8f3c7652a70f5e9ea14ff29608025"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective0/run/20261007T201907Z/capture.json",
+    "bytes": 2582,
+    "sha256": "23b7f5a926aff81f6bf8f545da0d654239b819233f93c18b2faff32cff30ab4e"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective0/run/20261007T201907Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective0/run/20261007T201907Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective0/run/20261007T201907Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective1/run/20261007T201907Z/capture.json",
+    "bytes": 2582,
+    "sha256": "55b677aa3787e1fbf0e1a24195a79032adbcd96b81e343800b612bcf174f20ab"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective1/run/20261007T201907Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective1/run/20261007T201907Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective1/run/20261007T201907Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective10/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective10/run/20261007T201907Z/capture.json",
+    "bytes": 710,
+    "sha256": "f11e559a5337ecb6ff3e4ee8691bb5888b1fe7f1cf02f6acb9d9be71a65a6ca2"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective11/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective11/run/20261007T201907Z/capture.json",
+    "bytes": 709,
+    "sha256": "18a8121a1f72f7fd989890da90f2cbb211aa20cfaa828416a8ac0d807cb75a82"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective2/run/20261007T201907Z/capture.json",
+    "bytes": 2582,
+    "sha256": "89c23a36dcf015a9fa9ad5ea6149c43769881db7b90bf8be2e401bc253bf0e3f"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective2/run/20261007T201907Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective2/run/20261007T201907Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective2/run/20261007T201907Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective3/run/20261007T201907Z/capture.json",
+    "bytes": 2580,
+    "sha256": "0e10ae5807aa46f9c6e00c8d19054dc2376b5dc176134a9b9d4935cb54be4afe"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective3/run/20261007T201907Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective3/run/20261007T201907Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective3/run/20261007T201907Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective4/run/20261007T201907Z/capture.json",
+    "bytes": 2582,
+    "sha256": "68415504f2cfd08c3e0dbf21f283a1565fcf6990f57a81db08ac086fa85c2ae3"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective4/run/20261007T201907Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective4/run/20261007T201907Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective4/run/20261007T201907Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective5/run/20261007T201907Z/capture.json",
+    "bytes": 2580,
+    "sha256": "2afe63c0dac7db231ac037d0009023ac5af8686c60a27060226a3c9e515f3c72"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective5/run/20261007T201907Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective5/run/20261007T201907Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective5/run/20261007T201907Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective6/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective6/run/20261007T201907Z/capture.json",
+    "bytes": 711,
+    "sha256": "42b2f5e3777cec2d65d137a4cc24669c7d8cd372189084afbb83a2705d8221f8"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective7/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective7/run/20261007T201907Z/capture.json",
+    "bytes": 710,
+    "sha256": "68070d815a4093d3a1c78c72c3c83bdeffd70ee8f71ce5f3697d7789ef9ecff3"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective8/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective8/run/20261007T201907Z/capture.json",
+    "bytes": 710,
+    "sha256": "f11e559a5337ecb6ff3e4ee8691bb5888b1fe7f1cf02f6acb9d9be71a65a6ca2"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective9/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_capture_records_effective9/run/20261007T201907Z/capture.json",
+    "bytes": 709,
+    "sha256": "18a8121a1f72f7fd989890da90f2cbb211aa20cfaa828416a8ac0d807cb75a82"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_pre_start_refusal_records0/synthetic-STOP.json",
+    "bytes": 40,
+    "sha256": "7a86513a85204e63a17d9a4ae2fb3b31c5d8f3c7652a70f5e9ea14ff29608025"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final2/test_pre_start_refusal_records1/synthetic-STOP.json",
+    "bytes": 40,
+    "sha256": "7a86513a85204e63a17d9a4ae2fb3b31c5d8f3c7652a70f5e9ea14ff29608025"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective0/run/20261007T201933Z/capture.json",
+    "bytes": 2582,
+    "sha256": "be0131404fe540c93eb7e2e210ebde276fa782d3a113be352fe5dbddf11ff945"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective0/run/20261007T201933Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective0/run/20261007T201933Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective0/run/20261007T201933Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective1/run/20261007T201933Z/capture.json",
+    "bytes": 2582,
+    "sha256": "3d75ea3390e1e8730b76064bc9f40d3c299a91c7f194ed507e8ee2255b2dbc6d"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective1/run/20261007T201933Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective1/run/20261007T201933Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective1/run/20261007T201933Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective10/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective10/run/20261007T201933Z/capture.json",
+    "bytes": 710,
+    "sha256": "0bc0ebec0630851c4646f0f8c06c9d75f8114dcbbd0b416aae376229ba8cbadd"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective11/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective11/run/20261007T201933Z/capture.json",
+    "bytes": 709,
+    "sha256": "740012339e2da1136fe01a5360bfd3c496699b843dfa8662addbbed81d59aca6"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective2/run/20261007T201933Z/capture.json",
+    "bytes": 2582,
+    "sha256": "2212a8b93fa83c731ed316c23bb85fad3f0408c389e4e460fa74fb405984ef81"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective2/run/20261007T201933Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective2/run/20261007T201933Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective2/run/20261007T201933Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective3/run/20261007T201933Z/capture.json",
+    "bytes": 2581,
+    "sha256": "3983125c26115967b7657517fe0773e43e57e464794b7c5221cefb9d24091bcf"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective3/run/20261007T201933Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective3/run/20261007T201933Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective3/run/20261007T201933Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective4/run/20261007T201933Z/capture.json",
+    "bytes": 2581,
+    "sha256": "33314780c96b6de187bb0117f7fa73ef0a77de52db17f261ec9b442a574cb983"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective4/run/20261007T201933Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective4/run/20261007T201933Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective4/run/20261007T201933Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective5/run/20261007T201933Z/capture.json",
+    "bytes": 2580,
+    "sha256": "d21e7706e624748c2e10e79f9b176fd2221ddfc6be76c1e864474ba987dd169d"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective5/run/20261007T201933Z/groningen.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective5/run/20261007T201933Z/groningen.json",
+    "bytes": 392,
+    "sha256": "871f17480892ed6106ca5dace3a448f0de7f83457e3113948757da98cbb2a82a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective5/run/20261007T201933Z/groningen.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective6/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective6/run/20261007T201933Z/capture.json",
+    "bytes": 711,
+    "sha256": "024314929b696dac3ac1c7aa0ae97c9e529f1888e20d9ba5b90a726dec81f6bf"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective7/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective7/run/20261007T201933Z/capture.json",
+    "bytes": 710,
+    "sha256": "0b3918763a57708f7b020fe9b5170d69288751e82e5cdd71a0a798e67b61fb4f"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective8/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective8/run/20261007T201933Z/capture.json",
+    "bytes": 710,
+    "sha256": "0bc0ebec0630851c4646f0f8c06c9d75f8114dcbbd0b416aae376229ba8cbadd"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective9/STOP.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_capture_records_effective9/run/20261007T201933Z/capture.json",
+    "bytes": 709,
+    "sha256": "740012339e2da1136fe01a5360bfd3c496699b843dfa8662addbbed81d59aca6"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/capture.json",
+    "bytes": 3485,
+    "sha256": "8feea89ae9d84eb122257952de11c0684cda930942ad2129a7a6fe135fd7dfc0"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea0/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/capture.json",
+    "bytes": 3484,
+    "sha256": "fe1e08e8e19378cea98ce63d7f9644d8c4c6a67dbfe996348d254ba2ced313c4"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea1/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/capture.json",
+    "bytes": 3486,
+    "sha256": "8ec1d27cb3c78c2cd00b1b0062d28aa1e5241779217e49c1498ee43fb86da3b6"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea2/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/capture.json",
+    "bytes": 3485,
+    "sha256": "03d817cb86157d22aa36b99192fe481d2fe97d17b3d361743cc3a33d592702e1"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea3/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/capture.json",
+    "bytes": 3485,
+    "sha256": "be6198e793701d255c2f1000b9c45cb6cd7de421086a40795a871a74e8deb6a2"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea4/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/capture.json",
+    "bytes": 3483,
+    "sha256": "fa8b438d0702c7f06040a1ce422175def1ecfd0446ad279a409190ad2714cb10"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_parent_config_matches_rea5/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_pre_start_refusal_records0/capture/20261007T201933Z/capture.json",
+    "bytes": 773,
+    "sha256": "abd8c1a5af0b5def91fde10e368ab6b3f5e045687883874e2250a86f1ffb3280"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_pre_start_refusal_records0/synthetic-STOP.json",
+    "bytes": 40,
+    "sha256": "7a86513a85204e63a17d9a4ae2fb3b31c5d8f3c7652a70f5e9ea14ff29608025"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_pre_start_refusal_records1/capture/20261007T201933Z/capture.json",
+    "bytes": 772,
+    "sha256": "9cb0a0ccc81c034f5257833b8d28adae966f00e2c46e0be3877cbdd42b00a489"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_pre_start_refusal_records1/synthetic-STOP.json",
+    "bytes": 40,
+    "sha256": "7a86513a85204e63a17d9a4ae2fb3b31c5d8f3c7652a70f5e9ea14ff29608025"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/capture.json",
+    "bytes": 3485,
+    "sha256": "8031afb425aef939c69848a82db3b7074e820b721ada5c539d613e7c837a1562"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_0/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/capture.json",
+    "bytes": 3484,
+    "sha256": "bd9eb7990932cb746f65a9520239ac0d7c69b59f58b8c79a3366227e7e72114a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_1/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/capture.json",
+    "bytes": 3485,
+    "sha256": "3352c16ba027ffb43f2976ad68393b1d3d8ef21087eb3bfdc32cd72e3515bbc3"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_2/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/capture.json",
+    "bytes": 3485,
+    "sha256": "d01d4bc03e7e38690d4255472a9baef14e87404214243e8faa8fba6a7ad0ee3c"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_3/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/capture.json",
+    "bytes": 3484,
+    "sha256": "a0faedaa6a44f6763ba21c1e53f5208d6f4876eccd5944f2cb0a121547e491f7"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/offline-test-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/offline-test-b.json",
+    "bytes": 397,
+    "sha256": "604f0d48e9a43e2f7b3f6bd3ef8341db0999488704c142ee28c07f47f70ee1ed"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_real_batch_to_real_child_4/capture/20261007T201933Z/offline-test-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/capture/20261007T201933Z/capture.json",
+    "bytes": 1370,
+    "sha256": "6e6204acddb4601b9765b4a79216ad7b26a2374cc0487ff6983e55e9ff9c111b"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee0/synthetic-STOP.json",
+    "bytes": 44,
+    "sha256": "897a28f1455a1a3b9a90f4bdc7154227098cec5c012efb6da7b6a4485846a6d5"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee1/capture/20261007T201933Z/capture.json",
+    "bytes": 1369,
+    "sha256": "71553bf1cd2408ef49a64d7ab50acfc42ccc6b7cd6cb7a98e2105f873094068a"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee1/capture/20261007T201933Z/offline-test-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee1/capture/20261007T201933Z/offline-test-a.json",
+    "bytes": 397,
+    "sha256": "cc6b876a09d878a69d27b2222226cbf9c1d1785907df2ccc27d08c752e9fd637"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee1/capture/20261007T201933Z/offline-test-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/pytest-temp-final3/test_refusal_between_cases_kee1/synthetic-STOP.json",
+    "bytes": 44,
+    "sha256": "897a28f1455a1a3b9a90f4bdc7154227098cec5c012efb6da7b6a4485846a6d5"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_parent_config_matches_rea0.json",
+    "bytes": 5776,
+    "sha256": "9fce77bf0bc31014066277aede0e8ab228bf0e6edbb1805746d9608d105126e5"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_parent_config_matches_rea1.json",
+    "bytes": 5764,
+    "sha256": "32256ddd24d8c38fcb908aba4366685656eefcb06f85798a8521dbde979c7ad2"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_parent_config_matches_rea2.json",
+    "bytes": 5780,
+    "sha256": "1dfdda99c0d89fb80a514f06fad7405479dcaa5c6f74d69d62be534efcd88cc5"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_parent_config_matches_rea3.json",
+    "bytes": 5768,
+    "sha256": "e3351f092fe1c42bca0f0e3c1a7698a6bf7672a58c5b8b3d4e6a90e42cdc021e"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_parent_config_matches_rea4.json",
+    "bytes": 5838,
+    "sha256": "a4ee45b55c4ff4eb1ff573fb01428a0def6975f157e454350f06dafdaab8047b"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_parent_config_matches_rea5.json",
+    "bytes": 5825,
+    "sha256": "6b3645f150f621c7df785b45f7dc4f7a97284779852ef5b0899a4629bd0219b6"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_pre_start_refusal_records0.json",
+    "bytes": 1200,
+    "sha256": "6eb7d8494bc2c23cf5f3f7964cf77753f723860089477d1b6c1f0a9fc966b0fc"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_pre_start_refusal_records1.json",
+    "bytes": 1197,
+    "sha256": "7e14dd7d13872eb32540515759bdf3dda2ca40c3d1ccec52d0b10e7c626754a0"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_real_batch_to_real_child_0.json",
+    "bytes": 5741,
+    "sha256": "078e64ae58342d8de67ece5c45762cc7a94e143ba6a4078f0e6c63504847491c"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_real_batch_to_real_child_1.json",
+    "bytes": 5764,
+    "sha256": "53b6f05d1a41d911e9e0f082836267de7c4a93b83cdf85d9507b0331a72ca50d"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_real_batch_to_real_child_2.json",
+    "bytes": 5775,
+    "sha256": "ae7b4c4f00d8f4f62658ca5065042405bcd2d260bc79e5c59cdf6e34dfd0fdd0"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_real_batch_to_real_child_3.json",
+    "bytes": 5805,
+    "sha256": "723a5fbde88b8a65282c39dacfa8663cd169ae66f2096ca3335d4ff7a7e6a959"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_real_batch_to_real_child_4.json",
+    "bytes": 5797,
+    "sha256": "b5c3eaf12d0241e23f43f2df87cd10fe3fae2d3e359eae2c1a077c4382d51fc4"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_refusal_between_cases_kee0.json",
+    "bytes": 2696,
+    "sha256": "2b9c1fd622d53a8326078ba72b2a29abd94705c66985b37a66719bded3a050b6"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/raw-controls/test_refusal_between_cases_kee1.json",
+    "bytes": 2688,
+    "sha256": "ead9afdcc0d40700db15c2570dd082d4a0863823b413ed7e100bea4b191cc3da"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/source-snapshot/backend/app/adapters/discovery/live_discovery.py",
+    "bytes": 95295,
+    "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/source-snapshot/backend/app/adapters/search/intent.py",
+    "bytes": 12990,
+    "sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/source-snapshot/backend/evaluation/research/live.py",
+    "bytes": 57714,
+    "sha256": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/source-snapshot/backend/evaluation/research/mapping.py",
+    "bytes": 11675,
+    "sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/source-snapshot/backend/evaluation/research/schema.py",
+    "bytes": 6411,
+    "sha256": "313a92ebeadcd534b8731b5a3254a2f00ffbd9d99a16795b79d1d7a2d41ce924"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/source-snapshot/backend/tests/test_subject_phrase_capture.py",
+    "bytes": 3834,
+    "sha256": "d051c525527f397eb4889e6195d6f132015feb4439875211d20e2117ae773082"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/test_independent_harness_choices.py",
+    "bytes": 7450,
+    "sha256": "20548dae2048a91d06d22ee39069b622519c031460ad8e75d861e25852cb26d0"
+  },
+  {
+    "path": "reviews/expert_a/harness-review/test_parent_subject_phrase_capture.py",
+    "bytes": 3834,
+    "sha256": "d051c525527f397eb4889e6195d6f132015feb4439875211d20e2117ae773082"
+  },
+  {
+    "path": "reviews/expert_a/patch-replay/backend/app/adapters/discovery/live_discovery.py",
+    "bytes": 95295,
+    "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6"
+  },
+  {
+    "path": "reviews/expert_a/patch-replay/backend/tests/test_subject_phrase_guard.py",
+    "bytes": 8902,
+    "sha256": "0320d636c44a1d2117cc4c46cd18353baf2c04accb9e7107867234afcc71aaef"
+  },
+  {
+    "path": "reviews/expert_a/proposed/backend/app/adapters/discovery/live_discovery.py",
+    "bytes": 95295,
+    "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6"
+  },
+  {
+    "path": "reviews/expert_a/replay_aut_subject_phrase.py",
+    "bytes": 12109,
+    "sha256": "add313e1c93840b101dd08016cc921904f550766dfd05fb64560312c706ad3ea"
+  },
+  {
+    "path": "reviews/expert_a/replay_subject_phrase_controls.py",
+    "bytes": 4736,
+    "sha256": "ad067517b5a468b5de4436679740378da6aa74bbbe1b4137817527da6860096c"
+  },
+  {
+    "path": "reviews/expert_a/retained-pages/computer-science.body",
+    "bytes": 71651,
+    "sha256": "1340f8a4853246291e727bfaa433ca0ba9ec31ca0fb79cb8f4b16914ffe88f0c"
+  },
+  {
+    "path": "reviews/expert_a/retained-pages/computer-science.meta.json",
+    "bytes": 734,
+    "sha256": "3dff64d5d03a766c27f6c33b91790ecbae91e02dfe61c76ce6a09cfc559d9c4d"
+  },
+  {
+    "path": "reviews/expert_a/retained-pages/data-science.body",
+    "bytes": 79486,
+    "sha256": "76efe3c790ce9aa3253487b3807afa994918022bfff4c2c0b2b4972e45264312"
+  },
+  {
+    "path": "reviews/expert_a/retained-pages/data-science.meta.json",
+    "bytes": 726,
+    "sha256": "16d03a9771712a612fa61b231df3dbc6b948fa68b00ca9a30e0135598953e192"
+  },
+  {
+    "path": "reviews/expert_a/review-start.manifest.json",
+    "bytes": 3972,
+    "sha256": "012b2fb559537a9b987ea06c2a5714c66ebc6ebd46e397d88c62d926800c2f41"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/discovery/live_discovery.py",
+    "bytes": 94439,
+    "sha256": "4c53f906dbe09471138a34aa752ad64fc62acc44043f50e9d8ccfb99d6650068"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/document_ir.py",
+    "bytes": 10960,
+    "sha256": "c8c3f15da74f8f891f4f79fd8bfd52e937b57898edfdc3ac1a59e7d44bce9f0f"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/extraction.py",
+    "bytes": 55162,
+    "sha256": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/fetching.py",
+    "bytes": 47727,
+    "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/html_parse.py",
+    "bytes": 916,
+    "sha256": "62f9c0c30c4b88ad1b7d23907f9019204e424891d361608d92aaac9551ac5d81"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/matching.py",
+    "bytes": 3383,
+    "sha256": "de83ec677b112554bdb5b38d98d2b3c0d9be48c1843c92b9a92d0425c40999e1"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/page_classifier.py",
+    "bytes": 37051,
+    "sha256": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/requirements/section_scope.py",
+    "bytes": 4882,
+    "sha256": "8b2c8da32b7595f95aab817d97b90f7900aca93bab21060499a39ecfc83a2f79"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/requirements/web_requirements.py",
+    "bytes": 43883,
+    "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/scope_reader.py",
+    "bytes": 16246,
+    "sha256": "169136aadc489f886f362a4bd703b4968933939257af1dd2e7867a26c2ff0304"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/search/ontology.json",
+    "bytes": 3254,
+    "sha256": "2cb1026c2c3fdcccfd66c828102a0bfdde58533e9961125677ed85ef83f3d373"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/search/ontology.py",
+    "bytes": 8480,
+    "sha256": "d63e4c6320c5154d60b5c6009615ae63ef5c95b4ed337eb7e9d0ec70ea895f35"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/structured_extraction.py",
+    "bytes": 6760,
+    "sha256": "d8a85ae1c2307c428d8e9220fb56d0ab9d69adfdf84a38e56958b30f6b862f47"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/domain/programme_identity.py",
+    "bytes": 5947,
+    "sha256": "1bf66f59ccf19dd2b859ebcae5783e01c292591b4e84faa59e624a368b92bc99"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/schemas/claim.py",
+    "bytes": 5548,
+    "sha256": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/ruff.toml",
+    "bytes": 416,
+    "sha256": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/tests/test_discovery_strong_aliases.py",
+    "bytes": 2482,
+    "sha256": "eaeb5fa50e5573a673336d1691cfa9e4f9eebbf9064399661213969e110e8cbd"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase-tests.patch",
+    "bytes": 9209,
+    "sha256": "3b380ce6efa8f2e8a189952e041ccf6f0ec782df9922ef9da66d1f420f31e231"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.attempt1.patch",
+    "bytes": 1435,
+    "sha256": "e3fbe6d91759ecb554c67188a35d9d0cb592ba138085f1acbb57454c24972925"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.control-matrix.offline.json",
+    "bytes": 17720,
+    "sha256": "e6b8ec3f5e90e97bf7510b7f1686ca91947b002605a89aa2a7eb826facd19e1d"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.control-matrix.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.control-matrix.stdout.txt",
+    "bytes": 125,
+    "sha256": "e11cdb79b1df2f7802c513482b15958c2b7330c947b1cfc141138571fea89993"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.patch",
+    "bytes": 1722,
+    "sha256": "bcbe3bdee64e7647cf0d5183be0da6549542011105c206c2d60b79823ac5f08f"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.patch-replay.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.patch-replay.stdout.txt",
+    "bytes": 65,
+    "sha256": "d311f46ae5f66abbd209e551fe08eef46c203576ddc74282ebc08ab9a33681c7"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.proposed-function.txt",
+    "bytes": 1920,
+    "sha256": "48c5ac1359cd341b39c2a18e9c8906e1613e43566d93e08301e6103ac65f306d"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.review.receipt.json",
+    "bytes": 14089,
+    "sha256": "5bef526446a125fe9ae8c7e286ed83bd5f35f241b8aa133a61183a01b18dc9ab"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.review.ru.md",
+    "bytes": 9857,
+    "sha256": "dfca4cf0820a779329ace6f7646a5c28c7040a5e92b4114170547a95f640043b"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-check.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-check.final.stdout.txt",
+    "bytes": 39,
+    "sha256": "4789a639a8e8236399f7b6e0f3783af1f0a8a505b96faee0e1ee34d3cc9a5aff"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-check.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-check.stdout.txt",
+    "bytes": 1682,
+    "sha256": "5aaa0a6e65c27b90dcc75bc1001946b01a3fbd40f38c43b9fae156ae471a7c57"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-format-verification.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-format-verification.stdout.txt",
+    "bytes": 26,
+    "sha256": "177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-format.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-format.final.stdout.txt",
+    "bytes": 23,
+    "sha256": "257e2056c07d2caeafd1fe2ade777c2fe7d25f1092cd23bdcf4cf6c416daac14"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-format.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-format.stdout.txt",
+    "bytes": 20,
+    "sha256": "878d50bf4ab752ab41ae942ac518b87e744d994b21bb15dca142ed7a470b3b3a"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-verification.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.ruff-verification.stdout.txt",
+    "bytes": 19,
+    "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.tests-patch-replay.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.tests-patch-replay.stdout.txt",
+    "bytes": 59,
+    "sha256": "ee8bd155ce51b6053c1a1e827a4714c5fa89a779744c9e75575f56c0b344580c"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.tests.attempt1.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.tests.attempt1.stdout.txt",
+    "bytes": 1336,
+    "sha256": "814aded742b05e8d5757c47bff2adf972bfc6be74401ff578b02b4eeb2a70d51"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.tests.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.tests.final.stdout.txt",
+    "bytes": 180,
+    "sha256": "990b79d553719c7cf358a2871b11cb06a0decc839fa91b5eab5c51a5508e7659"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.tests.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/subject-phrase.tests.stdout.txt",
+    "bytes": 180,
+    "sha256": "0952b41b7eeb395938a7ccc69e8c7cfcb688142910232461fde82e812120f1c8"
+  },
+  {
+    "path": "reviews/expert_a/test_subject_phrase_guard.py",
+    "bytes": 8902,
+    "sha256": "0320d636c44a1d2117cc4c46cd18353baf2c04accb9e7107867234afcc71aaef"
+  },
+  {
+    "path": "run_demo.py",
+    "bytes": 1876,
+    "sha256": "bdd7b1a979ed39a8e948f9b4b4919e2cdeae6482733acd195d1a634a73ee6e76"
+  },
+  {
+    "path": "run_frontend.py",
+    "bytes": 1164,
+    "sha256": "3ba209c52c4bfd576283c546b9ef49468257e148d86c411df35e1e286f84c27a"
+  },
+  {
+    "path": "run_gates.py",
+    "bytes": 2520,
+    "sha256": "841ac74e0d3c3e8436a4aea693d35a4e11d4b567419cac9c438cd96b58e6a5f5"
+  },
+  {
+    "path": "source-gates.json",
+    "bytes": 850,
+    "sha256": "f2b481476ecd98a3d14a1543dfed8c52a041cc09a7776a719634eb68d4921726"
+  },
+  {
+    "path": "subject-phrase.control-only.json",
+    "bytes": 1104,
+    "sha256": "accae299e6e5ef4ffd94fa16a4613f95e007ebb375d17fbc0ea3e2f56088f3d0"
+  },
+  {
+    "path": "subject-phrase.proposal.txt",
+    "bytes": 1492,
+    "sha256": "434b238fb1817c2ddbbe38b0dafc62e8d84270c34912451f4b9e564868470480"
+  }
+]

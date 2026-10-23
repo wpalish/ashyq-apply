@@ -1,0 +1,83 @@
+{
+  "status": "SAVED_SOURCE_READ_ONLY_PRE_FULL",
+  "recorded_at": "2026-10-09T00:47:38.448792+00:00",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "files": {
+    "docs/legal/README.md": {
+      "sha256": "fe4a21f33b8d792f2efec7173890e6b268c73936a3f3645344ac706f2c685ed7",
+      "bytes": 4234
+    },
+    "docs/legal/operator-facts.json": {
+      "sha256": "c25e56dc795fc3aa85583d8fbdb4ff31d3db5e65397f1d6ac7d07c29f3c20526",
+      "bytes": 1075
+    },
+    "docs/legal/RELEASE_READINESS.md": {
+      "sha256": "aa76ad4db864ee95dda23cc9ce1cf0784a7bc4d9bb3bac0dc0c59b9370a38ce4",
+      "bytes": 3929
+    },
+    "docs/legal/CONSENT_SPEC_RU.md": {
+      "sha256": "7f922c0c4880c8ff7dafc4701fbf26a394eabcc1d99f027e3c4d906eec3c754b",
+      "bytes": 7904
+    },
+    "docs/legal/DATA_RETENTION_AND_RIGHTS.md": {
+      "sha256": "bab30498960dbe79262c125775fd58afaea078a007639cbf5b30abd8e58fb606",
+      "bytes": 6225
+    },
+    "SECURITY.md": {
+      "sha256": "15d79555b2028a66147f4b33b22c52791cf2c68c732b2b0316243c32e3ae9a74",
+      "bytes": 13740
+    },
+    "frontend/src/screens/LegalScreen.tsx": {
+      "sha256": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+      "bytes": 14729
+    },
+    "frontend/src/screens/ExportScreen.tsx": {
+      "sha256": "09e3c468a73b0bab3238c4646cfb2f3c0ac45b0305e3fb55fd32cf237a4b52a6",
+      "bytes": 8413
+    },
+    "frontend/src/AuthGate.tsx": {
+      "sha256": "58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10",
+      "bytes": 12321
+    },
+    "frontend/src/lib/applicantStorage.ts": {
+      "sha256": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+      "bytes": 5051
+    },
+    "frontend/src/lib/store.tsx": {
+      "sha256": "49c0135d1b3000bf093f7806d34ca2d63796c3e5dd6cf987ee9012d89a557035",
+      "bytes": 34108
+    },
+    "frontend/src/lib/caseDrafts.ts": {
+      "sha256": "97395a4c9c391867375c06f864bc4a96f7b3a217941fa2cf97331bd77a864c8f",
+      "bytes": 7316
+    },
+    "frontend/src/App.tsx": {
+      "sha256": "d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b",
+      "bytes": 21478
+    },
+    "frontend/src/screens/ProfileScreen.tsx": {
+      "sha256": "f99fac5dee838614147a8f6aea499e827072cfe522b27111d4f96e46d715c16d",
+      "bytes": 36889
+    },
+    "frontend/src/lib/defaultProfile.ts": {
+      "sha256": "1a2c69c8d21298f80c6f824621a6942c666dd909cdeef4c6ec7d61b0489ed48d",
+      "bytes": 4558
+    }
+  },
+  "applied19_receipt_sha256": "8ace9a3e51ffdaa8eaaa7068fc98c0df38ef7f6a289156ba584597fb16b6d380",
+  "applied_head_receipt_sha256": "408f93723739e16fb8cc7b5f936bf23be0004f7311b3bdad731c7699203c5708",
+  "applied_source_head": "a0fc4a7b38162a7af7d438b8b148c49592e0563c",
+  "actual_full_binding": null,
+  "qualification": "Readiness/document state only. No full/runtime/CUA/DB/provider execution; primary untouched.",
+  "read_window_drift": [],
+  "static_peer_receipt_reads": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-preview-static/READY.json": {
+      "sha256": "6bd0e381c0e5d14cb516a9e76a91745a4034f6e6127ac51a7b4dbe16c71a5dfc",
+      "bytes": 1143
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-launcher-static-final/READY.json": {
+      "sha256": "0ff986846afdcdee491af52a74075f61c3f9169d271242e4afe5169ef4ac476b",
+      "bytes": 813
+    }
+  }
+}

@@ -1,0 +1,180 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Sources & conflicts" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - heading "Источники и проверка" [level=1]
+  - paragraph: Мы собираем информацию из официальных источников и помогаем проверить ключевые факты.
+  - generic: "Последнее чтение: 19 окт. 2026 г."
+  - paragraph: Демонстрационные данные. Цитаты и адреса относятся к синтетическому корпусу.
+  - complementary "Ограничения исследования":
+    - generic "Есть ограничения исследования (156)"
+  - navigation "Тип источника":
+    - button "Все источники 434":
+      - text: Все источники
+      - generic: "434"
+    - button "Программы 12":
+      - text: Программы
+      - generic: "12"
+    - button "Стипендии 149":
+      - text: Стипендии
+      - generic: "149"
+    - button "Требования 273":
+      - text: Требования
+      - generic: "273"
+    - button "Визы 0":
+      - text: Визы
+      - generic: "0"
+  - generic: Поиск по источникам
+  - searchbox "Поиск по источникам"
+  - generic: Статус факта
+  - combobox "Статус факта":
+    - option "Все статусы" [selected]
+    - option "Подтверждено"
+    - option "Нужно уточнить"
+    - option "Есть расхождение"
+    - option "Требует обновления"
+  - table:
+    - rowgroup:
+      - row "Тема / факт Источник Тип Дата чтения Статус":
+        - columnheader "Тема / факт"
+        - columnheader "Источник"
+        - columnheader "Тип"
+        - columnheader "Дата чтения"
+        - columnheader "Статус"
+    - rowgroup:
+      - 'row "Наличие программы University of Groningen · BSc Computing Science fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen Программы 19 окт. 2026 г. Подтверждено Раскрыть факт: Наличие программы"':
+        - rowheader "Наличие программы University of Groningen · BSc Computing Science":
+          - button "Наличие программы University of Groningen · BSc Computing Science" [expanded]:
+            - strong: Наличие программы
+            - generic: University of Groningen · BSc Computing Science
+        - cell "fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen":
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - generic: BSc Computing Science - University of Groningen
+        - cell "Программы":
+          - generic: Программы
+        - cell "19 окт. 2026 г."
+        - 'cell "Подтверждено Раскрыть факт: Наличие программы"':
+          - text: Подтверждено
+          - 'button "Раскрыть факт: Наличие программы"':
+      - row "Выдержка из источника fixture://u-groningen/program-0.html demo fixture Программа / финансирование BSc Computing Science Раздел на сайте Programme identity fall 2027 Официальный домен · program_intake":
+        - cell "Выдержка из источника fixture://u-groningen/program-0.html demo fixture Программа / финансирование BSc Computing Science Раздел на сайте Programme identity fall 2027 Официальный домен · program_intake":
+          - heading "Выдержка из источника" [level=2]
+          - blockquote: BSc Computing Science University of Groningen, Groningen, Netherlands. Entry for the fall 2027 intake. Entry requirements Applicants present a secondary school diploma equivalent to
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - heading "Программа / финансирование" [level=2]
+          - paragraph: BSc Computing Science
+          - heading "Раздел на сайте" [level=2]
+          - paragraph: Programme identity
+          - paragraph: fall 2027
+          - generic: Официальный домен · program_intake
+      - 'row "Общий балл IELTS University of Groningen · BSc Computing Science fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen Требования 19 окт. 2026 г. Подтверждено Раскрыть факт: Общий балл IELTS"':
+        - rowheader "Общий балл IELTS University of Groningen · BSc Computing Science":
+          - button "Общий балл IELTS University of Groningen · BSc Computing Science":
+            - strong: Общий балл IELTS
+            - generic: University of Groningen · BSc Computing Science
+        - cell "fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen":
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - generic: BSc Computing Science - University of Groningen
+        - cell "Требования":
+          - generic: Требования
+        - cell "19 окт. 2026 г."
+        - 'cell "Подтверждено Раскрыть факт: Общий балл IELTS"':
+          - text: Подтверждено
+          - 'button "Раскрыть факт: Общий балл IELTS"':
+      - 'row "Минимум по секциям IELTS University of Groningen · BSc Computing Science fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen Требования 19 окт. 2026 г. Подтверждено Раскрыть факт: Минимум по секциям IELTS"':
+        - rowheader "Минимум по секциям IELTS University of Groningen · BSc Computing Science":
+          - button "Минимум по секциям IELTS University of Groningen · BSc Computing Science":
+            - strong: Минимум по секциям IELTS
+            - generic: University of Groningen · BSc Computing Science
+        - cell "fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen":
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - generic: BSc Computing Science - University of Groningen
+        - cell "Требования":
+          - generic: Требования
+        - cell "19 окт. 2026 г."
+        - 'cell "Подтверждено Раскрыть факт: Минимум по секциям IELTS"':
+          - text: Подтверждено
+          - 'button "Раскрыть факт: Минимум по секциям IELTS"':
+      - 'row "Общий балл TOEFL University of Groningen · BSc Computing Science fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen Требования 19 окт. 2026 г. Подтверждено Раскрыть факт: Общий балл TOEFL"':
+        - rowheader "Общий балл TOEFL University of Groningen · BSc Computing Science":
+          - button "Общий балл TOEFL University of Groningen · BSc Computing Science":
+            - strong: Общий балл TOEFL
+            - generic: University of Groningen · BSc Computing Science
+        - cell "fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen":
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - generic: BSc Computing Science - University of Groningen
+        - cell "Требования":
+          - generic: Требования
+        - cell "19 окт. 2026 г."
+        - 'cell "Подтверждено Раскрыть факт: Общий балл TOEFL"':
+          - text: Подтверждено
+          - 'button "Раскрыть факт: Общий балл TOEFL"':
+      - 'row "Минимальный средний балл University of Groningen · BSc Computing Science fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen Требования 19 окт. 2026 г. Подтверждено Раскрыть факт: Минимальный средний балл"':
+        - rowheader "Минимальный средний балл University of Groningen · BSc Computing Science":
+          - button "Минимальный средний балл University of Groningen · BSc Computing Science":
+            - strong: Минимальный средний балл
+            - generic: University of Groningen · BSc Computing Science
+        - cell "fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen":
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - generic: BSc Computing Science - University of Groningen
+        - cell "Требования":
+          - generic: Требования
+        - cell "19 окт. 2026 г."
+        - 'cell "Подтверждено Раскрыть факт: Минимальный средний балл"':
+          - text: Подтверждено
+          - 'button "Раскрыть факт: Минимальный средний балл"':
+      - 'row "Шкала оценок University of Groningen · BSc Computing Science fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen Требования 19 окт. 2026 г. Подтверждено Раскрыть факт: Шкала оценок"':
+        - rowheader "Шкала оценок University of Groningen · BSc Computing Science":
+          - button "Шкала оценок University of Groningen · BSc Computing Science":
+            - strong: Шкала оценок
+            - generic: University of Groningen · BSc Computing Science
+        - cell "fixture://u-groningen/program-0.html demo fixture BSc Computing Science - University of Groningen":
+          - code: fixture://u-groningen/program-0.html
+          - generic: demo fixture
+          - generic: BSc Computing Science - University of Groningen
+        - cell "Требования":
+          - generic: Требования
+        - cell "19 окт. 2026 г."
+        - 'cell "Подтверждено Раскрыть факт: Шкала оценок"':
+          - text: Подтверждено
+          - 'button "Раскрыть факт: Шкала оценок"':
+  - navigation "Страницы фактов":
+    - button "Назад" [disabled]
+    - generic: 1 / 73
+    - button "Дальше"
+  - generic "Расхождения (1) и открытые вопросы (52)"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

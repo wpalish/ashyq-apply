@@ -1,0 +1,28 @@
+{
+  "status": "CONTROLLED_STOP_NOT_FULL_ACCEPTANCE",
+  "source_head": "04830101",
+  "reason": "Independent static review found raw/coerced nonfinite sanitization risk in claims/conflicts/authoritative checklist; reproduction pending before narrow repair",
+  "signal": "SIGINT",
+  "owned_helper_pid": 3031,
+  "sqlite": {
+    "status": "PASS",
+    "junit": {
+      "tests": 5095,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "7227bb2624efc4ef4a98584242855be16c2c974c47ff3f7ab28113e933cc87f2"
+    },
+    "coverage_percent": 95.45797758029855
+  },
+  "postgres": "INTERRUPTED_NOT_ACCEPTED",
+  "both_source_unchanged": true,
+  "both_shutdown_confirmed": true,
+  "both_runtime_removed": true,
+  "phase_receipt_sha256": {
+    "sqlite": "bbabef0c19706c7ba4d795ca6278b6abc13482c6b72a09d135d9d19e9ce470dc",
+    "postgres": "3261253e7089c6e304d3a2566b8987d80354ca3fd911fd0d2bb075c81c7d9e1d"
+  },
+  "foreign_processes_touched": false,
+  "full2_required_after_source_repair": true
+}

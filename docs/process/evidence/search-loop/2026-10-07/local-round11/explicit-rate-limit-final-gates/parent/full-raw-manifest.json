@@ -1,0 +1,88 @@
+{
+  "status": "EXACT_FRESH_FULL_RAW_ORIGINALS_READY",
+  "files": {
+    "summary.json": {
+      "sha256": "b6161a546ed6211151e438f70fbbca6813db091f7273f8fdd682c39f8ec78c41",
+      "bytes": 1635120
+    },
+    "source-manifest.json": {
+      "sha256": "ec39dc311865d2cbfbff5f55c1ae85838a71bd24c6db482df268e6a282d6e8f8",
+      "bytes": 1611469
+    },
+    "backend-sqlite.xml": {
+      "sha256": "093504056f5543bbfe5a6f627562adf9c3cb0a5278444aa5b6e6f35f4cb981e3",
+      "bytes": 646541
+    },
+    "backend-postgresql.xml": {
+      "sha256": "24ec8ca3b19911b4fb3776ffc1c1c22e6acdfafc8623e636a5461cdcfa29700e",
+      "bytes": 646540
+    },
+    "ruff.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "ruff-format.log": {
+      "sha256": "c08cb44deef3bd5e6aceb013d76f19020ed4f70d4eea0e35334c33d2a0dc94ff",
+      "bytes": 28
+    },
+    "mypy.log": {
+      "sha256": "874c02a239cb4a1a869edb412ef78e3c9330fbd6220e0dc83dd1474651872581",
+      "bytes": 10327
+    },
+    "backend-sqlite.log": {
+      "sha256": "7d468423c655a96163660350d35b081f3cecf6971b62f0e3ba626a4c4ec3b75e",
+      "bytes": 17137
+    },
+    "frontend-typecheck.log": {
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53
+    },
+    "frontend-lint.log": {
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65
+    },
+    "frontend-tests.log": {
+      "sha256": "1f74abb583e74b0b180ee3156734620223a53a45b41a8eb6bef23ac702954760",
+      "bytes": 20135
+    },
+    "frontend-build.log": {
+      "sha256": "f25ab914205c548872dfba180db0b30b0a14ad91fb3f1a1d15792cd5541c6961",
+      "bytes": 7315
+    },
+    "backend-postgresql.log": {
+      "sha256": "b91c55381ea206f66acc9a8a3dad1b8c7a73d74930cde92010ff8d8cff47e639",
+      "bytes": 5926
+    },
+    "e2e.log": {
+      "sha256": "8a6311b0f961158543ca35db3e74a33eeb79542007586dcb4bdb1ba3ebb951d7",
+      "bytes": 172068
+    },
+    "e2e-auth.log": {
+      "sha256": "b0994ab212871f9bbd299c84d51b85efbb971a4956dedd1e40953aebf73defd3",
+      "bytes": 16684
+    },
+    "pip-audit.log": {
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "bytes": 31
+    },
+    "npm-audit.log": {
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "bytes": 24
+    }
+  },
+  "command": [
+    "python3",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "--repo",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+    "check",
+    "--suite",
+    "full"
+  ],
+  "qualifications": [
+    "No Docker/container or hosted CI/production verification.",
+    "E2E artifacts remain in local runner run; raw text/full JUnit/source-manifest retained.",
+    "90 native eachDB included within4312 unique eachDB, not extra cases.",
+    "Whole source tree includes metadata; selected999 code/test/evaluation/scripts/frontend paths match current final bytes."
+  ]
+}

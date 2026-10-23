@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "family": "AF_INET",
+      "action": "bind",
+      "denied_by_os": true,
+      "errno": 1
+    },
+    {
+      "family": "AF_INET6",
+      "action": "bind",
+      "denied_by_os": true,
+      "errno": 1
+    },
+    {
+      "family": "AF_INET",
+      "action": "connect",
+      "denied_by_os": true,
+      "errno": 1
+    },
+    {
+      "family": "AF_INET6",
+      "action": "connect",
+      "denied_by_os": true,
+      "errno": 1
+    },
+    {
+      "family": "AF_INET",
+      "action": "sendto",
+      "denied_by_os": true,
+      "errno": 1
+    },
+    {
+      "family": "AF_INET6",
+      "action": "sendto",
+      "denied_by_os": true,
+      "errno": 1
+    }
+  ],
+  "scope": "OS transport refusal; no current research/quality probe"
+}

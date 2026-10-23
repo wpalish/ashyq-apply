@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+    "format",
+    "--no-cache",
+    "--check",
+    "app/adapters/cost/web_costs.py",
+    "app/adapters/discovery/catalog_walker.py",
+    "app/adapters/discovery/live_discovery.py",
+    "app/adapters/documents/web_documents.py",
+    "app/adapters/fetching.py",
+    "app/adapters/government/web_government.py",
+    "app/adapters/requirements/web_requirements.py",
+    "app/adapters/scholarship/web_scholarships.py",
+    "app/adapters/search/intent.py",
+    "app/jobs/worker.py",
+    "app/pipeline/runner.py",
+    "tests/test_fetch_pii_hops.py",
+    "tests/test_rejected_diagnostics.py"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/runtime/on/backend",
+  "env_allowlist": {
+    "PATH": "/usr/bin:/bin",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "UNIMATCH_SEARCH_PROVIDER": "none",
+    "UNIMATCH_DECISION_PROVIDER": "none",
+    "UNIMATCH_DATABASE_URL": "sqlite:///:memory:",
+    "UNIMATCH_DEMO_MODE": "true"
+  },
+  "returncode": 0,
+  "seconds": 0.05841075,
+  "utc": "2026-10-09T03:54:39.692129+00:00",
+  "log_sha256": "04eb0d6e6734823dcd2b2b704729e976f683df7a8f334da7216520ef1cb319bf"
+}

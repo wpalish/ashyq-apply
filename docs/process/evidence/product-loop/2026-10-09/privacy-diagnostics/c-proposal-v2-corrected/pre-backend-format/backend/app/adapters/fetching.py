@@ -1,0 +1,1142 @@
+"""The single door to the outside world.
+
+Every network read in the product goes through ``Fetcher``. That is what makes
+the politeness guarantees checkable in one place: robots.txt is consulted
+before the first request to a host, per-host concurrency is capped, requests
+are spaced, responses are cached on disk, and failures back off rather than
+retry tightly.
+
+The fetcher also enforces a privacy rule that is easy to violate by accident:
+no applicant data may appear in an outbound URL. ``assert_no_pii`` is called on
+every request and raises rather than leaking — and the same guard runs on
+every redirect hop the fetcher discovers along the way, not just the URL the
+caller asked for.
+
+A 200 also records its HTTP validators (ETag, Last-Modified) and a content
+hash of the extracted text. The hash is only ever compared against hashes
+computed by the same formula, so it is self-consistent by construction: if
+text extraction drifts, the worst case is one redundant re-extraction — never
+a false "unchanged".
+"""
+
+from __future__ import annotations
+
+import asyncio
+import hashlib
+import json
+import logging
+import re
+import time
+import unicodedata
+import urllib.robotparser
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+from urllib.parse import urlparse
+
+import httpx
+from app.adapters.network_policy import (
+    MAX_REDIRECTS,
+    BlockedRequest,
+    ResolvedTarget,
+    check_url,
+)
+from app.domain.enums import FetchOutcome
+from app.domain.site_identity import hosts_share_site
+
+log = logging.getLogger("unimatch.fetch")
+
+USER_AGENT = (
+    "ASHYQApplyBot/0.2 (+https://github.com/wpalish/ashyq-apply; "
+    "university admissions research for a single applicant; contact: set FETCH_CONTACT)"
+)
+DEFAULT_TIMEOUT = 20.0
+#: The longest robots.txt Crawl-delay this crawler will honour by waiting. A
+#: longer one is honoured by not reading the host at all: waiting it out made
+#: a single university's run hang until its wall clock ended.
+MAX_CRAWL_DELAY_SECONDS = 10.0
+DEFAULT_DELAY_SECONDS = 1.5
+MAX_PER_HOST_CONCURRENCY = 2
+MAX_ATTEMPTS = 3
+#: httpx's timeout bounds each connect and each read, not the whole response:
+#: a server that trickles bytes never trips it. Aalto's robots.txt held a run
+#: for its entire 90 s this way. These bound the whole exchange.
+ROBOTS_DEADLINE_SECONDS = 15.0
+ATTEMPT_DEADLINE_FACTOR = 1.0
+#: Name resolution is a blocking libc call. Run on the event loop it froze
+#: every coroutine, deadlines included, for as long as the resolver took.
+DNS_DEADLINE_SECONDS = 10.0
+#: How many of a host's validated addresses one attempt may try, and how long
+#: each may take to accept a connection when there is another to fall back on.
+MAX_ADDRESSES_TRIED = 3
+PER_ADDRESS_CONNECT_SECONDS = 5.0
+
+
+async def _resolve_checked(url: str) -> ResolvedTarget:
+    """``check_url`` off the event loop, bounded. Raises TimeoutError."""
+    return await asyncio.wait_for(asyncio.to_thread(check_url, url), DNS_DEADLINE_SECONDS)
+
+
+MAX_BYTES = 5_000_000
+MAX_ROBOTS_BYTES = 512_000
+#: Content types worth parsing. Anything else is refused before it is read, so
+#: a link to a large binary cannot be pulled through the size limit byte by byte.
+ALLOWED_CONTENT_TYPES = (
+    "text/html",
+    "application/xhtml+xml",
+    "text/plain",
+    "application/pdf",
+    "text/xml",
+    "application/xml",
+    "application/json",
+)
+
+
+def _pinned_request(
+    client: httpx.AsyncClient,
+    target: ResolvedTarget,
+    *,
+    timeout: float | httpx.Timeout | None = None,
+    headers: dict[str, str] | None = None,
+    address: str | None = None,
+) -> httpx.Request:
+    """Connect to the validated IP while preserving virtual-host TLS and HTTP."""
+    pinned_url = httpx.URL(target.url).copy_with(host=address or target.pinned_address)
+    host = f"[{target.host}]" if ":" in target.host else target.host
+    default_port = 443 if target.scheme == "https" else 80
+    if target.port != default_port:
+        host = f"{host}:{target.port}"
+    return client.build_request(
+        "GET",
+        pinned_url,
+        headers={"Host": host, **(headers or {})},
+        timeout=timeout,
+        extensions={"sni_hostname": target.host},
+    )
+
+
+class PIILeakError(RuntimeError):
+    """Raised when applicant data would be placed in an outbound request."""
+
+
+#: Below this many characters of extractable text, a "successful" HTML fetch is
+#: an empty shell worth escalating to a browser.
+MIN_USEFUL_TEXT = 400
+
+
+def same_source_site(requested_url: str, final_url: str) -> bool:
+    """Whether a fetched body stayed on the requested registrable domain.
+
+    A redirect to a different organisation cannot be cited under the URL that
+    initiated it, even when both hosts pass the network/SSRF policy.
+    """
+    try:
+        requested = urlparse(requested_url)
+        final = urlparse(final_url)
+    except ValueError:
+        return False
+    if requested.scheme not in ("http", "https") or final.scheme not in ("http", "https"):
+        return requested_url == final_url and requested.scheme == "fixture"
+    return hosts_share_site(requested_url, final_url)
+
+
+@dataclass
+class FetchResult:
+    url: str
+    outcome: FetchOutcome
+    status_code: int | None = None
+    content: bytes = b""
+    text: str = ""
+    content_type: str = ""
+    fetched_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    from_cache: bool = False
+    error: str = ""
+    final_url: str = ""
+    #: Which tier produced this content. Recorded on every SourcePage so a run
+    #: can prove the browser tier is doing work rather than merely existing.
+    fetch_tier: str = "http"
+    #: HTTP validators, exactly as the origin sent them, plus a self-consistent
+    #: hash of the extracted text. Recorded per page so the next visit can ask
+    #: a conditional GET instead of re-downloading. A validator only means
+    #: something to the origin that minted it; the browser tier carries none.
+    etag: str = ""
+    last_modified: str = ""
+    content_hash: str = ""
+
+    @property
+    def ok(self) -> bool:
+        return self.outcome in (FetchOutcome.OK, FetchOutcome.CACHED)
+
+    @property
+    def is_pdf(self) -> bool:
+        return "pdf" in self.content_type.lower() or self.final_url.lower().endswith(".pdf")
+
+
+class ResponseCache:
+    """Content-addressed disk cache. Keeps repeat runs off the network."""
+
+    def __init__(self, root: Path, ttl_seconds: int = 86_400) -> None:
+        self.root = root
+        self.ttl = ttl_seconds
+        self.root.mkdir(parents=True, exist_ok=True)
+
+    def _paths(self, url: str) -> tuple[Path, Path]:
+        digest = hashlib.sha256(url.encode()).hexdigest()[:32]
+        bucket = self.root / digest[:2]
+        return bucket / f"{digest}.meta.json", bucket / f"{digest}.body"
+
+    def get(self, url: str) -> FetchResult | None:
+        meta_path, body_path = self._paths(url)
+        if not meta_path.exists() or not body_path.exists():
+            return None
+        try:
+            meta = json.loads(meta_path.read_text())
+        except (json.JSONDecodeError, OSError):
+            return None
+        if time.time() - meta.get("stored_at", 0) > self.ttl:
+            return None
+        body = body_path.read_bytes()
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.CACHED,
+            status_code=meta.get("status_code"),
+            content=body,
+            text=body.decode(meta.get("encoding", "utf-8"), errors="replace"),
+            content_type=meta.get("content_type", ""),
+            fetched_at=datetime.fromisoformat(meta["fetched_at"]),
+            from_cache=True,
+            final_url=meta.get("final_url", url),
+            # Entries written before validators were recorded restore defaults.
+            etag=meta.get("etag", ""),
+            last_modified=meta.get("last_modified", ""),
+            content_hash=meta.get("content_hash", ""),
+        )
+
+    def put(self, result: FetchResult) -> None:
+        meta_path, body_path = self._paths(result.url)
+        bucket = meta_path.parent
+        bucket.mkdir(parents=True, exist_ok=True)
+        body_path.write_bytes(result.content)
+        meta_path.write_text(
+            json.dumps(
+                {
+                    "url": result.url,
+                    "final_url": result.final_url or result.url,
+                    "status_code": result.status_code,
+                    "content_type": result.content_type,
+                    "fetched_at": result.fetched_at.isoformat(),
+                    "stored_at": time.time(),
+                    "encoding": "utf-8",
+                    "etag": result.etag,
+                    "last_modified": result.last_modified,
+                    "content_hash": result.content_hash,
+                }
+            )
+        )
+
+
+class _FractionalCrawlDelayParser(urllib.robotparser.RobotFileParser):
+    """A robots parser that keeps fractional Crawl-delay values.
+
+    The stdlib parser stores a group's crawl-delay only when the value is all
+    digits (``"2.5".isdigit()`` is False), so a site asking for
+    ``Crawl-delay: 2.5`` — exactly what the REP examples use — had its request
+    silently dropped and the fetcher fell back to its own, usually shorter,
+    default. Everything else about parsing is the stdlib's; this only re-reads
+    the crawl-delay lines with float semantics and patches them onto the
+    entries the stdlib parser built, for the same user-agent groups.
+    """
+
+    #: Defined by the stdlib base class in __init__, whose stubs do not
+    #: surface them; this subclass reads both after super().parse().
+    entries: list[Any]
+    default_entry: Any | None
+
+    def parse(self, lines) -> None:
+        super().parse(lines)
+        groups: list[tuple[list[str], float]] = []
+        useragents: list[str] = []
+        delay: float | None = None
+        saw_rule = False
+
+        def close_group() -> None:
+            nonlocal useragents, delay, saw_rule
+            if useragents and delay is not None:
+                groups.append((useragents, delay))
+            useragents, delay, saw_rule = [], None, False
+
+        for raw in lines:
+            line = raw.split("#", 1)[0].strip()
+            if not line:
+                close_group()
+                continue
+            key, sep, value = line.partition(":")
+            if not sep:
+                continue
+            key = key.strip().lower()
+            value = value.strip()
+            if key == "user-agent":
+                # A user-agent line after a rule starts a new group, exactly
+                # as the stdlib state machine treats it; consecutive
+                # user-agent lines share one group.
+                if saw_rule:
+                    close_group()
+                useragents.append(value)
+            elif key in ("allow", "disallow", "crawl-delay", "request-rate"):
+                saw_rule = True
+                if key == "crawl-delay":
+                    try:
+                        delay = float(value)
+                    except ValueError:
+                        delay = None
+        close_group()
+
+        candidates = list(self.entries)
+        if self.default_entry is not None:
+            candidates.append(self.default_entry)
+        for entry in candidates:
+            if entry.delay is None:
+                for group_useragents, group_delay in groups:
+                    if entry.useragents == group_useragents:
+                        entry.delay = group_delay
+                        break
+
+
+class _RobotsUnreachable(Exception):
+    """robots.txt could not be fetched for a network or server reason."""
+
+
+class RobotsPolicy:
+    """robots.txt, fetched once per host and cached for the process lifetime."""
+
+    def __init__(self, user_agent: str = USER_AGENT, enabled: bool = True) -> None:
+        self.user_agent = user_agent
+        self.enabled = enabled
+        self._parsers: dict[str, urllib.robotparser.RobotFileParser | None] = {}
+        #: Hosts whose robots.txt never finished arriving.
+        self.stalled: set[str] = set()
+        #: Origins whose robots.txt was *unreachable* — a network error, a 5xx
+        #: or a stall. RFC 9309 §2.3.1.4: the crawler MUST then assume a
+        #: complete disallow. Unavailable (4xx) is different: no restrictions.
+        self._unreachable: dict[str, str] = {}
+        #: One lock per origin: a stalled host must not hold every other
+        #: host's robots.txt behind it.
+        self._locks: dict[str, asyncio.Lock] = {}
+
+    async def allowed(self, url: str, client: httpx.AsyncClient) -> tuple[bool, str]:
+        if not self.enabled:
+            return True, "robots checking disabled by configuration"
+        parsed = urlparse(url)
+        host = f"{parsed.scheme}://{parsed.netloc}"
+        async with self._locks.setdefault(host, asyncio.Lock()):
+            if host not in self._parsers and host not in self._unreachable:
+                try:
+                    self._parsers[host] = await asyncio.wait_for(
+                        self._load(host, client), ROBOTS_DEADLINE_SECONDS
+                    )
+                except TimeoutError:
+                    # Remembered, so the host is not stalled on again.
+                    log.info("robots.txt for %s did not arrive in time", host)
+                    self._unreachable[host] = "did not arrive in time"
+                    self.stalled.add(parsed.hostname or parsed.netloc)
+                except _RobotsUnreachable as exc:
+                    log.info("robots.txt for %s unreachable: %s", host, exc)
+                    self._unreachable[host] = str(exc)
+        if host in self._unreachable:
+            return False, (
+                f"robots.txt unreachable ({self._unreachable[host]}); RFC 9309 treats the "
+                "whole site as disallowed"
+            )
+        parser = self._parsers[host]
+        if parser is None:
+            # Unavailable (4xx, or a robots.txt we will not read): the RFC's
+            # "no restrictions" reading.
+            return True, "no robots.txt available"
+        allowed = parser.can_fetch(self.user_agent, url)
+        return allowed, "robots.txt allows" if allowed else "robots.txt disallows this path"
+
+    async def crawl_delay(self, url: str) -> float | None:
+        parsed = urlparse(url)
+        host = f"{parsed.scheme}://{parsed.netloc}"
+        parser = self._parsers.get(host)
+        if parser is None:
+            return None
+        try:
+            delay = parser.crawl_delay(self.user_agent)
+            return float(delay) if delay else None
+        except (AttributeError, TypeError, ValueError):
+            return None
+
+    async def _load(
+        self, host: str, client: httpx.AsyncClient
+    ) -> urllib.robotparser.RobotFileParser | None:
+        robots_url = f"{host}/robots.txt"
+        try:
+            # robots.txt is fetched from a host the crawler was pointed at, so
+            # it is exactly as attacker-influenced as any other URL.
+            target = await _resolve_checked(robots_url)
+        except BlockedRequest as exc:
+            log.warning("refusing robots.txt for %s: %s", host, exc)
+            return None
+        try:
+            request = _pinned_request(client, target, timeout=10.0)
+            resp = await client.send(request, stream=True)
+        except (httpx.HTTPError, OSError) as exc:
+            raise _RobotsUnreachable(exc.__class__.__name__) from exc
+        try:
+            if resp.status_code >= 500:
+                raise _RobotsUnreachable(f"HTTP {resp.status_code}")
+            if resp.status_code < 200 or resp.status_code >= 300:
+                return None
+            declared = resp.headers.get("content-length")
+            if declared and declared.isdigit() and int(declared) > MAX_ROBOTS_BYTES:
+                log.info("robots.txt for %s exceeds the size limit", host)
+                return None
+            chunks: list[bytes] = []
+            total = 0
+            async for chunk in resp.aiter_bytes():
+                total += len(chunk)
+                if total > MAX_ROBOTS_BYTES:
+                    log.info("robots.txt for %s exceeded the streaming size limit", host)
+                    return None
+                chunks.append(chunk)
+        finally:
+            await resp.aclose()
+        parser = _FractionalCrawlDelayParser()
+        parser.parse(b"".join(chunks).decode("utf-8", errors="replace").splitlines())
+        return parser
+
+
+# --- PII guard ------------------------------------------------------------
+
+_PII_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("email address", re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+")),
+    (
+        "credential-like parameter",
+        re.compile(r"(?i)\b(password|passwd|otp|token|secret|api[_-]?key)="),
+    ),
+)
+
+#: A long digit run is only suspicious in a query string. Content management
+#: systems put numeric node ids in paths all the time
+#: (https://www.aalto.fi/en/node/1008496), and treating those as passport
+#: numbers made the guard fire on ordinary university URLs.
+_QUERY_DIGITS = re.compile(r"\b\d{9,}\b")
+
+
+def find_pii(url: str, extra: str = "") -> str | None:
+    """Name the kind of applicant data in a request, or None if there is none."""
+    haystack = f"{url} {extra}"
+    for label, pattern in _PII_PATTERNS:
+        if pattern.search(haystack):
+            return label
+    query = urlparse(url).query
+    if query and _QUERY_DIGITS.search(query):
+        return "long digit sequence in a query parameter (passport/ID/card)"
+    if extra and _QUERY_DIGITS.search(extra):
+        return "long digit sequence (passport/ID/card)"
+    return None
+
+
+def privacy_safe_url(url: str) -> str:
+    """Diagnostic identity only; never a retry target or proof of a read.
+
+    Ordinary public URLs remain exact. For an already rejected URL retain
+    only a structurally safe origin, never userinfo/path/query/fragment. This
+    does not extend PII detection or verify the origin through DNS.
+    """
+    if find_pii(url) is None:
+        return url
+    try:
+        parsed = urlparse(url)
+        host = parsed.hostname or ""
+        if parsed.scheme not in ("http", "https") or not host:
+            return "[privacy-refused URL]"
+        host = f"[{host}]" if ":" in host else host
+        port = f":{parsed.port}" if parsed.port is not None else ""
+        origin = f"{parsed.scheme}://{host}{port}/"
+        return origin if find_pii(origin) is None else "[privacy-refused URL]"
+    except ValueError:
+        return "[privacy-refused URL]"
+
+
+def fetch_diagnostic_url(requested_url: str, result: FetchResult) -> str:
+    """Use safe identity for a refused input; keep an ordinary source exact."""
+    return (
+        privacy_safe_url(requested_url)
+        if result.outcome == FetchOutcome.REFUSED_PRIVACY
+        else requested_url
+    )
+
+
+def fetch_retry_url(requested_url: str, result: FetchResult) -> str | None:
+    """A privacy refusal must not turn an origin placeholder into a retry."""
+    return None if result.outcome == FetchOutcome.REFUSED_PRIVACY else requested_url
+
+
+def assert_no_pii(url: str, extra: str = "") -> None:
+    """Refuse to send applicant-identifying data to a third-party host.
+
+    Raises, because a caller that *builds* a URL out of profile fields has a
+    bug that must not be swallowed. ``Fetcher.get`` catches this for URLs it
+    merely discovered while crawling, where the right response is to skip the
+    link and carry on.
+    """
+    label = find_pii(url, extra)
+    if label is not None:
+        raise PIILeakError(
+            f"Refusing to fetch: the request contains what looks like a {label}. "
+            "Applicant data must never appear in an outbound URL."
+        )
+
+
+# --- content hash -----------------------------------------------------------
+
+
+def _content_hash(text: str) -> str:
+    """A self-consistency hash of page text: detects change without a body.
+
+    sha256 over the NFKC-normalized, whitespace-collapsed extracted text. The
+    hash is only ever compared against hashes computed by this same formula,
+    so it is self-consistent by construction: if text extraction drifts, the
+    worst case is one redundant re-extraction — never a false "unchanged".
+    Falls back to the raw text when extraction fails or yields nothing, so a
+    page the extractor cannot read is hashed as itself, not as empty.
+    """
+    try:
+        from app.adapters.extraction import html_to_text
+
+        extracted = html_to_text(text)
+    except Exception:
+        extracted = ""
+    if not extracted:
+        extracted = text
+    normalized = unicodedata.normalize("NFKC", " ".join(extracted.split()))
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+
+def _refusal(result: FetchResult) -> str:
+    """Why a host refused this read outright, or "" when it did not.
+
+    A page that is missing (404) or broken (5xx) says nothing about the rest
+    of the host; a 401/403, an unreadable robots.txt or a stalled host does.
+    """
+    if result.outcome == FetchOutcome.HTTP_ERROR and result.status_code in (401, 403):
+        return f"HTTP {result.status_code}"
+    if result.outcome == FetchOutcome.ROBOTS_DISALLOWED and "unreachable" in result.error:
+        return "robots.txt unreachable"
+    if result.outcome == FetchOutcome.TIMEOUT and "not waited on again" in result.error:
+        return "host stalled"
+    return ""
+
+
+class Fetcher:
+    """Polite, cached, rate-limited HTTP access."""
+
+    def __init__(
+        self,
+        cache_dir: Path,
+        *,
+        delay_seconds: float = DEFAULT_DELAY_SECONDS,
+        respect_robots: bool = True,
+        offline: bool = False,
+        cache_ttl_seconds: int = 86_400,
+        timeout: float = DEFAULT_TIMEOUT,
+        contact: str = "",
+        corpus_dir: Path | None = None,
+        max_crawl_delay: float | None = MAX_CRAWL_DELAY_SECONDS,
+    ) -> None:
+        self.cache = ResponseCache(cache_dir, cache_ttl_seconds)
+        self.robots = RobotsPolicy(enabled=respect_robots)
+        self.delay = delay_seconds
+        #: None waits out any Crawl-delay: for background work with no clock.
+        self.max_crawl_delay = max_crawl_delay
+        self.offline = offline
+        self.timeout = timeout
+        self.user_agent = (
+            USER_AGENT.replace("set FETCH_CONTACT", contact) if contact else USER_AGENT
+        )
+        self._host_locks: dict[str, asyncio.Semaphore] = {}
+        #: Hosts that already let one whole exchange run past its deadline in
+        #: this fetcher's life. Run 20: Aalto stalled robots.txt, then
+        #: sitemap.xml, and each stall cost the case most of its clock.
+        self._stalled_hosts: set[str] = set()
+        self._last_request: dict[str, float] = {}
+        self._client: httpx.AsyncClient | None = None
+        self.corpus_dir = corpus_dir
+        #: Set by attach_renderer(). Escalation happens inside get(), so every
+        #: adapter benefits without knowing the tier exists.
+        self._renderer: object | None = None
+        self.stats: dict[str, int] = {o.value: 0 for o in FetchOutcome}
+        self.tier_counts: dict[str, int] = {"fixture": 0, "http": 0, "browser": 0, "pdf": 0}
+        #: Hosts that refused this fetcher outright earlier in its life, and
+        #: why: a 401/403, a robots.txt that could not be read, a host that
+        #: stalled. Recorded only; nothing here changes what ``get`` does.
+        #: Discovery may use it to stop offering pages on a host that is
+        #: known not to answer (expert trace, Toronto 2026-09-27).
+        self.refused_hosts: dict[str, str] = {}
+
+    def attach_renderer(self, renderer: object) -> None:
+        """Give the fetcher a browser to escalate to.
+
+        Escalation lives here rather than in each adapter because the previous
+        arrangement - a helper the adapters were supposed to call - meant the
+        browser tier was constructed on every run and never invoked once.
+        """
+        self._renderer = renderer
+
+    async def _send_to_any_address(
+        self, target: ResolvedTarget, current: str, headers: dict[str, str] | None
+    ) -> httpx.Response:
+        """Send to the first validated address that accepts a connection.
+
+        A name often resolves to several addresses; one bad edge used to make
+        the whole host look down. Every address was validated by the network
+        policy, so trying the next one widens nothing. Only a failure to
+        *connect* moves on — a server that answered is the answer.
+        """
+        assert self._client is not None
+        if not isinstance(self._client, httpx.AsyncClient):
+            request = self._client.build_request("GET", current, headers=headers)
+            return await self._client.send(request, stream=True)
+        addresses = list(dict.fromkeys(target.addresses))[:MAX_ADDRESSES_TRIED]
+        timeout = (
+            httpx.Timeout(self.timeout, connect=min(PER_ADDRESS_CONNECT_SECONDS, self.timeout))
+            if len(addresses) > 1
+            else None
+        )
+        for index, address in enumerate(addresses):
+            request = _pinned_request(
+                self._client, target, headers=headers, address=address, timeout=timeout
+            )
+            try:
+                return await self._client.send(request, stream=True)
+            except (httpx.ConnectError, httpx.ConnectTimeout) as exc:
+                if index == len(addresses) - 1:
+                    raise
+                log.info("%s via %s: %s; trying the next address", target.host, address, exc)
+        raise AssertionError("unreachable")
+
+    async def _request_with_redirects(
+        self, url: str, *, validators: dict[str, str] | None = None
+    ) -> FetchResult:
+        """Follow redirects by hand, re-validating every hop.
+
+        Each Location is put through the same policy as the original URL, so a
+        public page cannot bounce the crawler onto a private address — and it
+        goes through the privacy guard too, so a redirect cannot smuggle
+        applicant data into another host's access log.
+        """
+        if self._client is None:
+            raise RuntimeError("Fetcher must be used as an async context manager")
+        current = url
+        validators = dict(validators) if validators else None
+        network_budget = self.timeout * ATTEMPT_DEADLINE_FACTOR
+        for _hop in range(MAX_REDIRECTS + 1):
+            resolve_started = time.monotonic()
+            target = await _resolve_checked(current)
+            network_budget -= time.monotonic() - resolve_started
+            if network_budget <= 0:
+                raise TimeoutError("redirect chain exhausted its network deadline")
+            hop_result, network_used = await self._request_one_hop(
+                url, current, target, validators, network_budget
+            )
+            network_budget -= network_used
+            # Validators ride the caller's request only: a hop can land on
+            # another host, and an entity tag minted by one origin must not be
+            # replayed to another.
+            validators = None
+            if isinstance(hop_result, FetchResult):
+                return hop_result
+            status_code, location = hop_result
+            if not location:
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.HTTP_ERROR,
+                    status_code=status_code,
+                    error="redirect without a Location header",
+                    final_url=current,
+                )
+            current = str(httpx.URL(current).join(location))
+            # Refuse unsafe URLs before DNS or the destination's robots lookup.
+            leak = find_pii(current)
+            if leak is not None:
+                log.warning("refusing %s: looks like %s", privacy_safe_url(url), leak)
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.REFUSED_PRIVACY,
+                    error=f"Refused: the URL contains what looks like a {leak}. It was not fetched.",
+                    final_url=privacy_safe_url(url),
+                )
+            if not same_source_site(url, current):
+                log.warning(
+                    "refusing cross-site redirect from %s to %s",
+                    urlparse(url).hostname,
+                    urlparse(current).hostname,
+                )
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=(
+                        "redirect left the requested site's domain for "
+                        f"{urlparse(current).hostname}; no source was read"
+                    ),
+                    final_url=current,
+                )
+
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.HTTP_ERROR,
+            final_url=current,
+            error=f"more than {MAX_REDIRECTS} redirects",
+        )
+
+    async def _request_one_hop(
+        self,
+        requested_url: str,
+        current: str,
+        target: ResolvedTarget,
+        validators: dict[str, str] | None,
+        network_budget: float,
+    ) -> tuple[FetchResult | tuple[int, str | None], float]:
+        """Apply per-host policy and stream one response inside its host limit."""
+        async with self._semaphore(target.host):
+            refused = await self._redirect_policy(requested_url, current, target.host)
+            if refused is not None:
+                return refused, 0.0
+
+            async def exchange() -> FetchResult | tuple[int, str | None]:
+                # The whole network/body exchange is bounded, including a
+                # trickling response. Robots and permitted Crawl-delay above
+                # do not spend this network budget.
+                response = await self._send_to_any_address(target, current, validators)
+                try:
+                    # A 304 is terminal despite being in the 3xx family.
+                    if response.status_code == 304 or not response.is_redirect:
+                        return await self._read_response(requested_url, current, response)
+                    return response.status_code, response.headers.get("location")
+                finally:
+                    await response.aclose()
+
+            network_started = time.monotonic()
+            result = await asyncio.wait_for(exchange(), network_budget)
+            return result, time.monotonic() - network_started
+
+    async def _redirect_policy(
+        self, requested_url: str, redirect_url: str, host: str
+    ) -> FetchResult | None:
+        """Apply the destination's robots and pacing before following a hop."""
+        assert self._client is not None
+        if host in self._stalled_hosts or host in self.robots.stalled:
+            return FetchResult(
+                url=requested_url,
+                outcome=FetchOutcome.TIMEOUT,
+                error="redirect host stopped responding earlier in this run",
+                final_url=redirect_url,
+            )
+        allowed, reason = await self.robots.allowed(redirect_url, self._client)
+        if host in self.robots.stalled:
+            return FetchResult(
+                url=requested_url,
+                outcome=FetchOutcome.TIMEOUT,
+                error="redirect host robots.txt never finished arriving",
+                final_url=redirect_url,
+            )
+        if not allowed:
+            return FetchResult(
+                url=requested_url,
+                outcome=FetchOutcome.ROBOTS_DISALLOWED,
+                error=reason,
+                final_url=redirect_url,
+            )
+        asked = await self.robots.crawl_delay(redirect_url)
+        if asked is not None and self.max_crawl_delay is not None and asked > self.max_crawl_delay:
+            return FetchResult(
+                url=requested_url,
+                outcome=FetchOutcome.ROBOTS_CRAWL_DELAY,
+                error=f"robots.txt asks for a {asked:.0f}s crawl delay on redirect host",
+                final_url=redirect_url,
+            )
+        await self._space_requests(host, redirect_url)
+        return None
+
+    async def _read_response(self, url: str, final_url: str, response) -> FetchResult:
+        """Read a response, refusing what is too large or not worth parsing."""
+        # A validated conditional request ends here (RFC 7232): a 304 has no
+        # body and no content type to police, and the caller keeps the copy it
+        # already has. Test this before the content-type, size and body
+        # branches — none of them mean anything for a 304.
+        if response.status_code == 304:
+            await response.aclose()
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.CACHED,
+                status_code=304,
+                from_cache=True,
+                error="not modified (304)",
+                final_url=final_url,
+            )
+
+        if response.status_code >= 400:
+            await response.aclose()
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.HTTP_ERROR,
+                status_code=response.status_code,
+                error=f"HTTP {response.status_code}",
+                final_url=final_url,
+            )
+
+        content_type = response.headers.get("content-type", "")
+        base_type = content_type.split(";")[0].strip().lower()
+        if base_type and not any(base_type == allowed for allowed in ALLOWED_CONTENT_TYPES):
+            await response.aclose()
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.UNPARSEABLE,
+                status_code=response.status_code,
+                content_type=content_type,
+                final_url=final_url,
+                error=f"content type {base_type!r} is not something we parse",
+            )
+
+        # A declared length over the cap is refused without reading anything.
+        declared = response.headers.get("content-length")
+        if declared and declared.isdigit() and int(declared) > MAX_BYTES:
+            await response.aclose()
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.TOO_LARGE,
+                status_code=response.status_code,
+                content_type=content_type,
+                final_url=final_url,
+                error=f"declared {int(declared):,} bytes, over the {MAX_BYTES:,} limit",
+            )
+
+        # And an undeclared one is cut off as it arrives, not after.
+        chunks: list[bytes] = []
+        total = 0
+        async for chunk in response.aiter_bytes():
+            total += len(chunk)
+            if total > MAX_BYTES:
+                await response.aclose()
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.TOO_LARGE,
+                    status_code=response.status_code,
+                    content_type=content_type,
+                    final_url=final_url,
+                    error=f"body exceeded the {MAX_BYTES:,} byte limit while streaming",
+                )
+            chunks.append(chunk)
+        await response.aclose()
+
+        content = b"".join(chunks)
+        text = content.decode(response.encoding or "utf-8", errors="replace")
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.OK,
+            status_code=response.status_code,
+            content=content,
+            text=text,
+            content_type=content_type,
+            final_url=final_url,
+            # Record what the next visit needs to ask "has this changed?".
+            etag=response.headers.get("etag", ""),
+            last_modified=response.headers.get("last-modified", ""),
+            content_hash=_content_hash(text),
+        )
+
+    async def _maybe_render(self, result: FetchResult) -> FetchResult:
+        """Escalate to the browser when a 200 came back with no usable text."""
+        if self._renderer is None or not result.ok or result.is_pdf:
+            return result
+        from app.adapters.extraction import html_to_text
+
+        if len(html_to_text(result.text)) >= MIN_USEFUL_TEXT:
+            return result
+
+        rendered = await self._renderer.render(result.url)  # type: ignore[attr-defined]
+        # A renderer that reports OK while carrying an error status (an older
+        # browser tier did) must not launder its error page into the fetch of
+        # record or the disk cache: the rendered body stays unread and the
+        # original HTTP result stands.
+        if rendered.status_code is not None and rendered.status_code >= 400:
+            log.warning(
+                "browser tier returned HTTP %s for %s; keeping the plain HTTP result",
+                rendered.status_code,
+                result.url[:120],
+            )
+            return result
+        if rendered.ok and not same_source_site(result.url, rendered.final_url or rendered.url):
+            log.warning("browser tier left the requested host %s", urlparse(result.url).hostname)
+            return result
+        if rendered.ok and len(html_to_text(rendered.text)) > len(html_to_text(result.text)):
+            rendered.fetch_tier = "browser"
+            # Browser output has no HTTP validators: whatever a renderer claims
+            # to carry over from the HTTP tier is dropped here, and the content
+            # hash is recomputed from the rendered text.
+            rendered.etag = ""
+            rendered.last_modified = ""
+            rendered.content_hash = _content_hash(rendered.text)
+            self.tier_counts["browser"] += 1
+            log.info("escalated %s to the browser tier", result.url[:120])
+            self.cache.put(rendered)
+            return rendered
+        return result
+
+    async def __aenter__(self) -> Fetcher:
+        self._client = httpx.AsyncClient(
+            headers={"User-Agent": self.user_agent, "Accept-Language": "en"},
+            # Redirects are followed by hand so every hop is re-validated. With
+            # httpx following them, a public URL could redirect straight to a
+            # private address and the policy would never see it.
+            follow_redirects=False,
+            timeout=self.timeout,
+            max_redirects=0,
+            # Requests are keyed by pinned IP. Avoid reusing one TLS
+            # connection for two virtual hosts that share that address.
+            limits=httpx.Limits(max_keepalive_connections=0),
+        )
+        return self
+
+    async def __aexit__(self, *exc: object) -> None:
+        if self._client is not None:
+            await self._client.aclose()
+            self._client = None
+
+    def _semaphore(self, host: str) -> asyncio.Semaphore:
+        if host not in self._host_locks:
+            self._host_locks[host] = asyncio.Semaphore(MAX_PER_HOST_CONCURRENCY)
+        return self._host_locks[host]
+
+    async def _space_requests(self, host: str, url: str) -> None:
+        delay = await self.robots.crawl_delay(url) or self.delay
+        last = self._last_request.get(host)
+        if last is not None:
+            wait = delay - (time.monotonic() - last)
+            if wait > 0:
+                await asyncio.sleep(wait)
+        self._last_request[host] = time.monotonic()
+
+    def _fetch_fixture(self, url: str) -> FetchResult:
+        """Serve a bundled page for a ``fixture://`` URL.
+
+        Demo mode routes through here so it exercises the same parsing,
+        claim-building and assessment code as a live run - the only difference
+        is where the bytes came from.
+        """
+        if self.corpus_dir is None:
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.NOT_FOUND
+                if hasattr(FetchOutcome, "NOT_FOUND")
+                else FetchOutcome.HTTP_ERROR,
+                error="No corpus directory is configured for fixture:// URLs.",
+            )
+        rel = url[len("fixture://") :].lstrip("/")
+        path = (self.corpus_dir / rel).resolve()
+        # Refuse to escape the corpus directory.
+        if not str(path).startswith(str(self.corpus_dir.resolve())):
+            return FetchResult(
+                url=url, outcome=FetchOutcome.HTTP_ERROR, error="path traversal refused"
+            )
+        if not path.is_file():
+            self.stats[FetchOutcome.HTTP_ERROR.value] += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.HTTP_ERROR,
+                status_code=404,
+                error=f"No bundled page at {rel}",
+                final_url=url,
+            )
+        data = path.read_bytes()
+        ctype = "application/pdf" if path.suffix == ".pdf" else "text/html; charset=utf-8"
+        self.stats[FetchOutcome.OK.value] += 1
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            content=data,
+            text=data.decode("utf-8", errors="replace") if path.suffix != ".pdf" else "",
+            content_type=ctype,
+            final_url=url,
+        )
+
+    async def get(
+        self,
+        url: str,
+        *,
+        use_cache: bool = True,
+        etag: str | None = None,
+        if_modified_since: str | None = None,
+    ) -> FetchResult:
+        """Fetch a URL from the disk cache when possible, else politely.
+
+        See ``_get``; this wrapper only records a host that refused outright.
+        """
+        result = await self._get(
+            url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
+        )
+        reason = _refusal(result)
+        host = urlparse(url).hostname or ""
+        if reason and host:
+            self.refused_hosts.setdefault(host, reason)
+        return result
+
+    async def _get(
+        self,
+        url: str,
+        *,
+        use_cache: bool = True,
+        etag: str | None = None,
+        if_modified_since: str | None = None,
+    ) -> FetchResult:
+        """Fetch a URL from the disk cache when possible, else politely.
+
+        ``etag`` / ``if_modified_since`` are supplied by the caller (from its
+        own source_pages records); the fetcher never touches the database. With
+        a validator present the disk cache is skipped and the first request
+        carries If-None-Match and/or If-Modified-Since (RFC 7232: when both are
+        sent, the entity tag takes precedence). A 304 is a terminal success:
+        it comes back as CACHED with an empty body and ``status_code == 304``,
+        so callers must check the status and keep the copy they already have.
+        """
+        # A URL harvested from a page can contain anything. Refuse it and move
+        # on: one bad link must not end a research run.
+        leak = find_pii(url)
+        if leak is not None:
+            log.warning("refusing %s: looks like %s", privacy_safe_url(url), leak)
+            self.stats[FetchOutcome.REFUSED_PRIVACY.value] += 1
+            return FetchResult(
+                url=privacy_safe_url(url),
+                outcome=FetchOutcome.REFUSED_PRIVACY,
+                error=(f"Refused: the URL contains what looks like a {leak}. It was not fetched."),
+            )
+
+        if url.startswith("fixture://"):
+            result = self._fetch_fixture(url)
+            self.tier_counts["fixture" if result.ok else "http"] += 1
+            return result
+
+        # Conditional GET: the point of a validator is to ask the origin, not
+        # to answer from the local cache, so a validator skips the cache read.
+        validators: dict[str, str] = {}
+        if etag:
+            validators["If-None-Match"] = etag
+        if if_modified_since:
+            validators["If-Modified-Since"] = if_modified_since
+
+        if use_cache and not validators:
+            cached = self.cache.get(url)
+            if cached is not None:
+                if same_source_site(url, cached.final_url or url):
+                    self.stats[FetchOutcome.CACHED.value] += 1
+                    self.tier_counts[cached.fetch_tier] = (
+                        self.tier_counts.get(cached.fetch_tier, 0) + 1
+                    )
+                    return cached
+                log.warning("ignoring cached cross-site response for %s", urlparse(url).hostname)
+
+        if self.offline:
+            self.stats[FetchOutcome.NETWORK_UNAVAILABLE.value] += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.NETWORK_UNAVAILABLE,
+                error="Offline mode: no cached copy of this page is available.",
+            )
+
+        if self._client is None:
+            raise RuntimeError("Fetcher must be used as an async context manager")
+
+        early = urlparse(url).hostname or ""
+        if early in self._stalled_hosts or early in self.robots.stalled:
+            self.stats[FetchOutcome.TIMEOUT.value] += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.TIMEOUT,
+                error="host stopped responding earlier in this run; not waited on again",
+            )
+        try:
+            target = await _resolve_checked(url)
+        except TimeoutError:
+            self._stalled_hosts.add(urlparse(url).hostname or url)
+            self.stats[FetchOutcome.TIMEOUT.value] += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.TIMEOUT,
+                error=f"name resolution took longer than {DNS_DEADLINE_SECONDS:.0f}s",
+            )
+        except BlockedRequest as exc:
+            log.warning("blocked by network policy: %s", exc)
+            self.stats[FetchOutcome.BLOCKED.value] += 1
+            return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+
+        host = target.host
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            try:
+                result = await self._request_with_redirects(url, validators=validators)
+            except BlockedRequest as exc:
+                log.warning("blocked mid-redirect: %s", exc)
+                self.stats[FetchOutcome.BLOCKED.value] += 1
+                return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+            except TimeoutError:
+                # The whole exchange overran: a server that trickles will
+                # trickle again, so this is not retried, nor is the host.
+                self._stalled_hosts.add(host)
+                self.stats[FetchOutcome.TIMEOUT.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.TIMEOUT,
+                    error="no complete response within the deadline",
+                )
+            except httpx.TimeoutException as exc:
+                if attempt == MAX_ATTEMPTS:
+                    self.stats[FetchOutcome.TIMEOUT.value] += 1
+                    return FetchResult(url=url, outcome=FetchOutcome.TIMEOUT, error=str(exc))
+            except (httpx.HTTPError, OSError) as exc:
+                if attempt == MAX_ATTEMPTS:
+                    self.stats[FetchOutcome.NETWORK_UNAVAILABLE.value] += 1
+                    return FetchResult(
+                        url=url, outcome=FetchOutcome.NETWORK_UNAVAILABLE, error=str(exc)
+                    )
+            else:
+                if result.outcome is FetchOutcome.OK:
+                    if not same_source_site(url, result.final_url or url):
+                        self.stats[FetchOutcome.BLOCKED.value] += 1
+                        return FetchResult(
+                            url=url,
+                            outcome=FetchOutcome.BLOCKED,
+                            error="response left the requested site's domain",
+                            final_url=result.final_url,
+                        )
+                    self.cache.put(result)
+                    self.stats[FetchOutcome.OK.value] += 1
+                    self.tier_counts["pdf" if result.is_pdf else "http"] += 1
+                    try:
+                        return await self._maybe_render(result)
+                    except Exception as exc:
+                        # The escalation sits outside the retry excepts
+                        # above, so an infra failure in the browser tier
+                        # must be contained here: it becomes a diagnostic
+                        # result, never an exception out of get().
+                        log.warning("browser tier failed for %s: %s", url, exc)
+                        self.stats[FetchOutcome.UNPARSEABLE.value] += 1
+                        return FetchResult(
+                            url=url,
+                            outcome=FetchOutcome.UNPARSEABLE,
+                            error=f"browser tier failed: {exc}"[:300],
+                        )
+                # Retry only what is worth retrying.
+                retryable = result.status_code == 429 or (
+                    result.status_code is not None and 500 <= result.status_code < 600
+                )
+                if not retryable or attempt == MAX_ATTEMPTS:
+                    self.stats[result.outcome.value] += 1
+                    return result
+            # Exponential backoff: 2s, 4s.
+            await asyncio.sleep(2**attempt)
+
+        self.stats[FetchOutcome.HTTP_ERROR.value] += 1
+        return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, error="exhausted attempts")

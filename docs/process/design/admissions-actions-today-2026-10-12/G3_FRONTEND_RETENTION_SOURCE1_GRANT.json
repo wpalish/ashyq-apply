@@ -1,0 +1,17 @@
+{
+  "status": "EXTERNAL_SOURCE_AUTHORING_ONLY_NOT_APPLIED_NOT_RUN",
+  "at_utc": "2026-10-13T06:54:40.440042+00:00",
+  "allowed_paths": {
+    "frontend/src/lib/admissionsActionsRecovery.ts": "29768832e7f0d972f55606c6310aeb915f90663e9527f825feda95bbe2eb881e",
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": "5724262f6ccaf1f567ac0bda067d308a55c35280a3ccd303c17fe90c3831c477"
+  },
+  "notes": {
+    "G3_RETENTION_UI_IMPLEMENTATION_NOTE2.md": "e1c5aeff651351b772647627179591f9161216ac95bb60605f7b13ffe48e2835",
+    "G3_RETENTION_UI_IMPLEMENTATION_NOTE2_SEAL.json": "c2dfc0fe7925b4dce805408ad64e1771be9714c2bf941e55fcc7f0293b46f25b",
+    "G3_UI_INTEGRATION_PLAN1.md": "47b21cbd09959b5311fb696f824333804f67c512ab3c22fcb5b860e58b335527"
+  },
+  "scope": "Two explicit fresh-receipt acknowledged-entry retention exports, optional shared strict receipt verification export for transient known ACK, and read-only capture of existing family for Store DELETE. Factor same native ACK checker; preserve schemas/constants/old assertions. No automatic eviction, arbitrary keys, pending removal or index reset. Brand one-use ticket, exact selected raw rechecks, entry-first/fresh survivor index-last and honest partial residual. Root sole writer/gates.",
+  "capture_contract": "captureAdmissionsActionsRecovery(scope, profileId, caseEpoch, current): G3RecoveryResult<G3RecoveryBinding | null>; reads existing exact own family/fence only; truly absent family returns null; no fence/key creation or repair; corrupt/deleted/generation/owner refusal remains closed.",
+  "aba_boundary": "Delayed journal reuse of selected UUID after acknowledged retirement can recreate a pending entry if index bytes repeat; do not claim atomic exclusion/no reinsertion. Preserve reinserted pending raw and final selected-key absence recheck gives residual_unknown. UI serializes mutations, uses new UUID saves and never re-journals manual retries. Add meaningful delayed actual helper interleave control if feasible without schema changes.",
+  "tests": "Append-only existing727 baseline test bytes; add meaningful bounded matrix for fresh exact proof, four pending states, changed raw/owner/epoch/tombstone, cap release, sibling/index/storage partial refusal, private namespaces and one-use tickets. No native old test edits."
+}

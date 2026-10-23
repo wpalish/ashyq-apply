@@ -8,6 +8,8 @@ neighbouring field into a match.
 
 from __future__ import annotations
 
+import asyncio
+import socket
 from datetime import UTC, datetime
 
 import pytest
@@ -28,6 +30,8 @@ from app.adapters.search.retrieval import (
     tokenize,
 )
 from app.domain.enums import DegreeLevel
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+from app.pipeline.read_budget import BudgetedFetcher
 
 NOW = datetime(2026, 9, 21, tzinfo=UTC)
 
@@ -823,3 +827,61 @@ class TestRejectingKindsThatAreNotProgrammes:
             reject_irrelevant_kinds=True,
         )
         assert len(outcome.kept) == 1
+
+
+@pytest.mark.parametrize(
+    "signal",
+    [
+        pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
+        pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
+        pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
+        pytest.param(LeaseLost("stale lease"), id="lease-lost"),
+        pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
+        pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
+    ],
+)
+async def test_native_entry_root_control_stops_before_second_get(tmp_path, monkeypatch, signal):
+    """A real get-fence control is not an unreadable entry-root page."""
+    attempts = []
+    network = []
+
+    def reserve():
+        attempts.append("before_get")
+        raise signal
+
+    def deny_network(*args, **kwargs):
+        network.append("unexpected network")
+        raise AssertionError("native refused get must not reach the network")
+
+    monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+    monkeypatch.setattr(socket.socket, "connect", deny_network)
+    monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
+    requested = an_intent(domain="example.edu")
+    rows = [
+        ("https://cs.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+        ("https://admissions.example.edu/programmes/cs", "Bachelor Computer Science", ""),
+    ]
+    provider = FakeSearchProvider({q.text: rows for q in queries_for(requested, budget=2)}, now=NOW)
+    fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
+    queries = []
+
+    async def read(url):
+        result = await fetcher.get(url)
+        return result.text if result.ok else ""
+
+    with pytest.raises(type(signal)) as raised:
+        await discover_candidates(
+            provider,
+            requested,
+            query_budget=2,
+            hop_entry_points=2,
+            fetch=read,
+            on_query_attempt=lambda: queries.append(1),
+        )
+
+    assert raised.value is signal
+    assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
+    assert attempts == ["before_get"]
+    assert len(provider.calls) == len(queries) == 2
+    assert network == []
+    assert all(count == 0 for count in fetcher.stats.values())

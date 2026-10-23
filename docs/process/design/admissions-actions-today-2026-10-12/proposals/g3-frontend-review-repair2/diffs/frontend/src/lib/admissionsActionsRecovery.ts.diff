@@ -1,0 +1,13 @@
+--- a/frontend/src/lib/admissionsActionsRecovery.ts
++++ b/frontend/src/lib/admissionsActionsRecovery.ts
+@@ -452,7 +452,9 @@
+   if (entry.descriptor.status === 'acknowledged') {
+     if (g3Canonical(entry.descriptor.receipt_ref) !== g3Canonical(ref)) return fail('ack');
+     const raw = readRaw(binding, entryKey(binding, id)); if (!raw.ok) return raw;
+-    return raw.value === null ? fail('changed') : success({ entry, raw: raw.value, index_raw: current.value.index_raw ?? '' });
++    if (raw.value === null) return fail('changed');
++    try { if (g3Canonical(parse(raw.value)) !== g3Canonical(entry)) return fail('changed'); } catch { return fail('invalid'); }
++    return success({ entry, raw: raw.value, index_raw: current.value.index_raw ?? '' });
+   }
+   const latest = await inspectCase(binding); if (!latest.ok) return latest;
+   const latestEntry = latest.value.entries.find(item => item.descriptor.client_write_uuid === id);

@@ -1,0 +1,8 @@
+{
+  "reason": "JSDOM getByRole counts descendants of closed native details; split retained groups and assert real toggle",
+  "before": "6336ebd24c33e2123a03a0b9feeaf0f956d26ec03b66cd5e526ed1720514b309",
+  "after": "d69df8e812b06f95c61c79ea0bb484b2146794f9b816d97c3c27faf326f61542",
+  "original": "static-frontend-retry/frontend-junit.xml",
+  "production_unchanged": true,
+  "required": "14 immediate, 4 retained in closed native details; click opens and all18 remain"
+}

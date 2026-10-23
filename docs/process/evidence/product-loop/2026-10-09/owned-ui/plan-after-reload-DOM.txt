@@ -1,0 +1,62 @@
+- complementary:
+  - generic: Unimatch
+  - navigation "Main navigation":
+    - button "Home":
+      - generic: Home
+    - button "Find 20":
+      - generic: Find
+      - generic: "20"
+    - button "Plan 1":
+      - generic: Plan
+      - generic: "1"
+    - button "Documents 1":
+      - generic: Documents
+      - generic: "1"
+    - button "Community":
+      - generic: Community
+  - paragraph:
+    - text: Same students.
+    - strong: Bigger horizons.
+  - generic "Preferences"
+  - option "Match system"
+  - option "Light" [selected]
+  - option "Dark"
+  - option "English" [selected]
+  - option "Русский"
+  - option "Қазақша"
+- banner:
+  - generic: Demo data
+  - generic "Explore⌄"
+  - text: Applicant
+  - combobox "Applicant":
+    - option "New applicant"
+    - option "Demo Applicant (synthetic) · 1 run" [selected]
+  - button "New case"
+  - button "Settings"
+  - button "Sign out"
+- main:
+  - paragraph: Your application journey
+  - heading "A clearer plan. A brighter you." [level=1]
+  - paragraph: Keep your chosen programmes together, check their deadlines and prepare what each one asks for. These are your choices, not admission offers.
+  - region "Your next step":
+    - generic: NEXT STEP
+    - 'heading "Next deadline: University of Groningen" [level=2]'
+    - paragraph: 01 мая 2027 г. · BSc Computing Science
+    - button "Open collected checklists"
+    - strong: "1"
+    - generic: programmes in your plan
+  - generic: 0 chosen by you
+  - generic: 1 considering
+  - generic: 0 ruled out
+  - generic: 19 undecided
+  - button "Collect documents for 1 programmes"
+  - heading "Considering (1)" [level=2]
+  - generic: University of Groningen
+  - generic: BSc Computing Science · Groningen, Netherlands
+  - generic: Considering
+  - button "Undo"
+  - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+  - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+  - generic: remaining 1 848 USD · 2026/27
+  - generic: deadline 01 мая 2027 г.
+  - generic: checklist ready

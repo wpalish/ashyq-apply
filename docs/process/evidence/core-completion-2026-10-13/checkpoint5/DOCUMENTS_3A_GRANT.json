@@ -1,0 +1,12 @@
+{
+  "at_utc": "2026-10-13T18:41:32.309248+00:00",
+  "baseline": "a27228bd",
+  "paths": {
+    "frontend/src/screens/PersonalDocumentsPanel.tsx": null,
+    "frontend/src/screens/PersonalDocumentsPanel.test.tsx": null,
+    "frontend/src/screens/DocumentsScreen.tsx": "e7ef0217c19f051c434acb69fb7f2b0ea1883a2228984054747cb8b77abcde9f",
+    "frontend/src/screens/DocumentsScreen.legacyValidation.test.tsx": null,
+    "frontend/src/lib/i18n.ts": "8b0cfe2069619c12523528850467c7821e096e01d63572ba15ce9db6e94e1a44"
+  },
+  "scope": "Mount existing typed G3 hook/recovery in Documents; personal task create without research, immutable task ID, personal dates/notes editor and explicit self-report choices, current/history retained after failed refresh. Caller-owned reviewed base revision/draft scoped to caseKey; original UUID/body only through transport, no automatic changes. Existing checklist viewer remains source/reference + explicitly labelled legacy browser marks; invalid null/array/nonboolean storage readonly and preserved; no automatic import as server/official readiness. Source binding/explicit import and versioned label/delete/manual app gaps remain later. EN/RU/KK consistent, no private files/LMS/newserverroutes/dependencies. Native FE fixtures/gates, backend exact carry."
+}

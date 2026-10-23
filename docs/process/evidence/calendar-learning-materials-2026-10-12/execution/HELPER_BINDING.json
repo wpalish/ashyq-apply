@@ -1,0 +1,56 @@
+{
+  "predecessor": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11",
+  "changes": [
+    "expected source pins",
+    "focused diagnostic selectors only"
+  ],
+  "expected_before": 566,
+  "expected_after": 573,
+  "delta": {
+    "backend/app/api/routes_preparation.py": {
+      "before": "c7857f730f9e0d13aed2b3001cc98fb4b556fedc0d905da2eb077eaaa2f16691",
+      "after": "e0316416aaa9209e9f532746c8d122db376d87fe926e98da4374dcafcace259f"
+    },
+    "backend/app/api/routes_profile.py": {
+      "before": "a0d17726a21bfe3e3fa481dbf51514860db2f1033dc516eb3efce160dfb1ce55",
+      "after": "d9bd87d528f7c8545c3b6e1875d7924f09bb4bb2e63f5cf18db022e0fe0c235a"
+    },
+    "backend/app/models/study_schedule.py": {
+      "before": "3e0b0699cd723bd5b804fa836f24c69648e89d4c33e81483671dad43df81205c",
+      "after": "087ccef37010f3eeddce5329856832de1d4aeea796cba48a52e439cf0ca03626"
+    },
+    "frontend/src/types.ts": {
+      "before": "821fe541bb6d32c749e6a46b639660a5d6b029ba06676ed2d8496591c7c7e6b6",
+      "after": "92a613fb84038dd56cd08c7c97ed44b1fdce9d16c3c4ae094a0e2116971c68bb"
+    },
+    "backend/tests/test_learning_schedule_api.py": {
+      "before": null,
+      "after": "1dfe04cc512c1058d59e67c283e76c3e67dc5e3acf28d45ac7db22cc998f76de"
+    },
+    "backend/tests/test_rejected_diagnostics_persistence.py": {
+      "before": null,
+      "after": "00679ceb5c7c1300b5d6451ba993b4976d9c9fb36feba85a3603df6f0c57a54e"
+    },
+    "backend/migrations/versions/b5c81d9e2022_learning_calendar.py": {
+      "before": null,
+      "after": "2c9e19365c4ca2835b48094191916667360fe2af94142148c36f60f9e921cad9"
+    },
+    "backend/tests/test_learning_schedule.py": {
+      "before": null,
+      "after": "e982401aeac45246327fcabf6864601c7d3480254262f883ce6d1fb3a1441cff"
+    },
+    "backend/tests/test_rejected_diagnostics.py": {
+      "before": null,
+      "after": "756bdd3fabf2db2578a075a4cec4876a62ea8c97943d069d1e3b312e4e674766"
+    },
+    "backend/app/domain/learning_schedule.py": {
+      "before": null,
+      "after": "743f89bc6c0654fa76528e4b329a9b1f595a646fa9fbb14aca68de5127b7934b"
+    },
+    "backend/app/schemas/learning_schedule.py": {
+      "before": null,
+      "after": "842824a4176ff42d770dd250deaf67f8f212527bf73d5414eff482b01af5b628"
+    }
+  },
+  "forbidden_actions": "No security/stopped collector/live/gold signing or hosted changes"
+}

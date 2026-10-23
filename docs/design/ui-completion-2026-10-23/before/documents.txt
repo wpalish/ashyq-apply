@@ -1,0 +1,73 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Документы и сроки" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - heading "Документы" [level=1]
+  - paragraph: Проверь требования программы, создай связанные задачи и отмечай подготовку. Затем переходи к заявке.
+  - heading "Требования по программам" [level=2]
+  - paragraph: Сначала сверь требования с источниками, затем создай личные задачи. Готовность отмечается отдельно.
+  - generic: Программа
+  - generic: Документы из источников
+  - generic: Статус чтения
+  - generic: Действие
+  - article:
+    - strong: KU Leuven
+    - generic: BSc Informatics
+    - list:
+      - listitem: Secondary school diploma (certified copy)
+      - listitem: Passport identity page (copy)
+      - listitem: Personal statement
+    - generic: Ещё 2 в полном списке
+    - generic: Тестовый корпус
+    - generic: Готовность документов не оценена
+    - button "Полный список"
+    - link "Требования и мой профиль":
+      - /url: "#/approved?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1&view=requirements"
+    - code: fixture://ku-leuven/program-0.html
+    - generic: demo fixture
+  - status:
+    - generic: Загружаем сохранённые задачи…
+  - generic "Требования, привязки к источникам и прежние отметки"
+  - option "Выберите требование программы" [selected]
+  - 'option "KU Leuven · BSc Informatics · Secondary school diploma (certified copy) · Документы для поступления #1"'
+  - 'option "KU Leuven · BSc Informatics · Passport identity page (copy) · Документы для поступления #2"'
+  - 'option "KU Leuven · BSc Informatics · Personal statement · Документы для поступления #3"'
+  - 'option "KU Leuven · BSc Informatics · Academic reference · Документы для поступления #4"'
+  - 'option "KU Leuven · BSc Informatics · Curriculum vitae · Документы для поступления #5"'
+  - 'option "KU Leuven · BSc Informatics · Passport identity page (copy) · Ваши действия #1"'
+  - 'option "KU Leuven · BSc Informatics · Personal statement · Ваши действия #2"'
+  - 'option "KU Leuven · BSc Informatics · Curriculum vitae · Ваши действия #3"'
+  - 'option "KU Leuven · BSc Informatics · Secondary school diploma (certified copy) · Действия школы #1"'
+  - 'option "KU Leuven · BSc Informatics · Academic reference · Действия рекомендателя #1"'
+  - option "Создать новую связанную задачу" [selected]
+  - generic "Восстановление сохранения"
+  - generic "Полные чеклисты, сроки и прежние браузерные отметки"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

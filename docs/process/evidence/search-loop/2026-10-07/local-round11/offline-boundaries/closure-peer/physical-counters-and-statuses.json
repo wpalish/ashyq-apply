@@ -1,0 +1,161 @@
+{
+  "cases": [
+    {
+      "case_id": "groningen",
+      "fetcher_calls": 32,
+      "search_queries": 5,
+      "elapsed_ms": 119020,
+      "programme_url_records": 0,
+      "prediction_records": 0,
+      "provider_failure": null,
+      "capture_kind": "BOUNDED_TERMINAL_PARTIAL_JOB_running",
+      "native_job_status": "running",
+      "worker_jobs_done": 0,
+      "observation_error_present": true,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "delft",
+      "fetcher_calls": 39,
+      "search_queries": 6,
+      "elapsed_ms": 76701,
+      "programme_url_records": 3,
+      "prediction_records": 18,
+      "provider_failure": null,
+      "capture_kind": "COMPLETED_JOB_CAPTURE",
+      "native_job_status": "succeeded",
+      "worker_jobs_done": 1,
+      "observation_error_present": false,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "aalto",
+      "fetcher_calls": 56,
+      "search_queries": 6,
+      "elapsed_ms": 110157,
+      "programme_url_records": 0,
+      "prediction_records": 0,
+      "provider_failure": null,
+      "capture_kind": "COMPLETED_JOB_CAPTURE",
+      "native_job_status": "succeeded",
+      "worker_jobs_done": 1,
+      "observation_error_present": false,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "vienna",
+      "fetcher_calls": 37,
+      "search_queries": 6,
+      "elapsed_ms": 96958,
+      "programme_url_records": 1,
+      "prediction_records": 2,
+      "provider_failure": null,
+      "capture_kind": "COMPLETED_JOB_CAPTURE",
+      "native_job_status": "succeeded",
+      "worker_jobs_done": 1,
+      "observation_error_present": false,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "warsaw",
+      "fetcher_calls": 35,
+      "search_queries": 6,
+      "elapsed_ms": 115920,
+      "programme_url_records": 3,
+      "prediction_records": 4,
+      "provider_failure": null,
+      "capture_kind": "COMPLETED_JOB_CAPTURE",
+      "native_job_status": "succeeded",
+      "worker_jobs_done": 1,
+      "observation_error_present": false,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "ubc",
+      "fetcher_calls": 37,
+      "search_queries": 6,
+      "elapsed_ms": 119015,
+      "programme_url_records": 0,
+      "prediction_records": 0,
+      "provider_failure": null,
+      "capture_kind": "BOUNDED_TERMINAL_PARTIAL_JOB_running",
+      "native_job_status": "running",
+      "worker_jobs_done": 0,
+      "observation_error_present": true,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "toronto",
+      "fetcher_calls": 60,
+      "search_queries": 6,
+      "elapsed_ms": 99115,
+      "programme_url_records": 3,
+      "prediction_records": 0,
+      "provider_failure": null,
+      "capture_kind": "BOUNDED_TERMINAL_PARTIAL_JOB_queued",
+      "native_job_status": "queued",
+      "worker_jobs_done": 0,
+      "observation_error_present": true,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "hku",
+      "fetcher_calls": 28,
+      "search_queries": 6,
+      "elapsed_ms": 65750,
+      "programme_url_records": 1,
+      "prediction_records": 0,
+      "provider_failure": null,
+      "capture_kind": "COMPLETED_JOB_CAPTURE",
+      "native_job_status": "succeeded",
+      "worker_jobs_done": 1,
+      "observation_error_present": false,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "ntu",
+      "fetcher_calls": 57,
+      "search_queries": 4,
+      "elapsed_ms": 116393,
+      "programme_url_records": 3,
+      "prediction_records": 84,
+      "provider_failure": null,
+      "capture_kind": "COMPLETED_JOB_CAPTURE",
+      "native_job_status": "succeeded",
+      "worker_jobs_done": 1,
+      "observation_error_present": false,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    },
+    {
+      "case_id": "kaist",
+      "fetcher_calls": 10,
+      "search_queries": 5,
+      "elapsed_ms": 37950,
+      "programme_url_records": 0,
+      "prediction_records": 0,
+      "provider_failure": {
+        "http_status": null,
+        "reason": "rate limited",
+        "error": "Search service unavailable (exa_mcp; rate limited)."
+      },
+      "capture_kind": "PROVIDER_FAILURE_NOT_ADMITTED",
+      "native_job_status": "queued",
+      "worker_jobs_done": 0,
+      "observation_error_present": true,
+      "raw_semantic_claim_or_prediction_values_not_adjudicated": true
+    }
+  ],
+  "totals": {
+    "fetcher_calls": 391,
+    "search_queries": 56,
+    "elapsed_ms": 956979,
+    "programme_url_records": 14,
+    "prediction_records": 108
+  },
+  "counts": {
+    "BOUNDED_TERMINAL_PARTIAL_JOB_running": 2,
+    "COMPLETED_JOB_CAPTURE": 6,
+    "BOUNDED_TERMINAL_PARTIAL_JOB_queued": 1,
+    "PROVIDER_FAILURE_NOT_ADMITTED": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "repo": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "destination": "docs/process/evidence/search-loop/2026-10-07/local-round13/stopped-trace-off-proof",
+  "source_manifest": "source-before-999.json",
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "status": "CONFIRMED_OFF_QUERY_DIAGNOSTIC_TRANSFER_LOSS_QUALIFIED_NO_PATCH_NO_OVERRUN_SQL_OR_QUALITY",
+  "packets": [
+    {
+      "folder": "local-round12/b-outer-trace-preparation",
+      "manifest": "ready-manifest.json",
+      "sha256": "8e4a13b345aea6e00b05ec944124f8a349a7f144f18a4c5137a41399d53ac51f",
+      "label": "native-two-route-off"
+    },
+    {
+      "folder": "local-round12/a-outer-off-review",
+      "manifest": "ready-manifest.json",
+      "sha256": "ca33f2c00cf886505ba709d1144043610cab1719354a7c088eb75f628ea90a67",
+      "label": "independent-off-review"
+    }
+  ],
+  "parent_files": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/PLAN.json",
+      "name": "PLAN.json",
+      "sha256": "d94aece9e219cec706a99952d9624d7b401a266554c371591d2c24a9344e433b"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-before-999.json",
+      "name": "source-before-999.json",
+      "sha256": "3e66216452290baa7a415f24ab31f6650ffa8c9f0f7592ae0b53922b0024d9dd"
+    }
+  ]
+}

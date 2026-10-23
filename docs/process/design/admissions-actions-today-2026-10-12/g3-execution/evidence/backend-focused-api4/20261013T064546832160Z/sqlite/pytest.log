@@ -1,0 +1,65 @@
+........................................................................ [ 37%]
+........................................................................ [ 75%]
+................................................                         [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_admissions_actions_concurrency.py::test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history[sqlite]
+tests/test_admissions_actions_concurrency.py::test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history[postgres]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[sqlite-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[sqlite-delete]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[postgres-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[postgres-delete]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_account.py:456: SAWarning: DELETE statement on table 'auth_sessions' expected to delete 1 row(s); 0 were matched.  Please set confirm_deleted_rows=False within the mapper configuration to prevent this warning.
+    session.commit()
+
+tests/test_admissions_actions_concurrency.py::test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history[sqlite]
+tests/test_admissions_actions_concurrency.py::test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history[postgres]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[sqlite-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[sqlite-delete]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[postgres-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[postgres-delete]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_account.py:456: SAWarning: DELETE statement on table 'organization_memberships' expected to delete 2 row(s); 1 were matched.  Please set confirm_deleted_rows=False within the mapper configuration to prevent this warning.
+    session.commit()
+
+tests/test_admissions_actions_concurrency.py: 12 warnings
+  tests/test_admissions_actions_concurrency.py:847: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("present", [False, True])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders[sqlite-legacy]
+tests/test_admissions_actions_concurrency.py::test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders[sqlite-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders[postgres-legacy]
+tests/test_admissions_actions_concurrency.py::test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders[postgres-g3]
+  tests/test_admissions_actions_concurrency.py:888: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["legacy", "g3"])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[sqlite-False]
+tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[sqlite-True]
+tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[postgres-False]
+tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[postgres-True]
+  tests/test_admissions_actions_concurrency.py:971: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("present", [False, True])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect[sqlite-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect[sqlite-delete]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect[postgres-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect[postgres-delete]
+  tests/test_admissions_actions_concurrency.py:1035: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["g3", "delete"])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[sqlite-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[sqlite-delete]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[postgres-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[postgres-delete]
+  tests/test_admissions_actions_concurrency.py:1085: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["g3", "delete"])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets[sqlite]
+tests/test_admissions_actions_concurrency.py::test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets[postgres]
+  tests/test_admissions_actions_concurrency.py:1237: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    def test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+192 passed, 43 warnings in 80.38s (0:01:20)

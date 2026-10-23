@@ -1,0 +1,80 @@
+{
+  "utc": "2026-10-09T04:02:00.461109+00:00",
+  "status": "WRITE_AHEAD_NOT_APPLIED_PENDING_FINAL_PEER_SEAL",
+  "proposal_READY_sha256": "2dd776c38d489df632fc84a89e87331943e5af8d1b33ccb48feb43c2a9f4c3f3",
+  "paths": {
+    "backend/app/adapters/cost/web_costs.py": {
+      "before_primary_sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+      "proposed_sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "bytes": 9177
+    },
+    "backend/app/adapters/discovery/catalog_walker.py": {
+      "before_primary_sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "proposed_sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "bytes": 33397
+    },
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "before_primary_sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "proposed_sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "bytes": 97093
+    },
+    "backend/app/adapters/documents/web_documents.py": {
+      "before_primary_sha256": "2249d096c3623661d7f2620a3dd34e5e4404e23b0db49dff760e7605f07fdd3b",
+      "proposed_sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "bytes": 36438
+    },
+    "backend/app/adapters/fetching.py": {
+      "before_primary_sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "proposed_sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "bytes": 49209
+    },
+    "backend/app/adapters/government/web_government.py": {
+      "before_primary_sha256": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82",
+      "proposed_sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "bytes": 3331
+    },
+    "backend/app/adapters/requirements/web_requirements.py": {
+      "before_primary_sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "proposed_sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "bytes": 43972
+    },
+    "backend/app/adapters/scholarship/web_scholarships.py": {
+      "before_primary_sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "proposed_sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "bytes": 62107
+    },
+    "backend/app/adapters/search/intent.py": {
+      "before_primary_sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+      "proposed_sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "bytes": 13298
+    },
+    "backend/app/jobs/worker.py": {
+      "before_primary_sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "proposed_sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "bytes": 21770
+    },
+    "backend/app/pipeline/runner.py": {
+      "before_primary_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "proposed_sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "bytes": 98012
+    },
+    "backend/tests/test_fetch_pii_hops.py": {
+      "before_primary_sha256": "8696d69d94db618d9f84322e5af747daf81a784d25aed5a8c354e10a97f661fc",
+      "proposed_sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "bytes": 28880
+    },
+    "backend/tests/test_rejected_diagnostics.py": {
+      "before_primary_sha256": null,
+      "proposed_sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "bytes": 24483
+    },
+    "backend/tests/test_rejected_diagnostics_persistence.py": {
+      "before_primary_sha256": null,
+      "proposed_sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+      "bytes": 10710
+    }
+  },
+  "acceptance_required": "Final C exact-byte independent A native/portable peer seal read and qualified by root; original C9/A rejection preserved.",
+  "next": "Guarded copy exactly14 paths; merge previous20 unchanged pins into34; record receipt; WIP[skip ci]/Agent push; record HEAD outside repo; source-frozen doctor then core then full with absolute --repo via check_queue.py.",
+  "scope": "Rejected diagnostic identity and safe typed query reason only. Existing PII detection, egress/robots/caps/stops/Claims/config/defaults/gold untouched. No historical cleanup or reset scope. General ordinary errors retain their URLs/details/retries/tracebacks."
+}

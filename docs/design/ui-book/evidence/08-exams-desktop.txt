@@ -1,0 +1,170 @@
+Browser tab: 4, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/profile".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/profile
+	2 container root
+		3 link Description: Skip to content, Value: 127.0.0.1:18140/#main-content
+		24 container
+			25 text unimatch
+			26 container Main navigation
+				27 button Home
+				28 button Find
+					29 text Find
+					30 text 20
+				31 button Plan
+					32 text Plan
+					33 text 2
+				34 button Documents
+					35 text Documents
+					36 text 2
+				37 button Community
+		18 container
+			19 text Demo data
+			20 button (collapsed) Explore, Secondary Actions: Expand
+				21 text Explore
+			22 button (collapsed) Description: Applicant workspace, Help: D, Secondary Actions: Expand
+				23 text D
+		38 container Description: Профиль абитуриента, ID: main-content
+			42 container
+				43 text Сохранённая оценка. Оценка отражает состояние исследования на тот момент. Она не подтверждает текущую готовность и не является вероятностью поступления.
+			126 container
+				127 button (collapsed) Profile recovery history for this tab, Secondary Actions: Expand
+					128 text Profile recovery history for this tab
+			46 heading Tests & scores, Value: 1
+				129 text Tests & scores
+			48 text A few simple details help us find the right matches for you. Your information stays editable.
+			49 container Profile steps
+				50 button 1 Personal details
+					51 text 1
+					52 text Personal details
+				53 button 2 Academic background
+					54 text 2
+					55 text Academic background
+				56 button 3 Tests & scores
+					57 text 3
+					58 text Tests & scores
+				59 button 4 Activities & achievements
+					60 text 4
+					61 text Activities & achievements
+				62 button 5 Review
+					63 text 5
+					64 text Review
+			65 container
+				66 text Loaded  Demo Applicant (synthetic)  from your saved profile. Edits here update that profile.
+			163 container
+				164 heading English language, Value: 2
+					165 text English language
+				166 text Subscores matter: many programmes publish a per-section minimum on top of the overall band. IELTS overall
+				167 stepper (settable, integer) IELTS overall, Value: 7, ID: ielts-overall
+				168 text IELTS listening
+				169 stepper (settable, float) IELTS listening, Value: 7.5, Details: 7,5, ID: ielts-listening
+				170 text IELTS reading
+				171 stepper (settable, float) IELTS reading, Value: 7.5, Details: 7,5, ID: ielts-reading
+				172 text IELTS writing
+				173 stepper (settable, integer) IELTS writing, Value: 6, ID: ielts-writing
+				174 text IELTS speaking
+				175 stepper (settable, integer) IELTS speaking, Value: 7, ID: ielts-speaking
+				176 text Test type
+				177 pop up button (collapsed, settable) Test type, Value: Academic, ID: ielts-type, Secondary Actions: Expand
+					178 menu
+						179 (selected) Academic
+						180 General Training
+						181 UKVI Academic
+						182 One Skill Retake
+			183 container
+				184 heading Standardised tests, Value: 2
+					185 text Standardised tests
+				186 text Leave blank if not taken — test-optional programmes are unaffected. SAT total
+				187 stepper (settable, integer) SAT total, Value: 1400, ID: sat
+				188 text SAT Math
+				189 stepper (settable, integer) SAT Math, Value: 760, ID: satm
+				190 text SAT Reading & Writing
+				191 stepper (settable, integer) SAT Reading & Writing, Value: 640, ID: satr
+				192 text TOEFL total
+				193 stepper (settable) TOEFL total, ID: toefl
+				194 text ACT composite
+				195 stepper (settable) ACT composite, ID: act
+				196 text ACT English
+				197 stepper (settable) ACT English, ID: act-en
+				198 text ACT Math
+				199 stepper (settable) ACT Math, ID: act-math
+				200 text ACT Reading
+				201 stepper (settable) ACT Reading, ID: act-read
+				202 text ACT Science
+				203 stepper (settable) ACT Science, ID: act-sci
+				204 text TOEFL Reading
+				205 stepper (settable) TOEFL Reading, ID: toefl-r
+				206 text TOEFL Listening
+				207 stepper (settable) TOEFL Listening, ID: toefl-l
+				208 text TOEFL Speaking
+				209 stepper (settable) TOEFL Speaking, ID: toefl-s
+				210 text TOEFL Writing
+				211 stepper (settable) TOEFL Writing, ID: toefl-w
+				212 text SAT test date
+				213 date field (settable) SAT test date, Value: 2026-05-02, ID: sat-taken
+					214 container
+						215 stepper
+						216 stepper
+						217 stepper
+					218 pop up button Показать окно выбора даты Показать окно выбора даты
+				219 text SAT planned retake
+				220 date field (settable) SAT planned retake, Value: 2026-10-03, ID: sat-retake
+					221 container
+						222 stepper
+						223 stepper
+						224 stepper
+					225 pop up button Показать окно выбора даты Показать окно выбора даты
+				226 text ACT test date
+				227 date field (settable) ACT test date, ID: act-taken
+					228 container
+						229 stepper
+						230 stepper
+						231 stepper
+					232 pop up button Показать окно выбора даты Показать окно выбора даты
+				233 text ACT planned retake
+				234 date field (settable) ACT planned retake, ID: act-retake
+					235 container
+						236 stepper
+						237 stepper
+						238 stepper
+					239 pop up button Показать окно выбора даты Показать окно выбора даты
+				240 text IELTS test date
+				241 date field (settable) IELTS test date, Value: 2026-04-18, ID: ielts-taken
+					242 container
+						243 stepper
+						244 stepper
+						245 stepper
+					246 pop up button Показать окно выбора даты Показать окно выбора даты
+				247 text IELTS planned retake
+				248 date field (settable) IELTS planned retake, ID: ielts-retake
+					249 container
+						250 stepper
+						251 stepper
+						252 stepper
+					253 pop up button Показать окно выбора даты Показать окно выбора даты
+				254 text TOEFL test date
+				255 date field (settable) TOEFL test date, ID: toefl-taken
+					256 container
+						257 stepper
+						258 stepper
+						259 stepper
+					260 pop up button Показать окно выбора даты Показать окно выбора даты
+				261 text TOEFL planned retake
+				262 date field (settable) TOEFL planned retake, ID: toefl-retake
+					263 container
+						264 stepper
+						265 stepper
+						266 stepper
+					267 pop up button Показать окно выбора даты Показать окно выбора даты
+				268 text Duolingo English Test
+				269 stepper (settable) Duolingo English Test, ID: duolingo-score
+				270 text Duolingo maximum
+				271 stepper (settable) Duolingo maximum, ID: duolingo-max
+				272 text Planned retakes
+				273 text field (settable) Planned retakes, Value: SAT on 2026-10-03 targeting 1500, ID: planned-retakes
+				274 text Comma-separated.
+				275 button + Add another test
+			123 container
+				162 button ← Back
+				124 button Save profile
+				125 button Continue →
+
+The focused UI element is 56 button 3 Tests & scores

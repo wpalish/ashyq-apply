@@ -1,0 +1,15 @@
+--- a/frontend/src/lib/store.tsx
++++ b/frontend/src/lib/store.tsx
+@@ -1,3 +1,4 @@
++import { forgetSharedRouteRecovery } from '@/lib/sharedRouteRecovery';
+ /**
+  * Application state.
+  *
+@@ -897,6 +898,7 @@
+       // Acknowledgment retires only this case's browser data, even if the user
+       // has opened another case while the deletion request was pending.
+       clearDraftSlot(caseKey, storageScope);
++      forgetSharedRouteRecovery(caseKey, storageScope);
+       forgetDocumentMarks(results.map((result) => result.id));
+       setCases((previous) => previous.filter((item) => item.id !== caseKey));
+       if (gen !== opGenRef.current) return false;

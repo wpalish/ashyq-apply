@@ -1,0 +1,30 @@
+{
+  "status": "B_N01_N02_FRONTEND_QUALIFIED_NATIVE_CORE_REGRESSION_PENDING",
+  "baseline": "42f4d814fcda0c8cd5636319915e4d9770b1860e",
+  "source_postimages": {
+    "frontend/src/screens/ProfileScreen.tsx": "a24d5105cb953dec01a334ba4a30bb5f75f64cca860aa34f509cd51c2702e0a1",
+    "frontend/src/lib/store.tsx": "01cc6c9ba755554264ce1cffcd00451e366409e1f378e54a594987d28bd018c2",
+    "frontend/src/screens/ProfileScreen.test.tsx": "6ee9d9fd1d9cdcc7bd3cfa0b4b96afbd6d845bb90bcee5a9234b051f2285e489",
+    "frontend/src/screens/ProfileScreen.feedback.test.tsx": "10435c9032f85945ab5e8860e70364773f12f2b70ec6a297ca95cd41fcdd8e86",
+    "frontend/src/screens/ProfileScreen.context.test.tsx": "153fe2bd206f24754410279bae6e8a06f408f0940e8e91467480d554ab942d11",
+    "frontend/src/lib/store.profileValidation.test.tsx": "1097920bc5280acef0f1ba2f167c1084e7a9539f1a6c8c9076ede7bb3613d64c"
+  },
+  "frontend": {
+    "cases": 878,
+    "failures": 0,
+    "skips": 0,
+    "new_controls": 21,
+    "typecheck": "PASS",
+    "lint": "PASS_9_PREEXISTING_WARNINGS",
+    "build": "PASS"
+  },
+  "off": "20 controls: 1PASS/19 material failures; first environment127 NOT_PRODUCT preserved",
+  "backend_carry": {
+    "files": 645,
+    "exact": true,
+    "prior_full": "5840eachDB_94.23percent_not_new_run"
+  },
+  "live": "NOT_MEASURED_STOPS_RETAINED",
+  "production": "UNCHANGED",
+  "native": "Current B source not yet verified via actual native browser; previous8 belong previous source"
+}

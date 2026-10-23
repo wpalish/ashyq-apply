@@ -1,0 +1,75 @@
+{
+  "queries": [
+    {
+      "at_ns": 810531267112958,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, settings_snapshot=?, started_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('candidate_discovery', '{\"university_research_budget_v1\": {}}', '2026-10-07 23:11:14.762815', '2026-10-07 23:11:14.763089', '8b9a2a873aac4336897d66fc2d697813')"
+    },
+    {
+      "elapsed_ns": 149042,
+      "sql_prefix": "UPDATE research_runs SET stage=?, settings_snapshot=?, started_at=?, updated_at=? WHERE research_run"
+    },
+    {
+      "at_ns": 810531267717041,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('8b9a2a873aac4336897d66fc2d697813',)"
+    },
+    {
+      "elapsed_ns": 35042,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810531267908791,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = ?",
+      "params": "('286dc295d9c542f7b6cd6a0bd4589cb4',)"
+    },
+    {
+      "elapsed_ns": 18500,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = ?"
+    },
+    {
+      "at_ns": 810531268165416,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = ? AND jobs.run_id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ?",
+      "params": "('286dc295d9c542f7b6cd6a0bd4589cb4', '8b9a2a873aac4336897d66fc2d697813', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 24042,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = ? AND jobs.run_id = ? AND jobs.status = ? AND jobs.work"
+    },
+    {
+      "at_ns": 810531268411916,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET heartbeat_at=jobs.heartbeat_at, updated_at=? WHERE jobs.id = ? AND jobs.run_id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ?",
+      "params": "('2026-10-07 23:11:14.764397', '286dc295d9c542f7b6cd6a0bd4589cb4', '8b9a2a873aac4336897d66fc2d697813', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 117625,
+      "sql_prefix": "UPDATE jobs SET heartbeat_at=jobs.heartbeat_at, updated_at=? WHERE jobs.id = ? AND jobs.run_id = ? A"
+    },
+    {
+      "at_ns": 810531268632541,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('8b9a2a873aac4336897d66fc2d697813',)"
+    },
+    {
+      "elapsed_ns": 8334,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810531268829916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('8b9a2a873aac4336897d66fc2d697813',)"
+    },
+    {
+      "elapsed_ns": 7375,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = ?"
+    }
+  ],
+  "sql_errors": []
+}

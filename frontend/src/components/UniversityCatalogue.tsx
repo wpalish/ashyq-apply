@@ -1,87 +1,48 @@
+import { OfficialProgrammeLibrary } from './OfficialProgrammeLibrary';
+import { officialProgrammes } from '@/lib/officialProgrammes';
 import { useEffect, useRef, useState } from 'react';
-import { api, type UniversityCatalogue as Catalogue } from '@/api/client';
+import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
+import { useTranslation } from '@/lib/useTranslation';
+import { universityDirectory,filterUniversities,type UniversityIdentity } from '@/lib/universityDirectory';
+import { ArrowLeft,ArrowRight,MagnifyingGlass } from '@phosphor-icons/react';
 
-export function UniversityCatalogue({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
-  const { savedProfile, startRun, loading, run } = useStore();
-  const [q, setQ] = useState('');
-  const [country, setCountry] = useState('');
-  const [offset, setOffset] = useState(0);
-  const [data, setData] = useState<Catalogue | null>(null);
-  const [error, setError] = useState('');
-  const [fetching, setFetching] = useState(false);
-  const [retry, setRetry] = useState(0);
-  const [selected, setSelected] = useState<string[]>([]);
-  const pendingRun = useRef<string | null | undefined>(undefined);
-
-  useEffect(() => {
-    setOffset(0);
-    setSelected([]);
-    pendingRun.current = undefined;
-  }, [savedProfile?.id]);
-
-  useEffect(() => {
-    let current = true;
-    const timer = setTimeout(() => {
-      setFetching(true);
-      setError('');
-      api.universities({ q, country, offset, profile_id: savedProfile?.id })
-        .then((next) => { if (current) setData(next); })
-        .catch((e: unknown) => { if (current) setError(e instanceof Error ? e.message : 'Cannot load universities.'); })
-        .finally(() => { if (current) setFetching(false); });
-    }, 200);
-    return () => { current = false; clearTimeout(timer); };
-  }, [q, country, offset, savedProfile?.id, retry]);
-
-  useEffect(() => {
-    if (pendingRun.current !== undefined && run?.id && run.id !== pendingRun.current) {
-      pendingRun.current = undefined;
-      onProgress?.();
-    }
-  }, [run?.id, onProgress]);
-
-  return <section className="university-catalogue" aria-label="University catalogue">
-    <div className="catalogue-heading">
-      <div><p className="screen__eyebrow">EXPLORE UNIVERSITIES</p><h2>Find a place to begin.</h2>
-        <p>Browse {data?.catalogue_total ?? 'our'} universities, even when live research is unavailable. Select up to 5 to check against your profile.</p></div>
-      {data && <span className="chip">{data.seed_count} imported universities</span>}
-    </div>
-    <div className="catalogue-tools">
-      <label>University, city or country<input type="search" value={q} placeholder="Try MIT, Canada or Groningen" onChange={(e) => { setQ(e.target.value); setOffset(0); }} /></label>
-      <label>Country or region<select value={country} onChange={(e) => { setCountry(e.target.value); setOffset(0); }}>
-        <option value="">All countries</option>
-        {['Europe', 'Asia', 'North America', 'South America', 'Oceania', 'Africa'].map((c) => <option key={c}>{c}</option>)}
-        {data?.countries.map((c) => <option key={c}>{c}</option>)}
-      </select></label>
-      <button type="button" className="btn btn--primary" disabled={loading || (!!savedProfile && selected.length === 0)} onClick={async () => {
-        if (!savedProfile) { onStart?.(); return; }
-        pendingRun.current = run?.id ?? null;
-        await startRun(false, selected);
-      }}>{loading ? 'Starting…' : savedProfile ? `Research selected (${selected.length})` : 'Complete profile to research'}</button>
-    </div>
-    <p className="catalogue-note">These are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.</p>
-    {error && <div role="alert">{error} <button className="btn btn--sm" onClick={() => setRetry((n) => n + 1)}>Try again</button></div>}
-    <p role="status">{fetching ? 'Searching the local catalogue…' : data ? `${data.total} universities found` : 'Loading catalogue…'}</p>
-    <div className="catalogue-grid" aria-busy={fetching}>
-      {data?.items.map((u) => <article key={u.id} className="catalogue-card">
-        <label className="catalogue-choice"><input type="checkbox" checked={selected.includes(u.id)} disabled={!savedProfile || (!selected.includes(u.id) && selected.length >= 5)} onChange={(e) => setSelected((ids) => e.target.checked ? [...ids, u.id] : ids.filter((id) => id !== u.id))} /><strong>{u.name}</strong></label>
-        <p>{u.city}{u.city ? ' · ' : ''}{u.country}</p>
-        <span className="chip">Programme verification needed</span>
-        <dl><div><dt>Admission fit</dt><dd>Not assessed</dd></div><div><dt>Tuition & funding</dt><dd>Research required</dd></div></dl>
-        {u.seed_ranking && <p className="xs faint">QS {u.seed_ranking.year}: #{u.seed_ranking.rank} · imported ranking</p>}
-        <details><summary>Imported data & sources</summary>
-          <p className="xs">Snapshot {u.seed_version?.split('/')[0] ?? 'curated registry'}. Source observation date, programme and fee population are unknown. Imported figures do not determine eligibility or affordability.</p>
-          {u.seed_tuition_usd && <p className="xs">Historical estimate: USD {u.seed_tuition_usd.min.toLocaleString()}–{u.seed_tuition_usd.max.toLocaleString()}. Period and scope unverified.</p>}
-          <p className="xs">Website identity: {u.domain_status === 'curated' ? 'curated registry' : u.domain_status === 'site_identity_checked' ? 'checked on the website' : 'verification needed'}.</p>
-          {u.sources.ranking && <a href={u.sources.ranking} target="_blank" rel="noreferrer">Ranking publisher ↗</a>}
-        </details>
-      </article>)}
-    </div>
-    {data?.total === 0 && <p>No universities match these filters. Try another country or name.</p>}
-    {data && data.total > 20 && <nav className="catalogue-pagination" aria-label="University catalogue pages">
-      <button className="btn" disabled={offset === 0 || fetching} onClick={() => setOffset((n) => Math.max(0, n - 20))}>Previous</button>
-      <span>{offset + 1}–{Math.min(offset + 20, data.total)} of {data.total}</span>
-      <button className="btn" disabled={offset + 20 >= data.total || fetching} onClick={() => setOffset((n) => n + 20)}>Next</button>
-    </nav>}
-  </section>;
+function IdentityImage({record}:{record:UniversityIdentity}){
+ const [failed,setFailed]=useState(false);
+ return <span className="university-identity-image">{record.image&&!failed?<img src={record.image} alt={`${record.imageKind==='site_icon'?'Иконка сайта':'Эмблема'} ${record.name}`} loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={()=>setFailed(true)}/>:<span className="small muted">Изображение уточняется</span>}</span>;
+}
+export function UniversityCatalogue({onStart,onProgress}:{onStart?:()=>void;onProgress?:()=>void}){
+ const {savedProfile,startRun,loading,run,caseEpoch}=useStore();const {locale}=useTranslation();const ru=locale!=='en';
+ const [hasProgrammes,setHasProgrammes]=useState(false);const [q,setQ]=useState('');const [country,setCountry]=useState('');const [page,setPage]=useState(0);
+ const [opened,setOpened]=useState<UniversityIdentity|null>(null);const [selected,setSelected]=useState<string[]>([]);
+ const [busy,setBusy]=useState(false);const [error,setError]=useState('');
+ const caseKey=`${savedProfile?.id??'new'}:${caseEpoch??0}`;const liveCase=useRef(caseKey);liveCase.current=caseKey;
+ const pendingRun=useRef<string|null|undefined>(undefined);
+ useEffect(()=>{setSelected([]);setBusy(false);setError('');pendingRun.current=undefined;},[caseKey]);
+ useEffect(()=>{if(pendingRun.current!==undefined&&run?.id&&run.id!==pendingRun.current){pendingRun.current=undefined;onProgress?.();}},[run?.id,onProgress]);
+ const publishedIds=new Set(officialProgrammes.map(p=>p.universityId));const filtered=filterUniversities(q,country).filter(row=>!hasProgrammes||publishedIds.has(row.id));const countries=[...new Set(universityDirectory.map(row=>row.country))].sort();
+ const follow=(row:UniversityIdentity|null)=>{setOpened(row);window.location.hash=row?`#/shortlist?view=catalogue&university=${encodeURIComponent(row.id)}`:'#/shortlist?view=catalogue';};
+ useEffect(()=>{const read=()=>{const params=new URLSearchParams(window.location.hash.split('?')[1]);setOpened(universityDirectory.find(row=>row.id===params.get('university'))??null);};read();window.addEventListener('hashchange',read);return()=>window.removeEventListener('hashchange',read);},[]);
+ const previous=useRef<string|null>(null);const openedId=opened?.id??null;
+ useEffect(()=>{if(openedId)document.getElementById('directory-university-title')?.focus();else if(previous.current)document.getElementById(`directory-open-${previous.current}`)?.focus();previous.current=openedId;},[openedId]);
+ const research=async()=>{
+  if(!savedProfile){onStart?.();return;}if(!selected.length||busy||loading)return;
+  const owner=caseKey;const identities=selected.map(id=>universityDirectory.find(row=>row.id===id)!);setBusy(true);setError('');
+  try{
+   const ids:string[]=[];
+   for(const row of identities){const response=await api.universities({q:row.name});if(liveCase.current!==owner)return;
+    const normalize=(text:string)=>text.toLocaleLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+    const match=response.items.find(item=>[item.name,...item.aliases].some(name=>normalize(name)===normalize(row.name)));
+    if(!match)throw new Error(ru?`Не удалось связать ${row.name} с каталогом. Попробуй позже.`:`Cannot resolve ${row.name} in the catalogue.`);ids.push(match.id);
+   }
+   if(liveCase.current!==owner)return;pendingRun.current=run?.id??null;await startRun(false,ids);
+  }catch(e){if(liveCase.current===owner){pendingRun.current=undefined;setError(e instanceof Error?e.message:String(e));}}
+  finally{if(liveCase.current===owner)setBusy(false);}
+ };
+ const toggle=(id:string)=>setSelected(old=>old.includes(id)?old.filter(value=>value!==id):old.length<5?[...old,id]:old);
+ const researchButton=<button className="btn btn--primary" disabled={busy||loading||Boolean(savedProfile&&!selected.length)} onClick={()=>void research()}>{busy||loading?(ru?'Начинаем…':'Starting…'):savedProfile?(ru?`Проверить программы в выбранных (${selected.length})`:`Research selected (${selected.length})`):(ru?'Заполнить профиль для подбора':'Complete profile to research')}</button>;
+ if(opened)return <section className="university-directory-detail" aria-label={ru?'Карточка университета':'University profile'}><button className="btn btn--ghost" onClick={()=>follow(null)}><ArrowLeft size={18}/>{ru?'К каталогу 500 вузов':'Back to 500 universities'}</button><header className="university-directory-identity"><IdentityImage key={`${opened.id}:${opened.image}`} record={opened}/><div><h1 id="directory-university-title" tabIndex={-1}>{opened.name}</h1><p>{opened.city} · {opened.country}</p></div></header><div className="university-directory-actions"><button className="btn" disabled={Boolean(savedProfile&&!selected.includes(opened.id)&&selected.length>=5)} onClick={()=>savedProfile?toggle(opened.id):onStart?.()}>{selected.includes(opened.id)?(ru?'Убрать из выбранных':'Remove selection'):(ru?'Выбрать для проверки программ':'Select for programme research')}</button>{researchButton}<a href="#/approved" className="btn btn--ghost">{ru?'Мой план':'My plan'}</a></div>{error&&<p role="alert">{error}</p>}
+ <OfficialProgrammeLibrary key={opened.id} universityId={opened.id} university={opened.name}/><div className="university-directory-columns"><section className="panel"><h2>{ru?'О вузе и его истории':'About and history'}</h2>{opened.history?<><p className="university-history" lang="en">{opened.history}</p><p className="small muted">{ru?'Краткая справка на английском. Источник и история изменений указаны ниже.':'English summary; source and revision history are linked below.'}</p><a href={opened.historySource??opened.source} target="_blank" rel="noreferrer">{ru?'Источник истории ↗':'History source ↗'}</a></>:<p>{ru?'История этого вуза ещё требует проверки по источнику.':'History awaits source verification.'}</p>}</section><section className="panel"><h2>{ru?'Справочная информация':'University facts'}</h2><dl className="university-directory-facts"><dt>{ru?'Основан':'Founded'}</dt><dd>{opened.founded??(ru?'Не подтверждено':'Unconfirmed')}</dd><dt>{ru?'Тип':'Type'}</dt><dd>{opened.type??'—'}</dd><dt>{ru?'Студентов · импортированная оценка':'Students · imported estimate'}</dt><dd>{opened.students?.toLocaleString()??'—'}</dd><dt>{ru?'Иностранных студентов · оценка':'International students · estimate'}</dt><dd>{opened.internationalPercent===null?'—':`${opened.internationalPercent}%`}</dd></dl>{opened.website&&<a className="btn" href={opened.website} target="_blank" rel="noreferrer">{ru?'Сайт университета ↗':'University website ↗'}</a>}<p className="small muted">{ru?'Это справочные сведения, а не проверка применимости программы к твоему набору. Стоимость, требования и стипендии проверяются отдельно.':'Identity information is separate from current programme requirements, tuition and scholarships.'}</p></section></div>
+ <details className="panel"><summary>{ru?'Происхождение данных и изображения':'Data and image sources'}</summary><p>{ru?'Дата импорта':'Imported'}: {opened.snapshotDate}. {ru?'Статистика историческая; дата её наблюдения не подтверждена.':'Statistics are historical; observation date is unknown.'}</p><a href={opened.source} target="_blank" rel="noreferrer">{ru?'Исходный справочник ↗':'Imported source ↗'}</a>{opened.imageSource&&<p><a href={opened.imageSource} target="_blank" rel="noreferrer">{opened.imageKind==='site_icon'?(ru?'Иконка сайта · источник ↗':'Website icon source ↗'):(ru?'Источник эмблемы ↗':'Emblem source ↗')}</a></p>}<p className="small">Wikipedia: CC BY-SA, авторы и история изменений доступны по ссылке статьи. Эмблемы принадлежат соответствующим университетам; показ для идентификации.</p></details></section>;
+ return <section className="university-catalogue" aria-label="University catalogue"><header className="catalogue-heading"><div><h1>{ru?'Каталог 500 университетов':'500 universities'}</h1><p>{ru?'Вузы разных стран: история, основные сведения и источники. Выбери до пяти для проверки программ по своему профилю.':'Explore university identities, history and sources. Select up to five for programme research.'}</p></div><a className="btn" href="#/shortlist">{ru?'Мои результаты подбора':'My programme results'}</a></header><div className="catalogue-tools"><label>{ru?'Университет, город или страна':'University, city or country'}<span className="directory-search"><MagnifyingGlass size={18}/><input type="search" value={q} placeholder={ru?'Например, Oxford или Canada':'Try Oxford or Canada'} onChange={e=>{setQ(e.target.value);setPage(0);}}/></span></label><label>{ru?'Страна':'Country or region'}<select value={country} onChange={e=>{setCountry(e.target.value);setPage(0);}}><option value="">{ru?'Все страны':'All countries'}</option>{countries.map(name=><option key={name}>{name}</option>)}</select></label>{researchButton}</div>{selected.length>0&&<div className="directory-selected" aria-label={ru?'Выбранные вузы':'Selected universities'}>{selected.map(id=><button className="btn btn--sm" key={id} onClick={()=>toggle(id)}>{universityDirectory.find(row=>row.id===id)?.name} ×</button>)}<button className="book-text-action" onClick={()=>setSelected([])}>{ru?'Очистить':'Clear'}</button></div>}{error&&<p role="alert">{error} <button className="btn btn--sm" onClick={()=>void research()}>{ru?'Повторить':'Try again'}</button></p>}<label className="catalogue-coverage-choice"><input type="checkbox" checked={hasProgrammes} onChange={event=>{setHasProgrammes(event.target.checked);setPage(0);}}/>{ru?'Только вузы с опубликованными программами':'Universities with published programme records'}</label><p className="notice">Программы с прочитанными официальными источниками: {officialProgrammes.length} в {new Set(officialProgrammes.map(p=>p.universityId)).size} из 500 вузов. Полное наполнение обоих уровней ещё не завершено.</p><p role="status">{ru?`Найдено ${filtered.length} из 500 вузов`:`${filtered.length} of 500 universities found`}</p><div className="catalogue-grid">{filtered.slice(page*20,page*20+20).map(row=><article className="catalogue-card" key={row.id}><header><IdentityImage key={`${row.id}:${row.image}`} record={row}/><div><button id={`directory-open-${row.id}`} className="university-name" onClick={()=>follow(row)}>{row.name}</button><p>{row.city}{row.city?' · ':''}{row.country}</p></div></header><p className="university-summary" lang="en">{row.history?.slice(0,200)||(ru?'История требует проверки по источнику.':'History awaits verification.')}{row.history&&row.history.length>200?'…':''}</p><footer><button className="book-text-action" onClick={()=>follow(row)}>{publishedIds.has(row.id)?(ru?'Программы и условия':'Programmes and admissions'):(ru?'О вузе и истории':'University profile')}<ArrowRight size={17}/></button><label className="catalogue-choice"><input type="checkbox" checked={selected.includes(row.id)} disabled={!savedProfile||(!selected.includes(row.id)&&selected.length>=5)} onChange={()=>toggle(row.id)}/>{ru?'Выбрать':'Select'}</label></footer></article>)}</div>{!filtered.length&&<div className="empty"><h2>{ru?'Вузы не найдены':'No universities found'}</h2><button className="btn" onClick={()=>{setQ('');setCountry('');setHasProgrammes(false);setPage(0);}}>{ru?'Сбросить фильтры':'Reset filters'}</button></div>}{filtered.length>20&&<nav className="catalogue-pagination" aria-label="University catalogue pages"><button className="btn" disabled={page===0} onClick={()=>{setPage(old=>old-1);document.querySelector('.university-catalogue')?.scrollIntoView({block:'start'});}}>{ru?'Назад':'Previous'}</button><span>{page*20+1}–{Math.min((page+1)*20,filtered.length)} / {filtered.length}</span><button className="btn" disabled={(page+1)*20>=filtered.length} onClick={()=>{setPage(old=>old+1);document.querySelector('.university-catalogue')?.scrollIntoView({block:'start'});}}>{ru?'Дальше':'Next'}</button></nav>}<p className="small muted">{ru?'Справочник загружен локально. Условия поступления проверяются отдельно. Если эмблема ещё не найдена или не загрузилась, показывается явная отметка.':'Directory loaded locally. Programme admission conditions require separate verification. Missing images are labelled.'}</p></section>;
 }

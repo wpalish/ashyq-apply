@@ -1,0 +1,80 @@
+..........................FFF                                            [100%]
+=================================== FAILURES ===================================
+____ test_raw_terminal_error_contradicts_completed_observation_must_reject _____
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp-v2-clock/test_raw_terminal_error_contra0')
+
+    def test_raw_terminal_error_contradicts_completed_observation_must_reject(tmp_path):
+        c = capture()
+        r = full_raw()
+        r['canary']['run_error'] = 'RuntimeError: interrupted before terminal report'
+        evidence(tmp_path, c, r)
+>       rejected(c, tmp_path)
+
+test_validate_v2.py:187: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp-v2-clock/test_raw_terminal_error_contra0')
+
+    def rejected(c, tmp_path):
+        result = pilot.validate(c, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v2.py:77: AssertionError
+_____________ test_raw_terminal_totals_missing_meters_must_reject ______________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp-v2-clock/test_raw_terminal_totals_missi0')
+
+    def test_raw_terminal_totals_missing_meters_must_reject(tmp_path):
+        c = capture()
+        r = full_raw()
+        r['canary']['totals'] = {}
+        evidence(tmp_path, c, r)
+>       rejected(c, tmp_path)
+
+test_validate_v2.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp-v2-clock/test_raw_terminal_totals_missi0')
+
+    def rejected(c, tmp_path):
+        result = pilot.validate(c, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v2.py:77: AssertionError
+____________ test_claimed_source_deadline_at_one_second_must_reject ____________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp-v2-clock/test_claimed_source_deadline_a0')
+
+    def test_claimed_source_deadline_at_one_second_must_reject(tmp_path):
+        c = capture()
+        c['observations'][0]['error'] = 'BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED'
+        c['config']['case_budgets']['groningen']['stop_reason'] = 'source_work_deadline_exhausted'
+        evidence(tmp_path, c)
+        (tmp_path / 'groningen.raw.json').unlink()
+>       rejected(c, tmp_path)
+
+test_validate_v2.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp-v2-clock/test_claimed_source_deadline_a0')
+
+    def rejected(c, tmp_path):
+        result = pilot.validate(c, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': True, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v2.py:77: AssertionError
+=========================== short test summary info ============================
+FAILED test_validate_v2.py::test_raw_terminal_error_contradicts_completed_observation_must_reject
+FAILED test_validate_v2.py::test_raw_terminal_totals_missing_meters_must_reject
+FAILED test_validate_v2.py::test_claimed_source_deadline_at_one_second_must_reject
+3 failed, 26 passed in 0.11s

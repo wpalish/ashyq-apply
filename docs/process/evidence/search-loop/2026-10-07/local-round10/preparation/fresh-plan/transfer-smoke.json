@@ -1,0 +1,160 @@
+{
+  "status": "FRESH_PLAN_TRANSFER_VALIDATE_SMOKE_PASS_PEER_PENDING_NO_LIVE",
+  "controller_sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+  "plan_sha256": "f8ac2ec56a55ce8929b32993fef7836723e74a70c96847b27e9ce57615f8bc65",
+  "source_head": "7c74a12d71bd00228014c11d194928d223e110be",
+  "normal_import_only": true,
+  "main_preflight_network_process_calls": 0,
+  "assertions": 18,
+  "pass": 18,
+  "results": [
+    {
+      "name": "legitimate_nonempty_overall_claim",
+      "partial_lane": false,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_nonempty_overall_claim",
+      "partial_lane": true,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_sqlite_naive_record_timestamp",
+      "partial_lane": false,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_sqlite_naive_record_timestamp",
+      "partial_lane": true,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_nonempty_missing_excerpt_preserved",
+      "partial_lane": false,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_nonempty_missing_excerpt_preserved",
+      "partial_lane": true,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_component_floor_native_normalization",
+      "partial_lane": false,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_component_floor_native_normalization",
+      "partial_lane": true,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_programme_language_two_predictions",
+      "partial_lane": false,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "legitimate_programme_language_two_predictions",
+      "partial_lane": true,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "https://example.edu?programme=cs",
+      "partial_lane": false,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "https://example.edu?programme=cs",
+      "partial_lane": true,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "https://EXAMPLE.edu:443/programme/computer-science",
+      "partial_lane": false,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "https://EXAMPLE.edu:443/programme/computer-science",
+      "partial_lane": true,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "https://example.edu/programme/computer%20science",
+      "partial_lane": false,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "https://example.edu/programme/computer%20science",
+      "partial_lane": true,
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "wrong_url_rejected",
+      "partial_lane": false,
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "raw/observation programme URLs mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "name": "wrong_url_rejected",
+      "partial_lane": true,
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "raw/observation programme URLs mismatch"
+      ],
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "started_at": "2026-10-09T01:26:30.295936+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "source": {
+    "repository": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+    "source_head": "c7b41fcf42c2fb84e877a8cb8b1349eedb79941f",
+    "source_branch": "task/product-security-privacy"
+  },
+  "steps": [
+    {
+      "name": "python-version",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "-c",
+        "import sys; print(sys.version); assert sys.version_info[:2] == (3,12)"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012630Z-doctor-87227274/python-version.log",
+      "exit_code": 0,
+      "seconds": 0.01
+    },
+    {
+      "name": "node-version",
+      "command": [
+        "node",
+        "-e",
+        "console.log(process.version); if (process.versions.node.split('.')[0] !== '22') process.exit(1)"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012630Z-doctor-87227274/node-version.log",
+      "exit_code": 0,
+      "seconds": 0.11
+    },
+    {
+      "name": "python-dependencies",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "-c",
+        "import importlib.util; names=['pytest','pytest_cov','ruff','mypy','respx','pgserver','playwright','pip_audit']; missing=[n for n in names if importlib.util.find_spec(n) is None]; print('Missing:', missing); raise SystemExit(bool(missing))"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012630Z-doctor-87227274/python-dependencies.log",
+      "exit_code": 0,
+      "seconds": 0.01
+    },
+    {
+      "name": "node-dependencies",
+      "command": [
+        "npm",
+        "ls",
+        "--depth=0"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012630Z-doctor-87227274/node-dependencies.log",
+      "exit_code": 0,
+      "seconds": 0.4
+    },
+    {
+      "name": "chromium-installed",
+      "command": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import {chromium} from '@playwright/test'; import fs from 'node:fs'; const p=chromium.executablePath(); console.log(p); if (!fs.existsSync(p)) process.exit(1);"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012630Z-doctor-87227274/chromium-installed.log",
+      "exit_code": 0,
+      "seconds": 0.19
+    }
+  ],
+  "github_actions_started": false,
+  "live_network_capture_started": false,
+  "status": "passed",
+  "docker_available": false,
+  "ci_runtime_target": {
+    "python": "3.12",
+    "node": "22",
+    "github_os": "Linux",
+    "local_os": "Darwin"
+  },
+  "finished_at": "2026-10-09T01:26:31.034882+00:00"
+}

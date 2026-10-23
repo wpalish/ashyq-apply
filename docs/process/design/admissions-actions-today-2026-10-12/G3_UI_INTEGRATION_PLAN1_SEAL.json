@@ -1,0 +1,64 @@
+{
+  "schema_version": "immutable-g3-ui-plan-metadata-v1",
+  "at_utc": "2026-10-13T05:23:55Z",
+  "author": "/root/open_search_solutions",
+  "status": "PLAN_ONLY_UI_SOURCE_CLOSED_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "scope": "Finite native Home/Approved/Documents/Preparation/Store integration with own G3 current API and qualified forthcoming foundation; no new feature/server contract or full roadmap.",
+  "plan": {
+    "path": "G3_UI_INTEGRATION_PLAN1.md",
+    "sha256": "47b21cbd09959b5311fb696f824333804f67c512ab3c22fcb5b860e58b335527",
+    "bytes": 22013
+  },
+  "immutable_inputs": [
+    {
+      "path": "proposals/G3_NATIVE_FRONTEND_SEAM_SCOUT.md",
+      "sha256": "b5b251ee1fecd5a9be5bc559bbd7eb5557e4e28516ee5c1a1dc9acd493add989"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/SEAL.json",
+      "sha256": "e48a39997f0295d91710525fa3d4a0c873cf00e1397433ffc23b2b52de4c7b01",
+      "declared_members_verified_sha_and_bytes": 19,
+      "qualification": "Original immutable predecessor only; findings not silently closed"
+    },
+    {
+      "path": "G3_FRONTEND_FOUNDATION_INDEPENDENT_REVIEW1.md",
+      "sha256": "916c697cfb464b33b2d66e5d50298835080fdb0f1a6fd88e374723fbaad33657"
+    },
+    {
+      "path": "proposals/g3-api-wire1/G3_API_WIRE_V1.md",
+      "sha256": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+      "qualification": "Existing frozen wire referenced by verified foundation input"
+    }
+  ],
+  "source_pins": {
+    "frontend/src/App.tsx": "293f8aeccb4286660bd1822a3a914a74218b85c4704be1b4fcdf0fda5b031725",
+    "frontend/src/screens/HomeScreen.tsx": "bda406914a413a5371d5299f48aa5dfe6b0fbf3bcfae9b1613bbf25b4be18517",
+    "frontend/src/screens/ApprovedScreen.tsx": "0395dc3be1315f4c09defc2e0be85434fad0848b407220fa2903f26cdbe6b89a",
+    "frontend/src/screens/DocumentsScreen.tsx": "e7ef0217c19f051c434acb69fb7f2b0ea1883a2228984054747cb8b77abcde9f",
+    "frontend/src/screens/PreparationScreen.tsx": "52c8c4df92498e8cbe1f52b135f755ea7329aab34cff9e71b0bc8431a8b64bb1",
+    "frontend/src/lib/store.tsx": "81afb3fbe97ccd015d9755bfd1fe4079e57eae8bfd2a48363c308545842f272a",
+    "frontend/src/api/client.ts": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+    "frontend/src/lib/i18n.ts": "08c9bf1ce7a50d289d27424ad007ee83adca5c2f9f4b111c4faae6b50aa12e58",
+    "frontend/src/types.ts": "472da567fe598b74f9fe43520b925fdfda6401866ef51f994104b2f5afa71511",
+    "frontend/src/lib/draftIdentity.tsx": "4039d06362d2861d79d5daec2891c1c1f613d93e4c0360bf5da915db55f3d015",
+    "frontend/src/lib/applicantStorage.ts": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+    "frontend/src/components/primitives.tsx": "ef745e6002023398e5d69f6e6227c719d879bc10997c94f179b15d67747a676b",
+    "frontend/src/styles/unimatch.css": "6820400b329f9096aae2b7b507ea20d2746200f77f291ebbb44f9f4761b68530",
+    "frontend/src/App.preparation.test.tsx": "406ad762023db5f3d55e71024c84ee27563358b622e4ef08da202c6284f3a490",
+    "frontend/src/screens/PreparationScreen.learningPath.test.tsx": "bd4e359b97ea3d8208402e047c3fbbb8570aa3515ff8b20f7c5d609e54211f8c",
+    "frontend/src/lib/storeIsolation.test.tsx": "552e3144f29df301a1f7efd2408b6f68ed879a12bf614323b5452e7dafa4ae90",
+    "frontend/src/lib/draftIdentity.test.tsx": "c307e02e43749727ca4037bbf7441e07d17403a32e56dab170fcca9b35b8ea82",
+    "frontend/e2e/journey.spec.ts": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+    "frontend/e2e/auth-journey.spec.ts": "708b4a18f4cbcc8de2291114b67ebe76691b0036a9285d1e6688bca57595be24",
+    "backend/app/domain/admissions_actions.py": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8"
+  },
+  "concrete_missing_seams": [
+    "Qualified foundation F1-F4 closure/application remains a root prerequisite, not asserted by this plan.",
+    "Original helper lacks explicit selected acknowledged-entry retirement; bounded local helper/test grant required, unresolved originals retained.",
+    "Native review renderer is catalogue-data gated; direct exact Today review needs independent handoff renderer/retry.",
+    "Today currently supplies head for selected/derived origin only; no alternative legacy digest/head is manufactured or new endpoint proposed."
+  ],
+  "source_operations": "Ordinary source/metadata reading, SHA/byte verification, external plan/seal authoring only",
+  "application_helper_git_handoff_import_ast_format_test_runtime_network_provider_labels_stopped_work": "NOT_TOUCHED_NOT_RUN",
+  "root_only_next": "Root reviews metadata and later issues finite exact path/preimage UI/helper write-ahead after backend/foundation gates; this seal does not grant source or execution."
+}

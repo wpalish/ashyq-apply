@@ -1,0 +1,220 @@
+........................F...........................................     [100%]
+=================================== FAILURES ===================================
+________ test_fence_loss_between_precheck_and_commit_rolls_back_charge _________
+
+self = <sqlalchemy.engine.base.Connection object at 0x10e2ad520>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10e2c7110>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10e2af8f0>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x10e2ac500>
+parameters = [(2, '2026-10-07 21:07:25.892978', '5002d777b7ce4e158b4b9af87ac8e386')]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10e2c7110>
+cursor = <sqlite3.Cursor object at 0x10e288e40>
+statement = 'UPDATE jobs SET attempts=?, updated_at=? WHERE jobs.id = ?'
+parameters = (2, '2026-10-07 21:07:25.892978', '5002d777b7ce4e158b4b9af87ac8e386')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10e2af8f0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.OperationalError: database is locked
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert...dex/2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard/testtmp-pinned/test_fence_loss_between_preche0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e2c7380>
+
+    @pytest.mark.asyncio
+    async def test_fence_loss_between_precheck_and_commit_rolls_back_charge(context, monkeypatch):
+        f = activate(context)
+        seen = mock_original_get(monkeypatch, context)
+        with context.runner._university_read_scope(candidate()):
+            original_save = context.runner._save
+    
+            def race():
+                with context.factory() as newer:
+                    newer.execute(update(Job).where(Job.id == context.job.id).values(attempts=2))
+                    newer.commit()
+                original_save()
+    
+            monkeypatch.setattr(context.runner, "_save", race)
+            with pytest.raises(LeaseLost):
+>               await f.get("https://example.edu/race")
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:543: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/read_budget.py:108: in get
+    self.before_get()
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:545: in _reserve_university_read
+    self._change_read_budget(key, reserve=True)
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:593: in _change_read_budget
+    self._save()  # heartbeat fence and counter commit BEFORE original get
+    ^^^^^^^^^^^^
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:537: in race
+    newer.execute(update(Job).where(Job.id == context.job.id).values(attempts=2))
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2362: in execute
+    return self._execute_internal(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2247: in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/bulk_persistence.py:1648: in orm_execute_statement
+    return super().orm_execute_statement(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py:305: in orm_execute_statement
+    result = conn.execute(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x10e2c7110>
+cursor = <sqlite3.Cursor object at 0x10e288e40>
+statement = 'UPDATE jobs SET attempts=?, updated_at=? WHERE jobs.id = ?'
+parameters = (2, '2026-10-07 21:07:25.892978', '5002d777b7ce4e158b4b9af87ac8e386')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x10e2af8f0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+E       [SQL: UPDATE jobs SET attempts=?, updated_at=? WHERE jobs.id = ?]
+E       [parameters: (2, '2026-10-07 21:07:25.892978', '5002d777b7ce4e158b4b9af87ac8e386')]
+E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: OperationalError
+=========================== short test summary info ============================
+FAILED work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py::test_fence_loss_between_precheck_and_commit_rolls_back_charge
+1 failed, 67 passed in 14.20s

@@ -1,0 +1,54 @@
+{
+  "status": "WRITEAHEAD_CONTRACT_FIRST_OFFLINE_ONLY",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "source_pins": {
+    "backend/app/adapters/cost/web_costs.py": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/cost/web_costs.py",
+      "sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed"
+    },
+    "backend/app/adapters/structured_costs.py": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/structured_costs.py",
+      "sha256": "149f716bcf015066b41f9edf6d8678f670e2352962561b69068013f2640a0f53"
+    },
+    "backend/app/adapters/document_ir.py": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/document_ir.py",
+      "sha256": "c8c3f15da74f8f891f4f79fd8bfd52e937b57898edfdc3ac1a59e7d44bce9f0f"
+    },
+    "backend/app/adapters/extraction.py": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/extraction.py",
+      "sha256": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf"
+    },
+    "backend/app/domain/claim_scope.py": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/domain/claim_scope.py",
+      "sha256": "e29c2f751734396d2208a8c968588f8f561813017785cd1a58067a56d1f5753c"
+    },
+    "backend/app/schemas/claim.py": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/schemas/claim.py",
+      "sha256": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794"
+    },
+    "backend/app/schemas/money.py": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/schemas/money.py",
+      "sha256": "54a91d7827cd5ef786b9fcb9e1d6a3867d2edbc195484d631f3aad4e42a4bed8"
+    },
+    "backend/app/schemas/result.py": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/schemas/result.py",
+      "sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974"
+    }
+  },
+  "public_inputs": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-source-funnel/public-cache/bebf43d56e3b363476eed0f7cddede69.body": "803e15a08ada381f88ee3e933f89bef63594e39d1192f65a8b10367e5af5dcfc",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-source-funnel/public-cache/bebf43d56e3b363476eed0f7cddede69.meta.json": "946e2772e6ee749d82ef196d6539be1f093511f16716d07caaf199cc3a1d56d2"
+  },
+  "prior_seal": {
+    "manifest": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-source-funnel/MANIFEST.json",
+    "sha256": "90a27182835b19be19e8b0523c93d8a258f697446b845ec2995f6a543522554f"
+  },
+  "scope": "Bounded source-owned annual tuition table row retention only. Native DocumentIR/ClaimBuilder/WebCostAdapter, newFalseflag. No applicant tariff, CS alias, requested2027year, synthetic combined quote or arithmetic/breakdown use. Contract gap stops implementation if cohort cannot be preserved without guessedacademic_year.",
+  "controls": [
+    "OFF wholeoutput compatibility",
+    "native original Bachelor+Mastertable",
+    "source-owned degree/field/cohort/population/period",
+    "persemester/month/oneoff/waiver/exemption/year/field/header/currency/wholequote boundaries"
+  ],
+  "forbidden": "No app/repo/Git/HANDOFF/source/default/live/provider/model/network/DNS/STOP/labels/scorer actions; no newagents; preservefailedcontrols andalloriginals; externalfolders only."
+}

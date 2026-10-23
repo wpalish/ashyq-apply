@@ -1,0 +1,20 @@
+from pathlib import Path
+O=Path(__file__).resolve().parent;B=O/'proposed/backend'
+p=B/'evaluation/research/expert/controller.py';s=p.read_text().replace('    run_began = monotonic()','    run_began = monotonic()\n    last_wall = wall_before',1).replace('record["wall_elapsed_ms_before"] = wall_before + math.ceil((monotonic() - run_began) * 1000)','record["wall_elapsed_ms_before"] = max(last_wall, wall_before + math.ceil((began - run_began) * 1000))').replace('record["wall_elapsed_ms_cumulative"] = wall_before + math.ceil((monotonic() - run_began) * 1000)','record["wall_elapsed_ms_cumulative"] = max(record["wall_elapsed_ms_before"] + elapsed, wall_before + math.ceil((monotonic() - run_began) * 1000))\n                    last_wall = record["wall_elapsed_ms_cumulative"]').replace('summary["final"]["wall_elapsed_ms"] = wall_before + math.ceil((monotonic() - run_began) * 1000)','summary["final"]["wall_elapsed_ms"] = max(last_wall, wall_before + math.ceil((monotonic() - run_began) * 1000))')
+s=s.replace('previous_policy.get("thinking_in_tool_ms") is not False or','previous_policy.get("thinking_in_tool_ms") is not False or type(previous_policy.get("protective_wall_ms")) is not int or previous_policy.get("protective_wall_ms") != 900_000 or',1)
+p.write_text(s)
+p=B/'evaluation/research/local_pilot.py';s=p.read_text().replace('"wall_elapsed_before_ms": wall_elapsed(),','"wall_elapsed_before_ms": max(wall_elapsed(), summary["final"]["wall_elapsed_ms"] if summary else 0),')
+s=s.replace('        proof = isolation.prove_access(allowed, sealed)','        store(root / "isolation-launch.original.json", {"expert": expert, "case_id": case_id, "status": "native-probe-entry"})\n        proof = isolation.prove_access(allowed, sealed)',1) if False else s
+# one per-case marker, neutral root differs.
+start=s.index('async def _collect_expert(');before=s[:start];part=s[start:]
+part=part.replace('        proof = isolation.prove_access(allowed, sealed)','        store(root / "isolation-launch.original.json", {"expert": expert, "case_id": case_id, "status": "probe-entry"})\n        proof = isolation.prove_access(allowed, sealed)',1)
+s=before+part;s=s.replace('/ "isolation.original.json").is_file() or list(', '/ "isolation-launch.original.json").is_file() or list(')
+p.write_text(s)
+p=B/'tests/test_local_pilot.py';s=p.read_text().replace("with pytest.raises(ValueError,match='timing policy'):run_tool(plan(resume_summary=first),tmp_path)","with pytest.raises(ValueError,match='policy'):run_tool(plan(resume_summary=first),tmp_path)")
+s=s.replace("    source=Path(gate.plan['source_snapshot']);backend=source/'backend';scripts=backend/'scripts';scripts.mkdir(exist_ok=True)","    from shutil import copyfile\n    source=tmp_path/'prepared-source';backend=source/'backend';scripts=backend/'scripts';scripts.mkdir(parents=True)\n    current_backend=Path(p.__file__).resolve().parents[2]")
+s=s.replace("    original=Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/scripts/canary_discovery.py')", "    original=current_backend/'scripts/canary_discovery.py'")
+s=s.replace("    registry=backend/'app/adapters/discovery/institution_registry.json'", "    bindings=backend/'evaluation/research/data/identity_bindings.reviewed.json';bindings.parent.mkdir(parents=True);copyfile(current_backend/'evaluation/research/data/identity_bindings.reviewed.json',bindings)\n    marker=backend/'evaluation/research/expert/controller.py';marker.parent.mkdir();copyfile(Path(c.__file__),marker)\n    monkeypatch.setattr(c,'__file__',str(marker))\n    registry=backend/'app/adapters/discovery/institution_registry.json';registry.parent.mkdir(parents=True)")
+s=s.replace("if not executable.exists():executable.symlink_to(Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python'))", "if not executable.exists():\n        import sys\n        executable.symlink_to(Path(sys.executable))")
+p.write_text(s)
+for p in B.rglob('*.py'):
+ q=O/'runtime/backend'/p.relative_to(B);q.write_bytes(p.read_bytes())

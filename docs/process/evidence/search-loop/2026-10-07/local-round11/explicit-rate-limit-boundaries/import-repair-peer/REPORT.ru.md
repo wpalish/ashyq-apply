@@ -1,0 +1,7 @@
+ACCEPT исключительно import-only ремонта. Независимый AST показывает: во всех3тестах non-import module bodies идентичны принятым A/Bbytes, exact import-node multiset сохранён, имена/decorators/parameter inputs/assertions неизменны. Text delta только перенос app.adapters.search.exa_mcp после httpx/pytest и2groupblanklines. Продуктовыеapp3 остаются точными133bbytes.
+
+Current test3 hashes соответствуют parent repairreceipt; выбранные999metadata отличаются от первого integratedsnapshot только этими3тестами, и новыйsource-after-isort-999 содержит принятыеapp3/newtest3. STOP65b5 неизменён. Source/testbytesbeforeafter, независимый AST и rootcommandreceipt сохранены. B Ruff/tests/appimports не запускал; repository-cwd Rufffix exit0 — прочитанная rootevidence, не собственная команда.
+
+Из acceptedAONJUnit сохранены90unique parameterized native identities,0fail/error/skip. AST сохранность определяет прежние test expectations, но не новый functionalPASS. Fresh source full/native gates ещё нужны;4312unique backend исходUNKNOWN до завершения. Первый fullsnapshot отдельно immutable: Ruff3I001,SQLiteKeyboardInterrupt130 beforeJUnit, functionalUNKNOWN. ExternalRuffPASS originalproposal квалифицирован по своему importdiscoverycontext.
+
+Ни sourceapp/default/guard/budget/testlogic/live/STOP/Git/reset/labels/scoring изменения B не выполнял. Root может продолжить exact-sourcefull после принятия этой узкой поправки. Никакогоquality/newbugcount значения90или4312не имеют.

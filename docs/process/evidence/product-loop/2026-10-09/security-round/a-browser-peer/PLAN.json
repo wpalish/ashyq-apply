@@ -1,0 +1,13 @@
+{
+  "task": "Independent exact-byte frontend privacy proposal peer",
+  "proposal_ready_sha256": "6063029c598e7c05cdb207f74bdcb7de47d0773f58752ce9aa6fef2381df4bb0",
+  "scope": "static source + finite native frontend tests in own copy; no primary writes, ports, backend, database, external dispatch or secrets",
+  "inputs": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/browser-proposal",
+  "selected_files": 110,
+  "steps": [
+    "verify selected hashes/current base/STOP",
+    "review exact 8 source paths and 4 tests",
+    "own-copy native selected suite with socket/DNS denial if meaningful",
+    "record concrete findings and seal selected plaintext only"
+  ]
+}

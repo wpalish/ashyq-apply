@@ -1,0 +1,23 @@
+{
+  "status": "PREPROPOSAL_REVIEW_ONLY",
+  "A_ready_manifest": null,
+  "source_files_verified_and_copied": 18,
+  "native_controls_executed": 0,
+  "network_calls": 0,
+  "source_writes": 0,
+  "confirmed_current_source_boundaries": [
+    "local candidate assignment only after adapter return",
+    "_apply only normal finish",
+    "discovery limitations are diagnostics, not Claims/unknown ledger",
+    "handled exhausted cap verify can persist explicit unknown under existing fence",
+    "asyncio timeout cancellation excluded"
+  ],
+  "proposal_issues_proven": [],
+  "review_risks": [
+    "stale query attempt counters after published snapshot",
+    "wrong programme/population/year membership",
+    "callback not durable on cancellation",
+    "control exception propagation",
+    "SQL fenced partial semantics"
+  ]
+}

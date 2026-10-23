@@ -1,3 +1,4 @@
+from app.models.admissions_actions import AdmissionsActionsCurrentRow, AdmissionsActionsEventRow
 from app.models.applicant import ApplicantProfileRow
 from app.models.auth import (
     AuthSession,
@@ -27,6 +28,7 @@ from app.models.research import (
     ProgramResultRow,
     ResearchRun,
 )
+from app.models.shared_route import SharedRouteCurrentRow, SharedRouteHistoryRow
 from app.models.social import (
     Avatar,
     Block,
@@ -40,6 +42,8 @@ from app.models.social import (
     SocialProfileUniversity,
 )
 from app.models.source_page import SourcePage, SourceSnapshot
+from app.models.study import StudyAttempt
+from app.models.study_schedule import StudyScheduleRow
 from app.models.subscription import (
     TERMINAL_SUBSCRIPTION_STATUSES,
     Subscription,
@@ -52,6 +56,8 @@ __all__ = [
     "TERMINAL_ORDER_STATUSES",
     "TERMINAL_STATUSES",
     "TERMINAL_SUBSCRIPTION_STATUSES",
+    "AdmissionsActionsCurrentRow",
+    "AdmissionsActionsEventRow",
     "ApplicantProfileRow",
     "AuditEvent",
     "AuthSession",
@@ -82,10 +88,14 @@ __all__ = [
     "ProgramResultRow",
     "ResearchRun",
     "SchemaVersion",
+    "SharedRouteCurrentRow",
+    "SharedRouteHistoryRow",
     "SocialProfile",
     "SocialProfileUniversity",
     "SourcePage",
     "SourceSnapshot",
+    "StudyAttempt",
+    "StudyScheduleRow",
     "Subscription",
     "SubscriptionStatus",
     "TimestampedBase",

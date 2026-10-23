@@ -1,0 +1,45 @@
+{
+  "first_on_refused": [
+    [
+      {
+        "type": "UniversityReadStopped",
+        "reason": "checkpoint_busy",
+        "sqlstate": null,
+        "sqlite_errorcode": null,
+        "message": "University read allowance refused: checkpoint_busy"
+      },
+      {
+        "type": "OperationalError",
+        "reason": null,
+        "sqlstate": "55P03",
+        "sqlite_errorcode": null,
+        "message": "(psycopg.errors.LockNotAvailable) could not obtain lock on row in relation \"jobs\"\n[SQL: SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT]\n[parameters: {'id_1': '5617fa8f380b470f8e7a35501197b750', 'run_id_1': '8dca727ba87145bcbb4ab8559ceab19c', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"
+      },
+      {
+        "type": "LockNotAvailable",
+        "reason": null,
+        "sqlstate": "55P03",
+        "sqlite_errorcode": null,
+        "message": "could not obtain lock on row in relation \"jobs\""
+      }
+    ]
+  ],
+  "original_get": 60,
+  "durable": {
+    "off_writer": "second stale replacement",
+    "university_research_budget_v1": {
+      "version": 1,
+      "episodes": {
+        "decision:5617fa8f380b470f8e7a35501197b750": {
+          "read_counts": {
+            "catalogue:u-one": 60
+          }
+        }
+      },
+      "read_limit": 60,
+      "active_episode": "decision:5617fa8f380b470f8e7a35501197b750"
+    }
+  },
+  "fresh_namespace_not_erased": true,
+  "scope": "dirty/pending checkpoint writer; not universal OFF I/O cap"
+}

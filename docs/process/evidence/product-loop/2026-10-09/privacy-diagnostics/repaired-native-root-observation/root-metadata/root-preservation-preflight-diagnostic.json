@@ -1,0 +1,7 @@
+{
+  "tool_chunk": "bd68c9",
+  "original_output": "Traceback (most recent call last):\n  File \"<stdin>\", line 21, in <module>\nKeyError: 'source_status'\n",
+  "stage": "Root one-off read-only preflight, before exclusive packet mkdir/copy",
+  "packet_existed_after_failure": false,
+  "qualification": "Doctor source fingerprint contains repository/head/branch only; source_status exists in core/full manifest. Native gates did not fail. No original modified; no app change or test rerun."
+}

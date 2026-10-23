@@ -1,0 +1,79 @@
+{
+  "protocol": {
+    "kind": "genuine-research-job",
+    "sqlite_case_database": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2-final/pytest-attempt1/test_unrecognized_generic_cont1/canary-09tyt_fg/canary.db",
+    "started": true,
+    "native_ledger": {
+      "version": 1,
+      "read_limit": 60,
+      "active_episode": "decision:675763591f7e4c6ba0430d51f8ed2334",
+      "episodes": {
+        "decision:675763591f7e4c6ba0430d51f8ed2334": {
+          "read_counts": {
+            "catalogue:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": 36
+          }
+        }
+      }
+    },
+    "native_enabled": true,
+    "worker_id": "iMac-Aliser.local:22805",
+    "observation_available": true,
+    "control_error": "OperationalError",
+    "control_message": null,
+    "run_id": "089e32aafa3b44a7ac1fd63ec74cd1b3",
+    "job_id": "675763591f7e4c6ba0430d51f8ed2334",
+    "claim_token": 1,
+    "control_type": "OperationalError",
+    "control_reason": null,
+    "heartbeat_tasks": 1,
+    "heartbeat_done": [
+      true
+    ],
+    "heartbeat_cancelled": [
+      true
+    ],
+    "worker_jobs_done": 0,
+    "worker_jobs_failed": 1,
+    "terminal_run_error_payload_redacted": true,
+    "job_status": "queued",
+    "lease_token": 1,
+    "recorded_worker_id": null,
+    "page_outcomes": [],
+    "run_unknowns": [],
+    "run_errors": [
+      "OperationalError"
+    ],
+    "claim_records": [
+      {
+        "id": "1d4a8060d1304cb5bda1de4f7d263fee",
+        "claim_type": "program_exists",
+        "source_url": "https://example.edu/degree",
+        "accessed_at": "2026-10-07T23:56:46.730716",
+        "payload": {
+          "claim_type": "program_exists",
+          "normalized_value": {
+            "program": "BSc Computer Science",
+            "degree": "bachelor",
+            "language": null
+          },
+          "original_text_excerpt": "BSc Computer Science",
+          "source_url": "https://example.edu/degree",
+          "page_title": "",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "BSc Computer Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": null,
+          "accessed_at": "2026-10-07T23:56:46.730716Z",
+          "source_specificity": "unknown",
+          "confidence": 0.5,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        }
+      }
+    ]
+  },
+  "run_error": "OperationalError"
+}

@@ -43,6 +43,7 @@ class Rejection:
     """Why a URL did not survive the prefilter. Values are stable for telemetry."""
 
     SCHEME = "unsupported_scheme"
+    MALFORMED_URL = "malformed_url"
     OTHER_INSTITUTION = "other_institution"
     NOT_A_PROGRAMME_PAGE = "not_a_programme_page"
     WRONG_DEGREE_LEVEL = "wrong_degree_level"
@@ -138,9 +139,20 @@ def prefilter(
     seen: set[str] = set()
 
     for result in results:
-        scheme = urlparse(result.url).scheme.lower()
+        try:
+            parts = urlparse(result.url)
+            scheme = parts.scheme.lower()
+            host = parts.hostname
+            # urllib validates the port only when this property is accessed.
+            _ = parts.port
+        except ValueError:
+            rejected.append(RejectedCandidate(result.url, Rejection.MALFORMED_URL))
+            continue
         if scheme not in ALLOWED_SCHEMES:
             rejected.append(RejectedCandidate(result.url, Rejection.SCHEME))
+            continue
+        if not host:
+            rejected.append(RejectedCandidate(result.url, Rejection.MALFORMED_URL))
             continue
 
         url = canonical_url(result.url)

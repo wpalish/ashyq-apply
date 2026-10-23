@@ -1,0 +1,889 @@
+diff --git a/backend/app/schemas/study_schedule.py b/backend/app/schemas/study_schedule.py
+new file mode 100644
+--- /dev/null
++++ b/backend/app/schemas/study_schedule.py
+@@ -0,0 +1,179 @@
++"""Applicant-entered study planning, separate from official requirement evidence."""
++
++from __future__ import annotations
++
++import math
++from datetime import date, datetime, timedelta
++from typing import Annotated, Literal
++from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
++
++from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
++
++Exam = Literal["ielts_academic", "digital_sat"]
++TaskKind = Literal[
++    "diagnostic",
++    "skill",
++    "review",
++    "timed_practice",
++    "mock",
++    "exam",
++    "results",
++    "delivery",
++    "submit",
++]
++Weekday = Annotated[int, Field(strict=True, ge=0, le=6)]
++CompletionId = Annotated[str, Field(min_length=1, max_length=160)]
++IELTS_KEYS = frozenset({"overall", "listening", "reading", "writing", "speaking"})
++SAT_KEYS = frozenset({"total", "math", "reading_writing"})
++MAX_DAILY_MINUTES = 180
++
++
++class Base(BaseModel):
++    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
++
++
++class ScheduleSettings(Base):
++    exam: Exam
++    starts_on: date
++    certificate_deadline: date
++    first_exam_on: date
++    retake_on: date | None = None
++    result_wait_days: int = Field(ge=1, le=60, strict=True)
++    delivery_days: int = Field(ge=0, le=30, strict=True)
++    safety_days: int = Field(ge=0, le=30, strict=True)
++    timezone: str = Field(min_length=1, max_length=80)
++    weekly_minutes: int = Field(ge=30, le=1260, strict=True)
++    study_days: list[Weekday] = Field(min_length=1, max_length=7)
++    target_scores: dict[str, float]
++    baseline_scores: dict[str, float] = Field(default_factory=dict)
++    baseline_on: date | None = None
++    confirmed_planning_dates: Literal[True]
++    completed_task_ids: list[CompletionId] = Field(default_factory=list, max_length=400)
++
++    @field_validator("confirmed_planning_dates", mode="before")
++    @classmethod
++    def _explicit_confirmation(cls, value: object) -> object:
++        if value is not True:
++            raise ValueError("Planning dates must be explicitly confirmed as applicant-entered")
++        return value
++
++    @field_validator("timezone")
++    @classmethod
++    def _timezone(cls, value: str) -> str:
++        try:
++            ZoneInfo(value)
++        except (ZoneInfoNotFoundError, ValueError) as exc:
++            raise ValueError("timezone must be a valid IANA timezone") from exc
++        return value
++
++    @field_validator("study_days", "completed_task_ids")
++    @classmethod
++    def _unique(cls, value: list) -> list:
++        if len(value) != len(set(value)):
++            raise ValueError("Duplicate entries are not allowed")
++        return value
++
++    @field_validator("target_scores", "baseline_scores", mode="before")
++    @classmethod
++    def _not_boolean_scores(cls, value: object) -> object:
++        if isinstance(value, dict) and any(isinstance(v, bool) for v in value.values()):
++            raise ValueError("A boolean is not a test score")
++        return value
++
++    @model_validator(mode="after")
++    def _settings(self) -> ScheduleSettings:
++        keys = IELTS_KEYS if self.exam == "ielts_academic" else SAT_KEYS
++        if set(self.target_scores) != keys or not set(self.baseline_scores) <= keys:
++            raise ValueError(
++                "Use the complete target keys and only known baseline keys for this exam"
++            )
++        for scores in (self.target_scores, self.baseline_scores):
++            for key, value in scores.items():
++                if not math.isfinite(value):
++                    raise ValueError("Scores must be finite")
++                if self.exam == "ielts_academic":
++                    if not 0 <= value <= 9 or value * 2 != int(value * 2):
++                        raise ValueError("IELTS planning scores must be 0..9 in half bands")
++                else:
++                    low, high = (400, 1600) if key == "total" else (200, 800)
++                    if not low <= value <= high or value != int(value):
++                        raise ValueError(
++                            "SAT planning scores must be integers within their score range"
++                        )
++        if self.exam == "ielts_academic" and self.target_scores["overall"] <= 0:
++            raise ValueError("The IELTS overall target must be positive")
++        if self.exam == "digital_sat":
++            if (
++                self.target_scores["math"] + self.target_scores["reading_writing"]
++                < self.target_scores["total"]
++            ):
++                raise ValueError("SAT section targets must sum to at least the total target")
++            if (
++                set(self.baseline_scores) == SAT_KEYS
++                and self.baseline_scores["math"] + self.baseline_scores["reading_writing"]
++                != self.baseline_scores["total"]
++            ):
++                raise ValueError("A complete SAT baseline total must equal its sections")
++        if bool(self.baseline_scores) != (self.baseline_on is not None):
++            raise ValueError("Baseline scores and baseline_on must be provided together")
++        if not self.starts_on <= self.first_exam_on < self.certificate_deadline:
++            raise ValueError("Use starts_on <= first_exam_on < certificate_deadline")
++        if (
++            self.retake_on is not None
++            and not self.first_exam_on < self.retake_on < self.certificate_deadline
++        ):
++            raise ValueError(
++                "A retake must be after the first exam and before the entered deadline"
++            )
++        if (self.certificate_deadline - self.starts_on).days > 365:
++            raise ValueError("The planning horizon cannot exceed 365 days")
++        try:
++            self.certificate_deadline - timedelta(
++                days=self.result_wait_days + self.delivery_days + self.safety_days
++            )
++            (self.retake_on or self.first_exam_on) + timedelta(
++                days=self.result_wait_days + self.delivery_days + self.safety_days
++            )
++        except OverflowError as exc:
++            raise ValueError("Planning dates exceed the supported calendar range") from exc
++        return self
++
++
++class ScheduleWrite(Base):
++    expected_revision: int = Field(ge=0, le=2147483646, strict=True)
++    settings: ScheduleSettings
++
++
++class ScheduleTask(Base):
++    id: str = Field(min_length=1, max_length=160)
++    due_on: date
++    title: str
++    kind: TaskKind
++    skill: str | None = None
++    minutes: int = Field(ge=0, le=MAX_DAILY_MINUTES)
++    lesson_id: str | None = None
++    completed: bool = False
++    overdue: bool = False
++
++
++class GeneratedSchedule(Base):
++    as_of: date
++    latest_exam_on: date
++    latest_safe_exam_on: date
++    result_expected_on: date
++    delivery_expected_on: date
++    study_minutes_remaining: int = Field(ge=0)
++    remaining_study_days: int = Field(ge=0)
++    diagnostic_required: bool
++    readiness: Literal["not_assessed"] = "not_assessed"
++    timing: Literal["within_entered_buffers", "at_risk", "deadline_passed"]
++    warnings: list[str]
++    tasks: list[ScheduleTask] = Field(max_length=400)
++
++
++class StudyScheduleOut(Base):
++    profile_id: str
++    revision: int = Field(ge=0)
++    settings: ScheduleSettings | None = None
++    schedule: GeneratedSchedule | None = None
++    updated_at: datetime | None = None
+diff --git a/backend/app/domain/study_schedule.py b/backend/app/domain/study_schedule.py
+new file mode 100644
+--- /dev/null
++++ b/backend/app/domain/study_schedule.py
+@@ -0,0 +1,318 @@
++"""Pure finite calendar planning; no evidence changes or score/readiness forecast."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import math
++from datetime import date, timedelta
++
++from app.schemas.study_schedule import (
++    IELTS_KEYS,
++    MAX_DAILY_MINUTES,
++    SAT_KEYS,
++    GeneratedSchedule,
++    ScheduleSettings,
++    ScheduleTask,
++    TaskKind,
++)
++
++_IELTS_SKILLS = ("listening", "reading", "writing", "speaking")
++_SAT_SKILLS = ("math", "reading_writing")
++_LESSONS = {
++    ("ielts_academic", "reading"): "ielts-reading-1",
++    ("digital_sat", "math"): "sat-math-1",
++    ("digital_sat", "reading_writing"): "sat-rw-1",
++}
++_STUDY_KINDS = frozenset({"diagnostic", "skill", "review", "timed_practice", "mock"})
++
++
++def _deficit(settings: ScheduleSettings, skill: str) -> float:
++    if skill not in settings.baseline_scores:
++        return 1.0
++    width = 9 if settings.exam == "ielts_academic" else 600
++    return min(
++        1.0, max(0.0, (settings.target_scores[skill] - settings.baseline_scores[skill]) / width)
++    )
++
++
++def build_schedule(settings: ScheduleSettings, *, today: date) -> GeneratedSchedule:
++    """Build the original calendar; today changes only status and remaining workload.
++
++    Buffers and dates describe the applicant's plan, not official result delivery.
++    Completion is self-reported, never a new test result or admission verdict.
++    """
++    if settings.baseline_on is not None and settings.baseline_on > today:
++        raise ValueError("baseline_on cannot be after today")
++    skills = _IELTS_SKILLS if settings.exam == "ielts_academic" else _SAT_SKILLS
++    keys = IELTS_KEYS if settings.exam == "ielts_academic" else SAT_KEYS
++    missing = sorted(keys - settings.baseline_scores.keys())
++    outdated = settings.baseline_on is not None and (today - settings.baseline_on).days > 30
++    diagnostic_required = bool(missing) or outdated
++    latest = settings.retake_on or settings.first_exam_on
++    results = latest + timedelta(days=settings.result_wait_days)
++    delivery = results + timedelta(days=settings.delivery_days)
++    buffered = delivery + timedelta(days=settings.safety_days)
++    latest_safe = settings.certificate_deadline - timedelta(
++        days=settings.result_wait_days + settings.delivery_days + settings.safety_days
++    )
++    timing = (
++        "deadline_passed"
++        if today > settings.certificate_deadline
++        else "at_risk"
++        if buffered > settings.certificate_deadline
++        else "within_entered_buffers"
++    )
++    warnings = [
++        "Dates, score targets and buffers are applicant-entered planning assumptions, not verified programme requirements or certificate deadlines.",
++        "Application closing dates do not establish when exam evidence must be received. Confirm the recipient's evidence deadline, accepted test type and delivery method.",
++        "Results available to the student do not prove recipient receipt or processing. Exam dates do not prove a booking, available seat or permitted retake.",
++        "Study completion and starter correct/total never establish an official score, readiness or admission eligibility.",
++    ]
++    if missing:
++        warnings.append("Diagnostic required; baseline is missing: " + ", ".join(missing) + ".")
++    if outdated:
++        warnings.append(
++            "The entered baseline is more than 30 days old; reassess skills before relying on its practice priorities."
++        )
++    gaps = [
++        f"{key.replace('_', ' ')} {value:g} to {settings.target_scores[key]:g}"
++        for key, value in sorted(settings.baseline_scores.items())
++        if value < settings.target_scores[key]
++    ]
++    if gaps:
++        warnings.append(
++            "Entered planning gaps: "
++            + "; ".join(gaps)
++            + ". Time to close these gaps has not been assessed; an overall value cannot establish component readiness."
++        )
++    if settings.exam == "ielts_academic":
++        warnings.append(
++            "IELTS Listening, Writing and Speaking require professional feedback or suitable official practice; this catalogue has no starter lesson for those skills."
++        )
++        warnings.append(
++            "IELTS overall and four component targets are separate; no band-growth rate or overall result is predicted."
++        )
++    if timing == "at_risk":
++        warnings.append(
++            f"The latest entered exam is later than the buffer-based latest safe planning date {latest_safe.isoformat()}; entered result, delivery and safety buffers overrun the certificate deadline."
++        )
++    elif timing == "deadline_passed":
++        warnings.append(
++            "The entered certificate deadline has passed; past tasks and timing events remain visible."
++        )
++    if settings.retake_on is not None and settings.retake_on <= settings.first_exam_on + timedelta(
++        days=settings.result_wait_days
++    ):
++        warnings.append(
++            "The entered retake is no later than expected first results; first-result feedback may not be available to guide it. Confirm retake rules separately."
++        )
++
++    # Include past slots. Filtering by today would silently erase incomplete work
++    # and invalidate completion IDs when the date advances.
++    dates = []
++    cursor = settings.starts_on
++    exam_days = {settings.first_exam_on, latest}
++    while cursor < latest:
++        if cursor.weekday() in settings.study_days and cursor not in exam_days:
++            dates.append(cursor)
++        cursor += timedelta(days=1)
++    # Reserve a nominal share per selected weekday. Partial weeks and exam days
++    # leave capacity unused rather than cramming it into the remaining day.
++    weekdays = sorted(settings.study_days)
++    budget = min(settings.weekly_minutes, len(weekdays) * MAX_DAILY_MINUTES)
++    quotient, remainder = divmod(budget, len(weekdays))
++    shares = {weekday: quotient + (index < remainder) for index, weekday in enumerate(weekdays)}
++    allocated = {day: shares[day.weekday()] for day in dates}
++    if any(value < 15 for value in allocated.values()):
++        warnings.append(
++            "Some daily blocks are under 15 minutes; consider fewer chosen days for longer practice or feedback sessions."
++        )
++    if settings.weekly_minutes > len(settings.study_days) * MAX_DAILY_MINUTES:
++        warnings.append(
++            "The 180-minute daily planning cap leaves some entered weekly budget unallocated; choose additional days if appropriate."
++        )
++
++    # Changing planning structure requires explicit completion reset. Today and
++    # self-reported checkmarks are deliberately excluded from this fingerprint.
++    structure = settings.model_dump(mode="json", exclude={"completed_task_ids"})
++    structure["study_days"] = sorted(structure["study_days"])
++    fingerprint = hashlib.sha256(
++        json.dumps(structure, sort_keys=True, separators=(",", ":")).encode()
++    ).hexdigest()[:20]
++    tasks: list[ScheduleTask] = []
++
++    def add(
++        day: date,
++        token: str,
++        kind: TaskKind,
++        title: str,
++        *,
++        skill: str | None = None,
++        minutes: int = 0,
++        lesson_id: str | None = None,
++    ) -> None:
++        tasks.append(
++            ScheduleTask(
++                id=f"schedule-v1:{fingerprint}:{token}:{day.isoformat()}",
++                due_on=day,
++                title=title,
++                kind=kind,
++                skill=skill,
++                minutes=minutes,
++                lesson_id=lesson_id,
++            )
++        )
++
++    priority = sorted(skills, key=lambda skill: (-_deficit(settings, skill), skills.index(skill)))
++    weights = {skill: 1 + math.ceil(4 * _deficit(settings, skill)) for skill in skills}
++    counters = {skill: 0 for skill in skills}
++    linked: set[str] = set()
++    diagnostic_day = dates[0] if dates and missing else None
++    if (
++        not missing
++        and settings.baseline_on is not None
++        and (latest - settings.baseline_on).days > 30
++    ):
++        reassess_on = settings.baseline_on + timedelta(days=31)
++        diagnostic_day = next((day for day in dates if day >= reassess_on), None)
++    phase_last = {
++        phase: max((d for d in dates if (d > settings.first_exam_on) == phase), default=None)
++        for phase in (False, True)
++    }
++    for index, day in enumerate(dates):
++        minutes = allocated[day]
++        if day == diagnostic_day:
++            add(
++                day,
++                "study-diagnostic",
++                "diagnostic",
++                "Arrange a component diagnostic and record its dated baseline; starter totals are not official scores",
++                minutes=minutes,
++            )
++            continue
++        phase = day > settings.first_exam_on
++        if day == phase_last[phase] and minutes == MAX_DAILY_MINUTES and all(counters.values()):
++            add(
++                day,
++                "study-external-mock",
++                "mock",
++                "External full-format mock: confirm test format, duration and assessor; this is not the starter quiz",
++                minutes=minutes,
++            )
++            continue
++        skill = min(
++            priority, key=lambda name: (counters[name] / weights[name], priority.index(name))
++        )
++        counters[skill] += 1
++        kind: TaskKind = (
++            "review"
++            if phase
++            else "timed_practice"
++            if index % 5 == 4
++            else "review"
++            if index % 3 == 2
++            else "skill"
++        )
++        label = skill.replace("_", " ").title()
++        lesson = _LESSONS.get((settings.exam, skill))
++        if not phase and lesson is not None and lesson not in linked:
++            linked.add(lesson)
++            kind = "skill"
++            title = f"{label}: introductory starter, followed by error review; target {settings.target_scores[skill]:g} is a planning goal"
++        else:
++            lesson = None
++            title = f"{label}: {'focused retake review' if phase else kind.replace('_', ' ')} and error log; planning goal {settings.target_scores[skill]:g}"
++        add(
++            day,
++            f"study-{kind}-{skill}",
++            kind,
++            title,
++            skill=skill,
++            minutes=minutes,
++            lesson_id=lesson,
++        )
++    if not any(task.kind == "mock" for task in tasks):
++        warnings.append(
++            "No full-format external mock fits the final daily reserve; arrange an adequately long assessment separately. Timed practice is not a score estimate."
++        )
++
++    add(
++        settings.first_exam_on,
++        "first-exam",
++        "exam",
++        "First entered exam date; booking and accepted test type must be confirmed",
++    )
++    if settings.retake_on is not None:
++        add(
++            settings.retake_on,
++            "retake-exam",
++            "exam",
++            "Entered retake date; permission, booking and any feedback window must be confirmed",
++        )
++        add(
++            settings.first_exam_on + timedelta(days=settings.result_wait_days),
++            "first-results",
++            "results",
++            "First results planning estimate; no certificate or recipient receipt is guaranteed",
++        )
++    add(
++        results,
++        "latest-results",
++        "results",
++        "Latest results planning estimate from entered result buffer",
++    )
++    add(
++        delivery,
++        "latest-delivery",
++        "delivery",
++        "Recipient delivery planning estimate; actual processing must be confirmed",
++    )
++    add(
++        buffered,
++        "safety-buffer-end",
++        "delivery",
++        "Entered safety buffer ends; verify recipient receipt and outstanding conditions",
++    )
++    add(
++        settings.certificate_deadline,
++        "evidence-deadline",
++        "submit",
++        "Applicant-entered certificate deadline; verify actual receipt and submission requirements",
++    )
++
++    known = {task.id for task in tasks}
++    if not set(settings.completed_task_ids) <= known:
++        raise ValueError(
++            "Unknown or structurally outdated completion IDs; explicitly clear completion when changing the plan"
++        )
++    completed = set(settings.completed_task_ids)
++    for task in tasks:
++        task.completed = task.id in completed
++        task.overdue = not task.completed and task.due_on < today
++    tasks.sort(key=lambda task: (task.due_on, task.id))
++    remaining = [
++        task
++        for task in tasks
++        if task.kind in _STUDY_KINDS
++        and task.minutes > 0
++        and task.due_on >= today
++        and not task.completed
++    ]
++    if len(remaining) < len(skills) + int(diagnostic_required):
++        warnings.append(
++            "Insufficient future study slots for a component diagnostic and balanced skill coverage; revise the plan or seek professional advice. Target attainability remains unassessed."
++        )
++    return GeneratedSchedule(
++        as_of=today,
++        latest_exam_on=latest,
++        latest_safe_exam_on=latest_safe,
++        result_expected_on=results,
++        delivery_expected_on=delivery,
++        study_minutes_remaining=sum(task.minutes for task in remaining),
++        remaining_study_days=len(remaining),
++        diagnostic_required=diagnostic_required,
++        timing=timing,
++        warnings=warnings,
++        tasks=tasks,
++    )
+diff --git a/backend/tests/test_study_schedule.py b/backend/tests/test_study_schedule.py
+new file mode 100644
+--- /dev/null
++++ b/backend/tests/test_study_schedule.py
+@@ -0,0 +1,377 @@
++"""Finite synthetic planner controls: no database, network or official score prediction."""
++
++from __future__ import annotations
++
++from collections import Counter, defaultdict
++from datetime import date, timedelta
++from typing import Any
++
++import pytest
++from app.domain.study_schedule import build_schedule
++from app.schemas.study_schedule import (
++    GeneratedSchedule,
++    ScheduleSettings,
++    ScheduleTask,
++    ScheduleWrite,
++)
++from pydantic import ValidationError
++
++
++def settings(**changes: Any) -> ScheduleSettings:
++    values: dict[str, Any] = {
++        "exam": "ielts_academic",
++        "starts_on": "2026-10-12",
++        "certificate_deadline": "2026-11-30",
++        "first_exam_on": "2026-11-17",
++        "result_wait_days": 7,
++        "delivery_days": 2,
++        "safety_days": 3,
++        "timezone": "Asia/Almaty",
++        "weekly_minutes": 180,
++        "study_days": [0, 2, 4],
++        "target_scores": {
++            "overall": 7,
++            "listening": 7,
++            "reading": 7,
++            "writing": 6.5,
++            "speaking": 6.5,
++        },
++        "baseline_scores": {
++            "overall": 6,
++            "listening": 6,
++            "reading": 6,
++            "writing": 5.5,
++            "speaking": 6,
++        },
++        "baseline_on": "2026-10-10",
++        "confirmed_planning_dates": True,
++    }
++    values.update(changes)
++    return ScheduleSettings.model_validate(values)
++
++
++def study(schedule: GeneratedSchedule) -> list[ScheduleTask]:
++    return [task for task in schedule.tasks if task.minutes > 0]
++
++
++def sat(**changes: Any) -> ScheduleSettings:
++    return settings(
++        exam="digital_sat",
++        target_scores={"total": 1400, "math": 720, "reading_writing": 700},
++        baseline_scores={"total": 1250, "math": 650, "reading_writing": 600},
++        **changes,
++    )
++
++
++def test_backwards_boundary_and_forward_events_are_exact_entered_buffers() -> None:
++    plan = build_schedule(settings(), today=date(2026, 10, 11))
++    assert plan.latest_exam_on == date(2026, 11, 17)
++    assert plan.latest_safe_exam_on == date(2026, 11, 18)
++    assert plan.result_expected_on == date(2026, 11, 24)
++    assert plan.delivery_expected_on == date(2026, 11, 26)
++    assert plan.timing == "within_entered_buffers"
++    assert plan.readiness == "not_assessed"
++    assert any("applicant-entered" in text for text in plan.warnings)
++    assert any("recipient receipt" in text for text in plan.warnings)
++
++
++def test_retake_risk_retains_late_events_and_focused_review() -> None:
++    plan = build_schedule(
++        settings(retake_on="2026-11-25", study_days=list(range(7))), today=date(2026, 10, 11)
++    )
++    assert plan.latest_exam_on == date(2026, 11, 25)
++    assert plan.timing == "at_risk"
++    assert plan.result_expected_on == date(2026, 12, 2)
++    assert plan.delivery_expected_on == date(2026, 12, 4)
++    assert any(task.due_on == date(2026, 12, 7) and "safety" in task.title for task in plan.tasks)
++    assert len([task for task in plan.tasks if task.kind == "exam"]) == 2
++    assert all(task.due_on not in {date(2026, 11, 17), date(2026, 11, 25)} for task in study(plan))
++    assert any(
++        date(2026, 11, 17) < task.due_on < date(2026, 11, 25) and task.kind == "review"
++        for task in study(plan)
++    )
++
++
++def test_no_retake_is_invented() -> None:
++    plan = build_schedule(settings(), today=date(2026, 10, 11))
++    assert len([task for task in plan.tasks if task.kind == "exam"]) == 1
++    assert not any("retake-exam" in task.id for task in plan.tasks)
++    assert not any(task.due_on > date(2026, 11, 17) for task in study(plan))
++
++
++@pytest.mark.parametrize(
++    "budget,days", [(30, list(range(7))), (130, [0, 2, 4]), (1260, [0]), (1260, list(range(7)))]
++)
++def test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases(
++    budget: int, days: list[int]
++) -> None:
++    config = settings(weekly_minutes=budget, study_days=days, retake_on="2026-11-25")
++    plan = build_schedule(config, today=date(2026, 10, 11))
++    totals: dict[date, int] = defaultdict(int)
++    dates = []
++    for task in study(plan):
++        assert task.due_on.weekday() in days
++        assert task.due_on not in {config.first_exam_on, config.retake_on}
++        assert isinstance(task.minutes, int) and 0 < task.minutes <= 180
++        totals[task.due_on - timedelta(days=task.due_on.weekday())] += task.minutes
++        dates.append(task.due_on)
++    assert all(value <= budget for value in totals.values())
++    assert len(dates) == len(set(dates))
++    assert len(plan.tasks) <= 400
++
++
++def test_missing_component_diagnostic_does_not_infer_it_from_overall() -> None:
++    plan = build_schedule(settings(baseline_scores={"overall": 7}), today=date(2026, 10, 11))
++    assert plan.diagnostic_required
++    assert study(plan)[0].kind == "diagnostic"
++    assert {task.skill for task in study(plan) if task.skill} == {
++        "listening",
++        "reading",
++        "writing",
++        "speaking",
++    }
++    assert any("baseline is missing" in text and "writing" in text for text in plan.warnings)
++    assert plan.readiness == "not_assessed"
++
++
++def test_weak_components_get_priority_without_starving_other_ielts_skills() -> None:
++    plan = build_schedule(
++        settings(
++            baseline_scores={
++                "overall": 6,
++                "listening": 6,
++                "reading": 6.5,
++                "writing": 4,
++                "speaking": 6.5,
++            }
++        ),
++        today=date(2026, 10, 11),
++    )
++    skill_tasks = [task for task in study(plan) if task.skill]
++    counts = Counter(task.skill for task in skill_tasks)
++    assert skill_tasks[0].skill == "writing"
++    assert set(counts) == {"listening", "reading", "writing", "speaking"}
++    assert counts["writing"] > counts["speaking"]
++    assert any("overall 6 to 7" in text and "writing 4 to 6.5" in text for text in plan.warnings)
++
++
++def test_starter_links_are_once_and_never_substitute_other_components_or_mocks() -> None:
++    ielts = build_schedule(settings(), today=date(2026, 10, 11))
++    linked = [task for task in ielts.tasks if task.lesson_id]
++    assert len(linked) == 1 and linked[0].lesson_id == "ielts-reading-1"
++    assert linked[0].skill == "reading" and linked[0].kind == "skill"
++    assert any("Listening, Writing and Speaking require" in text for text in ielts.warnings)
++    digital = build_schedule(sat(), today=date(2026, 10, 11))
++    assert Counter(task.lesson_id for task in digital.tasks if task.lesson_id) == {
++        "sat-math-1": 1,
++        "sat-rw-1": 1,
++    }
++    assert all(task.lesson_id is None for task in digital.tasks if task.kind == "mock")
++
++
++def test_mock_needs_full_reserved_block_and_preserves_component_coverage() -> None:
++    small = build_schedule(sat(), today=date(2026, 10, 11))
++    assert not any(task.kind == "mock" for task in small.tasks)
++    assert any("No full-format external mock fits" in text for text in small.warnings)
++    large = build_schedule(sat(weekly_minutes=540), today=date(2026, 10, 11))
++    mocks = [task for task in large.tasks if task.kind == "mock"]
++    assert mocks and all(task.minutes == 180 and task.lesson_id is None for task in mocks)
++    assert {task.skill for task in study(large) if task.skill} == {"math", "reading_writing"}
++
++
++def test_baseline_at_target_does_not_assess_readiness() -> None:
++    config = sat()
++    config = ScheduleSettings.model_validate(
++        {**config.model_dump(), "baseline_scores": config.target_scores | {"total": 1420}}
++    )
++    plan = build_schedule(config, today=date(2026, 10, 11))
++    assert plan.readiness == "not_assessed"
++    assert plan.study_minutes_remaining > 0
++
++
++def test_advancing_today_retains_calendar_ids_past_tasks_and_completion() -> None:
++    config = settings()
++    before = build_schedule(config, today=date(2026, 10, 11))
++    first = study(before)[0]
++    completed = ScheduleSettings.model_validate(
++        {**config.model_dump(), "completed_task_ids": [first.id]}
++    )
++    after = build_schedule(completed, today=date(2026, 10, 26))
++    assert [task.id for task in before.tasks] == [task.id for task in after.tasks]
++    same = next(task for task in after.tasks if task.id == first.id)
++    assert same.completed and not same.overdue
++    assert any(task.overdue and task.due_on < date(2026, 10, 26) for task in study(after))
++    remaining = [
++        task for task in study(after) if not task.completed and task.due_on >= date(2026, 10, 26)
++    ]
++    assert after.study_minutes_remaining == sum(task.minutes for task in remaining)
++    assert after.remaining_study_days == len(remaining)
++
++
++def test_baseline_aging_changes_diagnostic_flag_without_rewriting_calendar() -> None:
++    before = build_schedule(settings(), today=date(2026, 11, 9))
++    after = build_schedule(settings(), today=date(2026, 11, 10))
++    assert not before.diagnostic_required and after.diagnostic_required
++    assert [task.model_dump(exclude={"overdue", "completed"}) for task in before.tasks] == [
++        task.model_dump(exclude={"overdue", "completed"}) for task in after.tasks
++    ]
++    assert any(
++        task.kind == "diagnostic" and task.due_on == date(2026, 11, 11) for task in after.tasks
++    )
++    assert any("more than 30 days" in text for text in after.warnings)
++
++
++def test_baseline_progress_after_start_is_allowed_but_future_baseline_is_not() -> None:
++    config = settings(baseline_on="2026-10-20")
++    assert build_schedule(config, today=date(2026, 10, 21)).as_of == date(2026, 10, 21)
++    with pytest.raises(ValueError, match="baseline_on cannot be after today"):
++        build_schedule(config, today=date(2026, 10, 19))
++
++
++def test_unknown_and_structurally_changed_completion_ids_are_rejected() -> None:
++    config = settings()
++    first = study(build_schedule(config, today=date(2026, 10, 11)))[0]
++    with pytest.raises(ValueError, match="completion IDs"):
++        build_schedule(
++            settings(completed_task_ids=["unrelated-case-task"]), today=date(2026, 10, 11)
++        )
++    with pytest.raises(ValueError, match="completion IDs"):
++        build_schedule(
++            settings(weekly_minutes=210, completed_task_ids=[first.id]), today=date(2026, 10, 11)
++        )
++
++
++def test_past_deadline_preserves_all_events_and_exposes_overdue_work() -> None:
++    plan = build_schedule(settings(), today=date(2026, 12, 5))
++    assert plan.timing == "deadline_passed"
++    assert plan.study_minutes_remaining == 0 and plan.remaining_study_days == 0
++    assert plan.tasks and all(task.overdue for task in plan.tasks)
++    assert any(task.kind == "submit" and task.due_on == date(2026, 11, 30) for task in plan.tasks)
++
++
++def test_zero_study_window_warns_without_inventing_exam_day_work() -> None:
++    plan = build_schedule(settings(first_exam_on="2026-10-12"), today=date(2026, 10, 11))
++    assert not study(plan)
++    assert any("Insufficient future study slots" in text for text in plan.warnings)
++    assert plan.readiness == "not_assessed"
++
++
++def test_365_day_horizon_and_maximum_buffers_keep_bounded_complete_response() -> None:
++    config = settings(
++        starts_on="2026-01-01",
++        first_exam_on="2026-12-31",
++        certificate_deadline="2027-01-01",
++        baseline_on="2026-01-01",
++        weekly_minutes=1260,
++        study_days=list(range(7)),
++        result_wait_days=60,
++        delivery_days=30,
++        safety_days=30,
++    )
++    plan = build_schedule(config, today=date(2026, 1, 1))
++    assert len(plan.tasks) <= 400
++    assert len(study(plan)) <= 365
++    assert plan.timing == "at_risk"
++    assert plan.delivery_expected_on > config.certificate_deadline
++    assert any(task.due_on > config.certificate_deadline for task in plan.tasks)
++
++
++@pytest.mark.parametrize(
++    "changes",
++    [
++        {"target_scores": {"overall": 7}},
++        {
++            "target_scores": {
++                "overall": 7,
++                "listening": 7,
++                "reading": 7,
++                "writing": 6.25,
++                "speaking": 6.5,
++            }
++        },
++        {
++            "target_scores": {
++                "overall": float("nan"),
++                "listening": 7,
++                "reading": 7,
++                "writing": 6.5,
++                "speaking": 6.5,
++            }
++        },
++        {
++            "target_scores": {
++                "overall": True,
++                "listening": 7,
++                "reading": 7,
++                "writing": 6.5,
++                "speaking": 6.5,
++            }
++        },
++        {"baseline_scores": {"invented": 6}},
++        {"baseline_scores": {}, "baseline_on": "2026-10-10"},
++        {"baseline_on": None},
++        {"study_days": [0, 0]},
++        {"study_days": [True]},
++        {"study_days": [7]},
++        {"timezone": "Not/A_Zone"},
++        {"confirmed_planning_dates": 1},
++        {"result_wait_days": 0},
++        {"result_wait_days": 61},
++        {"delivery_days": 31},
++        {"safety_days": -1},
++        {"weekly_minutes": 29},
++        {"weekly_minutes": 1261},
++        {"retake_on": "2026-11-17"},
++        {"certificate_deadline": "2027-10-13"},
++        {"completed_task_ids": [""]},
++        {"completed_task_ids": ["x" * 161]},
++        {"completed_task_ids": ["x", "x"]},
++        {"completed_task_ids": [str(index) for index in range(401)]},
++    ],
++)
++def test_invalid_or_unbounded_planning_settings_fail_validation(changes: dict[str, Any]) -> None:
++    with pytest.raises(ValidationError):
++        settings(**changes)
++
++
++@pytest.mark.parametrize(
++    "target,baseline",
++    [
++        (
++            {"total": 1400, "math": 600, "reading_writing": 600},
++            {"total": 1250, "math": 650, "reading_writing": 600},
++        ),
++        (
++            {"total": 1400.5, "math": 720, "reading_writing": 700},
++            {"total": 1250, "math": 650, "reading_writing": 600},
++        ),
++        (
++            {"total": 1400, "math": 720, "reading_writing": 700},
++            {"total": 1260, "math": 650, "reading_writing": 600},
++        ),
++    ],
++)
++def test_sat_goal_and_complete_baseline_arithmetic_are_validated(
++    target: dict[str, float], baseline: dict[str, float]
++) -> None:
++    with pytest.raises(ValidationError):
++        settings(exam="digital_sat", target_scores=target, baseline_scores=baseline)
++
++
++@pytest.mark.parametrize("revision", [-1, 2147483647, True])
++def test_revision_cannot_overflow_next_database_integer(revision: int) -> None:
++    with pytest.raises(ValidationError):
++        ScheduleWrite(expected_revision=revision, settings=settings())
++
++
++@pytest.mark.parametrize(
++    "start,exam,deadline",
++    [("0001-01-01", "0001-01-01", "0001-01-02"), ("9999-12-01", "9999-12-30", "9999-12-31")],
++)
++def test_calendar_overflow_fails_validation_before_builder(
++    start: str, exam: str, deadline: str
++) -> None:
++    with pytest.raises(ValidationError, match="supported calendar"):
++        settings(
++            starts_on=start, first_exam_on=exam, certificate_deadline=deadline, result_wait_days=60
++        )

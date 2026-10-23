@@ -58,7 +58,25 @@ _GPA = re.compile(r"\b\d\.\d+\b")
 
 
 class QueryPrivacyError(ValueError):
-    """Raised when a value carries something a provider must never be told."""
+    """Typed safe refusal: the rejected value is never retained as diagnostics."""
+
+    def __init__(self, *, field: str, reason: str) -> None:
+        self.field = (
+            field
+            if field in {"institution", "domain", "field", "population_marker"}
+            else "discovery field"
+        )
+        descriptions = {
+            "email": "contains an email address; contact details are never part of a discovery query",
+            "currency": "contains a currency amount; budget and family contribution never leave this service",
+            "grade": "looks like a grade; a search engine is never told how well the applicant did",
+            "long-number": "contains a long number (score or phone); use intake_year for a year",
+            "population-not-allowed": "is not one of the allowed public population markers",
+        }
+        self.reason = reason if reason in descriptions else "privacy-refused"
+        super().__init__(
+            f"{self.field}: {descriptions.get(self.reason, 'discovery value refused for privacy')}."
+        )
 
 
 def _reject_applicant_data(field: str, value: str) -> None:
@@ -70,25 +88,13 @@ def _reject_applicant_data(field: str, value: str) -> None:
     needs, and they are carried by ``intake_year`` rather than free text.
     """
     if _EMAIL.search(value):
-        raise QueryPrivacyError(
-            f"{field}={value!r} contains an email address. Contact details are never "
-            "part of a discovery query."
-        )
+        raise QueryPrivacyError(field=field, reason="email")
     if _MONEY.search(value):
-        raise QueryPrivacyError(
-            f"{field}={value!r} contains a currency amount. Budget and family "
-            "contribution never leave this service."
-        )
+        raise QueryPrivacyError(field=field, reason="currency")
     if _GPA.search(value):
-        raise QueryPrivacyError(
-            f"{field}={value!r} looks like a grade. A search engine is asked where a "
-            "programme is, never how well the applicant did."
-        )
+        raise QueryPrivacyError(field=field, reason="grade")
     if _PHONE_OR_SCORE.search(value):
-        raise QueryPrivacyError(
-            f"{field}={value!r} contains a long number, which is how a test score or a "
-            "phone number gets into a query. Use intake_year for a year."
-        )
+        raise QueryPrivacyError(field=field, reason="long-number")
 
 
 @dataclass(frozen=True, slots=True)
@@ -120,11 +126,7 @@ class DiscoveryIntent:
         for name in ("institution", "domain", "field", "population_marker"):
             _reject_applicant_data(name, getattr(self, name))
         if self.population_marker and self.population_marker not in ALLOWED_POPULATION_MARKERS:
-            raise QueryPrivacyError(
-                f"population_marker={self.population_marker!r} is not one of "
-                f"{sorted(ALLOWED_POPULATION_MARKERS)}. A narrower audience describes this "
-                "applicant rather than a published policy."
-            )
+            raise QueryPrivacyError(field="population_marker", reason="population-not-allowed")
         if self.intake_year is not None and not (2000 <= self.intake_year <= 2100):
             raise ValueError(f"intake_year={self.intake_year} is not a plausible intake year")
 

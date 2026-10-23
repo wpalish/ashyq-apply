@@ -1,3 +1,4 @@
+import { useJourneyRoute } from '@/lib/programmeJourney';
 /**
  * Screen 08 — Documents and deadlines.
  *
@@ -6,12 +7,18 @@
  * sinks an application, not the form you can fill in on the last evening.
  */
 
-import { useMemo, useState } from 'react';
+import { BookProgrammeDocuments } from '@/components/BookProgrammeDocuments';
+import { FileText } from '@phosphor-icons/react';
+import { PersonalDocumentsPanel } from './PersonalDocumentsPanel';
+import { useTranslation } from '@/lib/useTranslation';
+import { useMemo, useRef, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
-import { date, dateTime } from '@/lib/format';
+import { date, dateTime, sourceDatePosition } from '@/lib/format';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
+import { applicantStorageKey } from '@/lib/applicantStorage';
 import type { DocumentItem, ProgramResult } from '@/types';
+import type { ScreenId } from '@/App';
 
 const OWNER_LABEL: Record<string, string> = {
   applicant: 'You',
@@ -22,25 +29,51 @@ const OWNER_LABEL: Record<string, string> = {
 
 const DONE_KEY = 'ashyq.docsDone';
 
-function loadDone(): Record<string, boolean> {
+function loadDone(): { marks: Record<string, boolean>; invalid: boolean } {
   try {
-    return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? '{}');
-  } catch {
-    return {};
-  }
+    const scoped = applicantStorageKey(DONE_KEY);
+    if (scoped === null) return { marks: {}, invalid: false };
+    const raw = window.localStorage.getItem(scoped);
+    if (raw === null) return { marks: {}, invalid: false };
+    if (new TextEncoder().encode(raw).length > 256 * 1024) return { marks: {}, invalid: true };
+    const value: unknown = JSON.parse(raw);
+    if (typeof value !== 'object' || value === null || Array.isArray(value)
+      || Object.keys(value).length > 4000) return { marks: {}, invalid: true };
+    const marks: Record<string, boolean> = Object.create(null);
+    for (const [key, mark] of Object.entries(value)) {
+      if (typeof mark !== 'boolean' || Array.from(key).length > 1000) return { marks: {}, invalid: true };
+      marks[key] = mark;
+    }
+    return { marks, invalid: false };
+  } catch { return { marks: {}, invalid: true }; }
 }
 
-export function DocumentsScreen() {
-  const { results, run } = useStore();
+export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId) => void }) {
+  const { results, run, savedProfile } = useStore();
+  const { t, locale } = useTranslation(); const ru=locale!=='en';
+  const journey=useJourneyRoute();
+  const [detailOpen,setDetailOpen]=useState(false);
+  const [legacyOpen,setLegacyOpen]=useState(false);
   const withChecklists = results.filter((r) => r.checklist);
+  const chosen = results.some((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
+  const activeJob = run?.job_running || run?.job_status === 'queued' || run?.job_status === 'running';
+  const needsAttention = run && (run.stale || run.cancelled
+    || ['failed', 'dead', 'cancelled'].includes(run.job_status ?? '')
+    || (!activeJob && ['failed', 'retryable_failed', 'cancelled'].includes(run.stage)));
+  const busy = !needsAttention && activeJob;
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
-  const [done, setDone] = useState<Record<string, boolean>>(loadDone);
+  const [legacySnapshot] = useState(loadDone);
+  const [done, setDone] = useState<Record<string, boolean>>(legacySnapshot.marks);
+  const doneStorageKey = useRef(applicantStorageKey(DONE_KEY));
 
   const toggle = (key: string) => {
+    if (legacySnapshot.invalid) return;
+    const scoped = applicantStorageKey(DONE_KEY);
+    if (scoped === null || scoped !== doneStorageKey.current) return;
     setDone((prev) => {
       const next = { ...prev, [key]: !prev[key] };
       try {
-        window.localStorage.setItem(DONE_KEY, JSON.stringify(next));
+        window.localStorage.setItem(scoped, JSON.stringify(next));
       } catch {
         /* progress ticks are a convenience; storage being unavailable is fine */
       }
@@ -50,7 +83,6 @@ export function DocumentsScreen() {
 
   const deadlines = useMemo(() => {
     const items: { when: string; what: string; where: string; past: boolean }[] = [];
-    const today = new Date().toISOString().slice(0, 10);
     // Every row on the shortlist, not only the ones with a checklist: the
     // panel says "across your shortlist" and a deadline matters whether or not
     // documents have been collected for it yet.
@@ -60,7 +92,7 @@ export function DocumentsScreen() {
           when: r.admission_deadline,
           what: `Admission application${r.admission_deadline_timezone ? ` (${r.admission_deadline_timezone})` : ''}`,
           where: `${r.university} — ${r.program}`,
-          past: r.admission_deadline < today,
+          past: sourceDatePosition(r.admission_deadline, r.admission_deadline_timezone) === 'earlier',
         });
       }
       for (const s of r.scholarships) {
@@ -69,7 +101,7 @@ export function DocumentsScreen() {
             when: s.deadline,
             what: `${s.name}${s.deadline_timezone ? ` (${s.deadline_timezone})` : ''}`,
             where: r.university,
-            past: s.deadline < today,
+            past: sourceDatePosition(s.deadline, s.deadline_timezone) === 'earlier',
           });
         }
       }
@@ -77,30 +109,28 @@ export function DocumentsScreen() {
     return items.sort((a, b) => a.when.localeCompare(b.when));
   }, [results]);
 
-  if (withChecklists.length === 0) {
-    return (
-      <div className="find-page">
-        <div className="screen__head"><p className="screen__eyebrow">DOCUMENTS & DEADLINES</p><h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1><p className="screen__lede">Your document checklist appears after you save programmes in Plan and collect their official requirements.</p></div>
-        <div className="find-empty"><Empty title="No checklists yet">Choose a programme in Find, then collect documents from Plan.</Empty></div>
-      </div>
-    );
-  }
+  const current = withChecklists.find((r) => r.id === selected) ?? withChecklists[0];
 
-  const current = withChecklists.find((r) => r.id === selected) ?? withChecklists[0]!;
+  const legacyContent = (<>
+        <Notice>{t('documents.legacyHint')}</Notice>
+        {legacySnapshot.invalid && <Notice kind="warn"><span data-testid="legacy-document-storage-invalid">{t('documents.legacyInvalid')}</span></Notice>}
+        {(busy || needsAttention) && (
+          <Notice kind={needsAttention ? 'warn' : 'info'}>
+            <div role="status">
+              <strong>{needsAttention ? 'Research needs attention.' : run?.stage === 'document_collection' ? 'Document collection is in progress.' : 'Research is in progress.'}</strong>
+              {' '}{needsAttention ? 'Review the stopped stage and source limitations. Existing findings remain available below.' : 'New requirements will appear here when collection finishes. Existing findings remain available below.'}
+              {onNavigate && <button className="btn btn--sm" type="button" onClick={() => onNavigate('progress')}>View research progress</button>}
+            </div>
+          </Notice>
+        )}
+        {!current && !busy && !needsAttention && (
+          <Panel>
+            <Empty title="No checklists yet">{chosen ? 'Collect official requirements for your selected programmes from Plan.' : 'Choose a programme in Find, then collect its official requirements from Plan.'}</Empty>
+            {onNavigate && <button className="btn btn--primary" type="button" onClick={() => onNavigate(chosen ? 'approved' : 'shortlist')}>{chosen ? 'Open plan' : 'Choose programmes'}</button>}
+          </Panel>
+        )}
 
-  return (
-    <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">Documents & deadlines</p>
-        <h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1>
-        <p className="screen__lede">
-          Ordered by lead time, not by deadline. The items at the top depend on other people, so
-          they are the ones that need starting first.
-        </p>
-      </div>
-
-      <div className="stack stack--loose">
-        <details className="documents-deadlines">
+        {results.length > 0 && <details className="documents-deadlines" open={!current}>
           <summary>Calendar and deadlines across your shortlist ({deadlines.length})</summary>
         <Panel
           title="Every deadline across your shortlist"
@@ -118,6 +148,7 @@ export function DocumentsScreen() {
             ) : undefined
           }
         >
+          <p className="small muted">{t('dates.timelineHint')}</p>
           <div className="timeline">
             {deadlines.map((d, i) => (
               <div key={i} className={`timeline__item ${d.past ? 'timeline__item--past' : ''}`}>
@@ -126,15 +157,15 @@ export function DocumentsScreen() {
                   <div className="small"><strong>{d.what}</strong></div>
                   <div className="xs muted">{d.where}</div>
                 </div>
-                {d.past && <Chip tone="risk">passed</Chip>}
+                {d.past && <Chip tone="warn">{t('dates.earlier')}</Chip>}
               </div>
             ))}
             {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}
           </div>
         </Panel>
-        </details>
+        </details>}
 
-        <div className="row">
+        {current && <div className="row">
           {withChecklists.map((r) => (
             <button
               key={r.id}
@@ -146,17 +177,36 @@ export function DocumentsScreen() {
               {r.university}
             </button>
           ))}
-        </div>
+        </div>}
 
-        <ChecklistFor result={current} done={done} toggle={toggle} />
+        {current && <ChecklistFor result={current} done={done} toggle={toggle} marksInvalid={legacySnapshot.invalid} />}
+  </>);
+
+  return (
+    <>
+      {!detailOpen&&<div className="screen__head book-documents__header">
+        <p className="screen__eyebrow">{ru?'Документы':'Documents & deadlines'}</p>
+        <h1 className="screen__title">{ru?'Документы':<>Prepare with <span className="find-yellow">confidence.</span></>}</h1>
+        <p className="screen__lede">
+          {ru?'Проверь требования программы, создай связанные задачи и отмечай подготовку. Затем переходи к заявке.':'Ordered by lead time, not by deadline. The items at the top depend on other people, so they are the ones that need starting first.'}
+        </p>
+        {ru&&<aside><span className="book-icon-tile"><FileText size={26}/></span><div><h2>Подготовь документы заранее</h2><p>Проверяй требования вузов и следи за своими задачами.</p></div></aside>}
+      </div>}
+
+      <div className="stack stack--loose">
+        {ru&&legacySnapshot.invalid&&<Notice kind="warn">{t('documents.legacyInvalid')}</Notice>}
+        {ru&&(busy||needsAttention)&&<Notice kind={needsAttention?'warn':'info'}><div role="status"><strong>{needsAttention?'Исследование требует внимания.':'Исследование выполняется.'}</strong> Сохранённые находки доступны. Проверь этап и ограничения источников.{onNavigate&&<button className="btn btn--sm" onClick={()=>onNavigate('progress')}>Открыть исследование</button>}</div></Notice>}
+        {ru&&!detailOpen&&(journey?.profileId===savedProfile?.id&&journey?.resultId?<details className="journey-requirements"><summary>Собранный список требований программы</summary><BookProgrammeDocuments profileId={savedProfile?.id} results={run?.profile_id===savedProfile?.id?results.filter(result=>['approved','maybe'].includes(result.user_decision)&&(!journey?.resultId||journey.profileId!==savedProfile?.id||result.id===journey.resultId)):[]} onOpen={id=>{setSelected(id);setLegacyOpen(true);window.requestAnimationFrame(()=>{const section=document.querySelector<HTMLElement>('.book-documents__legacy');section?.scrollIntoView({block:'start'});section?.querySelector<HTMLElement>('summary')?.focus();});}}/></details>:<BookProgrammeDocuments profileId={savedProfile?.id} results={run?.profile_id===savedProfile?.id?results.filter(result=>['approved','maybe'].includes(result.user_decision)&&(!journey?.resultId||journey.profileId!==savedProfile?.id||result.id===journey.resultId)):[]} onOpen={id=>{setSelected(id);setLegacyOpen(true);window.requestAnimationFrame(()=>{const section=document.querySelector<HTMLElement>('.book-documents__legacy');section?.scrollIntoView({block:'start'});section?.querySelector<HTMLElement>('summary')?.focus();});}}/>)}
+        {savedProfile ? <PersonalDocumentsPanel onDetailChange={setDetailOpen} /> : <Notice>{t('documents.saveCaseFirst')}</Notice>}
+        {ru?<details className="book-documents__legacy" open={legacyOpen} onToggle={event=>setLegacyOpen(event.currentTarget.open)}><summary>Полные чеклисты, сроки и прежние браузерные отметки</summary>{legacyContent}</details>:legacyContent}
       </div>
     </>
   );
 }
 
 function ChecklistFor({
-  result, done, toggle,
-}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void }) {
+  result, done, toggle, marksInvalid,
+}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void; marksInvalid: boolean }) {
   const c = result.checklist!;
 
   // Longest lead time first, both between groups and inside them. What the
@@ -184,11 +234,11 @@ function ChecklistFor({
     <div className="stack">
       <Panel
         title={`${result.university} — ${result.program}`}
-        hint={`${completed} of ${total} items ticked off. Generated ${dateTime(c.generated_at)}.`}
+        hint={`${completed} of ${total} legacy browser marks. Generated ${dateTime(c.generated_at)}.`}
         actions={
           <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
             {c.completeness === 'official' ? 'from official pages'
-              : c.completeness === 'partial' ? 'partially read' : 'no official list found'}
+              : c.completeness === 'partial' ? 'partially read' : 'official list not confirmed'}
           </Chip>
         }
       >
@@ -204,7 +254,7 @@ function ChecklistFor({
                 const key = `${result.id}::${d.name}`;
                 return (
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
-                    <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
+                    <input type="checkbox" disabled={marksInvalid} checked={Boolean(done[key])} onChange={() => toggle(key)} />
                     <div>
                       <div className="doc__name">{d.name}</div>
                       <div className="doc__meta">

@@ -1,0 +1,79 @@
+{
+  "phase": "sqlite",
+  "runtime": "/private/tmp/um-full-s0uvvtl9",
+  "mode": "FOCUSED_DIAGNOSTIC_NOT_FULL",
+  "scope": "Focused native harness controls; NOT a full gate or coverage proof",
+  "os_probe": {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/network.sb",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+      "-I",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/storage-diagnosis1/os_network_probe.py",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/os-network-probe.json"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_seconds": 0.077,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "pytest": {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/network.sb",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/storage-diagnosis1/pytest_full.py",
+      "tests/test_admissions_actions_concurrency.py::test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile[postgres]",
+      "-vv",
+      "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/junit.xml",
+      "--tb=short",
+      "--basetemp=/private/tmp/um-full-s0uvvtl9/tmp/pytest",
+      "-p",
+      "no:cacheprovider",
+      "-p",
+      "pytest_cov.plugin",
+      "-p",
+      "pytest_asyncio.plugin",
+      "-p",
+      "mock_endpoint_plugin"
+    ],
+    "exit_code": 1,
+    "timed_out": false,
+    "duration_seconds": 3.747,
+    "log_sha256": "309618016b04ad173936d0b9b3e8a31f47f2ff6b43c391ab5c60afcf4c00fbd9"
+  },
+  "junit": {
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "skips": 0,
+    "sha256": "5b92f36c4ce3f4b141ea62f83ee9fa32bff7c26a27869dc76dfdeb343bc838dd"
+  },
+  "coverage_percent": null,
+  "outside_attempts": [],
+  "guard_startup_failures": [],
+  "guard_receipts": 1,
+  "pg_connection_events": 4,
+  "ipv6_trait_restored": true,
+  "app_preimported": false,
+  "status": "FOCUSED_DIAGNOSTIC_FAIL_NOT_FULL",
+  "source_unchanged_during_gate": true,
+  "owned_cluster_cleanup": [],
+  "active_cluster_markers": [],
+  "shutdown_confirmed": true,
+  "runtime_removed": true,
+  "evidence_hashes": {
+    "pytest.log": "309618016b04ad173936d0b9b3e8a31f47f2ff6b43c391ab5c60afcf4c00fbd9",
+    "source-before.json": "7e86750da2d7ee046367959d0087b18f88a9af0aceffb29f5488796ed1dec8a2",
+    "private-pg-probe.json": "d8b088bb229de54b062077db45dd5a90c53b8d111e3c44cadf8de1a9e19b1e86",
+    "source-after.json": "7e86750da2d7ee046367959d0087b18f88a9af0aceffb29f5488796ed1dec8a2",
+    "os-network-probe.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+    "os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+    "network.sb": "94517d4de596f9317ef54c22f91759ec38bbbcd5232fc422cb2d5838795f2d4a",
+    "guard-87041.json": "32bf7613bdf95766f92f12fd32ec17500be82fd1a33659b07c3b2b9a88a706bc",
+    "junit.xml": "5b92f36c4ce3f4b141ea62f83ee9fa32bff7c26a27869dc76dfdeb343bc838dd"
+  }
+}

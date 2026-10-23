@@ -1,0 +1,93 @@
+{
+  "status": "QUALIFIED_NATIVE_FULL_FINITE_UI_ACCEPT",
+  "recorded_at": "2026-10-08T23:54:09.963068+00:00",
+  "tested_source_head": "c7ece3c0a057a4fe6a8b8b5e43c3b17c8338cbd4",
+  "metadata_checkpoint": "f687eaf3eeb4f3963e697680dbbd13aeaacb6774",
+  "initial_full_snapshot_sha256": "7d2aac5dd661b438445f72d1b4dbb4ad50a80ab06f46ce8835b6cc971cc552eb",
+  "initial_core_snapshot_sha256": "0a0497a352655630d11985ecbe577fcc1413c8a7e8a27cc4cb9523c2fca0db23",
+  "doctor": {
+    "status": "passed",
+    "steps": 5,
+    "source_snapshot": null
+  },
+  "core": {
+    "status": "passed",
+    "steps": 8
+  },
+  "full": {
+    "status": "passed",
+    "steps": 13,
+    "run": "20261008T231450Z-check-c4cb266b",
+    "sqlite_unique": 4369,
+    "postgres_same_unique_ID_set": 4369,
+    "warnings_each_DB": 32,
+    "sqlite_coverage_percent": 95.28,
+    "postgres_coverage_measured": false,
+    "frontend_cases": 301,
+    "frontend_files": 30,
+    "demo_passed": 79,
+    "demo_unchanged_viewport_skip": 1,
+    "auth_passed": 6,
+    "mypy_files": 386,
+    "dependency_known_vulnerabilities": 0
+  },
+  "native_peer_ready_sha256": "efab8f765f060ec2950ed761efaddea5623cb70716b56e8b5745043de0629eda",
+  "source_scope": {
+    "increment_existing_paths": 4,
+    "product_union_source_paths": 16,
+    "preserved_old_templates": 27,
+    "new_frontend_cases": 19,
+    "backend_protected_paths": 940,
+    "protected_inputs": 1045,
+    "direct_root_git_receipt_sha256": "84d0808df10a730da6748af130febc71d7d31097bfe3e8bd7a1bfcfff264e1f5"
+  },
+  "generated_E2E_outputs": {
+    "exact_changed_PNG_count": 38,
+    "delta_sha256": "3f645d11211c5866ae312337a3d2d711b78b7518e9312c004bfece08c84f5fb9",
+    "qualification": "Initial manifest/SHA retained; current physical whole tree not claimed equal. No app/source code changes for preview guard repair.",
+    "unchanged_other_declared_paths_count": 10255
+  },
+  "finite_ui": {
+    "C_ready_sha256": "872aba86759f47649ac309bada716e718ac825e1f799e40fb50d75ececc3020e",
+    "JPEG_captures": 5,
+    "desktop_width": 1131,
+    "phone_width": 390,
+    "independent_ui_peer_ready_sha256": "dbc9244b50cd477efafff14eccc211ec53d4d25a53150c679bd0073ef9307dbe",
+    "optional_zero_no_run_browser": "NOT_RUN",
+    "filters_cross_route_reload_persistence_claimed": false,
+    "actual_midrun_Worker_cancellation_claimed": false,
+    "qualification": "Cancelled synthetic run retains completed stage_state100; route/visibility/reload only, no real university facts. Phone vertical scroll allowed."
+  },
+  "cleanup": {
+    "root_helper_exit_code": 0,
+    "owned_groups": [
+      61616,
+      61617
+    ],
+    "errors": [],
+    "ports_free": [
+      5173,
+      8099
+    ],
+    "original_synthetic_seed_sha256": "1bd0ba53d7dbcd830d652decfa7a25bb73d35d2e34d2a7c663b650ff5f6ef6db",
+    "owned_C_tabs_closed": 1,
+    "viewport_reset": true
+  },
+  "not_run": [
+    "containers_Docker_unavailable",
+    "hosted_required_checks",
+    "production",
+    "accepted_fresh_university_quality",
+    "full_published_signed_in_journey",
+    "private_fresh_Unilight_flow",
+    "comparative_real_user_trials"
+  ],
+  "provider_STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "launch_goal_complete": false,
+  "counts_qualification": "Repeat suites/DB runs/peer duplicates/files are not additional unique tests or experiments.",
+  "metadata_correction": {
+    "recorded_at": "2026-10-08T23:57:15.654818+00:00",
+    "prior_sha256": "f8feb20106ae005dd9979aba615829cfeb54dd845c7f91b0ce2b7e2493e93745",
+    "reason": "10255 counts file paths/entries, not bytes; their content equality is independently verified. No executable or test change."
+  }
+}

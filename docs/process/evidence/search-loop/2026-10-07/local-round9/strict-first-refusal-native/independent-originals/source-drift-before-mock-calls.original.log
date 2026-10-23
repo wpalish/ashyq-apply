@@ -1,0 +1,1738 @@
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE                                       [100%]
+==================================== ERRORS ====================================
+___ ERROR at setup of test_original_internal_retry_hides_first_refusal[rate] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67d460>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_original_internal_retry_h0')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+___ ERROR at setup of test_original_internal_retry_hides_first_refusal[429] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67f650>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_original_internal_retry_h1')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_disabling_only_other_retry_branch_still_retries[rate-enabled0] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67de20>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_disabling_only_other_retr0')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_disabling_only_other_retry_branch_still_retries[429-enabled1] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67e9f0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_disabling_only_other_retr1')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-rate] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67f500>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu0')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-401] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d7102f0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu1')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-402] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d710ad0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu2')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-403] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d7113d0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu3')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-429] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d711d00>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu4')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-500] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d712870>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu5')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-rpc] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67fd40>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu6')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-tool] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67fa70>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu7')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-malformed] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67e210>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu8')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-timeout] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67cf20>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu9')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-transport] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d713e00>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu10')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[False-302] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d712720>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu11')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-rate] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d7124b0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu12')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-401] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d710cb0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu13')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-402] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d713800>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu14')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-403] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d750530>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu15')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-429] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d750e30>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu16')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-500] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d7518e0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu17')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-rpc] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d712390>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu18')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-tool] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d7121b0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu19')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-malformed] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d711af0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu20')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-timeout] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67dcd0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu21')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-transport] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67d4c0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu22')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_current_strict_first_refusal_stops_transport_and_restores_flags[True-302] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d67e780>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_current_strict_first_refu23')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_refusal_on_cold_initialize_is_exactly_one_total_transport[401] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d752ff0>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_refusal_on_cold_initializ0')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_refusal_on_cold_initialize_is_exactly_one_total_transport[402] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d753500>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_refusal_on_cold_initializ1')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_refusal_on_cold_initialize_is_exactly_one_total_transport[429] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d750230>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_refusal_on_cold_initializ2')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_scoped_retry_flags_restore_on_exception_and_cancellation[control0] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d751640>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_scoped_retry_flags_restor0')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_ ERROR at setup of test_scoped_retry_flags_restore_on_exception_and_cancellation[control1] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d753860>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_scoped_retry_flags_restor1')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+_________ ERROR at setup of test_legacy_capture_retains_retry_behavior _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d7e8770>
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls/pytest-temp/test_legacy_capture_retains_re0')
+
+    @pytest.fixture
+    def no_retry_external(monkeypatch, tmp_path):
+        def deny(*args, **kwargs):
+            raise AssertionError('Provider test forbids external DNS/network/process/model I/O')
+    
+        monkeypatch.setattr(socket, 'getaddrinfo', deny)
+        monkeypatch.setattr(socket, 'create_connection', deny)
+        monkeypatch.setattr(socket.socket, 'connect', deny)
+        monkeypatch.setattr(subprocess, 'Popen', deny)
+        monkeypatch.setattr(subprocess, 'run', deny)
+        monkeypatch.setattr(subprocess, 'check_output', deny)
+        monkeypatch.setattr(httpx.Client, 'send', deny)
+    
+        async def send_mock_only(client, *args, **kwargs):
+            assert isinstance(client._transport, httpx.MockTransport)
+            return await _MOCK_ONLY_SEND(client, *args, **kwargs)
+    
+        monkeypatch.setattr(httpx.AsyncClient, 'send', send_mock_only)
+        # Keep real URL/policy validation; the resolver is wholly synthetic.
+        monkeypatch.setattr(
+            exa_mcp, 'check_url',
+            lambda url: actual_check_url(url, resolver=lambda *a, **kw: [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('93.184.216.34', 443))
+            ]),
+        )
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_RETRY', True)
+        monkeypatch.setattr(exa_mcp, 'RETRY_429_ONCE', True)
+        monkeypatch.setattr(exa_mcp, 'RATE_LIMIT_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'THROTTLE_BACKOFF_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, 'MIN_QUERY_INTERVAL_SECONDS', 0.0)
+        monkeypatch.setattr(exa_mcp, '_last_query_at', None)
+        monkeypatch.setattr(config, 'get_settings', lambda: SimpleNamespace(
+            search_provider='exa_mcp', enable_browser_tier=False, respect_robots=True,
+        ))
+        bindings = tmp_path / 'synthetic-empty-bindings.json'
+        bindings.write_text('{"version":"synthetic-no-output-identities","bindings":[]}')
+        monkeypatch.setattr(live, 'REVIEWED_BINDINGS', bindings)
+        monkeypatch.setattr(live, 'DOCUMENT_SECONDS', 0.0)
+>       assert hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest() == _NEW_SOURCE_SHA
+E       AssertionError: assert '06e63d5224b7...5187b8962077a' == 'c240d17c66da...427f57ca7b921'
+E         
+E         - c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921
+E         + 06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a
+
+work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py:82: AssertionError
+=========================== short test summary info ============================
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_original_internal_retry_hides_first_refusal[rate]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_original_internal_retry_hides_first_refusal[429]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_disabling_only_other_retry_branch_still_retries[rate-enabled0]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_disabling_only_other_retry_branch_still_retries[429-enabled1]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-rate]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-401]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-402]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-403]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-429]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-500]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-rpc]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-tool]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-malformed]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-timeout]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-transport]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[False-302]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-rate]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-401]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-402]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-403]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-429]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-500]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-rpc]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-tool]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-malformed]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-timeout]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-transport]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_current_strict_first_refusal_stops_transport_and_restores_flags[True-302]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_refusal_on_cold_initialize_is_exactly_one_total_transport[401]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_refusal_on_cold_initialize_is_exactly_one_total_transport[402]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_refusal_on_cold_initialize_is_exactly_one_total_transport[429]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_scoped_retry_flags_restore_on_exception_and_cancellation[control0]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_scoped_retry_flags_restore_on_exception_and_cancellation[control1]
+ERROR work/local-round9/b-strict-provider-retry-controls/test_provider_retry_actual_capture.py::test_legacy_capture_retains_retry_behavior
+34 errors in 0.54s

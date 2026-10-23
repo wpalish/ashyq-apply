@@ -1,0 +1,21 @@
+{
+  "created_at": "2026-10-08T21:56:19.356578+00:00",
+  "task": "Finite Compare2 exact peer review after C immutable seal",
+  "status": "AWAITING_C_READY_PIN",
+  "parent_provided_head": "45bcc99a",
+  "scope": [
+    "official does not mean applicant-ready",
+    "unknown/partial/unavailable does not mean absence",
+    "exact result/checklist owner binding",
+    "nonduplicated owner summaries",
+    "exact result detail",
+    "no invented scope/deadline/costs"
+  ],
+  "restrictions": [
+    "No primary/source/Git writes",
+    "No full/server/ports",
+    "No live/network/provider/model/account/DB",
+    "No sealed previous packet edits"
+  ],
+  "conditional_execution": "Only bounded owned isolated unit peer with installed deps after exact C ready verified"
+}

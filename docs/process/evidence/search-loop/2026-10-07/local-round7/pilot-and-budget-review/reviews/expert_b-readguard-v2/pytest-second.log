@@ -1,0 +1,128 @@
+.......................................................................F [ 90%]
+.......F                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes[actual_run_to_decision] _
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert.../2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-second/test_busy_actual_caller_propag1'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a69d0a0>
+entry = 'actual_run_to_decision'
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("entry", ["actual_stage_verify", "actual_run_to_decision"])
+    async def test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes(
+        context, monkeypatch, entry
+    ):
+        from app.pipeline import runner as runner_module
+    
+        fetcher = controls.activate(context)
+        candidate = controls.candidate()
+        with context.runner._university_read_scope(candidate):
+            pass
+        prior_claim, prior_result = seed_prior(context, candidate)
+        context.runner._candidates = [candidate]
+        before = snapshot(context)
+        seen = controls.mock_original_get(monkeypatch, context)
+    
+        def zero_timeout(dbapi_connection, *args):
+            dbapi_connection.execute("PRAGMA busy_timeout=0")
+    
+        event.listen(context.engine, "checkout", zero_timeout)
+        real_requirements = runner_module.WebRequirementsAdapter
+        with context.engine.connect() as blocker:
+    
+            def requirements(*args, **kwargs):
+                instance = real_requirements(*args, **kwargs)
+                blocker.exec_driver_sql("BEGIN IMMEDIATE")
+                return instance
+    
+            monkeypatch.setattr(runner_module, "WebRequirementsAdapter", requirements)
+            if entry == "actual_run_to_decision":
+                context.runner.state[PipelineStage.PROFILE_VALIDATION].status = "done"
+    
+                async def discovered(fetcher):
+                    context.runner._candidates = [candidate]
+    
+                monkeypatch.setattr(context.runner, "_stage_discover", discovered)
+            try:
+                with pytest.raises(UniversityReadStopped, match="checkpoint_busy"):
+                    if entry == "actual_stage_verify":
+                        await context.runner._stage_verify(fetcher)
+                    else:
+                        await context.runner.run_to_decision()
+            finally:
+                context.session.rollback()
+                blocker.rollback()
+                event.remove(context.engine, "checkout", zero_timeout)
+        assert seen == []
+>       assert snapshot(context) == before
+E       AssertionError: assert {'demo_mode':...': 'run', ...} == {'university_...u-one': 0}}}}}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Left contains 9 more items:
+E         {'academic_year': '2027/28',
+E          'candidate_limit': 2,
+E          'candidate_limit_source': 'run',
+E          'demo_mode': False,...
+E         
+E         ...Full output truncated (6 lines hidden), use '-vv' to show
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:106: AssertionError
+_ test_same_genuine_job_reclaim_honors_enabled_ledger_after_source_default_off _
+
+context = namespace(engine=Engine(sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert.../2026-10-07/x20/work/search-loop-round4/reviews/expert_b-readguard-v2/testtmp-second/test_same_genuine_job_reclaim_0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a696ae0>
+
+    @pytest.mark.asyncio
+    async def test_same_genuine_job_reclaim_honors_enabled_ledger_after_source_default_off(
+        context, monkeypatch
+    ):
+        fetcher = controls.activate(context)
+        candidate = controls.candidate()
+        seen = controls.mock_original_get(monkeypatch, context)
+        with context.runner._university_read_scope(candidate):
+            for i in range(60):
+                await fetcher.get("https://example.edu/prior/" + str(i))
+        before = snapshot(context)
+        monkeypatch.setattr(read_budget, "UNIVERSITY_READ_BUDGET", False)
+        with context.factory() as updater:
+            updater.execute(update(Job).where(Job.id == context.job.id).values(attempts=2))
+            updater.commit()
+        with context.factory() as new_session:
+            retry = ResearchRunner(
+                new_session,
+                new_session.get(ResearchRun, context.run.id),
+                context.profile,
+                context.settings,
+                job_id=context.job.id,
+                worker_id="worker-one",
+                lease_token=2,
+            )
+    
+            async def discovery(current_fetcher):
+                assert isinstance(current_fetcher, read_budget.BudgetedFetcher)
+                with retry._university_read_scope(candidate):
+                    await current_fetcher.get("https://example.edu/reclaimed/61")
+    
+            retry.state[PipelineStage.PROFILE_VALIDATION].status = "done"
+            monkeypatch.setattr(retry, "_stage_discover", discovery)
+            with pytest.raises(UniversityReadStopped, match="read_cap"):
+                await retry.run_to_decision()
+            assert retry._read_guard_enabled is True
+        assert len(seen) == 60
+>       assert snapshot(context) == before
+E       AssertionError: assert {'demo_mode':...': 'run', ...} == {'university_...-one': 60}}}}}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Left contains 9 more items:
+E         {'academic_year': '2027/28',
+E          'candidate_limit': 2,
+E          'candidate_limit_source': 'run',
+E          'demo_mode': False,...
+E         
+E         ...Full output truncated (6 lines hidden), use '-vv' to show
+
+work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py:349: AssertionError
+=========================== short test summary info ============================
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py::test_busy_actual_caller_propagates_typed_unknown_without_failed_or_claim_writes[actual_run_to_decision]
+FAILED work/search-loop-round4/reviews/expert_b-readguard-v2/test_revision_controls.py::test_same_genuine_job_reclaim_honors_enabled_ledger_after_source_default_off
+2 failed, 78 passed in 6.57s

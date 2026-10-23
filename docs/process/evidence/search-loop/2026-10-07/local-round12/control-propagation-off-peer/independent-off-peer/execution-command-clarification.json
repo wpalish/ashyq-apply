@@ -1,0 +1,14 @@
+{
+  "source": "Direct A collaboration clarification after independent B question",
+  "original_execution_json_sha256": "9652131cd18247b0afbc2b4396d8de6531af53f9e4efa0688bf49da07a4ad6c6",
+  "finding": "Display command abbreviates executable relative to incompatible cwd; explicit absolute executable field is correct",
+  "actually_issued_command_as_reported_by_author": "env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin PYTHONDONTWRITEBYTECODE=1 UNIMATCH_DEMO_MODE=true UNIMATCH_ENABLE_BROWSER_TIER=false /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python proof.py > attempt1.stdout.log 2> attempt1.stderr.log",
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-off-proof",
+  "author_reported_tool_receipts": {
+    "exec_chunk": "13a2de",
+    "session": 31191,
+    "completion_chunk": "9e96a4",
+    "exit_code": 1
+  },
+  "qualification": "Author-reported argv correction, no B proof rerun; original shortened display metadata unchanged. Material defect supported by exact source/script/raw and independent B caller proof."
+}

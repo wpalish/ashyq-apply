@@ -1,0 +1,163 @@
+--- a/frontend/src/lib/admissionsActionsRecovery.ts
++++ b/frontend/src/lib/admissionsActionsRecovery.ts
+@@ -469,34 +469,144 @@
+   const verified = await inspectCase(binding); if (!verified.ok) return verified;
+   return success({ entry: next, raw: nextRaw, index_raw: nextIndex });
+ }
+-/** Only call after the native DELETE for this captured case returned its successful own ACK. */
++/** Successful DELETE retires its captured case even if the same owner has opened another case. */
++function deletionIdentityFailure(binding: G3RecoveryBinding): G3RecoveryFailure | null {
++  try {
++    const scope = binding.current().scope;
++    const owner = scope === undefined ? 'demo' : scope === null ? null : `auth:${scope}`;
++    if (owner !== binding.owner_binding || currentApplicantOwner() !== binding.owner_binding) return 'owner';
++    if (!exact(binding.profile_id) || !integer(binding.case_epoch) || !uuid(binding.generation)
++      || binding.family !== family(binding.owner_binding, binding.profile_id)) return 'invalid';
++    return null;
++  } catch { return 'owner'; }
++}
++/** Deletion-only guard: verifies captured generation and exact fence/tombstone bytes, never live case/epoch. */
++function deletionFenceFailure(
++  binding: G3RecoveryBinding, expectedFenceRaw?: string, expectedTombstoneRaw: string | null = null,
++): G3RecoveryFailure | null {
++  const identity = deletionIdentityFailure(binding); if (identity) return identity;
++  try {
++    const tombstoneRaw = window.localStorage.getItem(tombstoneKey(binding));
++    const afterTombstone = deletionIdentityFailure(binding); if (afterTombstone) return afterTombstone;
++    if (tombstoneRaw !== null) {
++      if (bytes(tombstoneRaw) > 2048) return 'invalid';
++      const tombstone = parse(tombstoneRaw);
++      if (!validFence(tombstone, binding) || !tombstone.deleted) return 'invalid';
++      if (expectedTombstoneRaw === null) return 'deleted';
++      if (tombstoneRaw !== expectedTombstoneRaw) return 'changed';
++    } else if (expectedTombstoneRaw !== null) return 'changed';
++    const raw = window.localStorage.getItem(fenceKey(binding));
++    const afterFence = deletionIdentityFailure(binding); if (afterFence) return afterFence;
++    if (raw === null || bytes(raw) > 2048) return 'generation';
++    const fence = parse(raw);
++    if (!validFence(fence, binding)) return 'invalid';
++    if (fence.deleted) return 'deleted';
++    if (fence.generation !== binding.generation) return 'generation';
++    return expectedFenceRaw !== undefined && raw !== expectedFenceRaw ? 'changed' : null;
++  } catch { return 'storage'; }
++}
++function deletionReadRaw(
++  binding: G3RecoveryBinding, key: string, fenceRaw: string, tombstoneRaw: string | null,
++): G3RecoveryResult<string | null> {
++  const before = deletionFenceFailure(binding, fenceRaw, tombstoneRaw); if (before) return fail(before);
++  try {
++    const raw = window.localStorage.getItem(key);
++    const after = deletionFenceFailure(binding, fenceRaw, tombstoneRaw);
++    return after ? fail(after) : success(raw);
++  } catch { return fail('storage'); }
++}
++/** Physically scans only the captured exact family, under the deletion-only guard on every storage I/O. */
++function deletionFamilyKeys(
++  binding: G3RecoveryBinding, fenceRaw: string, tombstoneRaw: string | null,
++): G3RecoveryResult<string[]> {
++  const before = deletionFenceFailure(binding, fenceRaw, tombstoneRaw); if (before) return fail(before);
++  try {
++    const length = window.localStorage.length;
++    const afterLength = deletionFenceFailure(binding, fenceRaw, tombstoneRaw); if (afterLength) return fail(afterLength);
++    const keys: string[] = [];
++    for (let i = 0; i < length; i += 1) {
++      const beforeKey = deletionFenceFailure(binding, fenceRaw, tombstoneRaw); if (beforeKey) return fail(beforeKey);
++      const key = window.localStorage.key(i);
++      const afterKey = deletionFenceFailure(binding, fenceRaw, tombstoneRaw); if (afterKey) return fail(afterKey);
++      if (key !== null && key.startsWith(binding.family)) keys.push(key);
++    }
++    if (keys.length > G3_RECOVERY_ENTRIES_MAX + 3) return fail('limit');
++    if (keys.some(key => key !== fenceKey(binding) && key !== indexKey(binding) && key !== tombstoneKey(binding)
++      && (!key.startsWith(`${binding.family}intent.`) || !uuid(key.slice(`${binding.family}intent.`.length))))) return fail('invalid');
++    return success(keys.filter(key => key.startsWith(`${binding.family}intent.`)).sort());
++  } catch { return fail('storage'); }
++}
++/** Ownership/shape checks authorize best-effort cleanup; a browser digest is not server deletion proof. */
++function deletionCandidates(binding: G3RecoveryBinding, fenceRaw: string): G3RecoveryResult<Map<string, string>> {
++  const keys = deletionFamilyKeys(binding, fenceRaw, null); if (!keys.ok) return keys;
++  const raws = new Map<string, string>();
++  const indexRaw = deletionReadRaw(binding, indexKey(binding), fenceRaw, null); if (!indexRaw.ok) return indexRaw;
++  if (indexRaw.value !== null) {
++    if (bytes(indexRaw.value) > G3_RECOVERY_INDEX_BYTES) return fail('oversize');
++    try { if (!validIndex(parse(indexRaw.value), binding)) return fail('invalid'); } catch { return fail('invalid'); }
++    raws.set(indexKey(binding), indexRaw.value);
++  }
++  for (const key of keys.value) {
++    const raw = deletionReadRaw(binding, key, fenceRaw, null); if (!raw.ok) return raw;
++    if (raw.value === null) return fail('changed');
++    if (bytes(raw.value) > G3_RECOVERY_ENTRY_BYTES) return fail('oversize');
++    try {
++      const entry = parse(raw.value);
++      if (!validEntry(entry, binding) || key !== entryKey(binding, entry.descriptor.client_write_uuid)) return fail('invalid');
++    } catch { return fail('invalid'); }
++    raws.set(key, raw.value);
++  }
++  const again = deletionFamilyKeys(binding, fenceRaw, null); if (!again.ok) return again;
++  if (g3Canonical(keys.value) !== g3Canonical(again.value)) return fail('changed');
++  return success(raws);
++}
++/** Only call after native DELETE succeeds for this captured case, before Store's stale-generation return. */
+ export function acknowledgeAdmissionsCaseDeletion(
+   binding: G3RecoveryBinding, acknowledgedProfileId: string,
+ ): G3DeleteCleanupV1 {
+   if (acknowledgedProfileId !== binding.profile_id) return { tombstoned: false, cleanup: 'residual_unknown', reason: 'ack' };
+-  const check = active(binding);
+-  if (!check.ok) return { tombstoned: false, cleanup: 'residual_unknown', reason: check.reason };
++  const captured: G3RecoveryBinding = { owner_binding: binding.owner_binding, profile_id: binding.profile_id,
++    case_epoch: binding.case_epoch, generation: binding.generation, family: binding.family, current: binding.current };
++  const check = deletionFenceFailure(captured);
++  if (check) return { tombstoned: false, cleanup: 'residual_unknown', reason: check };
+   let nextGeneration: string;
+   try { nextGeneration = crypto.randomUUID(); } catch { return { tombstoned: false, cleanup: 'residual_unknown', reason: 'digest' }; }
+-  const tombstone: G3FamilyFenceV1 = { schema_version: 'g3-case-family-fence-v1', owner_binding: binding.owner_binding,
+-    profile_id: binding.profile_id, generation: nextGeneration, deleted: true };
++  const tombstone: G3FamilyFenceV1 = { schema_version: 'g3-case-family-fence-v1', owner_binding: captured.owner_binding,
++    profile_id: captured.profile_id, generation: nextGeneration, deleted: true };
+   let tombstoned = false;
+   try {
+-    const beforeKeys = ownFamilyKeys(binding);
+-    if (!active(binding).ok) return { tombstoned: false, cleanup: 'residual_unknown', reason: 'changed' };
++    const beforeFenceRead = deletionFenceFailure(captured);
++    if (beforeFenceRead) return { tombstoned, cleanup: 'residual_unknown', reason: beforeFenceRead };
++    const fenceRaw = window.localStorage.getItem(fenceKey(captured));
++    const afterFenceRead = deletionFenceFailure(captured, fenceRaw ?? undefined);
++    if (afterFenceRead || fenceRaw === null) return { tombstoned, cleanup: 'residual_unknown', reason: afterFenceRead ?? 'generation' };
++    const candidates = deletionCandidates(captured, fenceRaw);
++    const beforeWrite = deletionFenceFailure(captured, fenceRaw);
++    if (beforeWrite) return { tombstoned, cleanup: 'residual_unknown', reason: beforeWrite };
+     const raw = JSON.stringify(tombstone);
+     // Separate immutable tombstone cannot be overwritten by a late initial alive-fence write.
+-    window.localStorage.setItem(tombstoneKey(binding), raw);
+-    tombstoned = window.localStorage.getItem(tombstoneKey(binding)) === raw;
+-    if (!tombstoned || identityFailure(binding)) return { tombstoned, cleanup: 'residual_unknown', reason: 'changed' };
+-    if (!beforeKeys.ok) return { tombstoned, cleanup: 'residual_unknown', reason: beforeKeys.reason };
+-    for (const key of [...beforeKeys.value, indexKey(binding)]) {
+-      if (identityFailure(binding) || window.localStorage.getItem(tombstoneKey(binding)) !== raw) return { tombstoned, cleanup: 'residual_unknown', reason: 'changed' };
++    window.localStorage.setItem(tombstoneKey(captured), raw);
++    const afterWrite = deletionFenceFailure(captured, fenceRaw, raw);
++    if (afterWrite) return { tombstoned, cleanup: 'residual_unknown', reason: afterWrite };
++    tombstoned = true;
++    if (!candidates.ok) return { tombstoned, cleanup: 'residual_unknown', reason: candidates.reason };
++    for (const [key, expectedRaw] of candidates.value) {
++      const current = deletionReadRaw(captured, key, fenceRaw, raw);
++      if (!current.ok) return { tombstoned, cleanup: 'residual_unknown', reason: current.reason };
++      if (current.value !== expectedRaw) return { tombstoned, cleanup: 'residual_unknown', reason: 'changed' };
++      const beforeRemove = deletionFenceFailure(captured, fenceRaw, raw);
++      if (beforeRemove) return { tombstoned, cleanup: 'residual_unknown', reason: beforeRemove };
+       window.localStorage.removeItem(key);
++      const afterRemove = deletionReadRaw(captured, key, fenceRaw, raw);
++      if (!afterRemove.ok) return { tombstoned, cleanup: 'residual_unknown', reason: afterRemove.reason };
++      if (afterRemove.value !== null) return { tombstoned, cleanup: 'residual_unknown', reason: 'changed' };
+     }
+-    const residual = Array.from({ length: window.localStorage.length }, (_, i) => window.localStorage.key(i))
+-      .some(key => key !== null && key.startsWith(binding.family) && key !== fenceKey(binding) && key !== tombstoneKey(binding));
+-    return { tombstoned, cleanup: residual || identityFailure(binding) ? 'residual_unknown' : 'completed_best_effort', reason: residual ? 'changed' : null };
++    const finalKeys = deletionFamilyKeys(captured, fenceRaw, raw);
++    if (!finalKeys.ok) return { tombstoned, cleanup: 'residual_unknown', reason: finalKeys.reason };
++    const finalIndex = deletionReadRaw(captured, indexKey(captured), fenceRaw, raw);
++    if (!finalIndex.ok) return { tombstoned, cleanup: 'residual_unknown', reason: finalIndex.reason };
++    const residual = finalKeys.value.length > 0 || finalIndex.value !== null;
++    return { tombstoned, cleanup: residual ? 'residual_unknown' : 'completed_best_effort', reason: residual ? 'changed' : null };
+   } catch { return { tombstoned, cleanup: 'residual_unknown', reason: 'storage' }; }
+ }
+ 

@@ -1,3 +1,4 @@
+import { BookSettings } from '@/components/BookSettings';
 import { AccountMenu } from '@/components/AccountMenu';
 import { api } from '@/api/client';
 import { Panel } from '@/components/primitives';
@@ -14,6 +15,7 @@ export function SettingsScreen({ theme, setTheme, locale, setLocale, onNavigate,
   onNavigate: (destination: Destination) => void;
   onSignedOut: () => void;
 }) {
+  if(locale!=='en') return <BookSettings theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={onNavigate} onSignedOut={onSignedOut}/>;
   return (
     <div className="stack stack--loose">
       <div className="screen__head">

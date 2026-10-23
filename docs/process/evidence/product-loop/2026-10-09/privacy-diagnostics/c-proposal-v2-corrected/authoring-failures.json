@@ -1,0 +1,11 @@
+{
+  "failures": [
+    {
+      "step": "First static AST comparison after backend import normalization",
+      "tool": "host python3 resolves to Python3.9",
+      "failure": "SyntaxError: invalid syntax at type PageRecorder = Callable[..., object]",
+      "qualification": "Authoring grammar mismatch, not a native product test. Re-run with existing product Python3.12. No original package or primary edits."
+    }
+  ],
+  "first_bad_C9_native_control": "Preserved in logs/off-issued.log after final grouping; earlier same control raw under logs/pre-backend-grouping/off-issued.log"
+}

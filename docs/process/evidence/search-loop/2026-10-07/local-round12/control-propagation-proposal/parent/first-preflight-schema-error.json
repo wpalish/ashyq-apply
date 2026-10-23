@@ -1,0 +1,14 @@
+{
+  "operation": "B initial ready-manifest field lookup",
+  "error": "KeyError: files",
+  "tool_exit_code": 1,
+  "repository_evidence_writes": 0,
+  "own_helper_copy_completed": true,
+  "observed_manifest_keys": [
+    "status",
+    "selected_files_sha256",
+    "selected_files",
+    "selected_bytes"
+  ],
+  "repair": "explicit files_key selected_files_sha256; preserve original ready-manifest and outcomes"
+}

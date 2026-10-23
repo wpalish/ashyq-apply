@@ -1,0 +1,13 @@
+(version 1)
+(allow default)
+(deny network*)
+(allow network-inbound
+    (local tcp "localhost:5229")
+    (local tcp "localhost:8139"))
+(allow network-outbound
+    (remote tcp "localhost:5229")
+    (remote tcp "localhost:8139"))
+; Native Chromium uses local UNIX-domain IPC. This grants no IP egress.
+(allow network*
+    (local unix-socket (subpath "/"))
+    (remote unix-socket (subpath "/")))

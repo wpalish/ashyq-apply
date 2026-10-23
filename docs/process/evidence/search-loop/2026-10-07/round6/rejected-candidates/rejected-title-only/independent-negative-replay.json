@@ -1,0 +1,142 @@
+{
+  "status": "REJECTED",
+  "reason": "Primary title alone can hide a funding page family or falsely confirm a generic undergraduate support label.",
+  "controls": [
+    {
+      "case": "generic_funding_index",
+      "url": "https://example.edu/student-support/offer",
+      "html": "<html><head><title>Student support</title></head><body><main><h1>Student support</h1><h2>Scholarships</h2><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "260186d3379e56afb21871c3831a7fa0bff2ba06d324071a4df495a04314505d",
+      "expected": "scholarship_index",
+      "legacy": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Student support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "rejected_title_only": {
+        "page_type": "unknown",
+        "confidence": 0.2,
+        "signals": [
+          "no decisive signals"
+        ],
+        "title": "Student support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      }
+    },
+    {
+      "case": "undergraduate_support_index",
+      "url": "https://example.edu/student-support/offer",
+      "html": "<html><head><title>Undergraduate support</title></head><body><main><h1>Undergraduate support</h1><h2>Scholarships</h2><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "d9a33ae8fb94fecc2c64e4df67b0efebd498404814623f7f2f337ff31ebc6a09",
+      "expected": "scholarship_index",
+      "legacy": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Undergraduate support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "rejected_title_only": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Undergraduate support' at bachelor level"
+        ],
+        "title": "Undergraduate support",
+        "subject": "Undergraduate support",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      }
+    },
+    {
+      "case": "named_merit_award_secondary_funding",
+      "url": "https://example.edu/student-support/offer",
+      "html": "<html><head><title>Example Merit Award</title></head><body><main><h1>Example Merit Award</h1><h2>Funding</h2><p>The award covers tuition fees. Its value is EUR 5000 per year. Eligibility: open to admitted undergraduate students. No separate application is required.</p></main></body></html>",
+      "html_sha256": "64f9a2f0e8c2f3802bbe78a8a75898c6e23766422336364f18501d0676a01a3f",
+      "expected": "scholarship_award",
+      "legacy": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Example Merit Award'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Example Merit Award",
+        "subject": "Example Merit Award",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "rejected_title_only": {
+        "page_type": "unknown",
+        "confidence": 0.2,
+        "signals": [
+          "no decisive signals"
+        ],
+        "title": "Example Merit Award",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      }
+    },
+    {
+      "case": "neutral_programme_scoped_funding_page",
+      "url": "https://example.edu/support/computer-science",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Scholarships</h2><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "35028e4e61c5610a6932bf318ce73ff3ad032a983ee81ef9e4f690781ac9c10c",
+      "expected": "scholarship_index",
+      "legacy": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "rejected_title_only": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      }
+    }
+  ]
+}

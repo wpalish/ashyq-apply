@@ -1,0 +1,122 @@
+{
+  "status": "READ_ONLY_DESIGN_INSPECTION",
+  "application_status": "NOT_APPLIED",
+  "source_proposal_status": "NOT_CREATED_NOT_ACCEPTED",
+  "application_imported": false,
+  "tests_run": false,
+  "runtime_started": false,
+  "network_or_provider_called": false,
+  "repository_or_git_written": false,
+  "source_proposed_files": [],
+  "read_mechanism": "stdlib AST parse/literal extraction and byte hashing only; no application import/evaluation",
+  "source_pins": {
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/preparation/catalogue.py": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/preparation/learning_pack.py": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/schemas/learning_schedule.py": "a5c26ea689d67aa68cf46936adc5057c854613a99691259282ba5ca64ea684b6",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/domain/learning_schedule.py": "f5fb507796e5c7f6d4704ffff6f218fb8a59a35b79bf1fc659212544628e2e62",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/domain/study_schedule.py": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_preparation.py": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/study.py": "cd48802f039ef76f507328af22eb27735fab56ea5a25071bdca522053af59acc",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/schemas/preparation_graph.py": "4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx": "f61dbb1b548e983970ac6cb0d41269e01d806183897274699ecd752ccb633936",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/TYPED_CONTRACT_DESIGN_V2.md": "3916138d910830dfb0b484f2a562a488889798985f11ac2abdb2ffcd7282f37c",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/SHARED_ROUTE_PERSISTENCE_SPEC_V2.md": "27bc906301708c604c723e1a1d2fdb6ae79f454750871b4d6f82a98cd4728de3",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md": "5a2f1deffba1ec2dc405e8b4893bd7100a7d1b3c2654747e5333c75986c52e87",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G2_INTEGRATION_DECISIONS.md": "e9d51228d38316f650d057207fd933437600564e53007e4733b052b391d5cbf5"
+  },
+  "exact_lessons": [
+    {
+      "lesson_id": "ielts-reading-1",
+      "track_id": "ielts_reading",
+      "question_count": 3,
+      "planned_minutes": 20,
+      "content_version": "starter-2026-10-11-v1",
+      "reference_id": "lesson:ielts-reading-1:starter-2026-10-11-v1"
+    },
+    {
+      "lesson_id": "ielts-reading-headings-1",
+      "track_id": "ielts_reading",
+      "question_count": 5,
+      "planned_minutes": 20,
+      "content_version": "learning-pack-2026-10-11-v1",
+      "reference_id": "lesson:ielts-reading-headings-1:learning-pack-2026-10-11-v1"
+    },
+    {
+      "lesson_id": "ielts-reading-completion-1",
+      "track_id": "ielts_reading",
+      "question_count": 5,
+      "planned_minutes": 20,
+      "content_version": "learning-pack-2026-10-11-v1",
+      "reference_id": "lesson:ielts-reading-completion-1:learning-pack-2026-10-11-v1"
+    },
+    {
+      "lesson_id": "ielts-reading-features-1",
+      "track_id": "ielts_reading",
+      "question_count": 5,
+      "planned_minutes": 20,
+      "content_version": "learning-pack-2026-10-11-v1",
+      "reference_id": "lesson:ielts-reading-features-1:learning-pack-2026-10-11-v1"
+    },
+    {
+      "lesson_id": "sat-math-1",
+      "track_id": "sat_math",
+      "question_count": 3,
+      "planned_minutes": 20,
+      "content_version": "starter-2026-10-11-v1",
+      "reference_id": "lesson:sat-math-1:starter-2026-10-11-v1"
+    },
+    {
+      "lesson_id": "sat-quadratic-structure-1",
+      "track_id": "sat_math",
+      "question_count": 5,
+      "planned_minutes": 20,
+      "content_version": "learning-pack-2026-10-11-v1",
+      "reference_id": "lesson:sat-quadratic-structure-1:learning-pack-2026-10-11-v1"
+    },
+    {
+      "lesson_id": "sat-data-interpretation-1",
+      "track_id": "sat_math",
+      "question_count": 5,
+      "planned_minutes": 20,
+      "content_version": "learning-pack-2026-10-11-v1",
+      "reference_id": "lesson:sat-data-interpretation-1:learning-pack-2026-10-11-v1"
+    },
+    {
+      "lesson_id": "sat-rw-1",
+      "track_id": "sat_reading_writing",
+      "question_count": 3,
+      "planned_minutes": 20,
+      "content_version": "starter-2026-10-11-v1",
+      "reference_id": "lesson:sat-rw-1:starter-2026-10-11-v1"
+    },
+    {
+      "lesson_id": "sat-grammar-transitions-1",
+      "track_id": "sat_reading_writing",
+      "question_count": 5,
+      "planned_minutes": 20,
+      "content_version": "learning-pack-2026-10-11-v1",
+      "reference_id": "lesson:sat-grammar-transitions-1:learning-pack-2026-10-11-v1"
+    }
+  ],
+  "track_order": {
+    "ielts_reading": [
+      "ielts-reading-1",
+      "ielts-reading-headings-1",
+      "ielts-reading-completion-1",
+      "ielts-reading-features-1"
+    ],
+    "sat_math": [
+      "sat-math-1",
+      "sat-quadratic-structure-1",
+      "sat-data-interpretation-1"
+    ],
+    "sat_reading_writing": [
+      "sat-rw-1",
+      "sat-grammar-transitions-1"
+    ]
+  },
+  "allocation_queue_note": "SAT interleaves math and reading_writing; IELTS preserves reading track",
+  "notes_sha256": "f8a8afe8e3d8ab658b28b11c2afcd31131d229c1c0b438758102a4f1a9c2e58b",
+  "original_authorization_correction": "Root instructed no schema/domain/test bytes until separate G2 write-ahead after qualified G1 terminal."
+}

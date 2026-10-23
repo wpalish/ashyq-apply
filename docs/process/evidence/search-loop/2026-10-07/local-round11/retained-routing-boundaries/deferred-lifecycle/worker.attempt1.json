@@ -1,0 +1,1767 @@
+[
+  {
+    "flag": false,
+    "job_status": "succeeded",
+    "attempt_token": 1,
+    "run_stage": "awaiting_user_decision",
+    "unknowns": [
+      "Remaining research remains unknown: university read allowance unavailable (read_cap).",
+      "Remaining research for University of Groningen is unknown: university read allowance refused (read_cap)."
+    ],
+    "errors": [],
+    "results": [
+      {
+        "id": "96036971992b4b5288ec7bfec028c262",
+        "run_id": "20404509419a4ac98430c078922c95b6",
+        "university": "University of Groningen",
+        "university_id": "netherlands::groningen",
+        "country": "Netherlands",
+        "city": "Groningen",
+        "program": "computer science (bachelor)",
+        "program_url": null,
+        "degree": "bachelor",
+        "intake": "fall 2027",
+        "rankings": [],
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "admissions_fit": "INSUFFICIENT_DATA",
+        "funding_fit": "UNKNOWN",
+        "best_funding_classification": "UNKNOWN",
+        "requirement_checks": [],
+        "missing_prerequisites": [],
+        "hard_filter_failures": [],
+        "scholarships": [],
+        "costs": {
+          "items": {},
+          "total": null,
+          "academic_year": null,
+          "source_urls": [],
+          "is_range": false
+        },
+        "funding_gap": {
+          "computable": false,
+          "gap": null,
+          "gap_low": null,
+          "gap_high": null,
+          "total_cost": null,
+          "confirmed_aid": null,
+          "stackable_aid": null,
+          "reason": "No official cost of attendance was found for this programme and intake.",
+          "year_mismatch": false,
+          "currency_mismatch": false,
+          "category_mismatch": false,
+          "cost_basis": null,
+          "missing_categories": [],
+          "warnings": [
+            "Cost pages could not be verified; the gap cannot be estimated.",
+            "No scholarship information was found on official sources for this programme."
+          ]
+        },
+        "preference_score": {
+          "total": 0.5625,
+          "max_possible": 8.45,
+          "components": [
+            {
+              "name": "Academic fit",
+              "raw": 0.0,
+              "weight": 1.0,
+              "weighted": 0.0,
+              "explanation": "Requirements could not be verified officially.",
+              "data_present": false
+            },
+            {
+              "name": "Funding fit",
+              "raw": 0.0,
+              "weight": 1.5,
+              "weighted": 0.0,
+              "explanation": "No official funding information was confirmed.",
+              "data_present": false
+            },
+            {
+              "name": "Affordability",
+              "raw": 0.0,
+              "weight": 0.75,
+              "weighted": 0.0,
+              "explanation": "Remaining annual cost could not be computed.",
+              "data_present": false
+            },
+            {
+              "name": "Country preference",
+              "raw": 0.5,
+              "weight": 1.0,
+              "weighted": 0.5,
+              "explanation": "No country preference was stated.",
+              "data_present": true
+            },
+            {
+              "name": "Programme standing",
+              "raw": 0.0,
+              "weight": 0.8,
+              "weighted": 0.0,
+              "explanation": "No ranking position was found.",
+              "data_present": false
+            },
+            {
+              "name": "Extracurricular profile",
+              "raw": 0.0,
+              "weight": 0.6,
+              "weighted": 0.0,
+              "explanation": "No activities or achievements recorded.",
+              "data_present": false
+            },
+            {
+              "name": "City fit",
+              "raw": 0.0,
+              "weight": 0.4,
+              "weighted": 0.0,
+              "explanation": "City fit assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "Climate fit",
+              "raw": 0.0,
+              "weight": 0.3,
+              "weighted": 0.0,
+              "explanation": "Climate fit assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "Workload fit",
+              "raw": 0.0,
+              "weight": 0.3,
+              "weighted": 0.0,
+              "explanation": "Workload fit assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "University size",
+              "raw": 0.0,
+              "weight": 0.3,
+              "weighted": 0.0,
+              "explanation": "Preferred size any; this university is assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "Campus type",
+              "raw": 0.0,
+              "weight": 0.3,
+              "weighted": 0.0,
+              "explanation": "Preferred campus any; this university is assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "Career and internships",
+              "raw": 0.0,
+              "weight": 0.7,
+              "weighted": 0.0,
+              "explanation": "No official careers information was found.",
+              "data_present": false
+            },
+            {
+              "name": "Post-study work",
+              "raw": 0.5,
+              "weight": 0.5,
+              "weighted": 0.25,
+              "explanation": "Post-study work was not a stated priority.",
+              "data_present": true
+            },
+            {
+              "name": "Admissions fit rationale",
+              "raw": 0.0,
+              "weight": 0.0,
+              "weighted": 0.0,
+              "explanation": "Published requirements could not be verified, so no comparison is possible.",
+              "data_present": true
+            }
+          ],
+          "missing_data_penalty": 0.25,
+          "missing_fields": [
+            "published requirements",
+            "scholarship data",
+            "cost of attendance",
+            "ranking position",
+            "activities",
+            "City fit",
+            "Climate fit",
+            "Workload fit",
+            "university size",
+            "campus type",
+            "career information"
+          ],
+          "disclaimer": "A preference-match score, not a probability of admission or of receiving funding."
+        },
+        "ranking": {
+          "fit": null,
+          "coverage": 0.0,
+          "sort_key": 0.0,
+          "gamma": 0.5,
+          "axes": [
+            {
+              "axis": "academic_fit",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.145,
+              "reason": "Published requirements could not be verified.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "funding_fit",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.2041666666666667,
+              "reason": "No official funding information was confirmed.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "affordability",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.2041666666666667,
+              "reason": "The remaining annual cost could not be computed.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "country",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.15833333333333333,
+              "reason": "No country preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "programme_standing",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.09666666666666668,
+              "reason": "No ranking position was found.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "city",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.051388888888888894,
+              "reason": "No city preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "climate",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.051388888888888894,
+              "reason": "No climate preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "university_size",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.009259259259259259,
+              "reason": "No university size preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "campus",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.009259259259259259,
+              "reason": "No campus preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "workload",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.009259259259259259,
+              "reason": "No workload preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "career",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.030555555555555558,
+              "reason": "No official careers information was found.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "post_study_work",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.030555555555555558,
+              "reason": "Post-study work was not a stated priority.",
+              "evidence_claim_ids": []
+            }
+          ],
+          "unknown_axes": [
+            "academic_fit",
+            "funding_fit",
+            "affordability",
+            "programme_standing",
+            "career"
+          ],
+          "not_applicable_axes": [
+            "country",
+            "city",
+            "climate",
+            "university_size",
+            "campus",
+            "workload",
+            "post_study_work"
+          ],
+          "knocked_out_by": [],
+          "bucket": "NEEDS_CLARIFICATION",
+          "bucket_reason": "Too little of the published requirements could be verified to place this row.",
+          "weights_source": "priorities_roc",
+          "version": "2",
+          "disclaimer": "How well this matches your stated priorities, on confirmed data. Not a probability of admission."
+        },
+        "catalog_attributes": {},
+        "catalog_attributes_source": "registry",
+        "admission_deadline": null,
+        "admission_deadline_timezone": null,
+        "admission_deadline_raw": null,
+        "deadline_passed": false,
+        "previous_cycle_deadline": null,
+        "climate_fit": "unknown",
+        "city_fit": "unknown",
+        "workload_fit": "unknown",
+        "size_fit": "unknown",
+        "campus_fit": "unknown",
+        "career_notes": "",
+        "post_study_work": "",
+        "work_during_study": "",
+        "conflicts": [],
+        "unresolved": [
+          {
+            "topic": "research read allowance",
+            "question": "Which remaining official facts can be established for computer science (bachelor)?",
+            "why_it_matters": "Remaining research for University of Groningen is unknown: university read allowance refused (read_cap).",
+            "university": "University of Groningen",
+            "program": "computer science (bachelor)",
+            "suggested_contact": null,
+            "blocking": false
+          },
+          {
+            "topic": "official source",
+            "question": "Which official page publishes entry requirements for computer science (bachelor)?",
+            "why_it_matters": "This university was found through a catalogue only. Nothing about it has been verified against an official source.",
+            "university": "University of Groningen",
+            "program": "computer science (bachelor)",
+            "suggested_contact": null,
+            "blocking": true
+          }
+        ],
+        "claims": [],
+        "source_urls": [],
+        "last_verified": null,
+        "verification_completeness": 0.0,
+        "user_decision": "undecided",
+        "user_decision_reason": "",
+        "user_notes": "",
+        "decided_at": null,
+        "checklist": null
+      }
+    ],
+    "claim_rows": 0,
+    "source_pages": [
+      {
+        "url": "https://www.rug.nl/bachelors/computing-science",
+        "page_type": "intake_specific_program",
+        "content_hash": "a0972cf0d971f1b7863e72914d72099d5c069081553cc9fb4265b76e37f742a1"
+      }
+    ],
+    "job_completed": 1,
+    "worker_done": 1,
+    "worker_failed": 0,
+    "ledger": {
+      "demo_mode": false,
+      "candidate_limit": 2,
+      "verify_limit": 2,
+      "candidate_limit_source": "run",
+      "academic_year": "2027/28",
+      "target_currency": "USD",
+      "respect_robots": false,
+      "university_ids": [
+        "u-one"
+      ],
+      "university_read_budget_scope": "decision-job-episode",
+      "university_research_budget_v1": {
+        "version": 1,
+        "read_limit": 60,
+        "active_episode": "decision:9b971e0490dd4d82b3b3455c06325801",
+        "episodes": {
+          "decision:9b971e0490dd4d82b3b3455c06325801": {
+            "read_counts": {
+              "catalogue:u-one": 60
+            }
+          }
+        }
+      }
+    },
+    "counts": {
+      "catalogue:u-one": 60
+    },
+    "source_transport_calls": [
+      {
+        "url": "https://www.rug.nl/synthetic-noise/0",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 1
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/1",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 2
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/2",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 3
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/3",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 4
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/4",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 5
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/5",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 6
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/6",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 7
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/7",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 8
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/8",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 9
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/9",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 10
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/10",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 11
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/11",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 12
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/12",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 13
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/13",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 14
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/14",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 15
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/15",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 16
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/16",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 17
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/17",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 18
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/18",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 19
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/19",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 20
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/20",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 21
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/21",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 22
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/22",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 23
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/23",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 24
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/24",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 25
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/25",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 26
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/26",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 27
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/27",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 28
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/28",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 29
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/29",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 30
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/30",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 31
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/31",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 32
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/32",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 33
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/33",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 34
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/34",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 35
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/35",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 36
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/36",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 37
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/37",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 38
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/38",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 39
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/39",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 40
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/40",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 41
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/41",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 42
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/42",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 43
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/43",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 44
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/44",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 45
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/45",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 46
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/46",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 47
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/47",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 48
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/48",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 49
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/49",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 50
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/50",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 51
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/51",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 52
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/52",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 53
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/53",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 54
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/54",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 55
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/55",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 56
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/56",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 57
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/57",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 58
+        }
+      },
+      {
+        "url": "https://www.rug.nl/bachelors/synthetic-catalogue",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 59
+        }
+      },
+      {
+        "url": "https://www.rug.nl/bachelors/computing-science",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 60
+        }
+      }
+    ],
+    "apply_calls": [],
+    "candidate_outputs": [],
+    "adapter_traces": [
+      {
+        "institution": "University of Groningen",
+        "domain": "www.rug.nl",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected": [],
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+        ],
+        "field_sources": {},
+        "field_hints": {},
+        "public_fields": null,
+        "queried_fields": [],
+        "search_queries_sent": 0,
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      }
+    ],
+    "execution": {
+      "elapsed_ns": 208299333,
+      "semaphore_released": true,
+      "heartbeat_tasks": 1,
+      "heartbeat_cancelled": [
+        true
+      ],
+      "heartbeat_done": [
+        true
+      ],
+      "escaped": []
+    },
+    "case_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-retained-discovery-lifecycle/worker.attempt1.off",
+    "checks": [
+      {
+        "case": "real_job_terminal_success_is_not_fact_success",
+        "status": "PASS"
+      },
+      {
+        "case": "real_60_charge_commits_before_each_original_io",
+        "status": "PASS"
+      },
+      {
+        "case": "saved_correct_source_read60_no_tail_read61",
+        "status": "PASS"
+      },
+      {
+        "case": "expected_provisional_URL_retained_on_only",
+        "status": "PASS"
+      },
+      {
+        "case": "zero_claim_all_applicability_unknown",
+        "status": "PASS"
+      },
+      {
+        "case": "real_SourcePage_prior_to_confirmation_preserved",
+        "status": "PASS"
+      },
+      {
+        "case": "heartbeat_cleaned_and_no_exception",
+        "status": "PASS"
+      },
+      {
+        "case": "no_apply_during_exception_unwind",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "flag": true,
+    "job_status": "succeeded",
+    "attempt_token": 1,
+    "run_stage": "awaiting_user_decision",
+    "unknowns": [
+      "Partial discovery: previously read strict programme routing retained; remaining research unknown (read_cap). Applicant/intake/campus/population applicability remains unknown.",
+      "Remaining research remains unknown: university read allowance unavailable (read_cap).",
+      "Remaining research for University of Groningen is unknown: university read allowance refused (read_cap)."
+    ],
+    "errors": [],
+    "results": [
+      {
+        "id": "57be6152cb1945acb0c1359ac520ca9e",
+        "run_id": "46fe321b9d2245d5aeab9b47fd09f200",
+        "university": "University of Groningen",
+        "university_id": "netherlands::groningen",
+        "country": "Netherlands",
+        "city": "Groningen",
+        "program": "Computing Science",
+        "program_url": "https://www.rug.nl/bachelors/computing-science",
+        "degree": "bachelor",
+        "intake": "fall 2027",
+        "rankings": [],
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "admissions_fit": "INSUFFICIENT_DATA",
+        "funding_fit": "UNKNOWN",
+        "best_funding_classification": "UNKNOWN",
+        "requirement_checks": [],
+        "missing_prerequisites": [],
+        "hard_filter_failures": [],
+        "scholarships": [],
+        "costs": {
+          "items": {},
+          "total": null,
+          "academic_year": null,
+          "source_urls": [],
+          "is_range": false
+        },
+        "funding_gap": {
+          "computable": false,
+          "gap": null,
+          "gap_low": null,
+          "gap_high": null,
+          "total_cost": null,
+          "confirmed_aid": null,
+          "stackable_aid": null,
+          "reason": "No official cost of attendance was found for this programme and intake.",
+          "year_mismatch": false,
+          "currency_mismatch": false,
+          "category_mismatch": false,
+          "cost_basis": null,
+          "missing_categories": [],
+          "warnings": [
+            "Cost pages could not be verified; the gap cannot be estimated.",
+            "No scholarship information was found on official sources for this programme."
+          ]
+        },
+        "preference_score": {
+          "total": 0.5625,
+          "max_possible": 8.45,
+          "components": [
+            {
+              "name": "Academic fit",
+              "raw": 0.0,
+              "weight": 1.0,
+              "weighted": 0.0,
+              "explanation": "Requirements could not be verified officially.",
+              "data_present": false
+            },
+            {
+              "name": "Funding fit",
+              "raw": 0.0,
+              "weight": 1.5,
+              "weighted": 0.0,
+              "explanation": "No official funding information was confirmed.",
+              "data_present": false
+            },
+            {
+              "name": "Affordability",
+              "raw": 0.0,
+              "weight": 0.75,
+              "weighted": 0.0,
+              "explanation": "Remaining annual cost could not be computed.",
+              "data_present": false
+            },
+            {
+              "name": "Country preference",
+              "raw": 0.5,
+              "weight": 1.0,
+              "weighted": 0.5,
+              "explanation": "No country preference was stated.",
+              "data_present": true
+            },
+            {
+              "name": "Programme standing",
+              "raw": 0.0,
+              "weight": 0.8,
+              "weighted": 0.0,
+              "explanation": "No ranking position was found.",
+              "data_present": false
+            },
+            {
+              "name": "Extracurricular profile",
+              "raw": 0.0,
+              "weight": 0.6,
+              "weighted": 0.0,
+              "explanation": "No activities or achievements recorded.",
+              "data_present": false
+            },
+            {
+              "name": "City fit",
+              "raw": 0.0,
+              "weight": 0.4,
+              "weighted": 0.0,
+              "explanation": "City fit assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "Climate fit",
+              "raw": 0.0,
+              "weight": 0.3,
+              "weighted": 0.0,
+              "explanation": "Climate fit assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "Workload fit",
+              "raw": 0.0,
+              "weight": 0.3,
+              "weighted": 0.0,
+              "explanation": "Workload fit assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "University size",
+              "raw": 0.0,
+              "weight": 0.3,
+              "weighted": 0.0,
+              "explanation": "Preferred size any; this university is assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "Campus type",
+              "raw": 0.0,
+              "weight": 0.3,
+              "weighted": 0.0,
+              "explanation": "Preferred campus any; this university is assessed as unknown.",
+              "data_present": false
+            },
+            {
+              "name": "Career and internships",
+              "raw": 0.0,
+              "weight": 0.7,
+              "weighted": 0.0,
+              "explanation": "No official careers information was found.",
+              "data_present": false
+            },
+            {
+              "name": "Post-study work",
+              "raw": 0.5,
+              "weight": 0.5,
+              "weighted": 0.25,
+              "explanation": "Post-study work was not a stated priority.",
+              "data_present": true
+            },
+            {
+              "name": "Admissions fit rationale",
+              "raw": 0.0,
+              "weight": 0.0,
+              "weighted": 0.0,
+              "explanation": "Published requirements could not be verified, so no comparison is possible.",
+              "data_present": true
+            }
+          ],
+          "missing_data_penalty": 0.25,
+          "missing_fields": [
+            "published requirements",
+            "scholarship data",
+            "cost of attendance",
+            "ranking position",
+            "activities",
+            "City fit",
+            "Climate fit",
+            "Workload fit",
+            "university size",
+            "campus type",
+            "career information"
+          ],
+          "disclaimer": "A preference-match score, not a probability of admission or of receiving funding."
+        },
+        "ranking": {
+          "fit": null,
+          "coverage": 0.0,
+          "sort_key": 0.0,
+          "gamma": 0.5,
+          "axes": [
+            {
+              "axis": "academic_fit",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.145,
+              "reason": "Published requirements could not be verified.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "funding_fit",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.2041666666666667,
+              "reason": "No official funding information was confirmed.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "affordability",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.2041666666666667,
+              "reason": "The remaining annual cost could not be computed.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "country",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.15833333333333333,
+              "reason": "No country preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "programme_standing",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.09666666666666668,
+              "reason": "No ranking position was found.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "city",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.051388888888888894,
+              "reason": "No city preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "climate",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.051388888888888894,
+              "reason": "No climate preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "university_size",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.009259259259259259,
+              "reason": "No university size preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "campus",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.009259259259259259,
+              "reason": "No campus preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "workload",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.009259259259259259,
+              "reason": "No workload preference was stated.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "career",
+              "value": null,
+              "state": "unknown",
+              "weight": 0.030555555555555558,
+              "reason": "No official careers information was found.",
+              "evidence_claim_ids": []
+            },
+            {
+              "axis": "post_study_work",
+              "value": null,
+              "state": "not_applicable",
+              "weight": 0.030555555555555558,
+              "reason": "Post-study work was not a stated priority.",
+              "evidence_claim_ids": []
+            }
+          ],
+          "unknown_axes": [
+            "academic_fit",
+            "funding_fit",
+            "affordability",
+            "programme_standing",
+            "career"
+          ],
+          "not_applicable_axes": [
+            "country",
+            "city",
+            "climate",
+            "university_size",
+            "campus",
+            "workload",
+            "post_study_work"
+          ],
+          "knocked_out_by": [],
+          "bucket": "NEEDS_CLARIFICATION",
+          "bucket_reason": "Too little of the published requirements could be verified to place this row.",
+          "weights_source": "priorities_roc",
+          "version": "2",
+          "disclaimer": "How well this matches your stated priorities, on confirmed data. Not a probability of admission."
+        },
+        "catalog_attributes": {},
+        "catalog_attributes_source": "registry",
+        "admission_deadline": null,
+        "admission_deadline_timezone": null,
+        "admission_deadline_raw": null,
+        "deadline_passed": false,
+        "previous_cycle_deadline": null,
+        "climate_fit": "unknown",
+        "city_fit": "unknown",
+        "workload_fit": "unknown",
+        "size_fit": "unknown",
+        "campus_fit": "unknown",
+        "career_notes": "",
+        "post_study_work": "",
+        "work_during_study": "",
+        "conflicts": [],
+        "unresolved": [
+          {
+            "topic": "research read allowance",
+            "question": "Which remaining official facts can be established for Computing Science?",
+            "why_it_matters": "Remaining research for University of Groningen is unknown: university read allowance refused (read_cap).",
+            "university": "University of Groningen",
+            "program": "Computing Science",
+            "suggested_contact": null,
+            "blocking": false
+          }
+        ],
+        "claims": [],
+        "source_urls": [],
+        "last_verified": null,
+        "verification_completeness": 0.0,
+        "user_decision": "undecided",
+        "user_decision_reason": "",
+        "user_notes": "",
+        "decided_at": null,
+        "checklist": null
+      }
+    ],
+    "claim_rows": 0,
+    "source_pages": [
+      {
+        "url": "https://www.rug.nl/bachelors/computing-science",
+        "page_type": "intake_specific_program",
+        "content_hash": "a0972cf0d971f1b7863e72914d72099d5c069081553cc9fb4265b76e37f742a1"
+      }
+    ],
+    "job_completed": 1,
+    "worker_done": 1,
+    "worker_failed": 0,
+    "ledger": {
+      "demo_mode": false,
+      "candidate_limit": 2,
+      "verify_limit": 2,
+      "candidate_limit_source": "run",
+      "academic_year": "2027/28",
+      "target_currency": "USD",
+      "respect_robots": false,
+      "university_ids": [
+        "u-one"
+      ],
+      "university_read_budget_scope": "decision-job-episode",
+      "university_research_budget_v1": {
+        "version": 1,
+        "read_limit": 60,
+        "active_episode": "decision:c8173c4ff01c4baeb202c5d349879219",
+        "episodes": {
+          "decision:c8173c4ff01c4baeb202c5d349879219": {
+            "read_counts": {
+              "catalogue:u-one": 60
+            }
+          }
+        }
+      }
+    },
+    "counts": {
+      "catalogue:u-one": 60
+    },
+    "source_transport_calls": [
+      {
+        "url": "https://www.rug.nl/synthetic-noise/0",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 1
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/1",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 2
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/2",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 3
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/3",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 4
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/4",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 5
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/5",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 6
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/6",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 7
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/7",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 8
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/8",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 9
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/9",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 10
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/10",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 11
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/11",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 12
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/12",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 13
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/13",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 14
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/14",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 15
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/15",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 16
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/16",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 17
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/17",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 18
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/18",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 19
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/19",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 20
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/20",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 21
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/21",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 22
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/22",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 23
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/23",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 24
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/24",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 25
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/25",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 26
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/26",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 27
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/27",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 28
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/28",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 29
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/29",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 30
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/30",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 31
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/31",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 32
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/32",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 33
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/33",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 34
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/34",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 35
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/35",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 36
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/36",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 37
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/37",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 38
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/38",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 39
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/39",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 40
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/40",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 41
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/41",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 42
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/42",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 43
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/43",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 44
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/44",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 45
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/45",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 46
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/46",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 47
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/47",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 48
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/48",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 49
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/49",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 50
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/50",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 51
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/51",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 52
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/52",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 53
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/53",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 54
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/54",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 55
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/55",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 56
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/56",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 57
+        }
+      },
+      {
+        "url": "https://www.rug.nl/synthetic-noise/57",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 58
+        }
+      },
+      {
+        "url": "https://www.rug.nl/bachelors/synthetic-catalogue",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 59
+        }
+      },
+      {
+        "url": "https://www.rug.nl/bachelors/computing-science",
+        "durable_before_original_IO": {
+          "catalogue:u-one": 60
+        }
+      }
+    ],
+    "apply_calls": [
+      {
+        "during_exception": false,
+        "native_count": {
+          "catalogue:u-one": 60
+        },
+        "gets": [
+          "https://www.rug.nl/synthetic-noise/0",
+          "https://www.rug.nl/synthetic-noise/1",
+          "https://www.rug.nl/synthetic-noise/2",
+          "https://www.rug.nl/synthetic-noise/3",
+          "https://www.rug.nl/synthetic-noise/4",
+          "https://www.rug.nl/synthetic-noise/5",
+          "https://www.rug.nl/synthetic-noise/6",
+          "https://www.rug.nl/synthetic-noise/7",
+          "https://www.rug.nl/synthetic-noise/8",
+          "https://www.rug.nl/synthetic-noise/9",
+          "https://www.rug.nl/synthetic-noise/10",
+          "https://www.rug.nl/synthetic-noise/11",
+          "https://www.rug.nl/synthetic-noise/12",
+          "https://www.rug.nl/synthetic-noise/13",
+          "https://www.rug.nl/synthetic-noise/14",
+          "https://www.rug.nl/synthetic-noise/15",
+          "https://www.rug.nl/synthetic-noise/16",
+          "https://www.rug.nl/synthetic-noise/17",
+          "https://www.rug.nl/synthetic-noise/18",
+          "https://www.rug.nl/synthetic-noise/19",
+          "https://www.rug.nl/synthetic-noise/20",
+          "https://www.rug.nl/synthetic-noise/21",
+          "https://www.rug.nl/synthetic-noise/22",
+          "https://www.rug.nl/synthetic-noise/23",
+          "https://www.rug.nl/synthetic-noise/24",
+          "https://www.rug.nl/synthetic-noise/25",
+          "https://www.rug.nl/synthetic-noise/26",
+          "https://www.rug.nl/synthetic-noise/27",
+          "https://www.rug.nl/synthetic-noise/28",
+          "https://www.rug.nl/synthetic-noise/29",
+          "https://www.rug.nl/synthetic-noise/30",
+          "https://www.rug.nl/synthetic-noise/31",
+          "https://www.rug.nl/synthetic-noise/32",
+          "https://www.rug.nl/synthetic-noise/33",
+          "https://www.rug.nl/synthetic-noise/34",
+          "https://www.rug.nl/synthetic-noise/35",
+          "https://www.rug.nl/synthetic-noise/36",
+          "https://www.rug.nl/synthetic-noise/37",
+          "https://www.rug.nl/synthetic-noise/38",
+          "https://www.rug.nl/synthetic-noise/39",
+          "https://www.rug.nl/synthetic-noise/40",
+          "https://www.rug.nl/synthetic-noise/41",
+          "https://www.rug.nl/synthetic-noise/42",
+          "https://www.rug.nl/synthetic-noise/43",
+          "https://www.rug.nl/synthetic-noise/44",
+          "https://www.rug.nl/synthetic-noise/45",
+          "https://www.rug.nl/synthetic-noise/46",
+          "https://www.rug.nl/synthetic-noise/47",
+          "https://www.rug.nl/synthetic-noise/48",
+          "https://www.rug.nl/synthetic-noise/49",
+          "https://www.rug.nl/synthetic-noise/50",
+          "https://www.rug.nl/synthetic-noise/51",
+          "https://www.rug.nl/synthetic-noise/52",
+          "https://www.rug.nl/synthetic-noise/53",
+          "https://www.rug.nl/synthetic-noise/54",
+          "https://www.rug.nl/synthetic-noise/55",
+          "https://www.rug.nl/synthetic-noise/56",
+          "https://www.rug.nl/synthetic-noise/57",
+          "https://www.rug.nl/bachelors/synthetic-catalogue",
+          "https://www.rug.nl/bachelors/computing-science"
+        ]
+      }
+    ],
+    "candidate_outputs": [],
+    "adapter_traces": [
+      {
+        "institution": "University of Groningen",
+        "domain": "www.rug.nl",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://www.rug.nl/bachelors/synthetic-catalogue"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://www.rug.nl/bachelors/synthetic-catalogue"
+          ],
+          "program_page": [
+            "https://www.rug.nl/bachelors/computing-science"
+          ]
+        },
+        "rejected": [],
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Partial discovery: previously read strict programme routing retained; remaining research unknown (read_cap). Applicant/intake/campus/population applicability remains unknown.",
+          "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+        ],
+        "field_sources": {},
+        "field_hints": {},
+        "public_fields": [
+          "computer science"
+        ],
+        "queried_fields": [],
+        "search_queries_sent": 0,
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      }
+    ],
+    "execution": {
+      "elapsed_ns": 184165750,
+      "semaphore_released": true,
+      "heartbeat_tasks": 1,
+      "heartbeat_cancelled": [
+        true
+      ],
+      "heartbeat_done": [
+        true
+      ],
+      "escaped": []
+    },
+    "case_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-retained-discovery-lifecycle/worker.attempt1.on",
+    "checks": [
+      {
+        "case": "real_job_terminal_success_is_not_fact_success",
+        "status": "PASS"
+      },
+      {
+        "case": "real_60_charge_commits_before_each_original_io",
+        "status": "PASS"
+      },
+      {
+        "case": "saved_correct_source_read60_no_tail_read61",
+        "status": "PASS"
+      },
+      {
+        "case": "expected_provisional_URL_retained_on_only",
+        "status": "PASS"
+      },
+      {
+        "case": "zero_claim_all_applicability_unknown",
+        "status": "PASS"
+      },
+      {
+        "case": "real_SourcePage_prior_to_confirmation_preserved",
+        "status": "PASS"
+      },
+      {
+        "case": "heartbeat_cleaned_and_no_exception",
+        "status": "PASS"
+      },
+      {
+        "case": "no_apply_during_exception_unwind",
+        "status": "PASS"
+      }
+    ]
+  }
+]

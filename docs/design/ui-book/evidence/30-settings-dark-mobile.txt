@@ -1,0 +1,74 @@
+Browser tab: 4, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/settings".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/settings
+	2 container root
+		3 link Description: Skip to content, Value: 127.0.0.1:18140/#main-content
+		404 container Main navigation
+			405 button Home
+			406 button Find
+			407 button Plan
+			408 button Documents
+			409 button Community
+		10 container
+			410 button Unimatch home
+			12 text Demo data
+			13 button (collapsed) Explore, Secondary Actions: Expand
+				14 text Explore
+			15 button (collapsed) Description: Applicant workspace, Help: U, Secondary Actions: Expand
+				16 text U
+		411 container Description: Settings, ID: main-content
+			415 container
+				416 text Сохранённая оценка. Оценка отражает состояние исследования на тот момент. Она не подтверждает текущую готовность и не является вероятностью поступления.
+			417 heading Make Unimatch feel like you., Value: 1
+				418 text Make Unimatch feel like  you.
+			419 text Manage your account, workspace and the information you choose to share.
+			420 container
+				421 heading Your information, Value: 2
+					422 text Your information
+				423 text Your applicant case and public community profile are separate.
+				424 button Applicant profile Education, scores and goals
+					425 text Applicant profile
+					426 text Education, scores and goals
+				427 button Community profile & privacy Public profile, visibility and messages
+					428 text Community profile & privacy
+					429 text Public profile, visibility and messages
+				430 button Data & exports Download or delete an applicant case
+					431 text Data & exports
+					432 text Download or delete an applicant case
+			433 container
+				434 heading Appearance & language, Value: 2
+					435 text Appearance & language
+				436 text Partial translations fall back to English. Appearance
+				437 pop up button (collapsed, settable) Appearance, Value: Dark, Secondary Actions: Expand
+					438 menu
+						439 System
+						440 Light
+						441 (selected) Dark
+				442 text Language
+				443 pop up button (collapsed, settable) Language, Value: Русский, Secondary Actions: Expand
+					444 menu
+						445 English
+						446 (selected) Русский
+						447 Қазақша
+			448 container
+				449 heading Account & workspace, Value: 2
+					450 text Account & workspace
+				451 text Change your password, switch workspace or delete your account.
+				452 button Account
+				453 button Change password
+				454 button Delete account
+			455 container
+				456 heading Billing & legal, Value: 2
+					457 text Billing & legal
+				458 button Billing & access Case unlocks and subscription quota
+					459 text Billing & access
+					460 text Case unlocks and subscription quota
+				461 button Privacy & terms Public draft documents
+					462 text Privacy & terms
+					463 text Public draft documents
+			464 container
+				465 heading Notifications, Value: 2
+					466 text Notifications
+				467 text Notification delivery and reminder preferences are planned. This deployment does not send deadline or research alerts, so there is no switch to enable yet.
+			468 button Sign out
+
+The focused UI element is 411 container Description: Settings, ID: main-content

@@ -1,0 +1,88 @@
+{
+  "status": "SEALED_EXTERNAL_ONLY_PREPARED_DOC_PROPOSAL_TEMPLATE_FULL_PENDING_NOT_APPLIED",
+  "created_utc": "2026-10-09T04:24:14.385663+00:00",
+  "source_head": "08450f71e6bbeadd9a2212fbd6c9f96f5c428755",
+  "source34_sha256": "bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6",
+  "proposed_target_count": 3,
+  "prior_document_bytes_preserved": true,
+  "gate_metrics_null_statuses_PENDING": true,
+  "files": {
+    "PLAN.md": {
+      "sha256": "fddf2208b10998b660b1d77d02c4050cf4da6edb9e06d0ab80ade902f163dde5",
+      "bytes": 1821
+    },
+    "PROPOSAL.json": {
+      "sha256": "fc54d272cf75d9558c8ba4bb193b3ec0462efe1fb0d7a7c93f6038d94b16214f",
+      "bytes": 3352
+    },
+    "assembly-checks.json": {
+      "sha256": "1d674b85b622d9aa0a4a2510f7c726af783d3fa86e85d6ac60ef9448ca2a2773",
+      "bytes": 799
+    },
+    "diff/SECURITY.md.diff": {
+      "sha256": "32c8a51180065780cca8ad4ed8d9279dd98c4affc10ab9570532f42137e68125",
+      "bytes": 2728
+    },
+    "diff/docs/legal/RELEASE_READINESS.md.diff": {
+      "sha256": "2a3e42e04d63e19c5e1929e4e45e5d0d02f9b559b99fbe1737cf463cc1f4ff9b",
+      "bytes": 2699
+    },
+    "inputs/application-receipt.json": {
+      "sha256": "76dfc214830b4a8aee9fa574cf6ea658014f52cc188484dda885df69e339afc5",
+      "bytes": 4554
+    },
+    "inputs/applied-head.txt": {
+      "sha256": "2d3b60cfc2ea38f0e4a1f65ac86e9edf2a31dc2d717cae1288ac110d5364c794",
+      "bytes": 41
+    },
+    "inputs/applied-source-pins.json": {
+      "sha256": "bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6",
+      "bytes": 3780
+    },
+    "inputs/read-source-pins.json": {
+      "sha256": "beba9bc4452ccbcff2422385d5c15499951dccbb6ce9a4fe5a7e4fc1e6c07e6e",
+      "bytes": 8190
+    },
+    "inputs/root-native-acceptance.json": {
+      "sha256": "f4af612d22fb22d94db3dce0472bbdb84b9dd8c8d4615ccc611ebc135b467074",
+      "bytes": 3504
+    },
+    "insertions/SECURITY.md.insert.txt": {
+      "sha256": "780353e248197aa2a6a14f3af4c567f622c2657256547b18dd7e446b4bc9a1e2",
+      "bytes": 2428
+    },
+    "insertions/docs/legal/RELEASE_READINESS.md.insert.txt": {
+      "sha256": "1c860b105ca93b6cd9d1274065363b9c58a56f22330c2f66d52c78418c50a504",
+      "bytes": 2310
+    },
+    "preimages/SECURITY.md": {
+      "sha256": "48977c9ea1662265a795fc30daaa205ebb4a13ced2bbca1bc7ac608e1feb03ad",
+      "bytes": 17916
+    },
+    "preimages/docs/legal/RELEASE_READINESS.md": {
+      "sha256": "6d69d035716329bf3d170638815fe01672494b59378b4d2a960fd9020044176d",
+      "bytes": 17254
+    },
+    "proposed/SECURITY.md": {
+      "sha256": "7e66451d5d479647264782f15f11701e9a47e7a6935d3d08a9c68206e7c2b4c6",
+      "bytes": 20344
+    },
+    "proposed/docs/legal/RELEASE_READINESS.md": {
+      "sha256": "1a9a532a2e0b36a7e26b0a962ac729d184252ae46d28269b44e738eaac7ed8b5",
+      "bytes": 19564
+    },
+    "proposed/docs/process/PRIVACY_DIAGNOSTICS_PROGRESS_2026-10-09.md": {
+      "sha256": "c700079de8fdfcc6c23a5ed6761555e0e7ce1ace65a24776dc6990236bdff976",
+      "bytes": 12885
+    }
+  },
+  "selected_file_count": 17,
+  "selected_bytes": 124169,
+  "primary_writes": 0,
+  "git_mutations": 0,
+  "tests_or_runtime_jobs_started": 0,
+  "network_calls": 0,
+  "reset_scope_not_read_or_executed": true,
+  "current_full_terminal_not_adopted_or_polled": true,
+  "final_actual_gate_inputs_and_peer_required": true
+}

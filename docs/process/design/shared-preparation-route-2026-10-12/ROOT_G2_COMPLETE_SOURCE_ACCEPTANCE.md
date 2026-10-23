@@ -1,0 +1,3 @@
+# G2 source application acceptance
+
+Root verified final backend44 members and test3 members and all preimages, then applied backend5/tests2. FE6 sealed source was applied separately. Independent export review closed by typed consistent-head503 guard. Expired own-review defect corrected in root panel and combined FE/backend tests; lessons/new preview/save remain gated. Import ordering/format exact12 only; sealed proposal originals remain unchanged. Native2 only additive controls plus kind guard. Current source is complete but NOT_IMPORTED/NOT_RUN; initial pure142 is not persistence/full/UI proof. All old STOPs, main/production/no-quota guards unchanged.

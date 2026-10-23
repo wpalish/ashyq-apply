@@ -1,0 +1,13 @@
+{
+  "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-storage-source1",
+  "seal_sha256": "f7a436b4e558bc45521f7814303d8939b72c34972a247fedb1e79a83e3860546",
+  "test_preimage_sha256": "2600ce96177333b48dbcaddc71b343544ad645f535cb1210af23f821b5692054",
+  "reviewed_four_unchanged": {
+    "backend/app/models/admissions_actions.py": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+    "backend/app/models/applicant.py": "8bfa6ec53deb2913bd0e06f2aff1f455f57beb981087ed706ea91da0ff1caaff",
+    "backend/app/models/__init__.py": "4c81051140433a838e635edd1778fb94d2fe2e958478069a8ba5dfa2a5f7e2a9",
+    "backend/migrations/versions/d7a61e902024_admissions_actions.py": "b571ad0a7aea39bc8ef61697ebebe340e66366b62d8e35a66b194685f14e3244"
+  },
+  "original_first_packet_preserved": true,
+  "application_plan": "Verify first packet; apply its four non-test postimages and this repair test postimage, or apply first five then this exact-one overlay. Never import/run the known-defective first test blob."
+}

@@ -1,0 +1,159 @@
+{
+  "status": "PASS_CORRECTED_SYNTHETIC_COMPATIBILITY_NOT_QUALITY",
+  "sealed_utc": "2026-10-08T08:51:51.613498+00:00",
+  "source_head": "eb81c127c8a2a5154dd0d6f7ac115d8dc4464288",
+  "application_binding": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-application-ready.json",
+    "sha256": "ef73d979b4bd62db6b1d997793d1ada83c439f69e64ba39ab939d67b5b73d09d",
+    "bytes": 32647
+  },
+  "physical_source_files": 265,
+  "app": 242,
+  "migrations": 21,
+  "primary_pre_post_equals_candidate": true,
+  "applied_six_exact": true,
+  "previous_seed_all30_originals_unchanged": true,
+  "commands": [
+    {
+      "action": "heads",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/guarded_child.py",
+        "heads"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/candidate/backend",
+      "exit_code": 0,
+      "control": null,
+      "seconds": 0.20721458399202675,
+      "guard_sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "application_binding_sha256": "ef73d979b4bd62db6b1d997793d1ada83c439f69e64ba39ab939d67b5b73d09d",
+      "stdout_sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "safe_flags": {
+        "demo": true,
+        "browser": false,
+        "provider": "none",
+        "auto_migrate": false
+      },
+      "primary_265_equal": true,
+      "STOP_unchanged": true
+    },
+    {
+      "action": "migrate",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/guarded_child.py",
+        "migrate"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/candidate/backend",
+      "exit_code": 0,
+      "control": null,
+      "seconds": 0.3679545830236748,
+      "guard_sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "application_binding_sha256": "ef73d979b4bd62db6b1d997793d1ada83c439f69e64ba39ab939d67b5b73d09d",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+      "safe_flags": {
+        "demo": true,
+        "browser": false,
+        "provider": "none",
+        "auto_migrate": false
+      },
+      "primary_265_equal": true,
+      "STOP_unchanged": true
+    },
+    {
+      "action": "seed",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/guarded_child.py",
+        "seed"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/candidate/backend",
+      "exit_code": 0,
+      "control": null,
+      "seconds": 1.9001505420310423,
+      "guard_sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "application_binding_sha256": "ef73d979b4bd62db6b1d997793d1ada83c439f69e64ba39ab939d67b5b73d09d",
+      "stdout_sha256": "779ec4ad9d31cc9fb2e7404d30ef1a2e388cc4992c6fd30cbb4ea105eec88212",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "safe_flags": {
+        "demo": true,
+        "browser": false,
+        "provider": "none",
+        "auto_migrate": false
+      },
+      "primary_265_equal": true,
+      "STOP_unchanged": true
+    },
+    {
+      "action": "inspect",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/guarded_child.py",
+        "inspect"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/candidate/backend",
+      "exit_code": 0,
+      "control": null,
+      "seconds": 0.14983725000638515,
+      "guard_sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "application_binding_sha256": "ef73d979b4bd62db6b1d997793d1ada83c439f69e64ba39ab939d67b5b73d09d",
+      "stdout_sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "safe_flags": {
+        "demo": true,
+        "browser": false,
+        "provider": "none",
+        "auto_migrate": false
+      },
+      "primary_265_equal": true,
+      "STOP_unchanged": true
+    }
+  ],
+  "inspection": {
+    "heads": [
+      "d8e412c6a901"
+    ],
+    "database_revisions": [
+      "d8e412c6a901"
+    ],
+    "rows": 20,
+    "first": "University of Groningen",
+    "UBC": {
+      "university": "University of British Columbia",
+      "funding_classification": "FULL_TUITION",
+      "portfolio_bucket": "OUT_OF_BUDGET"
+    },
+    "run": {
+      "stage": "awaiting_user_decision",
+      "pages_checked": 98,
+      "pages_failed": 15,
+      "claims_recorded": 427
+    },
+    "all_undecided_no_approve": true,
+    "qualification": "Synthetic demo ordering; no live university or quality evidence."
+  },
+  "network_attempts": 0,
+  "provider_model_university_calls": 0,
+  "approvals": 0,
+  "STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "outer_execution": {
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/execute_seed.py",
+      "--application-binding",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-application-ready.json",
+      "--application-binding-sha256",
+      "ef73d979b4bd62db6b1d997793d1ada83c439f69e64ba39ab939d67b5b73d09d"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed",
+    "tool_chunk": "d76981",
+    "exit_code": 0
+  },
+  "qualification": "Four finite commands executed once on own empty SQLite/cache/exports; native socket/DNS denial. Synthetic compatibility only, no live/runtime admission/quality/scorer/full PASS."
+}

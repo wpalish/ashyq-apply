@@ -997,10 +997,12 @@ class TestRerankAndShortlist:
         stored = client.get(f"/api/profiles/{profile['id']}").json()
         assert stored["preferences"]["priorities"] == []
 
-        client.post(
+        accepted = client.post(
             f"/api/runs/{run['id']}/rerank",
             json={"priorities": ["career", "campus_life"], "persist": True},
+            headers={"X-Expected-Profile-Revision": str(stored["revision"])},
         )
+        assert accepted.status_code == 200, accepted.text
         stored = client.get(f"/api/profiles/{profile['id']}").json()
         assert stored["preferences"]["priorities"] == ["career", "campus_life"]
 

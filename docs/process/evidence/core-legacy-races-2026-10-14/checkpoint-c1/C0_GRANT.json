@@ -1,0 +1,10 @@
+{
+  "status": "C0_DIAGNOSTIC_ONLY_BEFORE_SERVER_CHANGES",
+  "baseline": "36bb824e",
+  "paths": {
+    "backend/tests/test_profile_write_concurrency.py": null
+  },
+  "contract": "Actual two Session P0 snapshots and real own HTTP updates, both orders, SQLite/PostgreSQL; missing rejection must be retained as OFF failure",
+  "runtime": "new own backend-native14 diagnostic, same all-IP deny/private PG guards/runnerlock/no parent app imports; source646 expected, outcome not assumed",
+  "stops": "all prior stops/heldout150/production unchanged"
+}

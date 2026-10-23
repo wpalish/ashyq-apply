@@ -1,0 +1,219 @@
+{
+  "scope": "current native source audit, not deployed exploit testing",
+  "findings": [
+    {
+      "id": "S1",
+      "priority": "P1",
+      "title": "Self-asserted email grants global moderation",
+      "confirmed": "Registration creates an active session for an unverified email; require_moderator authorizes that email against moderator_emails. No mailbox-ownership/verified-email check is on this chain. Reports can contain private-message excerpts and moderation can remove other users content.",
+      "source": [
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_auth.py",
+          "lines": [
+            85,
+            116
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_social.py",
+          "lines": [
+            1028,
+            1037
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_social.py",
+          "lines": [
+            1097,
+            1128
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/auth.py",
+          "lines": [
+            31,
+            34
+          ]
+        }
+      ],
+      "preconditions": "auth_enabled and auth_registration_enabled; configured moderator email is not already registered. Actual deployment values were not read.",
+      "minimal_fix": "Provision immutable account user IDs in a default-empty deployment allowlist; never derive privilege from self-asserted email or tenant-owner role. Do not auto-set email_verified.",
+      "offline_test": "Actual native registration with configured moderator email must receive 403 from queue and resolution, preserving reported content. Explicit trusted ID provisioning grants queue/remove to that account; another tenant owner remains denied.",
+      "verification": "Static native chain confirmed; isolated native reproduction/proposal is separate upcoming packet."
+    },
+    {
+      "id": "S2",
+      "priority": "P2",
+      "title": "Privacy refusal logs the rejected sensitive URL",
+      "confirmed": "Fetcher detects email/credential-like query fields, then warning logs url[:120]; redirect refusal logs current[:120]. The rejected secret/contact value is therefore eligible for operational logs even though no destination request is sent. QueryPrivacyError likewise includes rejected input repr; the runner stores/logs generic exception text.",
+      "source": [
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py",
+          "lines": [
+            414,
+            418
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py",
+          "lines": [
+            628,
+            635
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py",
+          "lines": [
+            973,
+            980
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/intent.py",
+          "lines": [
+            72,
+            90
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py",
+          "lines": [
+            471,
+            477
+          ]
+        }
+      ],
+      "preconditions": "A discovered or submitted research URL contains a sensitive value within the logged prefix, or intended field triggers QueryPrivacyError. Log reader access/forwarding is a deployment condition, not audited.",
+      "minimal_fix": "Log refusal kind and sanitized host only (or opaque request identifier); omit rejected input values from privacy exception messages. Do not rely on length truncation as redaction.",
+      "offline_test": "caplog tests for initial and redirect PII refusal assert synthetic token/email absent and outcome REFUSED_PRIVACY, no HTTP dispatch. Invalid intended field must produce value-free error/log/audit diagnostics.",
+      "verification": "Source-confirmed logging path; not executed, no real sensitive values read."
+    },
+    {
+      "id": "S3",
+      "priority": "P2",
+      "title": "No explicit no-store policy for private API responses",
+      "confirmed": "_secure applies browser security headers to normal and early refusals but no Cache-Control. Profile/account/result exports and social responses lack a common no-store boundary; avatar API currently explicitly allows private 24h caching.",
+      "source": [
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/main.py",
+          "lines": [
+            167,
+            182
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/main.py",
+          "lines": [
+            192,
+            232
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_profile.py",
+          "lines": [
+            266,
+            305
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_social.py",
+          "lines": [
+            1207,
+            1214
+          ]
+        }
+      ],
+      "preconditions": "A browser/proxy chooses to retain a private response. Actual production headers/cache exploit not tested; cookie authentication alone is not an explicit no-store response policy.",
+      "minimal_fix": "Request-path-aware _secure sets Cache-Control: no-store for /api and /api/*, including middleware refusals; leave non-API static paths unchanged. This intentionally overrides avatar API private caching.",
+      "offline_test": "Native middleware client for successful case/account/export/social, 401/404/403/429, explicit cacheable avatar/private response override; static assets retain ETag/Last-Modified/cache policy.",
+      "verification": "Source confirmed; narrow proposal follows separately."
+    },
+    {
+      "id": "S4",
+      "priority": "P2",
+      "title": "Password-reset consumption is not atomic",
+      "confirmed": "confirm_password_reset reads unused token, then changes password and sets used_at with ordinary ORM assignments. There is no row lock or conditional consume UPDATE. Two transactions which both read unused may both complete with last-writer password. Existing tests cover sequential reuse, not concurrent redemption.",
+      "source": [
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_account.py",
+          "lines": [
+            233,
+            252
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_account.py",
+          "lines": [
+            255,
+            273
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/auth.py",
+          "lines": [
+            90,
+            106
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_account_flows.py",
+          "lines": [
+            500,
+            511
+          ]
+        }
+      ],
+      "preconditions": "Password recovery enabled, possession of same valid reset token, two concurrently executing requests (production PostgreSQL). Actual deployed flag and runtime race were not tested.",
+      "minimal_fix": "Atomically claim token in same transaction using unused/expiry predicate and rowcount/RETURNING or lock-and-recheck, then password/session updates. Exactly one transaction may redeem it.",
+      "offline_test": "Owned PostgreSQL two-session barrier concurrent redemption: exactly one success, one invalid-token response, single reset audit; no second surviving password/session. Sequential/expired/disabled recovery remain intact.",
+      "verification": "Static concurrency gap only; queued separately, no patch or runtime claim in this task."
+    },
+    {
+      "id": "S5",
+      "priority": "P2",
+      "title": "Complete export/delete wording exceeds actual retained record scope",
+      "confirmed": "Profile export says complete record and deletion removes all of it, but AuditEvent has no profile/run FK and is retained; delete_profile adds another linked audit. Job.run_id and Entitlement.profile_id have no FK and profile/run deletion does not erase them. Content reports deliberately retain subject author ID/excerpt after subject content deletion. These are explicit retention exceptions, not erased applicant/account data.",
+      "source": [
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_profile.py",
+          "lines": [
+            368,
+            398
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/research.py",
+          "lines": [
+            209,
+            229
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/jobs.py",
+          "lines": [
+            54,
+            80
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/billing.py",
+          "lines": [
+            135,
+            144
+          ]
+        },
+        {
+          "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/social.py",
+          "lines": [
+            366,
+            400
+          ]
+        }
+      ],
+      "preconditions": "Case has audit/jobs/entitlement, or other user reports social content before its author deletes it. No unauthenticated access or over-tenant exposure is established by this finding.",
+      "minimal_fix": "State precise deletion and export exceptions, assign retention/erasure rules to operational jobs, minimal audits, billing linkage and moderation evidence. Cancel orphan research jobs and redact retained errors if necessary; do not blindly delete subscription accounting/security history.",
+      "offline_test": "Owned synthetic populated case export/delete: profile/runs/results/claims/conflicts removed; every surviving linked record enumerated with approved retention/redaction. Other-reporter report excerpt after author deletion follows disclosed retention.",
+      "verification": "Static relationships and product wording confirmed; retention periods/operator backups are unknown."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "status": "EXTERNAL_ONLY_NOT_GRANTED_NOT_APPLIED",
+  "paths": {
+    "frontend/src/components/AdmissionsRecoveryPanel.tsx": "445acf41d456ed154387c38f080b41b4c8770816e6b5fc7669c703f92661d04f",
+    "frontend/src/components/AdmissionsRecoveryPanel.test.tsx": "bace9b0bd205b697565e1896dd8a27314a28a178ab9100af4b2be1e41f93d19a"
+  },
+  "finding": "Source review: journal reserve limit disables all ACK checkboxes and cleanup, although raw current journal is valid64 and lower layer revalidates exactserver ACK before removal. Native8 currently running first real physical64 control; require original failure/cleanup before applying source fix.",
+  "scope": "Allow recovery only for explicit limit alongside null; invalid/ownership/drift stay blocked. No allocation/auto retry/delete change; underlying own server receipt/index/fence/hash checks unchanged."
+}

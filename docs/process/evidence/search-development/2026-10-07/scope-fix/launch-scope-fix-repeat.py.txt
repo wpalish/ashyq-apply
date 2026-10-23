@@ -1,0 +1,61 @@
+"""Freeze one authorized same-cohort observation and retain original output."""
+import hashlib
+import json
+import os
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
+
+WORK = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO = WORK / 'ashyq-apply'
+EVIDENCE = REPO / 'docs/process/evidence/search-development/2026-10-07'
+STOP = WORK / 'development-STOP.json'
+REQUEST = EVIDENCE / 'scope-fix-repeat-request.prepared.json'
+MANIFEST = WORK / 'scope-fix-repeat-launch.json'
+
+
+def git(*args):
+    return subprocess.check_output(['git', *args], cwd=REPO, text=True).strip()
+
+
+def now():
+    return datetime.now(timezone.utc).isoformat()
+
+
+assert not STOP.exists(), 'Prior global stop must not be reset or bypassed'
+assert not MANIFEST.exists(), 'This prepared observation must not run twice'
+assert not git('status', '--porcelain'), 'Freeze a clean committed source first'
+assert (REPO / 'backend/.env').is_symlink(), 'Restore existing configuration before live observation'
+request = json.loads(REQUEST.read_text())
+baseline = json.loads((EVIDENCE / 'baseline-request.prepared.json').read_text())
+assert request['cohort'] == baseline['cohort']
+assert request['profile_sha256'] == baseline['profile_sha256']
+record = dict(request)
+record.update(status='RUNNING', source_pin=git('rev-parse', 'HEAD'), started_at=now())
+record['app_tree'] = git('rev-parse', 'HEAD:backend/app')
+paths = [
+    'backend/evaluation/research/live.py', 'backend/scripts/canary_discovery.py',
+    'backend/evaluation/research/mapping.py',
+    'backend/app/adapters/requirements/web_requirements.py',
+    'backend/app/adapters/requirements/section_scope.py',
+]
+record['source_file_sha256'] = {
+    p: hashlib.sha256((REPO / p).read_bytes()).hexdigest() for p in paths
+}
+MANIFEST.write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
+env = os.environ.copy()
+env.update(request['environment_overrides'])
+with (WORK / 'scope-fix-repeat-parent.log').open('w') as log:
+    result = subprocess.run(request['arguments'], cwd=REPO / 'backend', env=env,
+                            stdout=log, stderr=subprocess.STDOUT)
+record.update(status='PROCESS_RETURNED', exit_code=result.returncode, finished_at=now(),
+              shared_stop_present=STOP.exists())
+record['source_unchanged_during_capture'] = all(
+    hashlib.sha256((REPO / p).read_bytes()).hexdigest() == digest
+    for p, digest in record['source_file_sha256'].items()
+) and git('rev-parse', 'HEAD') == record['source_pin']
+MANIFEST.write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({k: record[k] for k in [
+    'source_pin', 'exit_code', 'shared_stop_present', 'source_unchanged_during_capture'
+]}))
+raise SystemExit(result.returncode)

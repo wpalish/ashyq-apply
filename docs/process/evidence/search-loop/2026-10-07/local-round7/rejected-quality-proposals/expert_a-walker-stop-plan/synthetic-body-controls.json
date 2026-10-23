@@ -1,0 +1,67 @@
+[
+  {
+    "case": "synthetic_funding_copy_without_funding_heading",
+    "url": "https://example.edu/bachelors/computer-science",
+    "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Eligibility</h2><p>This page lists fee waivers for students already admitted to another degree. The award covers tuition fees and its annual value is 5000 EUR. This support page does not offer a degree.</p></main></body></html>",
+    "html_sha256": "60f9517a1e278623690ef5db507c14205f15a0431ecc835926c33ebe7191eb8c",
+    "classification": {
+      "page_type": "program_detail",
+      "confidence": 0.75,
+      "signals": [
+        "single programme 'BSc Computer Science' at bachelor level"
+      ],
+      "title": "BSc Computer Science",
+      "subject": "BSc Computer Science",
+      "degree_level": "bachelor",
+      "language_of_instruction": null,
+      "academic_year": null,
+      "language_evidence": null
+    },
+    "profile_rejection": null,
+    "provenance": "entirely synthetic; no official university fact"
+  },
+  {
+    "case": "synthetic_older_population_campus_first",
+    "url": "https://example.edu/bachelors/computer-science",
+    "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This bachelor programme at Satellite Campus is for continuing domestic students. Academic year 2019/20. International applications are closed.</p></main></body></html>",
+    "html_sha256": "f71d77a521e961b83b464e1f9c11169d928f492996fd40f98daa9b5140a197fc",
+    "classification": {
+      "page_type": "intake_specific_program",
+      "confidence": 0.85,
+      "signals": [
+        "single programme 'BSc Computer Science' at bachelor level",
+        "academic year 2019/20"
+      ],
+      "title": "BSc Computer Science",
+      "subject": "BSc Computer Science",
+      "degree_level": "bachelor",
+      "language_of_instruction": null,
+      "academic_year": "2019/20",
+      "language_evidence": null
+    },
+    "profile_rejection": null,
+    "provenance": "entirely synthetic; no official university fact"
+  },
+  {
+    "case": "synthetic_current_international_second",
+    "url": "https://example.edu/bachelors/computer-science-international-2027",
+    "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>The bachelor programme teaches first-year programming and second-year algorithms.</p><p>International applicants for academic year 2027/28 may apply.</p></main></body></html>",
+    "html_sha256": "31e93d719117e3d60a1c39ec2e126295bca4a43bd1caf08001c08817adaecf34",
+    "classification": {
+      "page_type": "intake_specific_program",
+      "confidence": 0.85,
+      "signals": [
+        "single programme 'BSc Computer Science' at bachelor level",
+        "academic year 2027/28"
+      ],
+      "title": "BSc Computer Science",
+      "subject": "BSc Computer Science",
+      "degree_level": "bachelor",
+      "language_of_instruction": null,
+      "academic_year": "2027/28",
+      "language_evidence": null
+    },
+    "profile_rejection": null,
+    "provenance": "entirely synthetic; no official university fact"
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-10-07T20:11:36.698860+00:00",
+  "source_sha256": {
+    "backend/app/adapters/discovery/live_discovery.py": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+    "backend/evaluation/research/live.py": "e89734bb6f550dad4ce3328f1073c6b9fa9a6437e6a73fc41337f1507b7f90d8",
+    "backend/tests/test_subject_phrase_guard.py": "0320d636c44a1d2117cc4c46cd18353baf2c04accb9e7107867234afcc71aaef",
+    "backend/tests/test_subject_phrase_capture.py": "d051c525527f397eb4889e6195d6f132015feb4439875211d20e2117ae773082"
+  },
+  "commands": [
+    {
+      "name": "ruff",
+      "arguments": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 1
+    }
+  ],
+  "finished_at": "2026-10-07T20:11:36.788024+00:00",
+  "dotenv_restored": true,
+  "source_unchanged": true
+}

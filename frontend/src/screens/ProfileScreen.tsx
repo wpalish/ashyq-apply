@@ -1,3 +1,10 @@
+import { readPublicSearchIntent, clearPublicSearchIntent } from '@/lib/publicSearchIntent';
+import { ProfileRecoveryPanel } from '@/components/ProfileRecoveryPanel';
+import { useTranslation } from '@/lib/useTranslation';
+import { dateTime, localDate } from '@/lib/format';
+import { BookHelp } from '@/components/BookUI';
+import { BookActivities } from '@/components/BookActivities';
+import { User, GraduationCap, Trophy, Coins } from '@phosphor-icons/react';
 /**
  * Screen 01 — Applicant profile.
  *
@@ -6,13 +13,20 @@
  * decide which blanks are worth filling.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '@/api/client';
 import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
-import { Chip, Field, Notice, Panel } from '@/components/primitives';
+import { Chip, Field, Notice, Panel, SaveFeedback } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
 import type { TranscriptSuggestion } from '@/types';
+import type { G3LiveCaseIdentity } from '@/lib/admissionsActionsRecovery';
+
+type GradeInput = { identity: G3LiveCaseIdentity; fingerprint: string; generation: number };
+type SuggestionInput = { input: GradeInput; serial: number; fields: Record<string, string> };
+function sameCase(a: G3LiveCaseIdentity, b: G3LiveCaseIdentity): boolean {
+  return a.scope === b.scope && a.profile_id === b.profile_id && a.case_epoch === b.case_epoch;
+}
 
 /** "4.82 out of 5", not "[object Object]". */
 function describe(value: unknown): string {
@@ -35,13 +49,105 @@ const SEVERITY_LABEL: Record<string, string> = {
 const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & scores', 'Activities & achievements', 'Review'] as const;
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
+  const { locale } = useTranslation(); const ru=locale!=='en';
   const {
-    profileDraft, setProfileDraft, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty,
+    profileDraft, setProfileDraft, currentProfileDraft, currentAdmissionsCase, validation, saveProfile, loading,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch, profileRecovery, hydrated,
   } = useStore();
+  const [recoveryFormOpen,setRecoveryFormOpen]=useState(false);
+  useEffect(()=>setRecoveryFormOpen(false),[profileRecovery?.entry?.command.command_id,profileRecovery?.server?.revision]);
+  const toolCaseKey = JSON.stringify(currentAdmissionsCase());
+  let gradeGeneration = -1;
+  try { gradeGeneration = currentProfileDraft().gpa_generation; } catch { /* An obsolete workspace exposes no input. */ }
+  const mounted = useRef(true);
+  const conversionSerial = useRef(0);
+  const transcriptSerial = useRef(0);
+  const methodsSerial = useRef(0);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  const captureGrade = (): GradeInput => {
+    const current = currentProfileDraft();
+    return { identity: currentAdmissionsCase(), fingerprint: JSON.stringify(get(current.draft, ['academics', 'gpa']) ?? null), generation: current.gpa_generation };
+  };
+  const gradeIsCurrent = (input: GradeInput, serial: number, currentSerial: number): boolean => {
+    if (!mounted.current || serial !== currentSerial) return false;
+    try {
+      const latest = captureGrade();
+      return sameCase(input.identity, latest.identity) && input.generation === latest.generation && input.fingerprint === latest.fingerprint;
+    } catch { return false; }
+  };
+  const [publicIntent, setPublicIntent] = useState(readPublicSearchIntent);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [step, setStep] = useState(1);
+  const [saveFailed, setSaveFailed] = useState(false);
+  useEffect(()=>{
+    // A compared/read server version can supersede the refused local attempt.
+    // This clears only stale presentation; it neither acknowledges nor retries a write.
+    if(savedProfile&&!dirty&&!profileRecovery) setSaveFailed(false);
+  },[savedProfile,dirty,profileRecovery]);
+  const failedDraft = useRef<string | null>(null);
+  const saveOwner = useRef({ epoch: caseEpoch, attempt: 0 });
+  saveOwner.current.epoch = caseEpoch;
+  useEffect(() => {
+    const owner = saveOwner.current;
+    ++owner.attempt;
+    failedDraft.current = null;
+    setSaving(false); setSaved(false); setSaveFailed(false);
+    return () => { ++owner.attempt; };
+  }, [caseEpoch]);
+  useEffect(() => {
+    // A failed unchanged draft waits for Save. A new semantic edit may autosave,
+    // including list/transcript/conversion changes made outside input binding.
+    if (saveFailed && failedDraft.current !== JSON.stringify(profileDraft)) {
+      failedDraft.current = null;
+      setSaveFailed(false);
+    }
+  }, [profileDraft, saveFailed]);
+  const commitProfile = useCallback(async () => {
+    const attemptedDraft = JSON.stringify(profileDraft);
+    const identity = currentAdmissionsCase();
+    const attempt = ++saveOwner.current.attempt;
+    const current = () => saveOwner.current.epoch === caseEpoch && saveOwner.current.attempt === attempt;
+    failedDraft.current = null;
+    setSaving(true); setSaveFailed(false);
+    try {
+      await saveProfile();
+      if (current()) setSaved(true);
+      const now = currentAdmissionsCase();
+      const sameOwner = sameCase(identity, now) || (identity.profile_id === null && identity.scope === now.scope && identity.case_epoch === now.case_epoch);
+      return current() && sameOwner && JSON.stringify(currentProfileDraft().draft) === attemptedDraft;
+    } catch {
+      if (current()) {
+        failedDraft.current = attemptedDraft;
+        setSaved(false); setSaveFailed(true);
+      }
+      return false;
+    } finally {
+      if (current()) setSaving(false);
+    }
+  }, [saveProfile, caseEpoch, profileDraft, currentAdmissionsCase, currentProfileDraft]);
+  const receiptConfirmsCurrentDraft = !dirty && !profileRecovery && Boolean(savedProfile?.write_receipt);
+  const sections = ['personal', 'academics', 'exams', 'activities', 'review'];
+  const [step, setStep] = useState(() => Math.max(0, sections.indexOf(new URLSearchParams(window.location.hash.split('?')[1]??'').get('section')??'personal')) + 1);
+  const goToStep = (next: number) => {  setStep(next); if (ru) window.location.hash = `#/profile?section=${sections[next-1]}`; };
+  const stepRef = useRef(step); stepRef.current = step;
+  useEffect(() => {
+    const followSection = () => {
+      const [route,query] = window.location.hash.split('?');
+      if (route !== '#/profile') return;
+      const section = new URLSearchParams(query ?? '').get('section');
+      const index = ['personal', 'academics', 'exams', 'activities', 'review'].indexOf(section ?? 'personal');
+      if (index >= 0) {  setStep(index + 1); }
+    };
+    window.addEventListener('hashchange',followSection);
+    return () => window.removeEventListener('hashchange',followSection);
+  }, []);
+  const continueStep = async () => {
+    const before = step;
+    if (ru && !(await commitProfile())) return;
+    if (stepRef.current !== before) return;
+    if (before < PROFILE_STEPS.length) goToStep(before + 1);
+    else onNext();
+  };
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
   const [methods, setMethods] = useState<
     { key: string; description: string; source: string; caveat: string; to_scale: string }[]
@@ -52,18 +158,29 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const scaleLabel = String(get(profileDraft, ['academics', 'gpa', 'raw_scale_label']) ?? '');
 
   useEffect(() => {
-    if (!scaleLabel) return;
-    api.conversionMethods(scaleLabel).then((r) => setMethods(r.methods)).catch(() => setMethods([]));
-  }, [scaleLabel]);
+    const clock = methodsSerial;
+    const serial = ++methodsSerial.current;
+    const identity = currentAdmissionsCase();
+    const current = () => {
+      if (!mounted.current || serial !== methodsSerial.current) return false;
+      try {
+        return sameCase(identity, currentAdmissionsCase())
+          && scaleLabel === String(get(currentProfileDraft().draft, ['academics', 'gpa', 'raw_scale_label']) ?? '');
+      } catch { return false; }
+    };
+    setMethods([]);
+    if (scaleLabel) api.conversionMethods(scaleLabel).then(r => { if (current()) setMethods(r.methods); }).catch(() => { if (current()) setMethods([]); });
+    return () => { ++clock.current; };
+  }, [scaleLabel, caseEpoch, toolCaseKey, currentAdmissionsCase, currentProfileDraft]);
 
   useEffect(() => {
-    if (!savedProfile || !dirty || loading) return;
+    // Recovered edits stay local until Save, as the recovery notice promises.
+    if (!savedProfile || !dirty || loading || saving || saveFailed || draftRestored || profileRecovery) return;
     const timer = window.setTimeout(() => {
-      setSaving(true);
-      void saveProfile().then(() => setSaved(true)).catch(() => setSaved(false)).finally(() => setSaving(false));
+      void commitProfile();
     }, 1500);
     return () => window.clearTimeout(timer);
-  }, [savedProfile, dirty, loading, profileDraft, saveProfile]);
+  }, [savedProfile, dirty, loading, saving, saveFailed, draftRestored, profileDraft, commitProfile, profileRecovery]);
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -84,22 +201,35 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const [suggestions, setSuggestions] = useState<TranscriptSuggestion[]>([]);
   const [transcriptNote, setTranscriptNote] = useState('');
   const [transcriptBusy, setTranscriptBusy] = useState(false);
+  const [suggestionInput, setSuggestionInput] = useState<SuggestionInput | null>(null);
+  const gradeFingerprint = JSON.stringify(get(profileDraft, ['academics', 'gpa']) ?? null);
+  // Clearing the rendered tools complements the synchronous completion guard.
+  useEffect(() => {
+    ++conversionSerial.current; ++transcriptSerial.current;
+    setConversionError(null); setSuggestions([]); setSuggestionInput(null); setTranscriptNote(''); setTranscriptBusy(false);
+  }, [caseEpoch, gradeFingerprint, gradeGeneration, toolCaseKey]);
 
   const readTranscript = async (file: File | undefined) => {
     if (!file) return;
+    const serial = ++transcriptSerial.current;
+    const input = captureGrade();
+    const capturedDraft = currentProfileDraft().draft;
     setTranscriptBusy(true);
     setSuggestions([]);
+    setSuggestionInput(null); setTranscriptNote('');
     try {
       const reading = await api.readTranscript(file);
+      if (!gradeIsCurrent(input, serial, transcriptSerial.current)) return;
       setSuggestions(reading.suggestions);
+      setSuggestionInput({ input, serial, fields: Object.fromEntries(reading.suggestions.map(s => [s.field, JSON.stringify(get(capturedDraft, s.field.split('.') as Path) ?? null)])) });
       setTranscriptNote(reading.note);
     } catch (e) {
       // The draft is not touched on failure, for the same reason the grade
       // conversion leaves it alone: a refused read must not cost the applicant
       // what they have already typed.
-      setTranscriptNote(e instanceof ApiError ? e.message : 'That file could not be read.');
+      if (gradeIsCurrent(input, serial, transcriptSerial.current)) setTranscriptNote(e instanceof ApiError ? e.message : 'That file could not be read.');
     } finally {
-      setTranscriptBusy(false);
+      if (gradeIsCurrent(input, serial, transcriptSerial.current)) setTranscriptBusy(false);
     }
   };
 
@@ -110,9 +240,13 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
    * applicant calls their grading system. Writing the whole object in would
    * blank the scale name they had already typed.
    */
-  const applySuggestion = (suggestion: TranscriptSuggestion) => {
+  const applySuggestion = (suggestion: TranscriptSuggestion, binding: SuggestionInput | null) => {
+    if (!binding || !gradeIsCurrent(binding.input, binding.serial, transcriptSerial.current)) return;
     const path = suggestion.field.split('.') as Path;
+    if (binding.fields[suggestion.field] !== JSON.stringify(get(currentProfileDraft().draft, path) ?? null)) return;
     setProfileDraft((d) => {
+      if (!gradeIsCurrent(binding.input, binding.serial, transcriptSerial.current)
+        || binding.fields[suggestion.field] !== JSON.stringify(get(d, path) ?? null)) return d;
       if (suggestion.value && typeof suggestion.value === 'object') {
         return Object.entries(suggestion.value as Record<string, unknown>)
           .filter(([, v]) => v !== '' && v !== null && v !== undefined)
@@ -128,13 +262,17 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     // The draft is only touched on success. The old code parsed the response
     // without checking it, so a 400 replaced the applicant's GPA object with
     // {detail: "..."} — their grades, gone, with no error shown.
-    const gpa = get(profileDraft, ['academics', 'gpa']) as Record<string, unknown>;
+    const input = captureGrade();
+    const serial = ++conversionSerial.current;
+    const gpa = get(currentProfileDraft().draft, ['academics', 'gpa']) as Record<string, unknown>;
     setConversionError(null);
     try {
       const converted = await api.previewConversion(gpa, key);
-      setProfileDraft((d) => setIn(d, ['academics', 'gpa'], converted));
+      if (!gradeIsCurrent(input, serial, conversionSerial.current)) return;
+      setProfileDraft(d => gradeIsCurrent(input, serial, conversionSerial.current) ? setIn(d, ['academics', 'gpa'], converted) : d);
+      setSaved(false);
     } catch (e) {
-      setConversionError(e instanceof ApiError ? e.message : 'The conversion could not be applied.');
+      if (gradeIsCurrent(input, serial, conversionSerial.current)) setConversionError(e instanceof ApiError ? e.message : 'The conversion could not be applied.');
     }
   };
 
@@ -154,19 +292,28 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     setProfileDraft((draft) => setIn(draft, path, current.filter((_, itemIndex) => itemIndex !== index)));
   };
 
+  if (hydrated === false) return <div className="panel" role="status">Loading your saved applicant profile…</div>;
   return (
     <>
+      {profileRecovery && <ProfileRecoveryPanel asPage={ru&&!recoveryFormOpen} onContinue={section=>{setRecoveryFormOpen(true);if(section)setStep(section==='academics'?2:section==='activities'?4:1);window.requestAnimationFrame(()=>{(document.querySelector('.profile-editing-wrapper .screen__title') as HTMLElement|null)?.focus();});}} />}
+      <div className="profile-editing-wrapper" hidden={ru&&Boolean(profileRecovery)&&!recoveryFormOpen}>
+      {publicIntent && !savedProfile && <Notice><div className="stack stack--tight"><strong>Your search starts here: {publicIntent.subject}</strong><p className="small">{publicIntent.country || 'Worldwide'} · {publicIntent.budget === null ? 'Budget not decided' : `Up to USD ${publicIntent.budget.toLocaleString()} per year`}. Add these preferences to this draft, then complete your profile.</p><div className="row"><button className="btn btn--primary" onClick={() => { setProfileDraft(draft => { let next = setIn(draft, ['context', 'intended_fields'], [publicIntent.subject]); next = setIn(next, ['preferences', 'preferred_countries'], publicIntent.country ? [publicIntent.country] : []); if (publicIntent.budget !== null) { next = setIn(next, ['funding', 'max_annual_budget'], publicIntent.budget); next = setIn(next, ['funding', 'budget_currency'], 'USD'); } return next; }); clearPublicSearchIntent(); setPublicIntent(null); }}>Use these preferences</button><button className="btn btn--ghost" onClick={() => { clearPublicSearchIntent(); setPublicIntent(null); }}>Start blank</button></div></div></Notice>}
+      <a className="workspace-back" href="#/home">← На главную</a>
       <div className="screen__head">
-        <p className="screen__eyebrow">CREATE YOUR PROFILE · {String(step).padStart(2, '0')} / 05</p>
-        <h1 className="screen__title">Tell us about <span className="find-yellow">yourself.</span></h1>
+        {ru&&<div className="profile-save-status"><strong>{profileRecovery?'Нужно проверить сохранение':saving?'Сохраняем…':saveFailed?'Сохранить не удалось':dirty?'Есть несохранённые изменения':receiptConfirmsCurrentDraft || saved?'Изменения сохранены':savedProfile?'Загружена сохранённая анкета':'Анкета ещё не сохранена'}</strong>{savedProfile?.updated_at&&<small>Последняя запись: {/T.*(?:Z|[+-]\d{2}:\d{2})$/.test(savedProfile.updated_at) ? dateTime(savedProfile.updated_at) : localDate(savedProfile.updated_at.slice(0,10),'ru-RU')}</small>}</div>}
+        <p className="screen__eyebrow">{ru?'Профиль абитуриента':'Applicant profile'}</p>
+        <h1 className="screen__title" tabIndex={-1}>{ru ? ['','Личные данные','Образование и оценки','Экзамены и сертификаты','Активности и достижения','Проверь свой профиль'][step] : step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
         <p className="screen__lede">
-          A few simple details help us find the right matches for you. Your information stays editable.
+          {ru?(step===4?'Расскажи о внеучебной деятельности, проектах, волонтёрстве и своих достижениях. Здесь ты можешь добавить то, что показывает твои интересы и сильные стороны.':step===2||step===3?'Добавь сведения об образовании, оценках и экзаменах. Это поможет проверить требования выбранных программ.':'Заполни основную информацию. Её можно будет изменить в любой момент.'):'A few simple details help us find the right matches for you. Your information stays editable.'}
         </p>
       </div>
 
-      <nav className="profile-steps" aria-label="Profile steps">
-        {PROFILE_STEPS.map((name, index) => <button key={name} type="button" aria-current={step === index + 1 ? 'step' : undefined} onClick={() => setStep(index + 1)}><span>{index + 1}</span>{name}</button>)}
-      </nav>
+      <div id="profile-editing" className={`profile-layout ${ru?'book-russian':''}`}>
+      <aside className="profile-rail" aria-label={ru?'Разделы анкеты':'Profile sections'}><nav className="profile-steps" aria-label="Profile steps">
+        <div className="profile-rail-heading"><h2>{ru?'Мой профиль':'My profile'}</h2><p>{ru?'Заполни профиль, чтобы мы могли подобрать для тебя подходящие программы.':'Build your profile so we can research relevant programmes.'}</p></div>
+        {PROFILE_STEPS.map((name,index)=>{const Icon=[User,GraduationCap,GraduationCap,Trophy,User][index]??User;return <button key={name} data-step={index+1} type="button" aria-current={step===index+1?'step':undefined} onClick={()=>goToStep(index+1)}><span>{ru?<Icon size={22}/>:index+1}</span>{ru?['Личные данные','Учёба','Экзамены','Активности','Проверка'][index]:name}</button>;})}
+        {ru&&<button type="button" disabled={loading || saving} onClick={()=>{void commitProfile().then(accepted=>{if(accepted)onNext();});}}><span><Coins size={22}/></span>Бюджет</button>}
+      </nav><BookHelp>{ru?<><strong>Зачем это нужно?</strong><br/>На основе профиля мы подбираем программы, которые соответствуют твоим целям и возможностям.</>:'Your context helps research programmes that fit your goals.'}</BookHelp></aside>
 
       <div className="stack stack--loose">
         {draftRestored && (
@@ -185,7 +332,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </Notice>
         )}
 
-        {restored && savedProfile && (
+        {restored && savedProfile && !ru && (
           <Notice kind="info">
             <div>
               Loaded <strong>{String(profileDraft.display_name)}</strong> from your saved profile.
@@ -195,9 +342,10 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         )}
 
         <div className="profile-step-content" hidden={step !== 1}>
+        <details className="profile-demo-tools profile-demo-chooser"><summary>{ru?'Тестовые данные и чистая анкета':'Demo data and blank profile'}</summary>
         <Panel
-          title="Start from"
-          hint="Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears."
+          title={ru?'Черновик и тестовый пример':'Start from'}
+          hint={ru?'Эти действия заменяют текущий черновик. Для другого абитуриента создай новую анкету в меню рабочего пространства.':'These actions replace the current draft. Use New case in the workspace menu for another applicant.'}
         >
           <div className="row">
             <button
@@ -205,14 +353,14 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               data-testid="clear-profile"
               onClick={() => (savedProfile ? setConfirmingReplace('clear') : clearProfile())}
             >
-              Blank profile
+              {ru?'Очистить поля черновика':'Blank profile'}
             </button>
             <button
               className="btn btn--sm"
               data-testid="load-demo-profile"
               onClick={() => (savedProfile ? setConfirmingReplace('demo') : loadDemoProfile())}
             >
-              Load synthetic demo
+              {ru?'Заполнить тестовым примером':'Load synthetic demo'}
             </button>
             {String(profileDraft.display_name).includes('synthetic') && (
               <Chip tone="demo">synthetic demo data</Chip>
@@ -221,8 +369,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           {confirmingReplace && (
             <Notice kind="warn">
               <div style={{ flex: 1 }}>
-                <strong>Replace the profile you have saved?</strong> The saved copy is not deleted,
-                but your unsaved edits are lost.
+                <strong>{ru?'Заменить текущий черновик?':'Replace the profile you have saved?'}</strong> {ru?'Сохранённая версия останется на сервере до следующего сохранения. Несохранённые правки будут потеряны.':'The saved copy is not deleted, but your unsaved edits are lost.'}
                 <div className="row" style={{ marginTop: 'var(--space-3)' }}>
                   <button
                     className="btn btn--sm btn--danger"
@@ -233,20 +380,31 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                       setConfirmingReplace(null);
                     }}
                   >
-                    Replace
+                    {ru?'Заменить черновик':'Replace'}
                   </button>
                   <button className="btn btn--sm" onClick={() => setConfirmingReplace(null)}>
-                    Keep editing
+                    {ru?'Продолжить редактирование':'Keep editing'}
                   </button>
                 </div>
               </div>
             </Notice>
           )}
         </Panel>
+        </details>
 
-        <Panel title="Application context" hint="What you are applying for, and from where.">
+        {ru && <Panel title="Личные данные"><div className="grid-2">
+          <Field label="Имя" htmlFor="book-first-name"><input id="book-first-name" autoComplete="given-name" value={String(profileDraft.display_name??'').split(' ')[0]} onChange={event=>{const rest=String(profileDraft.display_name??'').split(' ').slice(1).join(' ');setProfileDraft(d=>setIn(d,['display_name'],event.target.value+(rest?' '+rest:'')));setSaved(false);}}/></Field>
+          <Field label="Фамилия" htmlFor="book-last-name"><input id="book-last-name" autoComplete="family-name" value={String(profileDraft.display_name??'').split(' ').slice(1).join(' ')} onChange={event=>{const first=String(profileDraft.display_name??'').split(' ')[0];setProfileDraft(d=>setIn(d,['display_name'],first+' '+event.target.value));setSaved(false);}}/></Field>
+          <Field label="Гражданство" htmlFor="book-citizenship"><input id="book-citizenship" {...bind(['context','citizenship'])}/></Field><Field label="Страна проживания" htmlFor="book-residence"><input id="book-residence" {...bind(['context','country_of_residence'])}/></Field>
+        </div><div className="book-form-section"><h2>Образование</h2><div className="grid-2"><Field label="Уровень обучения" htmlFor="book-level"><select id="book-level" {...bind(['context','level'])}><option value="foundation">Подготовительная программа</option><option value="bachelor">Бакалавриат</option><option value="master">Магистратура</option><option value="phd">Докторантура</option></select></Field><Field label="Система образования" htmlFor="book-education"><input id="book-education" {...bind(['context','education_system'])}/></Field><Field label="Страна обучения" htmlFor="book-education-country"><input id="book-education-country" {...bind(['context','education_country'])}/></Field><Field label="Окончание школы" htmlFor="book-graduation"><input id="book-graduation" type="date" {...bind(['context','graduation_date'])}/></Field></div></div>
+          <div className="book-form-section"><h2>Планы</h2><div className="grid-2"><Field label="Планируемый год поступления" htmlFor="book-year"><input id="book-year" type="number" min={2024} max={2035} {...bind(['context','intake_year'],'number')}/></Field><Field label="Желаемая страна обучения" htmlFor="book-countries"><CommaSeparatedInput id="book-countries" placeholder="Любая страна" {...bindList(['preferences','preferred_countries'])}/></Field></div></div>
+        </Panel>}
+        {ru ? <details className="profile-demo-tools"><summary>Дополнительные данные анкеты</summary>        <Panel title={ru?'Контекст поступления':'Application context'} hint="What you are applying for, and from where.">
           <div className="grid-2">
-            <Field label="Level" htmlFor="level">
+            <Field label="Applicant display name" htmlFor="applicant-name" hint="A label for your private applicant case. It is excluded from university search queries.">
+              <input id="applicant-name" autoComplete="name" maxLength={120} {...bind(['display_name'])} />
+            </Field>
+            <Field label={ru?'Уровень':'Level'} htmlFor="level">
               <select id="level" {...bind(['context', 'level'])}>
                 <option value="foundation">Foundation</option>
                 <option value="bachelor">Bachelor</option>
@@ -295,16 +453,71 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               <input id="grad" type="date" {...bind(['context', 'graduation_date'])} />
             </Field>
           </div>
-        </Panel>
+        </Panel></details> : <>        <Panel title={ru?'Контекст поступления':'Application context'} hint="What you are applying for, and from where.">
+          <div className="grid-2">
+            <Field label="Applicant display name" htmlFor="applicant-name" hint="A label for your private applicant case. It is excluded from university search queries.">
+              <input id="applicant-name" autoComplete="name" maxLength={120} {...bind(['display_name'])} />
+            </Field>
+            <Field label={ru?'Уровень':'Level'} htmlFor="level">
+              <select id="level" {...bind(['context', 'level'])}>
+                <option value="foundation">Foundation</option>
+                <option value="bachelor">Bachelor</option>
+                <option value="master">Master</option>
+                <option value="phd">PhD</option>
+              </select>
+            </Field>
+            <Field label="Field of study" htmlFor="field" hint="Drives which programmes are searched.">
+              <CommaSeparatedInput id="field" {...bindList(['context', 'intended_fields'])} />
+            </Field>
+            <Field label="Intake term" htmlFor="term">
+              <select id="term" {...bind(['context', 'intake_term'])}>
+                <option value="fall">Fall</option>
+                <option value="spring">Spring</option>
+                <option value="summer">Summer</option>
+                <option value="winter">Winter</option>
+              </select>
+            </Field>
+            <Field label="Intake year" htmlFor="year">
+              <input id="year" type="number" min={2024} max={2035} {...bind(['context', 'intake_year'], 'number')} />
+            </Field>
+            <Field label="Citizenship" htmlFor="citizenship"
+                   hint="Decides which scholarships you are eligible for at all.">
+              <input id="citizenship" {...bind(['context', 'citizenship'])} />
+            </Field>
+            <Field label="Country of residence" htmlFor="residence">
+              <input id="residence" {...bind(['context', 'country_of_residence'])} />
+            </Field>
+            <Field label="Country of education" htmlFor="education-country">
+              <input id="education-country" {...bind(['context', 'education_country'])} />
+            </Field>
+            <Field label="Additional nationality (if any)" htmlFor="second-citizenship" hint="Leave blank if none.">
+              <input id="second-citizenship" {...bind(['context', 'second_citizenship'])} />
+            </Field>
+            <Field label="Education system" htmlFor="edsys">
+              <input id="edsys" {...bind(['context', 'education_system'])} />
+            </Field>
+            <Field label="Curriculum type" htmlFor="curriculum-type">
+              <select id="curriculum-type" {...bind(['context', 'curriculum_type'])}>
+                {['national', 'ib', 'a_level', 'ap', 'us_high_school', 'other'].map((value) => (
+                  <option key={value} value={value}>{value.replace('_', ' ')}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Finishing school on" htmlFor="grad">
+              <input id="grad" type="date" {...bind(['context', 'graduation_date'])} />
+            </Field>
+          </div>
+        </Panel></>}
+
         </div>
 
         <div className="profile-step-content" hidden={step !== 2}>
         <Panel
-          title="Read it off your transcript"
-          hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
+          title={ru?'Чтение табеля':'Read it off your transcript'}
+          hint={ru?'Необязательно. Файл читается без сохранения. Предложенные значения попадут в анкету только после твоего подтверждения.':'Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so.'}
         >
           <div className="stack stack--tight">
-            <Field label="Transcript (PDF)" htmlFor="transcript-file">
+            <Field label={ru?'Табель или выписка (PDF)':'Transcript (PDF)'} htmlFor="transcript-file">
               <input
                 id="transcript-file"
                 type="file"
@@ -329,7 +542,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                   type="button"
                   className="btn btn--sm"
                   data-testid={`apply-${suggestion.field}`}
-                  onClick={() => applySuggestion(suggestion)}
+                  onClick={() => applySuggestion(suggestion, suggestionInput)}
                 >
                   Use this
                 </button>
@@ -339,23 +552,23 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </Panel>
 
         <Panel
-          title="Grades"
-          hint="Enter the grade exactly as it appears on your transcript. Unimatch does not convert it silently."
+          title={ru?'Оценки':'Grades'}
+          hint={ru?'Укажи исходную оценку и её шкалу. Автоматического пересчёта нет.':'Enter the grade exactly as it appears on your transcript. Unimatch does not convert it silently.'}
         >
           <div className="grid-2">
-            <Field label="GPA / average" htmlFor="gpa">
+            <Field label={ru?'Средний балл (GPA)':'GPA / average'} htmlFor="gpa">
               <input id="gpa" type="number" step="0.01" {...bind(['academics', 'gpa', 'raw_value'], 'float')} />
             </Field>
-            <Field label="Maximum on your scale" htmlFor="gpamax">
+            <Field label={ru?'Максимум по твоей шкале':'Maximum on your scale'} htmlFor="gpamax">
               <input id="gpamax" type="number" step="0.1" {...bind(['academics', 'gpa', 'raw_scale_max'], 'float')} />
             </Field>
-            <Field label="Scale name" htmlFor="gpascale" hint="e.g. 'KZ 5-point', 'US 4.0 unweighted'">
+            <Field label={ru?'Название шкалы':'Scale name'} htmlFor="gpascale" hint="e.g. 'KZ 5-point', 'US 4.0 unweighted'">
               <input id="gpascale" {...bind(['academics', 'gpa', 'raw_scale_label'])} />
             </Field>
-            <Field label="Class rank" htmlFor="rank">
+            <Field label={ru?'Место в классе':'Class rank'} htmlFor="rank">
               <input id="rank" type="number" {...bind(['academics', 'class_rank'], 'number')} />
             </Field>
-            <Field label="Class size" htmlFor="class-size">
+            <Field label={ru?'Учеников в классе':'Class size'} htmlFor="class-size">
               <input id="class-size" type="number" {...bind(['academics', 'class_size'], 'number')} />
             </Field>
           </div>
@@ -406,8 +619,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
         <div className="profile-step-content" hidden={step !== 3}>
         <Panel
-          title="English language"
-          hint="Subscores matter: many programmes publish a per-section minimum on top of the overall band."
+          title={ru?'Английский язык':'English language'}
+          hint={ru?'Добавь результаты, если они есть. Минимальные баллы по разделам проверяются по требованиям программы.':'Subscores matter: many programmes publish a per-section minimum on top of the overall band.'}
         >
           <div className="grid-3">
             {(['overall', 'listening', 'reading', 'writing', 'speaking'] as const).map((band) => (
@@ -420,7 +633,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                 />
               </Field>
             ))}
-            <Field label="Test type" htmlFor="ielts-type">
+            <Field label={ru?'Тип экзамена':'Test type'} htmlFor="ielts-type">
               <select id="ielts-type" {...bind(['academics', 'ielts', 'test_type'])}>
                 <option value="academic">Academic</option>
                 <option value="general_training">General Training</option>
@@ -431,12 +644,12 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="Standardised tests" hint="Leave blank if not taken — test-optional programmes are unaffected.">
+        <Panel title={ru?'Стандартизированные экзамены':'Standardised tests'} hint={ru?'Оставь пустым, если экзамен ещё не сдавался. Обязательность определяется требованиями программы.':'Leave blank if not taken — test-optional programmes are unaffected.'}>
           <div className="grid-3">
-            <Field label="SAT total" htmlFor="sat"><input id="sat" type="number" {...bind(['academics', 'sat', 'total'], 'number')} /></Field>
+            <Field label={ru?'SAT — общий балл':'SAT total'} htmlFor="sat"><input id="sat" type="number" {...bind(['academics', 'sat', 'total'], 'number')} /></Field>
             <Field label="SAT Math" htmlFor="satm"><input id="satm" type="number" {...bind(['academics', 'sat', 'math'], 'number')} /></Field>
             <Field label="SAT Reading &amp; Writing" htmlFor="satr"><input id="satr" type="number" {...bind(['academics', 'sat', 'reading_writing'], 'number')} /></Field>
-            <Field label="TOEFL total" htmlFor="toefl"><input id="toefl" type="number" {...bind(['academics', 'toefl', 'total'], 'number')} /></Field>
+            <Field label={ru?'TOEFL — общий балл':'TOEFL total'} htmlFor="toefl"><input id="toefl" type="number" {...bind(['academics', 'toefl', 'total'], 'number')} /></Field>
             <Field label="ACT composite" htmlFor="act"><input id="act" type="number" {...bind(['academics', 'act', 'composite'], 'number')} /></Field>
             <Field label="ACT English" htmlFor="act-en"><input id="act-en" type="number" {...bind(['academics', 'act', 'english'], 'number')} /></Field>
             <Field label="ACT Math" htmlFor="act-math"><input id="act-math" type="number" {...bind(['academics', 'act', 'math'], 'number')} /></Field>
@@ -473,12 +686,12 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           <div className="stack stack--tight" style={{ marginTop: 'var(--space-4)' }}>
             {otherTests.map((_, index) => (
               <div className="grid-3 panel panel--sunken" key={`other-test-${index}`}>
-                <Field label="Test name" htmlFor={`other-test-name-${index}`}><input id={`other-test-name-${index}`} {...bind(['academics', 'other_tests', index, 'name'])} /></Field>
-                <Field label="Score" htmlFor={`other-test-score-${index}`}><input id={`other-test-score-${index}`} type="number" step="0.01" {...bind(['academics', 'other_tests', index, 'score'], 'float')} /></Field>
-                <Field label="Maximum" htmlFor={`other-test-max-${index}`}><input id={`other-test-max-${index}`} type="number" step="0.01" {...bind(['academics', 'other_tests', index, 'max_score'], 'float')} /></Field>
-                <Field label="Taken on" htmlFor={`other-test-date-${index}`}><input id={`other-test-date-${index}`} type="date" {...bind(['academics', 'other_tests', index, 'dates', 'taken_on'])} /></Field>
-                <Field label="Planned retake" htmlFor={`other-test-retake-${index}`}><input id={`other-test-retake-${index}`} type="date" {...bind(['academics', 'other_tests', index, 'dates', 'planned_retake_on'])} /></Field>
-                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['academics', 'other_tests'], index)}>Remove</button>
+                <Field label={ru?'Название экзамена':'Test name'} htmlFor={`other-test-name-${index}`}><input id={`other-test-name-${index}`} {...bind(['academics', 'other_tests', index, 'name'])} /></Field>
+                <Field label={ru?'Балл':'Score'} htmlFor={`other-test-score-${index}`}><input id={`other-test-score-${index}`} type="number" step="0.01" {...bind(['academics', 'other_tests', index, 'score'], 'float')} /></Field>
+                <Field label={ru?'Максимум':'Maximum'} htmlFor={`other-test-max-${index}`}><input id={`other-test-max-${index}`} type="number" step="0.01" {...bind(['academics', 'other_tests', index, 'max_score'], 'float')} /></Field>
+                <Field label={ru?'Дата экзамена':'Taken on'} htmlFor={`other-test-date-${index}`}><input id={`other-test-date-${index}`} type="date" {...bind(['academics', 'other_tests', index, 'dates', 'taken_on'])} /></Field>
+                <Field label={ru?'Планируемая пересдача':'Planned retake'} htmlFor={`other-test-retake-${index}`}><input id={`other-test-retake-${index}`} type="date" {...bind(['academics', 'other_tests', index, 'dates', 'planned_retake_on'])} /></Field>
+                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['academics', 'other_tests'], index)}>{ru?'Удалить':'Remove'}</button>
               </div>
             ))}
             <button className="btn btn--sm" type="button" onClick={() => append(['academics', 'other_tests'], {
@@ -489,17 +702,17 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </div>
 
         <div className="profile-step-content" hidden={step !== 2}>
-        <Panel title="Subject grades" hint="Keep the original transcript scale for every subject.">
+        <Panel title={ru?'Оценки по предметам':'Subject grades'} hint="Keep the original transcript scale for every subject.">
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
               <div className="panel panel--sunken" key={`subject-${index}`}>
                 <div className="grid-3">
-                  <Field label="Subject" htmlFor={`subject-${index}`}><input id={`subject-${index}`} {...bind(['academics', 'subject_grades', index, 'subject'])} /></Field>
-                  <Field label="Grade" htmlFor={`subject-grade-${index}`}><input id={`subject-grade-${index}`} type="number" step="0.01" {...bind(['academics', 'subject_grades', index, 'grade', 'raw_value'], 'float')} /></Field>
-                  <Field label="Scale maximum" htmlFor={`subject-max-${index}`}><input id={`subject-max-${index}`} type="number" step="0.01" {...bind(['academics', 'subject_grades', index, 'grade', 'raw_scale_max'], 'float')} /></Field>
-                  <Field label="Scale label" htmlFor={`subject-scale-${index}`}><input id={`subject-scale-${index}`} {...bind(['academics', 'subject_grades', index, 'grade', 'raw_scale_label'])} /></Field>
+                  <Field label={ru?'Предмет':'Subject'} htmlFor={`subject-${index}`}><input id={`subject-${index}`} {...bind(['academics', 'subject_grades', index, 'subject'])} /></Field>
+                  <Field label={ru?'Оценка':'Grade'} htmlFor={`subject-grade-${index}`}><input id={`subject-grade-${index}`} type="number" step="0.01" {...bind(['academics', 'subject_grades', index, 'grade', 'raw_value'], 'float')} /></Field>
+                  <Field label={ru?'Максимум шкалы':'Scale maximum'} htmlFor={`subject-max-${index}`}><input id={`subject-max-${index}`} type="number" step="0.01" {...bind(['academics', 'subject_grades', index, 'grade', 'raw_scale_max'], 'float')} /></Field>
+                  <Field label={ru?'Название шкалы':'Scale label'} htmlFor={`subject-scale-${index}`}><input id={`subject-scale-${index}`} {...bind(['academics', 'subject_grades', index, 'grade', 'raw_scale_label'])} /></Field>
                 </div>
-                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['academics', 'subject_grades'], index)}>Remove</button>
+                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['academics', 'subject_grades'], index)}>{ru?'Удалить':'Remove'}</button>
               </div>
             ))}
             <button className="btn btn--sm" type="button" onClick={() => append(['academics', 'subject_grades'], {
@@ -508,94 +721,96 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported.">
+        <Panel title={ru?'Результаты AP, IB и A-Level':'AP, IB and A-Level results'} hint="Add achieved and predicted curriculum results exactly as reported.">
           <div className="stack stack--tight">
             {curriculumResults.map((item, index) => (
               <div className="grid-3 panel panel--sunken" key={`curriculum-${index}`}>
-                <Field label="Framework" htmlFor={`framework-${index}`}>
+                <Field label={ru?'Учебная программа':'Framework'} htmlFor={`framework-${index}`}>
                   <select id={`framework-${index}`} {...bind(['academics', 'curriculum_results', index, 'framework'])}>
                     {['AP', 'IB', 'A-Level', 'AS-Level', 'other'].map((value) => <option key={value}>{value}</option>)}
                   </select>
                 </Field>
-                <Field label="Subject" htmlFor={`curriculum-subject-${index}`}><input id={`curriculum-subject-${index}`} {...bind(['academics', 'curriculum_results', index, 'subject'])} /></Field>
-                <Field label="Result" htmlFor={`curriculum-result-${index}`}><input id={`curriculum-result-${index}`} {...bind(['academics', 'curriculum_results', index, 'result'])} /></Field>
-                <Field label="Year" htmlFor={`curriculum-year-${index}`}><input id={`curriculum-year-${index}`} type="number" {...bind(['academics', 'curriculum_results', index, 'year'], 'number')} /></Field>
+                <Field label={ru?'Предмет':'Subject'} htmlFor={`curriculum-subject-${index}`}><input id={`curriculum-subject-${index}`} {...bind(['academics', 'curriculum_results', index, 'subject'])} /></Field>
+                <Field label={ru?'Результат':'Result'} htmlFor={`curriculum-result-${index}`}><input id={`curriculum-result-${index}`} {...bind(['academics', 'curriculum_results', index, 'result'])} /></Field>
+                <Field label={ru?'Год':'Year'} htmlFor={`curriculum-year-${index}`}><input id={`curriculum-year-${index}`} type="number" {...bind(['academics', 'curriculum_results', index, 'year'], 'number')} /></Field>
                 <label className="row row--tight small"><input type="checkbox" checked={Boolean(item.predicted)} onChange={(event) => setProfileDraft((draft) => setIn(draft, ['academics', 'curriculum_results', index, 'predicted'], event.target.checked))} /> Predicted</label>
-                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['academics', 'curriculum_results'], index)}>Remove</button>
+                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['academics', 'curriculum_results'], index)}>{ru?'Удалить':'Remove'}</button>
               </div>
             ))}
             <button className="btn btn--sm" type="button" onClick={() => append(['academics', 'curriculum_results'], {
               framework: 'AP', subject: '', result: '', year: null, predicted: false,
-            })}>+ Add curriculum result</button>
+            })}>{ru?'Добавить результат учебной программы':'+ Add curriculum result'}</button>
           </div>
         </Panel>
         </div>
 
-        <div className="profile-step-content" hidden={step !== 4}>
-        <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list.">
+        {ru&&step===4&&<BookActivities/>}
+        {!ru && <div className="profile-step-content" hidden={step !== 4}>
+        <Panel title={ru?'Активности':'Extracurricular activities'} hint="Depth, responsibility and measurable impact matter more than a long list.">
           <div className="stack stack--tight">
             {activities.map((_, index) => (
               <div className="panel panel--sunken" key={`activity-${index}`}>
                 <div className="grid-3">
-                  <Field label="Activity" htmlFor={`activity-${index}`}><input id={`activity-${index}`} {...bind(['activities', index, 'name'])} /></Field>
-                  <Field label="Category" htmlFor={`activity-category-${index}`}><input id={`activity-category-${index}`} {...bind(['activities', index, 'category'])} /></Field>
-                  <Field label="Role" htmlFor={`activity-role-${index}`}><input id={`activity-role-${index}`} {...bind(['activities', index, 'role'])} /></Field>
-                  <Field label="Responsibility" htmlFor={`activity-level-${index}`}>
+                  <Field label={ru?'Название активности':'Activity'} htmlFor={`activity-${index}`}><input id={`activity-${index}`} {...bind(['activities', index, 'name'])} /></Field>
+                  <Field label={ru?'Категория':'Category'} htmlFor={`activity-category-${index}`}><input id={`activity-category-${index}`} {...bind(['activities', index, 'category'])} /></Field>
+                  <Field label={ru?'Роль':'Role'} htmlFor={`activity-role-${index}`}><input id={`activity-role-${index}`} {...bind(['activities', index, 'role'])} /></Field>
+                  <Field label={ru?'Ответственность':'Responsibility'} htmlFor={`activity-level-${index}`}>
                     <select id={`activity-level-${index}`} {...bind(['activities', index, 'responsibility_level'])}>
                       {['participant', 'contributor', 'coordinator', 'leader', 'founder'].map((value) => <option key={value}>{value}</option>)}
                     </select>
                   </Field>
-                  <Field label="Months" htmlFor={`activity-months-${index}`}><input id={`activity-months-${index}`} type="number" {...bind(['activities', index, 'duration_months'], 'number')} /></Field>
-                  <Field label="Hours / week" htmlFor={`activity-hours-${index}`}><input id={`activity-hours-${index}`} type="number" step="0.5" {...bind(['activities', index, 'hours_per_week'], 'float')} /></Field>
-                  <Field label="Weeks / year" htmlFor={`activity-weeks-${index}`}><input id={`activity-weeks-${index}`} type="number" {...bind(['activities', index, 'weeks_per_year'], 'number')} /></Field>
-                  <Field label="Measurable outcome" htmlFor={`activity-outcome-${index}`}><textarea id={`activity-outcome-${index}`} {...bind(['activities', index, 'measurable_outcome'])} /></Field>
-                  <Field label="Impact on others" htmlFor={`activity-impact-${index}`}><textarea id={`activity-impact-${index}`} {...bind(['activities', index, 'impact_on_others'])} /></Field>
-                  <Field label="Evidence links" htmlFor={`activity-links-${index}`} hint="Comma-separated URLs.">
+                  <Field label={ru?'Длительность, месяцев':'Months'} htmlFor={`activity-months-${index}`}><input id={`activity-months-${index}`} type="number" {...bind(['activities', index, 'duration_months'], 'number')} /></Field>
+                  <Field label={ru?'Часов в неделю':'Hours / week'} htmlFor={`activity-hours-${index}`}><input id={`activity-hours-${index}`} type="number" step="0.5" {...bind(['activities', index, 'hours_per_week'], 'float')} /></Field>
+                  <Field label={ru?'Недель в году':'Weeks / year'} htmlFor={`activity-weeks-${index}`}><input id={`activity-weeks-${index}`} type="number" {...bind(['activities', index, 'weeks_per_year'], 'number')} /></Field>
+                  <Field label={ru?'Описание и результат':'Measurable outcome'} htmlFor={`activity-outcome-${index}`}><textarea id={`activity-outcome-${index}`} {...bind(['activities', index, 'measurable_outcome'])} /></Field>
+                  <Field label={ru?'Влияние на других':'Impact on others'} htmlFor={`activity-impact-${index}`}><textarea id={`activity-impact-${index}`} {...bind(['activities', index, 'impact_on_others'])} /></Field>
+                  <Field label={ru?'Ссылки на подтверждение':'Evidence links'} htmlFor={`activity-links-${index}`} hint="Comma-separated URLs.">
                     <CommaSeparatedInput id={`activity-links-${index}`} {...bindList(['activities', index, 'evidence_links'])} />
                   </Field>
                 </div>
-                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['activities'], index)}>Remove activity</button>
+                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['activities'], index)}>{ru?'Удалить активность':'Remove activity'}</button>
               </div>
             ))}
             <button className="btn btn--sm" type="button" onClick={() => append(['activities'], {
               name: '', category: '', role: '', duration_months: null, hours_per_week: null,
               weeks_per_year: null, responsibility_level: 'participant', measurable_outcome: null,
               impact_on_others: null, evidence_links: [],
-            })}>+ Add activity</button>
+            })}>{ru?'Добавить ещё активность':'+ Add activity'}</button>
           </div>
         </Panel>
 
-        <Panel title="Achievements" hint="Include level, placement and how recipients were selected.">
+        <Panel title={ru?'Достижения':'Achievements'} hint="Include level, placement and how recipients were selected.">
           <div className="stack stack--tight">
             {achievements.map((_, index) => (
               <div className="grid-3 panel panel--sunken" key={`achievement-${index}`}>
-                <Field label="Achievement" htmlFor={`achievement-${index}`}><input id={`achievement-${index}`} {...bind(['achievements', index, 'name'])} /></Field>
-                <Field label="Level" htmlFor={`achievement-level-${index}`}>
+                <Field label={ru?'Название достижения':'Achievement'} htmlFor={`achievement-${index}`}><input id={`achievement-${index}`} {...bind(['achievements', index, 'name'])} /></Field>
+                <Field label={ru?'Уровень':'Level'} htmlFor={`achievement-level-${index}`}>
                   <select id={`achievement-level-${index}`} {...bind(['achievements', index, 'level'])}>
                     {['school', 'city', 'regional', 'national', 'international'].map((value) => <option key={value}>{value}</option>)}
                   </select>
                 </Field>
-                <Field label="Year" htmlFor={`achievement-year-${index}`}><input id={`achievement-year-${index}`} type="number" {...bind(['achievements', index, 'year'], 'number')} /></Field>
-                <Field label="Placement" htmlFor={`achievement-place-${index}`}><input id={`achievement-place-${index}`} {...bind(['achievements', index, 'placement'])} /></Field>
-                <Field label="Selection criterion" htmlFor={`achievement-select-${index}`}><textarea id={`achievement-select-${index}`} {...bind(['achievements', index, 'selection_criterion'])} /></Field>
-                <Field label="Evidence links" htmlFor={`achievement-links-${index}`} hint="Comma-separated URLs.">
+                <Field label={ru?'Год':'Year'} htmlFor={`achievement-year-${index}`}><input id={`achievement-year-${index}`} type="number" {...bind(['achievements', index, 'year'], 'number')} /></Field>
+                <Field label={ru?'Призовое место':'Placement'} htmlFor={`achievement-place-${index}`}><input id={`achievement-place-${index}`} {...bind(['achievements', index, 'placement'])} /></Field>
+                <Field label={ru?'Критерий отбора':'Selection criterion'} htmlFor={`achievement-select-${index}`}><textarea id={`achievement-select-${index}`} {...bind(['achievements', index, 'selection_criterion'])} /></Field>
+                <Field label={ru?'Ссылки на подтверждение':'Evidence links'} htmlFor={`achievement-links-${index}`} hint="Comma-separated URLs.">
                   <CommaSeparatedInput id={`achievement-links-${index}`} {...bindList(['achievements', index, 'evidence_links'])} />
                 </Field>
-                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['achievements'], index)}>Remove</button>
+                <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['achievements'], index)}>{ru?'Удалить':'Remove'}</button>
               </div>
             ))}
             <button className="btn btn--sm" type="button" onClick={() => append(['achievements'], {
               name: '', level: 'school', year: new Date().getFullYear(), placement: null,
               selection_criterion: null, evidence_links: [],
-            })}>+ Add achievement</button>
+            })}>{ru?'Добавить достижение':'+ Add achievement'}</button>
           </div>
         </Panel>
         </div>
 
+        }
         <div className="profile-step-content" hidden={step !== 5}>
         {validation && (
           <Panel
-            title="What is missing, and what it costs you"
+            title={ru?'Недостающие данные и их влияние':'What is missing, and what it costs you'}
             hint={validation.summary}
           >
             {validation.gaps.length === 0 ? (
@@ -620,28 +835,32 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             )}
           </Panel>
         )}
-        {!validation && <Panel title="Ready to review"><p className="muted">Save your profile to check which information is blocking, recommended or optional.</p></Panel>}
+        {!validation && <Panel title={ru?'Проверка профиля':'Ready to review'}><p className="muted">Save your profile to check which information is blocking, recommended or optional.</p></Panel>}
         </div>
 
+        <div className="workspace-savebar">
+        {step > 1 && <button className="btn profile-step-back" type="button" onClick={() => goToStep(step - 1)}>{ru?'← Назад':'← Back'}</button>}
+          <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft}
+            uncertain={Boolean(profileRecovery && !receiptConfirmsCurrentDraft && profileRecovery.entry && ['pending', 'unknown', 'accepted'].includes(profileRecovery.entry.status))} />
         <div className="profile-step-actions">
-          {step > 1 && <button className="btn" type="button" onClick={() => setStep(step - 1)}>← Back</button>}
           <button
             className="btn"
             disabled={loading || saving}
+            aria-busy={saving}
             data-testid="save-profile"
-            onClick={async () => {
-              await saveProfile();
-              setSaved(true);
-            }}
+            onClick={() => { void commitProfile(); }}
           >
-            {loading || saving ? 'Saving…' : 'Save profile'}
+            {ru?saving?'Сохраняем…':loading?'Подожди…':'Сохранить как черновик':saving ? 'Saving…' : loading ? 'Please wait…' : 'Save profile'}
           </button>
-          {saved && !dirty && !saving && <Chip tone="ok">Saved</Chip>}
-          {dirty && !saving && <span className="xs muted">Unsaved changes stay on this device</span>}
-          <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
-            {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
+
+          <button className="btn btn--primary" disabled={loading || saving} onClick={() => void continueStep()} data-testid="to-preferences">
+            {ru?step < PROFILE_STEPS.length?'Сохранить и продолжить →':'Сохранить и перейти к бюджету →':step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>
         </div>
+        </div>
+      </div>
+      </div>
+      {!profileRecovery && <ProfileRecoveryPanel />}
       </div>
     </>
   );

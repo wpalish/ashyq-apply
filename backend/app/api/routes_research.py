@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import hashlib
+from contextlib import suppress
 from datetime import UTC, datetime
 from typing import Literal
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
-from pydantic import BaseModel, Field
-from sqlalchemy import case, func
+from pydantic import BaseModel, Field, ValidationError
+from sqlalchemy import case, func, or_, update
 from sqlalchemy.orm import Session
 
 from app.api.paywall import require_full_access
@@ -16,6 +17,11 @@ from app.api.tenancy import owned_profile, owned_run
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import STAGE_ORDER, PipelineStage, UserDecision
+from app.domain.profile_input_provenance import (
+    INPUT_OBSERVATION_KEY,
+    input_status,
+    pending_input_observation,
+)
 from app.jobs.store import JobStore
 from app.models import (
     ApplicantProfileRow,
@@ -29,6 +35,9 @@ from app.models import (
 from app.models.base import ensure_utc
 from app.payments.entitlements import has_full_access
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState, is_lease_expired
+from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import ProgrammeObservation, observation_projection
+from app.schemas.research_read import ResearchInputStatusReadV1
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
@@ -66,6 +75,10 @@ class StageView(BaseModel):
 
 
 class RunView(BaseModel):
+    profile_input_status: ResearchInputStatusReadV1
+    programme_observations: list[ProgrammeObservation] = Field(default_factory=list)
+    programme_observation_state: Literal["readable", "unavailable"] = "readable"
+    additional_programme_observations_omitted: bool = False
     id: str
     profile_id: str
     stage: str
@@ -150,7 +163,25 @@ def _view(
             results.count(),
             results.filter(ProgramResultRow.user_decision != UserDecision.UNDECIDED.value).count(),
         )
+    profile_row = session.get(ApplicantProfileRow, run.profile_id)
+    observed_profile = None
+    if profile_row is not None:
+        # Invalid historical data cannot certify current applicability.
+        with suppress(ValidationError):
+            observed_profile = ApplicantProfileIn.model_validate(profile_row.payload)
+    profile_read = input_status(
+        (run.settings_snapshot or {}).get(INPUT_OBSERVATION_KEY), observed_profile, now
+    )
+    observed = observation_projection(run.programme_observations)
     return RunView(
+        profile_input_status=profile_read,
+        programme_observations=[
+            ProgrammeObservation.model_validate(item) for item in observed["programme_observations"]
+        ],
+        programme_observation_state=observed["programme_observation_state"],
+        additional_programme_observations_omitted=observed[
+            "additional_programme_observations_omitted"
+        ],
         id=run.id,
         profile_id=run.profile_id,
         stage=run.stage,
@@ -175,7 +206,11 @@ def _view(
         errors=list(run.errors or []),
         unknowns=list(run.unknowns or []),
         retry_urls=list(run.retry_urls or []),
-        settings=dict(run.settings_snapshot or {}),
+        settings={
+            key: value
+            for key, value in (run.settings_snapshot or {}).items()
+            if key != INPUT_OBSERVATION_KEY
+        },
         created_at=run.created_at.isoformat(),
         started_at=run.started_at.isoformat() if run.started_at else None,
         finished_at=run.finished_at.isoformat() if run.finished_at else None,
@@ -286,6 +321,7 @@ def start_run(
         university_ids=selected_ids or None,
         access_tier="full" if full_access else "free",
         stage_state=RunState.load(None).dump(),
+        settings_snapshot={INPUT_OBSERVATION_KEY: pending_input_observation()},
     )
     session.add(run)
     session.flush()
@@ -486,11 +522,23 @@ def collect_documents(
     swapping one approval for another silently return the finished job, and
     the newly approved programme never received a checklist.
 
-    A finished job for the same key is therefore a deliberate no-op, not a
-    lost request: the documents it collected are still the right ones.
+    A successful job for the same key is therefore a deliberate no-op: the
+    documents it collected are still the right ones. Cancelled or exhausted
+    attempts get a new generation key, leaving the old worker's fence intact.
     """
     require_full_access(session, run_id, principal)
     run = owned_run(session, run_id, principal)
+    # Serialize admission on the owned run. A no-op UPDATE also takes SQLite's
+    # write lock; preserving updated_at avoids reporting a change before admission.
+    locked = session.execute(
+        update(ResearchRun)
+        .where(ResearchRun.id == run_id)
+        .values(updated_at=ResearchRun.updated_at)
+        .returning(ResearchRun.id)
+    ).scalar()
+    if locked is None:
+        raise HTTPException(404, "Research run not found")
+    session.refresh(run)
     approved_ids = sorted(
         row.id
         for row in session.query(ProgramResultRow.id).filter(
@@ -506,6 +554,32 @@ def collect_documents(
             400,
             "Approve at least one programme first — documents are only collected for shortlisted rows.",
         )
+    shortlist_digest = hashlib.sha256(",".join(approved_ids).encode()).hexdigest()[:16]
+    base_key = f"documents:{run_id}:{shortlist_digest}"
+    attempts = {
+        job.idempotency_key: job
+        for job in session.query(Job).filter(
+            Job.run_id == run_id,
+            Job.kind == "documents",
+            or_(
+                Job.idempotency_key == base_key,
+                Job.idempotency_key.startswith(f"{base_key}:retry:", autoescape=True),
+            ),
+        )
+    }
+    generation = 0
+    key = base_key
+    while key in attempts:
+        previous = attempts[key]
+        if previous.status not in {JobStatus.CANCELLED.value, JobStatus.DEAD.value}:
+            # Active work is joined and successful work retained. In particular,
+            # do not clear a running attempt's cancellation beneath its worker.
+            session.commit()
+            session.refresh(run)
+            return _view(session, run, job=previous)
+        generation += 1
+        key = f"{base_key}:retry:{generation}"
+
     run.cancelled = False
     session.add(
         AuditEvent(
@@ -517,11 +591,10 @@ def collect_documents(
             detail={"approved": approved},
         )
     )
-    shortlist_digest = hashlib.sha256(",".join(approved_ids).encode()).hexdigest()[:16]
     JobStore(session).enqueue(
         "documents",
         run_id=run_id,
-        idempotency_key=f"documents:{run_id}:{shortlist_digest}",
+        idempotency_key=key,
         priority=5,
     )
     session.commit()

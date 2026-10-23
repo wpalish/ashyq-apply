@@ -1,0 +1,21 @@
+{
+  "status": "WRITEAHEAD_BEFORE_INITIAL_PROOF_COPY_OR_NATIVE_CONTROLS",
+  "task": "Review immutable rejected initial A proofs and native provider refusal/capture boundary only",
+  "A_proof_manifest": null,
+  "source_pins": {
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/catalogue/discovery.py": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+    "evaluation/research/live.py": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "app/pipeline/control.py": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+  },
+  "allowed": "Read/copy exact immutable original proof bytes supplied by A; normal native offline mock controls if needed, denied transports; define narrow contract not source-ready patch acceptance.",
+  "forbidden": [
+    "No mutable A revision import/acceptance",
+    "No network/provider/model/DNS/HTTP/API calls",
+    "No labels/gold/scoring/STOP/app/Git/source writes",
+    "No source application"
+  ],
+  "prior_B_preparation_manifest": "6d38bb1226f66d99567e69f0eefabb8e1e0a7cc912bcc62d243b73fa25029e98"
+}

@@ -1,0 +1,14 @@
+Status: SOURCE_ONLY / NOT_IMPORTED / NOT_COLLECTED / NOT_RUN
+Preimage SHA256: a8a80fbce0c6f43e883fe2c41f32a4e19300ab9792db1dca232977e5b573211e
+Postimage SHA256: c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d
+Author compared literal bytes with cmp, exit 0:
+
+cmp <(sed -n '/^def native_snapshot/,$p' preimages/backend/tests/test_admissions_actions_concurrency.py) <(sed -n '/^def native_snapshot/,/^# Additive API-writer controls/p' files/backend/tests/test_admissions_actions_concurrency.py | sed '$d' | sed '$d' | sed '$d')
+
+The removed three trailing lines in the second file are the appended marker and
+its two new blank separators. Every preceding original function/body/assertion
+from native_snapshot to the old final native-account assertion is byte equal.
+All seven original top-level test definitions occur inside that equal region.
+ADDITIVE.diff has exactly one old-code deletion: an import extended with the
+approved unchanged_inputs helper. No old function/test/assertion is removed.
+This is text/byte inspection, not an AST/import/runtime qualification.

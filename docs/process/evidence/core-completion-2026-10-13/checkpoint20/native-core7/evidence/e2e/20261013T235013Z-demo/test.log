@@ -1,0 +1,51 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:32:1 › native core: research, owned records, Today, second session, export and case deletion (30.9s)
+
+
+  1) [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:32:1 › native core: research, owned records, Today, second session, export and case deletion 
+
+    Error: expect(locator).not.toHaveCount(expected) failed
+
+    Locator:  getByRole('combobox', { name: 'Choose a programme requirement', exact: true }).locator('option')
+    Expected: not 1
+    Received: 1
+    Timeout:  20000ms
+
+    Call log:
+      - Expect "not toHaveCount" with timeout 20000ms
+      - waiting for getByRole('combobox', { name: 'Choose a programme requirement', exact: true }).locator('option')
+        44 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      100 |   const linked = await addTask(page, 'Synthetic core linked task', appId);
+      101 |   const occurrence = page.getByRole('combobox', { name: 'Choose a programme requirement', exact: true });
+    > 102 |   await expect(occurrence.locator('option')).not.toHaveCount(1);
+          |                                                  ^
+      103 |   await occurrence.selectOption((await occurrence.locator('option').nth(1).getAttribute('value'))!);
+      104 |   await page.getByRole('combobox', { name: 'Task to link', exact: true }).selectOption(linked.id);
+      105 |   await page.getByRole('button', { name: 'Review current requirement', exact: true }).click();
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:102:50
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:32:1 › native core: research, owned records, Today, second session, export and case deletion 

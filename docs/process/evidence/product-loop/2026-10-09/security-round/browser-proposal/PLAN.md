@@ -1,0 +1,5 @@
+# Browser privacy boundary proposal — external only
+
+Scope: authenticated principal+organization namespace and stale-owner read/write/API refusal; AuthGate binds before hydration and locks/remounts on cross-tab owner transitions; logout/account deletion clear applicant browser data only after acknowledged success; saved zero-run case export/delete and honest deletion acknowledgment. Keep anonymous demo and same-owner reload, old test bodies, backend/legal/nginx/contracts unchanged. No broad concurrent-cookie atomicity claim. No primary source/Git/SQL/ports/network/provider/model actions. Owned OFF/ON frontend copies, existing individual dependency symlinks, denied transports, few native mock API controls. Source-before pins precede implementation.
+
+Eight source paths (one new lib/applicantStorage.ts), two expanded existing test files; further new independent test file only if actual API boundary cannot be exercised from those native controls. No server marks. Test old source with same expectations first-class RED; preserve errors/fixes separately.

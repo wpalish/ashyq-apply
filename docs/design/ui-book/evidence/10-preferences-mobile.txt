@@ -1,0 +1,131 @@
+Browser tab: 4, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/preferences".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/preferences
+	2 container root
+		3 link Description: Skip to content, Value: 127.0.0.1:18140/#main-content
+		188 container Main navigation
+			189 button Home
+			190 button Find
+			191 button Plan
+			192 button Documents
+			193 button Community
+		10 container
+			194 button Unimatch home
+			12 text Demo data
+			13 button (collapsed) Explore, Secondary Actions: Expand
+				14 text Explore
+			15 button (collapsed) Description: Applicant workspace, Help: U, Secondary Actions: Expand
+				16 text U
+		195 container Description: Preferences & budget, ID: main-content
+			196 container
+				197 text Сохранённая оценка. Оценка отражает состояние исследования на тот момент. Она не подтверждает текущую готовность и не является вероятностью поступления.
+			198 heading Shape your perfect match., Value: 1
+				199 text Shape your perfect  match.
+			200 text Tell us where you want to go and what you can afford. You can change these choices later.
+			201 container
+				202 heading Target countries and regions, Value: 2
+					203 text Target countries and regions
+				204 text Choose the places you would consider studying. Select more than one.
+				205 container Suggested countries
+					206 checkbox Canada, Value: 1
+					207 checkbox United States, Value: 0
+					208 checkbox United Kingdom, Value: 0
+					209 checkbox Germany, Value: 1
+					210 checkbox Netherlands, Value: 1
+					211 checkbox Australia, Value: 0
+					212 checkbox Japan, Value: 0
+				213 button (collapsed) Other countries and location preferences, Secondary Actions: Expand
+					214 text Other countries and location preferences
+			215 container
+				216 heading Budget, Value: 2
+					217 text Budget
+				218 text Used to compute what is left after funding — never to hide options that cost more. Maximum you can pay per year
+				219 stepper (settable, integer) Maximum you can pay per year, Value: 6000, ID: budget
+				220 text Currency
+				221 pop up button (collapsed, settable) Currency, Value: USD, ID: cur, Secondary Actions: Expand
+					222 menu
+						223 AED
+						224 AUD
+						225 BRL
+						226 CAD
+						227 CHF
+						228 CNY
+						229 CZK
+						230 DKK
+						231 EUR
+						232 GBP
+						233 HKD
+						234 HUF
+						235 ILS
+						236 INR
+						237 JPY
+						238 KRW
+						239 KZT
+						240 MXN
+						241 MYR
+						242 NOK
+						243 NZD
+						244 PLN
+						245 QAR
+						246 RUB
+						247 SAR
+						248 SEK
+						249 SGD
+						250 TRY
+						251 (selected) USD
+						252 ZAR
+				253 heading How important is funding to you?, Value: 3
+					254 text How important is funding to you?
+				255 checkbox Very important Prioritize scholarships and funded programmes., Value: 1
+					256 text Very important
+					257 text Prioritize scholarships and funded programmes.
+				258 checkbox Somewhat important Show funded and self-funded options., Value: 0
+					259 text Somewhat important
+					260 text Show funded and self-funded options.
+				261 checkbox Not a priority Funding is useful, but not decisive., Value: 0
+					262 text Not a priority
+					263 text Funding is useful, but not decisive.
+				264 button (collapsed) More budget and funding details, Secondary Actions: Expand
+					265 text More budget and funding details
+			266 container
+				267 heading What matters most to you?, Value: 2
+					268 text What matters most to you?
+				269 text Put them in your order. The first one counts for about four times what the last one does; nothing here predicts an admission. The order only decides which of the qualifying options rise first. It is not a probability of admission.
+				270 content list
+					271 container
+						272 text 1 Funding and what it leaves you to pay
+						273 button (disabled) Move Funding and what it leaves you to pay up
+						274 button Move Funding and what it leaves you to pay down
+					275 container
+						276 text 2 Academic fit and programme standing
+						277 button Move Academic fit and programme standing up
+						278 button Move Academic fit and programme standing down
+					279 container
+						280 text 3 Country
+						281 button Move Country up
+						282 button Move Country down
+					283 container
+						284 text 4 City and climate
+						285 button Move City and climate up
+						286 button Move City and climate down
+					287 container
+						288 text 5 Careers and post-study work
+						289 button Move Careers and post-study work up
+						290 button Move Careers and post-study work down
+					291 container
+						292 text 6 Campus, size and workload
+						293 button Move Campus, size and workload up
+						294 button (disabled) Move Campus, size and workload down
+				295 button Recompute the shortlist
+				296 button (collapsed) Advanced weights, Secondary Actions: Expand
+					297 text Advanced weights
+			298 container
+				299 heading Find your opportunities, Value: 2
+					300 text Find your opportunities
+				301 text We check official sources and show what is confirmed, uncertain, or unavailable.
+				302 checkbox (settable, integer) Value: 1, Description: Demo mode — use the bundled synthetic corpus. No network access, deterministic, and every value is badged as demo data.
+				303 text Demo mode
+				304 text  — use the bundled synthetic corpus. No network access, deterministic, and every value is badged as demo data.
+				305 button Start research
+				306 text 1  gaps noted, none blocking
+
+The focused UI element is 195 container Description: Preferences & budget, ID: main-content

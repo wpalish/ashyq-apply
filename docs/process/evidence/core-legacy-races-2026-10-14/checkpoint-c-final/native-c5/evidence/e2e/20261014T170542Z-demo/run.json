@@ -1,0 +1,25 @@
+{
+  "suite": "demo",
+  "runtime": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/native-c5/evidence/e2e/20261014T170542Z-demo",
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/native-c5/e2e/loopback-only.sb",
+    "/Users/wpalish/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/node_modules/@playwright/test/cli.js",
+    "test",
+    "--config",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/native-c5/evidence/e2e/20261014T170542Z-demo/playwright.config.mts"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/native-c5/evidence/e2e/20261014T170542Z-demo/frontend",
+  "native_config": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/playwright.config.ts",
+  "source_count": 501,
+  "fabricated_responses": false,
+  "fault_injection": "delay real GET/drop real committed ACK; no storage sink or receipt replacement",
+  "providers": "none",
+  "demo_lifespan_and_worker": true,
+  "runner_pid": 56024,
+  "exit_code": 0,
+  "source_unchanged": true,
+  "ports_clear_after": true
+}

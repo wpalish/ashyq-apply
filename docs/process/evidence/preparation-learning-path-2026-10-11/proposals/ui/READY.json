@@ -1,0 +1,22 @@
+{
+  "status": "PROPOSED_FOR_ROOT_REVIEW_AND_APPLY_PENDING_WHOLE_GATES",
+  "sealed_at": "2026-10-11T16:19:51.052891+00:00",
+  "paths": 10,
+  "patch_sha256": "a1700dd9787860857cab5d4165a712deea1ddebffe68d512c67890f6b00b6607",
+  "manifest_sha256": "a38c543e38976434476950dfdcdbab8fe219898d6d0633204cb98d9d0434739c",
+  "proposed_pins_sha256": "55aced1919d5664313d1640d895f9120b3e6da34b62ab1a4561817e1b88e0162",
+  "backend_contract_sha256": "fa13b5868a1af9987ccbf398e51d924508f6a5e6af5989bbacbc685ba16a32df",
+  "selected": {
+    "tests": 68,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "final_evidence": "evidence/accepted",
+  "validation_source_unchanged": true,
+  "root_source_writes": false,
+  "git_actions": false,
+  "native_e2e": "NOT_RUN",
+  "outside_api_or_provider": "NONE",
+  "manifest_exclusion": "validation/: local copied dependencies, cache and build; seal files self-excluded"
+}

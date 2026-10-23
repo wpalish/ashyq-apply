@@ -15,8 +15,10 @@ from time import monotonic
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+from app.api.preparation_transactions import begin_fresh_preparation_write
 from app.api.routes_auth import PrincipalView, _view
 from app.config import get_settings
 from app.db import get_session
@@ -365,68 +367,98 @@ def delete_account(
     POST rather than DELETE because a body is required and several HTTP
     clients drop the body of a DELETE.
     """
-    user = session.get(User, principal.user_id)
-    if user is None or not verify_password(payload.password, user.password_hash):
-        raise HTTPException(400, "The password is not correct.")
-
-    sole_owner_orgs = [
-        membership.organization_id
-        for membership in session.query(OrganizationMembership)
-        .filter(OrganizationMembership.user_id == user.id)
-        .all()
-        if session.query(OrganizationMembership)
-        .filter(
-            OrganizationMembership.organization_id == membership.organization_id,
-            OrganizationMembership.user_id != user.id,
+    begin_fresh_preparation_write(session)
+    try:
+        # Parent-first ordering coordinates with preparation saves and case
+        # deletion. Inspect current authority after any lock wait.
+        user = (
+            session.query(User)
+            .filter(User.id == principal.user_id)
+            .with_for_update()
+            .populate_existing()
+            .first()
         )
-        .count()
-        == 0
-    ]
-    profiles = (
-        session.query(ApplicantProfileRow)
-        .filter(ApplicantProfileRow.organization_id.in_(sole_owner_orgs))
-        .count()
-        if sole_owner_orgs
-        else 0
-    )
-    if profiles and not payload.confirm_delete_data:
-        raise HTTPException(
-            409,
-            f"This account is the only member of a workspace holding {profiles} applicant "
-            f"case(s). Send confirm_delete_data=true to erase them with the account.",
-        )
-
-    # Audited before the deletion: afterwards there is no organization left to
-    # attach the record to.
-    for organization_id in sole_owner_orgs:
-        session.add(
-            AuditEvent(
-                organization_id=organization_id,
-                actor=f"user:{user.id[:8]}",
-                action="account_deleted",
-                entity_type="user",
-                entity_id=user.id,
-                detail={"profiles_removed": profiles},
-            )
-        )
-    session.commit()
-
-    session.delete(user)
-    for organization_id in sole_owner_orgs:
-        # The ORM deletes the cases one by one rather than trusting the
-        # database cascade: SQLite's foreign_keys pragma is per-connection and
-        # easy to lose, and "the applicant's data is gone" is a promise, not a
-        # best effort. Each profile takes its runs, results and claims with it.
-        for profile in (
-            session.query(ApplicantProfileRow)
-            .filter(ApplicantProfileRow.organization_id == organization_id)
+        if user is None or not user.is_active:
+            session.rollback()
+            raise HTTPException(401, "Authentication required.")
+        if not verify_password(payload.password, user.password_hash):
+            session.rollback()
+            raise HTTPException(400, "The password is not correct.")
+        organization_ids = sorted(
+            membership.organization_id
+            for membership in session.query(OrganizationMembership)
+            .filter(OrganizationMembership.user_id == user.id)
             .all()
+        )
+        organizations = (
+            session.query(Organization)
+            .filter(Organization.id.in_(organization_ids))
+            .order_by(Organization.id)
+            .with_for_update()
+            .populate_existing()
+            .all()
+        )
+        memberships = (
+            session.query(OrganizationMembership)
+            .filter(OrganizationMembership.organization_id.in_(organization_ids))
+            .order_by(OrganizationMembership.organization_id, OrganizationMembership.user_id)
+            .with_for_update()
+            .populate_existing()
+            .all()
+        )
+        if not any(
+            member.user_id == user.id and member.organization_id == principal.organization_id
+            for member in memberships
         ):
+            session.rollback()
+            raise HTTPException(401, "Authentication required.")
+        sole_owner_orgs = [
+            org.id
+            for org in organizations
+            if {member.user_id for member in memberships if member.organization_id == org.id}
+            == {user.id}
+        ]
+        profiles = (
+            session.query(ApplicantProfileRow)
+            .filter(ApplicantProfileRow.organization_id.in_(sole_owner_orgs))
+            .order_by(ApplicantProfileRow.id)
+            .with_for_update()
+            .populate_existing()
+            .all()
+        )
+        if profiles and not payload.confirm_delete_data:
+            session.rollback()
+            raise HTTPException(
+                409,
+                f"This account is the only member of a workspace holding {len(profiles)} "
+                "applicant case(s). Send confirm_delete_data=true to erase them with the account.",
+            )
+        # The audit and erase share one commit. FK-on deletion may cascade
+        # this organization-scoped audit; successful retention is not promised.
+        for organization_id in sole_owner_orgs:
+            session.add(
+                AuditEvent(
+                    organization_id=organization_id,
+                    actor=f"user:{user.id[:8]}",
+                    action="account_deleted",
+                    entity_type="user",
+                    entity_id=user.id,
+                    detail={"profiles_removed": len(profiles)},
+                )
+            )
+        session.flush()
+        for profile in profiles:
             session.delete(profile)
-        org = session.get(Organization, organization_id)
-        if org is not None:
-            session.delete(org)
-    session.commit()
+        session.delete(user)
+        for org in organizations:
+            if org.id in sole_owner_orgs:
+                session.delete(org)
+        session.commit()
+    except SQLAlchemyError as exc:
+        session.rollback()
+        raise HTTPException(
+            503, "Deletion could not be confirmed. Sign in again and check before retrying."
+        ) from exc
 
     clear_session_cookie(response)
     response.status_code = 204

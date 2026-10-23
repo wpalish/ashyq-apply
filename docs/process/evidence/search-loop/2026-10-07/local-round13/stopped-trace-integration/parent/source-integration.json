@@ -1,0 +1,23 @@
+{
+  "time": "2026-10-08T05:35:52.343251+00:00",
+  "status": "EXACT3_APPLIED_OTHER996_UNCHANGED_FRESH_FULL_PENDING",
+  "peer_ready": "c9c6ba029d29c98d0797be1285c2e7c7bb4a95eac27c7143993d2bcc1077378e",
+  "proposal_ready": "b95a950c8cfc3cee5583dbe17d6a0f66843dbcc8e41db674bff38b620a558872",
+  "applied": {
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "bytes": 96687
+    },
+    "backend/app/catalogue/discovery.py": {
+      "sha256": "bc07cdaf263349931dbb7abb3d987897480711ecb4b19420ce5f2e5df70eda12",
+      "bytes": 13296
+    },
+    "backend/tests/test_live_discovery.py": {
+      "sha256": "aef28ed47c9f8f2ee84d878c405ba442a2c89340464a3695b20567317c39863e",
+      "bytes": 107669
+    }
+  },
+  "source_after_file_sha256": "30808fcb536f6757d668afea60716f4a61ac13caa326fa72a080f5a5a2f13771",
+  "old_test_exact_prefix": true,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+}

@@ -1,0 +1,39 @@
+--- a/frontend/src/lib/admissionsActionsRecovery.test.ts
++++ b/frontend/src/lib/admissionsActionsRecovery.test.ts
+@@ -671,3 +671,36 @@
+     expect(confirmedBound.entry.descriptor.status).toBe('acknowledged');
+   });
+ });
++
++
++describe('finite G3 physical intent capacity', () => {
++  it('reads 64 real pending journals and refuses the 65th without changing any storage bytes', async () => {
++    const binding = opened();
++    localStorage.setItem('unrelated.synthetic.capacity', 'preserved unrelated bytes');
++    const snapshot = (storage: Storage) => Array.from({ length: storage.length }, (_, index) => storage.key(index))
++      .filter((key): key is string => key !== null).sort().map(key => [key, storage.getItem(key)]);
++    const ids = Array.from({ length: 65 }, (_, index) => `${index.toString(16).padStart(8, '0')}-2222-4333-8444-555555555555`);
++    for (const [index, id] of ids.slice(0, 64).entries()) {
++      const journal = value(await journalAdmissionsAction(binding, command(id), index + 1));
++      expect(journal.entry.body).toEqual(command(id));
++      expect(journal.entry.pending_state).toBe('not_sent');
++    }
++    const beforeRead = snapshot(localStorage); const sessionBefore = snapshot(sessionStorage);
++    const indexBefore = localStorage.getItem(indexKey(binding));
++    expect(indexBefore).not.toBeNull();
++    const recovered = value(await readAdmissionsActionsRecovery(binding));
++    expect(recovered.entries).toHaveLength(64); expect(recovered.index.entries).toHaveLength(64);
++    expect(recovered.entries.map(entry => entry.descriptor.client_write_uuid)).toEqual(ids.slice(0, 64));
++    expect(recovered.entries.every(entry => entry.descriptor.status === 'pending' && entry.pending_state === 'not_sent')).toBe(true);
++    expect(snapshot(localStorage)).toEqual(beforeRead); expect(snapshot(sessionStorage)).toEqual(sessionBefore);
++    expect(localStorage.getItem(indexKey(binding))).toBe(indexBefore);
++    const nextId = ids[64]; if (nextId === undefined) throw new Error('Synthetic 65th UUID fixture');
++    const next = command(nextId); const originalBody = structuredClone(next);
++    expect(await journalAdmissionsAction(binding, next, 65)).toEqual({ ok: false, reason: 'limit' });
++    expect(next).toEqual(originalBody); expect(localStorage.getItem(entryKey(binding, nextId))).toBeNull();
++    expect(localStorage.getItem(indexKey(binding))).toBe(indexBefore);
++    expect(snapshot(localStorage)).toEqual(beforeRead); expect(snapshot(sessionStorage)).toEqual(sessionBefore);
++    expect(value(await readAdmissionsActionsRecovery(binding)).entries).toEqual(recovered.entries);
++    expect(snapshot(localStorage)).toEqual(beforeRead); expect(snapshot(sessionStorage)).toEqual(sessionBefore);
++  });
++});

@@ -11,7 +11,7 @@
 import { useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Notice } from '@/components/primitives';
-import { t } from '@/lib/i18n';
+import { getLocale, t } from '@/lib/i18n';
 import type { ReportReason, ReportTarget } from '@/types';
 
 const REASONS: ReportReason[] = [
@@ -117,62 +117,26 @@ export function BlockButton({
 }: { userId: string; blocked: boolean; onChanged: () => void }) {
   const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
-
-  if (blocked) {
-    return (
-      <button
-        type="button"
-        className="btn btn--sm"
-        disabled={busy}
-        onClick={async () => {
-          setBusy(true);
-          try {
-            await api.unblockPerson(userId);
-            onChanged();
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        {t('block.unblock')}
-      </button>
-    );
-  }
-
-  if (!asking) {
-    return (
-      <button type="button" className="btn btn--sm btn--danger" onClick={() => setAsking(true)}>
-        {t('block.action')}
-      </button>
-    );
-  }
-
-  return (
-    <span className="stack stack--tight">
-      <strong className="small">{t('block.confirm')}</strong>
-      <span className="xs muted">{t('block.explain')}</span>
-      <span className="row row--tight">
-        <button
-          type="button"
-          className="btn btn--sm btn--danger"
-          disabled={busy}
-          onClick={async () => {
-            setBusy(true);
-            try {
-              await api.blockPerson(userId);
-              onChanged();
-            } finally {
-              setBusy(false);
-              setAsking(false);
-            }
-          }}
-        >
-          {t('block.action')}
-        </button>
-        <button type="button" className="btn btn--sm" onClick={() => setAsking(false)}>
-          {t('report.cancel')}
-        </button>
-      </span>
-    </span>
-  );
+  const [error, setError] = useState('');
+  const change = async () => {
+    setBusy(true);
+    try {
+      if (blocked) await api.unblockPerson(userId);
+      else await api.blockPerson(userId);
+      setError(''); setAsking(false); onChanged();
+    } catch (problem) {
+      setError(problem instanceof ApiError ? problem.message : getLocale() === 'en'
+        ? 'Could not update the block. Check the connection and try again.'
+        : 'Не удалось изменить блокировку. Проверь соединение и попробуй ещё раз.');
+    } finally { setBusy(false); }
+  };
+  return <span className="stack stack--tight">
+    {error && <span role="alert" className="small">{error}</span>}
+    {blocked ? <button type="button" className="btn btn--sm" disabled={busy} onClick={() => { void change(); }}>{t('block.unblock')}</button>
+      : !asking ? <button type="button" className="btn btn--sm btn--danger" onClick={() => setAsking(true)}>{t('block.action')}</button>
+      : <><strong className="small">{t('block.confirm')}</strong><span className="xs muted">{t('block.explain')}</span><span className="row row--tight">
+        <button type="button" className="btn btn--sm btn--danger" disabled={busy} onClick={() => { void change(); }}>{t('block.action')}</button>
+        <button type="button" className="btn btn--sm" disabled={busy} onClick={() => { setAsking(false); setError(''); }}>{t('report.cancel')}</button>
+      </span></>}
+  </span>;
 }

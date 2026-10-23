@@ -1,56 +1,52 @@
+import { useRef, useState } from 'react';
+import { ArrowDown, ArrowRight, CalendarBlank, Check, Coins, FileText, GraduationCap, MagnifyingGlass, MapPin, Question, WarningCircle, X } from '@phosphor-icons/react';
+import { savePublicSearchIntent } from '@/lib/publicSearchIntent';
+import { useTranslation } from '@/lib/useTranslation';
+import type { Locale } from '@/lib/i18n';
+import { BookFooter, BookGlobe } from './BookUI';
+import { ProductTour } from './ProductTour';
+
 export function PublicLanding() {
-  return (
-    <div className="landing">
-      <header className="landing__header">
-        <a className="landing__brand" href="#/welcome" aria-label="Unimatch home">
-          <img src="/brand/unimatch-mark.png" alt="" /> Unimatch
-        </a>
-        <nav aria-label="Public navigation">
-          <a href="#how-it-works">How it works</a>
-          <a href="#why-unimatch">Why Unimatch</a>
-          <a href="#/legal">Privacy &amp; terms</a>
-        </nav>
-        <a className="landing__sign-in" href="#/sign-in">Sign in</a>
-      </header>
-
-      <main>
-        <section className="landing__hero" aria-labelledby="landing-title">
-          <div className="landing__hero-copy">
-            <span className="home-eyebrow">SAME STUDENTS. BIGGER HORIZONS.</span>
-            <h1 id="landing-title">Find a university<br />that fits <em>you.</em></h1>
-            <p>Personalized recommendations. Real data. Global opportunities. Your path, made clearer.</p>
-            <div className="landing__actions">
-              <a className="landing__cta" href="#/sign-in?create=1">Start your journey <span aria-hidden="true">→</span></a>
-              <a className="landing__secondary" href="#how-it-works">See how it works</a>
-            </div>
-          </div>
-          <img src="/brand/unimatch-journey.png" alt="A small Unimatch robot looks toward a university across a mountain lake" />
-        </section>
-
-        <section className="landing__steps" id="how-it-works" aria-labelledby="steps-title">
-          <span className="home-eyebrow">A CLEARER PATH</span>
-          <h2 id="steps-title">Four simple steps. One brighter future.</h2>
-          <ol>
-            <li><strong>01 · Build your profile</strong><span>Share your goals and academic background.</span></li>
-            <li><strong>02 · We research</strong><span>We check available university and programme sources.</span></li>
-            <li><strong>03 · Compare with clarity</strong><span>See matches, unknowns and evidence together.</span></li>
-            <li><strong>04 · Plan your next step</strong><span>Keep decisions and document requirements organized.</span></li>
-          </ol>
-        </section>
-
-        <section className="landing__promise" id="why-unimatch">
-          <div>
-            <span className="home-eyebrow">MORE THAN A SEARCH</span>
-            <h2>Real information.<br /><em>Brighter choices.</em></h2>
-          </div>
-          <p>Unimatch shows what a source confirms, what remains unknown, and which questions are worth asking. You make the decision with a clearer view.</p>
-        </section>
-      </main>
-
-      <footer className="landing__footer">
-        <span>© {new Date().getFullYear()} Unimatch</span>
-        <a href="#/legal">Privacy &amp; terms · Drafts awaiting legal review</a>
-      </footer>
-    </div>
-  );
+  const { locale, setLocale } = useTranslation(); const ru = locale !== 'en';
+  const [subject, setSubject] = useState('Computer Science');
+  const [country, setCountry] = useState('');
+  const [budget, setBudget] = useState('60000');
+  const subjectField = useRef<HTMLInputElement>(null);
+  const main = useRef<HTMLElement>(null);
+  return <div className="landing book-window editorial-landing">
+    <a className="skip-link" href="#public-main-content" onClick={event => { event.preventDefault(); main.current?.focus(); }}>{ru ? 'К содержимому' : 'Skip to content'}</a>
+    <header className="landing__header">
+      <a className="landing__brand" href="#/welcome" aria-label="Unimatch home" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}><img src="/brand/unimatch-orbit.svg" alt=""/>unimatch</a>
+      <nav aria-label="Public navigation"><a href="#how-it-works">{ru ? 'Как это работает' : 'How it works'}</a><a href="#why-unimatch">{ru ? 'Почему источники' : 'Why evidence'}</a></nav>
+      <label className="book-language"><span className="visually-hidden">{ru ? 'Язык' : 'Language'}</span><select value={locale} onChange={event => setLocale(event.target.value as Locale)}><option value="ru">Рус</option><option value="kk">Қаз</option><option value="en">Eng</option></select></label>
+      <a className="landing__sign-in" href="#/sign-in">{ru ? 'Войти' : 'Sign in'}</a><a className="btn btn--primary landing__start" href="#/sign-in?create=1">{ru ? 'Начать' : 'Start'}</a>
+    </header>
+    <main id="public-main-content" tabIndex={-1} ref={main}>
+      <section className="landing__hero" aria-labelledby="landing-title">
+        <div className="landing__hero-copy"><h1 id="landing-title">{ru ? <>Найди, где учиться.<br/><span>Пойми, что дальше.</span></> : <>Find where to study.<br/><span>Know what comes next.</span></>}</h1><p>{ru ? 'Программы, требования и твой план поступления. Вместе — от первого выбора до следующего шага.' : 'Programmes, requirements and your admissions plan. Together, from your first choice to your next step.'}</p><div className="landing__hero-actions"><button className="btn btn--primary" type="button" onClick={() => subjectField.current?.focus()}>{ru ? 'Найти программы' : 'Find programmes'}<ArrowRight size={18}/></button><a className="editorial-link" href="#how-it-works">{ru ? 'Посмотреть, как это работает' : 'See how it works'}<ArrowDown size={17}/></a></div></div>
+        <div className="landing__visual" aria-hidden="true"><BookGlobe note={false}/><div className="landing__visual-note landing__visual-note--profile"><span><GraduationCap size={21}/></span><div><strong>{ru ? 'Твои цели' : 'Your goals'}</strong><small>{ru ? 'Направление · страна · бюджет' : 'Subject · country · budget'}</small></div></div><div className="landing__visual-note landing__visual-note--plan"><span><CalendarBlank size={21}/></span><div><strong>{ru ? 'Твой следующий шаг' : 'Your next step'}</strong><small>{ru ? 'Требования → документы → план' : 'Requirements → documents → plan'}</small></div></div></div>
+      </section>
+      <section className="landing-search-section" aria-labelledby="landing-search-title"><div className="landing-search-section__heading"><h2 id="landing-search-title">{ru ? 'С чего начнём?' : 'Where shall we start?'}</h2><p>{ru ? 'Задай направление. Предпочтения можно будет изменить.' : 'Set a direction. You can change your preferences later.'}</p></div>
+        <form className="landing__search" aria-label="Plan your university search" onSubmit={event => { event.preventDefault(); savePublicSearchIntent({ subject: subject.trim(), country, budget: budget === '' ? null : Number(budget) }); window.location.hash = '#/sign-in?create=1'; }}>
+          <label><span>{ru ? 'Что изучать?' : 'What do you want to study?'}</span><span className="book-search-field"><MagnifyingGlass size={20}/><input ref={subjectField} value={subject} maxLength={120} required onChange={event => setSubject(event.target.value)} aria-label={ru ? 'Что изучать?' : 'What do you want to study?'}/><button type="button" aria-label={ru ? 'Очистить направление' : 'Clear subject'} onClick={() => setSubject('')}><X size={16}/></button></span></label>
+          <label><span>{ru ? 'Куда?' : 'Where?'}</span><span className="book-search-field"><MapPin size={20}/><select value={country} onChange={event => setCountry(event.target.value)} aria-label={ru ? 'Куда?' : 'Where?'}><option value="">{ru ? 'Весь мир' : 'Explore worldwide'}</option>{['Canada', 'Germany', 'Netherlands', 'United Kingdom', 'United States', 'Japan', 'Australia'].map(value => <option key={value}>{value}</option>)}</select></span></label>
+          <label><span>{ru ? 'Годовой бюджет семьи' : 'Annual family budget (USD)'}</span><span className="book-search-field"><Coins size={20}/><span className="book-budget-prefix">{ru ? 'До $' : 'USD '}</span><input aria-label={ru ? 'Годовой бюджет семьи' : 'Annual family budget (USD)'} type="number" min={0} max={1000000} placeholder={ru ? 'Уточняется' : 'Not decided yet'} value={budget} onChange={event => setBudget(event.target.value)}/></span></label>
+          <button className="btn btn--primary" type="submit">{ru ? 'Продолжить' : 'Continue'}<ArrowRight size={18}/></button>
+        </form>
+        <div className="landing__topics"><span>{ru ? 'Или начни с интереса' : 'Or start with an interest'}</span>{['Computer Science', 'Business', 'Engineering', 'Medicine', 'Art & Design'].map(value => <button type="button" key={value} aria-pressed={subject === value} onClick={() => setSubject(value)}>{value}</button>)}</div>
+      </section>
+      <ProductTour english={!ru}/>
+      <section className="editorial-evidence" id="why-unimatch" aria-labelledby="editorial-evidence-title">
+        <div className="editorial-evidence__copy"><h2 id="editorial-evidence-title">{ru ? <>Сначала факты.<br/>Затем решение.</> : <>Evidence first.<br/>Then your decision.</>}</h2><p>{ru ? 'Требования отличаются по программе, уровню и набору. Поэтому рядом с собранной информацией важны источник и контекст, а не уверенный ответ без основания.' : 'Requirements vary by programme, degree and intake. A source and its context matter more than an unsupported confident answer.'}</p><a className="editorial-link" href="#/sign-in?create=1">{ru ? 'Собрать свой маршрут' : 'Build your own journey'}<ArrowRight size={18}/></a></div>
+        <div className="editorial-evidence__states" aria-label={ru ? 'Как различается состояние информации' : 'How evidence states differ'}>
+          <article><span className="editorial-state editorial-state--confirmed"><Check size={23}/></span><div><h3>{ru ? 'Подтверждено источником' : 'Confirmed by a source'}</h3><p>{ru ? 'Ссылка и цитата помогают проверить опубликованное условие.' : 'A link and excerpt help you review the published condition.'}</p></div></article>
+          <article><span className="editorial-state editorial-state--unknown"><Question size={23}/></span><div><h3>{ru ? 'Требует уточнения' : 'Needs clarification'}</h3><p>{ru ? 'Неизвестное остаётся неизвестным. Это не отказ и не отсутствие программы.' : 'Unknown stays unknown. It is not rejection or proof that a programme does not exist.'}</p></div></article>
+          <article><span className="editorial-state editorial-state--conflict"><WarningCircle size={23}/></span><div><h3>{ru ? 'Есть расхождение' : 'Sources disagree'}</h3><p>{ru ? 'Если страницы расходятся, нужно проверить условия и применимость.' : 'When pages disagree, review the conditions and their scope.'}</p></div></article>
+        </div>
+      </section>
+      <section className="editorial-plan" aria-labelledby="editorial-plan-title"><div><h2 id="editorial-plan-title">{ru ? <>Большие планы.<br/>Посильные шаги.</> : <>Big plans.<br/>Manageable steps.</>}</h2><p>{ru ? 'Выбранная программа становится отправной точкой: документы, личные задачи, заявки и даты — в одном рабочем пространстве.' : 'A selected programme becomes your starting point: documents, personal tasks, applications and dates in one workspace.'}</p><a className="btn" href="#/sign-in?create=1">{ru ? 'Начать свой план' : 'Start your plan'}<ArrowRight size={18}/></a></div><ol className="editorial-plan__route" aria-label={ru ? 'Пример пути поступления' : 'Example admissions journey'}><li><GraduationCap size={24}/><div><strong>{ru ? 'Выбрать программу' : 'Choose a programme'}</strong><span>{ru ? 'Сравнить условия и открытые вопросы' : 'Compare conditions and open questions'}</span></div></li><li><FileText size={24}/><div><strong>{ru ? 'Подготовить документы' : 'Prepare documents'}</strong><span>{ru ? 'Связать требования с личными задачами' : 'Connect requirements to personal tasks'}</span></div></li><li><CalendarBlank size={24}/><div><strong>{ru ? 'Держать сроки в поле зрения' : 'Keep dates in view'}</strong><span>{ru ? 'Разделять личные даты и официальные дедлайны' : 'Separate personal dates and official deadlines'}</span></div></li></ol></section>
+      <section className="editorial-faq" aria-labelledby="editorial-faq-title"><h2 id="editorial-faq-title">{ru ? 'Важное до старта.' : 'Before you begin.'}</h2><div><details><summary>{ru ? 'Unimatch гарантирует поступление?' : 'Does Unimatch guarantee admission?'}</summary><p>{ru ? 'Нет. Решение принимает университет. Unimatch помогает разобраться в опубликованных условиях и организовать личную подготовку. Непроверенные условия требуют уточнения.' : 'No. The university makes the decision. Unimatch helps you review published conditions and organise your preparation. Unverified conditions still need checking.'}</p></details><details><summary>{ru ? 'IELTS и SAT — обязательная часть продукта?' : 'Are IELTS and SAT preparation required?'}</summary><p>{ru ? 'Нет. Подготовка к экзаменам — дополнительный раздел. Конкретный экзамен нужен только тогда, когда это следует из применимого требования программы.' : 'No. Exam preparation is optional. An exam is required only when an applicable programme requirement calls for it.'}</p></details><details><summary>{ru ? 'Что произойдёт после поиска на этой странице?' : 'What happens after searching on this page?'}</summary><p>{ru ? 'Откроется создание аккаунта. Если хранилище вкладки доступно, предпочтения временно останутся здесь. Применить их к личному профилю можно будет явным действием.' : 'Account creation opens. If tab storage is available, your preferences stay here temporarily. Applying them to your personal profile requires an explicit action.'}</p></details></div></section>
+      <section className="editorial-finale"><h2>{ru ? <>Твоё завтра<br/>начинается с выбора.</> : <>Your tomorrow<br/>starts with a choice.</>}</h2><a className="btn btn--primary" href="#/sign-in?create=1">{ru ? 'Создать аккаунт' : 'Create an account'}<ArrowRight size={18}/></a></section>
+    </main><BookFooter/>
+  </div>;
 }

@@ -1,0 +1,32 @@
+--- a/frontend/src/lib/i18n.ts
++++ b/frontend/src/lib/i18n.ts
+@@ -39,6 +39,9 @@
+  * from `ru` or `kk` renders this text rather than the raw key.
+  */
+ const EN = {
++  'nav.group.optional': 'Optional tools',
++  'preparation.optionalLink': 'Exam preparation · optional',
++  'preparation.optionalHint': 'Optional practice. You can find universities, manage documents and plan applications without using our IELTS or SAT materials. Official exam requirements for a programme still apply.',
+   ...G1_EN,
+   'shared.title': 'Shared preparation route',
+   'shared.recoveryDraft': 'Browser draft restored or changed — it is not a server save. This tab keeps your personal inputs.',
+@@ -441,6 +444,9 @@
+  * from the glossary whose Russian equivalent a person has to choose.
+  */
+ const RU: Partial<Record<MessageKey, string>> = {
++  'nav.group.optional': 'Дополнительные инструменты',
++  'preparation.optionalLink': 'Подготовка к экзаменам · по желанию',
++  'preparation.optionalHint': 'Практика по желанию. Поиск вузов, документы и план заявок доступны без наших материалов IELTS и SAT. Официальные требования выбранной программы к экзаменам сохраняются.',
+   ...G1_RU,
+   'shared.title': 'Общий маршрут подготовки',
+   'shared.recoveryDraft': 'Черновик браузера восстановлен или изменён — серверу он не сохранён. В этой вкладке остаётся ваш ввод.',
+@@ -819,6 +825,9 @@
+ 
+ /** Kazakh, on the same rule. */
+ const KK: Partial<Record<MessageKey, string>> = {
++  'nav.group.optional': 'Қосымша құралдар',
++  'preparation.optionalLink': 'Емтиханға дайындық · қалауыңыз бойынша',
++  'preparation.optionalHint': 'Қосымша жаттығу. Университеттерді іздеу, құжаттар мен өтініштерді жоспарлау үшін біздің IELTS немесе SAT материалдарын пайдалану міндетті емес. Бағдарламаның ресми емтихан талаптары сақталады.',
+   ...G1_KK,
+   'shared.title': 'Ортақ дайындық бағыты',
+   'shared.recoveryDraft': 'Браузердегі жоба қалпына келтірілді немесе өзгерді — ол серверге сақталмаған. Енгізілген деректер осы қойындыда қалады.',

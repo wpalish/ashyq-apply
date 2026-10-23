@@ -1,0 +1,16 @@
+from pathlib import Path
+import fcntl,hashlib,json,datetime
+s=Path(__file__).resolve().parent;b=s.parents[1];r=b/'work/unimatch-calendar-materials';lab=b/'product-platform/2026-10-12/g3-execution/source';h=lambda v:hashlib.sha256(v).hexdigest();lock=(b/'local-runner/.run.lock').open('r+');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+p='frontend/e2e/core-admissions.spec.ts';old=(r/p).read_bytes();assert old==(lab/p).read_bytes();t=old.decode();labels=['Linked application','Programme reference','Choose a programme requirement','Task to link','Your reported status']
+for label in labels:
+ a=f"page.getByLabel('{label}', {{ exact: true }})";assert a in t;t=t.replace(a,f"page.getByRole('combobox', {{ name: '{label}', exact: true }})")
+(s/'native7-selectors-preimage.spec.ts').write_bytes(old);(s/'native7-selectors-proposal.spec.ts').write_text(t)
+harness=s/'native-core7/e2e/run-native-recovery.py';raw=harness.read_bytes();x=raw.decode();x=x.replace("' use: { ...native.use, baseURL:","' use: { ...native.use, actionTimeout: 20000, baseURL:")
+start=x.index("if suite == 'demo':\n");end=x.index("if suite == 'ux':\n",start);x=x[:start]+x[end:]
+(s/'native7-harness-repair-preimage.py').write_bytes(raw);(s/'native7-harness-repair-proposal.py').write_text(x)
+grant={'status':'ROOT_WRITE_AHEAD','at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_path':p,'preimage':h(old),'postimage':h(t.encode()),'harness_preimage':h(raw),'harness_postimage':h(x.encode()),'finding':'FIRST_NATIVE_DEMO_FAILED_SELECTOR_NOT_PRODUCT. Error context has combo Programme reference with2 actual selected options and nativeDB2approved. Playwright getByLabel exact includes wrapped option text; use semantic combobox/name selector. Same assertions/data/API, no waiver. 20s action timeout avoids hanging360s. Remove inherited unused fault metadata: first original receipt field is not actual performed fault evidence.','first_proof':'native-core7/evidence/e2e/20261013T234255Z-demo','auth':'NOT_RUN_FIRST_DEMO_FAILURE','acceptance':'NOT_ACCEPTED'};(s/'NATIVE_CORE_7_REPAIR1_GRANT.json').write_text(json.dumps(grant,indent=2)+'\n')
+f=r/'docs/process/HANDOFF.md';f.write_text(f.read_text().replace('## 5. NEXT STEP — exact and executable\n\n','## 5. NEXT STEP — exact and executable\n\n**[core7 first failure/repair1] First native Demo fails20s? Actual360s selector timeout at combo option, AuthNOT_RUN; source483 unchanged/ports clean. Error-context shows2 actual selected combo options and ownDB2approved, so product selection loss hypothesis withdrawn. Exact one E2E file5 selector calls getByRole combobox/name, no assertion/data change. External helper action timeout20s and remove inherited unused shared-route fault metadata; first raw field not evidence of actual fault execution. Preserve originals, new source/harness pins, repeat finite actual Demo/Auth. Native acceptance/full5840 still pending; root solo.**\n\n',1))
+for tree in [r,lab]:(tree/p).write_text(t)
+harness.write_text(x)
+f=s/'native-core7/expected-source-pins.json';v=json.loads(f.read_text());assert v[p]==h(old);v[p]=h(t.encode());f.write_text(json.dumps(v,indent=2)+'\n')
+print('Test selector-only repair applied; first raw preserved.');fcntl.flock(lock,fcntl.LOCK_UN);lock.close()

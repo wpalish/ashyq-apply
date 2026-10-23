@@ -1,0 +1,44 @@
+{
+  "head": "76aa096b905f484b7ad2a0c6aec64c7972742e7d",
+  "delta": {
+    "backend/app/api/routes_preparation.py": {
+      "before": "a92784aa81b589091c7924339eadddee6241591f36d30f63755d41cbcf116718",
+      "after": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2"
+    },
+    "backend/tests/test_learning_schedule_api.py": {
+      "before": "33ae0feec710c5f90e3af6d868212ca992cef2192fba6d730d5e1010b2f73d82",
+      "after": "ceea0da3f8c781f68e3eeb60d2be5cbe3100bf6857afb7683fd57532914abbe6"
+    },
+    "frontend/e2e/auth-journey.spec.ts": {
+      "before": "4591986814ac67f16d2b2c4900db4663164329b1fe4c268602b84fbcc88d97cf",
+      "after": "f0c43881686a065c3b04e7ce8d4d45d31e155213ef01566f8d32ee689b1be90d"
+    },
+    "frontend/e2e/preparation.spec.ts": {
+      "before": "e69aafdb16e7f5f62cfafc1eacc4968297637505749b57522230ab60f78461e2",
+      "after": "d9965ce8643d528d034257561ee9ff9ee87358443bb4e8a12efaa408f62499a0"
+    },
+    "frontend/src/screens/LearningSchedulePanel.test.tsx": {
+      "before": "845381c8f346899a2753d5b70ba0ec43e8789ac044d8a16d12af4e2045b81280",
+      "after": "4ae60a7fef1906570c8a17bb2051ad8e69eee431e16eecb772818ed527c5ba98"
+    },
+    "frontend/src/screens/LearningSchedulePanel.tsx": {
+      "before": "94ac8f480b0efb2a0409b0dbb927f60f3f4effbbc72a5efbd08406fc9f04927f",
+      "after": "b3dac63b381fbc921a014234a8d42b3b2668fe5482650e97a2be9e646d2bbf07"
+    },
+    "frontend/src/screens/PreparationScreen.learningPath.test.tsx": {
+      "before": "9eed8f46dd1959cf4a446b1c6532c71b04c978454ec015c287fc047b0b5bd5ed",
+      "after": "3854e44498c46c87ce4ad49110156dd13e12a24213fcd39362873b4b48d84e1a"
+    }
+  },
+  "expected_count": 573,
+  "expected_changes": {
+    "backend/app/api/routes_preparation.py": {
+      "before": "a92784aa81b589091c7924339eadddee6241591f36d30f63755d41cbcf116718",
+      "after": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2"
+    },
+    "backend/tests/test_learning_schedule_api.py": {
+      "before": "33ae0feec710c5f90e3af6d868212ca992cef2192fba6d730d5e1010b2f73d82",
+      "after": "ceea0da3f8c781f68e3eeb60d2be5cbe3100bf6857afb7683fd57532914abbe6"
+    }
+  }
+}

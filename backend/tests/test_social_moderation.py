@@ -427,12 +427,15 @@ class TestTheQueue:
 
 
 def sign_in_as_moderator(client: TestClient) -> None:
-    """The one account the settings name. Registered on first use."""
+    """Provision the trusted fixture account by its immutable ID, not its email."""
+    from app import config
+
     existing = client.post(
         "/api/auth/login",
         json={"email": "keeper@example.test", "password": "correct horse battery keeper"},
     )
     if existing.status_code == 200:
+        config.get_settings().moderator_user_ids = existing.json()["user_id"]
         return
     registered = client.post(
         "/api/auth/register",
@@ -444,3 +447,86 @@ def sign_in_as_moderator(client: TestClient) -> None:
         },
     )
     assert registered.status_code == 201, registered.text
+    config.get_settings().moderator_user_ids = registered.json()["user_id"]
+
+
+class TestModeratorAccountProvisioning:
+    def test_registering_the_configured_email_does_not_grant_moderation(self, client):
+        from app.db import SessionLocal
+        from app.models import User
+
+        claimed_id = join_as(client, "keeper")
+        with SessionLocal() as session:
+            claimed = session.get(User, claimed_id)
+            assert claimed is not None and not claimed.email_verified
+        response = client.get("/api/social/moderation/reports")
+        assert response.status_code == 403, response.text
+
+    def test_claimed_email_cannot_remove_another_tenants_reported_content(self, client):
+        from app.db import SessionLocal
+        from app.models import ContentReport, Post
+
+        author = join_as(client, "protected-author")
+        post = client.post("/api/social/posts", json={"body": "Protected synthetic post"}).json()
+        client.post("/api/auth/logout")
+        join_as(client, "protected-reporter")
+        report = client.post(
+            "/api/social/reports",
+            json={"subject_type": "post", "subject_id": post["id"], "reason": "spam", "note": ""},
+        ).json()
+        client.post("/api/auth/logout")
+        impersonator = join_as(client, "keeper")
+        assert impersonator != author
+        denied = client.post(
+            f"/api/social/moderation/reports/{report['id']}",
+            json={"action": "remove", "note": "Unauthorized removal"},
+        )
+        assert denied.status_code == 403, denied.text
+        with SessionLocal() as session:
+            assert session.get(Post, post["id"]) is not None
+            retained = session.get(ContentReport, report["id"])
+            assert retained is not None and retained.status == "open"
+            assert retained.resolved_at is None and retained.resolved_by is None
+
+    def test_only_explicitly_provisioned_id_can_moderate_across_workspaces(self, client):
+        from app import config
+
+        join_as(client, "cross-workspace-author")
+        post = client.post("/api/social/posts", json={"body": "Synthetic moderation case"}).json()
+        client.post("/api/auth/logout")
+        join_as(client, "cross-workspace-reporter")
+        report = client.post(
+            "/api/social/reports",
+            json={"subject_type": "post", "subject_id": post["id"], "reason": "spam", "note": ""},
+        ).json()
+        client.post("/api/auth/logout")
+        trusted_id = join_as(client, "operator-provisioned")
+        assert client.get("/api/social/moderation/reports").status_code == 403
+        config.get_settings().moderator_user_ids = f" , {trusted_id}, , "
+        queue = client.get("/api/social/moderation/reports")
+        assert queue.status_code == 200
+        assert [item["id"] for item in queue.json()["items"]] == [report["id"]]
+        removed = client.post(
+            f"/api/social/moderation/reports/{report['id']}",
+            json={"action": "remove", "note": "Operator-provisioned account"},
+        )
+        assert removed.status_code == 200 and removed.json()["status"] == "actioned"
+        client.post("/api/auth/logout")
+        join_as(client, "another-workspace-owner")
+        assert client.get("/api/social/moderation/reports").status_code == 403
+        assert client.get(f"/api/social/posts/{post['id']}").status_code == 404
+
+    def test_recreating_the_same_email_does_not_inherit_a_provisioned_id(self, client):
+        from app import config
+
+        old_id = join_as(client, "keeper")
+        assert client.get("/api/social/moderation/reports").status_code == 403
+        config.get_settings().moderator_user_ids = old_id
+        assert client.get("/api/social/moderation/reports").status_code == 200
+        deleted = client.post(
+            "/api/auth/me/delete", json={"password": "correct horse battery keeper"}
+        )
+        assert deleted.status_code == 204
+        new_id = join_as(client, "keeper")
+        assert new_id != old_id
+        assert client.get("/api/social/moderation/reports").status_code == 403

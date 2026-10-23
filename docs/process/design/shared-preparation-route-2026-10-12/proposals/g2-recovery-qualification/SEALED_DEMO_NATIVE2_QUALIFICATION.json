@@ -1,0 +1,199 @@
+{
+  "schema_version": "external-demo-qualification-v1",
+  "reviewed_at_utc": "2026-10-12T05:12:07Z",
+  "reviewer": "/root/open_search_solutions",
+  "status": "QUALIFIED_SAVED_NATIVE2_DEMO_ONLY",
+  "independently_executed_application_or_tests": false,
+  "review_methods": [
+    "ordinary source/text reads",
+    "SHA-256 artifact hashes",
+    "offline saved ZIP/body decoding",
+    "JSON metadata comparisons",
+    "saved screenshot inspection"
+  ],
+  "original_html_executed": false,
+  "source_git_handoff_helper_edited": false,
+  "provider_network_auth_private_or_stopped_payload_work": false,
+  "observed_run": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo",
+    "suite": "demo",
+    "source_binding_head": "5f4f9b442ae96e0ba9a3d6330240975e561025c8",
+    "full_binding_members": 772,
+    "run_source_members": 429,
+    "before_after_exact_equal": true,
+    "all429_match_binding10": true,
+    "exit_code": 0,
+    "total_cases": 106,
+    "passed": 105,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0,
+    "html_unexpected": 0,
+    "html_flaky": 0,
+    "historical_skip": {
+      "file": "community.spec.ts",
+      "line": 81,
+      "project": "desktop-chromium",
+      "reason": "the wrapped navigation only applies below 900px"
+    },
+    "lost_ack_cases": [
+      {
+        "project": "desktop-chromium",
+        "status": "passed",
+        "retry": 0,
+        "errors": 0,
+        "http_status": 200,
+        "expected_revision": 1,
+        "accepted_revision": 2,
+        "uuid": "938be128-26e9-4930-a57f-20ee230798cc",
+        "command_ack_inputs_equal": true
+      },
+      {
+        "project": "mobile",
+        "status": "passed",
+        "retry": 0,
+        "errors": 0,
+        "http_status": 200,
+        "expected_revision": 1,
+        "accepted_revision": 2,
+        "uuid": "9832a266-0e47-4c5d-afe9-12155e404495",
+        "command_ack_inputs_equal": true
+      }
+    ],
+    "same_tab_home_reload_no_second_write_assertion": "PASS_in_both_saved_cases",
+    "native_current_history_export_exact_receipt_assertion": "PASS_in_both_saved_cases",
+    "saved_budget250_separate_dirty_draft260_assertion": "PASS_in_both_saved_cases",
+    "readiness": "not_assessed",
+    "programme_applicability": "unknown"
+  },
+  "extraction": {
+    "original_html": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/playwright-report/index.html",
+    "original_html_sha256": "e2141aaa16bbbbb29e0e2b92bce49dcd1fb3e239c1771aea882ed3a1ce887b31",
+    "method": "Decode playwrightReportBase64 template as ZIP, inspect original preparation JSON member, preserve exact decoded attachment body text",
+    "zipped_member": "47ff6f7eed4fa2ee7144.json",
+    "attachment_name": "g2-recovery-forwarded-native-ack.json",
+    "fabricated_or_source_reconstructed_receipt": false
+  },
+  "carry": {
+    "status": "EXCLUDED_AUTH_FILE_ONLY_DEMO_EXECUTION_CLOSURE_UNCHANGED",
+    "new_source_binding_head": "c1ef1aa82085ef22ff62cb2a4ace9e23d8b7fdda",
+    "binding11_sha256": "7d36c635c8062baafc66dfd3f00ee3e3812a29f230083f030ff052463edc4bba",
+    "members": 772,
+    "added_paths": 0,
+    "removed_paths": 0,
+    "changed_paths": [
+      {
+        "path": "frontend/e2e/auth-journey.spec.ts",
+        "old": "f3d9be295640cc157ebdd591d7cb5f4a817cf82ab415bca8af6ac336f4ce62c4",
+        "new": "4ed22753500706698f965d36b64f8c0ebdf80f224a8b5f719ac8c167c320234b"
+      }
+    ],
+    "run_map_unchanged428_of429": true,
+    "excluded_by": "frontend/playwright.config.ts:11 testIgnore '**/auth-journey.spec.ts'",
+    "demo_rerun_claimed": false,
+    "focused_root_lab_hashes_equal": true,
+    "static_or_backend_full_gate_independently_qualified": false
+  },
+  "cleanup": {
+    "state": "NATIVE2_ROOT_TERMINAL_CLEANUP_RECEIPT_READ",
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G2_NATIVE2_TERMINAL_VERIFICATION.json",
+    "sha256": "7d24879211e051e03b1377612af6b37a54ef93b0d5da3d5066b18405f59b3b43",
+    "at_utc": "2026-10-12T05:03:35.274036+00:00",
+    "demo_runner_and_groups_absent": true,
+    "ports_clear": true,
+    "owned_synthetic_runtime_paths_removed": true,
+    "independently_probed_or_deleted_by_reviewer": false
+  },
+  "auth": {
+    "status": "NOT_QUALIFIED_BY_THIS_REVIEW",
+    "native2_passed": 3,
+    "native2_old_selector_error": 1,
+    "native2_not_run": 8,
+    "fresh_corrected_auth_mutable_output_not_read": true
+  },
+  "limitations": [
+    "one controlled same-tab Demo lost-ACK flow",
+    "no cross-tab atomic browser-storage CAS proof",
+    "no harness-after.json exists; no after-manifest claim",
+    "no deployment/production/live search-quality/official-score/admission/superiority proof",
+    "G3 SOURCE_CLOSED pending separate root release/baton/writeahead"
+  ],
+  "owned_members": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-recovery-qualification/DEMO_NATIVE2_QUALIFICATION.md",
+      "sha256": "7b91cda8388ad41266f4ad32868896791cabfe06a51fb4fcdbcf5ffe487d21d8"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-recovery-qualification/native2-demo-artifact-read/embedded-report.zip",
+      "sha256": "23806e3e752ad58583d1895ac601e5cdd2691a88e3bf6ffe6c09edf981cabd2b"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-recovery-qualification/native2-demo-artifact-read/forwarded-native-ack.desktop.json",
+      "sha256": "e602c34b0850691a26189b998547828f05bbb494d2aad262aea284e3c39b37b7"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-recovery-qualification/native2-demo-artifact-read/forwarded-native-ack.mobile.json",
+      "sha256": "75a3616b1f39dc893bf84a3451bf720901e2e756f5ee8dde62ea703b20416acd"
+    }
+  ],
+  "pinned_inputs": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/run.json",
+      "sha256": "8cb52534b5db8c5ddd5c044856825b697582780445c8983f6a7241e731f48850"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/junit.xml",
+      "sha256": "9b6563a910cd6bde081ad836d37c19e2faa4019c7733f8668ea4e9a2bf712407"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/test.log",
+      "sha256": "658975d1dca96189c8c0d4abb0a46a5eb4d69870fdb8584e4d01e7ead487b448"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/source-before.json",
+      "sha256": "fef64d55bf41f7b5221e65d03a5109fb3de48e12e642f8842441cb15d2ecb0f5"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/source-after.json",
+      "sha256": "fef64d55bf41f7b5221e65d03a5109fb3de48e12e642f8842441cb15d2ecb0f5"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/harness-before.json",
+      "sha256": "28d8a58a91ef9ab7bfa169138f0ad6e8bb510d9648b6aa9349c6fe50c4385780"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/playwright.config.mts",
+      "sha256": "f56e655cea8d55597d60b7f6548f41bedc750c7a21c48f218ed1151334df86c5"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/playwright-report/index.html",
+      "sha256": "e2141aaa16bbbbb29e0e2b92bce49dcd1fb3e239c1771aea882ed3a1ce887b31"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/docs/screenshots/g2-recovery-lost-ack.png",
+      "sha256": "c5e3577f1a50904c84e20afb10b2660fb7ecb2b0c3b228c401821a5694e23c75"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/docs/screenshots/mobile/g2-recovery-lost-ack.png",
+      "sha256": "efb8fecdbef2ca62b8f873d933080882ac64ad7359cdf37fbe7dd338facce65f"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/SOURCE_COPY.persistence10.json",
+      "sha256": "4a1ff273413b38568e90cd5ade936af50f5498cc33ec43c7a9bfa1eb38320353"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/SOURCE_COPY.persistence11.json",
+      "sha256": "7d36c635c8062baafc66dfd3f00ee3e3812a29f230083f030ff052463edc4bba"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G2_NATIVE2_TERMINAL_VERIFICATION.json",
+      "sha256": "7d24879211e051e03b1377612af6b37a54ef93b0d5da3d5066b18405f59b3b43"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G2_RECOVERY_STATIC12_DEMO_CARRY_VERIFICATION.json",
+      "sha256": "887a6d3bf59e7a5f5e7840da21baf0f09832440b7112699557cde3364d1b689e"
+    }
+  ],
+  "actionable_demo_blockers": []
+}
+

@@ -1,0 +1,27 @@
+--- sealed-original
++++ fresh-on
+@@ -30,6 +30,14 @@
+ from app.adapters.fetching import Fetcher, FetchResult
+ from app.adapters.search.base import SearchResponse, SearchResult
+ from app.adapters.search.intent import DiscoveryIntent
++import importlib.util
++import sys
++PROPOSED_RETRIEVAL = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/proposed/backend/app/adapters/search/retrieval.py')
++assert hashlib.sha256(PROPOSED_RETRIEVAL.read_bytes()).hexdigest() == '4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee'
++_spec = importlib.util.spec_from_file_location('app.adapters.search.retrieval', PROPOSED_RETRIEVAL)
++_module = importlib.util.module_from_spec(_spec)
++sys.modules[_spec.name] = _module
++_spec.loader.exec_module(_module)
+ from app.adapters.search.retrieval import discover_candidates
+ from app.domain.enums import DegreeLevel, FetchOutcome
+ from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+@@ -188,6 +196,9 @@
+     for module in (retrieval_module, live_module, control_module, budget_module):
+         path = Path(module.__file__).resolve()
+         expected = REPO / 'backend' / Path(*module.__name__.split('.')).with_suffix('.py')
++        if module is retrieval_module:
++            expected = PROPOSED_RETRIEVAL
++            assert hashlib.sha256(path.read_bytes()).hexdigest() == '4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee'
+         assert path == expected
+         modules.append({'name': module.__name__, 'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
+     rows = []

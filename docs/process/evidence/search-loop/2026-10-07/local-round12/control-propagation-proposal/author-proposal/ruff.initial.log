@@ -1,0 +1,87 @@
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_hybrid_retrieval.py:780:1: SyntaxError: Unexpected indentation
+    |
+778 | from datetime import UTC, datetime
+779 |
+780 |         from app.adapters.search.base import SearchResult
+    | ^
+781 |
+782 |         now = datetime(2026, 9, 21, tzinfo=UTC)
+    |
+
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_hybrid_retrieval.py:802:1: SyntaxError: unindent does not match any outer indentation level
+    |
+800 |         ]
+801 |
+802 |     def test_by_default_an_irrelevant_kind_is_kept(self):
+    | ^
+803 |         from app.adapters.search.prefilter import prefilter
+    |
+
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_hybrid_retrieval.py:808:1: SyntaxError: unindent does not match any outer indentation level
+    |
+806 |         assert len(outcome.kept) == 2, "the default must not change silently"
+807 |
+808 |     def test_when_asked_it_is_dropped_with_its_reason(self):
+    | ^
+809 |         from app.adapters.search.prefilter import Rejection, prefilter
+    |
+
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_hybrid_retrieval.py:822:1: SyntaxError: unindent does not match any outer indentation level
+    |
+820 |         assert outcome.rejected[0].reason is Rejection.NOT_A_PROGRAMME_PAGE
+821 |
+822 |     def test_a_programme_page_is_never_dropped_by_this(self):
+    | ^
+823 |         from app.adapters.search.prefilter import prefilter
+    |
+
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_hybrid_retrieval.py:894:1: SyntaxError: Expected dedent, found end of file
+    |
+892 |     assert network == []
+893 |     assert all(count == 0 for count in fetcher.stats.values())
+    |                                                               ^
+    |
+
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_search_layer_budget_fixes.py:10:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 8 |   """
+ 9 |
+10 | / from __future__ import annotations
+11 | |
+12 | | import asyncio
+13 | | from copy import deepcopy
+14 | | import socket
+15 | | from datetime import UTC, datetime
+16 | | from pathlib import Path
+17 | | from typing import ClassVar, cast
+18 | |
+19 | | import pytest
+20 | |
+21 | | from app.adapters.discovery.live_discovery import (
+22 | |     MAX_PAGES_PER_CATEGORY,
+23 | |     DiscoveryTrace,
+24 | |     LiveDiscoveryAdapter,
+25 | |     PageCategory,
+26 | | )
+27 | | from app.adapters.search import SearchProviderNotConfigured
+28 | | from app.adapters.search.base import (
+29 | |     SearchFailureReason,
+30 | |     SearchProvider,
+31 | |     SearchResponse,
+32 | |     SearchResult,
+33 | |     SearchUnavailable,
+34 | | )
+35 | | from app.adapters.search.intent import DiscoveryIntent
+36 | | from app.adapters.search.retrieval import discover_candidates
+37 | | from app.domain.enums import DegreeLevel
+38 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+39 | | from app.pipeline.read_budget import BudgetedFetcher
+40 | | from app.schemas.profile import ApplicantProfileIn
+   | |__________________________________________________^ I001
+41 |
+42 |   NAME = "University of Groningen"
+   |
+   = help: Organize imports
+
+Found 6 errors.
+[*] 1 fixable with the `--fix` option.

@@ -1,0 +1,10 @@
+search provider: exa
+get #1 start t=0s https://caltech.edu/
+get #1 took 0.5s robots_disallowed
+get #2 start t=1s https://www.caltech.edu/
+get #2 took 1.3s ok
+search #1 took 2.5s (t=4s)
+get #3 start t=4s https://www.caltech.edu/
+get #3 took 7.5s ok
+get #4 start t=12s https://en.wikipedia.org/
+get #4 took 2.3s ok

@@ -1,0 +1,90 @@
+{
+  "status": "READ_ONLY_STATIC_REVIEW_NO_GATE_EXECUTION",
+  "proposal_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/proposals/schedule",
+  "proposal": {
+    "backend/app/schemas/study_schedule.py": {
+      "sha256": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+      "bytes": 7157
+    },
+    "backend/app/domain/study_schedule.py": {
+      "sha256": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+      "bytes": 13182
+    },
+    "backend/tests/test_study_schedule.py": {
+      "sha256": "d2e5338a895f03daf79bea508febea72d458191a613df824bf9188c938e966e5",
+      "bytes": 14784
+    }
+  },
+  "native_context": {
+    "backend/tests/test_preparation_api.py": {
+      "sha256": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437",
+      "bytes": 33923
+    },
+    "backend/tests/conftest.py": {
+      "sha256": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6",
+      "bytes": 10851
+    },
+    "backend/app/api/routes_preparation.py": {
+      "sha256": "8dbf16b84ef74e399825a4127cd0d55a9c220909d266f33eb29d26afbd60075f",
+      "bytes": 14764
+    },
+    "backend/app/api/routes_profile.py": {
+      "sha256": "bcbcfb36fd65b1ad1cb449ea8a047f1a2c5e50f05241a99b3c071cd937e7168f",
+      "bytes": 15116
+    },
+    "backend/app/models/study_schedule.py": {
+      "sha256": "1b558525a2ae05ce6cb75cad46515318f4e569bf706b9fc0267c68e022052d0a",
+      "bytes": 976
+    },
+    "backend/app/models/applicant.py": {
+      "sha256": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb",
+      "bytes": 2192
+    },
+    "backend/app/models/__init__.py": {
+      "sha256": "d5033b970b7ea2f3187789ed079f292b5cf3ba93f1156575c68de09c60db3e14",
+      "bytes": 2247
+    },
+    "backend/app/payments/preparation.py": {
+      "sha256": "ab44ed538177c2ac765cd86ec326bb53c196c01927dc04565a9911fe50150a26",
+      "bytes": 1635
+    },
+    "backend/migrations/versions/a9e5c14d2021_study_schedule.py": {
+      "sha256": "0502ab5e4660372dcb20cd79a2a14779cbc59086b7a363545cd2628ccb733c3d",
+      "bytes": 1013
+    },
+    "backend/app/api/routes_account.py": {
+      "sha256": "e7ec09868bbe8c61b6ea97c05b65ca15f96843427bf09002af6bed36f4f4f1d9",
+      "bytes": 15697
+    },
+    "backend/app/api/tenancy.py": {
+      "sha256": "34557c1bae4f9cc36413cfd952a001342df9a35a1c5ecf5ad19bd83cf121363f",
+      "bytes": 1539
+    },
+    "backend/app/models/base.py": {
+      "sha256": "dfab71868df728ce3dc74d01f9d547512eb8076795207e113425a1eb1b786b62",
+      "bytes": 1241
+    }
+  },
+  "native_context_unchanged_since_api_preparation": {
+    "backend/tests/test_preparation_api.py": true,
+    "backend/tests/conftest.py": true,
+    "backend/app/api/routes_preparation.py": true,
+    "backend/app/api/routes_profile.py": true,
+    "backend/app/models/study_schedule.py": true,
+    "backend/app/models/applicant.py": true,
+    "backend/app/models/__init__.py": true,
+    "backend/app/payments/preparation.py": true,
+    "backend/migrations/versions/a9e5c14d2021_study_schedule.py": true
+  },
+  "api_test": {
+    "sha256": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194",
+    "bytes": 15079
+  },
+  "static_counts": {
+    "planner_test_functions": 20,
+    "planner_expected_cases": 51,
+    "planner_assertion_nodes": 67,
+    "api_expected_cases": 40
+  },
+  "reviewer_qualification": "Authored API regression proposal; independent of planner/schema author; no tests/app imports/network/Git/source writes"
+}

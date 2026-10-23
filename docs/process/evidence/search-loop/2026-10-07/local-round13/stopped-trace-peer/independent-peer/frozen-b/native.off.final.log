@@ -1,0 +1,194 @@
+........................................................................ [ 28%]
+............................................................FF.......F.. [ 57%]
+.F.FFF.................................................................. [ 86%]
+..................................                                       [100%]
+=================================== FAILURES ===================================
+_________ test_stopped_native_discovery_exports_spent_queries[curated] _________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/off-final/test_stopped_native_discovery_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10aa26360>
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+kind = 'curated'
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("kind", ["curated", "catalogue"])
+    async def test_stopped_native_discovery_exports_spent_queries(
+        tmp_path, monkeypatch, profile_bachelor, kind
+    ):
+        case = await _stopped_trace_case(tmp_path, monkeypatch, profile_bachelor, kind=kind)
+        out = case.captured[0]
+        candidate, trace = out["candidates"][0], out["traces"][0]
+        assert case.error is None and len(case.provider.calls) == 6
+>       assert candidate["search_queries_used"] == trace["search_queries_attempted"] == 6
+E       assert 0 == 6
+
+tests/test_live_discovery.py:2220: AssertionError
+________ test_stopped_native_discovery_exports_spent_queries[catalogue] ________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/off-final/test_stopped_native_discovery_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10aa89f40>
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+kind = 'catalogue'
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("kind", ["curated", "catalogue"])
+    async def test_stopped_native_discovery_exports_spent_queries(
+        tmp_path, monkeypatch, profile_bachelor, kind
+    ):
+        case = await _stopped_trace_case(tmp_path, monkeypatch, profile_bachelor, kind=kind)
+        out = case.captured[0]
+        candidate, trace = out["candidates"][0], out["traces"][0]
+        assert case.error is None and len(case.provider.calls) == 6
+>       assert candidate["search_queries_used"] == trace["search_queries_attempted"] == 6
+E       assert 0 == 6
+
+tests/test_live_discovery.py:2220: AssertionError
+_______________ test_future_read_reason_preserves_observed_trace _______________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/off-final/test_future_read_reason_preser0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b339ee0>
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_future_read_reason_preserves_observed_trace(tmp_path, monkeypatch, profile_bachelor):
+        from app.pipeline.control import UniversityReadStopped
+    
+        case = await _stopped_trace_case(
+            tmp_path,
+            monkeypatch,
+            profile_bachelor,
+            signal=UniversityReadStopped("future_native_reason"),
+        )
+        row = case.captured[0]
+>       assert (
+            row["candidates"][0]["search_queries_used"]
+            == row["traces"][0]["search_queries_attempted"]
+            == 6
+        )
+E       assert 0 == 6
+
+tests/test_live_discovery.py:2292: AssertionError
+_ test_native_identity_query_count_survives_before_inner_entry[identity-stop] __
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/off-final/test_native_identity_query_cou0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b2135f0>
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+mode = 'identity-stop'
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("mode", ["identity-stop", "identity-missing"])
+    async def test_native_identity_query_count_survives_before_inner_entry(
+        tmp_path, monkeypatch, profile_bachelor, mode
+    ):
+        case = await _stopped_trace_case(
+            tmp_path, monkeypatch, profile_bachelor, kind="catalogue", mode=mode
+        )
+        row = case.captured[0]
+        assert len(case.provider.calls) == 1
+>       assert (
+            row["candidates"][0]["search_queries_used"]
+            == row["traces"][0]["search_queries_attempted"]
+            == 1
+        )
+E       assert 0 == 1
+
+tests/test_live_discovery.py:2335: AssertionError
+___________ test_catalogue_stopped_trace_keeps_owner_and_prefix_once ___________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/off-final/test_catalogue_stopped_trace_k0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b23d970>
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_catalogue_stopped_trace_keeps_owner_and_prefix_once(
+        tmp_path, monkeypatch, profile_bachelor
+    ):
+        case = await _stopped_trace_case(
+            tmp_path, monkeypatch, profile_bachelor, kind="catalogue", prime=True
+        )
+        row = case.captured[0]
+        candidate, trace = row["candidates"][0], row["traces"][0]
+        assert len(case.provider.calls) == 2
+>       assert candidate["search_queries_used"] == trace["search_queries_attempted"] == 6
+E       assert 4 == 6
+
+tests/test_live_discovery.py:2358: AssertionError
+________ test_next_scope_stop_does_not_reuse_previous_university_trace _________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/off-final/test_next_scope_stop_does_not_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b23edb0>
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_next_scope_stop_does_not_reuse_previous_university_trace(
+        tmp_path, monkeypatch, profile_bachelor
+    ):
+        entries = [
+            {
+                "name": "Example University",
+                "country": "Example",
+                "city": "City",
+                "homepage": "https://example.edu/",
+            },
+            {
+                "name": "Second University",
+                "country": "Example",
+                "city": "City",
+                "homepage": "https://second.edu/",
+            },
+        ]
+        case = await _stopped_trace_case(
+            tmp_path, monkeypatch, profile_bachelor, kind="catalogue", entries=entries
+        )
+        candidates, traces = case.captured[0]["candidates"], case.captured[0]["traces"]
+        assert [c["catalogue_id"] for c in candidates] == ["offline-0", "offline-1"]
+        assert [t["institution"] for t in traces] == [e["name"] for e in entries]
+>       assert [c["search_queries_used"] for c in candidates] == [6, 0]
+E       assert [0, 0] == [6, 0]
+E         
+E         At index 0 diff: 0 != 6
+E         Use -v to get more diff
+
+tests/test_live_discovery.py:2394: AssertionError
+______ test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace ______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/off-final/test_repeated_discovery_does_n0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b23ea80>
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace(
+        tmp_path, monkeypatch, profile_bachelor
+    ):
+        case = await _stopped_trace_case(tmp_path, monkeypatch, profile_bachelor, repeat=True)
+        assert len(case.provider.calls) == 12
+>       assert [r["candidates"][0]["search_queries_used"] for r in case.captured] == [6, 6]
+E       assert [0, 0] == [6, 6]
+E         
+E         At index 0 diff: 0 != 6
+E         Use -v to get more diff
+
+tests/test_live_discovery.py:2409: AssertionError
+=============================== warnings summary ===============================
+tests/test_live_discovery.py: 15 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/html_parse.py:20: MarkupResemblesLocatorWarning: The input looks more like a filename than markup. You may want to open this file and pass the filehandle into Beautiful Soup.
+    return BeautifulSoup(markup, parser)
+
+tests/test_live_discovery.py: 15 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/off/backend/app/adapters/html_parse.py:20: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
+    return BeautifulSoup(markup, parser)
+
+tests/test_university_catalogue.py::test_catalogue_api_filters_and_returns_only_preliminary_facts
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_live_discovery.py::test_stopped_native_discovery_exports_spent_queries[curated]
+FAILED tests/test_live_discovery.py::test_stopped_native_discovery_exports_spent_queries[catalogue]
+FAILED tests/test_live_discovery.py::test_future_read_reason_preserves_observed_trace
+FAILED tests/test_live_discovery.py::test_native_identity_query_count_survives_before_inner_entry[identity-stop]
+FAILED tests/test_live_discovery.py::test_catalogue_stopped_trace_keeps_owner_and_prefix_once
+FAILED tests/test_live_discovery.py::test_next_scope_stop_does_not_reuse_previous_university_trace
+FAILED tests/test_live_discovery.py::test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace
+7 failed, 243 passed, 1 deselected, 31 warnings in 10.12s

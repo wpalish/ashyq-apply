@@ -1,0 +1,292 @@
+FFFFFF..FFFF..FFFFFF.FF.FFF..FFFFFFFFFFFFFFFF                            [100%]
+=================================== FAILURES ===================================
+___ test_searched_identity_and_real_programme_planner_share_budget[0-single] ___
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:133: in test_searched_identity_and_real_programme_planner_share_budget
+    assert len(built.vendor.calls) == max(0, 6 - initial)
+E   assert 7 == 6
+E    +  where 7 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}, ...])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}, ...] = <test_identity_query_ledger.Vendor object at 0x10b94a750>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10b94a750> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10b94b770>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4489258976'>)).vendor
+E    +  and   6 = max(0, (6 - 0))
+___ test_searched_identity_and_real_programme_planner_share_budget[0-multi] ____
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:133: in test_searched_identity_and_real_programme_planner_share_budget
+    assert len(built.vendor.calls) == max(0, 6 - initial)
+E   assert 7 == 6
+E    +  where 7 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...ersity bachelor undergraduate first cycle Mathematics programme', 'domains': ('example.edu',), 'max_results': 10}, ...])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...ersity bachelor undergraduate first cycle Mathematics programme', 'domains': ('example.edu',), 'max_results': 10}, ...] = <test_identity_query_ledger.Vendor object at 0x10c0a1070>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c0a1070> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c0a2de0>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4496957968'>)).vendor
+E    +  and   6 = max(0, (6 - 0))
+___ test_searched_identity_and_real_programme_planner_share_budget[1-single] ___
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:133: in test_searched_identity_and_real_programme_planner_share_budget
+    assert len(built.vendor.calls) == max(0, 6 - initial)
+E   assert 7 == 5
+E    +  where 7 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}, ...])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}, ...] = <test_identity_query_ledger.Vendor object at 0x10c134440>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c134440> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c1355e0>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4497556688'>)).vendor
+E    +  and   5 = max(0, (6 - 1))
+___ test_searched_identity_and_real_programme_planner_share_budget[1-multi] ____
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:133: in test_searched_identity_and_real_programme_planner_share_budget
+    assert len(built.vendor.calls) == max(0, 6 - initial)
+E   assert 7 == 5
+E    +  where 7 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...ersity bachelor undergraduate first cycle Mathematics programme', 'domains': ('example.edu',), 'max_results': 10}, ...])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...ersity bachelor undergraduate first cycle Mathematics programme', 'domains': ('example.edu',), 'max_results': 10}, ...] = <test_identity_query_ledger.Vendor object at 0x10c156f60>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c156f60> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c15c170>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4497698800'>)).vendor
+E    +  and   5 = max(0, (6 - 1))
+___ test_searched_identity_and_real_programme_planner_share_budget[6-single] ___
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:133: in test_searched_identity_and_real_programme_planner_share_budget
+    assert len(built.vendor.calls) == max(0, 6 - initial)
+E   assert 7 == 0
+E    +  where 7 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}, ...])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}, ...] = <test_identity_query_ledger.Vendor object at 0x10c13b470>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c13b470> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c139550>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4497585168'>)).vendor
+E    +  and   0 = max(0, (6 - 6))
+___ test_searched_identity_and_real_programme_planner_share_budget[6-multi] ____
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:133: in test_searched_identity_and_real_programme_planner_share_budget
+    assert len(built.vendor.calls) == max(0, 6 - initial)
+E   assert 7 == 0
+E    +  where 7 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...ersity bachelor undergraduate first cycle Mathematics programme', 'domains': ('example.edu',), 'max_results': 10}, ...])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...ersity bachelor undergraduate first cycle Mathematics programme', 'domains': ('example.edu',), 'max_results': 10}, ...] = <test_identity_query_ledger.Vendor object at 0x10b9774d0>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10b9774d0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10b977110>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4489440160'>)).vendor
+E    +  and   0 = max(0, (6 - 6))
+_ test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-single] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:153: in test_seed_or_registry_is_not_charged_and_existing_count_survives
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 1)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c148290>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c148290> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c1a9280>, vendor=<test_identity_que...at 0x10c148290>, factories=[True], probes=['https://example.edu/'], fetcher=namespace(get=<AsyncMock id='4497637984'>)).vendor
+_ test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-multi] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:153: in test_seed_or_registry_is_not_charged_and_existing_count_survives
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 1)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c132840>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c132840> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c133a10>, vendor=<test_identity_que...at 0x10c132840>, factories=[True], probes=['https://example.edu/'], fetcher=namespace(get=<AsyncMock id='4497549520'>)).vendor
+_ test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-single] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:153: in test_seed_or_registry_is_not_charged_and_existing_count_survives
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 6)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c141250>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c141250> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c142450>, vendor=<test_identity_que...at 0x10c141250>, factories=[True], probes=['https://example.edu/'], fetcher=namespace(get=<AsyncMock id='4497609440'>)).vendor
+_ test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-multi] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:153: in test_seed_or_registry_is_not_charged_and_existing_count_survives
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 6)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c14f080>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c14f080> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c14de50>, vendor=<test_identity_que...at 0x10c14f080>, factories=[True], probes=['https://example.edu/'], fetcher=namespace(get=<AsyncMock id='4497666032'>)).vendor
+_ test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-single] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:153: in test_seed_or_registry_is_not_charged_and_existing_count_survives
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 1)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c16c350>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c16c350> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c0a1ac0>, vendor=<test_identity_que..._ledger.Vendor object at 0x10c16c350>, factories=[True], probes=[], fetcher=namespace(get=<AsyncMock id='4497785584'>)).vendor
+_ test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-multi] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:153: in test_seed_or_registry_is_not_charged_and_existing_count_survives
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 1)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c118dd0>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c118dd0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c11bfe0>, vendor=<test_identity_que..._ledger.Vendor object at 0x10c118dd0>, factories=[True], probes=[], fetcher=namespace(get=<AsyncMock id='4497444448'>)).vendor
+_ test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-single] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:153: in test_seed_or_registry_is_not_charged_and_existing_count_survives
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 6)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c1584d0>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c1584d0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c159640>, vendor=<test_identity_que..._ledger.Vendor object at 0x10c1584d0>, factories=[True], probes=[], fetcher=namespace(get=<AsyncMock id='4497606800'>)).vendor
+_ test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-multi] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:153: in test_seed_or_registry_is_not_charged_and_existing_count_survives
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 6)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c1d78c0>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c1d78c0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c1d6390>, vendor=<test_identity_que..._ledger.Vendor object at 0x10c1d78c0>, factories=[True], probes=[], fetcher=namespace(get=<AsyncMock id='4498225200'>)).vendor
+__ test_identity_early_return_preserves_attempt_or_factory_failure[0-unknown] __
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:166: in test_identity_early_return_preserves_attempt_or_factory_failure
+    assert found.search_queries_used == trace.search_queries_sent == initial + charge
+E   AssertionError: assert 0 == (0 + 1)
+E    +  where 0 = DiscoveryTrace(institution='Example University', domain='example.edu', sitemaps_declared=[], sitemaps_read=[], sitemap...=False, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+___ test_identity_early_return_preserves_attempt_or_factory_failure[0-error] ___
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:166: in test_identity_early_return_preserves_attempt_or_factory_failure
+    assert found.search_queries_used == trace.search_queries_sent == initial + charge
+E   AssertionError: assert 0 == (0 + 1)
+E    +  where 0 = DiscoveryTrace(institution='Example University', domain='example.edu', sitemaps_declared=[], sitemaps_read=[], sitemap...=False, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+__ test_identity_early_return_preserves_attempt_or_factory_failure[1-unknown] __
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:166: in test_identity_early_return_preserves_attempt_or_factory_failure
+    assert found.search_queries_used == trace.search_queries_sent == initial + charge
+E   AssertionError: assert 1 == (1 + 1)
+E    +  where 1 = DiscoveryTrace(institution='Example University', domain='example.edu', sitemaps_declared=[], sitemaps_read=[], sitemap...=False, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+___ test_identity_early_return_preserves_attempt_or_factory_failure[1-error] ___
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:166: in test_identity_early_return_preserves_attempt_or_factory_failure
+    assert found.search_queries_used == trace.search_queries_sent == initial + charge
+E   AssertionError: assert 1 == (1 + 1)
+E    +  where 1 = DiscoveryTrace(institution='Example University', domain='example.edu', sitemaps_declared=[], sitemaps_read=[], sitemap...=False, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+__ test_identity_early_return_preserves_attempt_or_factory_failure[6-unknown] __
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:165: in test_identity_early_return_preserves_attempt_or_factory_failure
+    assert len(built.vendor.calls) == charge
+E   assert 1 == 0
+E    +  where 1 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}] = <test_identity_query_ledger.Vendor object at 0x10c14ba70>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c14ba70> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c14a720>, vendor=<test_identity_que...[True], probes=['https://example.edu/', 'http://www.example.edu/'], fetcher=namespace(get=<AsyncMock id='4497652192'>)).vendor
+___ test_identity_early_return_preserves_attempt_or_factory_failure[6-error] ___
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:165: in test_identity_early_return_preserves_attempt_or_factory_failure
+    assert len(built.vendor.calls) == charge
+E   assert 1 == 0
+E    +  where 1 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}] = <test_identity_query_ledger.Vendor object at 0x10c181b20>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c181b20> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c16c740>, vendor=<test_identity_que...[True], probes=['https://example.edu/', 'http://www.example.edu/'], fetcher=namespace(get=<AsyncMock id='4497867360'>)).vendor
+_ test_identity_early_return_preserves_attempt_or_factory_failure[6-factory_error] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:169: in test_identity_early_return_preserves_attempt_or_factory_failure
+    assert built.factories == []
+E   assert [True] == []
+E     
+E     Left contains one more item: True
+E     Use -v to get more diff
+____ test_direct_planner_honours_remaining_count_and_zero_is_safe[1-single] ____
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:184: in test_direct_planner_honours_remaining_count_and_zero_is_safe
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 1)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c14c1a0>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c14c1a0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c1ee5d0>, vendor=<test_identity_que..._ledger.Vendor object at 0x10c14c1a0>, factories=[True], probes=[], fetcher=namespace(get=<AsyncMock id='4497661376'>)).vendor
+____ test_direct_planner_honours_remaining_count_and_zero_is_safe[1-multi] _____
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:184: in test_direct_planner_honours_remaining_count_and_zero_is_safe
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 1)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c1f7ef0>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c1f7ef0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c200da0>, vendor=<test_identity_que..._ledger.Vendor object at 0x10c1f7ef0>, factories=[True], probes=[], fetcher=namespace(get=<AsyncMock id='4498358192'>)).vendor
+____ test_direct_planner_honours_remaining_count_and_zero_is_safe[6-single] ____
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:184: in test_direct_planner_honours_remaining_count_and_zero_is_safe
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 6)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'... 'max_results': 10}, {'query': 'site:example.edu admissions bachelor', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c1f68a0>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c1f68a0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c1f56a0>, vendor=<test_identity_que..._ledger.Vendor object at 0x10c1f68a0>, factories=[True], probes=[], fetcher=namespace(get=<AsyncMock id='4498352096'>)).vendor
+____ test_direct_planner_honours_remaining_count_and_zero_is_safe[6-multi] _____
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:184: in test_direct_planner_honours_remaining_count_and_zero_is_safe
+    assert len(built.vendor.calls) == 6 - initial
+E   assert 6 == (6 - 6)
+E    +  where 6 = len([{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}, {'query'..._results': 10}, {'query': 'site:example.edu programmes "Mathematics"', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c14e3c0>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c14e3c0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c14ed50>, vendor=<test_identity_que..._ledger.Vendor object at 0x10c14e3c0>, factories=[True], probes=[], fetcher=namespace(get=<AsyncMock id='4497665312'>)).vendor
+_____________ test_direct_multifield_zero_budget_does_not_dispatch _____________
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:197: in test_direct_multifield_zero_budget_does_not_dispatch
+    assert built.vendor.calls == []
+E   assert [{'query': 's...results': 10}] == []
+E     
+E     Left contains 6 more items, first extra item: {'query': 'site:example.edu "Computer Science" "bachelor"', 'domains': ('example.edu',), 'max_results': 10}
+E     Use -v to get more diff
+_______ test_candidate_ledger_does_not_get_reset_by_fresh_identity_trace _______
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:207: in test_candidate_ledger_does_not_get_reset_by_fresh_identity_trace
+    assert len(built.vendor.calls) == 5
+E   assert 7 == 5
+E    +  where 7 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}, ...])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}, ...] = <test_identity_query_ledger.Vendor object at 0x10c134710>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c134710> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c0a2b70>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4497562544'>)).vendor
+_____ test_strict_evaluation_guard_never_receives_seventh_attempt[single] ______
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:217: in test_strict_evaluation_guard_never_receives_seventh_attempt
+    assert len(built.vendor.calls) == len(built.guarded.attempts) == 6
+E   assert 6 == 7
+E    +  where 6 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...': 10}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer...': 10}, {'query': 'site:example.edu undergraduate "Computer Science"', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c183740>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c183740> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c182cc0>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4497879792'>)).vendor
+E    +  and   7 = len(['"Example University" "Test Country" official university website', 'site:example.edu "Computer Science" "bachelor"', ...ter Science"', 'site:example.edu courses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', ...])
+E    +    where ['"Example University" "Test Country" official university website', 'site:example.edu "Computer Science" "bachelor"', ...ter Science"', 'site:example.edu courses "Computer Science"', 'site:example.edu undergraduate "Computer Science"', ...] = <test_identity_query_ledger.Guard object at 0x10c183d70>.attempts
+E    +      where <test_identity_query_ledger.Guard object at 0x10c183d70> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c182cc0>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4497879792'>)).guarded
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.search.retrieval:retrieval.py:410 search query failed (admissions): Search service unavailable (exa).
+______ test_strict_evaluation_guard_never_receives_seventh_attempt[multi] ______
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:217: in test_strict_evaluation_guard_never_receives_seventh_attempt
+    assert len(built.vendor.calls) == len(built.guarded.attempts) == 6
+E   assert 6 == 7
+E    +  where 6 = len([{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer... University bachelor undergraduate first cycle Mathematics programme', 'domains': ('example.edu',), 'max_results': 10}])
+E    +    where [{'query': '"Example University" "Test Country" official university website', 'domains': (), 'max_results': 3}, {'quer... University bachelor undergraduate first cycle Mathematics programme', 'domains': ('example.edu',), 'max_results': 10}] = <test_identity_query_ledger.Vendor object at 0x10c1a9b20>.calls
+E    +      where <test_identity_query_ledger.Vendor object at 0x10c1a9b20> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c1a9f70>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4498038016'>)).vendor
+E    +  and   7 = len(['"Example University" "Test Country" official university website', 'site:example.edu "Computer Science" "bachelor"', ...mple.edu "Mathematics" "bachelor"', 'Example University bachelor undergraduate first cycle Mathematics programme', ...])
+E    +    where ['"Example University" "Test Country" official university website', 'site:example.edu "Computer Science" "bachelor"', ...mple.edu "Mathematics" "bachelor"', 'Example University bachelor undergraduate first cycle Mathematics programme', ...] = <test_identity_query_ledger.Guard object at 0x10c1a9be0>.attempts
+E    +      where <test_identity_query_ledger.Guard object at 0x10c1a9be0> = namespace(adapter=<app.catalogue.discovery.CatalogueDiscoveryAdapter object at 0x10c1a9f70>, vendor=<test_identity_que...u/', 'http://www.example.edu/', 'https://discovered.example.edu/'], fetcher=namespace(get=<AsyncMock id='4498038016'>)).guarded
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.search.retrieval:retrieval.py:410 search query failed (programmes): Search service unavailable (exa).
+_____ test_local_identity_rejection_is_attempt_telemetry_not_http_dispatch _____
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:232: in test_local_identity_rejection_is_attempt_telemetry_not_http_dispatch
+    assert found.search_queries_used == trace.search_queries_sent == 1
+E   AssertionError: assert 0 == 1
+E    +  where 0 = DiscoveryTrace(institution='Example University', domain='example.edu', sitemaps_declared=[], sitemaps_read=[], sitemap...=False, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+__ test_real_429_latch_blocks_second_vendor_dispatch_and_counts_only_attempts __
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:246: in test_real_429_latch_blocks_second_vendor_dispatch_and_counts_only_attempts
+    assert found.search_queries_used == trace.search_queries_sent == 1
+E   AssertionError: assert 0 == 1
+E    +  where 0 = DiscoveryTrace(institution='Example University', domain='example.edu', sitemaps_declared=[], sitemaps_read=[], sitemap...=False, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+_ test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-single] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:261: in test_shared_disabled_preserves_six_programme_attempts_and_exposes_total
+    assert found.search_queries_used == trace.search_queries_sent == initial + 7
+E   AssertionError: assert 6 == (0 + 7)
+E    +  where 6 = DiscoveryTrace(institution='Example University', domain='discovered.example.edu', sitemaps_declared=[], sitemaps_read=...k=True, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+_ test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-multi] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:261: in test_shared_disabled_preserves_six_programme_attempts_and_exposes_total
+    assert found.search_queries_used == trace.search_queries_sent == initial + 7
+E   AssertionError: assert 6 == (0 + 7)
+E    +  where 6 = DiscoveryTrace(institution='Example University', domain='discovered.example.edu', sitemaps_declared=[], sitemaps_read=...k=True, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+_ test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-single] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:261: in test_shared_disabled_preserves_six_programme_attempts_and_exposes_total
+    assert found.search_queries_used == trace.search_queries_sent == initial + 7
+E   AssertionError: assert 6 == (1 + 7)
+E    +  where 6 = DiscoveryTrace(institution='Example University', domain='discovered.example.edu', sitemaps_declared=[], sitemaps_read=...k=True, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+_ test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-multi] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:261: in test_shared_disabled_preserves_six_programme_attempts_and_exposes_total
+    assert found.search_queries_used == trace.search_queries_sent == initial + 7
+E   AssertionError: assert 6 == (1 + 7)
+E    +  where 6 = DiscoveryTrace(institution='Example University', domain='discovered.example.edu', sitemaps_declared=[], sitemaps_read=...k=True, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+_ test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-single] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:261: in test_shared_disabled_preserves_six_programme_attempts_and_exposes_total
+    assert found.search_queries_used == trace.search_queries_sent == initial + 7
+E   AssertionError: assert 6 == (6 + 7)
+E    +  where 6 = DiscoveryTrace(institution='Example University', domain='discovered.example.edu', sitemaps_declared=[], sitemaps_read=...k=True, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+_ test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-multi] _
+../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py:261: in test_shared_disabled_preserves_six_programme_attempts_and_exposes_total
+    assert found.search_queries_used == trace.search_queries_sent == initial + 7
+E   AssertionError: assert 6 == (6 + 7)
+E    +  where 6 = DiscoveryTrace(institution='Example University', domain='discovered.example.edu', sitemaps_declared=[], sitemaps_read=...k=True, kept_by_link_text=[], walker={'catalogs_walked': 0, 'candidates': [], 'programs_confirmed': 0, 'outcomes': []}).search_queries_sent
+=========================== short test summary info ============================
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_searched_identity_and_real_programme_planner_share_budget[0-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_searched_identity_and_real_programme_planner_share_budget[0-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_searched_identity_and_real_programme_planner_share_budget[1-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_searched_identity_and_real_programme_planner_share_budget[1-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_searched_identity_and_real_programme_planner_share_budget[6-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_searched_identity_and_real_programme_planner_share_budget[6-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-1-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_seed_or_registry_is_not_charged_and_existing_count_survives[seed-6-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-1-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_seed_or_registry_is_not_charged_and_existing_count_survives[registry-6-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_identity_early_return_preserves_attempt_or_factory_failure[0-unknown]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_identity_early_return_preserves_attempt_or_factory_failure[0-error]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_identity_early_return_preserves_attempt_or_factory_failure[1-unknown]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_identity_early_return_preserves_attempt_or_factory_failure[1-error]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_identity_early_return_preserves_attempt_or_factory_failure[6-unknown]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_identity_early_return_preserves_attempt_or_factory_failure[6-error]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_identity_early_return_preserves_attempt_or_factory_failure[6-factory_error]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_direct_planner_honours_remaining_count_and_zero_is_safe[1-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_direct_planner_honours_remaining_count_and_zero_is_safe[1-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_direct_planner_honours_remaining_count_and_zero_is_safe[6-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_direct_planner_honours_remaining_count_and_zero_is_safe[6-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_direct_multifield_zero_budget_does_not_dispatch
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_candidate_ledger_does_not_get_reset_by_fresh_identity_trace
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_strict_evaluation_guard_never_receives_seventh_attempt[single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_strict_evaluation_guard_never_receives_seventh_attempt[multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_local_identity_rejection_is_attempt_telemetry_not_http_dispatch
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_real_429_latch_blocks_second_vendor_dispatch_and_counts_only_attempts
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[0-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[1-multi]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-single]
+FAILED ../../search-loop-round3/reviews/expert_b/proposed/test_identity_query_ledger.py::test_shared_disabled_preserves_six_programme_attempts_and_exposes_total[6-multi]
+37 failed, 8 passed in 0.53s

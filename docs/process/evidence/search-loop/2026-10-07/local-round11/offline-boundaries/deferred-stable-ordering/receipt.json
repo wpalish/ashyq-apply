@@ -1,0 +1,36 @@
+{
+  "created_utc": "2026-10-08T01:51:31.041634+00:00",
+  "status": "EXTERNAL_REVIEW_ONLY_NO_CUT_NO_MEASURED_GAIN",
+  "controls": {
+    "PASS": 37,
+    "RED": 0,
+    "total": 37,
+    "OFF_native_equivalence": 15,
+    "ON_completed_invariants": 15,
+    "actual_caller_cap_controls": 3,
+    "original_typed_exception_controls": 4
+  },
+  "proposal_sha256": "cb9d9e12461ab6fd727f7bf2c26738a77c06a95b1a8280d95a6da885fd2f5a52",
+  "patch_sha256": "3673faa89995fa6df7dd6e81d5cd69a8f065625c60d4166d381772e8f293f7d5",
+  "raw_final_sha256": "feeeebd88d606b5c8908d4e3d342e9326f92343424daa27800a51014da7d7ca0",
+  "plan_sha256": "df73ff6d60aa6e1fc7fd8eba5cffd10b5f2035c18c54984d13a498bd154a40fc",
+  "previous_rejected_manifest_sha256": "232f6edd02cf33ed61a472d51012cd1598ecc13d84cfbfe0980b2a3cea2dc5e9",
+  "actual_source_files_verified": 7,
+  "default_flag": false,
+  "static_checks": [
+    "Ruff check proposed 1 file PASS",
+    "Ruff format check proposed 1 file PASS",
+    "mypy proposed 1 file follow-imports silent PASS"
+  ],
+  "historical_first_Ruff": "1 I001 preserved; imports sorted and formatter only; non-import AST equal",
+  "source_application": false,
+  "CLI_capture_pair_wiring": false,
+  "Groningen_postCS_read_saving": 0,
+  "end_to_end_scored_quality_gain": false,
+  "global_provider_stop_preserved": true,
+  "source_Git_gold_STOP_mutations_network_provider_model_calls": 0,
+  "claims_created": 0,
+  "actual_SQL_Job_production_Fetcher_enforcement_proof": false,
+  "runtime_mock_native_caller_class_seam": true,
+  "static_tool_cache_note": "Initial mypy used configured default cache; final mypy explicitly uses own external tool-cache. No app/source files changed."
+}

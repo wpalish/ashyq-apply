@@ -1,0 +1,3 @@
+# Saved-only repaired queue scope review
+
+Root authorized exact-byte diff review of fresh sibling check_repaired_queue.py. Compare to priorqualified immutable check_queue.py e5d7c351; only fresh OUT/PINS/RECEIPT/status/HEAD names may differ. Preserve firstfailed native packet and inherited34pins/receiptSHA/HEAD/branch/STOP/sharedlock/ownchild/suite/nonzero guards. No prepared tool, tests, server, provider/model/network, reset scope, primary/Git mutation or source application. Future repaired pins/receipt/head follow root exact2test application and clean WIP push; this review does not authorize prematurely running absent inputs.

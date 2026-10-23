@@ -1,0 +1,99 @@
+{
+  "completed_utc": "2026-10-08T02:30:37.406259+00:00",
+  "executions": [
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "run_controls.py",
+        "controls.pinned.json"
+      ],
+      "exit_code": 0,
+      "log": "pinned-command-1.log",
+      "log_sha256": "f6cdfabb07f3f620e8031245b40b1bcb603a451228ef5da728c04733443a9fde",
+      "source_sha256_before": {
+        "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+        "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+        "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+        "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+      },
+      "source_sha256_after": {
+        "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+        "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+        "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+        "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+      }
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "run_scope_ownership.py",
+        "scope-ownership.pinned.json"
+      ],
+      "exit_code": 0,
+      "log": "pinned-command-2.log",
+      "log_sha256": "80f1ec76fb45e7d7b82f24044302616d1fb6d221473e6026cf9db62f3e139985",
+      "source_sha256_before": {
+        "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+        "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+        "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+        "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+      },
+      "source_sha256_after": {
+        "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+        "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+        "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+        "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+      }
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "run_boundary_controls.py",
+        "boundary-controls.executed-pinned.json"
+      ],
+      "exit_code": 0,
+      "log": "pinned-command-3.log",
+      "log_sha256": "6e48c895ffd5b294fc3e9e9643ada2df85541291518ff2012428132eedec139a",
+      "source_sha256_before": {
+        "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+        "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+        "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+        "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+      },
+      "source_sha256_after": {
+        "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+        "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+        "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+        "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+      }
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "run_worker_controls.py",
+        "worker.executed-pinned"
+      ],
+      "exit_code": 0,
+      "log": "pinned-command-4.log",
+      "log_sha256": "497637a525ab13d199c84510faa64bc67e456b592143b9ccd07a24116e457123",
+      "source_sha256_before": {
+        "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+        "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+        "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+        "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+      },
+      "source_sha256_after": {
+        "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+        "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+        "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+        "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+      }
+    }
+  ],
+  "source_sha256_after_all": {
+    "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+    "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+    "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+    "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "kind": "external_actual_production_path_readguard_prototype",
+  "created_at": "2026-10-07T21:11:54.048616+00:00",
+  "applied_to_repository": false,
+  "network_calls": 0,
+  "default_flag": {
+    "UNIVERSITY_READ_BUDGET": false
+  },
+  "contract": "60 committed pre-get reservations per stable university per fenced research Job.id decision episode",
+  "original_source_sha256": {
+    "app/adapters/base.py": "68355f99ee62ea2eefac63a7b991b057b16c374a26a9b1b210a0a07cad1e9637",
+    "app/pipeline/runner.py": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+    "app/catalogue/discovery.py": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02",
+    "app/adapters/discovery/live_discovery.py": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6",
+    "app/adapters/discovery/catalog_walker.py": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7"
+  },
+  "current_repository_matches_originals": true,
+  "proposed_source_sha256": {
+    "app/adapters/base.py": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+    "app/pipeline/runner.py": "9725d06c36d908453d30930b6eecb548c89dc16121d75222e9a6b5c8ca53f641",
+    "app/catalogue/discovery.py": "aa1cda24dd530bfe75d47f020ac30f45c27b2ab3a56796008c3287ed4fd03329",
+    "app/adapters/discovery/live_discovery.py": "b007dfa99b5fd560d45834cf96103871d35f1a7e314fbd1c70d34b08b6e752f5",
+    "app/adapters/discovery/catalog_walker.py": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+    "app/pipeline/control.py": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+    "app/pipeline/read_budget.py": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+  },
+  "unchanged_dependency_sha256": {
+    "app/adapters/fetching.py": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+    "app/jobs/store.py": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+    "app/jobs/worker.py": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681",
+    "app/models/jobs.py": "438fff6a82ddadd99ab956e43054f3e606f039bfc1bddf0f654ccd9edf151789",
+    "app/models/research.py": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+    "app/db.py": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319",
+    "app/config.py": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539",
+    "app/adapters/requirements/web_requirements.py": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "app/adapters/cost/web_costs.py": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+    "app/adapters/government/web_government.py": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82",
+    "app/adapters/scholarship/web_scholarships.py": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+    "app/pipeline/state.py": "ccf94b89dc44f3cbf136e6e77bb627411dda36489d214e91ac3a599446086a79"
+  },
+  "sticky_stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "patch_sha256": "c09219f02f30a89ec083484868586264f91cabb89eb8cb7e80c0e30221b8b0f7"
+}

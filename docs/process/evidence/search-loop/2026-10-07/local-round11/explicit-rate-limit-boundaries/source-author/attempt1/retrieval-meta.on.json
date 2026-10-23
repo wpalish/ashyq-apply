@@ -1,0 +1,288 @@
+{
+  "mode": "on",
+  "scenario": "retrieval:meta",
+  "counts": {
+    "PASS": 5,
+    "RED": 0,
+    "total": 5
+  },
+  "checks": [
+    {
+      "case": "stop_unattempted_families",
+      "expected": "onecharged attemptedfamily, no laterfamily or tool dispatch",
+      "status": "PASS"
+    },
+    {
+      "case": "explicit_throttled",
+      "expected": "report marks typed explicit rate limit",
+      "status": "PASS"
+    },
+    {
+      "case": "safe_exact_diagnostic",
+      "expected": "metadataNone stayswithoutHTTP429 and retainsenum",
+      "status": "PASS"
+    },
+    {
+      "case": "native_methods_never_substituted",
+      "expected": "actualExa search/search_once/post/initialize function identity unchanged",
+      "status": "PASS"
+    },
+    {
+      "case": "transport_denied_closed",
+      "expected": "allHTTP MockTransport, closedownedclients, real sockets denied",
+      "status": "PASS"
+    }
+  ],
+  "outputs": {
+    "retrieval": {
+      "candidates": [],
+      "queries_run": [
+        "field_and_degree"
+      ],
+      "provider": "exa_mcp",
+      "ontology_version": "2026-09-30.1",
+      "rejection_counts": {},
+      "failed_queries": [
+        "field_and_degree"
+      ],
+      "hop_entry_points": [],
+      "hop_candidates": 0,
+      "hop_entry_points_unreachable": 0,
+      "throttled": true,
+      "failure_diagnostics": [
+        "Search service unavailable (exa_mcp; rate limited)."
+      ]
+    }
+  },
+  "query_seam_attempts": [
+    {
+      "family_attempt": 1,
+      "HTTP_before": 0
+    }
+  ],
+  "mock_HTTP_counts": {
+    "initialize": 1,
+    "notifications/initialized": 1,
+    "tools/call": 2
+  },
+  "mock_HTTP_events": [
+    {
+      "method": "initialize",
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-03-26",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "ashyq-apply",
+            "version": "1"
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": null,
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "protocolVersion": "2025-03-26",
+          "capabilities": {},
+          "serverInfo": {
+            "name": "offline-synthetic-mcp",
+            "version": "1"
+          }
+        }
+      }
+    },
+    {
+      "method": "notifications/initialized",
+      "payload": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized"
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 202,
+      "response": null
+    },
+    {
+      "method": "tools/call",
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "site:example.edu \"computer science\" \"bachelor\"",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "structuredContent": {
+            "results": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "title": "BSc Computer Science",
+                "highlights": [
+                  "Public discovery hint only"
+                ]
+              }
+            ]
+          },
+          "_meta": {
+            "ai.exa/rateLimited": true
+          }
+        }
+      }
+    },
+    {
+      "method": "tools/call",
+      "payload": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "tools/call",
+        "params": {
+          "name": "web_search_advanced_exa",
+          "arguments": {
+            "query": "site:example.edu \"computer science\" \"bachelor\"",
+            "numResults": 10,
+            "type": "auto",
+            "enableHighlights": true,
+            "highlightsMaxCharacters": 1000,
+            "textMaxCharacters": 1,
+            "includeDomains": [
+              "example.edu"
+            ]
+          }
+        }
+      },
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa",
+      "session_header": "synthetic-session",
+      "status": 200,
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "structuredContent": {
+            "results": [
+              {
+                "url": "https://example.edu/bachelors/computer-science",
+                "title": "BSc Computer Science",
+                "highlights": [
+                  "Public discovery hint only"
+                ]
+              }
+            ]
+          },
+          "_meta": {
+            "ai.exa/rateLimited": true
+          }
+        }
+      }
+    }
+  ],
+  "owned_child_latch": {
+    "until": {
+      "exa_mcp": 402.0
+    },
+    "origin": {
+      "exa_mcp": [
+        402.0,
+        null,
+        "rate limited"
+      ]
+    }
+  },
+  "fake_clock_sleeps": [
+    2.0
+  ],
+  "synthetic_resolutions": [
+    {
+      "host": "mcp.exa.ai",
+      "port": 443,
+      "kind": "synthetic resolver, no DNS"
+    },
+    {
+      "host": "mcp.exa.ai",
+      "port": 443,
+      "kind": "synthetic resolver, no DNS"
+    }
+  ],
+  "native_source_before": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "native_source_after": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "proposal_source_before": {
+    "app/adapters/search/__init__.py": "054fbcf11ce9cf0de4e63cd299449b67024ada4d259edf92d95f314a34804034",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c106b7f725fc95ab4e92889d8b581cc623b4c993a680b897e50bbeadf77edc14"
+  },
+  "proposal_source_after": {
+    "app/adapters/search/__init__.py": "054fbcf11ce9cf0de4e63cd299449b67024ada4d259edf92d95f314a34804034",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c106b7f725fc95ab4e92889d8b581cc623b4c993a680b897e50bbeadf77edc14"
+  },
+  "native_flags": {
+    "RATE_LIMIT_RETRY": true,
+    "RETRY_429_ONCE": false,
+    "MIN_QUERY_INTERVAL_SECONDS": 0.0
+  },
+  "effective_child_retry": true,
+  "native_methods": {
+    "search": {
+      "name": "ExaMcpSearchProvider.search",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py"
+    },
+    "_search_once": {
+      "name": "ExaMcpSearchProvider._search_once",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py"
+    },
+    "_post": {
+      "name": "ExaMcpSearchProvider._post",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py"
+    },
+    "_initialize": {
+      "name": "ExaMcpSearchProvider._initialize",
+      "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/exa_mcp.py"
+    }
+  },
+  "target_files": {
+    "search": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/proposed/app/adapters/search/__init__.py",
+    "retrieval": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/proposed/app/adapters/search/retrieval.py",
+    "live": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/proposed/app/adapters/discovery/live_discovery.py"
+  },
+  "real_network_provider_model_Git_app_STOP_changes": 0,
+  "qualification": "Mock HTTP protocol/tool dispatch is independent of query seam charges. Defaultnative metadata retryTrue2tools stays intact. State controls use an explicitlysyntheticprovider; actualintegration cases never replace nativeExa methods. Childreset occurs only in statedfreshownedstatecontrol; primary state untouched."
+}

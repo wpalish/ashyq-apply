@@ -1,0 +1,31 @@
+{
+  "status": "ACCEPT_CONFIRMED_OFF_DEFECT_EVIDENCE_REPAIR_NOT_REVIEWED",
+  "created_at": "2026-10-08T04:12:30.671260+00:00",
+  "A_ready_sha256": "2ca715d6a86f26fa613a722127e54b6e385731693729f1cfba4b736620a6a1dd",
+  "A_original_receipt_sha256": "0ab84201887c63f36bbeb39cb8e4c0bedcfd516f0309ac43011940111099e459",
+  "B_initial_ready_sha256": "bd73bc7e5f400d9a3a31beea7064d8dbf0e6088cd7407967299aa4be54410053",
+  "A_selected_files": 24,
+  "A_selected_bytes": 428170,
+  "A_scenario_results": {
+    "total": 11,
+    "PASS": 7,
+    "material_RED": 4,
+    "accounting_PASS": 97,
+    "fixture_errors": 0
+  },
+  "B_scenario_results": {
+    "total": 21,
+    "PASS": 9,
+    "material_RED": 12
+  },
+  "current_source13_pre_post_equal": true,
+  "STOP_pre_post_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "new_app_patch": false,
+  "real_network_attempts": 0,
+  "claim_limits": [
+    "Synthetic guard callback, no SQL/Worker/durable state proof",
+    "No quality/default/cap bypass acceptance",
+    "A display argv correction is separate author clarification; no rerun/normalization of original"
+  ],
+  "report_sha256": "75159556d972a38de3a5d4435cf958a33e7a4ad3e086b73551c85872288bf864"
+}

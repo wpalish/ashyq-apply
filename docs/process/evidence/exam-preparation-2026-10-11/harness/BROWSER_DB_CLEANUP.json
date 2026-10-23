@@ -1,0 +1,72 @@
+{
+  "status": "REMOVED_OWN_SYNTHETIC_BROWSER_DBS",
+  "recorded_runner_ids_and_groups_absent_at_cleanup": true,
+  "recorded_runner_ids": [
+    40688,
+    41400,
+    47038,
+    47328
+  ],
+  "recorded_pgids": [
+    40690,
+    40699,
+    41402,
+    41412,
+    47051,
+    47068,
+    47330,
+    47344
+  ],
+  "deleted": [
+    {
+      "path": "evidence/e2e/20261011T130607Z-demo/synthetic.db",
+      "bytes": 13733888
+    },
+    {
+      "path": "evidence/e2e/20261011T130607Z-demo/synthetic.db-wal",
+      "bytes": 4795712
+    },
+    {
+      "path": "evidence/e2e/20261011T130607Z-demo/synthetic.db-shm",
+      "bytes": 32768
+    },
+    {
+      "path": "evidence/e2e/20261011T131348Z-demo/synthetic.db",
+      "bytes": 13627392
+    },
+    {
+      "path": "evidence/e2e/20261011T131348Z-demo/synthetic.db-wal",
+      "bytes": 4441392
+    },
+    {
+      "path": "evidence/e2e/20261011T131348Z-demo/synthetic.db-shm",
+      "bytes": 32768
+    },
+    {
+      "path": "evidence/e2e/20261011T140255Z-demo/synthetic.db",
+      "bytes": 13598720
+    },
+    {
+      "path": "evidence/e2e/20261011T140255Z-demo/synthetic.db-wal",
+      "bytes": 4527912
+    },
+    {
+      "path": "evidence/e2e/20261011T140255Z-demo/synthetic.db-shm",
+      "bytes": 32768
+    },
+    {
+      "path": "evidence/e2e/20261011T140504Z-auth/synthetic.db",
+      "bytes": 5222400
+    },
+    {
+      "path": "evidence/e2e/20261011T140504Z-auth/synthetic.db-wal",
+      "bytes": 4330152
+    },
+    {
+      "path": "evidence/e2e/20261011T140504Z-auth/synthetic.db-shm",
+      "bytes": 32768
+    }
+  ],
+  "scope": "Own four terminal browser runs only; no source/production/private userdata",
+  "all_descendant_worker_pid_termination_independently_proven": false
+}

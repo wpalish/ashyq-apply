@@ -1,0 +1,336 @@
+[
+  {
+    "case": "live_previous_success_then_capped_next",
+    "status": "RED",
+    "expected": "Second university cannot inherit first name/id/domain/URL/trace; zero new get on entry refusal",
+    "candidates": [
+      {
+        "name": "Example University",
+        "country": "Netherlands",
+        "city": "City",
+        "domain": "example.edu",
+        "programs": [
+          {
+            "name": "A",
+            "field": "computer science",
+            "degree": "bachelor",
+            "url": "https://example.edu/bachelors/a"
+          }
+        ],
+        "rankings": [],
+        "admissions_url": null,
+        "costs_url": null,
+        "scholarships_url": null,
+        "attributes": {},
+        "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+        "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+        "search_queries_used": 0,
+        "catalogue_id": null
+      },
+      {
+        "name": "Example University",
+        "country": "Netherlands",
+        "city": "City",
+        "domain": "example.edu",
+        "programs": [
+          {
+            "name": "A",
+            "field": "computer science",
+            "degree": "bachelor",
+            "url": "https://example.edu/bachelors/a"
+          }
+        ],
+        "rankings": [],
+        "admissions_url": null,
+        "costs_url": null,
+        "scholarships_url": null,
+        "attributes": {},
+        "discovery_source": "live-sitemap-discovery -> https://example.edu/",
+        "notes": "Partial discovery (read_cap); retained routing is not verified programme facts. Remaining research and applicability unknown.",
+        "search_queries_used": 0,
+        "catalogue_id": null
+      }
+    ],
+    "traces": [
+      {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://example.edu/bachelors/catalog"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://example.edu/bachelors/catalog"
+          ],
+          "program_page": [
+            "https://example.edu/bachelors/a"
+          ]
+        },
+        "rejected": [],
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "field_hints": {},
+        "public_fields": [
+          "computer science"
+        ],
+        "queried_fields": [],
+        "search_queries_sent": 0,
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 1,
+          "candidates": [
+            {
+              "url": "https://example.edu/bachelors/a",
+              "label": "BSc Computer Science",
+              "score": 21,
+              "source": "html"
+            }
+          ],
+          "programs_confirmed": 1,
+          "outcomes": [
+            {
+              "url": "https://example.edu/bachelors/a",
+              "outcome": "program_detail"
+            }
+          ]
+        }
+      },
+      {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://example.edu/bachelors/catalog"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://example.edu/bachelors/catalog"
+          ],
+          "program_page": [
+            "https://example.edu/bachelors/a"
+          ]
+        },
+        "rejected": [],
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Partial discovery: previously read strict programme routing retained; remaining research unknown (read_cap). Applicant/intake/campus/population applicability remains unknown.",
+          "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+        ],
+        "field_sources": {},
+        "field_hints": {},
+        "public_fields": [
+          "computer science"
+        ],
+        "queried_fields": [],
+        "search_queries_sent": 0,
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      }
+    ],
+    "scope_starts": [
+      {
+        "name": "Example University",
+        "catalogue_id": null,
+        "gets": []
+      },
+      {
+        "name": "Second University",
+        "catalogue_id": null,
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ]
+      }
+    ],
+    "gets": [
+      "https://example.edu/bachelors/catalog",
+      "https://example.edu/bachelors/a"
+    ]
+  },
+  {
+    "case": "catalogue_previous_success_then_capped_next",
+    "status": "RED",
+    "expected": "Second university cannot inherit first name/id/domain/URL/trace; zero new get on entry refusal",
+    "candidates": [
+      {
+        "name": "Example University",
+        "country": "Netherlands",
+        "city": "City",
+        "domain": "example.edu",
+        "programs": [
+          {
+            "name": "A",
+            "field": "computer science",
+            "degree": "bachelor",
+            "url": "https://example.edu/bachelors/a"
+          }
+        ],
+        "rankings": [],
+        "admissions_url": null,
+        "costs_url": null,
+        "scholarships_url": null,
+        "attributes": {},
+        "discovery_source": "local-catalogue:first; local-catalogue-with-live-enrichment -> https://example.edu/",
+        "notes": "Sitemap-first discovery found: program_catalog, program_page. Not found: admissions, costs, scholarships, documents.",
+        "search_queries_used": 0,
+        "catalogue_id": "first"
+      },
+      {
+        "name": "Example University",
+        "country": "Netherlands",
+        "city": "City",
+        "domain": "example.edu",
+        "programs": [
+          {
+            "name": "A",
+            "field": "computer science",
+            "degree": "bachelor",
+            "url": "https://example.edu/bachelors/a"
+          }
+        ],
+        "rankings": [],
+        "admissions_url": null,
+        "costs_url": null,
+        "scholarships_url": null,
+        "attributes": {},
+        "discovery_source": "local-catalogue:first; local-catalogue-with-live-enrichment -> https://example.edu/",
+        "notes": "Partial discovery (read_cap); retained routing is not verified programme facts. Remaining research and applicability unknown.",
+        "search_queries_used": 0,
+        "catalogue_id": "first"
+      }
+    ],
+    "traces": [
+      {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://example.edu/bachelors/catalog"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://example.edu/bachelors/catalog"
+          ],
+          "program_page": [
+            "https://example.edu/bachelors/a"
+          ]
+        },
+        "rejected": [],
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "field_hints": {},
+        "public_fields": [
+          "computer science"
+        ],
+        "queried_fields": [],
+        "search_queries_sent": 0,
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 1,
+          "candidates": [
+            {
+              "url": "https://example.edu/bachelors/a",
+              "label": "BSc Computer Science",
+              "score": 21,
+              "source": "html"
+            }
+          ],
+          "programs_confirmed": 1,
+          "outcomes": [
+            {
+              "url": "https://example.edu/bachelors/a",
+              "outcome": "program_detail"
+            }
+          ]
+        }
+      },
+      {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://example.edu/bachelors/catalog"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://example.edu/bachelors/catalog"
+          ],
+          "program_page": [
+            "https://example.edu/bachelors/a"
+          ]
+        },
+        "rejected": [],
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Partial discovery: previously read strict programme routing retained; remaining research unknown (read_cap). Applicant/intake/campus/population applicability remains unknown.",
+          "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+        ],
+        "field_sources": {},
+        "field_hints": {},
+        "public_fields": [
+          "computer science"
+        ],
+        "queried_fields": [],
+        "search_queries_sent": 0,
+        "search_coverage": {},
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      }
+    ],
+    "scope_starts": [
+      {
+        "name": "Example University",
+        "catalogue_id": "first",
+        "gets": []
+      },
+      {
+        "name": "Second University",
+        "catalogue_id": "second",
+        "gets": [
+          "https://example.edu/bachelors/catalog",
+          "https://example.edu/bachelors/a"
+        ]
+      }
+    ],
+    "gets": [
+      "https://example.edu/bachelors/catalog",
+      "https://example.edu/bachelors/a"
+    ]
+  }
+]

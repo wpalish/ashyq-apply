@@ -1,0 +1,33 @@
+{
+  "time_utc": "2026-10-11T07:32:21.921346+00:00",
+  "status": "ROOT_SAVED_EVIDENCE_RECHECK_PASS_NOT_INDEPENDENT_ACCEPTANCE",
+  "files_verified": 98,
+  "mismatches": [],
+  "suites": {
+    "doctor": {
+      "steps": 5,
+      "status": "passed",
+      "source_head": "22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c"
+    },
+    "core": {
+      "steps": 8,
+      "status": "passed",
+      "source_head": "22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c"
+    },
+    "full": {
+      "steps": 13,
+      "status": "passed",
+      "source_head": "22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c"
+    }
+  },
+  "backend_test_ids_each": 4392,
+  "same_case_ids": true,
+  "post_run_png_delta": 38,
+  "core_declared_files_unchanged": 12213,
+  "full_other_declared_files_unchanged": 12175,
+  "scope": "Saved originals only; no native rerun, provider/model/network dispatch, production change or independent verdict. Current integration has separate source and separate gates.",
+  "verification_setup_failures": [
+    "First system Python input encoding error before execution",
+    "Doctor summary has no source_status; status assertion retained for source-bearing core/full summaries"
+  ]
+}

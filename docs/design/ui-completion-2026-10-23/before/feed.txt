@@ -1,0 +1,83 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Лента" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - navigation "Разделы сообщества":
+    - paragraph:
+      - text: Сообщество
+    - link "Все темы":
+      - /url: "#/feed"
+      - text: Все темы
+    - link "Найти людей":
+      - /url: "#/discover"
+      - text: Найти людей
+    - link "Мой профиль":
+      - /url: "#/me"
+      - text: Мой профиль
+    - link "Сообщения":
+      - /url: "#/messages"
+      - text: Сообщения
+    - link "Настройки":
+      - /url: "#/settings"
+      - text: Настройки
+  - heading "Сообщество" [level=1]
+  - paragraph: Обменивайся опытом, задавай вопросы и получай советы от других абитуриентов. Здесь обсуждают подготовку документов, учёбу за рубежом и студенческую жизнь.
+  - note: Опыт участников — личное мнение, а не официальная информация университета.
+  - heading "Написать пост" [level=2]
+  - paragraph: "Отметьте вуз или город через #, чтобы вас нашли нужные люди."
+  - generic: Спросите что-нибудь или расскажите, куда подаётесь
+  - textbox "Спросите что-нибудь или расскажите, куда подаётесь"
+  - generic: 500 осталось
+  - button "Опубликовать" [disabled]
+  - generic "Фильтры публикаций"
+  - option "Любой" [selected]
+  - option "Поступил"
+  - option "В листе ожидания"
+  - article:
+    - generic: UR
+    - button "UI Review (synthetic)"
+    - generic "Абитуриент не сказал, на каком он этапе.": Статус не указан
+    - time: 5 дней назад
+    - paragraph: "Local UI verification: my applicant case stays separate from my public community profile. This is synthetic test content."
+    - button "Ответить"
+    - button "Удалить"
+  - article:
+    - generic: DM
+    - button "Demo Member (synthetic)"
+    - generic "Абитуриент не сказал, на каком он этапе.": Статус не указан
+    - time: 5 дней назад
+    - paragraph: "Synthetic local UI example: comparing programmes and keeping official sources together. This is a test post, not admissions advice."
+    - button "Ответить (1)"
+    - button "Пожаловаться"
+  - note:
+    - strong: Дружелюбное сообщество
+    - text: Делимся опытом и поддерживаем друг друга на пути к обучению за рубежом.
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

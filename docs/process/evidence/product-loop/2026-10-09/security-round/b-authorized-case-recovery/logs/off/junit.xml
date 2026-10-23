@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="44" failures="4" errors="0" time="1.324871709">
+    <testsuite name="src/lib/store.test.tsx" timestamp="2026-10-09T01:04:08.306Z" hostname="iMac-Aliser.local" tests="44" failures="4" errors="0" skipped="0" time="1.324871709">
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; hydrates the editable draft from the stored profile" time="0.015310667">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; never leaves the synthetic demo profile in the draft after restoring" time="0.003767625">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; forgets the pointer when the stored profile is gone" time="0.004640292">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; restores the profile even when no run is stored" time="0.002675583">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="toDraft &gt; strips the server-side fields the API rejects on write" time="0.000300958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no synthetic scores" time="0.0003105">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; is distinguishable from the demo profile" time="0.000131584">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no invented preferences or family budget into a cleared or new case" time="0.0005525">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=false" time="0.003737042">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=true" time="0.002440583">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks save" time="0.005567709">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks start live" time="0.003810417">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; still opens an explicitly selected saved synthetic case unchanged" time="0.002055917">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="explicit demo loading &gt; only puts demo data in the draft when asked" time="0.002408875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; joins the run already in flight instead of reporting a conflict" time="0.001410709">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; sends an idempotency key so a retried request cannot start a second run" time="0.001296958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: true" time="0.001437375">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: false" time="0.002721458">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; does not claim success or call the API without a run" time="0.000856167">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; carries a session stored under the old name across, once" time="0.000968042">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; prefers the new key when both exist" time="0.002073208">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; knows the draft is dirty only after a real edit" time="0.001171667">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; aligns a saved form with the server-normalized profile" time="0.004039208">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; restores an unsaved draft after a reload without touching the saved profile" time="0.002307584">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; discarding a restored draft returns to the saved profile" time="0.002786708">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; never lets a restored draft become the saved profile by itself" time="0.002201833">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; reloads to the sign-in screen instead of showing an error banner" time="0.054694375">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; still shows the banner for errors that are not about authentication" time="0.004047208">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; exports a saved profile with no research run without starting research" time="0.011403583">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; deletes a saved zero-run case only after explicit confirmation" time="0.007788792">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 403" time="0.008177791">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 500" time="0.0070765">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; returns an acknowledgment and clears only successful case draft memory and its marks" time="0.019509125">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unmounted applicant actions cannot resume under a newly bound owner &gt; refuses an old saveProfile closure before creating the old private draft" time="0.053744292">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unmounted applicant actions cannot resume under a newly bound owner &gt; refuses an old startRun closure before creating the old private draft" time="0.053733">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; recovers latest run/results after logout removed every private pointer" time="0.006752292">
+            <failure message="[2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  saved-profile-id[39m
+Received:
+[31m  none[39m" type="Error">
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  saved-profile-id
+Received:
+  none
+ ❯ src/lib/store.test.tsx:707:52
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; uses first server-ordered authorized case when multiple cases exist" time="0.003286584">
+            <failure message="expected &quot;getProfile&quot; to be called with arguments: [ &apos;saved-profile-id&apos; ][90m
+
+Number of calls: [1m0[22m
+[39m" type="AssertionError">
+AssertionError: expected &quot;getProfile&quot; to be called with arguments: [ &apos;saved-profile-id&apos; ]
+
+Number of calls: 0
+
+ ❯ src/lib/store.test.tsx:718:26
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; recovers a saved zero-run profile without creating research" time="0.003117375">
+            <failure message="[2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  saved-profile-id[39m
+Received:
+[31m  none[39m" type="Error">
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  saved-profile-id
+Received:
+  none
+ ❯ src/lib/store.test.tsx:725:52
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps anonymous auth-disabled demo neutral despite saved server cases" time="0.002452583">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps an explicit local new case and its own unsaved draft" time="0.002540584">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps an empty authenticated workspace neutral" time="0.002328">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; reports a case-list failure instead of inventing recovered data" time="0.0024185">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps hydration closed while a server recovery waits, then honors newer new-case intent" time="0.002728125">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; drops a late profile answer after the authenticated owner changes" time="1.006004334">
+            <failure message="expected &quot;getProfile&quot; to be called with arguments: [ &apos;saved-profile-id&apos; ][90m
+
+Number of calls: [1m0[22m
+[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;html&gt;[39m
+  [36m&lt;head /&gt;[39m
+  [36m&lt;body&gt;[39m
+    [36m&lt;div&gt;[39m
+      [36m&lt;div&gt;[39m
+        [36m&lt;output[39m
+          [33mdata-testid[39m=[32m&quot;recovery-profile&quot;[39m
+        [36m&gt;[39m
+          [0mnone[0m
+        [36m&lt;/output&gt;[39m
+        [36m&lt;output[39m
+          [33mdata-testid[39m=[32m&quot;recovery-run&quot;[39m
+        [36m&gt;[39m
+          [0mnone[0m
+        [36m&lt;/output&gt;[39m
+        [36m&lt;output[39m
+          [33mdata-testid[39m=[32m&quot;recovery-results&quot;[39m
+        [36m&gt;[39m
+          [0m0[0m
+        [36m&lt;/output&gt;[39m
+        [36m&lt;output[39m
+          [33mdata-testid[39m=[32m&quot;recovery-hydrated&quot;[39m
+        [36m&gt;[39m
+          [0mtrue[0m
+        [36m&lt;/output&gt;[39m
+        [36m&lt;output[39m
+          [33mdata-testid[39m=[32m&quot;recovery-draft&quot;[39m
+        [36m&gt;[39m
+          [0m{&quot;display_name&quot;:&quot;New applicant&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}[0m
+        [36m&lt;/output&gt;[39m
+        [36m&lt;output[39m
+          [33mdata-testid[39m=[32m&quot;recovery-error&quot;[39m
+        [36m/&gt;[39m
+        [36m&lt;button&gt;[39m
+          [0mexplicit new applicant[0m
+        [36m&lt;/button&gt;[39m
+      [36m&lt;/div&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/body&gt;[39m
+[36m&lt;/html&gt;[39m" type="AssertionError">
+AssertionError: expected &quot;getProfile&quot; to be called with arguments: [ &apos;saved-profile-id&apos; ]
+
+Number of calls: 0
+
+
+Ignored nodes: comments, script, style
+&lt;html&gt;
+  &lt;head /&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;div&gt;
+        &lt;output
+          data-testid=&quot;recovery-profile&quot;
+        &gt;
+          none
+        &lt;/output&gt;
+        &lt;output
+          data-testid=&quot;recovery-run&quot;
+        &gt;
+          none
+        &lt;/output&gt;
+        &lt;output
+          data-testid=&quot;recovery-results&quot;
+        &gt;
+          0
+        &lt;/output&gt;
+        &lt;output
+          data-testid=&quot;recovery-hydrated&quot;
+        &gt;
+          true
+        &lt;/output&gt;
+        &lt;output
+          data-testid=&quot;recovery-draft&quot;
+        &gt;
+          {&quot;display_name&quot;:&quot;New applicant&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}
+        &lt;/output&gt;
+        &lt;output
+          data-testid=&quot;recovery-error&quot;
+        /&gt;
+        &lt;button&gt;
+          explicit new applicant
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+ ❯ src/lib/store.test.tsx:771:46
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+            </failure>
+        </testcase>
+    </testsuite>
+</testsuites>

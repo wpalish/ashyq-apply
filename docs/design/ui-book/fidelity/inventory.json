@@ -1,0 +1,922 @@
+[
+  {
+    "screen": 1,
+    "title": "Главная сайта",
+    "route": "#/welcome",
+    "component": "PublicLanding",
+    "proof": "Форма направления, страны и бюджета; переход к созданию профиля.",
+    "limits": "Интерес хранится только в этой вкладке с ограниченным сроком. Не мгновенный живой поиск.",
+    "captures": [
+      "evidence/final/native/01-landing-desktop-baseline.jpg",
+      "evidence/final/native/01-landing-mobile-baseline.jpg"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/01-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/01-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 2,
+    "title": "Вход",
+    "route": "#/sign-in",
+    "component": "AuthGate",
+    "proof": "Вход в локальный тестовый workspace проверен.",
+    "limits": "Нет утверждения о доступности production SSO.",
+    "captures": [
+      "evidence/final/native/02-sign-in-desktop-baseline.jpg",
+      "evidence/final/native/02-sign-in-mobile-baseline.jpg"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/02-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/02-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 3,
+    "title": "Регистрация",
+    "route": "#/sign-in?create=1",
+    "component": "AuthGate",
+    "proof": "Созданы два вымышленных локальных workspace; поля и ошибки сохранены.",
+    "limits": "Юридические тексты остаются черновиками.",
+    "captures": [
+      "evidence/final/native/03-register-desktop-baseline.jpg",
+      "evidence/final/native/03-register-mobile-baseline.jpg"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/03-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/03-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 4,
+    "title": "Восстановление доступа",
+    "route": "#/forgot",
+    "component": "AuthGate",
+    "proof": "Отдельная форма, статусы по возможностям сервера.",
+    "limits": "Доставка реального email не запускалась.",
+    "captures": [
+      "evidence/final/native/04-password-help-desktop-baseline.jpg",
+      "evidence/final/native/04-password-help-mobile-baseline.jpg"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/04-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/04-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 5,
+    "title": "Новый пароль",
+    "route": "#/reset?token=…",
+    "component": "AuthGate",
+    "proof": "Адаптивная форма сброса пароля.",
+    "limits": "В браузере показана форма с фиктивным токеном; пароль не менялся.",
+    "captures": [
+      "evidence/final/native/05-new-password-desktop-baseline.jpg",
+      "evidence/final/native/05-new-password-mobile-baseline.jpg"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/05-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/05-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 6,
+    "title": "Личный кабинет",
+    "route": "#/home",
+    "component": "HomeScreen / AdmissionsTodayPanel",
+    "proof": "Результаты дела, следующие действия, документы и заявки.",
+    "limits": "Записи тестовые; старый расчёт не означает готовность сейчас.",
+    "captures": [
+      "evidence/final/native/06-home-desktop-baseline.jpg",
+      "evidence/final/native/06-home-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/06-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/06-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 7,
+    "title": "Профиль абитуриента",
+    "route": "#/profile",
+    "component": "ProfileScreen",
+    "proof": "Личные поля дела и сохранение с подтверждением сервера.",
+    "limits": "Имя исключено из внешних поисковых запросов.",
+    "captures": [
+      "evidence/final/native/07-profile-desktop-baseline.jpg",
+      "evidence/final/native/07-profile-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/07-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/07-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 8,
+    "title": "Учёба и экзамены",
+    "route": "#/profile → шаги 2–3",
+    "component": "ProfileScreen",
+    "proof": "Исходная шкала оценок и отдельные экзамены.",
+    "limits": "Нет неописанного перевода GPA; дополнительные снимки exams прилагаются.",
+    "captures": [
+      "evidence/final/native/08-academics-desktop-baseline.jpg",
+      "evidence/final/native/08-academics-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/08-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/08-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 9,
+    "title": "Активности и достижения",
+    "route": "#/profile → шаг 4",
+    "component": "ProfileScreen",
+    "proof": "Редактируемые достижения и активности.",
+    "limits": "Нет выдуманных результатов и гарантий.",
+    "captures": [
+      "evidence/final/native/09-activities-desktop-baseline.jpg",
+      "evidence/final/native/09-activities-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/09-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/09-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 10,
+    "title": "Направление и бюджет",
+    "route": "#/preferences",
+    "component": "PreferencesScreen",
+    "proof": "Предпочтения, расходы и условия финансирования.",
+    "limits": "Исходные ограничения расчёта сохранены.",
+    "captures": [
+      "evidence/final/native/10-preferences-desktop-baseline.jpg",
+      "evidence/final/native/10-preferences-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/10-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/10-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 11,
+    "title": "Подбор выполняется",
+    "route": "#/progress",
+    "component": "ProgressScreen",
+    "proof": "Подлинное состояние локального демонстрационного задания.",
+    "limits": "Парные снимки показывают завершение; запуск и выполнение наблюдались отдельно. Живые сайты не проверялись.",
+    "captures": [
+      "evidence/final/native/11-research-desktop-baseline.jpg",
+      "evidence/final/native/11-research-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/11-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/11-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 12,
+    "title": "Подбор программ",
+    "route": "#/shortlist",
+    "component": "ShortlistScreen",
+    "proof": "Поиск по текущим результатам, фильтры, сохранение, сравнение.",
+    "limits": "Демо корпус явно помечен; нет вероятностей зачисления.",
+    "captures": [
+      "evidence/final/native/12-results-desktop-baseline.jpg",
+      "evidence/final/native/12-results-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/12-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/12-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 13,
+    "title": "Страница программы",
+    "route": "#/shortlist → View details",
+    "component": "ResultDetail",
+    "proof": "Требования, затраты, документы, причины порядка и источники.",
+    "limits": "Контекстная деталь внутри списка; нет отдельного выдуманного API страницы.",
+    "captures": [
+      "evidence/final/native/13-programme-desktop-baseline.jpg",
+      "evidence/final/native/13-programme-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/13-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/13-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 14,
+    "title": "Сравнение программ",
+    "route": "#/shortlist → Compare",
+    "component": "ComparePanel",
+    "proof": "Отдельное сравнение с возвратом; выбор и поиск сохраняются.",
+    "limits": "При смене дела устаревшие идентификаторы исключаются.",
+    "captures": [
+      "evidence/final/native/14-compare-desktop-baseline.jpg",
+      "evidence/final/native/14-compare-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/14-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/14-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 15,
+    "title": "Стипендии и расходы",
+    "route": "#/funding",
+    "component": "FundingScreen",
+    "proof": "Состав расходов и известный остаток затрат.",
+    "limits": "Неизвестные суммы не превращаются в ноль.",
+    "captures": [
+      "evidence/final/native/15-funding-desktop-baseline.jpg",
+      "evidence/final/native/15-funding-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/15-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/15-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 16,
+    "title": "Источники и проверка",
+    "route": "#/sources",
+    "component": "SourcesScreen",
+    "proof": "Конфликты, вопросы, сроки свежести и оригинальные источники.",
+    "limits": "Длинные технические заметки доступны по раскрытию.",
+    "captures": [
+      "evidence/final/native/16-sources-desktop-baseline.jpg",
+      "evidence/final/native/16-sources-mobile-baseline.jpg"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/16-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/16-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 17,
+    "title": "Мой план поступления",
+    "route": "#/approved",
+    "component": "ApprovedScreen",
+    "proof": "Выбранные программы и связанные действия.",
+    "limits": "Выбор не равен отправленной заявке.",
+    "captures": [
+      "evidence/final/native/17-plan-desktop-baseline.jpg",
+      "evidence/final/native/17-plan-mobile-baseline.jpg"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/17-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/17-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 18,
+    "title": "Сегодня",
+    "route": "#/today",
+    "component": "JourneyPages / AdmissionsTodayPanel",
+    "proof": "Серверные личные сроки и ссылки на точные записи.",
+    "limits": "Не оценивает шанс или текущее решение университета.",
+    "captures": [
+      "evidence/final/native/18-today-desktop-baseline.jpg",
+      "evidence/final/native/18-today-mobile-baseline.jpg"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/18-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/18-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 19,
+    "title": "Календарь сроков",
+    "route": "#/calendar",
+    "component": "JourneyPages",
+    "proof": "Календарь, смена месяца, выбранный день, источники, личные даты, ICS.",
+    "limits": "Неизвестная временная зона остаётся неизвестной.",
+    "captures": [
+      "evidence/final/native/19-calendar-desktop-baseline.jpg",
+      "evidence/final/native/19-calendar-mobile-baseline.jpg"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/19-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/19-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 20,
+    "title": "Документы",
+    "route": "#/documents",
+    "component": "DocumentsScreen / PersonalDocumentsPanel",
+    "proof": "Реальные чеклисты и личная задача с серверным ACK.",
+    "limits": "Собранный чеклист не означает готовую подачу.",
+    "captures": [
+      "evidence/final/native/20-documents-desktop-baseline.jpg",
+      "evidence/final/native/20-documents-mobile-baseline.jpg"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/20-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/20-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 21,
+    "title": "Документ и загрузка",
+    "route": "#/documents → Inspect a local file",
+    "component": "LocalDocumentPreview",
+    "proof": "Локальный PDF/PNG/JPEG, проверка формата, новый просмотр.",
+    "limits": "Файл не отправляется и не хранится на сервере. Закрытое облачное хранилище отсутствует.",
+    "captures": [
+      "evidence/final/native/21-document-desktop-baseline.jpg",
+      "evidence/final/native/21-document-mobile-baseline.jpg"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle + explicit capability/role view",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/21-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/21-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 22,
+    "title": "Заявки",
+    "route": "#/applications",
+    "component": "ApplicationsPanel",
+    "proof": "Создана тестовая заявка, срок и статус preparing подтверждены.",
+    "limits": "Статус личной записи не является подтверждением университета.",
+    "captures": [
+      "evidence/final/native/22-applications-desktop-baseline.jpg",
+      "evidence/final/native/22-applications-mobile-baseline.jpg"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/22-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/22-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 23,
+    "title": "Карточка заявки",
+    "route": "#/applications → запись",
+    "component": "ApplicationsPanel",
+    "proof": "Контекстная редактура заявки, заметки, программа и личный срок.",
+    "limits": "Формы подтверждают только серверное сохранение собственных записей.",
+    "captures": [
+      "evidence/final/native/23-application-desktop-baseline.jpg",
+      "evidence/final/native/23-application-mobile-baseline.jpg"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/23-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/23-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 24,
+    "title": "Подготовка",
+    "route": "#/preparation",
+    "component": "PreparationScreen",
+    "proof": "Необязательный каталог подготовки и расписания.",
+    "limits": "Поиск/план доступны без наших материалов IELTS/SAT.",
+    "captures": [
+      "evidence/final/native/24-preparation-desktop-baseline.jpg",
+      "evidence/final/native/24-preparation-mobile-baseline.jpg"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/24-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/24-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 25,
+    "title": "Учебный материал",
+    "route": "#/preparation → Learning material",
+    "component": "PreparationScreen",
+    "proof": "Самостоятельный вид учебного материала из существующего каталога.",
+    "limits": "Это стартовый каталог, не полный курс IELTS Writing из примера.",
+    "captures": [
+      "evidence/final/native/25-lesson-desktop-baseline.jpg",
+      "evidence/final/native/25-lesson-mobile-baseline.jpg"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/25-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/25-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 26,
+    "title": "Практика",
+    "route": "#/preparation → Practice & feedback",
+    "component": "PreparationScreen",
+    "proof": "Ответы сохраняются при переключении материала и практики.",
+    "limits": "Не является официальным экзаменом или баллом IELTS.",
+    "captures": [
+      "evidence/final/native/26-practice-desktop-baseline.jpg",
+      "evidence/final/native/26-practice-mobile-baseline.jpg"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/26-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/26-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 27,
+    "title": "Разбор ответа",
+    "route": "#/preparation → сохранённая попытка",
+    "component": "PreparationScreen",
+    "proof": "Серверная проверка: 3/3; сохранённый разбор открыт заново.",
+    "limits": "3/3 относится к вымышленной учебной попытке, не к языковому уровню.",
+    "captures": [
+      "evidence/final/native/27-review-desktop-baseline.jpg",
+      "evidence/final/native/27-review-mobile-baseline.jpg"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/27-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/27-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 28,
+    "title": "Экспорт отчёта",
+    "route": "#/export",
+    "component": "ExportScreen / PrintableReport",
+    "proof": "Просмотр печатного отчёта, печать/Save as PDF, JSON, CSV.",
+    "limits": "Имя по явному выбору; без автоматической публикации. Системный диалог печати не снимался.",
+    "captures": [
+      "evidence/final/native/28-export-desktop-baseline.jpg",
+      "evidence/final/native/28-export-mobile-baseline.jpg"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/28-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/28-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 29,
+    "title": "Поделиться маршрутом",
+    "route": "#/share",
+    "component": "JourneyPages",
+    "proof": "PNG действительно скачан; текст и имя по выбору пользователя.",
+    "limits": "Локальный экспорт. Публичная ссылка на приватный маршрут не выдумана.",
+    "captures": [
+      "evidence/final/native/29-share-desktop-baseline.jpg",
+      "evidence/final/native/29-share-mobile-baseline.jpg"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/29-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/29-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 30,
+    "title": "Настройки",
+    "route": "#/settings",
+    "component": "SettingsScreen",
+    "proof": "Настройки профиля и темы, дополнительный снимок тёмной темы.",
+    "limits": "Русский/казахский интерфейс пока частично переведён.",
+    "captures": [
+      "evidence/final/native/30-settings-desktop-baseline.jpg",
+      "evidence/final/native/30-settings-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/30-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/30-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 31,
+    "title": "Доступ и подписка",
+    "route": "#/billing",
+    "component": "BillingScreen",
+    "proof": "Доступ по фактическим возможностям и данным сервера.",
+    "limits": "Реальная покупка и вымышленные тарифы не добавлены.",
+    "captures": [
+      "evidence/final/native/31-billing-desktop-baseline.jpg",
+      "evidence/final/native/31-billing-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/31-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/31-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 32,
+    "title": "Сообщество",
+    "route": "#/feed",
+    "component": "FeedScreen",
+    "proof": "Два синтетических поста и ответ в изолированной локальной базе.",
+    "limits": "Никаких внешних публикаций или чужих персональных данных.",
+    "captures": [
+      "evidence/final/native/32-feed-desktop-baseline.jpg",
+      "evidence/final/native/32-feed-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/32-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/32-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 33,
+    "title": "Найти людей",
+    "route": "#/discover",
+    "component": "DiscoverScreen",
+    "proof": "Поиск и профили двух синтетических участников.",
+    "limits": "Частные анкеты поступления не используются как публичный профиль.",
+    "captures": [
+      "evidence/final/native/33-discover-desktop-baseline.jpg",
+      "evidence/final/native/33-discover-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/33-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/33-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 34,
+    "title": "Мой публичный профиль",
+    "route": "#/me",
+    "component": "PersonScreen",
+    "proof": "Редактор и предварительный просмотр публичных полей.",
+    "limits": "Предпросмотр не копирует частные оценки и бюджет.",
+    "captures": [
+      "evidence/final/native/34-my-profile-desktop-baseline.jpg",
+      "evidence/final/native/34-my-profile-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/34-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/34-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 35,
+    "title": "Профиль участника",
+    "route": "#/person?user=<public-id>",
+    "component": "PersonScreen",
+    "proof": "Ссылка восстановлена после перезагрузки с тем же участником.",
+    "limits": "Неполная ссылка не подставляет профиль текущего пользователя.",
+    "captures": [
+      "evidence/final/native/35-community-profile-desktop-baseline.jpg",
+      "evidence/final/native/35-community-profile-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/35-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/35-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 36,
+    "title": "Сообщения",
+    "route": "#/messages",
+    "component": "MessagesScreen",
+    "proof": "Два сообщения между двумя тестовыми аккаунтами.",
+    "limits": "Ноль внешних адресатов; доступ следует настройкам сообщества.",
+    "captures": [
+      "evidence/final/native/36-messages-desktop-baseline.jpg",
+      "evidence/final/native/36-messages-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/36-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/36-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 37,
+    "title": "Модерация",
+    "route": "#/moderation",
+    "component": "ModerationScreen",
+    "proof": "Проверен честный отказ доступа и возврат в сообщество.",
+    "limits": "Положительный сценарий роли модератора в браузере не запускался; API и существующие тесты сохранены.",
+    "captures": [
+      "evidence/final/native/37-moderation-desktop-baseline.jpg",
+      "evidence/final/native/37-moderation-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle + explicit capability/role view",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "ROLE_GATED_LOCAL_FIXTURE_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "labelled DEV-only fixture; real API remains403",
+    "paired_views": [
+      "evidence/final/comparisons/37-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/37-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 38,
+    "title": "Правила и конфиденциальность",
+    "route": "#/legal",
+    "component": "LegalScreen",
+    "proof": "Читаемые разделы и видимая отметка черновика.",
+    "limits": "Это не юридически утверждённые документы.",
+    "captures": [
+      "evidence/final/native/38-legal-desktop-baseline.jpg",
+      "evidence/final/native/38-legal-mobile-baseline.jpg"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/38-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/38-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 39,
+    "title": "Конфликт сохранения",
+    "route": "409 при сохранении профиля",
+    "component": "ProfileRecoveryPanel",
+    "proof": "Настоящее параллельное изменение, сравнение редакций, выбор и повторное сохранение.",
+    "limits": "Контекстное состояние, не фиктивная обычная страница.",
+    "captures": [
+      "evidence/final/native/39-save-conflict-desktop-baseline.jpg",
+      "evidence/final/native/39-save-conflict-mobile-baseline.jpg"
+    ],
+    "group": "Восстановление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/39-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/39-mobile-baseline-paired.jpg"
+    ]
+  },
+  {
+    "screen": 40,
+    "title": "Неизвестный результат сохранения",
+    "route": "потеря ответа после успешного PUT",
+    "component": "ProfileRecoveryPanel / SaveFeedback",
+    "proof": "Запрос принят сервером, ответ разорван; исходная команда подтверждена повтором и получен Saved.",
+    "limits": "Временный loopback fault proxy выключен после проверки; draft и исходная команда не смешиваются.",
+    "captures": [
+      "evidence/final/native/40-save-recovery-desktop-baseline.jpg",
+      "evidence/final/native/40-save-recovery-mobile-baseline.jpg"
+    ],
+    "group": "Восстановление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract",
+    "current_status": "LOCAL_UI_REVIEWED",
+    "current_visual_acceptance": "LOCAL_RU_REVIEWED_NOT_OWNER_APPROVED",
+    "proof_kind": "real local UI with synthetic data",
+    "paired_views": [
+      "evidence/final/comparisons/40-desktop-baseline-paired.jpg",
+      "evidence/final/comparisons/40-mobile-baseline-paired.jpg"
+    ]
+  }
+]

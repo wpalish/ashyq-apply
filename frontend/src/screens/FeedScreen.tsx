@@ -6,7 +6,9 @@
  * you keep your position in the list while you read an answer.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { BookCommunityNav } from '@/components/BookCommunityNav';
+import { BookHelp } from '@/components/BookUI';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Byline, Composer, Post, Retract } from '@/components/social';
@@ -25,27 +27,29 @@ function Thread({
    *  answered, and "2 answers" over a thread showing one. */
   onCountChange: (delta: number) => void;
 }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation(); const ru = locale !== 'en';
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState<Page<ReplyView> | null>(null);
   const [replies, setReplies] = useState<ReplyView[]>([]);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async (cursor?: string | null) => {
+    setLoading(true);
     try {
       const next = await api.thread(postId, cursor);
-      setPage(next);
+      setPage(next); setError('');
       setReplies((prev) => (cursor ? [...prev, ...next.items] : next.items));
     } catch (problem) {
       setError(problem instanceof ApiError ? problem.message : 'Could not load this thread.');
-    }
+    } finally { setLoading(false); }
   }, [postId]);
 
   useEffect(() => { void load(); }, [load]);
 
   return (
     <div className="thread">
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
       {page === null && !error && <Loading label={t('community.openingThread')} />}
       {replies.map((reply) => (
         <div className="reply" key={reply.id} data-testid={`reply-${reply.id}`}>
@@ -67,7 +71,7 @@ function Thread({
           </div>
         </div>
       ))}
-      {page !== null && replies.length === 0 && (
+      {!error && page !== null && replies.length === 0 && (
         <p className="small muted">{t('community.noAnswers')}</p>
       )}
       {page?.next_cursor && (
@@ -88,6 +92,7 @@ function Thread({
             setError('');
           } catch (problem) {
             setError(problem instanceof ApiError ? problem.message : 'Could not post that reply.');
+            return false;
           } finally {
             setBusy(false);
           }
@@ -106,8 +111,10 @@ export function FeedScreen({
   onJoin: () => void;
   onDiscover: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
   const [filters, setFilters] = useState<FeedFilters>({});
+  const [draftFilters, setDraftFilters] = useState<FeedFilters>({});
+  const loadGeneration = useRef(0);
   const [posts, setPosts] = useState<PostView[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -116,20 +123,25 @@ export function FeedScreen({
   const [posting, setPosting] = useState(false);
 
   const load = useCallback(async (active: FeedFilters, from?: string | null) => {
+    const generation = ++loadGeneration.current;
     setLoading(true);
     try {
       const page = await api.feed(active, from);
+      if (generation !== loadGeneration.current) return;
       setPosts((prev) => (from ? [...prev, ...page.items] : page.items));
       setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
-      setError(problem instanceof ApiError ? problem.message : 'Could not load the feed.');
+      if (generation === loadGeneration.current) setError(problem instanceof ApiError ? problem.message : 'Could not load the feed.');
     } finally {
-      setLoading(false);
+      if (generation === loadGeneration.current) setLoading(false);
     }
   }, []);
 
-  useEffect(() => { void load(filters); }, [load, filters]);
+  useEffect(() => {
+    void load(filters);
+    return () => { ++loadGeneration.current; };
+  }, [load, filters]);
 
   const filtered = Object.values(filters).some(Boolean);
 
@@ -144,15 +156,16 @@ export function FeedScreen({
     count === 0 ? t('community.answer') : `${t('community.answer')} (${count})`;
 
   return (
-    <div className="community-page">
+    <div className={`community-page ${ru?'book-community-page':''}`}>
+    {ru&&<BookCommunityNav active="feed"/>}
     <div className="stack community-column">
       <div className="screen__head">
-        <p className="screen__eyebrow">COMMUNITY</p>
-        <h1 className="screen__title">Student <span className="find-yellow">experiences.</span></h1>
-        <p className="screen__lede">Real stories and practical advice from other students.</p>
+        {!ru&&<p className="screen__eyebrow">COMMUNITY</p>}
+        <h1 className="screen__title">{ru?'Сообщество':<>Student <span className="find-yellow">experiences.</span></>}</h1>
+        <p className="screen__lede">{ru?'Обменивайся опытом, задавай вопросы и получай советы от других абитуриентов. Здесь обсуждают подготовку документов, учёбу за рубежом и студенческую жизнь.':'Real stories and practical advice from other students.'}</p>
       </div>
 
-      <Notice kind="info">Student experiences are personal opinions, not official university information.</Notice>
+      <Notice kind="info">{ru?'Опыт участников — личное мнение, а не официальная информация университета.':'Student experiences are personal opinions, not official university information.'}</Notice>
 
       {!joined && (
         <Notice kind="info">
@@ -177,6 +190,7 @@ export function FeedScreen({
                 setError('');
               } catch (problem) {
                 setError(problem instanceof ApiError ? problem.message : 'Could not post that.');
+            return false;
               } finally {
                 setPosting(false);
               }
@@ -185,14 +199,17 @@ export function FeedScreen({
         </Panel>
       )}
 
+      <details className="book-community-filters" open={ru?undefined:true}><summary>{ru?'Фильтры публикаций':'Post filters'}</summary>
       <div className="filters">
         <div className="field">
           <label className="field__label xs" htmlFor="feed-tag">{t('community.filterTag')}</label>
           <input
             id="feed-tag"
             placeholder="KBTU"
-            defaultValue={filters.tag ?? ''}
-            onBlur={(event) => setFilters((f) => ({ ...f, tag: event.target.value.trim() }))}
+            value={draftFilters.tag ?? ''}
+            onChange={(event) => setDraftFilters((draft) => ({ ...draft, tag: event.target.value }))}
+            onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); setFilters(current => ({ ...current, ...Object.fromEntries(Object.entries(draftFilters).map(([key, value]) => [key, value?.trim() ?? ''])) })); } }}
+              onBlur={(event) => setFilters((f) => ({ ...f, tag: event.target.value.trim() }))}
           />
         </div>
         <div className="field">
@@ -200,8 +217,10 @@ export function FeedScreen({
           <input
             id="feed-city"
             placeholder="Astana"
-            defaultValue={filters.city ?? ''}
-            onBlur={(event) => setFilters((f) => ({ ...f, city: event.target.value.trim() }))}
+            value={draftFilters.city ?? ''}
+            onChange={(event) => setDraftFilters((draft) => ({ ...draft, city: event.target.value }))}
+            onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); setFilters(current => ({ ...current, ...Object.fromEntries(Object.entries(draftFilters).map(([key, value]) => [key, value?.trim() ?? ''])) })); } }}
+              onBlur={(event) => setFilters((f) => ({ ...f, city: event.target.value.trim() }))}
           />
         </div>
         <div className="field">
@@ -219,13 +238,14 @@ export function FeedScreen({
           </select>
         </div>
         {filtered && (
-          <button className="btn btn--sm btn--ghost" type="button" onClick={() => setFilters({})}>
+          <button className="btn btn--sm btn--ghost" type="button" onClick={() => { setFilters({}); setDraftFilters({}); }}>
             {t('community.clearFilters')}
           </button>
         )}
       </div>
+      </details>
 
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(filters); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
 
       <div className="feed">
         {posts.map((post) => (
@@ -276,7 +296,7 @@ export function FeedScreen({
       </div>
 
       {loading && <Loading label={t('community.loadingPosts')} />}
-      {!loading && posts.length === 0 && (
+      {!loading && !error && posts.length === 0 && (
         <Empty title={t(filtered ? 'community.noMatch' : 'community.noPosts')}>
           <p className="small">
             {t(filtered ? 'community.noMatchHint' : 'community.noPostsHint')}
@@ -289,15 +309,16 @@ export function FeedScreen({
         </button>
       )}
     </div>
-    <aside className="community-aside" aria-label="Explore the student community">
-      <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking toward a mountain campus" />
+    {!ru&&<aside className="community-aside" aria-label="Explore the student community">
+      <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
       <div>
         <p className="screen__eyebrow">SAME STUDENTS. BIGGER HORIZONS.</p>
         <h2>Meet students on a similar path.</h2>
         <p>Find people by their university, field and destination. Public stories help you start a conversation.</p>
         <button type="button" className="btn btn--primary" onClick={onDiscover}>Find students →</button>
       </div>
-    </aside>
+    </aside>}
+    {ru&&<div className="book-community-help"><BookHelp><strong>Дружелюбное сообщество</strong><br/>Делимся опытом и поддерживаем друг друга на пути к обучению за рубежом.</BookHelp></div>}
     </div>
   );
 }

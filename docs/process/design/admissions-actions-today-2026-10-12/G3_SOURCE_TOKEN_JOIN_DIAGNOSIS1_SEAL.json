@@ -1,0 +1,57 @@
+{
+  "schema_version": "g3-source-diagnosis-seal-v1",
+  "status": [
+    "SOURCE_ONLY",
+    "NOT_APPLIED",
+    "NOT_IMPORTED",
+    "NOT_RUN"
+  ],
+  "inspected_at": "2026-10-13 05:48:17 UTC",
+  "member": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_SOURCE_TOKEN_JOIN_DIAGNOSIS1.md",
+    "sha256": "ad8a55f07fe735d36b287e938b396c9e7b1d18c89d95f191ff37f674e757de6f",
+    "bytes": 3939
+  },
+  "source_pins": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_admissions_actions.py",
+      "sha256": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/research.py",
+      "sha256": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_admissions_actions_api.py",
+      "sha256": "af984816e28aa0af12f69c49eba8dff5d555c5804a4cbd7d887f5106440eea6a"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_preparation_graph.py",
+      "sha256": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/domain/admissions_actions.py",
+      "sha256": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8"
+    }
+  ],
+  "saved_evidence_pins": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/result.json",
+      "sha256": "8cdcf4a3cd0b6d1f68d501fcf5408a3ac4f5f70020a8b7ac12d768ae26c86d40"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/sqlite/pytest.log",
+      "sha256": "2bf5def1063148cead28922b0038dd7341b73e5f1e77b561aabc1a1da472b355"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/sqlite/junit.xml",
+      "sha256": "3c4c549fcdf223424e2f2bf029a254ac6281cb588a9bf5fd8dd472c9f6dc6a78"
+    }
+  ],
+  "limits": [
+    "Internal exception attributed from parent diagnosis plus structural source proof; saved short trace contains safe refusal only.",
+    "No source/import/AST/runtime/database/network/Git/helper/HANDOFF work.",
+    "Root sole executor/writer; full gate not claimed; STOPs preserved."
+  ]
+}
+

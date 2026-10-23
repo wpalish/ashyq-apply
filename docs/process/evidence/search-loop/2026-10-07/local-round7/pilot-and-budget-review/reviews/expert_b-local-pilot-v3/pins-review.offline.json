@@ -1,0 +1,107 @@
+{
+  "kind": "read-only protocol pin inspection",
+  "controller_sha256": "2cc2a53d1c6d1d1a0d5b33a65b1482f6a139dcf92ecf27e172092015b5b4edca",
+  "plan_sha256": "07d47fe1996885cfa7bc156d11501a598540b9b7b0b08d10563a185a3645ae72",
+  "prior_receipt_sha256": "acece8df76e278dcdea8d201b636e889f8488f932c794600ad040ab702f80ebf",
+  "source_head": "7277c154bda838688268b7a07d4286ed8f4688ce",
+  "tree_hash_declared": "b18f63fe7bf47773ffd6f97ef0cea45967a4fa061dd616da0aafa5723389826b",
+  "source_files_checked": 3410,
+  "old_files_checked": 42,
+  "executable_subset_matches_full_checked": true,
+  "commands_equal_prepared_plan_with_only_case_out_and_stop_reserve": true,
+  "remaining_order": [
+    "hku",
+    "ntu",
+    "kaist"
+  ],
+  "prior_status_preserved": "PROTOCOL_STOP_UNSCORED",
+  "new_execution_started": false,
+  "provider_stop_exists": false,
+  "historical_stop_immutable": true,
+  "physical_results": [
+    {
+      "case": "groningen",
+      "capture_sha256": "a1fa591273ddd49e02fb47304b4c7d69639c38487119691e840e7d257ab9199d",
+      "errors": [],
+      "bounded_timeout_without_full_raw": true,
+      "bounded_page_cap_with_full_raw": false,
+      "fetcher_calls": 33,
+      "search_queries": 6,
+      "elapsed_ms": 117007,
+      "quality_status": "UNSCORED"
+    },
+    {
+      "case": "delft",
+      "capture_sha256": "745748799ef015a51bdd212205500959dea0e7ceb996cd9c1d32fdd560c0d9c1",
+      "errors": [],
+      "bounded_timeout_without_full_raw": false,
+      "bounded_page_cap_with_full_raw": false,
+      "fetcher_calls": 39,
+      "search_queries": 6,
+      "elapsed_ms": 79084,
+      "quality_status": "UNSCORED"
+    },
+    {
+      "case": "aalto",
+      "capture_sha256": "d2cf7e0dbea30873306f1ae1b558adef706f0c186290141dcf4e8fac7ef56889",
+      "errors": [],
+      "bounded_timeout_without_full_raw": false,
+      "bounded_page_cap_with_full_raw": false,
+      "fetcher_calls": 56,
+      "search_queries": 6,
+      "elapsed_ms": 104239,
+      "quality_status": "UNSCORED"
+    },
+    {
+      "case": "vienna",
+      "capture_sha256": "715e9f391f4c938085d105fc934f23470616c95b1c92ad9c0bdd2d7c6c39b989",
+      "errors": [],
+      "bounded_timeout_without_full_raw": false,
+      "bounded_page_cap_with_full_raw": false,
+      "fetcher_calls": 37,
+      "search_queries": 6,
+      "elapsed_ms": 71850,
+      "quality_status": "UNSCORED"
+    },
+    {
+      "case": "warsaw",
+      "capture_sha256": "21cb39414e68261eb5e6e01cc790f4dfcda2016dd362239a76fde580de8fe855",
+      "errors": [],
+      "bounded_timeout_without_full_raw": true,
+      "bounded_page_cap_with_full_raw": false,
+      "fetcher_calls": 35,
+      "search_queries": 6,
+      "elapsed_ms": 117007,
+      "quality_status": "UNSCORED"
+    },
+    {
+      "case": "ubc",
+      "capture_sha256": "81088f4c52ba920abeb5f43f1bbf7cd67f027f5997de403da2085af3f774c403",
+      "errors": [],
+      "bounded_timeout_without_full_raw": true,
+      "bounded_page_cap_with_full_raw": false,
+      "fetcher_calls": 40,
+      "search_queries": 6,
+      "elapsed_ms": 117007,
+      "quality_status": "UNSCORED"
+    },
+    {
+      "case": "toronto",
+      "capture_sha256": "ddef93b7d9ec840504e1800e34694c2f732ebd2b8ac40e3921ffe762aa4476a7",
+      "errors": [],
+      "bounded_timeout_without_full_raw": false,
+      "bounded_page_cap_with_full_raw": true,
+      "fetcher_calls": 60,
+      "search_queries": 6,
+      "elapsed_ms": 94520,
+      "quality_status": "UNSCORED"
+    }
+  ],
+  "network_calls": 0,
+  "DNS_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "Git_actions": 0,
+  "main_calls": 0,
+  "source_changes": 0
+}

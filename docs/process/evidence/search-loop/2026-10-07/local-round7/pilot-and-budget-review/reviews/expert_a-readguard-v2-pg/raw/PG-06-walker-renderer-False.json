@@ -1,0 +1,28 @@
+{
+  "exception": [
+    {
+      "type": "UniversityReadStopped",
+      "reason": "checkpoint_busy",
+      "sqlstate": null,
+      "message": "University read allowance refused: checkpoint_busy"
+    },
+    {
+      "type": "OperationalError",
+      "reason": null,
+      "sqlstate": "55P03",
+      "message": "(psycopg.errors.LockNotAvailable) could not obtain lock on row in relation \"research_runs\"\n[SQL: SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT]\n[parameters: {'id_1': '10b76fcc62894144b1ed000dcb4013b1'}]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"
+    },
+    {
+      "type": "LockNotAvailable",
+      "reason": null,
+      "sqlstate": "55P03",
+      "message": "could not obtain lock on row in relation \"research_runs\""
+    }
+  ],
+  "original_get": 0,
+  "durable": {
+    "catalogue:u-one": 0
+  },
+  "actual_walk": true,
+  "renderer_callback_uses_guarded_fetcher": false
+}

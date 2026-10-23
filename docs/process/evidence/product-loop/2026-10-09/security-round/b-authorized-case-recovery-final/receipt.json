@@ -1,0 +1,75 @@
+{
+  "status": "READY_FOR_INDEPENDENT_REVIEW",
+  "recorded_at": "2026-10-09T01:18:24.151821+00:00",
+  "scope_paths": [
+    "frontend/src/lib/store.tsx",
+    "frontend/src/lib/store.test.tsx"
+  ],
+  "base": {
+    "frontend/src/lib/store.tsx": {
+      "sha256": "49c0135d1b3000bf093f7806d34ca2d63796c3e5dd6cf987ee9012d89a557035",
+      "bytes": 34108
+    },
+    "frontend/src/lib/store.test.tsx": {
+      "sha256": "1dd51e6df4a7aac51fbd970f19b2ca29c2ff887c682f089c95e8556d6b25ed4f",
+      "bytes": 31261
+    }
+  },
+  "proposed": {
+    "frontend/src/lib/store.tsx": {
+      "sha256": "78364580ad47e200f8b22f3b8a2eff1b35e17e5cc6e5174d3cf2bd0dd13b401e",
+      "bytes": 34832
+    },
+    "frontend/src/lib/store.test.tsx": {
+      "sha256": "c931d85257d275f85e789b37cbf92d7c756a4973a7c7521c05f94701281ed9be",
+      "bytes": 41883
+    }
+  },
+  "patch": {
+    "sha256": "1587badf711c3be3ab840a0d0772cd72dad88e725172626dfd18f9ef97dc8ef8",
+    "bytes": 27182
+  },
+  "predecessor_delta": {
+    "sha256": "a921d031a44f77d27dccc163681542668860b32fcd61f5319ee5c364399ba114",
+    "bytes": 3334
+  },
+  "predecessor_READY_sha256": "cb2b5dce556de0da149160095cd169b87fb534e2d7732720cf4695d9290f2ec2",
+  "predecessor_all103_unchanged": true,
+  "native": {
+    "final_ON": {
+      "passed": 45,
+      "failed": 0,
+      "skipped": 0
+    },
+    "original_OFF": {
+      "passed": 40,
+      "failed": 5,
+      "skipped": 0
+    },
+    "cb2b_previous": {
+      "passed": 44,
+      "failed": 1,
+      "skipped": 0
+    },
+    "old35_pass_all3": true,
+    "prior9_test_bodies_unchanged": true,
+    "new_loading_case": 1,
+    "typecheck_exit": 0,
+    "lint_exit": 0,
+    "old_body_audit_exit": 0,
+    "predecessor_body_audit_exit": 0,
+    "transport_listen_DNS_attempts": 0
+  },
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "qualifications": [
+    "Actual React StoreProvider / existing API method mocks, no backend/SQL/ports/server/E2E/live execution",
+    "Explicit switchCase loading control reaches original a0fc and cb2b, preserving blank/profile/run/results and usable loading state after newer newCase intent",
+    "Expected jsdom unsupported location.reload diagnostic retained",
+    "Previous failed full and cb2b/peer negative histories remain immutable; final45 selected cases not full/browser acceptance",
+    "Cooperative owner/mount/gen fences are not server-atomic cookie isolation"
+  ],
+  "current_base_source_and_E2E_unchanged": true
+}

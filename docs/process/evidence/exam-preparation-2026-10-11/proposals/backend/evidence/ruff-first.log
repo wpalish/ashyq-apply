@@ -1,0 +1,16 @@
+exam-preparation-2026-10-11/proposals/backend/files/backend/app/domain/preparation.py:82:5: SIM102 Use a single `if` statement instead of nested `if` statements
+   |
+80 |               # Co-published minima do not establish AND/OR or which route applies.
+81 |               return "alternatives_unresolved"
+82 | /     if check.status == EligibilityStatus.NOT_APPLICABLE and ClaimType.SAT_POLICY in types:
+83 | |         if any(check.published_value == claim.normalized_value
+84 | |                and isinstance(claim.normalized_value, str)
+85 | |                and claim.normalized_value.strip().casefold() in {"optional", "test-optional", "test optional", "not required"}
+86 | |                for claim in claims if claim.claim_type == ClaimType.SAT_POLICY):
+   | |________________________________________________________________________________^ SIM102
+87 |               return "optional"
+88 |       if types & _MINIMUM_TYPES and check.status != EligibilityStatus.NOT_APPLICABLE:
+   |
+   = help: Combine `if` statements using `and`
+
+Found 11 errors (10 fixed, 1 remaining).

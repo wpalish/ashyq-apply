@@ -1,0 +1,57 @@
+{
+  "verdict": "ACCEPTED_UNSCORED_CLOSURE_ONLY",
+  "root_receipt_sha256": "cb6bf01534090ad499e33fb8905cbf61e6531249791ae9e1fb02e17a16d41e20",
+  "checks": {
+    "selected332_archived_and_original_hash_and_size": true,
+    "no_unlisted_archived_file_except_receipt": true,
+    "native_status_and_capture_split_6_3_1": true,
+    "physical_totals_391_56_108_14": true,
+    "sticky_stop_original_and_live_copy_identical": true,
+    "same999_saved_full_summary_and_source_manifest_pins": true,
+    "saved_full13technical_gate_pass_not_quality": true,
+    "pr_no_quality_acceptance_and_whitespace_limits_explicit": true,
+    "root_recorded_no_labels_score_or_resumed_collection": true,
+    "stop_last_case_no_post_refusal_case_in_saved_sequence": true
+  },
+  "selected_files": 332,
+  "selected_bytes": 37160511,
+  "source_pins_compared": 999,
+  "stop_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "stop": {
+    "case_id": "kaist",
+    "provider": "exa_mcp",
+    "http_status": null,
+    "failure_reason": "rate limited",
+    "time": "2026-10-08T01:33:07.997034+00:00"
+  },
+  "attempted": 10,
+  "admitted": 9,
+  "completed": 6,
+  "bounded_partial": 3,
+  "unadmitted_refusal": 1,
+  "physical_counters_not_quality_scores": {
+    "fetcher_calls": 391,
+    "search_queries": 56,
+    "elapsed_ms": 956979,
+    "programme_url_records": 14,
+    "prediction_records": 108
+  },
+  "pr_body_sha256": "434fbceb40fa438bb9069e2863fcd0b87234e35451a341da58169fb962f5235d",
+  "runtime_actions": {
+    "main_preflight_driver_scorer_import_or_execution": 0,
+    "network_model_provider_calls": 0,
+    "repo_source_Git_STOP_mutations": 0,
+    "semantic_gold_label_reads": 0
+  },
+  "limits": [
+    "No quality score or semantic adjudication; counts only lengths and physical meters.",
+    "No broad diff --check PASS; archived original whitespace preserved.",
+    "No fresh 999-file executable/Git proof: same saved fullsource digests and recorded reverify receipts verified only.",
+    "No post-refusal case in retained collection; independent global audit of every later machine process was not performed.",
+    "scoring_executed/reviewed_labels_read/production_changed are preserved owner/controller declarations consistent with archive, not independent history reconstruction.",
+    "HTTPstatus null does not prove HTTP429/account balance."
+  ],
+  "report_sha256": "51b52bcf93eb942e5387990ea505c8c7fd5831678f7eece27c2d11d873d7556c",
+  "source_pins_semantics": "999prefix-selected source/data paths; saved digest metadata only, no semantic label/data body reads",
+  "first_review_assumption": "PDF0 assumption corrected; original script/receipt preserved; not a root contract failure"
+}

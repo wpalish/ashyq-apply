@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "file_checks": {
+    "PASS": 931,
+    "RED": 0,
+    "physical": 931,
+    "bytes": 16787404,
+    "unique_content_hashes": 511,
+    "qualification": "Physical copiedfiles and distinctcontenthashes are notuniqueexperiments/calls."
+  },
+  "source_prefix999": {
+    "PASS": 999,
+    "RED": 0,
+    "map_sha256": "1c55186a6626b9f393601439c44b8e1e8e3f12f8fb9d498e0fb40613faa803d7"
+  },
+  "STOP_reference_is_hash_not_embedded_copy": true,
+  "first_full": {
+    "status": "interrupted",
+    "ruff_exit": 1,
+    "ruff_errors": 3,
+    "format_exit": 0,
+    "mypy_exit": 0,
+    "sqlite_exit": 130
+  }
+}

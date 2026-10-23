@@ -1,0 +1,41 @@
+{
+  "time": "2026-10-08T03:24:37.373500+00:00",
+  "status": "ONLY_IMPORT_GROUPING_REPAIRED_PEER_PENDING",
+  "command": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "--fix",
+    "--select",
+    "I",
+    "tests/test_exa_mcp.py",
+    "tests/test_search_layer_budget_fixes.py",
+    "tests/test_search_throttle_latch.py"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend",
+  "exit_code": 0,
+  "files": {
+    "backend/tests/test_exa_mcp.py": {
+      "before": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596",
+      "after": "b0e53700afc97c458508d45e5404566bd730af0de1a4a355210c5d1f5b85fd6a",
+      "non_import_AST_equal": true,
+      "same_import_alias_set": true
+    },
+    "backend/tests/test_search_layer_budget_fixes.py": {
+      "before": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+      "after": "a037d3f48bff9da00879f289379e87938b1db58e903a373ec863f73a78ccf321",
+      "non_import_AST_equal": true,
+      "same_import_alias_set": true
+    },
+    "backend/tests/test_search_throttle_latch.py": {
+      "before": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+      "after": "e8ff78ba31ab5d0e037343153b8ae09b43d3fb583bd8abb1ff64ef815bebf101",
+      "non_import_AST_equal": true,
+      "same_import_alias_set": true
+    }
+  },
+  "app_changed": false,
+  "test_bodies_assertions_changed": false,
+  "live_calls": 0
+}

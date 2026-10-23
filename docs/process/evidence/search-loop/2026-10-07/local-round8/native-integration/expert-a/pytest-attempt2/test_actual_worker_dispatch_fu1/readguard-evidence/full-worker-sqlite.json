@@ -1,0 +1,902 @@
+{
+  "backend": "sqlite",
+  "job_status": "succeeded",
+  "lease_token": 1,
+  "stage": "awaiting_user_decision",
+  "unknowns": [
+    "Remaining research for Test University is unknown: university read allowance refused (read_cap)."
+  ],
+  "pages_failed": 0,
+  "job_completed_events": 1,
+  "claim_rows": 1,
+  "claim_types": [
+    "program_exists"
+  ],
+  "unresolved": [
+    {
+      "topic": "research read allowance",
+      "question": "Which remaining official facts can be established for BSc Computer Science?",
+      "why_it_matters": "Remaining research for Test University is unknown: university read allowance refused (read_cap).",
+      "university": "Test University",
+      "program": "BSc Computer Science",
+      "suggested_contact": null,
+      "blocking": false
+    }
+  ],
+  "native_ledger": {
+    "version": 1,
+    "read_limit": 60,
+    "active_episode": "decision:61e746f387924a909c21129f34ef292d",
+    "episodes": {
+      "decision:61e746f387924a909c21129f34ef292d": {
+        "read_counts": {
+          "catalogue:u-one": 60
+        }
+      }
+    }
+  },
+  "counts": {
+    "catalogue:u-one": 60
+  },
+  "attempts": [
+    "discovery",
+    "discovery",
+    "discovery",
+    "discovery",
+    "discovery",
+    "discovery",
+    "discovery",
+    "discovery",
+    "discovery",
+    "discovery",
+    "discovery",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "requirements",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding",
+    "funding"
+  ],
+  "original_io": [
+    {
+      "url": "https://example.edu/discovery/0",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 1
+      },
+      "thread": 8419598720,
+      "at_ns": 810599035571708
+    },
+    {
+      "url": "https://example.edu/discovery/1",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 2
+      },
+      "thread": 8419598720,
+      "at_ns": 810599036723458
+    },
+    {
+      "url": "https://example.edu/discovery/2",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 3
+      },
+      "thread": 8419598720,
+      "at_ns": 810599037999916
+    },
+    {
+      "url": "https://example.edu/discovery/3",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 4
+      },
+      "thread": 8419598720,
+      "at_ns": 810599039179041
+    },
+    {
+      "url": "https://example.edu/discovery/4",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 5
+      },
+      "thread": 8419598720,
+      "at_ns": 810599040359666
+    },
+    {
+      "url": "https://example.edu/discovery/5",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 6
+      },
+      "thread": 8419598720,
+      "at_ns": 810599041531291
+    },
+    {
+      "url": "https://example.edu/discovery/6",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 7
+      },
+      "thread": 8419598720,
+      "at_ns": 810599042726708
+    },
+    {
+      "url": "https://example.edu/discovery/7",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 8
+      },
+      "thread": 8419598720,
+      "at_ns": 810599043990000
+    },
+    {
+      "url": "https://example.edu/discovery/8",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 9
+      },
+      "thread": 8419598720,
+      "at_ns": 810599045177458
+    },
+    {
+      "url": "https://example.edu/discovery/9",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 10
+      },
+      "thread": 8419598720,
+      "at_ns": 810599046381375
+    },
+    {
+      "url": "https://example.edu/discovery/10",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 11
+      },
+      "thread": 8419598720,
+      "at_ns": 810599047594458
+    },
+    {
+      "url": "https://example.edu/requirements/0",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 12
+      },
+      "thread": 8419598720,
+      "at_ns": 810599052919000
+    },
+    {
+      "url": "https://example.edu/requirements/1",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 13
+      },
+      "thread": 8419598720,
+      "at_ns": 810599054154333
+    },
+    {
+      "url": "https://example.edu/requirements/2",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 14
+      },
+      "thread": 8419598720,
+      "at_ns": 810599055376916
+    },
+    {
+      "url": "https://example.edu/requirements/3",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 15
+      },
+      "thread": 8419598720,
+      "at_ns": 810599056731625
+    },
+    {
+      "url": "https://example.edu/requirements/4",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 16
+      },
+      "thread": 8419598720,
+      "at_ns": 810599057942666
+    },
+    {
+      "url": "https://example.edu/requirements/5",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 17
+      },
+      "thread": 8419598720,
+      "at_ns": 810599059163541
+    },
+    {
+      "url": "https://example.edu/requirements/6",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 18
+      },
+      "thread": 8419598720,
+      "at_ns": 810599060488333
+    },
+    {
+      "url": "https://example.edu/requirements/7",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 19
+      },
+      "thread": 8419598720,
+      "at_ns": 810599061823833
+    },
+    {
+      "url": "https://example.edu/requirements/8",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 20
+      },
+      "thread": 8419598720,
+      "at_ns": 810599063066041
+    },
+    {
+      "url": "https://example.edu/requirements/9",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 21
+      },
+      "thread": 8419598720,
+      "at_ns": 810599064322208
+    },
+    {
+      "url": "https://example.edu/requirements/10",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 22
+      },
+      "thread": 8419598720,
+      "at_ns": 810599065570000
+    },
+    {
+      "url": "https://example.edu/requirements/11",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 23
+      },
+      "thread": 8419598720,
+      "at_ns": 810599066689250
+    },
+    {
+      "url": "https://example.edu/requirements/12",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 24
+      },
+      "thread": 8419598720,
+      "at_ns": 810599067830833
+    },
+    {
+      "url": "https://example.edu/requirements/13",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 25
+      },
+      "thread": 8419598720,
+      "at_ns": 810599068988541
+    },
+    {
+      "url": "https://example.edu/requirements/14",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 26
+      },
+      "thread": 8419598720,
+      "at_ns": 810599070164791
+    },
+    {
+      "url": "https://example.edu/requirements/15",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 27
+      },
+      "thread": 8419598720,
+      "at_ns": 810599071948166
+    },
+    {
+      "url": "https://example.edu/requirements/16",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 28
+      },
+      "thread": 8419598720,
+      "at_ns": 810599073147208
+    },
+    {
+      "url": "https://example.edu/requirements/17",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 29
+      },
+      "thread": 8419598720,
+      "at_ns": 810599074282916
+    },
+    {
+      "url": "https://example.edu/requirements/18",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 30
+      },
+      "thread": 8419598720,
+      "at_ns": 810599075391250
+    },
+    {
+      "url": "https://example.edu/requirements/19",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 31
+      },
+      "thread": 8419598720,
+      "at_ns": 810599076518375
+    },
+    {
+      "url": "https://example.edu/requirements/20",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 32
+      },
+      "thread": 8419598720,
+      "at_ns": 810599077675791
+    },
+    {
+      "url": "https://example.edu/requirements/21",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 33
+      },
+      "thread": 8419598720,
+      "at_ns": 810599078909208
+    },
+    {
+      "url": "https://example.edu/requirements/22",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 34
+      },
+      "thread": 8419598720,
+      "at_ns": 810599080082125
+    },
+    {
+      "url": "https://example.edu/requirements/23",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 35
+      },
+      "thread": 8419598720,
+      "at_ns": 810599081191291
+    },
+    {
+      "url": "https://example.edu/requirements/24",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 36
+      },
+      "thread": 8419598720,
+      "at_ns": 810599082358916
+    },
+    {
+      "url": "https://example.edu/funding/0",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 37
+      },
+      "thread": 8419598720,
+      "at_ns": 810599092581458
+    },
+    {
+      "url": "https://example.edu/funding/1",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 38
+      },
+      "thread": 8419598720,
+      "at_ns": 810599093721250
+    },
+    {
+      "url": "https://example.edu/funding/2",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 39
+      },
+      "thread": 8419598720,
+      "at_ns": 810599094843416
+    },
+    {
+      "url": "https://example.edu/funding/3",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 40
+      },
+      "thread": 8419598720,
+      "at_ns": 810599095940291
+    },
+    {
+      "url": "https://example.edu/funding/4",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 41
+      },
+      "thread": 8419598720,
+      "at_ns": 810599097211166
+    },
+    {
+      "url": "https://example.edu/funding/5",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 42
+      },
+      "thread": 8419598720,
+      "at_ns": 810599098366958
+    },
+    {
+      "url": "https://example.edu/funding/6",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 43
+      },
+      "thread": 8419598720,
+      "at_ns": 810599099503166
+    },
+    {
+      "url": "https://example.edu/funding/7",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 44
+      },
+      "thread": 8419598720,
+      "at_ns": 810599100661000
+    },
+    {
+      "url": "https://example.edu/funding/8",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 45
+      },
+      "thread": 8419598720,
+      "at_ns": 810599101843958
+    },
+    {
+      "url": "https://example.edu/funding/9",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 46
+      },
+      "thread": 8419598720,
+      "at_ns": 810599103053250
+    },
+    {
+      "url": "https://example.edu/funding/10",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 47
+      },
+      "thread": 8419598720,
+      "at_ns": 810599104331250
+    },
+    {
+      "url": "https://example.edu/funding/11",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 48
+      },
+      "thread": 8419598720,
+      "at_ns": 810599105484250
+    },
+    {
+      "url": "https://example.edu/funding/12",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 49
+      },
+      "thread": 8419598720,
+      "at_ns": 810599106640166
+    },
+    {
+      "url": "https://example.edu/funding/13",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 50
+      },
+      "thread": 8419598720,
+      "at_ns": 810599107790500
+    },
+    {
+      "url": "https://example.edu/funding/14",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 51
+      },
+      "thread": 8419598720,
+      "at_ns": 810599108926583
+    },
+    {
+      "url": "https://example.edu/funding/15",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 52
+      },
+      "thread": 8419598720,
+      "at_ns": 810599110116958
+    },
+    {
+      "url": "https://example.edu/funding/16",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 53
+      },
+      "thread": 8419598720,
+      "at_ns": 810599111407458
+    },
+    {
+      "url": "https://example.edu/funding/17",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 54
+      },
+      "thread": 8419598720,
+      "at_ns": 810599112506708
+    },
+    {
+      "url": "https://example.edu/funding/18",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 55
+      },
+      "thread": 8419598720,
+      "at_ns": 810599113651708
+    },
+    {
+      "url": "https://example.edu/funding/19",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 56
+      },
+      "thread": 8419598720,
+      "at_ns": 810599114815916
+    },
+    {
+      "url": "https://example.edu/funding/20",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 57
+      },
+      "thread": 8419598720,
+      "at_ns": 810599116034833
+    },
+    {
+      "url": "https://example.edu/funding/21",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 58
+      },
+      "thread": 8419598720,
+      "at_ns": 810599117159458
+    },
+    {
+      "url": "https://example.edu/funding/22",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 59
+      },
+      "thread": 8419598720,
+      "at_ns": 810599118279833
+    },
+    {
+      "url": "https://example.edu/funding/23",
+      "kwargs": {
+        "use_cache": true,
+        "etag": null,
+        "if_modified_since": null
+      },
+      "durable": {
+        "catalogue:u-one": 60
+      },
+      "thread": 8419598720,
+      "at_ns": 810599119424708
+    }
+  ],
+  "execution": {
+    "elapsed_ns": 106256292,
+    "semaphore_released": true,
+    "heartbeat_tasks": 1,
+    "heartbeat_cancelled": [
+      true
+    ],
+    "heartbeat_done": [
+      true
+    ],
+    "escaped": []
+  },
+  "fails": [],
+  "cancels": [],
+  "worker_done": 1,
+  "worker_failed": 0
+}

@@ -1,0 +1,499 @@
+"""The worker.
+
+Claims a job, runs it, and beats while it does. Every exit path is accounted
+for: success completes the job, a failure retries it with backoff until its
+attempts run out, a cancellation stops it at a consistent point, and a crash
+leaves a lease that another worker's reaper takes back.
+
+Runs as its own process, separate from the API. `python -m app.jobs.worker`.
+"""
+
+from __future__ import annotations
+
+import asyncio
+import contextlib
+import logging
+import signal
+import sys
+from datetime import UTC, datetime, timedelta
+
+from app.config import Settings, get_settings
+from app.db import session_scope
+from app.domain.enums import PipelineStage
+from app.jobs.store import JobStore, worker_identity
+from app.logging_setup import configure_logging, set_correlation_id
+from app.models import ApplicantProfileRow, AuditEvent, Job, JobStatus, ResearchRun
+from app.models.base import ensure_utc
+from app.pipeline.runner import LeaseLost, ResearchRunner, RunCancelled
+from app.schemas.profile import ApplicantProfileIn
+
+log = logging.getLogger("unimatch.worker")
+
+#: Beat at a third of the lease so two beats can be missed before it expires.
+HEARTBEAT_DIVISOR = 3
+
+
+class Worker:
+    def __init__(self, settings: Settings | None = None, *, worker_id: str | None = None) -> None:
+        self.settings = settings or get_settings()
+        self.worker_id = worker_id or worker_identity()
+        self.stopping = asyncio.Event()
+        self.jobs_done = 0
+        self.jobs_failed = 0
+
+    # --- lifecycle --------------------------------------------------------
+
+    def request_stop(self, *_args: object) -> None:
+        """Finish the job in hand, then exit. No work is abandoned mid-stage."""
+        if not self.stopping.is_set():
+            log.info("shutdown requested; finishing the current job first")
+            self.stopping.set()
+
+    async def run_forever(self) -> None:
+        log.info(
+            "worker %s starting (concurrency %d)", self.worker_id, self.settings.worker_concurrency
+        )
+        self.reap()
+        semaphore = asyncio.Semaphore(self.settings.worker_concurrency)
+        running: set[asyncio.Task] = set()
+
+        while not self.stopping.is_set():
+            await semaphore.acquire()
+            job_id = self.claim_one()
+            if job_id is None:
+                semaphore.release()
+                # Wake early if a stop is requested; otherwise poll on schedule.
+                with contextlib.suppress(TimeoutError):
+                    await asyncio.wait_for(
+                        self.stopping.wait(), timeout=self.settings.worker_poll_seconds
+                    )
+                self.reap()
+                continue
+
+            task = asyncio.create_task(self._run_and_release(job_id, semaphore))
+            running.add(task)
+            task.add_done_callback(running.discard)
+
+        if running:
+            log.info("waiting for %d job(s) to finish", len(running))
+            await asyncio.gather(*running, return_exceptions=True)
+        log.info(
+            "worker %s stopped (%d done, %d failed)",
+            self.worker_id,
+            self.jobs_done,
+            self.jobs_failed,
+        )
+
+    async def _run_and_release(self, job_id: str, semaphore: asyncio.Semaphore) -> None:
+        # The worker has no request to correlate against, so the job id plays
+        # that part: every line this task logs can be traced back to the job
+        # that produced it, which is what the API's request id buys there.
+        # Each job runs in its own task, so the ContextVar does not leak
+        # between the jobs running concurrently.
+        set_correlation_id(job_id)
+        try:
+            await self.execute(job_id)
+        finally:
+            semaphore.release()
+
+    # --- queue operations -------------------------------------------------
+
+    def reap(self) -> list[str]:
+        """Take back jobs whose worker stopped beating."""
+        with session_scope() as session:
+            return JobStore(session, lease_seconds=self.settings.job_lease_seconds).reap_expired()
+
+    def claim_one(self) -> str | None:
+        with session_scope() as session:
+            store = JobStore(session, lease_seconds=self.settings.job_lease_seconds)
+            job = store.claim(worker_id=self.worker_id)
+            return job.id if job else None
+
+    # --- execution --------------------------------------------------------
+
+    async def execute(self, job_id: str) -> None:
+        """Run one job to a terminal state."""
+        heartbeat: asyncio.Task | None = None
+        # The attempt token, read once off the claimed row: every write this
+        # attempt makes - checkpoints, beats, the outcome - is conditioned on
+        # it, so a re-claim of the same job under this worker_id (the self-reap
+        # loop with concurrency > 1) still cannot be spoken for by this task.
+        lease_token: int | None = None
+        try:
+            with session_scope() as session:
+                store = JobStore(
+                    session,
+                    lease_seconds=self.settings.job_lease_seconds,
+                    worker_id=self.worker_id,
+                )
+                job = store.get(job_id)
+                if job is None:
+                    return
+                lease_token = job.attempts
+                log.info("running job %s (%s) attempt %d", job.id[:8], job.kind, lease_token)
+                heartbeat = asyncio.create_task(self._beat(job_id, lease_token=lease_token))
+                await self._dispatch(session, store, job, lease_token=lease_token)
+            self.jobs_done += 1
+        except LeaseLost as exc:
+            # Someone else owns this job now. Say so and touch nothing: any
+            # write this attempt could still make is fenced off, the new owner
+            # is already redoing the work, and a failure recorded here would
+            # be the new owner's job reporting a failure it never had.
+            log.warning("job %s abandoned: %s", job_id[:8], exc)
+        except RunCancelled as exc:
+            with session_scope() as session:
+                JobStore(session, worker_id=self.worker_id).mark_cancelled(
+                    job_id, str(exc), lease_token=lease_token
+                )
+            log.info("job %s cancelled", job_id[:8])
+        except Exception as exc:
+            self.jobs_failed += 1
+            log.exception("job %s failed", job_id[:8])
+            with session_scope() as session:
+                status = JobStore(session, worker_id=self.worker_id).fail(
+                    job_id, f"{type(exc).__name__}: {exc}", lease_token=lease_token
+                )
+            log.info("job %s -> %s", job_id[:8], status)
+        finally:
+            if heartbeat is not None:
+                heartbeat.cancel()
+
+    async def _beat(self, job_id: str, *, lease_token: int | None = None) -> None:
+        interval = max(1.0, self.settings.job_lease_seconds / HEARTBEAT_DIVISOR)
+        try:
+            while True:
+                await asyncio.sleep(interval)
+                with session_scope() as session:
+                    store = JobStore(
+                        session,
+                        lease_seconds=self.settings.job_lease_seconds,
+                        worker_id=self.worker_id,
+                    )
+                    if not store.heartbeat(job_id, lease_token=lease_token):
+                        # The runner observes this at its next checkpoint and
+                        # stops; logging alone let a zombie keep working.
+                        log.warning("lost the lease on job %s", job_id[:8])
+                        return
+        except asyncio.CancelledError:
+            return
+
+    def _schedule_recheck(self, store: JobStore, run: ResearchRun) -> None:
+        """Queue the next look at this run's evidence, at the date it ages out.
+
+        The key carries the run's recheck generation — the runner bumps it in
+        the same transaction as the new ``next_recheck_at`` — so a completed
+        recheck's key is never recomputed. The previous date-granular key was
+        the chain death: a no-op recheck re-derived the same date, the store's
+        dedupe matched the job that had just finished, and nothing was ever
+        scheduled again.
+
+        A queued recheck left over from an earlier attempt of the same run is
+        cancelled here: the freshly armed one supersedes it, and the old
+        date-keyed dedupe used to do the same job implicitly.
+        """
+        when = run.next_recheck_at
+        if when is None:
+            return
+        when = ensure_utc(when)
+        assert when is not None
+        now = datetime.now(UTC)
+        # A follow-up the queue can only pick up in the past is the chain
+        # death in another coat; never arm one.
+        if when <= now:
+            when = now + timedelta(seconds=60)
+        for stale in (
+            store.session.query(Job)
+            .filter(
+                Job.run_id == run.id,
+                Job.kind == "recheck",
+                Job.status == JobStatus.QUEUED.value,
+            )
+            .all()
+        ):
+            store.cancel(stale.id)
+        store.enqueue(
+            "recheck",
+            run_id=run.id,
+            idempotency_key=f"recheck:{run.id}:{run.recheck_generation}",
+            available_at=when,
+            priority=-5,  # never ahead of work a person is waiting for
+        )
+
+    def _complete_runless(self, session, job_id: str, *, lease_token: int | None) -> bool:
+        """Complete a run-less job (a source scan), fenced by the attempt token.
+
+        Deliberately without the worker-id condition the run-bound kinds keep:
+        a scan whose lease was taken mid-flight may legitimately be finished by
+        the attempt that continues it, and the token is what tells attempts
+        apart — a stale attempt's token matches nothing, so it can neither
+        complete the job nor renew a lease the new owner holds. What this
+        protects is the scan's one-transaction shape: its enqueued reextracts
+        and its reschedule commit exactly when this completion does.
+        """
+        store = JobStore(session, lease_seconds=self.settings.job_lease_seconds)
+        return store.complete(job_id, lease_token=lease_token)
+
+    async def _dispatch(
+        self, session, store: JobStore, job: Job, *, lease_token: int | None
+    ) -> None:
+        """Route a job to its handler, in the job's own transaction.
+
+        Every store write here is fenced with the attempt token read at claim
+        time, and the completion commit is the owner's alone: a worker whose
+        lease was taken rolls its remaining transaction back and records
+        nothing - no audit event, no artefacts, no recheck. Run-less kinds
+        (``source_scan``) are routed before the run lookup, since there is no
+        run to find; their completion fence is the attempt token alone (see
+        ``_complete_runless``).
+        """
+        if job.kind == "payment_reconcile":
+            # A payment job has no run. Handle it before anything asks for one.
+            from app.jobs.payment_reconcile import reconcile_order
+            from app.models.billing import TERMINAL_ORDER_STATUSES
+
+            order_id = str((job.payload or {}).get("order_id", ""))
+            status = reconcile_order(session, order_id)
+            if status and status not in TERMINAL_ORDER_STATUSES:
+                # Not settled: fail softly so the queue's backoff re-runs it.
+                failed_status = store.fail(
+                    job.id,
+                    f"order {order_id[:8]} still {status}",
+                    retry=True,
+                    lease_token=lease_token,
+                )
+                # A successful retry transition from this running attempt can
+                # only become queued (or dead when attempts are exhausted).
+                # Anything else means the lease changed owner while the
+                # provider call was in flight. Raising from inside
+                # session_scope rolls back the PaymentEvent/order/grant writes
+                # reconcile_order may already have staged in this transaction.
+                if failed_status not in {JobStatus.QUEUED.value, JobStatus.DEAD.value}:
+                    raise LeaseLost(
+                        f"payment job {job.id[:8]} changed owner before retry scheduling"
+                    )
+                return
+            if not store.complete(job.id, lease_token=lease_token):
+                session.rollback()
+            return
+
+        if job.kind == "source_scan":
+            # A scan is run-less housekeeping: it belongs to an institution,
+            # not to a research run, so it is handled before anything asks for
+            # a run, and no run's organization stands behind an audit event.
+            from app.jobs.source_scanner import purge_source_pages, run_source_scan
+
+            scan_payload = job.payload or {}
+            if scan_payload.get("purge"):
+                purged = purge_source_pages(session, datetime.now(UTC))
+                log.info("daily source-page purge removed %d row(s)", purged)
+            else:
+                await run_source_scan(session, job, self.settings)
+            if not self._complete_runless(session, job.id, lease_token=lease_token):
+                log.warning(
+                    "job %s was taken over; leaving its outcome to the new owner",
+                    job.id[:8],
+                )
+                session.rollback()
+            return
+
+        run = session.get(ResearchRun, job.run_id) if job.run_id else None
+        if run is None:
+            store.fail(
+                job.id, f"run {job.run_id} no longer exists", retry=False, lease_token=lease_token
+            )
+            return
+
+        profile_row = session.get(ApplicantProfileRow, run.profile_id)
+        if profile_row is None:
+            store.fail(
+                job.id, "the applicant profile was deleted", retry=False, lease_token=lease_token
+            )
+            return
+
+        profile = ApplicantProfileIn.model_validate(profile_row.payload)
+        runner = ResearchRunner(
+            session,
+            run,
+            profile,
+            self.settings,
+            job_id=job.id,
+            worker_id=self.worker_id,
+            lease_token=lease_token,
+        )
+
+        if job.kind == "documents":
+            await runner.collect_documents()
+        elif job.kind == "research":
+            await runner.run_to_decision()
+            self._schedule_recheck(store, run)
+        elif job.kind == "recheck":
+            stale = await runner.recheck_stale()
+            log.info("recheck of run %s: %d stale claims", run.id[:8], stale)
+            self._schedule_recheck(store, run)
+        elif job.kind == "reextract_page":
+            from app.jobs.source_scanner import reextract_page
+
+            await reextract_page(session, job, run, profile, self.settings)
+        else:
+            store.fail(
+                job.id, f"unknown job kind {job.kind!r}", retry=False, lease_token=lease_token
+            )
+            return
+
+        # The job's completion and the work it produced commit together, so a
+        # crash can never mark a job done with its results missing. The fence
+        # makes it one-sided: False means another attempt owns the job now, so
+        # this one leaves the transaction - recheck enqueue and all - to it.
+        if not store.complete(job.id, lease_token=lease_token):
+            log.warning(
+                "job %s was taken over; leaving its outcome and trail to the new owner",
+                job.id[:8],
+            )
+            session.rollback()
+            return
+        session.add(
+            AuditEvent(
+                organization_id=profile_row.organization_id,
+                actor="worker",
+                action="job_completed",
+                entity_type="job",
+                entity_id=job.id,
+                detail={"kind": job.kind, "stage": run.stage},
+            )
+        )
+
+
+#: A worker that starts before migrations finish should wait, not die: in a
+#: rolling deploy their order is not guaranteed.
+SCHEMA_WAIT_SECONDS = 60
+
+
+def wait_for_schema(timeout: float = SCHEMA_WAIT_SECONDS) -> bool:
+    """Block until the database matches this code, or give up saying why."""
+    import time
+
+    from app.db import SchemaOutOfDate, assert_at_head
+
+    deadline = time.monotonic() + timeout
+    last: Exception | None = None
+    while time.monotonic() < deadline:
+        try:
+            assert_at_head()
+            return True
+        except SchemaOutOfDate as exc:
+            last = exc
+            log.info("waiting for the database schema to be migrated…")
+            time.sleep(2)
+        except Exception as exc:  # a database that is not up yet at all
+            last = exc
+            log.info("waiting for the database to accept connections…")
+            time.sleep(2)
+    log.error("giving up waiting for the schema: %s", last)
+    return False
+
+
+def reconcile_startup(*, arm_source_scans: bool = True) -> dict[str, int]:
+    """Put the queue and the runs back into a consistent state.
+
+    Runs before any work is claimed: expired leases go back to the queue, and a
+    run whose job is no longer live stops claiming to be running.
+
+    ``arm_source_scans=False`` keeps every other reconciliation but leaves the
+    source-scan queue alone — the demo wiring, where there is nothing real to
+    scan (C3).
+    """
+    settings = get_settings()
+    with session_scope() as session:
+        store = JobStore(session, lease_seconds=settings.job_lease_seconds)
+        reaped = store.reap_expired()
+
+        stranded = 0
+        live_run_ids = {
+            job.run_id
+            for job in session.query(Job).filter(
+                Job.status.in_([JobStatus.QUEUED.value, JobStatus.RUNNING.value])
+            )
+            if job.run_id
+        }
+        in_progress = (
+            session.query(ResearchRun)
+            .filter(
+                ResearchRun.finished_at.is_(None),
+                ResearchRun.stage.notin_(
+                    [
+                        PipelineStage.AWAITING_USER_DECISION.value,
+                        PipelineStage.COMPLETED.value,
+                        PipelineStage.CANCELLED.value,
+                        PipelineStage.RETRYABLE_FAILED.value,
+                        PipelineStage.FAILED.value,
+                    ]
+                ),
+            )
+            .all()
+        )
+        for run in in_progress:
+            if run.id in live_run_ids:
+                continue
+            run.stage = PipelineStage.RETRYABLE_FAILED.value
+            run.worker_id = None
+            run.recovery_count = (run.recovery_count or 0) + 1
+            run.errors = [
+                *(run.errors or []),
+                "No job is queued or running for this run. It was recovered at startup and "
+                "can be retried from the last completed stage.",
+            ]
+            session.add(run)
+            session.add(
+                AuditEvent(
+                    organization_id=run.profile.organization_id,
+                    actor="system",
+                    action="run_recovered",
+                    entity_type="run",
+                    entity_id=run.id,
+                    detail={"recovery_count": run.recovery_count},
+                )
+            )
+            stranded += 1
+
+        scans_bootstrapped = 0
+        if arm_source_scans:
+            from app.jobs.source_scanner import bootstrap_source_scans
+
+            scans_bootstrapped = bootstrap_source_scans(session, settings)
+
+        return {
+            "jobs_reaped": len(reaped),
+            "runs_recovered": stranded,
+            "scans_bootstrapped": scans_bootstrapped,
+        }
+
+
+def main() -> int:  # pragma: no cover - process entry point
+    settings = get_settings()
+    settings.validate_runtime()
+    configure_logging(settings.log_level, settings.log_format)
+    if not wait_for_schema():
+        return 1
+    # Demo deployments never arm source scans: there is nothing real to scan (C3).
+    summary = reconcile_startup(arm_source_scans=not settings.demo_mode)
+    log.info("startup reconciliation: %s", summary)
+
+    worker = Worker(settings)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        try:
+            loop.add_signal_handler(sig, worker.request_stop)
+        except NotImplementedError:
+            # Windows' ProactorEventLoop has no signal handlers; the plain
+            # signal module still delivers SIGINT/SIGTERM to the main thread.
+            signal.signal(sig, lambda *_: worker.request_stop())
+    try:
+        loop.run_until_complete(worker.run_forever())
+    finally:
+        loop.close()
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    sys.exit(main())

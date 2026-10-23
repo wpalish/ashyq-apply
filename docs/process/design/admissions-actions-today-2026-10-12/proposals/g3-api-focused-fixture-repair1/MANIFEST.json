@@ -1,0 +1,51 @@
+{
+  "schema_version": "g3-focused-fixture-repair1-v1",
+  "status": "EXTERNAL_SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_FORMATTED_NOT_RUN_NOT_ACCEPTED",
+  "producer": "/root/g3_frontend_foundation",
+  "authority": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_API_FOCUSED_REPAIR1_GRANT.json",
+    "sha256": "b786a779c02610a7077bb7c172d2de1ac3621baf928d9aaa7ce373b6f84ea60b",
+    "slice": "Today-only; root sole route/source/runtime writer"
+  },
+  "allowed_application_paths": [
+    "backend/tests/test_today.py"
+  ],
+  "source_basis": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_today.py",
+    "sha256": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16"
+  },
+  "paths": [
+    {
+      "path": "backend/tests/test_today.py",
+      "preimage_sha256": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16",
+      "postimage_sha256": "0acb3fcdbb9929fb921920fbcdb57f5d50bd63ef025e38d4871aa432b0c8a86d",
+      "preimage_bytes": 22088,
+      "postimage_bytes": 23268
+    }
+  ],
+  "preservation": {
+    "exact_literal_replacements": 4,
+    "full_inverse_returns_exact_preimage": true,
+    "imports_unchanged": true,
+    "other_test_functions_byte_unchanged": true,
+    "original_per_slot_equality_unchanged": true,
+    "original_other_assertions_unchanged": true,
+    "no_fake_accepted_state_or_history": true
+  },
+  "negative_control": {
+    "expected_revision": 4,
+    "same_uuid_body_requests": 2,
+    "expected": "record_not_found404",
+    "unchanged": "native_snapshot+stored",
+    "no_DML": true,
+    "executed": false
+  },
+  "executed_by_author": {
+    "application_import": false,
+    "AST": false,
+    "format_lint_collection_tests": false,
+    "database_network_provider": false,
+    "primary_lab_runtime_source_mutation": false,
+    "git_handoff": false
+  }
+}

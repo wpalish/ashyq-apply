@@ -1,0 +1,161 @@
+Browser tab: 4, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/profile".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/profile
+	2 container root
+		3 link Description: Skip to content, Value: 127.0.0.1:18140/#main-content
+		24 container
+			25 text unimatch
+			26 container Main navigation
+				27 button Home
+				28 button Find
+					29 text Find
+					30 text 20
+				31 button Plan
+					32 text Plan
+					33 text 2
+				34 button Documents
+					35 text Documents
+					36 text 2
+				37 button Community
+		18 container
+			19 text Demo data
+			20 button (collapsed) Explore, Secondary Actions: Expand
+				21 text Explore
+			22 button (collapsed) Description: Applicant workspace, Help: D, Secondary Actions: Expand
+				23 text D
+		38 container Description: Профиль абитуриента, ID: main-content
+			42 container
+				43 text Сохранённая оценка. Оценка отражает состояние исследования на тот момент. Она не подтверждает текущую готовность и не является вероятностью поступления.
+			126 container
+				127 button (collapsed) Profile recovery history for this tab, Secondary Actions: Expand
+					128 text Profile recovery history for this tab
+			46 heading Activities & achievements, Value: 1
+				129 text Activities & achievements
+			48 text A few simple details help us find the right matches for you. Your information stays editable.
+			49 container Profile steps
+				50 button 1 Personal details
+					51 text 1
+					52 text Personal details
+				53 button 2 Academic background
+					54 text 2
+					55 text Academic background
+				56 button 3 Tests & scores
+					57 text 3
+					58 text Tests & scores
+				59 button 4 Activities & achievements
+					60 text 4
+					61 text Activities & achievements
+				62 button 5 Review
+					63 text 5
+					64 text Review
+			65 container
+				66 text Loaded  Demo Applicant (synthetic)  from your saved profile. Edits here update that profile.
+			163 container
+				164 heading Extracurricular activities, Value: 2
+					165 text Extracurricular activities
+				166 text Depth, responsibility and measurable impact matter more than a long list. Activity
+				167 text field (settable) Activity, Value: Regional Informatics Olympiad team, ID: activity-0
+				168 text Category
+				169 text field (settable) Category, Value: academic, ID: activity-category-0
+				170 text Role
+				171 text field (settable) Role, Value: team captain, ID: activity-role-0
+				172 text Responsibility
+				173 pop up button (collapsed, settable) Responsibility, Value: leader, ID: activity-level-0, Secondary Actions: Expand
+					174 menu
+						175 participant
+						176 contributor
+						177 coordinator
+						178 (selected) leader
+						179 founder
+				180 text Months
+				181 stepper (settable, integer) Months, Value: 24, ID: activity-months-0
+				182 text Hours / week
+				183 stepper (settable, integer) Hours / week, Value: 8, ID: activity-hours-0
+				184 text Weeks / year
+				185 stepper (settable, integer) Weeks / year, Value: 36, ID: activity-weeks-0
+				186 text Measurable outcome
+				187 text entry area (settable) Measurable outcome, Value: Led a four-person team to 2nd place at the national round in 2026., ID: activity-outcome-0
+				188 text Impact on others
+				189 text entry area (settable) Impact on others, Value: Ran weekly training for 15 younger students., ID: activity-impact-0
+				190 text Evidence links
+				191 text field (settable) Evidence links, ID: activity-links-0
+				192 text Comma-separated URLs.
+				193 button Remove activity
+				194 text Activity
+				195 text field (settable) Activity, Value: Volunteer coding club, ID: activity-1
+				196 text Category
+				197 text field (settable) Category, Value: community, ID: activity-category-1
+				198 text Role
+				199 text field (settable) Role, Value: founder and instructor, ID: activity-role-1
+				200 text Responsibility
+				201 pop up button (collapsed, settable) Responsibility, Value: founder, ID: activity-level-1, Secondary Actions: Expand
+					202 menu
+						203 participant
+						204 contributor
+						205 coordinator
+						206 leader
+						207 (selected) founder
+				208 text Months
+				209 stepper (settable, integer) Months, Value: 18, ID: activity-months-1
+				210 text Hours / week
+				211 stepper (settable, integer) Hours / week, Value: 4, ID: activity-hours-1
+				212 text Weeks / year
+				213 stepper (settable, integer) Weeks / year, Value: 40, ID: activity-weeks-1
+				214 text Measurable outcome
+				215 text entry area (settable) Measurable outcome, Value: Taught Python to 60 students across three cohorts., ID: activity-outcome-1
+				216 text Impact on others
+				217 text entry area (settable) Impact on others, Value: Six participants entered regional competitions., ID: activity-impact-1
+				218 text Evidence links
+				219 text field (settable) Evidence links, ID: activity-links-1
+				220 text Comma-separated URLs.
+				221 button Remove activity
+				222 button + Add activity
+			223 container
+				224 heading Achievements, Value: 2
+					225 text Achievements
+				226 text Include level, placement and how recipients were selected. Achievement
+				227 text field (settable) Achievement, Value: National Informatics Olympiad, ID: achievement-0
+				228 text Level
+				229 pop up button (collapsed, settable) Level, Value: national, ID: achievement-level-0, Secondary Actions: Expand
+					230 menu
+						231 school
+						232 city
+						233 regional
+						234 (selected) national
+						235 international
+				236 text Year
+				237 stepper (settable, integer) Year, Value: 2026, ID: achievement-year-0
+				238 text Placement
+				239 text field (settable) Placement, Value: 2nd place (team), ID: achievement-place-0
+				240 text Selection criterion
+				241 text entry area (settable) Selection criterion, Value: Top 40 of 900 regional qualifiers., ID: achievement-select-0
+				242 text Evidence links
+				243 text field (settable) Evidence links, ID: achievement-links-0
+				244 text Comma-separated URLs.
+				245 button Remove
+				246 text Achievement
+				247 text field (settable) Achievement, Value: City science fair, ID: achievement-1
+				248 text Level
+				249 pop up button (collapsed, settable) Level, Value: city, ID: achievement-level-1, Secondary Actions: Expand
+					250 menu
+						251 school
+						252 (selected) city
+						253 regional
+						254 national
+						255 international
+				256 text Year
+				257 stepper (settable, integer) Year, Value: 2024, ID: achievement-year-1
+				258 text Placement
+				259 text field (settable) Placement, Value: 1st place, ID: achievement-place-1
+				260 text Selection criterion
+				261 text entry area (settable) Selection criterion, ID: achievement-select-1
+				262 text Evidence links
+				263 text field (settable) Evidence links, ID: achievement-links-1
+				264 text Comma-separated URLs.
+				265 button Remove
+				266 button + Add achievement
+			123 container
+				162 button ← Back
+				124 button Save profile
+				125 button Continue →
+
+The focused UI element is 59 button 4 Activities & achievements

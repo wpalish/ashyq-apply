@@ -1,0 +1,42 @@
+{
+  "status": "PROPOSED_NOT_EXECUTED",
+  "controls": [
+    {
+      "id": "legacy_off",
+      "check": "Exact old discovery/caller outputs and constructor signatures; no observation writes/extra callbacks. Existing _apply and query/read order unchanged."
+    },
+    {
+      "id": "genuine_commit_then_cancel",
+      "check": "Real enqueue/claim token1, Worker.execute/_dispatch, native saved Groningen transport: source observed before nextawait; inject original CancelledError at nextawait. Fresh reporting SQL sees committed PARTIAL source/hash, no fabricated ProgramResult/Claim/programme_url, no succeeded Job. Keep old source cancellation cause and clock."
+    },
+    {
+      "id": "AUT_continue_second",
+      "check": "Both actual retained AUT detail bodies through unchanged native walker/predicate. Observe DataScience literal first and ComputerScience second; do not earlystop/canonicalize/promote either into application claims."
+    },
+    {
+      "id": "fresh_cancel_and_fence",
+      "check": "Real API-like cancel flags committed before checkpoint cause no write. Real reap/claim token2 with same worker id rejects token1/stale ORM via SQL; prior observation+native counter remain unchanged. Only current token can append."
+    },
+    {
+      "id": "actual_callback_busy",
+      "check": "SQLite and actual PostgreSQL separately: lock Job and Run in another session; include real SourcePage.record callback, not mocked. Typed busy rollback, no nextIO, no immediate failure SQL/retry, prior facts remain. Distinguish metadata lock/failed transaction from Job\u2192Run NOWAIT; preserve SQLSTATE/latency/red."
+    },
+    {
+      "id": "namespace_preservation",
+      "check": "Fresh observation commit then ON read reservation and _save, ordinary OFF/stale ORM snapshot replacement, sameJobtoken2 entry and new actual job namespace handling. Observation namespace/native ledger/unrelated opaque fields survive; corrupt namespace fails closed without zeroing history."
+    },
+    {
+      "id": "typed_unwind",
+      "check": "Original read_cap/RunCancelled/LeaseLost/checkpoint_busy controls after successful source checkpoint propagate; Worker completes/cancels/defers/reaps by existing semantics. No exception-finally _apply or fake unknown claim; reporting cannot mask original cause."
+    },
+    {
+      "id": "partial_scope_and_clock",
+      "check": "Groningen mixed dated rows remain observation-only UNKNOWN applicability; metadata hash formula verified. Storage saturation/duplicates never grants stopping or absence. Advance actual clock during persistence, preserve120/full119source measurement contract; no hardDB deadline claim without runtime proof."
+    },
+    {
+      "id": "future_strict_yield_quality_separate",
+      "check": "Before any ordering implementation: Groningen exactownCS/degree token can route to normalverification before optionalpostwalk; nativeAUTDataSciencefirst doesnotyield, laterComputerScience retained. Degree/purpose/sidebar/splitwords/multifield/yearpopulationunresolved controls distinguish routing proof from complete2027coverage. Check real programmeURLs/actualclaims separately from PARTIAL observation count; no metadata-only recallgain."
+    }
+  ],
+  "no_actual_SQL_or_Job_or_transport_execution_claim": true
+}

@@ -1,0 +1,117 @@
+{
+  "status": "NOT_RUN_NO_ON_RULE_DUE_CONFIRMED_TYPED_COHORT_CONTRACT_GAP",
+  "controls": [
+    {
+      "id": "persemester",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 per semester</td></tr></table>",
+      "semantic_boundary": "not annual tuition",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "permonth",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 per month</td></tr></table>",
+      "semantic_boundary": "not annual tuition",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "oneoff",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 one-off registration fee</td></tr></table>",
+      "semantic_boundary": "fee role and period differ",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "waiver",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>Scholarship waives \u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "award/waiver is not tuition charged",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "exemption",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>EU/EEA students are exempt; \u20ac12 000 annual tuition is waived</td></tr></table>",
+      "semantic_boundary": "exemption population must not become payer tariff",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "academic_year_unknown",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "open study-start cohort must remain distinct from exact academic_year2027/28",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "older_bounded_year",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning between 1 August 2020 and 31 July 2024</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "old closed cohort is not current request and not2027price",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "missing_field_header",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td></td><td>\u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "no source-owned field/group identity",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "incidental_field",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>See information about Field of Technology</td><td>\u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "incidental mention is not row identity",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "missing_cohort_header",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Annual fees</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "cohort unspecified; never fill requested year",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "degree_header_mixed",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's and Master's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "do not assign onlyBachelor or collapse mixed population",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "currency_mixed",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 / USD13 000 per academic year</td></tr></table>",
+      "semantic_boundary": "no same-currency price or conversion selection",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "currency_missing",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "do not inferEUR from university country",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "numeric_atom_role",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Technology</td><td>12000 cents processing credit, EUR120 per year</td></tr></table>",
+      "semantic_boundary": "do not choose prefix atom as annual tuition",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "quote_over600",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025 qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier qualifier </td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "no clipped or joined proof; full qualifier+row mustfit600",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    },
+    {
+      "id": "quote_noncontiguous",
+      "raw_html": "<h1>Tuition fees</h1><table><tr><td>Bachelor's programmes</td><td>Tuition fees for rights to study beginning on or after 1 August 2025</td></tr><tr><td>Field of Business</td><td>\u20ac15 000 per academic year</td></tr><tr><td>Field of Technology</td><td>\u20ac12 000 per academic year</td></tr></table>",
+      "semantic_boundary": "no synthetic Bachelor/cohort+target row quote omitting intervening sibling",
+      "ON_actual_call_path_result": null,
+      "unknown_reason": "No rule patch implemented; cannot claim negative passes"
+    }
+  ]
+}

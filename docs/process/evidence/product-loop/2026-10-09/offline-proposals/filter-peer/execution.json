@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/Users/wpalish/.local/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "src/screens/ShortlistScreen.test.tsx",
+    "src/screens/JourneyScreens.test.tsx",
+    "src/screens/FilterChoicePeer.test.tsx",
+    "--reporter=default",
+    "--reporter=junit",
+    "--outputFile=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/a-filter-choice-review/logs/peer.junit.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/a-filter-choice-review/runtime/frontend",
+  "environment": {
+    "PATH": "/Users/wpalish/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "NODE_OPTIONS": "--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/a-filter-choice-review/support/deny-network.cjs",
+    "REVIEW_NETWORK_LOG_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/a-filter-choice-review/logs/network"
+  },
+  "started_at": "2026-10-08T21:53:26.195709+00:00",
+  "exit_code": 0,
+  "elapsed_seconds": 2.2395062080000003,
+  "qualification": "Combined isolated focused native proof: exact B4 plus current root Documents reorder, 2 own additional unit controls. No servers or full run."
+}

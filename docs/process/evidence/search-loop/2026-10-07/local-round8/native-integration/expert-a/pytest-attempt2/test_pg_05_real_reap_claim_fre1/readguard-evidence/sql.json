@@ -1,0 +1,485 @@
+{
+  "queries": [
+    {
+      "at_ns": 810600657643916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 79334,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600657874500,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 63083,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600658234416,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'run_id_1': 'fa21d2de1599498ca858e00f1c0a351b', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 183042,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600658582458,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 51458,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600658770916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 40625,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600659120250,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=%(stage)s::VARCHAR, settings_snapshot=%(settings_snapshot)s::JSON, started_at=%(started_at)s::TIMESTAMP WITH TIME ZONE, worker_id=%(worker_id)s::VARCHAR, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'stage': 'candidate_discovery', 'settings_snapshot': Json({'university_research_budget_v1': { ... (230 chars)), 'started_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 153218, tzinfo=datetime.timezone.utc), 'worker_id': 'worker-one', 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 154631, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 154883, tzinfo=datetime.timezone.utc), 'research_runs_id': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 122958,
+      "sql_prefix": "UPDATE research_runs SET stage=%(stage)s::VARCHAR, settings_snapshot=%(settings_snapshot)s::JSON, st"
+    },
+    {
+      "at_ns": 810600659543000,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER RETURNING jobs.id",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 23, 14, 24, 154648, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 154648, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 155307, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 86958,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(hear"
+    },
+    {
+      "at_ns": 810600659927375,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 53625,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600660051916,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 34125,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600660197833,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'run_id_1': 'fa21d2de1599498ca858e00f1c0a351b', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 52333,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600660300541,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 40042,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600660398916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 31792,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600660781291,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET settings_snapshot=%(settings_snapshot)s::JSON, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'settings_snapshot': Json({'university_research_budget_v1': { ... (230 chars)), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 156265, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 156546, tzinfo=datetime.timezone.utc), 'research_runs_id': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 79292,
+      "sql_prefix": "UPDATE research_runs SET settings_snapshot=%(settings_snapshot)s::JSON, heartbeat_at=%(heartbeat_at)"
+    },
+    {
+      "at_ns": 810600660993750,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER RETURNING jobs.id",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 23, 14, 24, 156279, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 156279, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 156761, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 60375,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(hear"
+    },
+    {
+      "at_ns": 810600661311875,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 53000,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600661735333,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 23, 12, 23, 157330, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 157501, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 68667,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(update"
+    },
+    {
+      "at_ns": 810600662062583,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.id, jobs.worker_id, jobs.lease_expires_at \nFROM jobs \nWHERE jobs.status = %(status_1)s::VARCHAR AND jobs.lease_expires_at IS NOT NULL AND jobs.lease_expires_at < %(lease_expires_at_1)s::TIMESTAMP WITH TIME ZONE ORDER BY jobs.id",
+      "params": "{'status_1': 'running', 'lease_expires_at_1': datetime.datetime(2026, 10, 7, 23, 12, 24, 157330, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "elapsed_ns": 104250,
+      "sql_prefix": "SELECT jobs.id, jobs.worker_id, jobs.lease_expires_at \nFROM jobs \nWHERE jobs.status = %(status_1)s::"
+    },
+    {
+      "at_ns": 810600662514000,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, worker_id=%(worker_id)s::VARCHAR, last_error=%(last_error)s::VARCHAR, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.lease_expires_at IS NOT NULL AND jobs.lease_expires_at < %(lease_expires_at_1)s::TIMESTAMP WITH TIME ZONE RETURNING jobs.id, jobs.attempts, jobs.max_attempts",
+      "params": "{'lease_expires_at': None, 'worker_id': None, 'last_error': 'The worker holding this job (worker-one) stopped without finishing. Lease expired at 2026-10-08T04:12:23.157330+05:00.', 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 158278, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'status_1': 'running', 'lease_expires_at_1': datetime.datetime(2026, 10, 7, 23, 12, 24, 157330, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "elapsed_ns": 93125,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, worker_id=%(worker_"
+    },
+    {
+      "at_ns": 810600662912708,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET status=%(status)s::VARCHAR, available_at=%(available_at)s::TIMESTAMP WITH TIME ZONE, finished_at=%(finished_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id IS NULL AND jobs.lease_expires_at IS NULL",
+      "params": "{'status': 'queued', 'available_at': datetime.datetime(2026, 10, 7, 23, 12, 54, 157330, tzinfo=datetime.timezone.utc), 'finished_at': None, 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 158678, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'status_1': 'running'}"
+    },
+    {
+      "elapsed_ns": 82708,
+      "sql_prefix": "UPDATE jobs SET status=%(status)s::VARCHAR, available_at=%(available_at)s::TIMESTAMP WITH TIME ZONE,"
+    },
+    {
+      "at_ns": 810600663243541,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET available_at=%(available_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'available_at': datetime.datetime(2026, 10, 7, 23, 12, 23, 157330, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 159010, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 59959,
+      "sql_prefix": "UPDATE jobs SET available_at=%(available_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::"
+    },
+    {
+      "at_ns": 810600663438416,
+      "thread": 8419598720,
+      "sql": "\n                SELECT id FROM jobs\n                WHERE status = %(queued)s AND queue = %(queue)s AND available_at <= %(now)s\n                ORDER BY priority DESC, available_at ASC\n                LIMIT 1\n                FOR UPDATE SKIP LOCKED\n                ",
+      "params": "{'queued': 'queued', 'queue': 'default', 'now': datetime.datetime(2026, 10, 7, 23, 12, 24, 159161, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "elapsed_ns": 68792,
+      "sql_prefix": "\n                SELECT id FROM jobs\n                WHERE status = %(queued)s AND queue = %(queue)s"
+    },
+    {
+      "at_ns": 810600663678333,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET status=%(status)s::VARCHAR, attempts=(jobs.attempts + %(attempts_1)s::INTEGER), lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, worker_id=%(worker_id)s::VARCHAR, started_at=%(started_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR RETURNING jobs.id",
+      "params": "{'status': 'running', 'attempts_1': 1, 'lease_expires_at': datetime.datetime(2026, 10, 7, 23, 14, 24, 159161, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 159161, tzinfo=datetime.timezone.utc), 'worker_id': 'worker-one', 'started_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 159161, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 159446, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'status_1': 'queued'}"
+    },
+    {
+      "elapsed_ns": 60917,
+      "sql_prefix": "UPDATE jobs SET status=%(status)s::VARCHAR, attempts=(jobs.attempts + %(attempts_1)s::INTEGER), leas"
+    },
+    {
+      "at_ns": 810600663861291,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind AS jobs_kind, jobs.queue AS jobs_queue, jobs.run_id AS jobs_run_id, jobs.idempotency_key AS jobs_idempotency_key, jobs.status AS jobs_status, jobs.priority AS jobs_priority, jobs.attempts AS jobs_attempts, jobs.max_attempts AS jobs_max_attempts, jobs.available_at AS jobs_available_at, jobs.lease_expires_at AS jobs_lease_expires_at, jobs.heartbeat_at AS jobs_heartbeat_at, jobs.worker_id AS jobs_worker_id, jobs.cancel_requested AS jobs_cancel_requested, jobs.payload AS jobs_payload, jobs.last_error AS jobs_last_error, jobs.started_at AS jobs_started_at, jobs.finished_at AS jobs_finished_at, jobs.id AS jobs_id, jobs.created_at AS jobs_created_at, jobs.updated_at AS jobs_updated_at \nFROM jobs \nWHERE jobs.id = %(pk_1)s::VARCHAR",
+      "params": "{'pk_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 54584,
+      "sql_prefix": "SELECT jobs.kind AS jobs_kind, jobs.queue AS jobs_queue, jobs.run_id AS jobs_run_id, jobs.idempotenc"
+    },
+    {
+      "at_ns": 810600664093583,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 44958,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600664198625,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 31250,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600664353333,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'run_id_1': 'fa21d2de1599498ca858e00f1c0a351b', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 55000,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600664555666,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 40542,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600664978333,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.profile_id AS research_runs_profile_id, research_runs.stage AS research_runs_stage, research_runs.client_request_key AS research_runs_client_request_key, research_runs.demo_mode AS research_runs_demo_mode, research_runs.candidate_limit AS research_runs_candidate_limit, research_runs.verify_limit AS research_runs_verify_limit, research_runs.university_ids AS research_runs_university_ids, research_runs.cancelled AS research_runs_cancelled, research_runs.access_tier AS research_runs_access_tier, research_runs.candidates_found AS research_runs_candidates_found, research_runs.programs_verified AS research_runs_programs_verified, research_runs.pages_checked AS research_runs_pages_checked, research_runs.pages_failed AS research_runs_pages_failed, research_runs.claims_recorded AS research_runs_claims_recorded, research_runs.stage_state AS research_runs_stage_state, research_runs.fetch_tiers AS research_runs_fetch_tiers, research_runs.errors AS research_runs_errors, research_runs.unknowns AS research_runs_unknowns, research_runs.retry_urls AS research_runs_retry_urls, research_runs.settings_snapshot AS research_runs_settings_snapshot, research_runs.started_at AS research_runs_started_at, research_runs.finished_at AS research_runs_finished_at, research_runs.worker_id AS research_runs_worker_id, research_runs.heartbeat_at AS research_runs_heartbeat_at, research_runs.next_recheck_at AS research_runs_next_recheck_at, research_runs.recovery_count AS research_runs_recovery_count, research_runs.recheck_generation AS research_runs_recheck_generation, research_runs.id AS research_runs_id, research_runs.created_at AS research_runs_created_at, research_runs.updated_at AS research_runs_updated_at \nFROM research_runs \nWHERE research_runs.id = %(pk_1)s::VARCHAR",
+      "params": "{'pk_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 111417,
+      "sql_prefix": "SELECT research_runs.profile_id AS research_runs_profile_id, research_runs.stage AS research_runs_st"
+    },
+    {
+      "at_ns": 810600665264708,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 37792,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600665383666,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 31792,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600665467083,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 28958,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600665561125,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind AS jobs_kind, jobs.queue AS jobs_queue, jobs.run_id AS jobs_run_id, jobs.idempotency_key AS jobs_idempotency_key, jobs.status AS jobs_status, jobs.priority AS jobs_priority, jobs.attempts AS jobs_attempts, jobs.max_attempts AS jobs_max_attempts, jobs.available_at AS jobs_available_at, jobs.lease_expires_at AS jobs_lease_expires_at, jobs.heartbeat_at AS jobs_heartbeat_at, jobs.worker_id AS jobs_worker_id, jobs.cancel_requested AS jobs_cancel_requested, jobs.payload AS jobs_payload, jobs.last_error AS jobs_last_error, jobs.started_at AS jobs_started_at, jobs.finished_at AS jobs_finished_at, jobs.id AS jobs_id, jobs.created_at AS jobs_created_at, jobs.updated_at AS jobs_updated_at \nFROM jobs \nWHERE jobs.id = %(pk_1)s::VARCHAR",
+      "params": "{'pk_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 47791,
+      "sql_prefix": "SELECT jobs.kind AS jobs_kind, jobs.queue AS jobs_queue, jobs.run_id AS jobs_run_id, jobs.idempotenc"
+    },
+    {
+      "at_ns": 810600665734291,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'run_id_1': 'fa21d2de1599498ca858e00f1c0a351b', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 2}"
+    },
+    {
+      "elapsed_ns": 50125,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600665830291,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 34250,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600665916750,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 30458,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600666269750,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 161775, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 162036, tzinfo=datetime.timezone.utc), 'research_runs_id': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 59541,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updat"
+    },
+    {
+      "at_ns": 810600666461416,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER RETURNING jobs.id",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 23, 14, 24, 161788, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 161788, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 162229, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 2}"
+    },
+    {
+      "elapsed_ns": 63084,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(hear"
+    },
+    {
+      "at_ns": 810600666773583,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 43208,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600666873291,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 30084,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600666967500,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind AS jobs_kind, jobs.queue AS jobs_queue, jobs.run_id AS jobs_run_id, jobs.idempotency_key AS jobs_idempotency_key, jobs.status AS jobs_status, jobs.priority AS jobs_priority, jobs.attempts AS jobs_attempts, jobs.max_attempts AS jobs_max_attempts, jobs.available_at AS jobs_available_at, jobs.lease_expires_at AS jobs_lease_expires_at, jobs.heartbeat_at AS jobs_heartbeat_at, jobs.worker_id AS jobs_worker_id, jobs.cancel_requested AS jobs_cancel_requested, jobs.payload AS jobs_payload, jobs.last_error AS jobs_last_error, jobs.started_at AS jobs_started_at, jobs.finished_at AS jobs_finished_at, jobs.id AS jobs_id, jobs.created_at AS jobs_created_at, jobs.updated_at AS jobs_updated_at \nFROM jobs \nWHERE jobs.id = %(pk_1)s::VARCHAR",
+      "params": "{'pk_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6'}"
+    },
+    {
+      "elapsed_ns": 45166,
+      "sql_prefix": "SELECT jobs.kind AS jobs_kind, jobs.queue AS jobs_queue, jobs.run_id AS jobs_run_id, jobs.idempotenc"
+    },
+    {
+      "at_ns": 810600667134666,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'run_id_1': 'fa21d2de1599498ca858e00f1c0a351b', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 2}"
+    },
+    {
+      "elapsed_ns": 46792,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600667237208,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 36667,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600667333791,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 31875,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810600667555083,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET settings_snapshot=%(settings_snapshot)s::JSON, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'settings_snapshot': Json({'university_research_budget_v1': { ... (230 chars)), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 163199, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 163323, tzinfo=datetime.timezone.utc), 'research_runs_id': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 57208,
+      "sql_prefix": "UPDATE research_runs SET settings_snapshot=%(settings_snapshot)s::JSON, heartbeat_at=%(heartbeat_at)"
+    },
+    {
+      "at_ns": 810600667727916,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER RETURNING jobs.id",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 23, 14, 24, 163211, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 163211, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 24, 163496, tzinfo=datetime.timezone.utc), 'id_1': 'b9febd8234de4e07a6c5ef3bdc0f05c6', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 2}"
+    },
+    {
+      "elapsed_ns": 51375,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(hear"
+    },
+    {
+      "at_ns": 810600667937250,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 44916,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600668209708,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 42042,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810600668541166,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'fa21d2de1599498ca858e00f1c0a351b'}"
+    },
+    {
+      "elapsed_ns": 38459,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    }
+  ],
+  "sql_errors": []
+}

@@ -1,0 +1,208 @@
+Browser tab: 4, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/export".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/export
+	2 container root
+		3 link Description: Skip to content, Value: 127.0.0.1:18140/#main-content
+		208 container
+			209 text unimatch
+			210 container Main navigation
+				211 button Home
+				212 button Find
+					213 text Find
+					214 text 20
+				215 button Plan
+					216 text Plan
+					217 text 2
+				218 button Documents
+					219 text Documents
+					220 text 2
+				221 button Community
+		10 container
+			12 text Demo data
+			13 button (collapsed) Explore, Secondary Actions: Expand
+				14 text Explore
+			15 button (collapsed) Description: Applicant workspace, Help: U, Secondary Actions: Expand
+				16 text U
+		222 container Description: Export & data deletion, ID: main-content
+			223 container
+				224 text Сохранённая оценка. Оценка отражает состояние исследования на тот момент. Она не подтверждает текущую готовность и не является вероятностью поступления.
+			225 heading Export your report, Value: 1
+				226 text Export your report
+			227 text Shortlist exports carry the source link and verification date for each row. You can also export or delete a saved case before research.
+			228 container
+				229 heading Printable report, Value: 2
+					230 text Printable report
+				231 text Preview your loaded findings, then use the print dialog to print or save as PDF. No report is published or sent automatically. Programmes to include
+				232 pop up button (collapsed, settable) Programmes to include, Value: Saved programmes, Secondary Actions: Expand
+					233 menu
+						234 (selected) Saved programmes
+						235 All research findings
+				236 checkbox (settable, integer) Description: Include applicant display name, Value: 0
+				237 text 2  programmes selected. Grades, budget and private files are excluded.
+				238 button Preview printable report
+			239 container Printable report preview
+				240 container
+					241 text unimatch
+					242 heading Your study report, Value: 2
+						243 text Your study report
+					244 text Prepared on this device:  18.10.2026, 16:56:19 Synthetic demonstration findings. These are not verified university requirements. Unknowns remain unknown. Choosing a programme does not mean an admission offer or a completed application.
+				245 button Print / Save as PDF
+				246 button Close report preview
+				247 container
+					248 heading University of Groningen, Value: 3
+						249 text University of Groningen
+					250 text BSc Computing Science  ·  Groningen ,  Netherlands
+					251 definition list
+						252 container Eligibility in this snapshot
+							253 text Eligibility in this snapshot
+						254 text Pending
+						255 container Remaining cost per year
+							256 text Remaining cost per year
+						257 text 1 848 USD · 2026/27
+						258 container Admission date recorded
+							259 text Admission date recorded
+						260 text 01 мая 2027 г. · CET
+					261 text 0  conflicts ·  2  open questions
+					262 content list
+						263 container
+							264 AXListMarker • 
+							265 text How many hours a week may an international student work while studying in Netherlands?
+						266 container
+							267 AXListMarker • 
+							268 text Which groups at University of Groningen work on machine learning?
+					269 heading Recorded sources, Value: 4
+						270 text Recorded sources
+					271 content list
+						272 container
+							273 AXListMarker • 
+							274 text fixture://government/netherlands.html demo fixture
+						275 container
+							276 AXListMarker • 
+							277 text fixture://u-groningen/admissions.html demo fixture
+						278 container
+							279 AXListMarker • 
+							280 text fixture://u-groningen/costs.html demo fixture
+						281 container
+							282 AXListMarker • 
+							283 text fixture://u-groningen/program-0.html demo fixture
+						284 container
+							285 AXListMarker • 
+							286 text fixture://u-groningen/scholarship-0.html demo fixture
+						287 container
+							288 AXListMarker • 
+							289 text fixture://u-groningen/scholarship-1.html demo fixture
+				290 container
+					291 heading KU Leuven, Value: 3
+						292 text KU Leuven
+					293 text BSc Informatics  ·  Leuven ,  Belgium
+					294 definition list
+						295 container Eligibility in this snapshot
+							296 text Eligibility in this snapshot
+						297 text Met
+						298 container Remaining cost per year
+							299 text Remaining cost per year
+						300 text 7 554 USD · 2026/27
+						301 container Admission date recorded
+							302 text Admission date recorded
+						303 text 01 мар. 2027 г. · CET
+					304 text 0  conflicts ·  2  open questions
+					305 content list
+						306 container
+							307 AXListMarker • 
+							308 text How many hours a week may an international student work while studying in Belgium?
+						309 container
+							310 AXListMarker • 
+							311 text Which groups at KU Leuven work on machine learning?
+					312 heading Recorded sources, Value: 4
+						313 text Recorded sources
+					314 content list
+						315 container
+							316 AXListMarker • 
+							317 text fixture://ku-leuven/admissions.html demo fixture
+						318 container
+							319 AXListMarker • 
+							320 text fixture://ku-leuven/costs.html demo fixture
+						321 container
+							322 AXListMarker • 
+							323 text fixture://ku-leuven/program-0.html demo fixture
+						324 container
+							325 AXListMarker • 
+							326 text fixture://ku-leuven/scholarship-0.html demo fixture
+						327 container
+							328 AXListMarker • 
+							329 text fixture://ku-leuven/scholarship-1.html demo fixture
+			330 text 20
+			331 text PROGRAMMES
+			332 text 0
+			333 text APPROVED
+			334 text 1
+			335 text CONFLICTS
+			336 text 441
+			337 text CLAIMS
+			338 text 104
+			339 text PAGES READ
+			340 container
+				341 heading Export the shortlist, Value: 2
+					342 text Export the shortlist
+				343 text CSV for a spreadsheet, JSON for everything including every claim, XLSX for a three-sheet workbook: shortlist, evidence, and open questions.
+				344 button Download .csv
+					345 text Download .
+					346 text csv
+				347 button Download .json
+					348 text Download .
+					349 text json
+				350 button Download .xlsx
+					351 text Download .
+					352 text xlsx
+				353 container
+					354 text Every exported row is marked  DEMO FIXTURE (synthetic)  in its data origin column, so a demo export can never be mistaken for researched figures.
+			355 container
+				356 heading Export your own data, Value: 2
+					357 text Export your own data
+				358 text This saved case: the profile as entered and a list of its runs. This is not an account-wide export.
+				359 button Show my stored data
+				360 button Download my data (.json)
+				361 text profile  eb686132
+			362 container
+				363 heading What this build does and does not do, Value: 2
+					364 text What this build does and does not do
+				365 heading Guarantees, Value: 3
+					366 text Guarantees
+				367 content list
+					368 container
+						369 AXListMarker • 
+						370 text robots.txt is honoured before every fetch, including the browser tier
+					371 container
+						372 AXListMarker • 
+						373 text applicant data is never placed in an outbound URL
+					374 container
+						375 AXListMarker • 
+						376 text no page behind a login is fetched, and no CAPTCHA is bypassed
+					377 container
+						378 AXListMarker • 
+						379 text no application is submitted, signed or paid for
+					380 container
+						381 AXListMarker • 
+						382 text unknown values are reported as unknown, never inferred
+				383 heading Limits, Value: 3
+					384 text Limits
+				385 content list
+					386 container
+						387 AXListMarker • 
+						388 text The product reports published criteria only. It cannot predict an admission or an award.
+					389 container
+						390 AXListMarker • 
+						391 text Grade conversions are approximations and are never applied without the user accepting one.
+					392 container
+						393 AXListMarker • 
+						394 text Currency rates are a dated static snapshot, not a live feed.
+				395 text Currency figures converted using a static snapshot dated 2026-08-01 .  Static snapshot bundled with ASHYQ Apply (see app/domain/currency.py)
+			396 container
+				397 heading Delete this case, Value: 2
+					398 text Delete this case
+				399 text This erases the applicant profile and every research run, result, claim, conflict and checklist attached to it. It cannot be undone here. Account data, audit records and backups are outside this case control.
+				400 text field (settable) Type DELETE to confirm
+				401 button (disabled) Delete permanently
+			402 container
+				403 text Run  c28c5715012042b387b21db9474b9626  · started  2026-10-18T10:55:32.021395  · demo corpus  · schema-backed audit log available at /api/audit. Audit retention is separate from case deletion.
+
+The focused UI element is 238 button Preview printable report

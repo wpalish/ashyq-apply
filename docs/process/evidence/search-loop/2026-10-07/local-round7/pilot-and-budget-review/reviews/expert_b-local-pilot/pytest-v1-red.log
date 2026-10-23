@@ -1,0 +1,692 @@
+........FFFFFFFFFFFFFFFFFFFFFFF                                          [100%]
+=================================== FAILURES ===================================
+__________________ test_malformed_completed_raw_must_reject[] __________________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_completed_raw_m0')
+text = ''
+
+    @pytest.mark.parametrize("text", ["", "not-json", "{}", "[]"])
+    def test_malformed_completed_raw_must_reject(tmp_path, text):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        (tmp_path / "groningen.raw.json").write_text(text)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_completed_raw_m0')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+______________ test_malformed_completed_raw_must_reject[not-json] ______________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_completed_raw_m1')
+text = 'not-json'
+
+    @pytest.mark.parametrize("text", ["", "not-json", "{}", "[]"])
+    def test_malformed_completed_raw_must_reject(tmp_path, text):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        (tmp_path / "groningen.raw.json").write_text(text)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_completed_raw_m1')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_________________ test_malformed_completed_raw_must_reject[{}] _________________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_completed_raw_m2')
+text = '{}'
+
+    @pytest.mark.parametrize("text", ["", "not-json", "{}", "[]"])
+    def test_malformed_completed_raw_must_reject(tmp_path, text):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        (tmp_path / "groningen.raw.json").write_text(text)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_completed_raw_m2')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_________________ test_malformed_completed_raw_must_reject[[]] _________________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_completed_raw_m3')
+text = '[]'
+
+    @pytest.mark.parametrize("text", ["", "not-json", "{}", "[]"])
+    def test_malformed_completed_raw_must_reject(tmp_path, text):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        (tmp_path / "groningen.raw.json").write_text(text)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_completed_raw_m3')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_______________________ test_wrong_case_raw_must_reject ________________________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_wrong_case_raw_must_rejec0')
+
+    def test_wrong_case_raw_must_reject(tmp_path):
+        c = envelope()
+        write_evidence(tmp_path, c, raw("foreign-case"))
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_wrong_case_raw_must_rejec0')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_________________ test_missing_physical_checkpoint_must_reject _________________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_physical_checkpoi0')
+
+    def test_missing_physical_checkpoint_must_reject(tmp_path):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        (tmp_path / "groningen.budget.json").unlink()
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_physical_checkpoi0')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_______________ test_conflicting_terminal_checkpoint_must_reject _______________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_conflicting_terminal_chec0')
+
+    def test_conflicting_terminal_checkpoint_must_reject(tmp_path):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        b = c["config"]["case_budgets"]["groningen"].copy()
+        b["fetcher_calls"] = 61
+        (tmp_path / "groningen.budget.json").write_text(json.dumps(b))
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_conflicting_terminal_chec0')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_______ test_missing_budget_audit_fields_must_reject[max_fetcher_calls] ________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel0')
+key = 'max_fetcher_calls'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel0')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_______ test_missing_budget_audit_fields_must_reject[max_search_queries] _______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel1')
+key = 'max_search_queries'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel1')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_______ test_missing_budget_audit_fields_must_reject[max_active_seconds] _______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel2')
+key = 'max_active_seconds'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel2')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+______ test_missing_budget_audit_fields_must_reject[strict_expert_budget] ______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel3')
+key = 'strict_expert_budget'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel3')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+____ test_missing_budget_audit_fields_must_reject[finalization_reserve_ms] _____
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel4')
+key = 'finalization_reserve_ms'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel4')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+____ test_missing_budget_audit_fields_must_reject[source_work_deadline_ms] _____
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel5')
+key = 'source_work_deadline_ms'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel5')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_____ test_missing_budget_audit_fields_must_reject[network_http_requests] ______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel6')
+key = 'network_http_requests'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel6')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+_________ test_missing_budget_audit_fields_must_reject[process_error] __________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel7')
+key = 'process_error'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel7')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+________ test_missing_budget_audit_fields_must_reject[provider_failure] ________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel8')
+key = 'provider_failure'
+
+    @pytest.mark.parametrize("key", ["max_fetcher_calls", "max_search_queries", "max_active_seconds",
+                                    "strict_expert_budget", "finalization_reserve_ms",
+                                    "source_work_deadline_ms", "network_http_requests",
+                                    "process_error", "provider_failure"])
+    def test_missing_budget_audit_fields_must_reject(tmp_path, key):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"].pop(key)
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_budget_audit_fiel8')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+________ test_http429_stop_reason_without_failure_envelope_must_reject _________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_http429_stop_reason_witho0')
+
+    def test_http429_stop_reason_without_failure_envelope_must_reject(tmp_path):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["config"]["case_budgets"]["groningen"]["stop_reason"] = "http_429"
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_http429_stop_reason_witho0')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+______ test_malformed_envelope_is_structured_protocol_error[config-None] _______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_envelope_is_str0')
+part = 'config', value = None
+
+    @pytest.mark.parametrize("part,value", [("config", None), ("config", []),
+                                          ("observations", [None]), ("observations", None)])
+    def test_malformed_envelope_is_structured_protocol_error(tmp_path, part, value):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c[part] = value
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_validate_v1.py:85: in rejected
+    result = pilot.validate(capture, "groningen", tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'config': None, ...}
+case = 'groningen'
+raw_root = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_envelope_is_str0')
+
+    def validate(capture, case, raw_root):
+        errors = []
+        cfg = capture.get('config', {})
+        expected = {'strict_expert_budget': True, 'seconds_per_case': 120,
+                    'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6,
+                    'finalization_reserve_ms': 3000, 'source_work_deadline_ms': 117000,
+                    'search_provider': 'exa_mcp', 'browser_enabled': False,
+                    'site_branding_identity': False, 'subject_phrase_match': False,
+                    'programme_identity_before_funding': False, 'shared_query_budget': True}
+        if capture.get('pipeline_sha') != EXPECTED_HEAD:
+            errors.append('wrong_pipeline_head')
+        for key, value in expected.items():
+>           if type(cfg.get(key)) is not type(value) or cfg.get(key) != value:
+                    ^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'get'
+
+local_pilot.v1.py:53: AttributeError
+_____ test_malformed_envelope_is_structured_protocol_error[config-value1] ______
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_envelope_is_str1')
+part = 'config', value = []
+
+    @pytest.mark.parametrize("part,value", [("config", None), ("config", []),
+                                          ("observations", [None]), ("observations", None)])
+    def test_malformed_envelope_is_structured_protocol_error(tmp_path, part, value):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c[part] = value
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_validate_v1.py:85: in rejected
+    result = pilot.validate(capture, "groningen", tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'config': [], ...}
+case = 'groningen'
+raw_root = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_envelope_is_str1')
+
+    def validate(capture, case, raw_root):
+        errors = []
+        cfg = capture.get('config', {})
+        expected = {'strict_expert_budget': True, 'seconds_per_case': 120,
+                    'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6,
+                    'finalization_reserve_ms': 3000, 'source_work_deadline_ms': 117000,
+                    'search_provider': 'exa_mcp', 'browser_enabled': False,
+                    'site_branding_identity': False, 'subject_phrase_match': False,
+                    'programme_identity_before_funding': False, 'shared_query_budget': True}
+        if capture.get('pipeline_sha') != EXPECTED_HEAD:
+            errors.append('wrong_pipeline_head')
+        for key, value in expected.items():
+>           if type(cfg.get(key)) is not type(value) or cfg.get(key) != value:
+                    ^^^^^^^
+E           AttributeError: 'list' object has no attribute 'get'
+
+local_pilot.v1.py:53: AttributeError
+__ test_malformed_envelope_is_structured_protocol_error[observations-value2] ___
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_envelope_is_str2')
+part = 'observations', value = [None]
+
+    @pytest.mark.parametrize("part,value", [("config", None), ("config", []),
+                                          ("observations", [None]), ("observations", None)])
+    def test_malformed_envelope_is_structured_protocol_error(tmp_path, part, value):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c[part] = value
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_validate_v1.py:85: in rejected
+    result = pilot.validate(capture, "groningen", tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+case = 'groningen'
+raw_root = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_envelope_is_str2')
+
+    def validate(capture, case, raw_root):
+        errors = []
+        cfg = capture.get('config', {})
+        expected = {'strict_expert_budget': True, 'seconds_per_case': 120,
+                    'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6,
+                    'finalization_reserve_ms': 3000, 'source_work_deadline_ms': 117000,
+                    'search_provider': 'exa_mcp', 'browser_enabled': False,
+                    'site_branding_identity': False, 'subject_phrase_match': False,
+                    'programme_identity_before_funding': False, 'shared_query_budget': True}
+        if capture.get('pipeline_sha') != EXPECTED_HEAD:
+            errors.append('wrong_pipeline_head')
+        for key, value in expected.items():
+            if type(cfg.get(key)) is not type(value) or cfg.get(key) != value:
+                errors.append('wrong_config:' + key)
+        if cfg.get('cohort') != [case]:
+            errors.append('wrong_cohort')
+        observations = capture.get('observations', [])
+>       if len(observations) != 1 or observations[0].get('case_id') != case:
+                                     ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'get'
+
+local_pilot.v1.py:58: AttributeError
+___ test_malformed_envelope_is_structured_protocol_error[observations-None] ____
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_envelope_is_str3')
+part = 'observations', value = None
+
+    @pytest.mark.parametrize("part,value", [("config", None), ("config", []),
+                                          ("observations", [None]), ("observations", None)])
+    def test_malformed_envelope_is_structured_protocol_error(tmp_path, part, value):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c[part] = value
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_validate_v1.py:85: in rejected
+    result = pilot.validate(capture, "groningen", tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+case = 'groningen'
+raw_root = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_malformed_envelope_is_str3')
+
+    def validate(capture, case, raw_root):
+        errors = []
+        cfg = capture.get('config', {})
+        expected = {'strict_expert_budget': True, 'seconds_per_case': 120,
+                    'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6,
+                    'finalization_reserve_ms': 3000, 'source_work_deadline_ms': 117000,
+                    'search_provider': 'exa_mcp', 'browser_enabled': False,
+                    'site_branding_identity': False, 'subject_phrase_match': False,
+                    'programme_identity_before_funding': False, 'shared_query_budget': True}
+        if capture.get('pipeline_sha') != EXPECTED_HEAD:
+            errors.append('wrong_pipeline_head')
+        for key, value in expected.items():
+            if type(cfg.get(key)) is not type(value) or cfg.get(key) != value:
+                errors.append('wrong_config:' + key)
+        if cfg.get('cohort') != [case]:
+            errors.append('wrong_cohort')
+        observations = capture.get('observations', [])
+>       if len(observations) != 1 or observations[0].get('case_id') != case:
+           ^^^^^^^^^^^^^^^^^
+E       TypeError: object of type 'NoneType' has no len()
+
+local_pilot.v1.py:58: TypeError
+_____________________ test_wrong_capture_mode_must_reject ______________________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_wrong_capture_mode_must_r0')
+
+    def test_wrong_capture_mode_must_reject(tmp_path):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["mode"] = "fixture"
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'fixture', 'captured_at': '2026-10-08T00:00:00Z',..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_wrong_capture_mode_must_r0')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+______________________ test_missing_telemetry_must_reject ______________________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_telemetry_must_re0')
+
+    def test_missing_telemetry_must_reject(tmp_path):
+        c = envelope()
+        write_evidence(tmp_path, c)
+        c["observations"][0].pop("telemetry")
+>       rejected(c, tmp_path)
+
+test_validate_v1.py:189: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capture = {'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'mode': 'live', 'captured_at': '2026-10-08T00:00:00Z', 'c..._budget': True, 'seconds_per_case': 120, 'max_fetcher_calls_per_case': 60, 'max_search_queries_per_case': 6, ...}, ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot/pytest-tmp/test_missing_telemetry_must_re0')
+
+    def rejected(capture, tmp_path):
+        result = pilot.validate(capture, "groningen", tmp_path)
+>       assert result["errors"], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'fetcher_calls': 2, 'search_queries': 1, ...}
+E       assert []
+
+test_validate_v1.py:86: AssertionError
+=========================== short test summary info ============================
+FAILED test_validate_v1.py::test_malformed_completed_raw_must_reject[] - Asse...
+FAILED test_validate_v1.py::test_malformed_completed_raw_must_reject[not-json]
+FAILED test_validate_v1.py::test_malformed_completed_raw_must_reject[{}] - As...
+FAILED test_validate_v1.py::test_malformed_completed_raw_must_reject[[]] - As...
+FAILED test_validate_v1.py::test_wrong_case_raw_must_reject - AssertionError:...
+FAILED test_validate_v1.py::test_missing_physical_checkpoint_must_reject - As...
+FAILED test_validate_v1.py::test_conflicting_terminal_checkpoint_must_reject
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[max_fetcher_calls]
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[max_search_queries]
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[max_active_seconds]
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[strict_expert_budget]
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[finalization_reserve_ms]
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[source_work_deadline_ms]
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[network_http_requests]
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[process_error]
+FAILED test_validate_v1.py::test_missing_budget_audit_fields_must_reject[provider_failure]
+FAILED test_validate_v1.py::test_http429_stop_reason_without_failure_envelope_must_reject
+FAILED test_validate_v1.py::test_malformed_envelope_is_structured_protocol_error[config-None]
+FAILED test_validate_v1.py::test_malformed_envelope_is_structured_protocol_error[config-value1]
+FAILED test_validate_v1.py::test_malformed_envelope_is_structured_protocol_error[observations-value2]
+FAILED test_validate_v1.py::test_malformed_envelope_is_structured_protocol_error[observations-None]
+FAILED test_validate_v1.py::test_wrong_capture_mode_must_reject - AssertionEr...
+FAILED test_validate_v1.py::test_missing_telemetry_must_reject - AssertionErr...
+23 failed, 8 passed in 0.11s

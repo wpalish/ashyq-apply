@@ -1,0 +1,21 @@
+{
+  "at_utc": "2026-10-12T01:52:33.642039+00:00",
+  "status": "NATIVE_SOURCE_ADDED_NOT_IMPORTED_NOT_RUN",
+  "write_ahead": "G2_NATIVE_TWO_PATH_WRITE_AHEAD.json",
+  "root_sole_writer": true,
+  "paths": [
+    {
+      "path": "frontend/e2e/preparation.spec.ts",
+      "before": "22ff2ffb350e028e5cf0ab6939d312e4055d06d92291b833bf886ea62af08e93",
+      "after": "b64e7ab628ffefc5a43e54557d4b01240c34a76c689ec5dbce30299da17c8a7c",
+      "old_bytes_unchanged_prefix": true
+    },
+    {
+      "path": "frontend/e2e/auth-journey.spec.ts",
+      "before": "d7dd8708aa11591360b19d48a3dd4b92e42152e6ca1dc9c6b22fdbc438e7adef",
+      "after": "3ce4835ea7acf0ce36a63a842b23021fcd4b148045a4511c02afe71e3efa69a5",
+      "old_bytes_unchanged_prefix": true
+    }
+  ],
+  "application": "Still PARTIAL_ROOT_WIRING; external backend/FE/API tests absent; no import/run"
+}

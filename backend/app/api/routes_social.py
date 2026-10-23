@@ -22,7 +22,7 @@ from datetime import datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
-from sqlalchemy import and_, func, or_
+from sqlalchemy import and_, func, or_, update
 from sqlalchemy.orm import Session, joinedload, selectinload
 
 # The module rather than the function: `get_settings` is replaced per test and
@@ -435,7 +435,13 @@ def feed(
         .options(selectinload(Post.tags))
         .join(User, User.id == Post.author_id)
         .outerjoin(SocialProfile, SocialProfile.user_id == Post.author_id)
-        .outerjoin(PostReply, PostReply.post_id == Post.id)
+        .outerjoin(
+            PostReply,
+            and_(
+                PostReply.post_id == Post.id,
+                PostReply.author_id.notin_(_hidden_from(session, principal.user_id)),
+            ),
+        )
         .group_by(Post.id, User.id, SocialProfile.user_id)
         # A block is mutual silence: neither side appears to the other.
         .filter(Post.author_id.notin_(_hidden_from(session, principal.user_id)))
@@ -473,6 +479,13 @@ def _load_post(session: Session, post_id: str) -> Post:
     return post
 
 
+def _visible_post(session: Session, post_id: str, viewer_id: str) -> Post:
+    post = _load_post(session, post_id)
+    if _blocked_either_way(session, viewer_id, post.author_id):
+        raise HTTPException(404, "This post does not exist.")
+    return post
+
+
 @router.get("/posts/{post_id}", response_model=PostView)
 def read_post(
     post_id: str,
@@ -480,8 +493,15 @@ def read_post(
     session: Session = Depends(get_session),
 ) -> PostView:
     """One post, so a thread can be opened from a link rather than the feed."""
-    post = _load_post(session, post_id)
-    replies = session.query(func.count(PostReply.id)).filter(PostReply.post_id == post.id).scalar()
+    post = _visible_post(session, post_id, principal.user_id)
+    replies = (
+        session.query(func.count(PostReply.id))
+        .filter(
+            PostReply.post_id == post.id,
+            PostReply.author_id.notin_(_hidden_from(session, principal.user_id)),
+        )
+        .scalar()
+    )
     return _post_view(
         post,
         _account(session, post.author_id),
@@ -576,12 +596,15 @@ def read_thread(
     session: Session = Depends(get_session),
 ) -> ReplyPage:
     """Oldest first: a thread is read in the order it was written."""
-    _load_post(session, post_id)
+    _visible_post(session, post_id, principal.user_id)
     query = (
         session.query(PostReply, User, SocialProfile)
         .join(User, User.id == PostReply.author_id)
         .outerjoin(SocialProfile, SocialProfile.user_id == PostReply.author_id)
-        .filter(PostReply.post_id == post_id)
+        .filter(
+            PostReply.post_id == post_id,
+            PostReply.author_id.notin_(_hidden_from(session, principal.user_id)),
+        )
     )
     if cursor:
         query = query.filter(_newer_than(PostReply.created_at, PostReply.id, cursor))
@@ -680,6 +703,23 @@ def _departed(session: Session, user_id: str) -> PersonCard:
     )
 
 
+def _conversation_person(session: Session, reader_id: str, other_id: str) -> PersonCard:
+    if _blocked_either_way(session, reader_id, other_id):
+        # The existing conversation retains its history, not live profile updates.
+        return PersonCard(
+            user_id=other_id,
+            display_name="Unavailable applicant",
+            status=None,
+            target_city="",
+            target_major="",
+            universities=[],
+            dm_policy=DirectMessagePolicy.NOBODY.value,
+            bio="",
+        )
+    profile = session.get(SocialProfile, other_id)
+    return _card(profile) if profile else _departed(session, other_id)
+
+
 def _mine(user_id: str):
     return or_(Conversation.lower_id == user_id, Conversation.higher_id == user_id)
 
@@ -706,7 +746,6 @@ def conversations(
     items = []
     for conversation in page:
         other = conversation.other_than(principal.user_id)
-        profile = session.get(SocialProfile, other)
         newest = (
             session.query(DirectMessage)
             .filter(DirectMessage.conversation_id == conversation.id)
@@ -715,7 +754,7 @@ def conversations(
         )
         items.append(
             ConversationView(
-                person=_card(profile) if profile else _departed(session, other),
+                person=_conversation_person(session, principal.user_id, other),
                 last_message=newest.body if newest else "",
                 last_message_at=(
                     ensure_utc(conversation.last_message_at) or conversation.last_message_at
@@ -750,11 +789,14 @@ def conversation_with(
     the alternative is a second request every screen has to remember to send,
     and a badge that lies whenever one forgets.
     """
-    profile = session.get(SocialProfile, user_id)
-    person = _card(profile) if profile else _departed(session, user_id)
     conversation = _conversation(session, principal.user_id, user_id)
     if conversation is None:
-        return MessagePage(person=person, items=[], next_cursor=None)
+        if _blocked_either_way(session, principal.user_id, user_id):
+            raise HTTPException(404, "This applicant has no social profile.")
+        return MessagePage(
+            person=_card(_profile_or_404(session, user_id)), items=[], next_cursor=None
+        )
+    person = _conversation_person(session, principal.user_id, user_id)
 
     query = session.query(DirectMessage).filter(DirectMessage.conversation_id == conversation.id)
     if cursor:
@@ -766,10 +808,41 @@ def conversation_with(
     )
     page, next_cursor = _split(rows, limit, lambda row: (row.created_at, row.id))
 
-    if principal.user_id == conversation.lower_id:
-        conversation.lower_read_at = utcnow()
-    else:
-        conversation.higher_read_at = utcnow()
+    incoming = [message for message in page if message.sender_id != principal.user_id]
+    if next_cursor and rows[len(page)].created_at == page[-1].created_at:
+        # A timestamp watermark cannot split unread incoming at the boundary.
+        # Own tied rows do not need acknowledgement, but may hide a later
+        # incoming row beyond the single lookahead message.
+        boundary = page[-1].created_at
+        unreturned_incoming = (
+            session.query(DirectMessage.id)
+            .filter(
+                DirectMessage.conversation_id == conversation.id,
+                DirectMessage.sender_id != principal.user_id,
+                DirectMessage.created_at == boundary,
+                DirectMessage.id > page[-1].id,
+            )
+            .first()
+        )
+        if unreturned_incoming is not None:
+            incoming = [message for message in incoming if message.created_at < boundary]
+    if incoming:
+        read_at = (
+            Conversation.lower_read_at
+            if principal.user_id == conversation.lower_id
+            else Conversation.higher_read_at
+        )
+        seen = incoming[-1].created_at
+        # Compare in the UPDATE itself: a concurrent or older page must never
+        # replace a newer watermark, and unseen pages must not count as read.
+        session.execute(
+            update(Conversation)
+            .where(
+                Conversation.id == conversation.id,
+                or_(read_at.is_(None), read_at < seen),
+            )
+            .values({read_at.key: seen})
+        )
     session.commit()
 
     return MessagePage(
@@ -830,11 +903,8 @@ def send_message(
     session.add(message)
     session.flush()
     conversation.last_message_at = message.created_at
-    # Writing is reading: a line you just sent is not unread to you.
-    if principal.user_id == conversation.lower_id:
-        conversation.lower_read_at = message.created_at
-    else:
-        conversation.higher_read_at = message.created_at
+    # Only returned incoming messages advance read watermarks. A sent
+    # message is already excluded from the sender's unread count.
     session.commit()
     session.refresh(message)
 
@@ -1022,7 +1092,13 @@ def file_report(
     session.add(report)
     session.commit()
     session.refresh(report)
-    return _report_view(session, report)
+    view = _report_view(session, report)
+    if author is not None and _blocked_either_way(session, principal.user_id, author):
+        # Reporting after blocking stays available; the moderator retains the
+        # evidence, while the receipt cannot become another current-content lookup.
+        view.subject_author = None
+        view.excerpt = ""
+    return view
 
 
 def require_moderator(principal: Principal = Depends(get_principal)) -> Principal:
@@ -1030,9 +1106,9 @@ def require_moderator(principal: Principal = Depends(get_principal)) -> Principa
 
     A workspace owner administers their own tenant, and the community is not
     theirs — it spans every workspace — so no tenant role can carry this. See
-    `Settings.moderator_emails` for why that is a setting rather than a table.
+    `Settings.moderator_user_ids` for why that is a setting rather than a table.
     """
-    if principal.email.casefold() not in config.get_settings().moderator_email_list:
+    if principal.user_id not in config.get_settings().moderator_user_id_list:
         raise HTTPException(403, "This is the moderation queue for this deployment.")
     return principal
 
@@ -1208,8 +1284,8 @@ def read_avatar(
         content=avatar.data,
         media_type=avatar.content_type,
         headers={
-            # The bytes of one version never change, so a browser may keep
-            # them; the URL carries a version that moves when the picture does.
+            # Version metadata identifies the picture. The API security
+            # middleware overrides caching with no-store, including avatars.
             "Cache-Control": "private, max-age=86400",
             "ETag": f'"{int(stamp.timestamp())}"',
         },

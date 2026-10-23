@@ -1,0 +1,37 @@
+{
+  "status": "BILLING_CASE_FENCE_AND_DATE_SEMANTICS_LOCALLY_VERIFIED_NATIVE_BROWSER_NOT_RUN",
+  "at_utc": "2026-10-13T22:23:32.073260+00:00",
+  "source_postimages": {
+    "frontend/src/screens/DocumentsScreen.tsx": "d149abdce09199be94a0c3f154352731fd05bc4d4f993811558d5e65e90d35c1",
+    "frontend/src/screens/BillingScreen.preparation.test.tsx": "5977d9ec17f55f8373f5950f041e5199d25369ea7beddfd5fdca7c250c271d6f",
+    "frontend/src/screens/BillingScreen.case.test.tsx": "76795af073fd533a1cdc9efe992a7a4001f39477fcaa20adccff9d7371917b13",
+    "frontend/src/screens/ShortlistScreen.tsx": "381d38348611c566d5f8605e4f19db2103b8ac616090beb581c1ded5b9b2e90e",
+    "frontend/src/screens/ApprovedScreen.tsx": "4424068a1d32a3b0f966edbeb75691824faddbfc388637c858404d46e5237c23",
+    "frontend/src/screens/BillingScreen.test.tsx": "e155ca70c48d0efd68dbf9a4dfb1350b0860558fdb0e71c46c4d70ab64abc6a5",
+    "frontend/src/screens/BillingScreen.tsx": "7ed7a20fcf8336de8794fa02f5fe20ee8e53a37a57ddc6a26481fe69dbf408da",
+    "frontend/src/components/ResultDetail.tsx": "a3a45a8e6a130935f795ae30151392541f163b5b44f7696bfe58f53a1a37955a",
+    "frontend/src/lib/i18n.ts": "bdd11e3923d859ee87b40c7afbf2bffe80289d845e41e49718b95b5b71e309fb",
+    "frontend/src/lib/format.test.ts": "2c80d0757bccfa238dedaeac121f8e15a89c9451c06ac1364a56421eb0033fda",
+    "frontend/src/lib/format.ts": "c56636c35c9fe3a4fb5ba89df723d7f174b212482fb39416e5a96d801ed0fd25",
+    "frontend/src/lib/format.dates.test.ts": "a16b9aa0ff17d0a366233a0bbd89874cfb10c0c6cd30bb6371fe36ac9f16a0f4"
+  },
+  "frontend": {
+    "tests": 835,
+    "files": 79,
+    "typecheck": "PASS",
+    "lint": "PASS_9_ORIGINAL_WARNINGS",
+    "build": "PASS",
+    "source_before_after_equal": true
+  },
+  "backend": {
+    "original_full": "HISTORICAL_NATIVE8_5807_BOTH_DB",
+    "unchanged_consumed_files": 639,
+    "changed_consumer": "tests/test_frontend_contract.py",
+    "fresh_native_contract_tests": 24,
+    "fresh_contract_status": "FOCUSED_PASS_NOT_FULL",
+    "current_full": "NOT_RERUN_AFTER_FORMAT_CHANGE"
+  },
+  "integration": "NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_RETAINED",
+  "remaining": "Native Today/exact targets/profile/source-age; isolated Demo/Auth/browser acceptance; release gates."
+}

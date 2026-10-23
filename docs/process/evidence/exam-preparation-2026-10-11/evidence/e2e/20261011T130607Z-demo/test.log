@@ -1,0 +1,179 @@
+
+Running 90 tests using 1 worker
+
+  ✓   1 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:39:1 › the page never scrolls horizontally at any breakpoint (1.8s)
+  ✓   2 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:53:1 › the ranked bucket stays clear of the pinned decision column at 1440px (97ms)
+  ✓   3 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:86:1 › the mobile shortlist becomes cards without an inner horizontal scroller (99ms)
+  ✓   4 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:106:1 › the whole workflow is reachable by keyboard (38ms)
+  ✓   5 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:118:1 › progress is announced to assistive technology (23ms)
+  ✓   6 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:125:1 › the results table is labelled and its controls are named (458ms)
+  ✓   7 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:146:1 › every reachable workflow screen has no serious axe violations (2.6s)
+  ✓   8 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:161:1 › both themes render with a painted background and readable text (1.0s)
+  ✓   9 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:179:1 › no console errors during the full journey (85ms)
+  ✓  10 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/catalogue.spec.ts:3:1 › browse the local university catalogue before live research (1.6s)
+  ✓  11 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:38:1 › joining publishes a profile that Discover can find (933ms)
+  ✓  12 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:48:1 › a post shows the tags it will publish, then carries them into the feed (716ms)
+  ✓  13 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:65:1 › an answer opens in place under its post and is counted (738ms)
+  -  14 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:80:1 › every community screen is reachable on a phone
+  ✓  15 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:98:1 › an over-long post cannot be sent (405ms)
+  ✓  16 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:108:1 › a post can be taken back without leaving the community (798ms)
+  ✓  17 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:127:1 › leaving the community is reversible from the same screen (779ms)
+  ✓  18 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:24:1 › profile screen states the cost of every gap (1.4s)
+  ✓  19 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:46:1 › preferences screen exposes the scoring weights and warns about live mode (416ms)
+  ✓  20 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:60:1 › research runs to completion and reports what it could not read (3.2s)
+  ✓  21 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:74:1 › the shortlist separates eligibility, fit and funding (800ms)
+  ✓  22 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:96:1 › marketing language does not turn full tuition into a full ride (87ms)
+  ✓  23 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:108:1 › a previous-cycle deadline is shown as a guide, not as passed (71ms)
+  ✓  24 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:117:1 › a citizenship-restricted award is shown as not eligible (641ms)
+  ✓  25 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:129:1 › an incomparable zero is refused rather than shown as nothing to pay (171ms)
+  ✓  26 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:142:1 › a per-section IELTS minimum is enforced independently of the overall band (713ms)
+  ✓  27 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:156:1 › missing scholarship data reads as unknown, not as no funding (156ms)
+  ✓  28 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:167:1 › conflicting official sources are shown with a drafted question (1.5s)
+  ✓  29 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:180:1 › funding comparison hatches what it cannot compare (538ms)
+  ✓  30 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:189:1 › approve, collect documents, and export (3.2s)
+  ✓  31 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:220:1 › rejection is remembered with the row kept (918ms)
+  ✓  32 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:250:1 › screens have addresses: back, forward, reload and a gated link (793ms)
+  ✓  33 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:270:1 › a link to a screen that is not reachable yet explains itself (375ms)
+  ✓  34 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/messages.spec.ts:14:1 › messages has its own screen, reachable and empty until someone writes (344ms)
+  ✓  35 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/messages.spec.ts:24:1 › the first-contact setting is on your own profile and saves (1.4s)
+  ✓  36 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/messages.spec.ts:48:1 › the navigation carries no badge when nothing is unread (352ms)
+  ✘  37 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:18:1 › a programme saved from Find retains its exam evidence in Preparation (20.4s)
+  -  38 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:34:1 › practice is submitted to the real API and keeps official scores separate
+  -  39 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:71:1 › one persisted attempt survives reload and is included in own export
+  -  40 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:116:1 › six mobile destinations stay readable in one row with a matching safe bottom reserve
+  -  41 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:152:1 › the final real practice actions scroll above the fixed navigation at 390 and 320
+  ✓  42 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/profile-persistence.spec.ts:19:1 › a saved profile is restored into the form after a reload (2.6s)
+  ✓  43 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/profile-persistence.spec.ts:42:1 › demo data is only ever loaded on request, and is labelled when it is (1.4s)
+  ✓  44 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/profile-persistence.spec.ts:63:1 › replacing a saved profile asks first (1.4s)
+  ✓  45 [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/profile-persistence.spec.ts:79:1 › typing multiple subjects and countries keeps separators and saves complete lists (2.7s)
+  ✓  46 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:39:1 › the page never scrolls horizontally at any breakpoint (2.2s)
+  ✓  47 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:53:1 › the ranked bucket stays clear of the pinned decision column at 1440px (107ms)
+  ✓  48 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:86:1 › the mobile shortlist becomes cards without an inner horizontal scroller (106ms)
+  ✓  49 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:106:1 › the whole workflow is reachable by keyboard (23ms)
+  ✓  50 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:118:1 › progress is announced to assistive technology (31ms)
+  ✓  51 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:125:1 › the results table is labelled and its controls are named (510ms)
+  ✓  52 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:146:1 › every reachable workflow screen has no serious axe violations (2.7s)
+  ✓  53 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:161:1 › both themes render with a painted background and readable text (1.3s)
+  ✓  54 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/accessibility.spec.ts:179:1 › no console errors during the full journey (90ms)
+  ✓  55 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/catalogue.spec.ts:3:1 › browse the local university catalogue before live research (1.6s)
+  ✓  56 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:38:1 › joining publishes a profile that Discover can find (1.3s)
+  ✓  57 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:48:1 › a post shows the tags it will publish, then carries them into the feed (1.3s)
+  ✓  58 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:65:1 › an answer opens in place under its post and is counted (743ms)
+  ✓  59 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:80:1 › every community screen is reachable on a phone (478ms)
+  ✓  60 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:98:1 › an over-long post cannot be sent (393ms)
+  ✓  61 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:108:1 › a post can be taken back without leaving the community (1.5s)
+  ✓  62 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/community.spec.ts:127:1 › leaving the community is reversible from the same screen (762ms)
+  ✓  63 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:24:1 › profile screen states the cost of every gap (1.5s)
+  ✓  64 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:46:1 › preferences screen exposes the scoring weights and warns about live mode (507ms)
+  ✓  65 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:60:1 › research runs to completion and reports what it could not read (2.9s)
+  ✓  66 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:74:1 › the shortlist separates eligibility, fit and funding (1.6s)
+  ✓  67 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:96:1 › marketing language does not turn full tuition into a full ride (93ms)
+  ✓  68 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:108:1 › a previous-cycle deadline is shown as a guide, not as passed (74ms)
+  ✓  69 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:117:1 › a citizenship-restricted award is shown as not eligible (1.7s)
+  ✓  70 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:129:1 › an incomparable zero is refused rather than shown as nothing to pay (184ms)
+  ✓  71 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:142:1 › a per-section IELTS minimum is enforced independently of the overall band (2.4s)
+  ✓  72 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:156:1 › missing scholarship data reads as unknown, not as no funding (167ms)
+  ✓  73 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:167:1 › conflicting official sources are shown with a drafted question (3.0s)
+  ✓  74 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:180:1 › funding comparison hatches what it cannot compare (954ms)
+  ✓  75 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:189:1 › approve, collect documents, and export (3.5s)
+  ✓  76 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:220:1 › rejection is remembered with the row kept (862ms)
+  ✓  77 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:250:1 › screens have addresses: back, forward, reload and a gated link (793ms)
+  ✓  78 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/journey.spec.ts:270:1 › a link to a screen that is not reachable yet explains itself (370ms)
+  ✓  79 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/messages.spec.ts:14:1 › messages has its own screen, reachable and empty until someone writes (351ms)
+  ✓  80 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/messages.spec.ts:24:1 › the first-contact setting is on your own profile and saves (2.1s)
+  ✓  81 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/messages.spec.ts:48:1 › the navigation carries no badge when nothing is unread (363ms)
+  ✘  82 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:18:1 › a programme saved from Find retains its exam evidence in Preparation (20.6s)
+  -  83 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:34:1 › practice is submitted to the real API and keeps official scores separate
+  -  84 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:71:1 › one persisted attempt survives reload and is included in own export
+  -  85 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:116:1 › six mobile destinations stay readable in one row with a matching safe bottom reserve
+  -  86 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:152:1 › the final real practice actions scroll above the fixed navigation at 390 and 320
+  ✓  87 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/profile-persistence.spec.ts:19:1 › a saved profile is restored into the form after a reload (1.8s)
+  ✓  88 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/profile-persistence.spec.ts:42:1 › demo data is only ever loaded on request, and is labelled when it is (1.4s)
+  ✓  89 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/profile-persistence.spec.ts:63:1 › replacing a saved profile asks first (1.4s)
+  ✓  90 [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/profile-persistence.spec.ts:79:1 › typing multiple subjects and countries keeps separators and saves complete lists (2.9s)
+
+
+  1) [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:18:1 › a programme saved from Find retains its exam evidence in Preparation 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('IELTS writing', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 20000ms
+      - waiting for getByText('IELTS writing', { exact: true })
+
+
+      27 |   expect(value).toBeTruthy();
+      28 |   await programme.selectOption(value!);
+    > 29 |   await expect(page.getByText('IELTS writing', { exact: true })).toBeVisible();
+         |                                                                  ^
+      30 |   await expect(page.getByText('Development starter access', { exact: true })).toBeVisible();
+      31 |   await page.screenshot({ path: shot('preparation-goals.png'), fullPage: true });
+      32 | });
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:29:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-desktop-chromium/error-context.md
+
+    Error Context: ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:18:1 › a programme saved from Find retains its exam evidence in Preparation 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('IELTS writing', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 20000ms
+      - waiting for getByText('IELTS writing', { exact: true })
+
+
+      27 |   expect(value).toBeTruthy();
+      28 |   await programme.selectOption(value!);
+    > 29 |   await expect(page.getByText('IELTS writing', { exact: true })).toBeVisible();
+         |                                                                  ^
+      30 |   await expect(page.getByText('Development starter access', { exact: true })).toBeVisible();
+      31 |   await page.screenshot({ path: shot('preparation-goals.png'), fullPage: true });
+      32 | });
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:29:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-mobile/error-context.md
+
+    Error Context: ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/preparation-a-programme-sa-d6fe1-xam-evidence-in-Preparation-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop-chromium] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:18:1 › a programme saved from Find retains its exam evidence in Preparation 
+    [mobile] › ../../../../../integration-2026-10-11/source/frontend/e2e/preparation.spec.ts:18:1 › a programme saved from Find retains its exam evidence in Preparation 
+  1 skipped
+  8 did not run
+  79 passed (2.5m)

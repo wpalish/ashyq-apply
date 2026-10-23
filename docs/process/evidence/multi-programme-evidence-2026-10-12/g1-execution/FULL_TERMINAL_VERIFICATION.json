@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "tested_head": "e5d12f58f915046cc0476a54e9e73cf6d9d39c40",
+  "full_run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/backend-full-final2/20261011T234942330288Z",
+  "same_unique_test_ids": true,
+  "phases": [
+    {
+      "phase": "sqlite",
+      "tests": 5128,
+      "unique_tests": 5128,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "coverage_percent": 95.4745880714783,
+      "source_paths": 615,
+      "source_unchanged": true,
+      "runtime_removed": true,
+      "owned_cleanup_complete": true,
+      "result_sha256": "4b51fa9d313f085155eca55fd5a5d30ff394d96b73bce87be11651cdcebdb9c8",
+      "junit_sha256": "f09b669ed2018b43bb15e1d2c62bdd679f2451668f9ab396202f8f9a7ad0b5f9"
+    },
+    {
+      "phase": "postgres",
+      "tests": 5128,
+      "unique_tests": 5128,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "coverage_percent": 95.46878626131353,
+      "source_paths": 615,
+      "source_unchanged": true,
+      "runtime_removed": true,
+      "owned_cleanup_complete": true,
+      "result_sha256": "f0a32fe34b7d810e737acbcc54fde5ebb57bbee868152313c4f079f5125fe661",
+      "junit_sha256": "310014768998444049d99ea18be8bded400b66cd003b66371d7c6c2448d4b1dd"
+    }
+  ],
+  "scope": "local engineering only; not live search quality, hosted CI, deployment or complete pedagogy"
+}

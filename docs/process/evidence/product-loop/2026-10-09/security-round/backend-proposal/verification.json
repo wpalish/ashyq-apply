@@ -1,0 +1,253 @@
+{
+  "status": "EXTERNAL_PROPOSAL_READY_FOR_INDEPENDENT_REVIEW_NOT_APPLIED",
+  "source_before_after_equal": true,
+  "primary_five_unchanged": true,
+  "STOP_unchanged": true,
+  "proposal_files": {
+    "backend/app/config.py": {
+      "sha256": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497",
+      "bytes": 19728
+    },
+    "backend/app/main.py": {
+      "sha256": "a7a3ef71fc888414aa0f07433a69d315a968c5868dc9868062775acffb31840e",
+      "bytes": 12116
+    },
+    "backend/app/api/routes_social.py": {
+      "sha256": "6421741d3e58df9c109b5b4c783f3479a770f5eea75112c1a039a19188e49a9a",
+      "bytes": 45271
+    },
+    "backend/tests/test_social_moderation.py": {
+      "sha256": "2ce8db0807b56cfb7173c36687becc530afc09769532822caab51038e1651407",
+      "bytes": 22530
+    },
+    "backend/tests/test_security.py": {
+      "sha256": "69ab59495c93c2f7e5afc03b94527e73775d4f96ceb571521df7803e8692aba7",
+      "bytes": 28019
+    }
+  },
+  "test_results": {
+    "initial_on": {
+      "cases": 58,
+      "passed": 56,
+      "failed": 2,
+      "skipped": 0,
+      "failed_cases": [
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_case_and_result_exports_are_not_stored",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_avatar_api_route_caching_is_overridden_without_changing_the_image",
+          "type": null
+        }
+      ],
+      "new_cases": 15
+    },
+    "initial_off": {
+      "cases": 13,
+      "passed": 1,
+      "failed": 12,
+      "skipped": 0,
+      "failed_cases": [
+        {
+          "class": "tests.test_social_moderation.TestModeratorAccountProvisioning",
+          "name": "test_registering_the_configured_email_does_not_grant_moderation",
+          "type": null
+        },
+        {
+          "class": "tests.test_social_moderation.TestModeratorAccountProvisioning",
+          "name": "test_claimed_email_cannot_remove_another_tenants_reported_content",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_successful_private_api_responses_are_not_stored[/api/auth/me]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_successful_private_api_responses_are_not_stored[/api/profiles]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_successful_private_api_responses_are_not_stored[/api/cases]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_successful_private_api_responses_are_not_stored[/api/social/me]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_case_and_result_exports_are_not_stored",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_auth_and_not_found_api_responses_are_not_stored",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_csrf_refusals_are_not_stored[headers0]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_csrf_refusals_are_not_stored[headers1]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_limiter_refusal_is_not_stored",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_avatar_api_route_caching_is_overridden_without_changing_the_image",
+          "type": null
+        }
+      ],
+      "new_cases": 13
+    },
+    "corrected_on": {
+      "cases": 58,
+      "passed": 58,
+      "failed": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "new_cases": 15
+    },
+    "corrected_off": {
+      "cases": 13,
+      "passed": 1,
+      "failed": 12,
+      "skipped": 0,
+      "failed_cases": [
+        {
+          "class": "tests.test_social_moderation.TestModeratorAccountProvisioning",
+          "name": "test_registering_the_configured_email_does_not_grant_moderation",
+          "type": null
+        },
+        {
+          "class": "tests.test_social_moderation.TestModeratorAccountProvisioning",
+          "name": "test_claimed_email_cannot_remove_another_tenants_reported_content",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_successful_private_api_responses_are_not_stored[/api/auth/me]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_successful_private_api_responses_are_not_stored[/api/profiles]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_successful_private_api_responses_are_not_stored[/api/cases]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_successful_private_api_responses_are_not_stored[/api/social/me]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_case_and_result_exports_are_not_stored",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_auth_and_not_found_api_responses_are_not_stored",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_csrf_refusals_are_not_stored[headers0]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_csrf_refusals_are_not_stored[headers1]",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_limiter_refusal_is_not_stored",
+          "type": null
+        },
+        {
+          "class": "tests.test_security.TestPrivateApiStorage",
+          "name": "test_avatar_api_route_caching_is_overridden_without_changing_the_image",
+          "type": null
+        }
+      ],
+      "new_cases": 13
+    },
+    "final_on": {
+      "cases": 58,
+      "passed": 58,
+      "failed": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "new_cases": 15
+    }
+  },
+  "unique_final_cases": {
+    "old": 43,
+    "new": 15,
+    "total": 58
+  },
+  "final_native_elapsed_seconds": 36.423,
+  "targeted_static": {
+    "ruff_check": 0,
+    "ruff_format_check": 0,
+    "mypy": 0,
+    "source_files": 5
+  },
+  "network": {
+    "guard_attempts": 1,
+    "blocked_urllib3_import_ipv6_loopback_probe": true,
+    "DNS_attempts": 0,
+    "connect_attempts": 0,
+    "external_dispatches": 0,
+    "ports_started": 0
+  },
+  "native_app_origins": {
+    "app.config": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/backend/app/config.py",
+    "app.db": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/backend/app/db.py",
+    "app.security": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/backend/app/security.py",
+    "app.api.routes_social": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/backend/app/api/routes_social.py",
+    "app.main": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/backend/app/main.py"
+  },
+  "old_test_parity": {
+    "backend/tests/test_social_moderation.py": {
+      "original_test_functions": 19,
+      "new_test_functions": 4,
+      "AST_equal": true,
+      "exact_original_function_text_equal": true
+    },
+    "backend/tests/test_security.py": {
+      "original_test_functions": 21,
+      "new_test_functions": 7,
+      "AST_equal": true,
+      "exact_original_function_text_equal": true
+    }
+  },
+  "qualifications": [
+    "Own isolated SQLite/native TestClient; not production or PG/session race proof",
+    "Moderator ID provisioning is operator responsibility; old moderator email setting grants no privilege",
+    "API avatar private caching overridden intentionally; non-API static caching kept",
+    "Uncaught server/upstream-generated 500 response storage is outside this existing _secure middleware return boundary",
+    "No cache exploit, legal compliance, provider quality, Worker or launch acceptance claim",
+    "Initial fixture errors and Ruff F821 remainder failure preserved; no installs/expectation loosening",
+    "Duplicate logs/snapshots are physical originals/copies, not additional experiments"
+  ]
+}

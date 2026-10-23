@@ -1,0 +1,777 @@
+{
+  "runs": [
+    {
+      "mode": "final-off",
+      "pass": 43,
+      "red": 20,
+      "cases": [
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > explains unavailable recovery while preserving sign in",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > asks new users to save their password and still creates their workspace",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > replaces a disabled recovery deep link with an explanation and a way back",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > keeps recovery available when the capability is true",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > keeps recovery available when the capability is undefined",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > preserves reset completion when recovery is enabled",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "public routes > shows a public landing before authentication",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "public routes > makes the legal draft available before authentication",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > does not auto-import an unowned local draft, old pointers or docsDone into an authenticated case",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > preserves the same authenticated owner local draft and pointer on reload",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > does not restore another user or organization local draft: {\"user_id\":\"user-2\",\"email\":\"applicant@example.test\",\"display_name\":\"Applicant\",\"organization_id\":\"org-1\",\"organization_name\":\"My workspace\",\"role\":\"owner\",\"local_development\":false}",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > does not restore another user or organization local draft: {\"user_id\":\"user-1\",\"email\":\"applicant@example.test\",\"display_name\":\"Applicant\",\"organization_id\":\"org-2\",\"organization_name\":\"My workspace\",\"role\":\"owner\",\"local_development\":false}",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > locks old private memory while a cross-tab owner transition awaits server revalidation",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > preserves explicit anonymous demo local draft controls",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > keeps an unbound legacy draft only when the server explicitly disables authentication for demo",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > does not bind an older status response over a newer cross-tab owner even before its event arrives",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "independent A actual auth acknowledgment regression > does not let post-login status A erase or supersede the newer acknowledged owner B",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > refuses stale-tab applicant mutation before any fetch under another owner",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > rejects a late response after ownership changes instead of returning it into old memory",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > keeps ordinary same-owner request payload, URL, and cookie mode unchanged",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > locks old tab data while a login is pending and binds only the acknowledged new principal",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > does not let a late auth acknowledgment erase or replace a newer owner",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > clears applicant browser data only after logout succeeds",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > clears applicant browser data only after deleteAccount succeeds",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > retains applicant data and restores binding when logout fails",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > retains applicant data and restores binding when deleteAccount fails",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "profile restoration after a reload > hydrates the editable draft from the stored profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "profile restoration after a reload > never leaves the synthetic demo profile in the draft after restoring",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "profile restoration after a reload > forgets the pointer when the stored profile is gone",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "profile restoration after a reload > restores the profile even when no run is stored",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "toDraft > strips the server-side fields the API rejects on write",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "blankProfile > carries no synthetic scores",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "blankProfile > is distinguishable from the demo profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "blankProfile > carries no invented preferences or family budget into a cleared or new case",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=false",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=true",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks save",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks start live",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > still opens an explicitly selected saved synthetic case unchanged",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "explicit demo loading > only puts demo data in the draft when asked",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "starting research twice > joins the run already in flight instead of reporting a conflict",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "starting research twice > sends an idempotency key so a retried request cannot start a second run",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "document collection acknowledgement > reports the actual API acknowledgement: true",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "document collection acknowledgement > reports the actual API acknowledgement: false",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "document collection acknowledgement > does not claim success or call the API without a run",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "renaming the storage keys > carries a session stored under the old name across, once",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "renaming the storage keys > prefers the new key when both exist",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > knows the draft is dirty only after a real edit",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > aligns a saved form with the server-normalized profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > restores an unsaved draft after a reload without touching the saved profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > discarding a restored draft returns to the saved profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > never lets a restored draft become the saved profile by itself",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a session that dies mid-use > reloads to the sign-in screen instead of showing an error banner",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a session that dies mid-use > still shows the banner for errors that are not about authentication",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > exports a saved profile with no research run without starting research",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > deletes a saved zero-run case only after explicit confirmation",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 403",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 500",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > returns an acknowledgment and clears only successful case draft memory and its marks",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old saveProfile closure before creating the old private draft",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old startRun closure before creating the old private draft",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/screens/DocumentsScreen.privacy.test.tsx",
+          "name": "native checklist mark owner scope > does not restore the previous person mark for even the same result/document id",
+          "old": false,
+          "status": "RED"
+        },
+        {
+          "file": "src/screens/DocumentsScreen.privacy.test.tsx",
+          "name": "native checklist mark owner scope > keeps a same-owner mark on ordinary remount without any collection or research",
+          "old": false,
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "mode": "sealed-on-v2",
+      "pass": 63,
+      "red": 0,
+      "cases": [
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > explains unavailable recovery while preserving sign in",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > asks new users to save their password and still creates their workspace",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > replaces a disabled recovery deep link with an explanation and a way back",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > keeps recovery available when the capability is true",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > keeps recovery available when the capability is undefined",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "password recovery capability > preserves reset completion when recovery is enabled",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "public routes > shows a public landing before authentication",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "public routes > makes the legal draft available before authentication",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > does not auto-import an unowned local draft, old pointers or docsDone into an authenticated case",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > preserves the same authenticated owner local draft and pointer on reload",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > does not restore another user or organization local draft: {\"user_id\":\"user-2\",\"email\":\"applicant@example.test\",\"display_name\":\"Applicant\",\"organization_id\":\"org-1\",\"organization_name\":\"My workspace\",\"role\":\"owner\",\"local_development\":false}",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > does not restore another user or organization local draft: {\"user_id\":\"user-1\",\"email\":\"applicant@example.test\",\"display_name\":\"Applicant\",\"organization_id\":\"org-2\",\"organization_name\":\"My workspace\",\"role\":\"owner\",\"local_development\":false}",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > locks old private memory while a cross-tab owner transition awaits server revalidation",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > preserves explicit anonymous demo local draft controls",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > keeps an unbound legacy draft only when the server explicitly disables authentication for demo",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "private browser state belongs to the authenticated principal and workspace > does not bind an older status response over a newer cross-tab owner even before its event arrives",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/AuthGate.test.tsx",
+          "name": "independent A actual auth acknowledgment regression > does not let post-login status A erase or supersede the newer acknowledged owner B",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > refuses stale-tab applicant mutation before any fetch under another owner",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > rejects a late response after ownership changes instead of returning it into old memory",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > keeps ordinary same-owner request payload, URL, and cookie mode unchanged",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > locks old tab data while a login is pending and binds only the acknowledged new principal",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > does not let a late auth acknowledgment erase or replace a newer owner",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > clears applicant browser data only after logout succeeds",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > clears applicant browser data only after deleteAccount succeeds",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > retains applicant data and restores binding when logout fails",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/api/client.privacy.test.ts",
+          "name": "actual API owner boundary around shared cookies > retains applicant data and restores binding when deleteAccount fails",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "profile restoration after a reload > hydrates the editable draft from the stored profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "profile restoration after a reload > never leaves the synthetic demo profile in the draft after restoring",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "profile restoration after a reload > forgets the pointer when the stored profile is gone",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "profile restoration after a reload > restores the profile even when no run is stored",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "toDraft > strips the server-side fields the API rejects on write",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "blankProfile > carries no synthetic scores",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "blankProfile > is distinguishable from the demo profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "blankProfile > carries no invented preferences or family budget into a cleared or new case",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=false",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=true",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks save",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks start live",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a fresh browser opens a new applicant > still opens an explicitly selected saved synthetic case unchanged",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "explicit demo loading > only puts demo data in the draft when asked",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "starting research twice > joins the run already in flight instead of reporting a conflict",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "starting research twice > sends an idempotency key so a retried request cannot start a second run",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "document collection acknowledgement > reports the actual API acknowledgement: true",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "document collection acknowledgement > reports the actual API acknowledgement: false",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "document collection acknowledgement > does not claim success or call the API without a run",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "renaming the storage keys > carries a session stored under the old name across, once",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "renaming the storage keys > prefers the new key when both exist",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > knows the draft is dirty only after a real edit",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > aligns a saved form with the server-normalized profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > restores an unsaved draft after a reload without touching the saved profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > discarding a restored draft returns to the saved profile",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unsaved edits > never lets a restored draft become the saved profile by itself",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a session that dies mid-use > reloads to the sign-in screen instead of showing an error banner",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "a session that dies mid-use > still shows the banner for errors that are not about authentication",
+          "old": true,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > exports a saved profile with no research run without starting research",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > deletes a saved zero-run case only after explicit confirmation",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 403",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 500",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "case privacy controls acknowledge actual deletion > returns an acknowledgment and clears only successful case draft memory and its marks",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old saveProfile closure before creating the old private draft",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/lib/store.test.tsx",
+          "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old startRun closure before creating the old private draft",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/screens/DocumentsScreen.privacy.test.tsx",
+          "name": "native checklist mark owner scope > does not restore the previous person mark for even the same result/document id",
+          "old": false,
+          "status": "PASS"
+        },
+        {
+          "file": "src/screens/DocumentsScreen.privacy.test.tsx",
+          "name": "native checklist mark owner scope > keeps a same-owner mark on ordinary remount without any collection or research",
+          "old": false,
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "same_cases": true,
+  "predecessor606_own62pass_A1materialRED": "peer-input/READY.json",
+  "A_on_original_OFF": "fails at B status revalidation prerequisite; not proof of the same late-owner overwrite cause as606"
+}

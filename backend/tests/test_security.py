@@ -522,3 +522,141 @@ class TestErrorsAndHeaders:
         assert good.status_code == 200
         disposition = good.headers["content-disposition"]
         assert disposition == 'attachment; filename="ashyq-{}-approved.csv"'.format(run["id"][:8])
+
+
+class TestPrivateApiStorage:
+    @pytest.mark.parametrize(
+        "path", ["/api/auth/me", "/api/profiles", "/api/cases", "/api/social/me"]
+    )
+    def test_successful_private_api_responses_are_not_stored(self, auth_client, path):
+        client, _ = auth_client
+        register(client, "private-response")
+        response = client.get(path)
+        assert response.status_code == 200, response.text
+        assert response.headers["cache-control"] == "no-store"
+
+    def test_case_and_result_exports_are_not_stored(self, auth_client):
+        from app.db import SessionLocal
+        from app.models import Entitlement
+
+        client, _ = auth_client
+        principal = register(client, "private-export")
+        profile = client.post(
+            "/api/profiles", json=copy.deepcopy(DEMO_PROFILE.model_dump(mode="json"))
+        )
+        assert profile.status_code == 201
+        with SessionLocal() as session:
+            session.add(
+                Entitlement(
+                    organization_id=principal["organization_id"],
+                    profile_id=profile.json()["id"],
+                    kind="case_full",
+                    source="manual",
+                )
+            )
+            session.commit()
+        case_export = client.get(f"/api/profiles/{profile.json()['id']}/export")
+        assert case_export.status_code == 200 and "profile" in case_export.json()
+        assert case_export.headers["cache-control"] == "no-store"
+        run = client.post("/api/runs", json={"profile_id": profile.json()["id"], "demo_mode": True})
+        assert run.status_code == 202
+        result_export = client.get(f"/api/runs/{run.json()['id']}/export.json")
+        assert result_export.status_code == 200
+        assert result_export.headers["cache-control"] == "no-store"
+        assert "attachment" in result_export.headers["content-disposition"]
+
+    def test_auth_and_not_found_api_responses_are_not_stored(self, auth_client):
+        client, _ = auth_client
+        refused = client.get("/api/profiles")
+        assert refused.status_code == 401
+        assert refused.headers["cache-control"] == "no-store"
+        register(client, "private-missing")
+        missing = client.get("/api/profiles/not-an-owned-case")
+        assert missing.status_code == 404
+        assert missing.headers["cache-control"] == "no-store"
+
+    @pytest.mark.parametrize(
+        "headers", [{"Sec-Fetch-Site": "cross-site"}, {"Origin": "https://untrusted.example.test"}]
+    )
+    def test_csrf_refusals_are_not_stored(self, auth_client, headers):
+        client, _ = auth_client
+        response = client.post("/api/auth/login", json={}, headers=headers)
+        assert response.status_code == 403
+        assert response.headers["cache-control"] == "no-store"
+
+    def test_limiter_refusal_is_not_stored(self, auth_client):
+        client, settings = auth_client
+        settings.auth_rate_limit_per_minute = 1
+        register(client, "private-rate")
+        response = client.post(
+            "/api/auth/login", json={"email": "absent@example.test", "password": "x"}
+        )
+        assert response.status_code == 429
+        assert response.headers["retry-after"] == "60"
+        assert response.headers["cache-control"] == "no-store"
+
+    def test_avatar_api_route_caching_is_overridden_without_changing_the_image(self, auth_client):
+        from tests.test_avatar_bytes import png_with_text
+
+        client, _ = auth_client
+        principal = register(client, "private-avatar")
+        joined = client.put(
+            "/api/social/me",
+            json={
+                "status": None,
+                "target_city": "",
+                "target_major": "",
+                "bio": "",
+                "universities": [],
+                "dm_policy": "anyone",
+            },
+        )
+        assert joined.status_code == 200
+        uploaded = client.put(
+            "/api/social/me/avatar",
+            files={"file": ("synthetic.png", png_with_text(), "image/png")},
+        )
+        assert uploaded.status_code == 204
+        response = client.get(f"/api/social/avatars/{principal['user_id']}")
+        assert response.status_code == 200
+        assert response.content.startswith(b"\x89PNG")
+        assert response.headers["cache-control"] == "no-store"
+        assert "etag" in response.headers
+
+    def test_static_asset_headers_remain_cacheable_and_api_prefix_is_exact(
+        self, auth_client, tmp_path
+    ):
+        from starlette.responses import Response
+        from starlette.routing import Route
+        from starlette.staticfiles import StaticFiles
+
+        from app import main
+
+        client, _ = auth_client
+        asset = tmp_path / "assets"
+        asset.mkdir()
+        (asset / "synthetic.js").write_text("/* synthetic */")
+        main.app.mount("/security-static-assets", StaticFiles(directory=asset))
+        mount = main.app.routes[-1]
+        try:
+            response = client.get("/security-static-assets/synthetic.js")
+            assert response.status_code == 200
+            assert "cache-control" not in response.headers
+            assert "etag" in response.headers and "last-modified" in response.headers
+        finally:
+            main.app.routes.remove(mount)
+
+        async def cacheable_public_response(_request):
+            return Response(
+                headers={"Cache-Control": "public, max-age=31536000, immutable", "ETag": '"v1"'}
+            )
+
+        public_route = Route("/apiary/static.js", cacheable_public_response)
+        main.app.routes.append(public_route)
+        try:
+            public = client.get("/apiary/static.js")
+            assert public.status_code == 200
+            assert public.headers["cache-control"] == "public, max-age=31536000, immutable"
+            assert public.headers["etag"] == '"v1"'
+        finally:
+            main.app.routes.remove(public_route)

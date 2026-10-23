@@ -1,0 +1,34 @@
+{
+  "status": "WRITE_AHEAD_OFFLINE_BEFORE_PROTOTYPE",
+  "created_utc": "2026-10-08T00:29:09.047751+00:00",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend",
+  "source_sha256": {
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f",
+    "evaluation/research/live.py": "c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db",
+    "tests/test_expert_live_budget.py": "eeb98dcecb84a8c6cc763d7e9f401adb6731552b7d8e685b90cbf7abea9a633f"
+  },
+  "scope": "Normal real ExaMcpSearchProvider.search with httpx.MockTransport and actual capture_one/_ExpertBudget. Old behavior red and minimal strict scoped no-retry proposed behavior separate. No live canary/research university/model calls.",
+  "guards": [
+    "deny sockets/DNS/subprocesses",
+    "real network_policy with synthetic resolver; no real DNS",
+    "synthetic empty identity bindings, never read reviewed/gold bindings/labels",
+    "synthetic canary orchestration returns no programmes/claims; not real Job/research outcome",
+    "search implementation/_search_once/_post not replaced",
+    "all output paths own folder; original sealed evidence untouched"
+  ],
+  "controls": [
+    "current default rate limit first->success retries twice hidden from strict STOP",
+    "hostile both retry flags True; partial off each leaves alternative retry branch",
+    "cold MCP handshake counts2 successful setup calls +1 first failed tool call, no tool retry",
+    "already initialized provider first refusal exactly1 MockTransport call",
+    "rate/quota/auth/HTTP/timeout/transport/RPC/tool/malformed/redirect refusal sticky STOP and no subsequent provider traffic",
+    "scoped flags restored after success/refusal/RuntimeError/CancelledError",
+    "legacy capture leaves current flags/retry behavior unchanged"
+  ],
+  "default_source_changes": 0,
+  "source_repo_writes": 0,
+  "network_calls": 0
+}

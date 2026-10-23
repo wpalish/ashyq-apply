@@ -1,0 +1,24 @@
+--- a/backend/app/domain/admissions_actions.py
++++ b/backend/app/domain/admissions_actions.py
+@@ -711,11 +711,20 @@
+             actionable = action.availability == "available" and ref is not None and (ref.kind == "attempt_review" or ref.kind == "lesson" and value.preparation_access.allowed)
+             study_cards.append(s.TodayCardV1(id=action.id, reason="accepted_study_action", target=ref, target_result_id=None, date=s.TodayDateReadV1(local_date=action.local_date, timezone=action.timezone, certainty="applicant_entered", comparison_zone=action.timezone, fallback_display_only=False), dependency_reasons=[], workload_origin=plan.origin, planned_minutes=action.planned_minutes, source_state="not_evaluated", actionable=actionable))
+ 
++    def personal_order(card: s.TodayCardV1) -> tuple[str, str, str]:
++        # One shared stable record-ID order, without an entity-category priority.
++        target = card.target
++        if not isinstance(target, s.ApplicationRefV1 | s.DocumentTaskRefV1):
++            raise ActionError("saved_unreadable")
++        return target.id, target.kind, card.id
++
++    personal_cards.sort(key=personal_order)
++
+     def card_day(card: s.TodayCardV1) -> date:
+         return value.as_of.astimezone(ZoneInfo(card.date.comparison_zone)).date()
+ 
+     overdue = [card for card in personal_cards if card.date.local_date is not None and card.date.local_date < card_day(card)]
+-    overdue.sort(key=lambda card: (card.date.local_date, card.id))
++    overdue.sort(key=lambda card: (card.date.local_date, *personal_order(card)))
+     current_personal = [card for card in personal_cards if card.date.local_date == card_day(card)]
+     current_study = [card for card in study_cards if card.date.local_date == card_day(card)]
+     future_study = [card for card in study_cards if card.date.local_date is not None and card.date.local_date > card_day(card)]

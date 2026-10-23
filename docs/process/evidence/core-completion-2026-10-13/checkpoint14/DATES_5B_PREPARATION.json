@@ -1,0 +1,14 @@
+{
+  "status": "EXTERNAL_ONLY_NOT_GRANTED_NOT_APPLIED",
+  "paths": {
+    "frontend/src/lib/format.ts": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9",
+    "frontend/src/lib/format.test.ts": "6a119c5da31ba12cae410924050c8ec374bf359c2ea682192438ee0280c15ed3",
+    "frontend/src/lib/format.dates.test.ts": null,
+    "frontend/src/screens/ApprovedScreen.tsx": "55d22c3728d21f7747075e304f54b58cd0474bc463cfc4304c33a5f4eb647a11",
+    "frontend/src/screens/DocumentsScreen.tsx": "cebab73521c4a8e691a864de6afb5940341f578d5c607181b909e26fc83566c1",
+    "frontend/src/screens/ShortlistScreen.tsx": "41e232ff9ebe47c165f7ed2f18aeedbfeb171c40fbbe02d85448e5e8a2308d37",
+    "frontend/src/components/ResultDetail.tsx": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e"
+  },
+  "baseline": "9e41e0b3",
+  "scope": "Calendar-only display preserves exact date in all browser time zones; real Instant timezone display separated. Source date comparison only in known IANA zone, earlier calendar date not official closure. Do not consume stored deadline_passed in visible current deadline highlights."
+}

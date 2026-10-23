@@ -1,0 +1,178 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "7277c154bda838688268b7a07d4286ed8f4688ce",
+  "captured_at": "20261007T224735Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa_mcp",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "site_branding_identity": false,
+    "subject_phrase_match": false,
+    "programme_identity_before_funding": false,
+    "shared_query_budget": true,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "kaist"
+    ],
+    "selection": "curated",
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 3000,
+    "source_work_deadline_ms": 117000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "kaist": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 3000,
+        "source_work_deadline_ms": 117000,
+        "fetcher_calls": 25,
+        "search_queries": 6,
+        "blocked_search_queries": 0,
+        "network_http_requests": 34,
+        "elapsed_ms": 104248,
+        "stop_reason": null,
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 104.55241212504916,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_attempted_case_ids": [
+      "kaist"
+    ],
+    "batch_completed_case_ids": [
+      "kaist"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "kaist",
+      "programme_urls": [
+        "https://aicollege.kaist.ac.kr/aic_eng/ug-reqs"
+      ],
+      "ranked_urls": [
+        "https://cs.kaist.ac.kr/content?menu=318"
+      ],
+      "predictions": [
+        {
+          "key": "unmapped.interview_required",
+          "value": true,
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "(KST) November 10, 2026 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Be",
+            "scope": {
+              "university": "KAIST",
+              "programme": "Ug Reqs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-07",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.credential_evaluation_required",
+          "value": true,
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "26 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Before Fe",
+            "scope": {
+              "university": "KAIST",
+              "programme": "Ug Reqs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-07",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 25,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 104.2480715001002,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetch-failed",
+          "url": "https://aicollege.kaist.ac.kr/aic_eng/ug-reqs",
+          "page_type": "unclassified",
+          "detail": "timeout — host stopped responding earlier in this run; not waited on again",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://aicollege.kaist.ac.kr/aic_eng/ug-reqs",
+          "page_type": "unclassified",
+          "detail": "timeout — host stopped responding earlier in this run; not waited on again",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "page_type": "program_detail",
+          "detail": "2 claims read from this page",
+          "characters": 2448
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://cs.kaist.ac.kr/content?menu=42",
+          "page_type": "unknown",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

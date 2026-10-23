@@ -1,0 +1,26 @@
+- banner:
+  - link "unimatch":
+    - /url: "#/welcome"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - link "На сайт":
+    - /url: "#/welcome"
+    - text: На сайт
+- main:
+  - heading "Восстановление доступа" [level=1]
+  - paragraph: Введи адрес электронной почты, который использовал при регистрации.
+  - generic: Почта
+  - textbox "Почта Если аккаунт существует и восстановление доступно, мы отправим письмо.":
+    - /placeholder: имя@почта.kz
+    - text: <redacted>
+  - generic: Если аккаунт существует и восстановление доступно, мы отправим письмо.
+  - button "Отправить письмо":
+    - text: Отправить письмо
+  - button "← Вернуться на страницу входа"
+- contentinfo:
+  - generic: Твои решения — с опорой на источники.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

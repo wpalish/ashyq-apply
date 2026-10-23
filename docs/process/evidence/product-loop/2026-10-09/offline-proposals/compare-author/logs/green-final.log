@@ -1,0 +1,18 @@
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/c-compare-preparation-proposal/runtime
+
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > keeps requested intakes attached to each selected programme and distinguishes a missing list 37ms
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > distinguishes successful source reading, partial reading and an unavailable collection attempt 11ms
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > counts only saved required items in the two lists, without counting owner views again 6ms
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > uses the stored document source and marks a missing source instead of borrowing a programme URL 4ms
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > keeps unsafe sources non-clickable and does not invent an owner when a stored role is missing 3ms
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > shows saved checklist unknowns and treats blank intake as unknown 4ms
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > does not show another result’s checklist in Compare or the existing Documents detail 12ms
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > opens the chosen result and its saved evidence, switches results and closes a removed result 20ms
+ ✓ src/components/ComparePanel.preparation.test.tsx > Compare preparation evidence > can toggle details closed without persisting any preparation state 5ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  02:55:00
+   Duration  410ms (environment 39%, tests 29%, transform 18%, import 8%, setup 6%, worker 1%)
+

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "ACCEPT_CORRECTED_LOCAL_FULL13_SAVED_EVIDENCE_NOT_LIVE_QUALITY",
+  "sealed_utc": "2026-10-08T09:15:24.448967+00:00",
+  "files": {
+    "PLAN.json": {
+      "sha256": "c808eada72c02f5ae488210b7cbe0fcf19b249a2e0fbf1de493db2c3f7c0ecae",
+      "bytes": 2450
+    },
+    "REPORT.ru.md": {
+      "sha256": "4608456b0c9fee34ca3bc7772e724bff34ae601f41a81afd9b6890902ca8a57c",
+      "bytes": 3952
+    },
+    "checker-error.original.json": {
+      "sha256": "6930ddb198de9f995dc072f85f5e730effdf9688cf2df62c8e00f508952545af",
+      "bytes": 782
+    },
+    "corrected-full-originals-manifest.json": {
+      "sha256": "ce17d3f409730ce6aba052e2149018b92f1eebf3ce50f64226cb75cfda415a2a",
+      "bytes": 2811
+    },
+    "corrected-full-verification.json": {
+      "sha256": "d807adcb9995c36fc2653d4b72e2c3524f912b99d94b0e51f69122f1159492cd",
+      "bytes": 15603
+    },
+    "execution.json": {
+      "sha256": "6d3b61ccc3bae136b0744cfaf20bd175e8f39cd1265ab400ad76dd288cb008bc",
+      "bytes": 1165
+    },
+    "start-seed-binding.json": {
+      "sha256": "96029c23aaa6db37cc0c769b350fe2e003c1efad6917df7b83c7237861276666",
+      "bytes": 2536
+    },
+    "verify_corrected_full.compat.py": {
+      "sha256": "5cf064e95b9d25435efa2f5a35a5d92a946c5a8edb49646a9c42366b8b3f69a1",
+      "bytes": 16204
+    },
+    "verify_corrected_full.py": {
+      "sha256": "cb5fd0ab429383724bf7f9bb0cbc8579601eb313cb07b0ef192803388c6eae3f",
+      "bytes": 16186
+    },
+    "verify_start_seed.py": {
+      "sha256": "69550eaa2885b4e47b624bb8915cf8ab2629e6a06737c4562cb9ecbc8359d1b5",
+      "bytes": 4692
+    }
+  },
+  "selected_files": 10,
+  "selected_bytes": 66381,
+  "raw_original_files_referenced_not_duplicated": 17,
+  "raw_original_bytes": 5697217,
+  "verification_sha256": "d807adcb9995c36fc2653d4b72e2c3524f912b99d94b0e51f69122f1159492cd",
+  "current_source_selected_paths": 1002,
+  "backend_unique_each": 4369,
+  "old_preserved": 4349,
+  "new_cases": 20,
+  "qualification": "Saved-byte review only; failed history preserved; no runtime/live/quality/hosted/container/production acceptance."
+}

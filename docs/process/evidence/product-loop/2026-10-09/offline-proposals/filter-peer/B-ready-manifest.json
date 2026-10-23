@@ -1,0 +1,165 @@
+{
+  "sealed_at": "2026-10-08T21:49:07.613949+00:00",
+  "status": "READY_FOR_PARENT_REVIEW_NOT_APPLIED",
+  "files": {
+    "PLAN.md": {
+      "sha256": "2a37cbae916a8884668c4e5588e3de8f8169c15605046bb8245aba7fdd4d3312",
+      "bytes": 1709
+    },
+    "REPORT.md": {
+      "sha256": "85cf5c1b2bb004a3db7a3dffed4c61aa63351fcb4e2df276559ef7e691eb9a8e",
+      "bytes": 4739
+    },
+    "base-source-after.json": {
+      "sha256": "2de5f94a61fe6cba7b577dc099c155e000cccb5024eca84af70b8f9101b7491e",
+      "bytes": 1936
+    },
+    "base-source.json": {
+      "sha256": "9243659eacde2fe2571366930e3cf901d3a4b09de31e8aac5602673a6b9e9adc",
+      "bytes": 2054
+    },
+    "compatibility.json": {
+      "sha256": "e494ddfd4324f1ee2eb7c3678e9c2fd6e4d5c6aa02f38b1763819a05fdf79bce",
+      "bytes": 515
+    },
+    "correction-history.json": {
+      "sha256": "16d5550f433adcb5b9f5adcd76f774aeb634d6d9b3ec5857abed6af3ebff3a5f",
+      "bytes": 385
+    },
+    "execution.json": {
+      "sha256": "c2b2fcdad7e1ccdfe630e5e689cdbfc5024548dc7cf581a1004f255dfd18bab1",
+      "bytes": 4864
+    },
+    "filter-choice.patch": {
+      "sha256": "1bb6f0f0474153ab2551cdf80622bbaed71db0076ec925931ddcc9b8a53af31d",
+      "bytes": 18835
+    },
+    "focused-results.json": {
+      "sha256": "8b134c82dbb65984ad1ade404fcab055fc1b2560b81deb60ffef85921c52b85b",
+      "bytes": 27724
+    },
+    "frontend-source-after.json": {
+      "sha256": "d4973c966038f80cd92889b5dc7b9f16e7e4a164d866450b87d7f9a0b83a1215",
+      "bytes": 13556
+    },
+    "frontend-source-before.json": {
+      "sha256": "d4973c966038f80cd92889b5dc7b9f16e7e4a164d866450b87d7f9a0b83a1215",
+      "bytes": 13556
+    },
+    "logs/compatibility.log": {
+      "sha256": "5c3ab18ffb7262929987c9be4aedb1f6bbf24412622e3ab692ff6695c1e21844",
+      "bytes": 379
+    },
+    "logs/lint.final.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "logs/lint.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "logs/network-final-off/network-26256.json": {
+      "sha256": "101ebcc50692b760ac524952f87742b648c0bba9972d35919e0304196a7e3639",
+      "bytes": 45
+    },
+    "logs/network-final-off/network-26261.json": {
+      "sha256": "9cecd4643b2ca2b7cecaacf1c0c7965038a575da273fa9ac17e14d64c8ede453",
+      "bytes": 45
+    },
+    "logs/network-final-on/network-26590.json": {
+      "sha256": "4d456cbe8122864aca18582c8767dba0f78d917a2bb5f363fc0522191dae083e",
+      "bytes": 45
+    },
+    "logs/off.final.junit.xml": {
+      "sha256": "b54189a842429863de4e363adc9373dfbfcf65e6538412d67f04cbcfd7135950",
+      "bytes": 516589
+    },
+    "logs/off.final.log": {
+      "sha256": "a4578a2f9b6a6d40b1eb06879bec3f60e23294e6a5d91d1fdc40591c07512934",
+      "bytes": 280947
+    },
+    "logs/off.junit.xml": {
+      "sha256": "5faec61a5fd1164faef822444e76954cc8e48b14e9371d9a31037218a72346d2",
+      "bytes": 516593
+    },
+    "logs/off.log": {
+      "sha256": "45c733fd8dbc1edce7a736c82c1bd2e2b305a08d1aed46e3bd458fbce42f2c09",
+      "bytes": 280940
+    },
+    "logs/on.final.junit.xml": {
+      "sha256": "191447b08a31a9927f786029325976eec25a592f6c7f79925e26a840dfd61390",
+      "bytes": 11665
+    },
+    "logs/on.final.log": {
+      "sha256": "f90d1cac5224845bc0213ada539e4b81768d974c47e39b6f4cbaa7c3d17cb9e6",
+      "bytes": 1002
+    },
+    "logs/on.junit.xml": {
+      "sha256": "c2a8089564ea168d0679649bb47b0f55acf5f0f824a61fed10f854ebdd19afa3",
+      "bytes": 11663
+    },
+    "logs/on.log": {
+      "sha256": "82429913a89384944abc2cd7284f5e7b104b3ca38d34ce9de2b0761c1f8fc703",
+      "bytes": 996
+    },
+    "logs/typecheck.attempt1.log": {
+      "sha256": "c1cbb66d8c7e97a206203ee57b969931452655e3fc0ae9a06c2cb993bb8d59ae",
+      "bytes": 727
+    },
+    "logs/typecheck.final.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "original/frontend/src/screens/ApprovedScreen.tsx": {
+      "sha256": "a01fd102159478c1994c60a740a491bcec0b881eddbb33f9038f187d2494c4ca",
+      "bytes": 7717
+    },
+    "original/frontend/src/screens/JourneyScreens.test.tsx": {
+      "sha256": "c3c24b0b61d83095c14e95e3b8d7022c41e289966d08f9ecd07ed301453dac6e",
+      "bytes": 7340
+    },
+    "original/frontend/src/screens/ShortlistScreen.test.tsx": {
+      "sha256": "e2cfd27784b29902d8bd8d813ea69030ddc351e950a971cc6d4f262be80f39a9",
+      "bytes": 9033
+    },
+    "original/frontend/src/screens/ShortlistScreen.tsx": {
+      "sha256": "c7322dbe1865d647d8e4f84dbde30bd9e341e6e6cb87320bf4261f7eb3307b3f",
+      "bytes": 30960
+    },
+    "proposed/frontend/src/screens/ApprovedScreen.tsx": {
+      "sha256": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "bytes": 7815
+    },
+    "proposed/frontend/src/screens/JourneyScreens.test.tsx": {
+      "sha256": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "bytes": 9931
+    },
+    "proposed/frontend/src/screens/ShortlistScreen.test.tsx": {
+      "sha256": "8470b4a3d3f03d7f02c8e83b4c23c1fb830e3741fa3769bb035529943a79d27c",
+      "bytes": 16863
+    },
+    "proposed/frontend/src/screens/ShortlistScreen.tsx": {
+      "sha256": "06df80e4708e983fcc267398f2d8c24a11cd9fce8a210f1948e9fba62ba62ddc",
+      "bytes": 32385
+    },
+    "proposed-source.json": {
+      "sha256": "cb3225e5c5a1a40f5c3f2f6901aa5e24416c13b3d5f024c1ab3b7357e378b976",
+      "bytes": 799
+    },
+    "receipt.json": {
+      "sha256": "9d0987e203824542b6656e51746f4ebbe953f80a583ff26e576e6c4d484188fd",
+      "bytes": 2235
+    },
+    "support/check-compatibility.cjs": {
+      "sha256": "46917f5075e79d0330527ccc174ed6267e891fe6e2dcca9f748cff8715fe277a",
+      "bytes": 2131
+    },
+    "support/deny-network.cjs": {
+      "sha256": "21ac17909cedd12d3bc81ee4f7da5c2a059e6a315cc48545ad93a9291caae354",
+      "bytes": 794
+    }
+  },
+  "selected_file_count": 39,
+  "selected_total_bytes": 1839512,
+  "runtime_excluded": "Owned frontend copies/cache/dependency links are not part of the deliverable; exact app/test pins and execution evidence are selected."
+}

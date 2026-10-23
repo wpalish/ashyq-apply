@@ -1,0 +1,45 @@
+{
+  "recorded_at_utc": "2026-10-07T21:30:20.353516+00:00",
+  "source_commit": "5472a8337e38aecf55addacf5e02fa057477cb51",
+  "metadata_commit": "d7c50f23",
+  "decision": "REJECTED_TWO_REVISION_BLOCKERS",
+  "review_pins": {
+    "reviews/expert_b-readguard/ready-manifest.json": "b603fe6a75660679e39b1b59545e21aae3aac79793ef2ae5d84c1ec6dc483a31",
+    "reviews/expert_b-readguard/readguard.patch": "c09219f02f30a89ec083484868586264f91cabb89eb8cb7e80c0e30221b8b0f7",
+    "reviews/expert_a-readguard/review.ru.md": "61a8fb486dbc8faec900bed1a3e7b012bcc8346c727062d22f1670c3ad628128",
+    "reviews/expert_a-readguard/receipt.json": "e5abdbc303e9a2abda7984b6460def6eae088ae0c01b2754c3a96720dc3dace5",
+    "reviews/expert_a-readguard/bundle-files.json": "86591da0a08acc3587ec3cc8f35de8a0cbd2cda40bd617d0aef08c431827f8e0"
+  },
+  "parent_read_source_sha256": {
+    "backend/app/jobs/worker.py": "491f5ccdeadd3556ad4e5bf6bfc2b4578207ef2cce129eb2fcd57b4b4e0e6681",
+    "backend/app/jobs/store.py": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+    "backend/app/api/routes_research.py": "f4f069abde5a3be929cc9154953e2f76f46a38b3a1d6fb7a811a7b9448c227b6",
+    "backend/app/pipeline/runner.py": "686a6961964eb020056cba8b80f51c3cee622d2e6d62e63194b7d520e55fd71f",
+    "backend/evaluation/research/live.py": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "backend/scripts/canary_discovery.py": "37f60bcfcafda9b33f87285141dedae8b66c65dd6b0518ed7457cfece404de70"
+  },
+  "confirmed_external_controls": [
+    "Two actual SQLite sessions: off save before first namespace can erase on count60 and admit get61; count1 persists.",
+    "Actual verification stage under SQLite BEGIN IMMEDIATE: zero original get, prior claim/result intact; OperationalError escapes and durable unknown absent.",
+    "Independent actual two-session 80 scope attempts: 60 original get/20 read_cap and durable count60."
+  ],
+  "parent_source_observations": [
+    "Worker claims each Job, reads attempts once, and fences dispatch/checkpoints/outcome by Job ID, worker ID and attempts.",
+    "worker_identity is hostname:pid; reclaims increment attempt and are covered by fresh SQL fence control.",
+    "Research retry route rejects any RUNNING Job for this run; collect-documents checks approved rows but has no equivalent running-job exclusion.",
+    "Only runner assigns settings_snapshot in application source; run_to_decision currently replaces the entire JSON before stage saves.",
+    "Legacy canary constructs direct ResearchRunner with no real Job; enabling fenced read guard in current canary is unsupported and must not fabricate a fence.",
+    "Synthetic same-job/same-worker/same-attempt duplicate runner does not prove ordinary worker reachability; erasure remains a revision blocker for broad durable claims."
+  ],
+  "unverified": [
+    "Actual PostgreSQL concurrency/crash/lock behavior",
+    "Durable diagnostic while database remains locked",
+    "Hard 120-second production cap",
+    "Durable query cap",
+    "Guard intent across source-toggle resume"
+  ],
+  "next": "Review immutable v2 external candidate before any source application; preserve old candidate and all raw originals.",
+  "network_calls": 0,
+  "provider_model_calls": 0,
+  "stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad"
+}

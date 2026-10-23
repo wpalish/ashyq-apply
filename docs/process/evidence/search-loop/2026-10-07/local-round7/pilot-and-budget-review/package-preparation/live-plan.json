@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/source/backend/.venv/bin/python",
+    "-m",
+    "evaluation.research.live",
+    "--live",
+    "--case",
+    "groningen",
+    "--seconds-per-case",
+    "120",
+    "--max-pages",
+    "60",
+    "--search-provider",
+    "exa_mcp",
+    "--shared-query-budget",
+    "--out",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/capture",
+    "--strict-expert-budget"
+  ],
+  "provider": "exa_mcp",
+  "case": "groningen",
+  "seconds": 120,
+  "page_reads": 60,
+  "shared_search_budget": 6,
+  "strict_action_ledger": true,
+  "comparison_eligible": false,
+  "network_location": "local computer",
+  "expert_evaluation": false,
+  "no_automatic_scoring": true
+}

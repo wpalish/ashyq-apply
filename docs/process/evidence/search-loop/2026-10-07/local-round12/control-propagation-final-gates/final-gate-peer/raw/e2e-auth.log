@@ -1,0 +1,119 @@
+
+> unimatch-frontend@0.1.0 e2e:auth
+> playwright test --config=playwright.auth.config.ts
+
+[WebServer] INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+[WebServer] INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+[WebServer] 2026-10-08 09:48:43,213 INFO    [-] unimatch.worker: startup reconciliation: {'jobs_reaped': 0, 'runs_recovered': 0, 'scans_bootstrapped': 0}
+[WebServer] 2026-10-08 09:48:43,213 INFO    [-] unimatch.worker: worker iMac-Aliser.local:50779 starting (concurrency 2)
+[WebServer] 2026-10-08 09:48:43,360 INFO    [-] uvicorn.error: Started server process [50776]
+[WebServer] 2026-10-08 09:48:43,360 INFO    [-] uvicorn.error: Waiting for application startup.
+[WebServer] 2026-10-08 09:48:43,512 INFO    [-] unimatch: ASHYQ Apply API started (env=development, demo_mode=True, robots=True, db=sqlite)
+[WebServer] 2026-10-08 09:48:43,513 INFO    [-] uvicorn.error: Application startup complete.
+[WebServer] 2026-10-08 09:48:43,513 INFO    [-] uvicorn.error: Uvicorn running on http://127.0.0.1:8099 (Press CTRL+C to quit)
+[WebServer] 2026-10-08 09:48:44,286 INFO    [a192eac0401047d6b9c09e3098adaf54] uvicorn.access: 127.0.0.1:53244 - "GET /api/health HTTP/1.1" 200
+[WebServer] (node:50816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:50818) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 2026-10-08 09:48:45,339 INFO    [cba8d9b6c82d489995e2b09a6d29aacb] uvicorn.access: 127.0.0.1:53256 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,344 INFO    [c5896fd2cad74d0f8e093c2b56dd6bed] uvicorn.access: 127.0.0.1:53257 - "GET /api/auth/status HTTP/1.1" 200
+  ✓  1 [desktop-chromium] › e2e/auth-journey.spec.ts:36:1 › the sign-in screen stands in front of the app (508ms)
+[WebServer] 2026-10-08 09:48:45,634 INFO    [d339a10d75df48bcafa48ca3edbcff69] uvicorn.access: 127.0.0.1:53258 - "POST /api/auth/register HTTP/1.1" 201
+[WebServer] 2026-10-08 09:48:45,640 INFO    [4c5e5c333ac74b9d80dde4b6406739fd] uvicorn.access: 127.0.0.1:53259 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,681 INFO    [ccadb32f8e7d4dee96bdeb58cd124d9b] uvicorn.access: 127.0.0.1:53266 - "GET /api/capabilities HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,681 INFO    [48da3d6204964e6fae257c10dc998290] uvicorn.access: 127.0.0.1:53264 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,683 INFO    [14f3e18af29b438598308d654dcdedfb] uvicorn.access: 127.0.0.1:53263 - "GET /api/social/me HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,691 INFO    [eedd8a621933442181d11dd8ef66ace0] uvicorn.access: 127.0.0.1:53265 - "GET /api/social/messages/unread HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,691 INFO    [e9a5b05bf9594bc8bead530062eeae25] uvicorn.access: 127.0.0.1:53267 - "GET /api/cases HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,696 INFO    [5b7dc8ae2d0e4710a60c915be5011edc] uvicorn.access: 127.0.0.1:53270 - "GET /api/capabilities HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,696 INFO    [0594be181f3a4155b097e3fc5df0159c] uvicorn.access: 127.0.0.1:53272 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,698 INFO    [0e10b477305b485ab320d256bb8eae4c] uvicorn.access: 127.0.0.1:53273 - "GET /api/social/me HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,700 INFO    [339b1a6b85a54cadad61bcd49142db24] uvicorn.access: 127.0.0.1:53276 - "GET /api/social/messages/unread HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,700 INFO    [a5502922c9184b8ba710b9abbf4ef997] uvicorn.access: 127.0.0.1:53277 - "GET /api/cases HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,730 INFO    [0e77d88ac99846e581238c4f2b0b33ca] uvicorn.access: 127.0.0.1:53279 - "GET /api/social/messages/unread HTTP/1.1" 200
+  ✓  2 [desktop-chromium] › e2e/auth-journey.spec.ts:45:1 › a new workspace can be registered (208ms)
+[WebServer] 2026-10-08 09:48:45,779 INFO    [011e71a21fcd46d5bc348c4c1f4a5266] uvicorn.access: 127.0.0.1:53281 - "GET /api/profiles/conversions/methods?scale_label=KZ%205-point HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,813 INFO    [56adcd217d4c4bab98458621aa044d4e] uvicorn.access: 127.0.0.1:53283 - "POST /api/profiles HTTP/1.1" 201
+[WebServer] 2026-10-08 09:48:45,818 INFO    [a714e786602a48e9b46b53385fe9d66c] uvicorn.access: 127.0.0.1:53285 - "GET /api/social/messages/unread HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,824 INFO    [20c1c5bced354028bdd38cc0940afc2b] uvicorn.access: 127.0.0.1:53287 - "GET /api/cases HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,878 INFO    [5510b35b2aee45e787e4a4a03189dc9f] uvicorn.access: 127.0.0.1:53289 - "PUT /api/profiles/3547d6a7c8f44cdd89ca9f2318275d43 HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,897 INFO    [3d79a7fb098f4b69a8c31864fc4a9c1c] uvicorn.access: 127.0.0.1:53291 - "POST /api/runs HTTP/1.1" 202
+[WebServer] 2026-10-08 09:48:45,908 INFO    [567bb673f73646c09764abc61353bb93] uvicorn.access: 127.0.0.1:53295 - "GET /api/social/messages/unread HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,909 INFO    [06e9b80ffc3f4528911254c785d31580] uvicorn.access: 127.0.0.1:53294 - "GET /api/admin/jobs?status=dead&limit=1 HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:45,912 INFO    [be8ff42e697342e092048ec7f6330b65] uvicorn.access: 127.0.0.1:53297 - "GET /api/admin/jobs?status=dead&limit=1 HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:46,229 INFO    [45632af4aca14b17b942ddb88a8d4672] unimatch.worker: running job 45632af4 (research) attempt 1
+[WebServer] 2026-10-08 09:48:46,238 INFO    [7a3a249d761145488806e4a6976c91d4] uvicorn.access: 127.0.0.1:53299 - "POST /api/profiles/validate HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:47,107 INFO    [a3cd11bcd47249e2ac79efa5a35ff970] uvicorn.access: 127.0.0.1:53301 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:47,124 INFO    [9acef06e61ae493284ba4a1d51bbdbb2] uvicorn.access: 127.0.0.1:53304 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/results HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:47,124 INFO    [11d335559d384d69b7fcf72bb0348c79] uvicorn.access: 127.0.0.1:53305 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/summary HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:47,128 INFO    [deaae90e2dbb498db5b9015cda082cef] uvicorn.access: 127.0.0.1:53308 - "GET /api/admin/jobs?status=dead&limit=1 HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:47,133 INFO    [7e46e58c414947abb511b3e1c3ac829b] uvicorn.access: 127.0.0.1:53309 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/shortlist HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,339 INFO    [bed987cad5dd4eebb7780da22a48276e] uvicorn.access: 127.0.0.1:53311 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,373 INFO    [30961852d3f946faaea33eafb5717725] uvicorn.access: 127.0.0.1:53318 - "GET /api/admin/jobs?status=dead&limit=1 HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,411 INFO    [40dd4707a6724a4aad656e5c6a771357] uvicorn.access: 127.0.0.1:53314 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/results HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,412 INFO    [bd66828b6e5a4467b858a7d8d4d0845f] uvicorn.access: 127.0.0.1:53315 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/summary HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,417 INFO    [6c199e3295f542758f36349ae6bbc266] uvicorn.access: 127.0.0.1:53319 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/shortlist HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,434 INFO    [07c73cd49c8c49248b32d5f9bfc8f5b8] uvicorn.access: 127.0.0.1:53322 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/results HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,435 INFO    [b7e7220fd0db4cbfb33f3611fa56eb54] uvicorn.access: 127.0.0.1:53323 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/summary HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,450 INFO    [0aba44f226e3418a8b0610bcedbf8c33] uvicorn.access: 127.0.0.1:53325 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/shortlist HTTP/1.1" 200
+  ✓  3 [desktop-chromium] › e2e/auth-journey.spec.ts:60:1 › the workspace can hold a profile and a finished run (3.0s)
+[WebServer] 2026-10-08 09:48:48,776 INFO    [7989fec7ab9342d4b344995636130fac] uvicorn.access: 127.0.0.1:53327 - "POST /api/auth/logout HTTP/1.1" 204
+[WebServer] 2026-10-08 09:48:48,908 INFO    [52d049268a47478a86fec6d3b0aac0dc] uvicorn.access: 127.0.0.1:53335 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:48,909 INFO    [e93eb6fdb0de468d9cccf439666325cb] uvicorn.access: 127.0.0.1:53336 - "GET /api/auth/status HTTP/1.1" 200
+  ✓  4 [desktop-chromium] › e2e/auth-journey.spec.ts:72:1 › signing out returns to the sign-in screen (183ms)
+[WebServer] 2026-10-08 09:48:49,000 INFO    [bf586ab871da4a56b8a749cfde74c987] uvicorn.access: 127.0.0.1:53337 - "POST /api/auth/login HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,003 INFO    [aad4fd8be0194455b4f9f57e1dbf81c5] uvicorn.access: 127.0.0.1:53338 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,015 INFO    [e706fffd5ffb45f8a830d15de973a5d8] uvicorn.access: 127.0.0.1:53347 - "GET /api/capabilities HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,016 INFO    [d2491ed586474cdc9899e1c4fdcb4429] uvicorn.access: 127.0.0.1:53343 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,017 INFO    [b952c3188ebe4c1f8714c6379238d9be] uvicorn.access: 127.0.0.1:53345 - "GET /api/social/messages/unread HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,017 INFO    [14dfedfa899f4e26bb316d16b0296e0c] uvicorn.access: 127.0.0.1:53344 - "GET /api/social/me HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,021 INFO    [bc695a5bd07c4f38848c22b8efc1bbff] uvicorn.access: 127.0.0.1:53346 - "GET /api/profiles/3547d6a7c8f44cdd89ca9f2318275d43 HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,024 INFO    [6ae384edeb754d68890133fb15332750] uvicorn.access: 127.0.0.1:53348 - "GET /api/cases HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,028 INFO    [087fd84b02b34857b6b6ad9c5db7d3d6] uvicorn.access: 127.0.0.1:53352 - "GET /api/capabilities HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,030 INFO    [081617a806a64e1fbf7e3aea8cf7ce3c] uvicorn.access: 127.0.0.1:53356 - "GET /api/social/messages/unread HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,031 INFO    [c00ae3b391864a85b1bc8ba30c2a8797] uvicorn.access: 127.0.0.1:53354 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,031 INFO    [e7bd6169c745451c852f60e3d352aad8] uvicorn.access: 127.0.0.1:53350 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,033 INFO    [cfcad71dc38d460b8ddfabf1651d9d6b] uvicorn.access: 127.0.0.1:53358 - "GET /api/social/me HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,034 INFO    [6a389857ba3242488547834a9043dab9] uvicorn.access: 127.0.0.1:53360 - "GET /api/profiles/3547d6a7c8f44cdd89ca9f2318275d43 HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,037 INFO    [b7c04edb038e4db4a9d29ea5641c4de2] uvicorn.access: 127.0.0.1:53362 - "GET /api/cases HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,038 INFO    [b86c049d48e94e92b010e47f6325a355] uvicorn.access: 127.0.0.1:53364 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,057 INFO    [8d257d823dc441aeb478a059e73ad38c] uvicorn.access: 127.0.0.1:53366 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/results HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,058 INFO    [014e3cd9668e42bfbce1bb38f4fe2a0a] uvicorn.access: 127.0.0.1:53368 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/summary HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,070 INFO    [edebb1bfa7824d86b475aaf62e26f1f4] uvicorn.access: 127.0.0.1:53370 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/results HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,095 INFO    [ab5406ce705a4e678cddefaeb21cc87a] uvicorn.access: 127.0.0.1:53372 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/shortlist HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,123 INFO    [c025ac3d7bc14b4c851cc870ce6f865a] uvicorn.access: 127.0.0.1:53374 - "GET /api/runs/07a182eaeb57462dacac815fb69117ab/shortlist HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,311 INFO    [78d020a58758403da78408eeda78754a] uvicorn.access: 127.0.0.1:53376 - "GET /api/universities?offset=0&profile_id=3547d6a7c8f44cdd89ca9f2318275d43 HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,442 INFO    [e04f6b95454243369bc48794d437102e] uvicorn.access: 127.0.0.1:53378 - "POST /api/profiles/validate HTTP/1.1" 200
+  ✓  5 [desktop-chromium] › e2e/auth-journey.spec.ts:77:1 › signing in again finds the work still there (722ms)
+[WebServer] 2026-10-08 09:48:49,687 INFO    [2eaf1e10e06f43ddbf2f2bdee58ea359] uvicorn.access: 127.0.0.1:53381 - "GET /api/profiles/conversions/methods?scale_label=KZ%205-point HTTP/1.1" 401
+[WebServer] 2026-10-08 09:48:49,687 INFO    [2c7cc57d93d943b0a4ffef67b9c2d4d5] uvicorn.access: 127.0.0.1:53382 - "GET /api/social/messages/unread HTTP/1.1" 401
+[WebServer] 2026-10-08 09:48:49,690 INFO    [a88f327ff3b94960be01d9cdc133ae49] uvicorn.access: 127.0.0.1:53384 - "GET /api/profiles/conversions/methods?scale_label=KZ%205-point HTTP/1.1" 401
+[WebServer] 2026-10-08 09:48:49,725 INFO    [37d1f8e64ccb4f51a38792321069967d] uvicorn.access: 127.0.0.1:53386 - "PUT /api/profiles/3547d6a7c8f44cdd89ca9f2318275d43 HTTP/1.1" 401
+[WebServer] 2026-10-08 09:48:49,862 INFO    [204148335e5443ed9942ed269020b54d] uvicorn.access: 127.0.0.1:53394 - "GET /api/auth/status HTTP/1.1" 200
+[WebServer] 2026-10-08 09:48:49,865 INFO    [7cdcf06e2db143688ac5198cf1ce66f8] uvicorn.access: 127.0.0.1:53395 - "GET /api/auth/status HTTP/1.1" 200
+  ✓  6 [desktop-chromium] › e2e/auth-journey.spec.ts:90:1 › a session that dies mid-use returns to sign-in, not an error banner (252ms)
+
+  6 passed (7.7s)

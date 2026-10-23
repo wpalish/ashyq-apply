@@ -14,6 +14,8 @@ import { ApiError, api } from '@/api/client';
 const GPA = { raw_value: 4.8, raw_scale_max: 5, raw_scale_label: 'KZ 5-point' };
 
 let draft: Record<string, unknown>;
+const currentAdmissionsCase = () => ({ scope: null, profile_id: null, case_epoch: 0 });
+const currentProfileDraft = () => ({ draft, generation: 0, gpa_generation: 0 });
 const setProfileDraft = vi.fn((update: (d: unknown) => unknown) => {
   draft = update(draft) as Record<string, unknown>;
 });
@@ -22,6 +24,8 @@ vi.mock('@/lib/store', () => ({
   useStore: () => ({
     profileDraft: draft,
     setProfileDraft,
+    currentAdmissionsCase,
+    currentProfileDraft,
     saveProfile: vi.fn(),
     validation: null,
     capabilities: null,

@@ -1,0 +1,3718 @@
+{
+  "network_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "git_calls": 0,
+  "repo_edits": 0,
+  "flag_default": false,
+  "source_sha256": {
+    "proposed_page_classifier.py": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+    "proposed_web_scholarships.py": "b7330166872b63052c58acf8d4a1c3b8748f2239090684bf8f5f236d6043fea9"
+  },
+  "own_control_count": 18,
+  "borrowed_control_count": 61,
+  "borrowed_original_sha256": "32304bf44aece2929f7733bb4005e7a45bdd1e3728e15a6a777b54e866346340",
+  "own_controls": [
+    {
+      "case": "funding_eligibility_with_academic_conditions",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This is a funding eligibility page for enrolled students.</p><h2>Curriculum</h2><p>Applicants must have completed first-year courses and second-year modules to qualify.</p><h2>Funding opportunities</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "ab06b52aee6286c5ef3461cd183c9d1eaeec7bb04263f527616f3c00c5fa2a5d",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "explicit_sibling_section_scope",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><section id=\"curriculum\"><h2>Curriculum</h2><p>Ask the office for advice.</p></section><section aria-label=\"Award eligibility\"><p>Applicants must complete first-year courses and second-year modules before applying.</p></section><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "e4c0442b0c32bd10a82ba908eb167f841b001fe8d42a8e8c6b6d34f174e1628c",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "role_navigation_academic_copy",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><div role=\"navigation\"><h2>Curriculum</h2><p>First-year courses and second-year modules.</p></div><h2>Scholarships</h2><p>View our award opportunities for enrolled students.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "9edc20f2c7fe3b3a984db848d099ffbadb867a800d787c8279b59fad88bfe065",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "funding_eligibility_credits_without_progression",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This is a financial support eligibility page.</p><h2>Curriculum</h2><p>Applicants need courses worth 120 credits to qualify.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "74ca6eee00c1ca71657a87f47f7a1a66d20a80434a11143e0992dff971f7e830",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "programme_negates_bursaries_not_degree",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><p>We do not offer bursaries for this degree.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "bd3b4f7379eaec57b5980e512bd3af1dfeb88feab81dbeef512f98b25c71968c",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "program_detail",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "programme_negates_funding_not_degree",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><p>We do not offer financial assistance for this programme.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "aa327e1bf2cdc4a77527c853c8a787e1a6b43cbe84c84ba84af7128d1bf64559",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "program_detail",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "comment_academic_only",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><!-- First-year courses and second-year modules. --><p>Ask the office.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "a5af379693f35e6987c029c2686d6a3f7fd6200a94a9528e65e0224285ce1eef",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "next_equal_heading_is_closed",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Ask the office.</p><h2>Eligibility</h2><p>First-year courses and second-year modules.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "32aee20f7ddf05b5ca715295417b36c8c12d5af3801fe850f72194cd3ef9f273",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "real_academic_same_block_positive",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "bf961ca5b0741cb8fefca339c9ef8004ef427f23dd078edb10c3a5d15aa24ef6",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "program_detail",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "secondary_funding_faq",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Scholarship FAQs</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "087cb549f1eca6eb0f1ea93d5fb91ce3149c2a24d600f5d0458d24a842f85bef",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_faq",
+      "off": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "secondary_funding_unknown",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><p>Please contact the office.</p></main></body></html>",
+      "html_sha256": "22dbbbabbc75d0f6063ec762f5088a5bd5048ba002e881416dd418103474249e",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "unknown",
+      "off": {
+        "page_type": "unknown",
+        "confidence": 0.3,
+        "signals": [
+          "funding page with 0 substantive signals and no clear award name"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "unknown",
+        "confidence": 0.3,
+        "signals": [
+          "funding page with 0 substantive signals and no clear award name"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "documents_fallthrough_preserved",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Required documents</h2><p>Upload your passport.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "0ff41b712c7c58fe0bdb3db3fdde27d0f3a4cd2b6c7cc32575df351f945f719c",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "catalogue_fallthrough_preserved",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>All programmes</h2><p>Explore other degrees.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "02e46e8e8f37841165162bfe3843c0c54d9814b20b914f498b86ecfbb35e52cf",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "funding_url_preserved",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "bf961ca5b0741cb8fefca339c9ef8004ef427f23dd078edb10c3a5d15aa24ef6",
+      "url": "https://example.edu/scholarships/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "support_identity_preserved",
+      "html": "<html><head><title>BSc Computer Science support</title></head><body><main><h1>BSc Computer Science support</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "4dbf6aa2c9a48792db7c49ef0ee751b42f93b0580f4edc280d3cb893c8125445",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "scholarships_only_identity_preserved",
+      "html": "<html><head><title>Computer Science scholarships</title></head><body><main><h1>Computer Science scholarships</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "c7ccd660f608eb3d71196c38e93e6de47cb4bf0813aede037145dae5454313b5",
+      "url": "https://example.edu/support/computer-science",
+      "expected": "scholarship_index",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links"
+        ],
+        "title": "Computer Science scholarships",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links"
+        ],
+        "title": "Computer Science scholarships",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "no_funding_programme_no_marker",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p></main></body></html>",
+      "html_sha256": "960db90bc3c8feb7ae186d8eb44be8d86c5ecb3270f07c8d41e060fb2daa6560",
+      "url": "https://example.edu/study/computer-science",
+      "expected": "program_detail",
+      "off": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "intake_programme_marker",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><p>Academic year 2027/28</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "7d0fde81c161b53a3d4745a0d81558cdd49a06e35070d557e12879c5b8ff80ac",
+      "url": "https://example.edu/study/computer-science",
+      "expected": "intake_specific_program",
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "intake_specific_program",
+        "confidence": 0.85,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level",
+          "academic year 2027/28"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": "2027/28",
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    }
+  ],
+  "borrowed_controls": [
+    {
+      "case": "own_programme_secondary_funding",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p><h2>University Fees and Funding</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "7060d2076c8cbe10503ae39672005e1c56c1087a65d0881472e79757cc904d31",
+      "url": "https://example.edu/bachelors/computer-science",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "bare_programme_secondary_funding",
+      "html": "<html><head><title>Computer Science | Bachelor | University</title></head><body><main><h1>Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p><h2>Funding</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "107566a14cfcb6e2537cb8ef0c2bc03c1ad3b315b5d7fc3d42480903ca8d14c9",
+      "url": "https://example.edu/bachelors/computer-science",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Computer Science | Bachelor | University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'Computer Science' at bachelor level"
+        ],
+        "title": "Computer Science | Bachelor | University",
+        "subject": "Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "programme_structure_synonym",
+      "html": "<html><head><title>Bachelor of Science in Mathematics</title></head><body><main><h1>Bachelor of Science in Mathematics</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Programme structure</h2><p>Students complete six modules, worth 180 ECTS, studying algebra, calculus and geometry.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "3dc2d0068bfd1009ddd94f43254cf7a9d82afe4ffa2db06590ef1092a4e5c1de",
+      "url": "https://example.edu/degree",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Bachelor of Science in Mathematics",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'Bachelor of Science in Mathematics' at bachelor level"
+        ],
+        "title": "Bachelor of Science in Mathematics",
+        "subject": "Bachelor of Science in Mathematics",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "programme_secondary_faq",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p><h2>Funding</h2><h2>Frequently asked questions</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "e1e236f6159067a7afef4bb349f05895bb74880e59ddaae8ee4c3a56cfff5b22",
+      "url": "https://example.edu/bachelors/computer-science",
+      "original_b_expected": "program_detail",
+      "expected": "scholarship_faq",
+      "contract_narrowed": true,
+      "off": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "programme_no_funding_unchanged",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p></main></body></html>",
+      "html_sha256": "25a5f34fbc0ca9aa1a36a2f02f3d22bfc6f4f9fa8d353a6175a57d3d592c790f",
+      "url": "https://example.edu/degree",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "no_identity_not_promoted_by_curriculum",
+      "html": "<html><head><title>Student support</title></head><body><main><h1>Student support</h1><h2>Curriculum</h2><p>Contact your department for academic questions.</p><h2>Funding</h2><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "40a415e56f5db58992ab0786cb99ebf19c51ad77ed7969708de73cd3fb02bfe9",
+      "url": "https://example.edu/about",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Student support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Student support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "generic_funding_index",
+      "html": "<html><head><title>Student support</title></head><body><main><h1>Student support</h1><h2>Scholarships</h2><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "260186d3379e56afb21871c3831a7fa0bff2ba06d324071a4df495a04314505d",
+      "url": "https://example.edu/student-support/offer",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Student support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Student support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "undergraduate_support_index",
+      "html": "<html><head><title>Undergraduate support</title></head><body><main><h1>Undergraduate support</h1><h2>Scholarships</h2><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "d9a33ae8fb94fecc2c64e4df67b0efebd498404814623f7f2f337ff31ebc6a09",
+      "url": "https://example.edu/student-support/offer",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Undergraduate support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Undergraduate support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "undergraduate_support_index_with_curriculum",
+      "html": "<html><head><title>Undergraduate support</title></head><body><main><h1>Undergraduate support</h1><h2>Curriculum</h2><p>Eligible faculties publish their current academic course structure.</p><h2>Scholarships</h2><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "eca57ad552cd2bef65405c94c69675fe9fe81207b0d36b18e8663ac6aace4b46",
+      "url": "https://example.edu/student-support/offer",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Undergraduate support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Undergraduate support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "named_merit_award_secondary_funding",
+      "html": "<html><head><title>Example Merit Award</title></head><body><main><h1>Example Merit Award</h1><h2>Funding</h2><p>The award covers tuition fees. Its value is EUR 5000 per year. Eligibility: open to admitted undergraduate students. No separate application is required.</p></main></body></html>",
+      "html_sha256": "64f9a2f0e8c2f3802bbe78a8a75898c6e23766422336364f18501d0676a01a3f",
+      "url": "https://example.edu/student-support/offer",
+      "original_b_expected": "scholarship_award",
+      "expected": "scholarship_award",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Example Merit Award'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Example Merit Award",
+        "subject": "Example Merit Award",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Example Merit Award'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Example Merit Award",
+        "subject": "Example Merit Award",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "index_primary_scholarships",
+      "html": "<html><head><title>Scholarships</title></head><body><main><h1>Scholarships</h1><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "bae172738efcfccce7cb21f5e5c79aa58bbcf494d92813c94e682546115e5f49",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "listing heading",
+          "no award identity of its own"
+        ],
+        "title": "Scholarships",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "listing heading",
+          "no award identity of its own"
+        ],
+        "title": "Scholarships",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "index_primary_financial_aid",
+      "html": "<html><head><title>Financial aid</title></head><body><main><h1>Financial aid</h1><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "5e57480f4c5ec775c7923bb1ef722ffaf0893eb2dbf04a66c0bd30441071163d",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "listing heading",
+          "no award identity of its own"
+        ],
+        "title": "Financial aid",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "listing heading",
+          "no award identity of its own"
+        ],
+        "title": "Financial aid",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "index_primary_bursaries",
+      "html": "<html><head><title>Bursaries</title></head><body><main><h1>Bursaries</h1><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "25b7ab5c2159fb69259763a88b8a4ab5ce45df60c3831b13d9a2318e38c4aef8",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "listing heading",
+          "no award identity of its own"
+        ],
+        "title": "Bursaries",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "listing heading",
+          "no award identity of its own"
+        ],
+        "title": "Bursaries",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "index_primary_grants",
+      "html": "<html><head><title>Grants for international students</title></head><body><main><h1>Grants for international students</h1><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "9ae3998d10d8111ebfb415acd3ea7c9abfa32851e9f2430c940606f1e8f6b7d0",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "listing heading",
+          "no award identity of its own"
+        ],
+        "title": "Grants for international students",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "listing heading",
+          "no award identity of its own"
+        ],
+        "title": "Grants for international students",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "index_title_funding_h1_generic",
+      "html": "<html><head><title>Scholarships | University</title></head><body><main><h1>Freshmen</h1><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "a75490f2a3764c956b2518ca42540813be112e9f3f53a0a47dae75e97b33e9c6",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Scholarships | University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Scholarships | University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "scholarship_url_generic_page",
+      "html": "<html><head><title>Freshmen</title></head><body><main><h1>Freshmen</h1><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "2ae088bddf11aeb9c7fed9f1f97685f4669fe65d99142b8cd6e202a4950d87e4",
+      "url": "https://example.edu/scholarships/freshmen",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Freshmen",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Freshmen",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "financial_aid_url_generic_page",
+      "html": "<html><head><title>Freshmen</title></head><body><main><h1>Freshmen</h1><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "2ae088bddf11aeb9c7fed9f1f97685f4669fe65d99142b8cd6e202a4950d87e4",
+      "url": "https://example.edu/financial-aid/freshmen",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Freshmen",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Freshmen",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "scholarship_url_programme_named",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "a560f2f5ccba5a104291547e98ed67204708a65444835b4c2bdf14c71af15e81",
+      "url": "https://example.edu/scholarships/bsc-computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "financial_aid_url_programme_named",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "a560f2f5ccba5a104291547e98ed67204708a65444835b4c2bdf14c71af15e81",
+      "url": "https://example.edu/financial-aid/bsc-computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "detail_primary_scholarship",
+      "html": "<html><head><title>Example Merit Scholarship</title></head><body><main><h1>Example Merit Scholarship</h1><p>The award covers tuition fees. Its value is EUR 5000 per year. Eligibility: open to admitted undergraduate students. No separate application is required.</p></main></body></html>",
+      "html_sha256": "a1879d4171bed226045e28c414028df5eaa40b7e9e4d795c7a9f10cc84dd3289",
+      "url": "https://example.edu/support/merit",
+      "original_b_expected": "scholarship_award",
+      "expected": "scholarship_award",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Example Merit Scholarship'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Example Merit Scholarship",
+        "subject": "Example Merit Scholarship",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Example Merit Scholarship'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Example Merit Scholarship",
+        "subject": "Example Merit Scholarship",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "detail_primary_bursary",
+      "html": "<html><head><title>Example Merit Bursary</title></head><body><main><h1>Example Merit Bursary</h1><p>The award covers tuition fees. Its value is EUR 5000 per year. Eligibility: open to admitted undergraduate students. No separate application is required.</p></main></body></html>",
+      "html_sha256": "525e316702bec9f0a1e94f52ac5dcfa141b275449e4ea0a37df05b401853fd96",
+      "url": "https://example.edu/support/merit",
+      "original_b_expected": "scholarship_award",
+      "expected": "scholarship_award",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Example Merit Bursary'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Example Merit Bursary",
+        "subject": "Example Merit Bursary",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Example Merit Bursary'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Example Merit Bursary",
+        "subject": "Example Merit Bursary",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "detail_named_award_with_programme_content",
+      "html": "<html><head><title>Undergraduate Merit Award</title></head><body><main><h1>Undergraduate Merit Award</h1><h2>Curriculum</h2><p>Applicants study science.</p><h2>Funding</h2><p>The award covers tuition fees. Its value is EUR 5000 per year. Eligibility: open to admitted undergraduate students. No separate application is required.</p></main></body></html>",
+      "html_sha256": "f8a1e569fbf8ba8f135d6664a94679ba5591b02587362f55bc43f298c465cda7",
+      "url": "https://example.edu/bachelors/funding",
+      "original_b_expected": "scholarship_award",
+      "expected": "scholarship_award",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Undergraduate Merit Award'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Undergraduate Merit Award",
+        "subject": "Undergraduate Merit Award",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_award",
+        "confidence": 0.95,
+        "signals": [
+          "named award 'Undergraduate Merit Award'",
+          "signals: amount, coverage, eligibility, application"
+        ],
+        "title": "Undergraduate Merit Award",
+        "subject": "Undergraduate Merit Award",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "funding_faq_own",
+      "html": "<html><head><title>Scholarship FAQs</title></head><body><main><h1>Scholarship FAQs</h1><h2>When can I apply?</h2><p>Applications are considered each year for eligible students.</p></main></body></html>",
+      "html_sha256": "3385d3c33f9e10cd46b898b11e483923435720d55953ddc1c287f02fa430bebc",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_faq",
+      "expected": "scholarship_faq",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "Scholarship FAQs",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "Scholarship FAQs",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "financial_aid_faq_own",
+      "html": "<html><head><title>Financial aid frequently asked questions</title></head><body><main><h1>Financial aid frequently asked questions</h1><p>Read our answers before submitting a funding application.</p></main></body></html>",
+      "html_sha256": "1b13f9ab7e8df6611c3862c5aa1eb7b93741911099ae74e9df86740c8f058f58",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_faq",
+      "expected": "scholarship_faq",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "Financial aid frequently asked questions",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "Financial aid frequently asked questions",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "generic_funding_faq",
+      "html": "<html><head><title>Student support</title></head><body><main><h1>Student support</h1><h2>Financial aid</h2><h2>Frequently asked questions</h2><p>Read our answers before submitting a funding application.</p></main></body></html>",
+      "html_sha256": "ed34fdab5fa41ad81b669f80903bc313c2bd39855b2d38e56ec0100dd688fcb8",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_faq",
+      "expected": "scholarship_faq",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "Student support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_faq",
+        "confidence": 0.9,
+        "signals": [
+          "FAQ markers"
+        ],
+        "title": "Student support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "catalogue_own",
+      "html": "<html><head><title>Bachelor's programmes</title></head><body><main><h1>Bachelor's programmes</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><ul><li><a href=\"/bachelors/subject0\">BSc Subject 0</a></li><li><a href=\"/bachelors/subject1\">BSc Subject 1</a></li><li><a href=\"/bachelors/subject2\">BSc Subject 2</a></li><li><a href=\"/bachelors/subject3\">BSc Subject 3</a></li><li><a href=\"/bachelors/subject4\">BSc Subject 4</a></li><li><a href=\"/bachelors/subject5\">BSc Subject 5</a></li><li><a href=\"/bachelors/subject6\">BSc Subject 6</a></li></ul></main></body></html>",
+      "html_sha256": "48bb0f8027733affda26faabadf3966e9db9c4f386b502112e688b565062114a",
+      "url": "https://example.edu/all",
+      "original_b_expected": "program_catalog",
+      "expected": "program_catalog",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "program_catalog",
+        "confidence": 0.75,
+        "signals": [
+          "7 programme links",
+          "plural catalogue heading"
+        ],
+        "title": "Bachelor's programmes",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_catalog",
+        "confidence": 0.75,
+        "signals": [
+          "7 programme links",
+          "plural catalogue heading"
+        ],
+        "title": "Bachelor's programmes",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "documents_own_funding_links",
+      "html": "<html><head><title>Required documents</title></head><body><main><h1>Required documents</h1><p>Submit your transcript and identity documents. The checklist helps you prepare your application.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "6c9aadfd69502448629e58dff12546bb5b875c03427858f634910db9a4e27610",
+      "url": "https://example.edu/submit",
+      "original_b_expected": "documents",
+      "expected": "documents",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "documents",
+        "confidence": 0.7,
+        "signals": [
+          "document checklist heading"
+        ],
+        "title": "Required documents",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "documents",
+        "confidence": 0.7,
+        "signals": [
+          "document checklist heading"
+        ],
+        "title": "Required documents",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "admissions_own",
+      "html": "<html><head><title>Admission procedure</title></head><body><main><h1>Admission procedure</h1><p>Read our application procedure and prepare your official school records for admission.</p></main></body></html>",
+      "html_sha256": "8ae27383ece054f6026cda6f7a8134038b405944e2ef1db8bcca5ae405fa32b7",
+      "url": "https://example.edu/admissions",
+      "original_b_expected": "general_admissions",
+      "expected": "general_admissions",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "general_admissions",
+        "confidence": 0.8,
+        "signals": [
+          "admissions phrasing without a single programme identity"
+        ],
+        "title": "Admission procedure",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "general_admissions",
+        "confidence": 0.8,
+        "signals": [
+          "admissions phrasing without a single programme identity"
+        ],
+        "title": "Admission procedure",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "costs_own",
+      "html": "<html><head><title>Tuition fees</title></head><body><main><h1>Tuition fees</h1><p>Review tuition fees and payment dates for the coming academic year.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "ccdc8fd45c8cea8591de8af5080640c425e1cdb2fabcc007e7cf9c4644a22049",
+      "url": "https://example.edu/fees",
+      "original_b_expected": "costs",
+      "expected": "costs",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "costs",
+        "confidence": 0.8,
+        "signals": [
+          "cost vocabulary in the page heading"
+        ],
+        "title": "Tuition fees",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "costs",
+        "confidence": 0.8,
+        "signals": [
+          "cost vocabulary in the page heading"
+        ],
+        "title": "Tuition fees",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "neutral_programme_scoped_funding_page",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Scholarships</h2><p>Choose a funding opportunity for undergraduate study. Each award has individual eligibility rules, terms and application steps. No degree is offered on this support page.</p><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "35028e4e61c5610a6932bf318ce73ff3ad032a983ee81ef9e4f690781ac9c10c",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "root_curriculum_funding_negative_1",
+      "html": "<html><head><title>Undergraduate support</title></head><body><main><h1>Undergraduate support</h1><h2>Curriculum</h2><p>Check the curriculum eligibility conditions of the scholarships linked below. This page offers funding support and does not offer a degree programme.</p><h2>Scholarships</h2><p>Choose funding for undergraduate study. Every award has individual eligibility terms and application steps.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "da74070ec654b4316ed4c5d396f4bcc24dc9cf448b4aa1c3fba1b579c8206efc",
+      "url": "https://example.edu/support",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Undergraduate support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Undergraduate support",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "root_curriculum_funding_negative_2",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Check the curriculum eligibility conditions of the scholarships linked below. This page offers funding support and does not offer a degree programme.</p><h2>Scholarships</h2><p>Choose funding for undergraduate study. Every award has individual eligibility terms and application steps.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "79ccca940c0cb9c9cd12cf2f82c914eef91044349dc420494dad713b93355e6c",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "curriculum_funding_without_explicit_contradiction",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Scholarship curriculum eligibility includes first year courses and second year projects.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "e1f2265d48f279970a34c358fc7e66ea7cce690bb1d0d6adb6f06754d5df54a3",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "empty_curriculum",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "8d566ae9536573feac64f826abd98c9cc2e0621a716079c585c19378f6988dd1",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "curriculum_vague_no_structure",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>All students should check the current courses with their department.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "c6cd88159e5f492d6590a6c43676b1f5611ef9933a010102330822df2e79c4c9",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "progression_only_in_later_funding",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Ask the office for help.</p><h2>Eligibility</h2><p>First year courses and second year projects are eligible.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "b7a2f635c5d9e7ce3531c87f63f3cf8528fd5bb178e49befb308aed848a10ed2",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "same_year_repetition_not_progression",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>First year modules. First-year projects. Year 1 courses.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "cb91a73e89435973e04c84650adff51b451ed889f4e989b81cb76e6135af409d",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "academic_proof_in_comment",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><!-- First year courses. Second year projects. --><p>Ask our office.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "8b1b3a181665591e0b6ce5594b53e19f01a0b6892c6b4fb38dc0c154114d59e1",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "academic_proof_in_chrome",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><aside><h2>Curriculum</h2><p>First year courses. Second year projects.</p></aside><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "7d6f58adbe2d65c9ffbb6bdc80df0c210c928946d6944a05d924865d5e7e78d8",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "explicit_page_funding_purpose_despite_academic_copy",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This page lists scholarships for students taking this degree.</p><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "2f21e3467b23418f0ed4a4206dc6a32586d2982109ee2b5f8448aefa00da6e11",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "explicit_page_no_degree_despite_academic_content",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p><p>This page does not offer a degree programme.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "7f996dd5072992debeeb7f5ceace43bd658ae9e17d486123617f91b1f8c9a290",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "explicit_no_degree_offered_despite_academic_content",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><p>First year: mathematics and programming. Second year: algorithms, databases and operating systems. Third year: academic project.</p><p>No degree is offered on this support page.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "593c0549fe4a36ac9054b1406e652f03ff706f3f3150d5c9f8e0c50333b8804b",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "empty_nested_curriculum_progression_later",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><div><h2>Curriculum</h2><p>Ask our office.</p></div><div><h2>Eligibility</h2><p>First year courses. Second year projects.</p></div><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "04cb81678bac0e1cdcf51a0eb572be66e8fd3c935f68e4d876bce54fbb5d9f34",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "funding_only_academic_copy_for_eligible_programmes",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Eligible scholarship students take first year courses and second year projects.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "ee569e5933bbe339f0987ac9976558f493f0680221c819e527eb45426c434c71",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "nested_academic_subsections",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bachelor degree teaches algorithms, software and computer systems. Students study programming and complete an academic project.</p><h2>Curriculum</h2><h3>First year</h3><p>Courses in mathematics and programming.</p><h3>Second year</h3><p>Modules in algorithms and databases.</p><h2>Funding</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "62c6fddd99e4f6bdeb381200ca3f695c16f78c8be4781faf078bd1a17a41aa1c",
+      "url": "https://example.edu/bachelors/computer-science",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "expert_a_funding_eligibility_with_academic_conditions",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This is a funding eligibility page for enrolled students.</p><h2>Curriculum</h2><p>Applicants must have completed first-year courses and second-year modules to qualify.</p><h2>Funding opportunities</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "ab06b52aee6286c5ef3461cd183c9d1eaeec7bb04263f527616f3c00c5fa2a5d",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "expert_a_explicit_sibling_section_scope",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><section id=\"curriculum\"><h2>Curriculum</h2><p>Ask the office for advice.</p></section><section aria-label=\"Award eligibility\"><p>Applicants must complete first-year courses and second-year modules before applying.</p></section><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "e4c0442b0c32bd10a82ba908eb167f841b001fe8d42a8e8c6b6d34f174e1628c",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "expert_a_role_navigation_academic_copy",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><div role=\"navigation\"><h2>Curriculum</h2><p>First-year courses and second-year modules.</p></div><h2>Scholarships</h2><p>View our award opportunities for enrolled students.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "9edc20f2c7fe3b3a984db848d099ffbadb867a800d787c8279b59fad88bfe065",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "expert_a_funding_eligibility_credits_without_progression",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This is a financial support eligibility page.</p><h2>Curriculum</h2><p>Applicants need courses worth 120 credits to qualify.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "74ca6eee00c1ca71657a87f47f7a1a66d20a80434a11143e0992dff971f7e830",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "expert_a_programme_negates_bursaries_not_degree",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><p>We do not offer bursaries for this degree.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "bd3b4f7379eaec57b5980e512bd3af1dfeb88feab81dbeef512f98b25c71968c",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "expert_a_programme_negates_funding_not_degree",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><p>We do not offer financial assistance for this programme.</p><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "aa327e1bf2cdc4a77527c853c8a787e1a6b43cbe84c84ba84af7128d1bf64559",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "expert_a_comment_academic_only",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><!-- First-year courses and second-year modules. --><p>Ask the office.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "a5af379693f35e6987c029c2686d6a3f7fd6200a94a9528e65e0224285ce1eef",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "expert_a_next_equal_heading_is_closed",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Ask the office.</p><h2>Eligibility</h2><p>First-year courses and second-year modules.</p><h2>Scholarships</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "32aee20f7ddf05b5ca715295417b36c8c12d5af3801fe850f72194cd3ef9f273",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "expert_a_real_academic_same_block_positive",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed by a project.</p><h2>Funding</h2><a href=\"/awards/one\">Alpha Scholarship</a><a href=\"/awards/two\">Beta Scholarship</a></main></body></html>",
+      "html_sha256": "bf961ca5b0741cb8fefca339c9ef8004ef427f23dd078edb10c3a5d15aa24ef6",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    },
+    {
+      "case": "renewal_course_copy_without_funding_word",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Renewal eligibility requires first-year courses and second-year modules.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "a2b40c02a0a4d467b8696f374a683ce93c2169ae1b08e71456de750ae3e2fc5c",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "article_sibling_boundary",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><article><h2>Curriculum</h2><p>Ask our office.</p></article><article><p>First-year courses and second-year modules.</p></article><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "02dce8b98c1e07f01a024f78781bdb5571f6761e9acc93fd29f2e802c5e59eff",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "aria_region_sibling_boundary",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><div role=\"region\"><h2>Curriculum</h2><p>Ask our office.</p></div><div role=\"region\"><p>First-year courses and second-year modules.</p></div><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "f7218c6d60b61a8abc0ef08c9e02b77190e0e0a12715315a08b3aa058e962b56",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "aria_equal_heading_closes_scope",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>Ask our office.</p><div role=\"heading\" aria-level=\"2\">Eligibility</div><p>First-year courses and second-year modules.</p><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "1ad852d19ee3ddf20a4c1528b4561b68a958da36aced9c1355d46db44ac8e227",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "aria_complementary_academic_copy",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><div role=\"complementary\"><h2>Curriculum</h2><p>First-year courses and second-year modules.</p></div><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "9aea2ec8f7c0dddc7c5b8b4792f7016e8db9f1e8de34f0cdaf02b409ff3093ef",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "hidden_academic_copy",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><div hidden><h2>Curriculum</h2><p>First-year courses and second-year modules.</p></div><h2>Scholarships</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "dcf6c0e3b95e8bdd56e6855ce79f46af79f599a525905ed5692bfc25281cb37b",
+      "url": "https://example.edu/support/computer-science",
+      "original_b_expected": "scholarship_index",
+      "expected": "scholarship_index",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": false
+    },
+    {
+      "case": "real_programme_aria_navigation_does_not_close",
+      "html": "<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>First year courses in algebra.</p><div role=\"navigation\"><h2>Links</h2></div><p>Second year modules in analysis.</p><h2>Funding</h2><ul><li><a href=\"/award/a\">Alpha Scholarship</a></li><li><a href=\"/award/b\">Beta Scholarship</a></li></ul></main></body></html>",
+      "html_sha256": "836af8014f9d26e90f62eae79e2a9fa70b1bfd6643fa956614bb4726664047b8",
+      "url": "https://example.edu/degree",
+      "original_b_expected": "program_detail",
+      "expected": "program_detail",
+      "contract_narrowed": false,
+      "off": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "BSc Computer Science",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "on": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "subsidiary funding index on a programme page",
+          "single programme 'BSc Computer Science' at bachelor level"
+        ],
+        "title": "BSc Computer Science",
+        "subject": "BSc Computer Science",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "passes": true,
+      "marker": true
+    }
+  ],
+  "failed": [],
+  "funding_routes_off_on_on_off": [
+    {
+      "enabled": false,
+      "mode": "programme_fallback",
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "No official scholarship page is known for University of the Witwatersrand; the programme page is read as a funding index instead, and awards are recorded only from award pages.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": true,
+      "mode": "programme_fallback",
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "No official scholarship page is known for University of the Witwatersrand; the programme page is read as a funding index instead, and awards are recorded only from award pages.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": true,
+      "mode": "programme_fallback",
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "No official scholarship page is known for University of the Witwatersrand; the programme page is read as a funding index instead, and awards are recorded only from award pages.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": false,
+      "mode": "programme_fallback",
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "No official scholarship page is known for University of the Witwatersrand; the programme page is read as a funding index instead, and awards are recorded only from award pages.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": false,
+      "mode": "explicit_primary",
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": true,
+      "mode": "explicit_primary",
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": true,
+      "mode": "explicit_primary",
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": false,
+      "mode": "explicit_primary",
+      "reads": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": false,
+      "mode": "linked_depth_one",
+      "reads": [
+        "https://www.wits.ac.za/offline-review/funding-index",
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/offline-review/funding-index",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; read as a funding index, and the awards it links are followed.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": true,
+      "mode": "linked_depth_one",
+      "reads": [
+        "https://www.wits.ac.za/offline-review/funding-index",
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/offline-review/funding-index",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as program_detail; read as a funding index, and the awards it links are followed.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": true,
+      "mode": "linked_depth_one",
+      "reads": [
+        "https://www.wits.ac.za/offline-review/funding-index",
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/offline-review/funding-index",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as program_detail; read as a funding index, and the awards it links are followed.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    },
+    {
+      "enabled": false,
+      "mode": "linked_depth_one",
+      "reads": [
+        "https://www.wits.ac.za/offline-review/funding-index",
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "outcomes": [
+        {
+          "url": "https://www.wits.ac.za/offline-review/funding-index",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body provided; unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; read as a funding index, and the awards it links are followed.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body provided; unknown"
+      ]
+    }
+  ],
+  "requirements_reader_off_on_on_off": [
+    {
+      "enabled": false,
+      "result": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='Computer Science - Wits University' signals='2 award links; no award identity of its own' chars=6834 degrees=[]",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": true,
+      "result": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": true,
+      "result": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": false,
+      "result": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='Computer Science - Wits University' signals='2 award links; no award identity of its own' chars=6834 degrees=[]",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    }
+  ],
+  "wits_source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+  "wits_body_sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+  "wits_metadata_sha256": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c",
+  "scope": "Original saved Wits body in real WebScholarshipAdapter; synthetic index routing fixture. Missing financial-aid target body remains offline HTTP_ERROR unknown. No award claims or proof of 2027 intake. Full-pipeline identity conditional on SI-1=True experimental design."
+}

@@ -1,0 +1,444 @@
+<testsuites id="" name="" tests="100" failures="4" skipped="11" errors="0" time="132.322995">
+<testsuite name="accessibility.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="desktop-chromium" tests="9" failures="1" skipped="0" time="6.419" errors="0">
+<testcase name="the page never scrolls horizontally at any breakpoint" classname="accessibility.spec.ts" time="1.768">
+</testcase>
+<testcase name="the ranked bucket stays clear of the pinned decision column at 1440px" classname="accessibility.spec.ts" time="0.104">
+</testcase>
+<testcase name="the mobile shortlist becomes cards without an inner horizontal scroller" classname="accessibility.spec.ts" time="0.124">
+</testcase>
+<testcase name="the whole workflow is reachable by keyboard" classname="accessibility.spec.ts" time="0.025">
+</testcase>
+<testcase name="progress is announced to assistive technology" classname="accessibility.spec.ts" time="0.028">
+</testcase>
+<testcase name="the results table is labelled and its controls are named" classname="accessibility.spec.ts" time="0.503">
+</testcase>
+<testcase name="every reachable workflow screen has no serious axe violations" classname="accessibility.spec.ts" time="2.714">
+</testcase>
+<testcase name="both themes render with a painted background and readable text" classname="accessibility.spec.ts" time="1.03">
+</testcase>
+<testcase name="no console errors during the full journey" classname="accessibility.spec.ts" time="0.123">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<failure message="console errors: Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden)" type="expect.toHaveLength">
+<![CDATA[  [desktop-chromium] › accessibility.spec.ts:179:1 › no console errors during the full journey ─────
+
+    Error: console errors: Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden)
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 0
+    Received length: 16
+    Received array:  ["Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", …]
+
+      184 |   await page.evaluate(() => { window.location.hash = '#/export'; });
+      185 |
+    > 186 |   expect(consoleErrors, `console errors: ${consoleErrors.join(' | ')}`).toHaveLength(0);
+          |                                                                         ^
+      187 | });
+      188 |
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/accessibility.spec.ts:186:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+</testcase>
+</testsuite>
+<testsuite name="catalogue.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="1.557" errors="0">
+<testcase name="browse the local university catalogue before live research" classname="catalogue.spec.ts" time="1.557">
+</testcase>
+</testsuite>
+<testsuite name="community.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="desktop-chromium" tests="7" failures="0" skipped="1" time="4.48" errors="0">
+<testcase name="joining publishes a profile that Discover can find" classname="community.spec.ts" time="0.945">
+</testcase>
+<testcase name="a post shows the tags it will publish, then carries them into the feed" classname="community.spec.ts" time="0.725">
+</testcase>
+<testcase name="an answer opens in place under its post and is counted" classname="community.spec.ts" time="0.695">
+</testcase>
+<testcase name="every community screen is reachable on a phone" classname="community.spec.ts">
+<properties>
+<property name="skip" value="the wrapped navigation only applies below 900px">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="an over-long post cannot be sent" classname="community.spec.ts" time="0.422">
+</testcase>
+<testcase name="a post can be taken back without leaving the community" classname="community.spec.ts" time="0.814">
+</testcase>
+<testcase name="leaving the community is reversible from the same screen" classname="community.spec.ts" time="0.771">
+</testcase>
+</testsuite>
+<testsuite name="journey.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="desktop-chromium" tests="16" failures="0" skipped="0" time="14.775" errors="0">
+<testcase name="profile screen states the cost of every gap" classname="journey.spec.ts" time="1.431">
+</testcase>
+<testcase name="preferences screen exposes the scoring weights and warns about live mode" classname="journey.spec.ts" time="0.455">
+</testcase>
+<testcase name="research runs to completion and reports what it could not read" classname="journey.spec.ts" time="3.152">
+</testcase>
+<testcase name="the shortlist separates eligibility, fit and funding" classname="journey.spec.ts" time="0.808">
+</testcase>
+<testcase name="marketing language does not turn full tuition into a full ride" classname="journey.spec.ts" time="0.09">
+</testcase>
+<testcase name="a previous-cycle deadline is shown as a guide, not as passed" classname="journey.spec.ts" time="0.074">
+</testcase>
+<testcase name="a citizenship-restricted award is shown as not eligible" classname="journey.spec.ts" time="0.517">
+</testcase>
+<testcase name="an incomparable zero is refused rather than shown as nothing to pay" classname="journey.spec.ts" time="0.149">
+</testcase>
+<testcase name="a per-section IELTS minimum is enforced independently of the overall band" classname="journey.spec.ts" time="0.566">
+</testcase>
+<testcase name="missing scholarship data reads as unknown, not as no funding" classname="journey.spec.ts" time="0.164">
+</testcase>
+<testcase name="conflicting official sources are shown with a drafted question" classname="journey.spec.ts" time="1.436">
+</testcase>
+<testcase name="funding comparison hatches what it cannot compare" classname="journey.spec.ts" time="0.559">
+</testcase>
+<testcase name="approve, collect documents, and export" classname="journey.spec.ts" time="3.259">
+</testcase>
+<testcase name="rejection is remembered with the row kept" classname="journey.spec.ts" time="0.958">
+</testcase>
+<testcase name="screens have addresses: back, forward, reload and a gated link" classname="journey.spec.ts" time="0.778">
+</testcase>
+<testcase name="a link to a screen that is not reachable yet explains itself" classname="journey.spec.ts" time="0.379">
+</testcase>
+</testsuite>
+<testsuite name="learning-path.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="1.773" errors="0">
+<testcase name="the ordered unit saves short answers, reviews mistakes and opens the exact next version" classname="learning-path.spec.ts" time="1.773">
+</testcase>
+</testsuite>
+<testsuite name="messages.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="desktop-chromium" tests="3" failures="0" skipped="0" time="2.289" errors="0">
+<testcase name="messages has its own screen, reachable and empty until someone writes" classname="messages.spec.ts" time="0.396">
+</testcase>
+<testcase name="the first-contact setting is on your own profile and saves" classname="messages.spec.ts" time="1.521">
+</testcase>
+<testcase name="the navigation carries no badge when nothing is unread" classname="messages.spec.ts" time="0.372">
+</testcase>
+</testsuite>
+<testsuite name="preparation.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="desktop-chromium" tests="9" failures="1" skipped="5" time="1.479" errors="0">
+<testcase name="a programme saved from Find retains its exam evidence in Preparation" classname="preparation.spec.ts" time="0.55">
+</testcase>
+<testcase name="practice is submitted to the real API and keeps official scores separate" classname="preparation.spec.ts" time="0.392">
+</testcase>
+<testcase name="one persisted attempt survives reload and is included in own export" classname="preparation.spec.ts" time="0.455">
+</testcase>
+<testcase name="six mobile destinations stay readable in one row with a matching safe bottom reserve" classname="preparation.spec.ts" time="0.082">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<failure message="expect(received).toBeLessThanOrEqual(expected)" type="expect.toBeLessThanOrEqual">
+<![CDATA[  [desktop-chromium] › preparation.spec.ts:117:1 › six mobile destinations stay readable in one row with a matching safe bottom reserve 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 46
+    Received:    48
+
+      140 |         expect(item.label.box.left).toBeGreaterThanOrEqual(item.box.left - 1);
+      141 |         expect(item.label.box.right).toBeLessThanOrEqual(item.box.right + 1);
+    > 142 |         expect(item.label.scrollWidth).toBeLessThanOrEqual(item.label.clientWidth + 1);
+          |                                        ^
+      143 |         expect(item.label.box.height).toBeLessThanOrEqual(item.label.lineHeight + 1);
+      144 |       }
+      145 |       expect(measured.paddingBottom).toBeGreaterThanOrEqual(measured.paddingTop);
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/preparation.spec.ts:142:40
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+</testcase>
+<testcase name="the final real practice actions scroll above the fixed navigation at 390 and 320" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="personal practice stays inside the requested viewport and all starter lessons open by normal clicks" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="deadline plan persists dated targets, task completion and backward timing without changing official scores" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="deadline risk and concurrent saved calendar remain explicit through the real UI and API" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="dated opt-in materials preserve legacy settings and reopen the exact saved attempt after reload" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="profile-persistence.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="desktop-chromium" tests="4" failures="0" skipped="0" time="8.437" errors="0">
+<testcase name="a saved profile is restored into the form after a reload" classname="profile-persistence.spec.ts" time="2.615">
+</testcase>
+<testcase name="demo data is only ever loaded on request, and is labelled when it is" classname="profile-persistence.spec.ts" time="1.422">
+</testcase>
+<testcase name="replacing a saved profile asks first" classname="profile-persistence.spec.ts" time="1.452">
+</testcase>
+<testcase name="typing multiple subjects and countries keeps separators and saves complete lists" classname="profile-persistence.spec.ts" time="2.948">
+</testcase>
+</testsuite>
+<testsuite name="accessibility.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="mobile" tests="9" failures="1" skipped="0" time="7.295" errors="0">
+<testcase name="the page never scrolls horizontally at any breakpoint" classname="accessibility.spec.ts" time="2.195">
+</testcase>
+<testcase name="the ranked bucket stays clear of the pinned decision column at 1440px" classname="accessibility.spec.ts" time="0.102">
+</testcase>
+<testcase name="the mobile shortlist becomes cards without an inner horizontal scroller" classname="accessibility.spec.ts" time="0.11">
+</testcase>
+<testcase name="the whole workflow is reachable by keyboard" classname="accessibility.spec.ts" time="0.024">
+</testcase>
+<testcase name="progress is announced to assistive technology" classname="accessibility.spec.ts" time="0.028">
+</testcase>
+<testcase name="the results table is labelled and its controls are named" classname="accessibility.spec.ts" time="0.473">
+</testcase>
+<testcase name="every reachable workflow screen has no serious axe violations" classname="accessibility.spec.ts" time="2.75">
+</testcase>
+<testcase name="both themes render with a painted background and readable text" classname="accessibility.spec.ts" time="1.306">
+</testcase>
+<testcase name="no console errors during the full journey" classname="accessibility.spec.ts" time="0.307">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/accessibility-no-console-errors-during-the-full-journey-mobile/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/accessibility-no-console-errors-during-the-full-journey-mobile/error-context.md]]
+
+[[ATTACHMENT|test-results/accessibility-no-console-errors-during-the-full-journey-mobile/error-context.md]]
+
+[[ATTACHMENT|test-results/accessibility-no-console-errors-during-the-full-journey-mobile/trace.zip]]
+]]>
+</system-out>
+<failure message="console errors: Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden)" type="expect.toHaveLength">
+<![CDATA[  [mobile] › accessibility.spec.ts:179:1 › no console errors during the full journey ───────────────
+
+    Error: console errors: Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden) | Failed to load resource: the server responded with a status of 403 (Forbidden)
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 0
+    Received length: 16
+    Received array:  ["Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", "Failed to load resource: the server responded with a status of 403 (Forbidden)", …]
+
+      184 |   await page.evaluate(() => { window.location.hash = '#/export'; });
+      185 |
+    > 186 |   expect(consoleErrors, `console errors: ${consoleErrors.join(' | ')}`).toHaveLength(0);
+          |                                                                         ^
+      187 | });
+      188 |
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/accessibility.spec.ts:186:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-mobile/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261011T221550Z-demo/test-results/accessibility-no-console-errors-during-the-full-journey-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+</testcase>
+</testsuite>
+<testsuite name="catalogue.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="mobile" tests="1" failures="0" skipped="0" time="1.584" errors="0">
+<testcase name="browse the local university catalogue before live research" classname="catalogue.spec.ts" time="1.584">
+</testcase>
+</testsuite>
+<testsuite name="community.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="mobile" tests="7" failures="0" skipped="0" time="6.031" errors="0">
+<testcase name="joining publishes a profile that Discover can find" classname="community.spec.ts" time="0.747">
+</testcase>
+<testcase name="a post shows the tags it will publish, then carries them into the feed" classname="community.spec.ts" time="1.332">
+</testcase>
+<testcase name="an answer opens in place under its post and is counted" classname="community.spec.ts" time="0.763">
+</testcase>
+<testcase name="every community screen is reachable on a phone" classname="community.spec.ts" time="0.498">
+</testcase>
+<testcase name="an over-long post cannot be sent" classname="community.spec.ts" time="0.416">
+</testcase>
+<testcase name="a post can be taken back without leaving the community" classname="community.spec.ts" time="1.461">
+</testcase>
+<testcase name="leaving the community is reversible from the same screen" classname="community.spec.ts" time="0.814">
+</testcase>
+</testsuite>
+<testsuite name="journey.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="mobile" tests="16" failures="0" skipped="0" time="20.985" errors="0">
+<testcase name="profile screen states the cost of every gap" classname="journey.spec.ts" time="1.416">
+</testcase>
+<testcase name="preferences screen exposes the scoring weights and warns about live mode" classname="journey.spec.ts" time="0.536">
+</testcase>
+<testcase name="research runs to completion and reports what it could not read" classname="journey.spec.ts" time="2.857">
+</testcase>
+<testcase name="the shortlist separates eligibility, fit and funding" classname="journey.spec.ts" time="1.683">
+</testcase>
+<testcase name="marketing language does not turn full tuition into a full ride" classname="journey.spec.ts" time="0.103">
+</testcase>
+<testcase name="a previous-cycle deadline is shown as a guide, not as passed" classname="journey.spec.ts" time="0.084">
+</testcase>
+<testcase name="a citizenship-restricted award is shown as not eligible" classname="journey.spec.ts" time="2.274">
+</testcase>
+<testcase name="an incomparable zero is refused rather than shown as nothing to pay" classname="journey.spec.ts" time="0.263">
+</testcase>
+<testcase name="a per-section IELTS minimum is enforced independently of the overall band" classname="journey.spec.ts" time="2.593">
+</testcase>
+<testcase name="missing scholarship data reads as unknown, not as no funding" classname="journey.spec.ts" time="0.21">
+</testcase>
+<testcase name="conflicting official sources are shown with a drafted question" classname="journey.spec.ts" time="2.873">
+</testcase>
+<testcase name="funding comparison hatches what it cannot compare" classname="journey.spec.ts" time="0.756">
+</testcase>
+<testcase name="approve, collect documents, and export" classname="journey.spec.ts" time="3.234">
+</testcase>
+<testcase name="rejection is remembered with the row kept" classname="journey.spec.ts" time="0.88">
+</testcase>
+<testcase name="screens have addresses: back, forward, reload and a gated link" classname="journey.spec.ts" time="0.827">
+</testcase>
+<testcase name="a link to a screen that is not reachable yet explains itself" classname="journey.spec.ts" time="0.396">
+</testcase>
+</testsuite>
+<testsuite name="learning-path.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="mobile" tests="1" failures="0" skipped="0" time="2.482" errors="0">
+<testcase name="the ordered unit saves short answers, reviews mistakes and opens the exact next version" classname="learning-path.spec.ts" time="2.482">
+</testcase>
+</testsuite>
+<testsuite name="messages.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="mobile" tests="3" failures="0" skipped="0" time="3.635" errors="0">
+<testcase name="messages has its own screen, reachable and empty until someone writes" classname="messages.spec.ts" time="0.384">
+</testcase>
+<testcase name="the first-contact setting is on your own profile and saves" classname="messages.spec.ts" time="2.855">
+</testcase>
+<testcase name="the navigation carries no badge when nothing is unread" classname="messages.spec.ts" time="0.396">
+</testcase>
+</testsuite>
+<testsuite name="preparation.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="mobile" tests="9" failures="1" skipped="5" time="2.5" errors="0">
+<testcase name="a programme saved from Find retains its exam evidence in Preparation" classname="preparation.spec.ts" time="1.388">
+</testcase>
+<testcase name="practice is submitted to the real API and keeps official scores separate" classname="preparation.spec.ts" time="0.499">
+</testcase>
+<testcase name="one persisted attempt survives reload and is included in own export" classname="preparation.spec.ts" time="0.511">
+</testcase>
+<testcase name="six mobile destinations stay readable in one row with a matching safe bottom reserve" classname="preparation.spec.ts" time="0.102">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/error-context.md]]
+
+[[ATTACHMENT|test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/error-context.md]]
+
+[[ATTACHMENT|test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/trace.zip]]
+]]>
+</system-out>
+<failure message="expect(received).toBeLessThanOrEqual(expected)" type="expect.toBeLessThanOrEqual">
+<![CDATA[  [mobile] › preparation.spec.ts:117:1 › six mobile destinations stay readable in one row with a matching safe bottom reserve 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 46
+    Received:    48
+
+      140 |         expect(item.label.box.left).toBeGreaterThanOrEqual(item.box.left - 1);
+      141 |         expect(item.label.box.right).toBeLessThanOrEqual(item.box.right + 1);
+    > 142 |         expect(item.label.scrollWidth).toBeLessThanOrEqual(item.label.clientWidth + 1);
+          |                                        ^
+      143 |         expect(item.label.box.height).toBeLessThanOrEqual(item.label.lineHeight + 1);
+      144 |       }
+      145 |       expect(measured.paddingBottom).toBeGreaterThanOrEqual(measured.paddingTop);
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/preparation.spec.ts:142:40
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261011T221550Z-demo/test-results/preparation-six-mobile-des-a4bde-atching-safe-bottom-reserve-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+</testcase>
+<testcase name="the final real practice actions scroll above the fixed navigation at 390 and 320" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="personal practice stays inside the requested viewport and all starter lessons open by normal clicks" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="deadline plan persists dated targets, task completion and backward timing without changing official scores" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="deadline risk and concurrent saved calendar remain explicit through the real UI and API" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="dated opt-in materials preserve legacy settings and reopen the exact saved attempt after reload" classname="preparation.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="profile-persistence.spec.ts" timestamp="2026-10-11T22:15:53.635Z" hostname="mobile" tests="4" failures="0" skipped="0" time="8.537" errors="0">
+<testcase name="a saved profile is restored into the form after a reload" classname="profile-persistence.spec.ts" time="2.651">
+</testcase>
+<testcase name="demo data is only ever loaded on request, and is labelled when it is" classname="profile-persistence.spec.ts" time="1.397">
+</testcase>
+<testcase name="replacing a saved profile asks first" classname="profile-persistence.spec.ts" time="1.568">
+</testcase>
+<testcase name="typing multiple subjects and countries keeps separators and saves complete lists" classname="profile-persistence.spec.ts" time="2.921">
+</testcase>
+</testsuite>
+</testsuites>

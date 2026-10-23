@@ -1,0 +1,54 @@
+{
+  "kind": "independent_actual_postgresql_readguard_v2_review",
+  "pinned_at_utc": "2026-10-07T22:15:24.655224+00:00",
+  "status": "NARROW_READ_GUARD_PG_CONTROLS_SUPPORTED_WITH_RETAINED_WORKER_RED",
+  "candidate_manifest_sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4",
+  "candidate_patch_sha256": "344c8200fce357ca4bc17cc3510031202390d10637780fb9f095b0d9d9759e38",
+  "candidate_runner_sha256": "a91a4f5259de94ba346190c30ec24fe845907b1a1053919b6830de6d27fc20c8",
+  "actual_pg_version": "16.2",
+  "all_13_matrix_controls_executed": true,
+  "main_suite": {
+    "passed": 17,
+    "failed": 1,
+    "seconds": 7.6,
+    "exit_code": 1,
+    "log": "pytest-actual-pg.stdout"
+  },
+  "supplement_suite": {
+    "passed": 10,
+    "failed": 0,
+    "seconds": 1.33,
+    "exit_code": 0,
+    "log": "pytest-routing-supplement.stdout"
+  },
+  "combined_passed": 27,
+  "combined_failed": 1,
+  "retained_worker_red": "test_pg_09_actual_worker_boundary_retry_vs_locked_job_limitation[job]",
+  "red_modified_or_replayed": false,
+  "own_servers_cleanup_confirmed": true,
+  "own_server_pids": [
+    11504,
+    12042
+  ],
+  "source_default": false,
+  "stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "provider_model_http_external_db_calls": 0,
+  "repository_git_source_package_STOP_writes": 0,
+  "artifact_sha256": {
+    "review.ru.md": "8b18649fb4a61473eaa0f6682e96d04bcc0a2d590b0341b7d372a0cd27336611",
+    "results.json": "6b2b2323d8cfb81cfb2a7df43a424051b33dbb4589351f645e6f5d6b58e68e00",
+    "preflight.json": "c25008354503f4fbff8798f8199be35828d0aa7d3d470456d7596a14caaceabc",
+    "postflight.json": "962f988ad0ed0c10ff4a35a7c74b85518f83fed26de31f503714b89fb25c47b6",
+    "test_independent_pg.py": "09e0f5ead2cd9aa945c7394c17c9bb133c4485f22f7849024eccca4846a05ada",
+    "test_pg_routing_supplement.py": "4e92be2cbb94879f2ccdbbd3939e84f7ba217f0071f0866f8a13bd3f9bf097da",
+    "run_pg.py": "d3ef8cc3f5a6156234363000df42c067e26c417c1200a7e70c17b682a8febe4f",
+    "run_pg_supplement.py": "244944daddc9e0abac34fc8a61cb4d98661db7bfd91165176f007b9d23711943",
+    "pytest-actual-pg.stdout": "074fe4ad591c3410f2501b4b9051a9fb0a544ffbd0afd87eaa827699222e965c",
+    "pytest-actual-pg.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pytest-routing-supplement.stdout": "bd53ab21ff93b781183babcbaec26181248ed7b9a9f3cc28aeaa4fc83151de0f",
+    "pytest-routing-supplement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bundle-files.json": "e87c343608ac83b0fb9b0e0855a9c53d6eb8e9ec75a9a04ed8665697f3343761"
+  },
+  "bundle_file_count": 104,
+  "no_default_or_launch_acceptance": true
+}

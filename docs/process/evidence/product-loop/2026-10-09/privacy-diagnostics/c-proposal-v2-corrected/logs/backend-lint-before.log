@@ -1,0 +1,265 @@
+app/adapters/fetching.py:22:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+20 |   """
+21 |
+22 | / from __future__ import annotations
+23 | |
+24 | | import asyncio
+25 | | import hashlib
+26 | | import json
+27 | | import logging
+28 | | import re
+29 | | import time
+30 | | import unicodedata
+31 | | import urllib.robotparser
+32 | | from dataclasses import dataclass, field
+33 | | from datetime import UTC, datetime
+34 | | from pathlib import Path
+35 | | from typing import Any
+36 | | from urllib.parse import urlparse
+37 | |
+38 | | import httpx
+39 | | from app.adapters.network_policy import (
+40 | |     MAX_REDIRECTS,
+41 | |     BlockedRequest,
+42 | |     ResolvedTarget,
+43 | |     check_url,
+44 | | )
+45 | | from app.domain.enums import FetchOutcome
+46 | | from app.domain.site_identity import hosts_share_site
+   | |_____________________________________________________^ I001
+47 |
+48 |   log = logging.getLogger("unimatch.fetch")
+   |
+   = help: Organize imports
+
+app/adapters/scholarship/web_scholarships.py:9:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 7 |   """
+ 8 |
+ 9 | / from __future__ import annotations
+10 | |
+11 | | import re
+12 | | from dataclasses import replace
+13 | | from datetime import UTC, datetime
+14 | | from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
+15 | |
+16 | | from app.adapters.applicability import (
+17 | |     assess_degree_applicability,
+18 | |     assess_international_eligibility,
+19 | | )
+20 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+21 | | from app.adapters.extraction import (
+22 | |     ClaimBuilder,
+23 | |     html_title,
+24 | |     is_official_domain,
+25 | |     parse_date_string,
+26 | |     parse_money,
+27 | |     parse_timezone,
+28 | |     readable_text,
+29 | |     verification_domains,
+30 | | )
+31 | | from app.adapters.fetching import Fetcher, FetchResult, fetch_diagnostic_url, fetch_retry_url
+32 | | from app.adapters.html_parse import parse_html
+33 | | from app.adapters.page_classifier import (
+34 | |     SUBSIDIARY_FUNDING_INDEX_SIGNAL,
+35 | |     PageType,
+36 | |     classify_page,
+37 | |     main_content,
+38 | | )
+39 | | from app.adapters.scholarship.conditional_benefits import read_conditional_policy
+40 | | from app.adapters.scope_reader import read_scope
+41 | | from app.domain.enums import (
+42 | |     ApplicationMode,
+43 | |     ClaimType,
+44 | |     CostCategory,
+45 | |     ScholarshipType,
+46 | |     SourceSpecificity,
+47 | | )
+48 | | from app.domain.funding import roll_up_availability
+49 | | from app.schemas.claim import MAX_EXCERPT_CHARS
+50 | | from app.schemas.money import Money
+51 | | from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
+52 | | from bs4 import BeautifulSoup
+   | |_____________________________^ I001
+53 |
+54 |   #: One official-award query after an empty walk for a confirmed programme.
+   |
+   = help: Organize imports
+
+app/pipeline/runner.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 6 |   """
+ 7 |
+ 8 | / from __future__ import annotations
+ 9 | |
+10 | | import json
+11 | | import logging
+12 | | import os
+13 | | import socket
+14 | | from contextlib import contextmanager, nullcontext
+15 | | from copy import deepcopy
+16 | | from datetime import UTC, date, datetime, timedelta
+17 | | from functools import partial
+18 | |
+19 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+20 | | from app.adapters.cost.web_costs import WebCostAdapter
+21 | | from app.adapters.discovery.catalog_walker import CatalogRenderer
+22 | | from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+23 | | from app.adapters.discovery.live_discovery import (
+24 | |     MAX_PAGES_PER_CATEGORY,
+25 | |     LiveDiscoveryAdapter,
+26 | |     registry_campuses,
+27 | | )
+28 | | from app.adapters.documents.web_documents import (
+29 | |     DOCUMENT_CLAIM_TYPES,
+30 | |     WebDocumentsAdapter,
+31 | |     retain_failed_documents,
+32 | | )
+33 | | from app.adapters.fetching import Fetcher
+34 | | from app.adapters.government.web_government import WebGovernmentAdapter
+35 | | from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+36 | | from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+37 | | from app.adapters.search.intent import QueryPrivacyError
+38 | | from app.catalogue.discovery import CatalogueDiscoveryAdapter
+39 | | from app.config import Settings
+40 | | from app.domain import dedupe, diagnostics
+41 | | from app.domain.campus import withhold_other_campuses
+42 | | from app.domain.citizenship import CitizenshipMatch, match_citizenship
+43 | | from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
+44 | | from app.domain.costs import compute_funding_gap, total_cost
+45 | | from app.domain.dates import parse_published_date
+46 | | from app.domain.eligibility import (
+47 | |     awards_needing_a_test_the_programme_made_optional,
+48 | |     evaluate_program,
+49 | |     population_deadlines,
+50 | | )
+51 | | from app.domain.enums import (
+52 | |     ClaimStatus,
+53 | |     ClaimType,
+54 | |     CostCategory,
+55 | |     EligibilityStatus,
+56 | |     PipelineStage,
+57 | |     UserDecision,
+58 | | )
+59 | | from app.domain.freshness import age_days, apply_freshness, is_stale, next_recheck_at
+60 | | from app.domain.funding import (
+61 | |     award_meets_shape,
+62 | |     classify,
+63 | |     funding_fit_for,
+64 | |     roll_up_availability,
+65 | |     unmet_coverage_requirements,
+66 | | )
+67 | | from app.domain.ranking_v2 import rank_result
+68 | | from app.domain.scoring import admissions_fit_for, score_result
+69 | | from app.domain.validation import validate_profile
+70 | | from app.models import (
+71 | |     AuditEvent,
+72 | |     ClaimRow,
+73 | |     ConflictRow,
+74 | |     Job,
+75 | |     ProgramResultRow,
+76 | |     ResearchRun,
+77 | |     SourcePage,
+78 | |     new_id,
+79 | | )
+80 | | from app.models.base import ensure_utc
+81 | | from app.pipeline import read_budget
+82 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+83 | | from app.pipeline.state import IN_PROGRESS_STAGES, RunState
+84 | | from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
+85 | | from app.schemas.profile import ApplicantProfileIn
+86 | | from app.schemas.result import CostBreakdown, ProgramResult, Tristate
+87 | | from sqlalchemy import inspect as sa_inspect
+88 | | from sqlalchemy import select, update
+89 | | from sqlalchemy.exc import OperationalError
+90 | | from sqlalchemy.orm import Session
+   | |__________________________________^ I001
+91 |
+92 |   log = logging.getLogger("unimatch.pipeline")
+   |
+   = help: Organize imports
+
+tests/test_fetch_pii_hops.py:27:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+25 |   """
+26 |
+27 | / from __future__ import annotations
+28 | |
+29 | | import asyncio
+30 | | import hashlib
+31 | | import socket
+32 | | import unicodedata
+33 | |
+34 | | import httpx
+35 | | import pytest
+36 | | from app.adapters.fetching import (
+37 | |     DEFAULT_DELAY_SECONDS,
+38 | |     MAX_ATTEMPTS,
+39 | |     MAX_PER_HOST_CONCURRENCY,
+40 | |     Fetcher,
+41 | |     FetchResult,
+42 | | )
+43 | | from app.adapters.network_policy import MAX_REDIRECTS
+44 | | from app.domain.enums import FetchOutcome
+   | |_________________________________________^ I001
+45 |
+46 |   PUBLIC_ADDRESS = "93.184.216.34"
+   |
+   = help: Organize imports
+
+tests/test_rejected_diagnostics.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Six bounded scenarios; all identifiers are disposable synthetic values."""
+ 2 |
+ 3 | / import asyncio
+ 4 | | import json
+ 5 | | import logging
+ 6 | | import os
+ 7 | | import socket
+ 8 | | from contextlib import contextmanager
+ 9 | | from dataclasses import asdict
+10 | | from pathlib import Path
+11 | | from types import SimpleNamespace as NS
+12 | | from typing import ClassVar
+13 | | from unittest.mock import AsyncMock
+14 | | from urllib.parse import quote
+15 | |
+16 | | import httpx
+17 | | import pytest
+18 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+19 | | from app.adapters.cost.web_costs import WebCostAdapter
+20 | | from app.adapters.discovery.catalog_walker import CatalogWalk, CatalogWalker, WalkerLink
+21 | | from app.adapters.discovery.live_discovery import (
+22 | |     DiscoveryTrace,
+23 | |     LiveDiscoveryAdapter,
+24 | |     PageCategory,
+25 | |     SitemapReader,
+26 | |     _public_requested_fields,
+27 | | )
+28 | | from app.adapters.documents.web_documents import WebDocumentsAdapter
+29 | | from app.adapters.fetching import Fetcher, FetchResult, find_pii
+30 | | from app.adapters.government.web_government import WebGovernmentAdapter
+31 | | from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+32 | | from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+33 | | from app.adapters.search.intent import (
+34 | |     DEFAULT_QUERY_BUDGET,
+35 | |     SCHOLARSHIP_QUERY_RESERVE,
+36 | |     SHARED_QUERY_BUDGET,
+37 | |     DiscoveryIntent,
+38 | |     QueryPrivacyError,
+39 | |     queries_for,
+40 | | )
+41 | | from app.config import Settings
+42 | | from app.domain.enums import DegreeLevel, DocumentPurpose, FetchOutcome, PipelineStage
+43 | | from app.jobs.worker import Worker
+44 | | from app.logging_setup import JsonFormatter
+45 | | from app.pipeline.runner import LeaseLost, ResearchRunner, RunCancelled
+   | |_______________________________________________________________________^ I001
+46 |
+47 |   PROOF_DIR = os.environ.get("REJECTED_DIAGNOSTICS_PROOF_DIR")
+   |
+   = help: Organize imports
+
+Found 5 errors.
+[*] 5 fixable with the `--fix` option.

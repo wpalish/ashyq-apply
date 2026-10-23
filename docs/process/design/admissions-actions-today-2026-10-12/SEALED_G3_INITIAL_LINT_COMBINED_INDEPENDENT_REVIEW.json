@@ -1,0 +1,292 @@
+{
+  "schema_version": "independent-source-review-seal-v1",
+  "created_at_utc": "2026-10-12T14:33:40Z",
+  "status": "SOURCE_QUALIFIED_FOR_ROOT_NATIVE_GATE_NOT_RUN",
+  "scope": "Only sealed initial lint1 plus sealed native import-contextrepair2; no broad new audit",
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_LINT_COMBINED_INDEPENDENT_REVIEW.md",
+    "sha256": "51ce2eb27d23448717ae136168a8d07609c0e205af869b56de98efc07f00cca0"
+  },
+  "reviewed_packets": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-lint-repair1",
+      "seal_sha256": "d1d6a9605582693540eabda5bb365b2e4f803ab7f9eba536e42177802d8a3ce2",
+      "verified_members": 16,
+      "declared_members": {
+        "PREIMAGES.json": {
+          "sha256": "e38d905001579e1d521e8e9e54d9bcb8de69cab849e6f85496e263fd857b4345",
+          "size_bytes": 1171
+        },
+        "README.md": {
+          "sha256": "c4a73e292d7736f04d106e6c91e8a7b5e77d2e75de334f99d4981ba822c2b785",
+          "size_bytes": 4232
+        },
+        "diffs/backend/app/domain/admissions_actions.py.diff": {
+          "sha256": "1569e31574df631405b82e2b980eaa96421374acf507ea50494e567a63ce89d7",
+          "size_bytes": 3940
+        },
+        "diffs/backend/app/schemas/admissions_actions.py.diff": {
+          "sha256": "8f198dddda403b06d08ee22b185b9e70dd17c8da9f5f4ed27efe68a89bbcecf9",
+          "size_bytes": 4717
+        },
+        "diffs/backend/tests/test_admissions_actions.py.diff": {
+          "sha256": "92a09e283917254acb334ea335626179a2760a3c3c3e466eb1989fb25d5781ea",
+          "size_bytes": 653
+        },
+        "evidence/RUFF_RECEIPT.json": {
+          "sha256": "4190697cda4a6622c6c6affbd8fecc26569f6a0cf278ff62e62640ac63db4b9c",
+          "size_bytes": 5598
+        },
+        "evidence/check.log": {
+          "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+          "size_bytes": 19
+        },
+        "evidence/format-check.log": {
+          "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+          "size_bytes": 26
+        },
+        "evidence/format.log": {
+          "sha256": "292ab567521d30841d69b41a9cc01ed3f5b34d1b4bdb12e6083b8943098c57a4",
+          "size_bytes": 43
+        },
+        "evidence/safe-fix.log": {
+          "sha256": "e8e47f867684d55042f97b4837a1db0c6c8cba238997a281bba7ccca3dccecab",
+          "size_bytes": 41
+        },
+        "files/backend/app/domain/admissions_actions.py": {
+          "sha256": "cf0c97753b8404fc375ee9ff017b8ce7acb7a88adf84484520d12e747b6218a3",
+          "size_bytes": 56807
+        },
+        "files/backend/app/schemas/admissions_actions.py": {
+          "sha256": "5712dbae6a70f7acd21e3e42776e2da132560d97e7b6d412d0602b940601567f",
+          "size_bytes": 58230
+        },
+        "files/backend/tests/test_admissions_actions.py": {
+          "sha256": "aa25530d91ddc72faf806ef3eb80872d9f3ea77024915620d71548a88c48add3",
+          "size_bytes": 71615
+        },
+        "original/backend/app/domain/admissions_actions.py": {
+          "sha256": "d800f46a159c29c09147467b8f1e7d401e05bd17211106e8e20456c4c6b46223",
+          "size_bytes": 56802
+        },
+        "original/backend/app/schemas/admissions_actions.py": {
+          "sha256": "225e8b1b2862c92daeb52f239c4e0dd98dd804f9ba3c93713aec61adbc2efd4b",
+          "size_bytes": 58322
+        },
+        "original/backend/tests/test_admissions_actions.py": {
+          "sha256": "1b978ffa9aad5482f440550670f4690173bcaf71e661c30a961f3709a7d03e3d",
+          "size_bytes": 71617
+        }
+      }
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-lint-context-repair2",
+      "seal_sha256": "8fad490b5dd25e70e0170365e775fd23806f6f8f0d3064b18228338c747bbaab",
+      "verified_members": 11,
+      "declared_members": {
+        "README.md": {
+          "sha256": "04cac9efc58bf98c0833b070f4238717f05fb0dd3cf61154bc17e787a49604c7",
+          "size_bytes": 227
+        },
+        "diffs/backend/app/domain/admissions_actions.py.diff": {
+          "sha256": "6f4e0c433d7aa2f5e98a81e6da4e4bffdaa1213c92348f9b60e0543c61e1f2e0",
+          "size_bytes": 534
+        },
+        "diffs/backend/app/schemas/admissions_actions.py.diff": {
+          "sha256": "9e603525c58946ae23b28ebbd95be949a311812decfd9dfa645cc15fec347be2",
+          "size_bytes": 877
+        },
+        "diffs/backend/tests/test_admissions_actions.py.diff": {
+          "sha256": "6f512345a29a626f329b32147598e3700cb29a56a13aab0ab337a64cf475bead",
+          "size_bytes": 651
+        },
+        "files/backend/app/domain/admissions_actions.py": {
+          "sha256": "e3d0c99b72a67b82c694596c7904bab0ae42122aafc6138abb668159f9c0c64a",
+          "size_bytes": 56808
+        },
+        "files/backend/app/schemas/admissions_actions.py": {
+          "sha256": "9f516e35f9b5486960c7dcdef720b2794d58f5bc18c8cb9d3f15ab6a158d477d",
+          "size_bytes": 58231
+        },
+        "files/backend/tests/test_admissions_actions.py": {
+          "sha256": "0c6ff0e8c4c6179e801c98c6923a21bf1ab31357dd26f37a7137b2be1e2c9cae",
+          "size_bytes": 71616
+        },
+        "original/backend/app/domain/admissions_actions.py": {
+          "sha256": "cf0c97753b8404fc375ee9ff017b8ce7acb7a88adf84484520d12e747b6218a3",
+          "size_bytes": 56807
+        },
+        "original/backend/app/schemas/admissions_actions.py": {
+          "sha256": "5712dbae6a70f7acd21e3e42776e2da132560d97e7b6d412d0602b940601567f",
+          "size_bytes": 58230
+        },
+        "original/backend/tests/test_admissions_actions.py": {
+          "sha256": "aa25530d91ddc72faf806ef3eb80872d9f3ea77024915620d71548a88c48add3",
+          "size_bytes": 71615
+        },
+        "ruff.log": {
+          "sha256": "a50c6b57ac4b01a7802f4fc138f5deda6e608582564d5897099f2cd958ae9a0e",
+          "size_bytes": 63
+        }
+      }
+    }
+  ],
+  "source_preimage_postimage_chain": {
+    "primary_preimages": {
+      "backend/app/schemas/admissions_actions.py": {
+        "preimage_sha256": "225e8b1b2862c92daeb52f239c4e0dd98dd804f9ba3c93713aec61adbc2efd4b",
+        "postimage_sha256": "5712dbae6a70f7acd21e3e42776e2da132560d97e7b6d412d0602b940601567f",
+        "size_bytes": 58230,
+        "lines": 1590
+      },
+      "backend/app/domain/admissions_actions.py": {
+        "preimage_sha256": "d800f46a159c29c09147467b8f1e7d401e05bd17211106e8e20456c4c6b46223",
+        "postimage_sha256": "cf0c97753b8404fc375ee9ff017b8ce7acb7a88adf84484520d12e747b6218a3",
+        "size_bytes": 56807,
+        "lines": 1393
+      },
+      "backend/tests/test_admissions_actions.py": {
+        "preimage_sha256": "1b978ffa9aad5482f440550670f4690173bcaf71e661c30a961f3709a7d03e3d",
+        "postimage_sha256": "aa25530d91ddc72faf806ef3eb80872d9f3ea77024915620d71548a88c48add3",
+        "size_bytes": 71615,
+        "lines": 1946
+      }
+    },
+    "import_context_final_postimages": {
+      "backend/app/schemas/admissions_actions.py": {
+        "preimage_sha256": "5712dbae6a70f7acd21e3e42776e2da132560d97e7b6d412d0602b940601567f",
+        "postimage_sha256": "9f516e35f9b5486960c7dcdef720b2794d58f5bc18c8cb9d3f15ab6a158d477d"
+      },
+      "backend/app/domain/admissions_actions.py": {
+        "preimage_sha256": "cf0c97753b8404fc375ee9ff017b8ce7acb7a88adf84484520d12e747b6218a3",
+        "postimage_sha256": "e3d0c99b72a67b82c694596c7904bab0ae42122aafc6138abb668159f9c0c64a"
+      },
+      "backend/tests/test_admissions_actions.py": {
+        "preimage_sha256": "aa25530d91ddc72faf806ef3eb80872d9f3ea77024915620d71548a88c48add3",
+        "postimage_sha256": "0c6ff0e8c4c6179e801c98c6923a21bf1ab31357dd26f37a7137b2be1e2c9cae"
+      }
+    }
+  },
+  "independently_verified_text_proof": {
+    "checks": [
+      {
+        "pack": "g3-initial-lint-repair1",
+        "path": "backend/app/schemas/admissions_actions.py",
+        "hunks": 10,
+        "diff_reconstructs_exact_postimage": true
+      },
+      {
+        "pack": "g3-initial-lint-repair1",
+        "path": "backend/app/domain/admissions_actions.py",
+        "hunks": 6,
+        "diff_reconstructs_exact_postimage": true
+      },
+      {
+        "pack": "g3-initial-lint-repair1",
+        "path": "backend/tests/test_admissions_actions.py",
+        "hunks": 2,
+        "diff_reconstructs_exact_postimage": true
+      },
+      {
+        "pack": "g3-initial-lint-context-repair2",
+        "path": "backend/app/schemas/admissions_actions.py",
+        "hunks": 2,
+        "diff_reconstructs_exact_postimage": true
+      },
+      {
+        "pack": "g3-initial-lint-context-repair2",
+        "path": "backend/app/domain/admissions_actions.py",
+        "hunks": 1,
+        "diff_reconstructs_exact_postimage": true
+      },
+      {
+        "pack": "g3-initial-lint-context-repair2",
+        "path": "backend/tests/test_admissions_actions.py",
+        "hunks": 2,
+        "diff_reconstructs_exact_postimage": true
+      }
+    ],
+    "context_non_import_bytes_equal": true,
+    "test_suffix_bytes_equal": true,
+    "unchanged_test_names": [
+      "test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance",
+      "test_closed_client_request_does_not_coerce_or_accept_server_fields",
+      "test_native_uppercase_uuid_is_the_same_canonical_intent_digest_and_original_replay",
+      "test_entered_dates_are_literal_valid_calendar_dates",
+      "test_confirmation_is_literal_boolean_true",
+      "test_event_ref_has_exact_three_fields_and_no_receipt_hash_cycle",
+      "test_full_actor_ids_not_display_prefixes_define_actor_reference",
+      "test_replay_keeps_original_actor_and_ack_independent_of_mutable_source_context",
+      "test_existing_personal_updates_require_no_target_source_plan_or_entitlement_observation",
+      "test_creation_scholarship_requires_exact_own_award_after_source_guard",
+      "test_target_intake_route_award_are_immutable_in_every_closed_personal_command",
+      "test_submission_is_applicant_declaration_and_mentioned_tasks_are_not_mutated",
+      "test_withdrawal_retains_submission_history_and_correction_requires_exact_loaded_own_receipt",
+      "test_a_prior_own_planning_correction_can_itself_be_corrected_without_rewriting_history",
+      "test_correction_distinguishes_a_wrong_own_application_from_missing_or_foreign_receipts",
+      "test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors",
+      "test_rebind_keeps_durable_id_and_original_report_with_separate_previous_binding_annotation",
+      "test_unbound_report_is_not_transferred_when_first_binding_is_explicitly_added",
+      "test_explicit_import_is_all_or_nothing_exact_snapshot_and_does_not_clear_native_marks",
+      "test_current_head_and_affected_roles_cannot_be_satisfied_by_merely_mentioned_record",
+      "test_rehashed_outer_state_does_not_replace_authoritative_head_delta",
+      "test_complete_export_detects_missing_current_and_interleaving_new_head",
+      "test_caps_are_current_records_and_distinct_source_union_not_history_size",
+      "test_four_hundred_task_cap_and_fifty_explicit_mapping_cap_are_literal",
+      "test_at_cap_metadata_reads_use_at_most_nine_batches_of_two_hundred_exact_ids",
+      "test_six_ordered_lists_duplicate_indices_and_native_scope_omission_are_proof_identity",
+      "test_present_raw_url_bytes_change_proof_not_semantics_and_never_enter_binding_ack",
+      "test_original_claim_order_scope_and_procedure_are_independent_identity_axes",
+      "test_real_native_cross_list_projection_must_cover_all_original_occurrences",
+      "test_same_list_duplicate_native_nodes_do_not_guess_numeric_occurrence_by_name_or_hash",
+      "test_actual_native_proof_change_is_hashed_without_copying_source_body_or_claiming_current_validity",
+      "test_scholarship_purpose_does_not_establish_named_award_document_validity",
+      "test_personal_planning_status_and_document_details_have_only_their_own_mutation_refs",
+      "test_closed_action_link_output_rejects_tampered_token_href_even_when_other_fields_match",
+      "test_lexical_public_actions_are_only_unverified_informational_links",
+      "test_blocked_links_emit_no_raw_literal_or_clickable_fallback",
+      "test_embedded_token_literals_affect_original_proof_but_never_action_href_or_ack",
+      "test_locked_link_and_source_envelope_expose_no_new_presence_hash_or_reason",
+      "test_selector_uses_exact_native_observed_head_and_replay_is_original_after_advance",
+      "test_derived_origin_uses_recorded_presence_and_never_corruption_fallback",
+      "test_today_preserves_one_accepted_slot_order_and_unknown_document_workload",
+      "test_today_selected_plan_failure_preserves_personal_actions_and_unknown_workload",
+      "test_today_expiry_blocks_new_lesson_but_keeps_exact_own_review_target_readable",
+      "test_today_one_recheck_withholds_mixed_actions_and_revoked_source_details",
+      "test_today_separate_twenty_source_and_twenty_native_goal_sets_allow_forty_union",
+      "test_date_only_due_and_dst_day_use_explicit_zones_without_official_urgency",
+      "test_unreadable_g3_today_is_unavailable_not_revision_zero_or_legacy_fallback",
+      "test_personal_creation_rehashed_receipt_cannot_inject_an_earlier_reviewed_source_binding",
+      "test_today_combined_personal_record_ids_are_stable_across_entity_types",
+      "test_today_future_preserves_study_before_stable_personal_actions_on_equal_dates"
+    ],
+    "test_count": 50
+  },
+  "independently_read_semantic_disposition": {
+    "short_circuit_grouping": "Nine existing and/or subexpressions grouped without changing parsed predicate order",
+    "pairwise": "Same adjacent pairs from validated local list; no mutation in loop",
+    "flattened_guards": "Same type/colon guards before exact inner conditions",
+    "type_aliases": "Names/RHS retained; Python3.12 target; runtime alias/Pydantic behavior deferred to root native gates",
+    "imports": "lint1 external source-root classification not native evidence; context2 only importblocks; native static2 still required"
+  },
+  "concrete_source_blockers": [],
+  "runtime_prerequisites": [
+    "Root native backend static2",
+    "Root already planned focused G3 initial runtime gate"
+  ],
+  "tests_preserved_source_count": 50,
+  "external_ruff_observations": "Read prior producer logs only; not rerun; not a native repaired primary gate",
+  "application_modules_imported": false,
+  "tests_collected": false,
+  "tests_executed": false,
+  "ast_imported_or_executed": false,
+  "ruff_or_mypy_executed_by_reviewer": false,
+  "application_lab_helper_git_handoff_mutated": false,
+  "network_db_browser_providers_or_stopped_work_resumed": false,
+  "external_writes": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_LINT_COMBINED_INDEPENDENT_REVIEW.md",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/SEALED_G3_INITIAL_LINT_COMBINED_INDEPENDENT_REVIEW.json"
+  ],
+  "no_release_deployment_or_product_acceptance_claim": true
+}
+

@@ -1,0 +1,135 @@
+FFFFF.                                                                   [100%]
+=================================== FAILURES ===================================
+______________ test_p1_initial_refusal_has_no_rejected_diagnostic ______________
+../../harness/test_rejected_diagnostics.py:108: in test_p1_initial_refusal_has_no_rejected_diagnostic
+    absent(marker, payload)
+../../harness/test_rejected_diagnostics.py:56: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P1_AL...mple.invalid' not in '{"result": ..._files": []}'
+E     
+E     'SYNTH_P1_ALPHA@example.invalid' is contained here:
+E       c.invalid/SYNTH_P1_ALPHA@example.invalid", "outcome": "refused_privacy", "status_code": null, "content": "b''", "text": "", "content_type": "", "fetched_at": "datetime.datetime(2026, 10, 9, 3, 25, 10, 676154, tzinfo=datetime.timezone.utc)", "from_cache": false, "error": "Refused: the URL contains what looks like a email address. It was not fetched.", "final_url": "", "fetch_tier": "http", "etag": "", "last_modified": "", "content_hash": ""}, "logs": [{"message": "refusing https://public.invalid/SYNTH_P1_ALPHA@example....
+E     
+E     ...Full output truncated (1 line hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/SYNTH_P1_ALPHA@example.invalid: looks like email address
+___________ test_p2_poisoned_redirect_keeps_safe_requested_identity ____________
+../../harness/test_rejected_diagnostics.py:137: in test_p2_poisoned_redirect_keeps_safe_requested_identity
+    absent(marker, payload)
+../../harness/test_rejected_diagnostics.py:56: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P2_TOKEN' not in '{"result": ..._large": 0}}'
+E     
+E     'SYNTH_P2_TOKEN' is contained here:
+E     ? ------------------------------------------------------------------------------------------------------------------------------------------------                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^                                                ^^^^                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                                                 ^^^^^ ^^^^^^^^
+E       ump?token=SYNTH_P2_TOKEN", "fetch_tier": "http", "etag": "", "last_mod...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:630 refusing https://public.invalid/jump?token=SYNTH_P2_TOKEN: looks like credential-like parameter
+________________ test_p3_rejected_intent_has_typed_safe_reason _________________
+../../harness/test_rejected_diagnostics.py:148: in test_p3_rejected_intent_has_typed_safe_reason
+    absent(marker, payload)
+../../harness/test_rejected_diagnostics.py:56: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P3_EM...mple.invalid' not in '{"text": "f..."attrs": {}}'
+E     
+E     'SYNTH_P3_EMAIL@example.invalid' is contained here:
+E       {"text": "field='Mathematics SYNTH_P3_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.", "representation": "QueryPrivacyError(\"field='Mathematics SYNTH_P3_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.\")", "args": ["field='Mathematics SYNTH_P3_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query."], "attrs": {}}
+___________ test_p4_native_consumers_do_not_reintroduce_refused_url ____________
+../../harness/test_rejected_diagnostics.py:210: in test_p4_native_consumers_do_not_reintroduce_refused_url
+    absent(marker, payload)
+../../harness/test_rejected_diagnostics.py:56: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P4_TOKEN' not in '{"cost": {"...omes": []}}}'
+E     
+E     'SYNTH_P4_TOKEN' is contained here:
+E     ? ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------                                 ^^ ^^^^^  -----------------------------                                                  ^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^...
+E     
+E     ...Full output truncated (3 lines hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+_______________ test_p5_actual_runner_worker_typed_escape_sinks ________________
+../../harness/test_rejected_diagnostics.py:260: in test_p5_actual_runner_worker_typed_escape_sinks
+    absent(marker, payload)
+../../harness/test_rejected_diagnostics.py:56: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P5_EM...mple.invalid' not in '{"run": {"s...e_calls": 1}'
+E     
+E     'SYNTH_P5_EMAIL@example.invalid' is contained here:
+E     ?          ------------------------------------------------------------------------------------------------------------------------------------------------------------------                                                                                                                  ^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                                                                                                   ^
+E       thematics SYNTH_P5_EMAIL@e...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+INFO     unimatch.worker:worker.py:134 running job syntheti (research) attempt 3
+ERROR    unimatch.pipeline:runner.py:472 run synthetic-run failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/harness/test_rejected_diagnostics.py", line 231, in rejected_stage
+    raise ValueError(marker)
+ValueError: SYNTH_P5_EMAIL@example.invalid
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/pipeline/runner.py", line 440, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/harness/test_rejected_diagnostics.py", line 233, in rejected_stage
+    intent(field="Mathematics " + marker)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/harness/test_rejected_diagnostics.py", line 60, in intent
+    return DiscoveryIntent(institution="Public University", domain="public.invalid",
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 9, in __init__
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/search/intent.py", line 121, in __post_init__
+    _reject_applicant_data(name, getattr(self, name))
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/search/intent.py", line 73, in _reject_applicant_data
+    raise QueryPrivacyError(
+app.adapters.search.intent.QueryPrivacyError: field='Mathematics SYNTH_P5_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.
+ERROR    unimatch.worker:worker.py:159 job syntheti failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/harness/test_rejected_diagnostics.py", line 231, in rejected_stage
+    raise ValueError(marker)
+ValueError: SYNTH_P5_EMAIL@example.invalid
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/jobs/worker.py", line 136, in execute
+    await self._dispatch(session, store, job, lease_token=lease_token)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/harness/test_rejected_diagnostics.py", line 247, in dispatch
+    async def dispatch(*a, **kw): await r.run_to_decision()
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/pipeline/runner.py", line 440, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/harness/test_rejected_diagnostics.py", line 233, in rejected_stage
+    intent(field="Mathematics " + marker)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/harness/test_rejected_diagnostics.py", line 60, in intent
+    return DiscoveryIntent(institution="Public University", domain="public.invalid",
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 9, in __init__
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/search/intent.py", line 121, in __post_init__
+    _reject_applicant_data(name, getattr(self, name))
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/search/intent.py", line 73, in _reject_applicant_data
+    raise QueryPrivacyError(
+app.adapters.search.intent.QueryPrivacyError: field='Mathematics SYNTH_P5_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.
+INFO     unimatch.worker:worker.py:164 job syntheti -> retry
+=========================== short test summary info ============================
+FAILED ../../harness/test_rejected_diagnostics.py::test_p1_initial_refusal_has_no_rejected_diagnostic
+FAILED ../../harness/test_rejected_diagnostics.py::test_p2_poisoned_redirect_keeps_safe_requested_identity
+FAILED ../../harness/test_rejected_diagnostics.py::test_p3_rejected_intent_has_typed_safe_reason
+FAILED ../../harness/test_rejected_diagnostics.py::test_p4_native_consumers_do_not_reintroduce_refused_url
+FAILED ../../harness/test_rejected_diagnostics.py::test_p5_actual_runner_worker_typed_escape_sinks
+5 failed, 1 passed in 0.77s

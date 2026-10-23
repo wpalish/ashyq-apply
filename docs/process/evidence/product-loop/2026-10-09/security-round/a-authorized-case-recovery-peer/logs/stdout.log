@@ -1,0 +1,16 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-authorized-case-recovery-peer/runtime/frontend[39m
+
+ [31m❯[39m src/lib/recovery.peer.test.tsx [2m([22m[2m3 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 54[2mms[22m[39m
+   [31m❯[39m independent recovery lifecycle boundaries [2m(3)[22m
+[31m     [31m×[31m new case during profile detail waits releases loading and retains the blank intent[39m[32m 41[2mms[22m[39m
+[31m     [31m×[31m a delayed orphan run pointer cannot replace the authorized recovered latest run[39m[32m 6[2mms[22m[39m
+     [32m✓[39m owner change during fallback detail cannot publish old profile/run/results[32m 7[2mms[22m[39m
+ [32m✓[39m src/lib/store.test.tsx [2m([22m[2m44 tests[22m[2m)[22m[33m 335[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m45 passed[39m[22m[90m (47)[39m
+[2m   Start at [22m 06:14:37
+[2m   Duration [22m 898ms[2m (environment 43%, tests 28%, transform 12%, setup 8%, import 8%)[22m
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-authorized-case-recovery-peer/logs/junit.xml

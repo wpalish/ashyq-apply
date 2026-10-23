@@ -1,0 +1,159 @@
+{
+  "status": "ACTUAL_SINGLE_FULL13_PASS",
+  "source_head": "c7b41fcf42c2fb84e877a8cb8b1349eedb79941f",
+  "initial_tree": "a75d44565a50be896244ca95e68281f87e7327dd3ec565ab2b897ec9674229e3",
+  "native_run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0",
+  "parent_full_exit_code": 0,
+  "steps": [
+    {
+      "name": "ruff",
+      "exit_code": 0,
+      "seconds": 0.14,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/ruff.log"
+    },
+    {
+      "name": "ruff-format",
+      "exit_code": 0,
+      "seconds": 0.05,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/ruff-format.log"
+    },
+    {
+      "name": "mypy",
+      "exit_code": 0,
+      "seconds": 12.87,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/mypy.log"
+    },
+    {
+      "name": "backend-sqlite",
+      "exit_code": 0,
+      "seconds": 519.03,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/backend-sqlite.log"
+    },
+    {
+      "name": "frontend-typecheck",
+      "exit_code": 0,
+      "seconds": 3.45,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/frontend-typecheck.log"
+    },
+    {
+      "name": "frontend-lint",
+      "exit_code": 0,
+      "seconds": 1.53,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/frontend-lint.log"
+    },
+    {
+      "name": "frontend-tests",
+      "exit_code": 0,
+      "seconds": 7.75,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/frontend-tests.log"
+    },
+    {
+      "name": "frontend-build",
+      "exit_code": 0,
+      "seconds": 4.65,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/frontend-build.log"
+    },
+    {
+      "name": "backend-postgresql",
+      "exit_code": 0,
+      "seconds": 358.41,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/backend-postgresql.log"
+    },
+    {
+      "name": "e2e",
+      "exit_code": 0,
+      "seconds": 71.23,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/e2e.log"
+    },
+    {
+      "name": "e2e-auth",
+      "exit_code": 0,
+      "seconds": 8.45,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/e2e-auth.log"
+    },
+    {
+      "name": "pip-audit",
+      "exit_code": 0,
+      "seconds": 12.86,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/pip-audit.log"
+    },
+    {
+      "name": "npm-audit",
+      "exit_code": 0,
+      "seconds": 0.65,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/npm-audit.log"
+    }
+  ],
+  "SQLite": {
+    "unique": 4384,
+    "warnings": 32,
+    "test_seconds": 516.71,
+    "coverage_percent": 95.27,
+    "fail": 0,
+    "error": 0,
+    "skip": 0
+  },
+  "PostgreSQL": {
+    "unique": 4384,
+    "warnings": 32,
+    "test_seconds": 355.52,
+    "coverage": "NOT_MEASURED",
+    "fail": 0,
+    "error": 0,
+    "skip": 0
+  },
+  "same_DB_IDs": true,
+  "same_core_IDs": true,
+  "old4369_preserved_plus15": true,
+  "unique_case_ID_sha256": "a621f5b10fab5337398c10a1db6792c8f54c3045ce6c5f6c7cc9f283dde40829",
+  "frontend": {
+    "passed": 342,
+    "files": 33,
+    "intentional_ErrorBoundary_raw_diagnostic": true
+  },
+  "demo": {
+    "passed": 79,
+    "old_skipped": 1
+  },
+  "auth": {
+    "passed": 6,
+    "failed": 0,
+    "notrun": 0
+  },
+  "mypy_source_files": 386,
+  "audits": {
+    "pip_exit": 0,
+    "npm_exit": 0,
+    "pip_no_known_vulnerabilities": true,
+    "npm_zero_vulnerabilities": true
+  },
+  "current_frozen19_exact": true,
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "history": {
+    "a-security-recovery-native-verification/core-terminal": {
+      "READY": {
+        "sha256": "8b195b5d0f879c77d73db4eaa4cdb80f1fecd6851281753aa1d8499150f8b365",
+        "bytes": 931
+      },
+      "errors": []
+    },
+    "a-auth-recovery-off-review-final": {
+      "READY": {
+        "sha256": "c37961d5cf7d5cf41d54ce792c3ad465e59d80aa163b8758f66881c3fa116226",
+        "bytes": 1252
+      },
+      "errors": []
+    }
+  },
+  "runtime_owned_UI": "PENDING_SEPARATE",
+  "physical_executed_full_snapshot": "ONLY38_DECLARED_E2E_PNG_DELTA_VS_INITIAL",
+  "current_primary_whole_tree": "NOT_EQUALITY_CLAIMED_METADATA_ONLY_HEAD_SEPARATE",
+  "current_metadata_head": "f4e899d8c15f835d740bbad2ea401a3ccf859fe4",
+  "PNG_qualification_READY": {
+    "sha256": "83ccfe74616776cd8e292e4171453d04b6f01d2932d26d0a3c9b42d66a839ada",
+    "bytes": 1107
+  }
+}

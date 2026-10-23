@@ -1,0 +1,46 @@
+{
+  "environment": "retained owned synthetic preview 18140 / API 18141 only",
+  "profileB": "8f86257ecca249c7a1339cd78d1be5b9",
+  "restoredProfileA": "eb6861322a0245c1b2ec493c8f59b311",
+  "writes": [
+    {
+      "application": "6ec828566d334dd1a7271728a7ec52b8",
+      "programme": "oxford-advanced-computer-science-msc",
+      "snapshot": "c38e1c70834d16de41e5d412327d28c716efb8dcb3b410df46b262796929c342",
+      "task": "31d95dd388944815a86a99a677e86f7e",
+      "verified": [
+        "explicit review and server ACK",
+        "linked personal document task; parent checklist immediately updated",
+        "personal note edited, ACK and reload",
+        "archived source version remains addressable",
+        "source calendar 2027-01-06 12:00 Europe/London and exact application link"
+      ]
+    },
+    {
+      "application": "a0d811037d684573ad10dc7397386ec1",
+      "programme": "st-andrews-data-science-online-msc",
+      "intake": "January2027",
+      "verified": [
+        "specific intake selection required",
+        "explicit review and server ACK",
+        "plan reload retains January2027",
+        "only January2027 deadline appears in Plan; other intakes excluded"
+      ]
+    }
+  ],
+  "otherChecks": [
+    "published-university filter shows 9 of 500",
+    "MIT internal-only master has no external plan action",
+    "source dates and personal dates remain separate",
+    "wrong-case St Andrews application link is fenced after restoring A",
+    "desktop1280 and mobile390 observations",
+    "A original state retained; inherited known conflicts preserved, not replayed or removed"
+  ],
+  "notPerformed": [
+    "actual university application or file upload",
+    "live provider/model/evaluation pilot",
+    "production acceptance",
+    "full backend/mypy/auth suites"
+  ],
+  "clickLimit": "One offscreen source-return click did not navigate through CUA; keyboard Enter opened the exact archived route. No reproducible code defect was established or claimed fixed."
+}

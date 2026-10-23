@@ -1,0 +1,133 @@
+Browser tab: 4, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/profile".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/profile
+	2 container root
+		3 link Description: Skip to content, Value: 127.0.0.1:18140/#main-content
+		17 container
+			18 text unimatch
+			19 container Main navigation
+				20 button Home
+				21 button Find
+					22 text Find
+					23 text 20
+				24 button Plan
+					25 text Plan
+					26 text 2
+				27 button Documents
+					28 text Documents
+					29 text 2
+				30 button Community
+		10 container
+			12 text Demo data
+			13 button (collapsed) Explore, Secondary Actions: Expand
+				14 text Explore
+			15 button (collapsed) Description: Applicant workspace, Help: U, Secondary Actions: Expand
+				16 text U
+		116 container
+			117 text Something went wrong.
+			118 text This profile changed in another window. Keep your edits and compare the saved profile.
+			119 button Dismiss
+		31 container Description: Профиль абитуриента, ID: main-content
+			32 container
+				33 text Сохранённая оценка. Оценка отражает состояние исследования на тот момент. Она не подтверждает текущую готовность и не является вероятностью поступления.
+			120 container Profile save recovery
+				121 heading Your profile changed in another tab, Value: 2
+					122 text Your profile changed in another tab
+				123 text Compare your current edits with the saved profile. Applying the comparison changes only your draft.
+				124 button (collapsed) Save details, Secondary Actions: Expand
+					125 text Save details
+				126 container
+					127 text Saved version  6 . Review each difference. This comparison does not save to the server.
+				128 container Applicant display name — choose a value
+					129 container
+						130 text Applicant display name  — choose a value
+					131 container
+						132 text Before:  UI conflict server (synthetic)
+					133 radio button (settable, integer) Description: Your current edits: UI local conflict draft (synthetic), Value: 0
+					134 radio button (settable, integer) Description: Saved profile: UI concurrent update (synthetic), Value: 0
+				135 button (disabled) Apply comparison to draft
+				136 text You can keep editing or leave this comparison. After applying, press Save explicitly.
+				137 button Export profile recovery for this tab
+				138 button Clear confirmed recovery history
+			36 heading Tell us about yourself., Value: 1
+				37 text Tell us about  yourself.
+			38 text A few simple details help us find the right matches for you. Your information stays editable.
+			39 container Profile steps
+				40 button 1 Personal details
+					41 text 1
+					42 text Personal details
+				43 button 2 Academic background
+					44 text 2
+					45 text Academic background
+				46 button 3 Tests & scores
+					47 text 3
+					48 text Tests & scores
+				49 button 4 Activities & achievements
+					50 text 4
+					51 text Activities & achievements
+				52 button 5 Review
+					53 text 5
+					54 text Review
+			55 container
+				56 text Loaded  UI local conflict draft (synthetic)  from your saved profile. Edits here update that profile.
+			57 container
+				58 heading Start from, Value: 2
+					59 text Start from
+				60 text Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears.
+				61 button Blank profile
+				62 button Load synthetic demo
+				139 text synthetic demo data
+			64 container
+				65 heading Application context, Value: 2
+					66 text Application context
+				67 text What you are applying for, and from where. Applicant display name
+				68 text field (settable) Applicant display name, Value: UI local conflict draft (synthetic), ID: applicant-name
+				69 text A label for your private applicant case. It is excluded from university search queries. Level
+				70 pop up button (collapsed, settable) Level, Value: Bachelor, ID: level, Secondary Actions: Expand
+					71 menu
+						72 Foundation
+						73 (selected) Bachelor
+						74 Master
+						75 PhD
+				76 text Field of study
+				77 text field (settable) Field of study, Value: computer science, ID: field
+				78 text Drives which programmes are searched. Intake term
+				79 pop up button (collapsed, settable) Intake term, Value: Fall, ID: term, Secondary Actions: Expand
+					80 menu
+						81 (selected) Fall
+						82 Spring
+						83 Summer
+						84 Winter
+				85 text Intake year
+				86 stepper (settable, integer) Intake year, Value: 2027, ID: year
+				87 text Citizenship
+				88 text field (settable) Citizenship, Value: Kazakhstan, ID: citizenship
+				89 text Decides which scholarships you are eligible for at all. Country of residence
+				90 text field (settable) Country of residence, Value: Kazakhstan, ID: residence
+				91 text Country of education
+				92 text field (settable) Country of education, Value: Kazakhstan, ID: education-country
+				93 text Additional nationality (if any)
+				94 text field (settable) Additional nationality (if any), ID: second-citizenship
+				95 text Leave blank if none. Education system
+				96 text field (settable) Education system, Value: Kazakhstan national secondary (attestat), ID: edsys
+				97 text Curriculum type
+				98 pop up button (collapsed, settable) Curriculum type, Value: national, ID: curriculum-type, Secondary Actions: Expand
+					99 menu
+						100 (selected) national
+						101 ib
+						102 a level
+						103 ap
+						104 us high_school
+						105 other
+				106 text Finishing school on
+				107 date field (settable) Finishing school on, Value: 2027-05-25, ID: grad
+					108 container
+						109 stepper
+						110 stepper
+						111 stepper
+					112 pop up button Показать окно выбора даты Показать окно выбора даты
+			113 container
+				114 button Save profile
+				140 text Not saved. Your edits are still in this form.
+				115 button Continue →
+
+The focused UI element is 1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/profile

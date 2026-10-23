@@ -1,0 +1,11 @@
+{
+  "at_utc": "2026-10-13T17:47:41.160346+00:00",
+  "baseline": "64a8ea3e",
+  "paths": {
+    "frontend/src/lib/store.tsx": "81afb3fbe97ccd015d9755bfd1fe4079e57eae8bfd2a48363c308545842f272a",
+    "frontend/src/lib/admissionsActionsRecovery.ts": "29768832e7f0d972f55606c6310aeb915f90663e9527f825feda95bbe2eb881e",
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": "5724262f6ccaf1f567ac0bda067d308a55c35280a3ccd303c17fe90c3831c477",
+    "frontend/src/lib/storeIsolation.test.tsx": "552e3144f29df301a1f7efd2408b6f68ed879a12bf614323b5452e7dafa4ae90"
+  },
+  "scope": "Root-only existing frontend Store/recovery library and their native test files. Synchronous case epoch/current identity getter; captured late DELETE uses existing G3 own-case tombstone; selected ACK-only cleanup requires matching returned server receipts and expected index, never pending/unknown/conflict deletion or raised cap64. Existing UUID/body/CAS/index/fence contracts retained. No new server route/DTO/payload cache/auto send. Native frontend tests including A\u2192B\u2192A, 64, corrupt/storage failure/interleaving. Backend exact unchanged full3 carry. Forms/typed transport follow after 2a."
+}

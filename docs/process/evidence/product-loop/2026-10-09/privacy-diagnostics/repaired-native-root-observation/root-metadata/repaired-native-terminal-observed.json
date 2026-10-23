@@ -1,0 +1,26 @@
+{
+  "observed_at_utc": "2026-10-11T04:45:10.755322+00:00",
+  "origin": "Actual tools.write_stdin completion observed by root, session 61069, chunk 47683e",
+  "session_id": 61069,
+  "chunk_id": "47683e",
+  "outer_exit_code": 0,
+  "end_lines_observed": [
+    "END doctor exit=0",
+    "END core exit=0",
+    "END full exit=0"
+  ],
+  "queue_sha256": "02a3177263538f02595b4d1bd4a1094df3711126d0d8cee8b1f548ae22c62cb7",
+  "execution_sha256": "178945f73f45920955f88be68fb28bd3e9a111d1e0e9978e4d17bb6c4222da6e",
+  "binding_sha256": "c8d90f5602b5091a59fc3bd643888f2b7ab146ebec21dc5d10a9f2ab1eafd01b",
+  "source_head": "22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c",
+  "source_branch": "task/product-privacy-diagnostics",
+  "source34_pins_sha256": "b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001",
+  "owned_run_ids": [
+    "20261009T043815Z-doctor-9e79d26c",
+    "20261009T043817Z-check-6eaf0e18",
+    "20261009T044726Z-check-2e9670eb"
+  ],
+  "runner_finished_at_utc": "2026-10-09T05:04:11.946137+00:00",
+  "process_snapshot": "No matching queue/local-runner/pytest/playwright process at current root inspection. No process adopted or restarted.",
+  "qualification": "Root observer metadata for real tool exit0. Child originals are separately preserved in the finite packet. This is not an independent final review or a raw tool transport archive."
+}

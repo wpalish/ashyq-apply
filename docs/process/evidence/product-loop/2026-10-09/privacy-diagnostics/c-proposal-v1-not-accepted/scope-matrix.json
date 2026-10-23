@@ -1,0 +1,68 @@
+{
+  "groups": [
+    {
+      "group": "P1",
+      "native": "Fetcher.get initial email URL",
+      "off": "raw warning args/message and FetchResult.url",
+      "on": "safe origin diagnostic, REFUSED_PRIVACY, status None, no content",
+      "branches": 1,
+      "controls": "cache read/write/DNS/request spies 0; refusal counter 1"
+    },
+    {
+      "group": "P2",
+      "native": "Fetcher redirect loop + real network policy with fake resolver + MockTransport",
+      "off": "raw poisoned hop warning/final_url",
+      "on": "exact safe requested source preserved; rejected hop omitted",
+      "branches": 1,
+      "controls": "safe initial resolver calls 2, mocked HTTP request 1; poisoned-hop DNS/request 0; final status None; refusal counter 1"
+    },
+    {
+      "group": "P3",
+      "native": "DiscoveryIntent guards and QueryPrivacyError",
+      "off": "raw rejected field in str/repr/args",
+      "on": "allowlisted field/reason and useful bounded prose only",
+      "branches": 5,
+      "controls": "email sentinel plus currency/grade/long-number/population reason controls; ValueError subtype",
+      "branches_off": 1,
+      "branches_on": 5,
+      "branch_qualification": "OFF reaches email constructor then semantic no-retention assertion fails; remaining four reason-control constructions execute ON only. Independent ordinary P6 controls run both copies."
+    },
+    {
+      "group": "P4",
+      "native": "five adapter failures + catalogue lead/catalogue document/sitemap/confirmed-program rejection, then real runner recorders",
+      "off": "unsafe original URL errors/outcomes/retry, catalogue candidate/no-list trace, run diagnostic attrs",
+      "on": "safe diagnostic URL and typed partial; privacy retry omitted; no no-list fallthrough",
+      "branches": 9,
+      "controls": "five adapters each pages_checked=1/pages_failed=1/claims=[]; empty docs/awards; no confirmed programme/absence claim; runner errors failure vs unknown preserved"
+    },
+    {
+      "group": "P5",
+      "native": "actual run_to_decision generic handler, actual _audit/Session.add, actual Worker.execute generic handler + JobStore.fail memory spy",
+      "off": "raw chained exception log JSON/text, run.errors, audit.detail, fail argument",
+      "on": "typed safe diagnostic without exc_info chain; stage FAILED and rethrow remain",
+      "branches": 2,
+      "controls": "worker failed1/done0; fail lease_token3; browser close1. Injected stage only, not current direct-query leakage"
+    },
+    {
+      "group": "P6",
+      "native": "ordinary numeric CMS URL/public query and MockTransport404; safe field helper/query renderer; runner ordinary/LeaseLost/RunCancelled exits",
+      "off": "PASS ordinary controls",
+      "on": "PASS ordinary controls",
+      "branches": 6,
+      "controls": "exact source/retry URL, status404/HTTP reason; generic traceback/rethrow/audit; budget6/sharedTrue/reserve1; Mathematics survives rejected grade; lease no audit/write; cancellation audit/rethrow"
+    }
+  ],
+  "branch_count_method": "Native failure seams and reason/control branches are reported within six groups, not as six production journeys. P6 branches group ordinary fetch/cost/query-field/ordinary error/lease/cancel.",
+  "unexecuted_source_only_branches": [
+    "live_discovery._recover_search_pages pending URL filtering",
+    "live_discovery._navigation_fallback failure diagnostic replacement"
+  ],
+  "unexecuted": [
+    "actual SQL persistence",
+    "RunView/API serialization roundtrip",
+    "provider/live discovery",
+    "successful page content extraction",
+    "full/core/integration suite",
+    "existing test_fetch_pii_hops body (proposed assertion adjusted, not executed in this task)"
+  ]
+}

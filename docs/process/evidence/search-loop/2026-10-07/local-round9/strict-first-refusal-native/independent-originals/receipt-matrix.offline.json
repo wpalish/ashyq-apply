@@ -1,0 +1,837 @@
+[
+  {
+    "fixture": "test_current_strict_first_refu0",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "rate limited",
+      "error": "Search service unavailable (exa_mcp; rate limited)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu1",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 401,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 401)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu10",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "transport error",
+      "error": "Search service unavailable (exa_mcp; transport error)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu11",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 302,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 302)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu12",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "rate limited",
+      "error": "Search service unavailable (exa_mcp; rate limited)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu13",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 401,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 401)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu14",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 402,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 402)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu15",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 403,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 403)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu16",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 429,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 429)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu17",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 500,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 500)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu18",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "MCP RPC error",
+      "error": "Search service unavailable (exa_mcp; MCP RPC error)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu19",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "MCP tool error",
+      "error": "Search service unavailable (exa_mcp; MCP tool error)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu2",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 402,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 402)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu20",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "malformed response",
+      "error": "Search service unavailable (exa_mcp; malformed response)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu21",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "timeout",
+      "error": "Search service unavailable (exa_mcp; timeout)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu22",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "transport error",
+      "error": "Search service unavailable (exa_mcp; transport error)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu23",
+    "calls": 1,
+    "methods": [
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 302,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 302)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu3",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 403,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 403)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu4",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 429,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 429)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu5",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 500,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 500)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu6",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "MCP RPC error",
+      "error": "Search service unavailable (exa_mcp; MCP RPC error)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu7",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "MCP tool error",
+      "error": "Search service unavailable (exa_mcp; MCP tool error)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu8",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "malformed response",
+      "error": "Search service unavailable (exa_mcp; malformed response)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_current_strict_first_refu9",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "timeout",
+      "error": "Search service unavailable (exa_mcp; timeout)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_disabling_only_other_retr0",
+    "calls": 2,
+    "methods": [
+      "tools/call",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": false,
+    "flagsDuring": [
+      [
+        true,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": null,
+    "escaped": null
+  },
+  {
+    "fixture": "test_disabling_only_other_retr1",
+    "calls": 2,
+    "methods": [
+      "tools/call",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": true,
+    "STOP": false,
+    "flagsDuring": [
+      [
+        false,
+        true
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": null,
+    "escaped": null
+  },
+  {
+    "fixture": "test_legacy_capture_retains_re0",
+    "calls": 4,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call",
+      "tools/call"
+    ],
+    "strict": false,
+    "initialized": false,
+    "STOP": false,
+    "flagsDuring": [
+      [
+        true,
+        true
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": null,
+    "failure": null,
+    "escaped": null
+  },
+  {
+    "fixture": "test_original_internal_retry_h0",
+    "calls": 4,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": false,
+    "flagsDuring": [
+      [
+        true,
+        true
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": null,
+    "escaped": null
+  },
+  {
+    "fixture": "test_original_internal_retry_h1",
+    "calls": 4,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": false,
+    "flagsDuring": [
+      [
+        true,
+        true
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": null,
+    "escaped": null
+  },
+  {
+    "fixture": "test_refusal_on_cold_initializ0",
+    "calls": 1,
+    "methods": [
+      "initialize"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 401,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 401)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_refusal_on_cold_initializ1",
+    "calls": 1,
+    "methods": [
+      "initialize"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 402,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 402)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_refusal_on_cold_initializ2",
+    "calls": 1,
+    "methods": [
+      "initialize"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": 429,
+      "reason": null,
+      "error": "Search service unavailable (exa_mcp; HTTP 429)."
+    },
+    "escaped": null
+  },
+  {
+    "fixture": "test_scoped_retry_flags_restor0",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "rate limited",
+      "error": "Search service unavailable (exa_mcp; rate limited)."
+    },
+    "escaped": "RuntimeError"
+  },
+  {
+    "fixture": "test_scoped_retry_flags_restor1",
+    "calls": 3,
+    "methods": [
+      "initialize",
+      "notifications/initialized",
+      "tools/call"
+    ],
+    "strict": true,
+    "initialized": false,
+    "STOP": true,
+    "flagsDuring": [
+      [
+        false,
+        false
+      ]
+    ],
+    "flagsRestored": true,
+    "budget_queries": 1,
+    "failure": {
+      "http_status": null,
+      "reason": "rate limited",
+      "error": "Search service unavailable (exa_mcp; rate limited)."
+    },
+    "escaped": "CancelledError"
+  }
+]

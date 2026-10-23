@@ -1,0 +1,4 @@
+{
+  "attempt2": "preserved",
+  "detail": "Native Worker finally calls heartbeat.cancel without awaiting; immediate all_tasks observes cancelling task. One event-loop yield tests eventual cancellation rather than inventing synchronous reaping guarantee. Source unchanged."
+}

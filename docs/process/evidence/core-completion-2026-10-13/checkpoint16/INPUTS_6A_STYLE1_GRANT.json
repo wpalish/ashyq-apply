@@ -1,0 +1,13 @@
+{
+  "paths": {
+    "backend/app/api/routes_research.py": "932b4724c5da87b659946085911e4f5d301c2963cbbf37d59e8d242d84196b8d",
+    "backend/app/api/routes_results.py": "6e32d3e4222ed71a06c902ae2894ad01c279d087ac5baba9bdc4f2db7d4f4ceb",
+    "backend/app/pipeline/runner.py": "735aecb6e65ce5fb23a325ccf2595533de0c7cad59eea31d14db81ece9b892e1",
+    "backend/app/domain/profile_input_provenance.py": "1a457495cb93ac5d5ba4a7e78862ca5b0f095ddc9bff5f2b58dc54af7bba93f5",
+    "backend/app/schemas/research_read.py": "4ac3c5fb9dc199ddda989414f932cb4cfb7ada0f4bdf9d290b215ed345264bb0",
+    "backend/tests/test_research_input_provenance.py": "9465b7342602f87bd8f2f2fb5b127ef73ab5878058ef23614494415f356562ac",
+    "backend/tests/test_result_read_freshness.py": "bb51f0147ad89dc34f2d0ba9e3994aeaab58a9a33e32ee805c5f7dfdc04931b4"
+  },
+  "failure": "Native static6a1 Alembicheads PASS; Ruff7 import ordering only. External subset omitted package __init__.py so Ruff classified app/tests as third-party; no test execution.",
+  "scope": "Exact7 import order with known-first-party app/tests matching actual native source; whitespace formatting only, no source semantic/assertion change. Raw static failure retained."
+}

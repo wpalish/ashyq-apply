@@ -1,0 +1,125 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - button "Unimatch home": unimatch
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "University shortlist" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - heading "Подбор программ" [level=1]
+  - paragraph: Сравни условия, выбери программу и переходи к её требованиям и документам.
+  - paragraph: 1 программ в твоём плане
+  - link "Каталог 500 вузов":
+    - /url: "#/shortlist?view=catalogue"
+  - link "Открыть план":
+    - /url: "#/approved"
+    - text: Открыть план
+  - link "Заявки и сроки":
+    - /url: "#/applications"
+    - text: Заявки и сроки
+  - paragraph: Демонстрационный подбор · данные из синтетического корпуса, не реальные требования университетов.
+  - generic: Направление
+  - textbox "Поиск программ":
+    - /placeholder: computer science
+  - generic: Регион
+  - combobox "Регион":
+    - option "Весь мир" [selected]
+    - option "Australia"
+    - option "Austria"
+    - option "Belgium"
+    - option "Canada"
+    - option "Finland"
+    - option "Germany"
+    - option "Ireland"
+    - option "Japan"
+    - option "Netherlands"
+    - option "Norway"
+    - option "Poland"
+    - option "Singapore"
+    - option "Switzerland"
+    - option "United Kingdom"
+    - option "United States"
+  - button "Бюджет в год До $6 000":
+    - generic: Бюджет в год
+    - strong: До $6 000
+  - button "Показать программы":
+    - text: Показать программы
+  - button "Все фильтры"
+  - generic: Степень
+  - combobox "Степень":
+    - option "Степень" [selected]
+    - option "Бакалавриат"
+  - tablist "Match list":
+    - tab "Все" [selected]
+    - tab "Приоритет"
+    - tab "Сохранённые"
+    - tab "Рассматриваю"
+  - paragraph: Найдено 20 программ
+  - article:
+    - generic: Netherlands · Groningen
+    - heading "University of Groningen" [level=2]
+    - paragraph: BSc Computing Science
+    - generic: Бакалавриат
+    - strong: 1 848 USD
+    - button "Источник и расчёт"
+    - strong: fall 2027
+    - button "Открыть программу"
+    - button "Добавить в сравнение":
+      - text: Добавить в сравнение
+  - article:
+    - generic: Belgium · Leuven
+    - heading "KU Leuven" [level=2]
+    - paragraph: BSc Informatics
+    - generic: Бакалавриат
+    - strong: 7 554 USD
+    - button "Источник и расчёт"
+    - strong: fall 2027
+    - button "Открыть программу"
+    - button "Добавить в сравнение":
+      - text: Добавить в сравнение
+  - article:
+    - generic: Japan · Tokyo
+    - heading "University of Tokyo" [level=2]
+    - paragraph: PEAK Environmental Sciences (Computing track)
+    - generic: Бакалавриат
+    - strong: 1 986 USD
+    - button "Источник и расчёт"
+    - strong: fall 2027
+    - button "Открыть программу"
+    - button "Добавить в сравнение":
+      - text: Добавить в сравнение
+  - region "Compare selected programmes":
+    - strong: Сравнить программы 0
+    - button "Перейти к сравнению" [disabled]:
+      - text: Перейти к сравнению
+  - navigation "Страницы результатов":
+    - button "Назад" [disabled]
+    - generic: 1 / 7
+    - button "Дальше"
+  - link "Посмотреть каталог 500 университетов":
+    - /url: "#/shortlist?view=catalogue"
+  - generic "Detailed evidence table"
+  - text: Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Bucket Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision Eligibility Admissions fit Funding Remaining / year Deadline Match Confirmed Decision
+  - paragraph: Showing 20 of 20. Rejected rows are kept with their reason so the same programme is not proposed again without new information.
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.

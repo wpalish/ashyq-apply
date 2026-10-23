@@ -1,0 +1,7 @@
+{
+  "paths": {
+    "frontend/src/screens/BillingScreen.tsx": "1a1546fd807e0d9f9451dcc823c7f4ebc87184e3dc90bddb9834e8c539c0e1a9"
+  },
+  "failure": "findings5a typecheck syntax3: external generator stopped at first old effect cleanup return, leaving its dead suffix and duplicate preparationAccess.",
+  "repair": "Exact Billing-only remove old four-line effect suffix/duplicate preparation variable. New case fences/read/semantic assertions unchanged. First evidence retained; new findings5b all gates."
+}

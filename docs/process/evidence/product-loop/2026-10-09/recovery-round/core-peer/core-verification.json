@@ -1,0 +1,265 @@
+{
+  "core_status": "passed",
+  "suite": "core",
+  "head": "c7ece3c0a057a4fe6a8b8b5e43c3b17c8338cbd4",
+  "source_tree_sha256": "0a0497a352655630d11985ecbe577fcc1413c8a7e8a27cc4cb9523c2fca0db23",
+  "source_status": "M docs/process/HANDOFF.md",
+  "head_expected_equal": true,
+  "steps": [
+    {
+      "name": "ruff",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/ruff.log",
+      "exit_code": 0,
+      "seconds": 0.16
+    },
+    {
+      "name": "ruff-format",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/ruff-format.log",
+      "exit_code": 0,
+      "seconds": 0.05
+    },
+    {
+      "name": "mypy",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/backend/.venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/mypy.log",
+      "exit_code": 0,
+      "seconds": 13.71
+    },
+    {
+      "name": "backend-sqlite",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--cov=app",
+        "--cov-fail-under=92",
+        "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/backend-sqlite.xml"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/backend-sqlite.log",
+      "exit_code": 0,
+      "seconds": 499.58
+    },
+    {
+      "name": "frontend-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/frontend-typecheck.log",
+      "exit_code": 0,
+      "seconds": 3.55
+    },
+    {
+      "name": "frontend-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/frontend-lint.log",
+      "exit_code": 0,
+      "seconds": 1.56
+    },
+    {
+      "name": "frontend-tests",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--run"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/frontend-tests.log",
+      "exit_code": 0,
+      "seconds": 8.25
+    },
+    {
+      "name": "frontend-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T230542Z-check-07efc2be/frontend-build.log",
+      "exit_code": 0,
+      "seconds": 4.79
+    }
+  ],
+  "eight_zero": true,
+  "source16": {
+    "frontend/e2e/journey.spec.ts": {
+      "expected": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+      "current": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+      "frozen": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+      "map": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077"
+    },
+    "frontend/src/App.tsx": {
+      "expected": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+      "current": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+      "frozen": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+      "map": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530"
+    },
+    "frontend/src/components/ComparePanel.preparation.test.tsx": {
+      "expected": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "current": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "frozen": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+      "map": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3"
+    },
+    "frontend/src/components/ComparePanel.tsx": {
+      "expected": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "current": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "frozen": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+      "map": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab"
+    },
+    "frontend/src/lib/store.test.tsx": {
+      "expected": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+      "current": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+      "frozen": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+      "map": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251"
+    },
+    "frontend/src/lib/store.tsx": {
+      "expected": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+      "current": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+      "frozen": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+      "map": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee"
+    },
+    "frontend/src/screens/ApprovedScreen.tsx": {
+      "expected": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "current": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "frozen": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+      "map": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f"
+    },
+    "frontend/src/screens/DocumentsScreen.tsx": {
+      "expected": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+      "current": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+      "frozen": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+      "map": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef"
+    },
+    "frontend/src/screens/HomeScreen.tsx": {
+      "expected": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+      "current": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+      "frozen": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+      "map": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705"
+    },
+    "frontend/src/screens/JourneyScreens.test.tsx": {
+      "expected": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "current": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "frozen": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+      "map": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10"
+    },
+    "frontend/src/screens/ShortlistScreen.test.tsx": {
+      "expected": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6",
+      "current": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6",
+      "frozen": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6",
+      "map": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6"
+    },
+    "frontend/src/screens/ShortlistScreen.tsx": {
+      "expected": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+      "current": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+      "frozen": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+      "map": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62"
+    },
+    "frontend/src/screens/SourcesScreen.test.tsx": {
+      "expected": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+      "current": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+      "frozen": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+      "map": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d"
+    },
+    "frontend/src/screens/SourcesScreen.tsx": {
+      "expected": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+      "current": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+      "frozen": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+      "map": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b"
+    },
+    "frontend/src/components/ResultDetail.scope.test.tsx": {
+      "expected": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b",
+      "current": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b",
+      "frozen": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b",
+      "map": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b"
+    },
+    "frontend/src/components/ResultDetail.tsx": {
+      "expected": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e",
+      "current": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e",
+      "frozen": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e",
+      "map": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e"
+    }
+  },
+  "all16_equal": true,
+  "native_tree_recipe_matches": true,
+  "summary_source_equal_manifest": true,
+  "sqlite": {
+    "passed_log": 4369,
+    "warnings": 32,
+    "test_seconds": 497.15,
+    "coverage_percent": 95.28,
+    "JUnit_total": 4369,
+    "JUnit_unique": 4369,
+    "failure": 0,
+    "error": 0,
+    "skip": 0,
+    "identities_sha256": "d7015b2cef3475a516382a1d687a7862e7994acc39aaaaf931edc3d8f6117d42",
+    "same_previous4369": true,
+    "previous_JUnit_pin": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T220925Z-check-75e57309/backend-sqlite.xml",
+      "sha256": "391b493f486d2b51013215815530492012ad485643375d5e1297100076e74904",
+      "bytes": 654153
+    }
+  },
+  "frontend": {
+    "passed": 301,
+    "files": 30,
+    "intentional_ErrorBoundary_stderr_present": true
+  },
+  "mypy_files": 386,
+  "STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "STOP_equal": true,
+  "private_selection_violations": [],
+  "earlier_A_ready": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/ready-manifest.json",
+    "sha256": "522e6b4f415fa493ac91c9e96798f1d308714391753a2c122d4ce285a1abfff9",
+    "bytes": 4745
+  },
+  "earlier_A_30_mismatches": [],
+  "github_actions_started": false,
+  "live_capture_started": false,
+  "container_gates": false,
+  "scope": "Actual core only; full/UI pending; no independent check execution."
+}

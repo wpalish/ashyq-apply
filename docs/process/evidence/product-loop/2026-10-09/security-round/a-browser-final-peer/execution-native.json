@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/Users/wpalish/.local/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "src/AuthGate.test.tsx",
+    "src/lib/store.test.tsx",
+    "src/api/client.privacy.test.ts",
+    "src/screens/DocumentsScreen.privacy.test.tsx",
+    "src/independent-reset-race.test.tsx",
+    "--reporter=default",
+    "--reporter=junit",
+    "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/logs/peer.junit.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/runtime/frontend",
+  "environment": {
+    "PATH": "/Users/wpalish/.local/bin:/usr/bin:/bin",
+    "NODE_OPTIONS": "--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/support/deny-network.cjs",
+    "REVIEW_NETWORK_LOG_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/logs"
+  },
+  "started_at": "2026-10-09T00:29:51.883936+00:00",
+  "exit_code": 0
+}

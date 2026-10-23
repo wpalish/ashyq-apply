@@ -1,0 +1,16 @@
+{
+  "exception": [
+    {
+      "type": "LeaseLost",
+      "reason": null,
+      "sqlstate": null,
+      "sqlite_errorcode": null,
+      "message": "Read checkpoint no longer holds its job attempt."
+    }
+  ],
+  "original_get": 0,
+  "durable": {
+    "catalogue:u-one": 0
+  },
+  "actual_walk": true
+}

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="48" time="7.109" timestamp="2026-10-08T04:51:54.817182+05:00" hostname="iMac-Aliser.local"><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_same_genuine_job_path_off_on_on_off[False0]" time="0.169" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_same_genuine_job_path_off_on_on_off[True0]" time="0.210" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_same_genuine_job_path_off_on_on_off[True1]" time="0.210" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_same_genuine_job_path_off_on_on_off[False1]" time="0.101" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_explicit_false_overrides_hostile_true_and_restores" time="0.102" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_invalid_protocol_rejected_before_db_and_io[kwargs0]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_invalid_protocol_rejected_before_db_and_io[kwargs1]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_invalid_protocol_rejected_before_db_and_io[kwargs2]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_invalid_protocol_rejected_before_db_and_io[kwargs3]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_invalid_protocol_rejected_before_db_and_io[kwargs4]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_ambiguous_resolved_selector_never_enqueues" time="0.040" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_pre_stop_no_db_job_or_fake_native_zero" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_actual_cancel_reclaim_control_and_prior_evidence[cancel-RunCancelled-cancelled-1]" time="0.136" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_actual_cancel_reclaim_control_and_prior_evidence[takeover-LeaseLost-running-2]" time="0.170" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_original_typed_busy_not_masked_by_fresh_observation_contention" time="0.133" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_async_cancel_observes_closed_worker_then_propagates_original" time="0.134" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_fresh_mapping_failure_does_not_replace_typed_control" time="0.135" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_capture_outer_attempts_and_native_ledger_are_independent" time="0.217" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_legacy_direct_false_full_report_matches_original" time="0.113" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_real_claim_refusal_never_executes_or_invents_lease" time="0.046" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_capture_pre_stop_never_constructs_job" time="0.002" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_capture_setup_time_spends_original_clock" time="0.129" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_capture_timeout_keeps_real_job_native_ledger_after_cleanup" time="1.019" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_fenced_cli_cancel_is_partial_exit_and_real_job_cancelled" time="0.161" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_unrecognized_generic_control_payload_is_redacted[runtime]" time="0.135"><failure message="AssertionError: assert ('queued' == 'pending'&#10;  &#10;  - pending&#10;  + queued)">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x10ef9ade0&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...c_cont0'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10ef8dee0&gt;
+error_kind = 'runtime'
+
+    @pytest.mark.parametrize("error_kind", ["runtime", "operational"])
+    def test_unrecognized_generic_control_payload_is_redacted(case, monkeypatch, error_kind):
+        private = "SYNTHETIC_PRIVATE_CONTROL_PAYLOAD"
+        error = (
+            RuntimeError(private)
+            if error_kind == "runtime"
+            else OperationalError("SELECT synthetic_private", {"private": private}, Exception(private))
+        )
+    
+        async def failed_funding(*args, **kwargs):
+            raise error
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", failed_funding)
+        report = asyncio.run(
+            canary.run_canary(
+                None,
+                False,
+                catalogue_ids=[ID],
+                university_read_budget=True,
+                fenced_research_job=True,
+            )
+        )
+        protocol = report["job_protocol"]
+        assert protocol["control_type"] == type(error).__name__
+        assert protocol["control_message"] is None and protocol["control_reason"] is None
+        assert report["run_error"] == type(error).__name__
+        assert private not in json.dumps(protocol) + report["run_error"]
+        assert protocol["terminal_run_error_payload_redacted"] is True
+        assert protocol["run_errors"][-1] == type(error).__name__
+        assert native_count(protocol) == {"catalogue:" + ID: 36}
+&gt;       assert protocol["job_status"] == "pending" and protocol["heartbeat_done"] == [True]
+E       AssertionError: assert ('queued' == 'pending'
+E         
+E         - pending
+E         + queued)
+
+../../local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py:628: AssertionError</failure></testcase><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_unrecognized_generic_control_payload_is_redacted[operational]" time="0.134"><failure message="AssertionError: assert ('queued' == 'pending'&#10;  &#10;  - pending&#10;  + queued)">case = namespace(state=&lt;function case.&lt;locals&gt;.state at 0x114161580&gt;, engines=[Engine(sqlite:////Users/wpalish/Documents/Code...c_cont1'), entry={'name': 'Test University', 'country': 'Example', 'city': 'City', 'homepage': 'https://example.edu/'})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10ee2c3e0&gt;
+error_kind = 'operational'
+
+    @pytest.mark.parametrize("error_kind", ["runtime", "operational"])
+    def test_unrecognized_generic_control_payload_is_redacted(case, monkeypatch, error_kind):
+        private = "SYNTHETIC_PRIVATE_CONTROL_PAYLOAD"
+        error = (
+            RuntimeError(private)
+            if error_kind == "runtime"
+            else OperationalError("SELECT synthetic_private", {"private": private}, Exception(private))
+        )
+    
+        async def failed_funding(*args, **kwargs):
+            raise error
+    
+        monkeypatch.setattr(rm.WebScholarshipAdapter, "find", failed_funding)
+        report = asyncio.run(
+            canary.run_canary(
+                None,
+                False,
+                catalogue_ids=[ID],
+                university_read_budget=True,
+                fenced_research_job=True,
+            )
+        )
+        protocol = report["job_protocol"]
+        assert protocol["control_type"] == type(error).__name__
+        assert protocol["control_message"] is None and protocol["control_reason"] is None
+        assert report["run_error"] == type(error).__name__
+        assert private not in json.dumps(protocol) + report["run_error"]
+        assert protocol["terminal_run_error_payload_redacted"] is True
+        assert protocol["run_errors"][-1] == type(error).__name__
+        assert native_count(protocol) == {"catalogue:" + ID: 36}
+&gt;       assert protocol["job_status"] == "pending" and protocol["heartbeat_done"] == [True]
+E       AssertionError: assert ('queued' == 'pending'
+E         
+E         - pending
+E         + queued)
+
+../../local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py:628: AssertionError</failure></testcase><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_actual_timeout_raw_write_is_charged_before_final_checkpoint" time="1.018" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_raw_failure_preserves_actual_timeout_and_committed_native_provenance" time="1.020" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_raw_failure_preserves_actual_typed_busy_with_readable_prior_state" time="0.170" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_successful_job_raw_failure_is_failed_capture_with_honest_job_state" time="0.198" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job" name="test_final_checkpoint_failure_preserves_timeout_without_false_durable_claim" time="1.019" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_batch_resolved_flags_forwarded_and_recorded[flags0-False-False-False]" time="0.009" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_batch_resolved_flags_forwarded_and_recorded[flags1-True-False-False]" time="0.003" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_batch_resolved_flags_forwarded_and_recorded[flags2-False-True-True]" time="0.003" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_batch_resolved_flags_forwarded_and_recorded[flags3-True-False-True]" time="0.003" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_batch_resolved_flags_forwarded_and_recorded[flags4-False-False-True]" time="0.002" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_batch_resolved_flags_forwarded_and_recorded[flags5-False-False-False]" time="0.002" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_invalid_before_child_or_settings[flags0]" time="0.003" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_invalid_before_child_or_settings[flags1]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_invalid_before_child_or_settings[flags2]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_pre_stop_envelope_effective_flags_without_job[False]" time="0.002" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_pre_stop_envelope_effective_flags_without_job[True]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_child_flags_are_passed_to_capture_without_global_promotion[False]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_child_flags_are_passed_to_capture_without_global_promotion[True]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_canary_cli_rejects_excluded_protocol_before_seed_calls[flags0]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_canary_cli_rejects_excluded_protocol_before_seed_calls[flags1]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_canary_cli_rejects_excluded_protocol_before_seed_calls[flags2]" time="0.001" /><testcase classname="local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol" name="test_outer_clock_is_original_entry_and_limits_unchanged" time="0.000" /></testsuite></testsuites>

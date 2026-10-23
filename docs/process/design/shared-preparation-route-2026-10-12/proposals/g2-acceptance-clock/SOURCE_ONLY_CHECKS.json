@@ -1,0 +1,48 @@
+{
+  "at_utc": "2026-10-12T02:26:10.814187+00:00",
+  "status": "SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "root_reported_preimage_head": "92199be5",
+  "application_paths": [
+    "backend/app/api/routes_shared_route.py",
+    "backend/tests/test_shared_route_api.py"
+  ],
+  "pins": {
+    "backend/app/api/routes_shared_route.py": {
+      "preimage_sha256": "f6dc485b26b9af6d04ba6e4a83d1da28ff1146b47ac3cab51c16d825d7bfb3d5",
+      "proposed_sha256": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+      "preimage_bytes": 39690,
+      "proposed_bytes": 40211
+    },
+    "backend/tests/test_shared_route_api.py": {
+      "preimage_sha256": "13e04e275e8b3ffd263f513f7e382a53bd736eec4fc687ab8c5f179c209b3636",
+      "proposed_sha256": "259d071ee173c8c41c6103e8de3e748a0458dad7c24af4b2ebb4fcd0848e4f30",
+      "preimage_bytes": 38847,
+      "proposed_bytes": 41216
+    }
+  },
+  "ast_function_class_delta": {
+    "backend/app/api/routes_shared_route.py": {
+      "changed_old_function_class_nodes": [
+        "_require_preparation",
+        "save_shared_route"
+      ],
+      "new_nodes": []
+    },
+    "backend/tests/test_shared_route_api.py": {
+      "changed_old_function_class_nodes": [
+        "test_cross_local_midnight_refuses_old_preview_without_any_shared_or_legacy_write"
+      ],
+      "new_nodes": [
+        "test_terminal_subscription_select_cannot_accept_an_old_day_or_elapsed_term"
+      ]
+    }
+  },
+  "root_preimages_match_now": true,
+  "new_semantic_boundary_cases": [
+    "local_midnight",
+    "term_expiry"
+  ],
+  "existing_midnight_observations": 3,
+  "app_import_test_collection_runtime_migration_network": false,
+  "old_seals_edited": false
+}

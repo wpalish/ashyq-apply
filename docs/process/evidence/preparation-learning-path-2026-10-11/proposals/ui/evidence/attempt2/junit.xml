@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="64" failures="2" errors="0" time="1.242215458">
+    <testsuite name="src/api/client.learningPath.test.ts" timestamp="2026-10-11T16:02:29.722Z" hostname="iMac-Aliser.local" tests="4" failures="2" errors="0" skipped="0" time="0.008785833">
+        <testcase classname="src/api/client.learningPath.test.ts" name="opt-in learning-pack API compatibility &gt; encodes optional catalogue version while preserving the legacy no-argument URLs" time="0.005770125">
+            <failure message="Body is unusable: Body has already been read" type="TypeError">
+TypeError: Body is unusable: Body has already been read
+ ❯ requestWithHeaders src/api/client.ts:177:32
+ ❯ request src/api/client.ts:186:11
+ ❯ src/api/client.learningPath.test.ts:20:39
+            </failure>
+        </testcase>
+        <testcase classname="src/api/client.learningPath.test.ts" name="opt-in learning-pack API compatibility &gt; preserves exact short text and immutable UUID/payload on replay without client-side grading" time="0.000937167">
+            <failure message="Body is unusable: Body has already been read" type="TypeError">
+TypeError: Body is unusable: Body has already been read
+ ❯ requestWithHeaders src/api/client.ts:177:32
+ ❯ request src/api/client.ts:186:11
+ ❯ src/api/client.learningPath.test.ts:35:12
+            </failure>
+        </testcase>
+        <testcase classname="src/api/client.learningPath.test.ts" name="opt-in learning-pack API compatibility &gt; reads an encoded owned attempt UUID review without requiring a new lesson or write" time="0.000603667">
+        </testcase>
+        <testcase classname="src/api/client.learningPath.test.ts" name="opt-in learning-pack API compatibility &gt; fences short writes before transport and late opt-in history under a changed shared owner" time="0.000859125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/api/client.preparation.test.ts" timestamp="2026-10-11T16:02:29.724Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.009915917">
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; uses encoded case and lesson identifiers, version and own progress limit" time="0.004834292">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; sends the exact immutable attempt payload again without generating a new id in the client" time="0.000841667">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; retains the preparation access error and does not misclassify it as a case purchase" time="0.000908709">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; preserves the pre-existing case-unlock 402 classification" time="0.000412">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; refuses a stale-tab attempt before any transport under the new shared cookie owner" time="0.000852541">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; rejects late history after another tab changes the owner" time="0.000287625">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; omits an empty programme rather than sending a fabricated result id" time="0.00018275">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="keeps schedule revision and entered buffers in an encoded owned PUT without retries" time="0.000347916">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="blocks stale-tab schedule writes before transport and late schedule reads after owner change" time="0.000297708">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/PreparationScreen.learningPath.test.tsx" timestamp="2026-10-11T16:02:29.724Z" hostname="iMac-Aliser.local" tests="20" failures="0" errors="0" skipped="0" time="0.4357895">
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; opts into the pack and uses track order, not unordered summaries or unqualified completion IDs" time="0.06375225">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; requires the requested pack version rather than silently adopting the legacy catalogue" time="0.006202417">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; opens a dated legacy starter with its own version and offers the ordered next lesson only after acceptance" time="0.063918791">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; renders bounded short input without keys and keeps exact text/UUID through double send, failure and retry" time="0.032959459">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; creates a new UUID and clears text feedback when explicitly starting another attempt" time="0.035862">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; does not accept a different lesson version or present it as the requested material" time="0.016842542">
+            <system-err>
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; rejects a matching UUID receipt with a different submitted answer payload" time="0.0267965">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; reviews persisted short feedback after expiry and remount without fetching or reconstructing current questions" time="0.018715083">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; uses stored choice IDs for an old saved version, not new lesson choice labels" time="0.010982708">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; reads exact immutable question and choice text through owned review rather than a current lesson fetch" time="0.009990708">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; keeps the same review request in flight and explicitly retries a failed read without writes" time="0.020420917">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; ignores an older review after a newer saved attempt is selected" time="0.011195291">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; rejects mismatched review profile before rendering feedback" time="0.010235958">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; rejects mismatched review uuid before rendering feedback" time="0.009652709">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; rejects mismatched review lesson-version before rendering feedback" time="0.008894166">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; fences a review read after owner changes before a storage event reaches React" time="0.007375208">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; hides and discards a pending review at case switch-start before the new case commits" time="0.011489833">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; fences delayed short feedback after a shared owner change before React replacement" time="0.0186245">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; drops text, accepted history review and late submission across a case switch" time="0.023784917">
+            <system-err>
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; keeps accepted saved-version markers even when the immediate history refresh fails" time="0.026787125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/PreparationScreen.test.tsx" timestamp="2026-10-11T16:02:29.725Z" hostname="iMac-Aliser.local" tests="19" failures="0" errors="0" skipped="0" time="0.3374945">
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; keeps source details closed while retaining every excerpt, scope and extra link" time="0.057260458">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; retains loaded evidence when the selected programme is selected again" time="0.009185666">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; lets the current request finish when the selected programme is selected again" time="0.013822">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; shows component thresholds and unstated scope in readable terms instead of raw JSON" time="0.005717584">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; refreshes saved history on entering Progress and ignores an older same-case refresh" time="0.038885834">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; does not call preparation for an unsaved case or an unavailable principal" time="0.001207708">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; uses explicit education access while personal goals stay unknown" time="0.02060575">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; blocks new practice for an expired term while retaining readable own history" time="0.014789917">
+            <system-err>
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; distinguishes locked evidence and never renders checks from a locked response" time="0.005640042">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; retains waiver, excerpt and recorded scope without promoting them to an unconditional goal" time="0.009098584">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; clears previous programme evidence immediately and ignores its late response" time="0.006644083">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; shows planned courses as external metadata, with no fabricated local practice" time="0.010852375">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; keeps one immutable UUID across double submit and network retry, then resets for a new attempt" time="0.047317792">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; hides A questions during switch-start and ignores late A lesson before B commits" time="0.01445925">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; does not show late A feedback or refresh its progress after B replaces the case" time="0.030641917">
+            <system-err>
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:129:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx:47:30)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; fences a submit response when the shared owner changes before React remounts" time="0.023308375">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; ignores a failed old-owner access read without showing its error in stale memory" time="0.001230125">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; ignores a lesson that resolves after a newer lesson intent" time="0.022033583">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; rejects mixed-case progress rather than rendering another case attempt" time="0.003518625">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/StudySchedulePanel.test.tsx" timestamp="2026-10-11T16:02:29.726Z" hostname="iMac-Aliser.local" tests="12" failures="0" errors="0" skipped="0" time="0.450229708">
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; loads on mount and requires explicit dates, all targets, budget, study days and buffers for a new plan" time="0.168964333">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; retains the complete form and denies double writes until a failed save can be explicitly retried" time="0.031606667">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; refreshes a revision conflict without repeating PUT and requires review before explicitly applying the retained inputs" time="0.037707125">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; keeps conflict review blocked when the latest GET fails even if an edit clears the alert" time="0.039006375">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; saves one checkbox intent with unchanged settings/revision and never marks completion before acceptance" time="0.021600875">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; requires explicit calendar-reset confirmation when structural inputs change, then clears only task checkmarks" time="0.02742075">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; allows a newer partial current-score entry after preparation started without treating missing components as zero" time="0.024590208">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; clears current scores when selecting another active exam and keeps all SAT target components explicit" time="0.03038175">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; keeps saved own schedules readable without access while blocking writes and starter openings" time="0.009697083">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; remounts a changed case and ignores a late old-case read" time="0.008276292">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; rejects a mismatched saved-case response and suppresses a late write after the owner changes" time="0.011976917">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; shows fourteen upcoming tasks and preserves the rest and past warnings in a native disclosure" time="0.037799125">
+        </testcase>
+    </testsuite>
+</testsuites>

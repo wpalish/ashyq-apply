@@ -1,0 +1,96 @@
+{
+  "configuration": "Exact normal backend/ruff.toml inside isolated ON/backend, actual app/tests paths; no rules changed",
+  "files": {
+    "backend/app/adapters/cost/web_costs.py": {
+      "before_sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "after_sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": false
+    },
+    "backend/app/adapters/discovery/catalog_walker.py": {
+      "before_sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "after_sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": false
+    },
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "before_sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "after_sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": false
+    },
+    "backend/app/adapters/documents/web_documents.py": {
+      "before_sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "after_sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": false
+    },
+    "backend/app/adapters/fetching.py": {
+      "before_sha256": "3646a30600306c07496dd739faf07d8b6b060ab43ba0e82503f4609c8f7e8015",
+      "after_sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": true
+    },
+    "backend/app/adapters/government/web_government.py": {
+      "before_sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "after_sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": false
+    },
+    "backend/app/adapters/requirements/web_requirements.py": {
+      "before_sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "after_sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": false
+    },
+    "backend/app/adapters/scholarship/web_scholarships.py": {
+      "before_sha256": "9eaeb268e1d7ed80f4d06d7b30bcf69fde83441047cd371ad21325da462600d5",
+      "after_sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": true
+    },
+    "backend/app/adapters/search/intent.py": {
+      "before_sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "after_sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": false
+    },
+    "backend/app/jobs/worker.py": {
+      "before_sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "after_sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": false
+    },
+    "backend/app/pipeline/runner.py": {
+      "before_sha256": "67b3cd35d938d95af4772205d5d8e1c9e96da463fb0916379fe6d929c8a99d06",
+      "after_sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": true
+    },
+    "backend/tests/test_fetch_pii_hops.py": {
+      "before_sha256": "37af0fa8f415cdc7065bf0c6a08c489c3a0fbd84f0dbda43dd82ba601c61098f",
+      "after_sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": true
+    },
+    "backend/tests/test_rejected_diagnostics.py": {
+      "before_sha256": "3651f87a30beb6ccdcacd8cf4ecc45007cbb35466e70fccecb4dbb3b440b15a9",
+      "after_sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "scoped_import_aliases_equal": true,
+      "non_import_AST_equal": true,
+      "source_bytes_changed": true
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-09T04:37:36.798858+00:00",
+  "status": "EXACT_TEST_REPAIR_APPLIED_FULL_PENDING",
+  "pre_apply_head": "84078321f6cf48cecf84f5fe897ceaa07760f975",
+  "original_failed_source_head": "08450f71e6bbeadd9a2212fbd6c9f96f5c428755",
+  "original_source34_sha256": "bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6",
+  "source34_pins_sha256": "b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001",
+  "test_changes": {
+    "backend/tests/test_rejected_diagnostics.py": "756bdd3fabf2db2578a075a4cec4876a62ea8c97943d069d1e3b312e4e674766",
+    "backend/tests/test_rejected_diagnostics_persistence.py": "00679ceb5c7c1300b5d6451ba993b4976d9c9fb36feba85a3603df6f0c57a54e"
+  },
+  "unchanged_selected_paths": 32,
+  "root_repair_READY_sha256": "179eff402d6257ba357031de3bfc174a2eb69381fe000029b13caefc4883027b",
+  "independent_peer_READY_sha256": "a3dcad4969dc61d8fe6ef201f62a88e315f9a317edd9647c64996e0393d1eb72",
+  "qualification": "Only stronger capture state/positive controls in2tests; application11 and predecessor20+oldhop unchanged. Originalfailed receipts remain immutable. Full pending."
+}

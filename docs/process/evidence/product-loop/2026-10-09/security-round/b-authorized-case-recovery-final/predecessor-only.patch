@@ -1,0 +1,58 @@
+--- a/frontend/src/lib/store.tsx
++++ b/frontend/src/lib/store.tsx
+@@ -634,6 +634,7 @@
+     // Invalidate an in-flight switch/save/run: the later user intent wins, and
+     // a slow response must not land an old case on top of the fresh blank one.
+     ++opGenRef.current;
++    setLoading(false);
+     // The new case exists only in this browser until its first save; its key
+     // is local so its unsaved edits get their own draft slot (FE01).
+     const localId = newLocalCaseKey();
+--- a/frontend/src/lib/store.test.tsx
++++ b/frontend/src/lib/store.test.tsx
+@@ -780,3 +780,45 @@
+     expect(call.results).not.toHaveBeenCalled(); expect(call.create).not.toHaveBeenCalled();
+   });
+ });
++
++
++describe('an explicit new case releases a cancelled case switch', () => {
++  it('releases loading and preserves blank intent after the old detail answer arrives', async () => {
++    bindApplicantOwner({ enabled: true, authenticated: true, principal: {
++      user_id: 'synthetic-switch-owner', organization_id: 'synthetic-switch-org', local_development: false,
++    } } as never);
++    writePointer('profile', 'local:before-explicit-switch');
++    let answer!: (value: StoredProfile) => void;
++    const detail = vi.spyOn(api, 'getProfile').mockReturnValue(new Promise((resolve) => { answer = resolve; }));
++    vi.spyOn(api, 'listRuns').mockResolvedValue([]);
++    const resultRead = vi.spyOn(api, 'results');
++    const create = vi.spyOn(api, 'createProfile');
++    const start = vi.spyOn(api, 'startRun');
++    function SwitchProbe() {
++      const store = useStore();
++      return <div>
++        <output data-testid="switch-loading">{String(store.loading)}</output>
++        <output data-testid="switch-hydrated">{String(store.hydrated)}</output>
++        <output data-testid="switch-profile">{store.savedProfile?.id ?? 'none'}</output>
++        <output data-testid="switch-run">{store.run?.id ?? 'none'}</output>
++        <output data-testid="switch-draft">{JSON.stringify(store.profileDraft)}</output>
++        <button onClick={() => void store.switchCase(REAL_PROFILE.id)}>switch pending owned case</button>
++        <button onClick={() => store.newCase()}>new case overrides switch</button>
++        <button disabled={store.loading}>Save remains usable</button>
++      </div>;
++    }
++    render(<StoreProvider><SwitchProbe /></StoreProvider>);
++    await waitFor(() => expect(screen.getByTestId('switch-hydrated')).toHaveTextContent('true'));
++    fireEvent.click(screen.getByText('switch pending owned case'));
++    await waitFor(() => expect(detail).toHaveBeenCalledWith(REAL_PROFILE.id));
++    expect(screen.getByTestId('switch-loading')).toHaveTextContent('true');
++    fireEvent.click(screen.getByText('new case overrides switch'));
++    await act(async () => { answer(REAL_PROFILE); });
++    expect(screen.getByTestId('switch-loading')).toHaveTextContent('false');
++    expect(screen.getByText('Save remains usable')).not.toBeDisabled();
++    expect(screen.getByTestId('switch-profile')).toHaveTextContent('none');
++    expect(screen.getByTestId('switch-run')).toHaveTextContent('none');
++    expect(JSON.parse(screen.getByTestId('switch-draft').textContent!)).toEqual(blankProfile());
++    expect(resultRead).not.toHaveBeenCalled(); expect(create).not.toHaveBeenCalled(); expect(start).not.toHaveBeenCalled();
++  });
++});

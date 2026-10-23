@@ -11,10 +11,10 @@ import { ApiError, api } from '@/api/client';
 
 type Workspace = { id: string; name: string; role: string; current: boolean };
 
-export function AccountMenu({ onSignedOut, initiallyOpen = false }: { onSignedOut: () => void; initiallyOpen?: boolean }) {
+export function AccountMenu({ onSignedOut, initiallyOpen = false, initialPanel='none' }: { onSignedOut: () => void; initiallyOpen?: boolean;initialPanel?:'none'|'password'|'delete' }) {
   const [open, setOpen] = useState(initiallyOpen);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [panel, setPanel] = useState<'none' | 'password' | 'delete'>('none');
+  const [panel, setPanel] = useState<'none' | 'password' | 'delete'>(initialPanel);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [deletePassword, setDeletePassword] = useState('');

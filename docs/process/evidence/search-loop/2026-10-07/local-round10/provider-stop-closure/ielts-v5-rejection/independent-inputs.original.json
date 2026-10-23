@@ -1,0 +1,172 @@
+[
+  {
+    "case": "positive_plain_overall",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "positive_overall_minimum_score_of",
+    "inner": "<h2>IELTS Academic</h2><p>An overall minimum score of 6.5 is required.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "positive_colon_at_least",
+    "inner": "<h2>IELTS Academic</h2><p>Overall band score: at least 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "negative_recommendation_tail",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5 is recommended but not required.</p>",
+    "expected": {}
+  },
+  {
+    "case": "negative_optional_score",
+    "inner": "<h2>IELTS Academic</h2><p>Overall minimum 6.5 is optional.</p>",
+    "expected": {}
+  },
+  {
+    "case": "negative_refused_results_from",
+    "inner": "<h2>IELTS Academic</h2><p>We do not accept results from IELTS Academic.</p><p>Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "negative_unacceptable_exam",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic is unacceptable for admission.</p><p>Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "negative_currency_symbol",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic 6.5\u00a3 registration charge.</p>",
+    "expected": {}
+  },
+  {
+    "case": "negative_overall_role_gpa",
+    "inner": "<h2>IELTS Academic</h2><p>Overall GPA minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "component_postfix_in_writing",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5 in writing is required.</p>",
+    "expected": {
+      "ielts_min_subscore": {
+        "writing": 6.5
+      },
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "component_named_prefix_positive",
+    "inner": "<h2>IELTS Academic</h2><p>Writing minimum score of 6.5.</p>",
+    "expected": {
+      "ielts_min_subscore": {
+        "writing": 6.5
+      },
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "duplicate_block_after_unowned_text",
+    "inner": "<p>Overall minimum 6.5.</p><h2>IELTS Academic</h2><p>Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "duplicate_block_after_other_exam",
+    "inner": "<h2>Language course example</h2><p>Overall minimum 6.5.</p><h2>IELTS Academic</h2><p>Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "sibling_domestic_scope_not_IELTS",
+    "inner": "<h2>Domestic applicants</h2><h3>TOEFL</h3><p>Minimum score of 100.</p><h2>IELTS Academic</h2><p>Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "scope": {
+      "population": null
+    },
+    "note": "Scope audit: no local IELTS population; original global population may survive. Distinguish inherited limitation from newly introduced semantics."
+  },
+  {
+    "case": "positive_local_international_scope",
+    "inner": "<h2>International applicants</h2><h3>IELTS Academic</h3><p>Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "scope": {
+      "population": "international"
+    }
+  },
+  {
+    "case": "sibling_IB_scope_not_IELTS",
+    "inner": "<h2>IB diploma holders</h2><h3>TOEFL</h3><p>Minimum score of 100.</p><h2>IELTS Academic</h2><p>Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "scope": {
+      "qualification": null
+    }
+  },
+  {
+    "case": "positive_local_2027_scope",
+    "inner": "<h2>Admission 2027/28</h2><h3>IELTS Academic</h3><p>Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "scope": {
+      "academic_year": "2027/28"
+    }
+  },
+  {
+    "case": "sibling_2024_scope_not_IELTS",
+    "inner": "<h2>Admission 2024/25</h2><h3>TOEFL</h3><p>Minimum score of 100.</p><h2>IELTS Academic</h2><p>Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "scope": {
+      "academic_year": null
+    }
+  }
+]

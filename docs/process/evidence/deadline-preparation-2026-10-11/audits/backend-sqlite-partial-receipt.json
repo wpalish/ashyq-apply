@@ -1,0 +1,224 @@
+{
+  "status": "SQLITE_RECEIPT_VERIFIED_PG_PENDING",
+  "reviewer_executed_gates": false,
+  "current_sqlite": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite",
+  "corrected_predecessor_sqlite": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/sqlite",
+  "mistaken_predecessor": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/backend-full/20261011T124000847599Z/sqlite/junit.xml",
+    "actual_tests": 4653,
+    "reason": "Earlier pre-binding receipt; never used as final4682 carry"
+  },
+  "sqlite": {
+    "tests": 4773,
+    "unique": 4773,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "predecessor": {
+    "tests": 4682,
+    "unique": 4682,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "predecessor_missing_keys": [],
+  "added_test_count": 91,
+  "new_pure_exact_keys": true,
+  "new_api_exact_names": true,
+  "new_pure_count": 51,
+  "new_api_count": 40,
+  "extra_exact_expected": true,
+  "coverage": {
+    "covered_lines": 15280,
+    "num_statements": 16002,
+    "percent_covered": 95.488063992001,
+    "percent_covered_display": "95",
+    "missing_lines": 722,
+    "excluded_lines": 139,
+    "percent_statements_covered": 95.488063992001,
+    "percent_statements_covered_display": "95"
+  },
+  "coverage_floor": 92,
+  "phase_exit_code": 0,
+  "phase_status": "PASS",
+  "timed_out": false,
+  "raw_summary": "4773 passed, 42 warnings in 545.06s (0:09:05)",
+  "source_maps_equal": true,
+  "consumed_source_paths": 601,
+  "required_source_paths": 563,
+  "required_pin_errors": [],
+  "predecessor_source_paths": 595,
+  "source_changed_paths": {
+    "frontend/src/types.ts": {
+      "before": "a9c937a5c395c412d73df0ea9af9c744c7faf30279922e41bc7088aedf800e08",
+      "after": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4"
+    },
+    "backend/app/models/__init__.py": {
+      "before": "5cc3113f9c763607fff33e1e413aa6380a4992f58f2a7d8fa77bbc7db27539b7",
+      "after": "d5033b970b7ea2f3187789ed079f292b5cf3ba93f1156575c68de09c60db3e14"
+    },
+    "backend/app/models/applicant.py": {
+      "before": "3e86e9b343b2d7f1ab247521641004f9dde3122d981dd8634a1716cc9eaaeeff",
+      "after": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb"
+    },
+    "backend/app/api/routes_preparation.py": {
+      "before": "9468402ee1ba94377b5d1f1ddde0f5f5c7eb98212eeb2100f2f055af4f6aca5b",
+      "after": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3"
+    },
+    "backend/app/api/routes_profile.py": {
+      "before": "c410ce3b1682e772c200718a82ba8cdee7f68a315eed1ebe6faf39b2359eb1ae",
+      "after": "a0d17726a21bfe3e3fa481dbf51514860db2f1033dc516eb3efce160dfb1ce55"
+    }
+  },
+  "source_added_paths": {
+    "backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+    "backend/tests/test_study_schedule.py": "02ec1c661b6f093ae2d96d81ab7df452d0853c7eba141d26c9a3798a9b47415a",
+    "backend/app/models/study_schedule.py": "3e0b0699cd723bd5b804fa836f24c69648e89d4c33e81483671dad43df81205c",
+    "backend/migrations/versions/a9e5c14d2021_study_schedule.py": "0502ab5e4660372dcb20cd79a2a14779cbc59086b7a363545cd2628ccb733c3d",
+    "backend/app/domain/study_schedule.py": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+    "backend/tests/test_study_schedule_api.py": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194"
+  },
+  "source_removed_paths": [],
+  "source_delta_matches_native_binding": true,
+  "evidence_hash_entries": 25,
+  "evidence_hash_errors": [],
+  "guards": [
+    {
+      "filename": "guard-50358.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 819,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": true,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50527.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50531.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50535.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50539.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50542.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50546.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50548.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50550.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50552.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50554.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50556.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    },
+    {
+      "filename": "guard-50561.json",
+      "outside_attempts": 0,
+      "allowed_private_pg_checks": 0,
+      "app_preimported": false,
+      "ipv6_trait_restored": true,
+      "driver_guard_installed": false,
+      "startup_stage": "stdlib_armed_optional_drivers_deferred"
+    }
+  ],
+  "guard_startup_failures": [],
+  "outside_attempts": [],
+  "active_cluster_markers": [],
+  "shutdown_confirmed": true,
+  "runtime_removed": true,
+  "runtime_exists_at_review": false,
+  "hashes": {
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/result.json": "4d314ffdeba940e676c85b613fcf7b3a971d7831ecae4cb35464ef8d50d214ef",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/junit.xml": "3b59ae24177b2e54b7a03601fca94c57a1517192255a47816c6397ab788754dd",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/source-before.json": "0a74726e1786830705563e144a4b52cb8981a10b1c39b802d8632ee5e51e2f47",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/source-after.json": "0a74726e1786830705563e144a4b52cb8981a10b1c39b802d8632ee5e51e2f47",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/coverage.json": "18ec19c8f8741ba5d5cee2604ee5800914da5f860b8691eef21bd970d143efd0",
+    "exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/sqlite/junit.xml": "d183ca729dc4452d321102780803a74814c15494ee561d45ed845df081016690",
+    "exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/sqlite/source-after.json": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+    "deadline-preparation-2026-10-11/backend-full/expected-native-source-pins.json": "7b89d263a3ee46a765f015c14ae7e7ea3bfd6bbb033aa87e0e51915e77a2fb8a",
+    "deadline-preparation-2026-10-11/evidence/native-binding.json": "21a4bf4b30f5ea56d686ec2b073daf17fc5aa419f5db6fe4b029cc58726f1d01",
+    "deadline-preparation-2026-10-11/proposals/schedule/evidence/focused-sealed.xml": "b62430381563460a574b0fb825f22363279158d9df886c49191cbcf9216623de"
+  },
+  "postgres": "PENDING_NOT_READ"
+}

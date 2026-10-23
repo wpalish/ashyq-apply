@@ -1,0 +1,333 @@
+--- a/frontend/src/screens/SharedRoutePanel.tsx
++++ b/frontend/src/screens/SharedRoutePanel.tsx
+@@ -1,7 +1,15 @@
+-import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
++import { useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
+ import { api, ApiError } from '@/api/client';
+ import { Notice, Panel } from '@/components/primitives';
+ import { subscribe, t, type MessageKey } from '@/lib/i18n';
++import { DraftIdentityContext } from '@/lib/draftIdentity';
++import {
++  acknowledgeSharedRouteRecovery, newSharedRouteRecovery, readSharedRouteRecovery,
++  recoveryCanonical, resetSharedRouteRecovery, sharedRouteRecoveryBinding, writeSharedRouteRecovery,
++  type RecoveryBinding, type SharedExamDraft as ExamDraft, type SharedManualReview,
++  type SharedPendingWrite as PendingWrite, type SharedRouteDraft as Draft, type SharedRouteLeaveRisk,
++  type SharedRouteRecovery,
++} from '@/lib/sharedRouteRecovery';
+ import type {
+   PreparationProgress, ProgramResult, SharedExam, SharedExamChoice,
+   SharedLearningRef, SharedOwnReview, SharedRouteCurrentOutV1, SharedRouteInputV1,
+@@ -16,19 +24,9 @@
+   isCurrent: () => boolean;
+   onTarget: (ref: SharedLearningRef) => void;
+   onActive: (active: boolean) => void;
+-}
+-
+-type ExamDraft = {
+-  exam: SharedExam; enabled: boolean; first_exam_on: string; retake_on: string;
+-  certificate_deadline: string; result_wait_days: string; delivery_days: string;
+-  safety_days: string; confirmed: boolean; targets: Record<string, string>;
+-};
+-type ReviewDraft = { attempt_id: string; lesson_id: string; content_version: string; exam: SharedExam | ''; minutes: string };
+-type Draft = {
+-  ids: string[]; starts_on: string; timezone: string; days: number[]; weekly: string;
+-  exams: ExamDraft[]; reviews: ReviewDraft[]; confirmed: boolean;
+-};
+-type PendingWrite = { body: SharedRouteWriteV1; state: 'sending' | 'uncertain' | 'conflict' | 'expired' };
++  onLeaveRisk?: SharedRouteLeaveRisk;
++}
++
+ type PreparedPreview = { body: SharedRoutePreviewOutV1; input: SharedRouteInputV1; generation: number };
+ 
+ const weekdays = [0, 1, 2, 3, 4, 5, 6];
+@@ -247,11 +245,12 @@
+   {item.kind === 'attempt_review' && <p className="xs" style={{ overflowWrap: 'anywhere' }}>{t('shared.attemptId')}: {item.attempt_id}</p>}
+ </details>;
+ 
+-export function SharedRoutePanel({ profileId, programmes, progress, allowed, isCurrent, onTarget, onActive }: Props) {
++export function SharedRoutePanel({ profileId, programmes, progress, allowed, isCurrent, onTarget, onActive, onLeaveRisk }: Props) {
+   useSyncExternalStore(subscribe, () => t('shared.title'));
++  const identity = useContext(DraftIdentityContext);
+   const [draft, setDraft] = useState<Draft>(initialDraft);
+   const [manualId, setManualId] = useState('');
+-  const [manualReview, setManualReview] = useState({ attempt_id: '', lesson_id: '', content_version: '' });
++  const [manualReview, setManualReview] = useState<SharedManualReview>({ attempt_id: '', lesson_id: '', content_version: '' });
+   const [current, setCurrent] = useState<SharedRouteCurrentOutV1 | null>(null);
+   const [historyRevision, setHistoryRevision] = useState('');
+   const [history, setHistory] = useState<SharedRouteViewV1 | null>(null);
+@@ -270,6 +269,50 @@
+   const historyIntent = useRef(0);
+   const acceptedRevision = useRef(0);
+ 
++  const draftRef = useRef(draft);
++  const manualIdRef = useRef(manualId);
++  const manualReviewRef = useRef(manualReview);
++  const bindingRef = useRef<RecoveryBinding | null>(null);
++  const journal = useRef<SharedRouteRecovery | null>(null);
++  const journalRaw = useRef<string | null>(null);
++  const blockedJournal = useRef(false);
++  const [recoveryWarning, setRecoveryWarning] = useState('');
++  const [restored, setRestored] = useState(false);
++  const [localDirty, setLocalDirty] = useState(false);
++  const dirtyRef = useRef(false);
++  const leaveToken = useRef(Symbol('shared-route-recovery'));
++  const publishRisk = useCallback(() => {
++    onLeaveRisk?.(leaveToken.current, dirtyRef.current || !!pendingRef.current);
++  }, [onLeaveRisk]);
++  const persist = useCallback((record: SharedRouteRecovery): boolean => {
++    journal.current = record;
++    if (!mounted.current || !isCurrent() || blockedJournal.current) {
++      setRecoveryWarning(t('shared.recoveryUnavailable')); publishRisk(); return false;
++    }
++    const out = writeSharedRouteRecovery(bindingRef.current, record, journalRaw.current);
++    if (out.ok) { journal.current = out.record; journalRaw.current = out.raw; setRecoveryWarning(''); }
++    else setRecoveryWarning(out.reason === 'changed' || out.reason === 'invalid'
++      ? t('shared.recoveryInvalid') : t('shared.recoveryUnavailable'));
++    dirtyRef.current = record.dirty; setLocalDirty(record.dirty); publishRisk(); return out.ok;
++  }, [isCurrent, publishRisk]);
++  const acknowledge = useCallback((receipt: SharedRouteWriteReceiptV1, body: SharedRouteWriteV1) => {
++    const active = pendingRef.current;
++    const latest = journal.current;
++    if (!active || !latest || recoveryCanonical(active.body) !== recoveryCanonical(body)) return false;
++    const retired = acknowledgeSharedRouteRecovery(bindingRef.current, latest, body, journalRaw.current);
++    if (!retired.ok) {
++      // The receipt is real, but a different/failed browser journal must not be reported retired.
++      const unresolved = { ...active, state: 'uncertain' as const, dispatched: true };
++      pendingRef.current = unresolved; setPending(unresolved);
++      journal.current = { ...latest, pending: unresolved };
++      setRecoveryWarning(t('shared.recoveryCleanup')); publishRisk(); return false;
++    }
++    journal.current = retired.record; journalRaw.current = retired.raw;
++    pendingRef.current = null; setPending(null); setAck(receipt); setPreview(null);
++    dirtyRef.current = retired.record.dirty; setLocalDirty(retired.record.dirty); setRecoveryWarning('');
++    setNotice(retired.record.dirty ? t('shared.recoveryNewer') : t('shared.saved'));
++    publishRisk(); return true;
++  }, [publishRisk]);
+   const readCurrent = useCallback(async () => {
+     const intent = ++readIntent.current;
+     setBusy('read'); setError('');
+@@ -282,25 +325,77 @@
+         || (out.view && !matchesSharedView(out.view, profileId, out.revision))) {
+         throw new Error(t('shared.mismatch'));
+       }
+-      const unresolved = pendingRef.current;
+-      if (unresolved && out.view && matchesSharedReceipt(out.view.receipt, profileId, unresolved.body)) {
+-        acceptedRevision.current = Math.max(acceptedRevision.current, out.view.receipt.revision);
+-        pendingRef.current = null; setPending(null); setAck(out.view.receipt); setNotice(t('shared.saved'));
+-      }
+       setPreview(old => old && old.body.expected_shared_revision === out.revision ? old : null);
+       setCurrent(out); onActive(!!out.view);
++      const unresolved = pendingRef.current;
++      if (unresolved && out.view) {
++        let accepted = out.view.receipt;
++        const expected = unresolved.body.expected_revision + 1;
++        // One exact free own history read; no scan, reallocation, preview or automatic PUT.
++        if (!matchesSharedReceipt(accepted, profileId, unresolved.body) && out.revision > expected) {
++          const historical = await api.sharedRouteHistory(profileId, expected);
++          if (!mounted.current || !isCurrent() || intent !== readIntent.current) return;
++          if (!matchesSharedView(historical, profileId, expected)) throw new Error(t('shared.mismatch'));
++          accepted = historical.receipt;
++        }
++        if (matchesSharedReceipt(accepted, profileId, unresolved.body)) {
++          acceptedRevision.current = Math.max(acceptedRevision.current, accepted.revision);
++          acknowledge(accepted, unresolved.body);
++        }
++      }
+     } catch (cause) { if (mounted.current && isCurrent() && intent === readIntent.current) setError(meaningfulError(cause)); }
+     finally { if (mounted.current && isCurrent() && intent === readIntent.current) setBusy(null); }
+-  }, [profileId, isCurrent, onActive]);
++  }, [profileId, isCurrent, onActive, acknowledge]);
+   useEffect(() => {
+-    mounted.current = true; void readCurrent();
+-    return () => { mounted.current = false; ++readIntent.current; ++previewIntent.current; ++writeIntent.current; ++historyIntent.current; };
+-  }, [readCurrent]);
+-
+-  const edit = (next: (old: Draft) => Draft) => {
++    mounted.current = true;
++    bindingRef.current = sharedRouteRecoveryBinding(identity, profileId);
++    const stored = readSharedRouteRecovery(bindingRef.current);
++    if (stored.state === 'valid') {
++      const recovered = stored.record.pending?.state === 'sending'
++        ? { ...stored.record, pending: { ...stored.record.pending, state: 'uncertain' as const } } : stored.record;
++      journal.current = recovered; journalRaw.current = stored.raw; blockedJournal.current = false;
++      draftRef.current = recovered.draft; manualIdRef.current = recovered.manual_id; manualReviewRef.current = recovered.manual_review;
++      generation.current = recovered.draft_generation; pendingRef.current = recovered.pending;
++      setDraft(recovered.draft); setManualId(recovered.manual_id); setManualReview(recovered.manual_review);
++      setPending(recovered.pending); dirtyRef.current = recovered.dirty; setLocalDirty(recovered.dirty); setRestored(recovered.dirty || !!recovered.pending);
++    } else {
++      journalRaw.current = stored.raw; blockedJournal.current = stored.state === 'invalid';
++      journal.current = bindingRef.current ? newSharedRouteRecovery(bindingRef.current, draftRef.current) : null;
++      if (stored.state !== 'empty') setRecoveryWarning(stored.state === 'invalid' ? t('shared.recoveryInvalid') : t('shared.recoveryUnavailable'));
++    }
++    publishRisk(); void readCurrent();
++    const token = leaveToken.current;
++    return () => {
++      mounted.current = false; ++readIntent.current; ++previewIntent.current; ++writeIntent.current; ++historyIntent.current;
++      onLeaveRisk?.(token, false);
++    };
++  }, [readCurrent, identity, profileId, publishRisk, onLeaveRisk]);
++
++  const edit = (next: (old: Draft) => Draft, manual?: { id?: string; review?: SharedManualReview }) => {
++    if (!mounted.current || !isCurrent()) return;
++    const value = next(draftRef.current); // Compute outside React updater; journal side effects happen once.
++    const id = manual?.id ?? manualIdRef.current; const review = manual?.review ?? manualReviewRef.current;
+     ++generation.current; ++previewIntent.current;
+-    setDraft(next); setPreview(null); setNotice(''); setError('');
+-    setBusy(old => old === 'preview' ? null : old);
++    draftRef.current = value; manualIdRef.current = id; manualReviewRef.current = review;
++    setDraft(value); setManualId(id); setManualReview(review); setPreview(null); setNotice(''); setError('');
++    dirtyRef.current = true; setLocalDirty(true); setBusy(old => old === 'preview' ? null : old);
++    if (journal.current) persist({ ...journal.current, draft: value, manual_id: id, manual_review: review,
++      draft_generation: generation.current, dirty: true, pending: pendingRef.current });
++    else { setRecoveryWarning(t('shared.recoveryUnavailable')); onLeaveRisk?.(leaveToken.current, true); }
++  };
++  const resetLocal = () => {
++    if (!isCurrent()) return;
++    const stored = readSharedRouteRecovery(bindingRef.current);
++    if (!window.confirm(t('shared.recoveryResetConfirm'))) return;
++    if (stored.state === 'unavailable' || !resetSharedRouteRecovery(bindingRef.current, stored.raw)) {
++      setRecoveryWarning(t('shared.recoveryUnavailable')); return;
++    }
++    const value = initialDraft(); const review = { attempt_id: '', lesson_id: '', content_version: '' };
++    draftRef.current = value; manualIdRef.current = ''; manualReviewRef.current = review;
++    journal.current = bindingRef.current ? newSharedRouteRecovery(bindingRef.current, value) : null;
++    journalRaw.current = null; blockedJournal.current = false; generation.current = 0; ++previewIntent.current; ++writeIntent.current;
++    pendingRef.current = null; setDraft(value); setManualId(''); setManualReview(review); setPending(null); setPreview(null);
++    dirtyRef.current = false; setLocalDirty(false); setRecoveryWarning(''); setNotice(''); setError(''); setRestored(false); publishRisk();
+   };
+   const changeExam = (exam: SharedExam, change: Partial<ExamDraft>) => edit(old => ({ ...old,
+     exams: old.exams.map(item => item.exam === exam ? { ...item, ...change } : item),
+@@ -310,7 +405,7 @@
+     if (!id || id !== id.trim() || id.length > 32 || draft.ids.includes(id) || draft.ids.length >= 20) {
+       setError(t('shared.invalidId')); return;
+     }
+-    edit(old => ({ ...old, ids: [...old.ids, id] })); setManualId('');
++    edit(old => ({ ...old, ids: [...old.ids, id] }), { id: '' });
+   };
+   const previewRoute = async () => {
+     if (!allowed || !current || busy || !isCurrent()) return;
+@@ -332,22 +427,45 @@
+   };
+ 
+   const sendWrite = async (body: SharedRouteWriteV1) => {
++    if (!mounted.current || !isCurrent()) return;
++    const prior = pendingRef.current;
++    const submitted = prior?.submitted_generation ?? generation.current;
++    const next: PendingWrite = { body, state: 'sending', submitted_generation: submitted, dispatched: true };
++    // An explicit retry may repair an earlier verified setItem whose readback failed; never adopt another intent.
++    const stored = readSharedRouteRecovery(bindingRef.current);
++    if (stored.state === 'valid' && journal.current && stored.record.draft_id === journal.current.draft_id
++      && stored.record.pending && recoveryCanonical(stored.record.pending.body) === recoveryCanonical(body)
++      && stored.record.draft_generation === journal.current.draft_generation
++      && recoveryCanonical(stored.record.draft) === recoveryCanonical(journal.current.draft)
++      && stored.record.manual_id === journal.current.manual_id
++      && recoveryCanonical(stored.record.manual_review) === recoveryCanonical(journal.current.manual_review)) {
++      journal.current = { ...journal.current, journal_revision: stored.record.journal_revision }; journalRaw.current = stored.raw;
++    }
++    pendingRef.current = next; setPending(next);
++    const persisted = journal.current && persist({ ...journal.current, pending: next });
++    if (!persisted) {
++      // A failed retry journal cannot turn an already dispatched unknown outcome into "never sent".
++      const blocked: PendingWrite = { body, submitted_generation: submitted,
++        dispatched: prior?.dispatched ?? false, state: prior?.dispatched ? prior.state === 'sending' ? 'uncertain' : prior.state : 'not_sent' };
++      pendingRef.current = blocked; setPending(blocked);
++      if (journal.current) journal.current = { ...journal.current, pending: blocked };
++      setRecoveryWarning(t('shared.recoveryUnavailable')); setNotice(blocked.dispatched ? t('shared.uncertain') : t('shared.recoveryNotSent'));
++      publishRisk(); return;
++    }
+     const intent = ++writeIntent.current;
+-    pendingRef.current = { body, state: 'sending' }; setPending(pendingRef.current);
+-    setBusy('save'); setError(''); setNotice('');
++    setBusy('save'); setError(''); setNotice(''); publishRisk();
+     try {
+       const receipt = await api.saveSharedRoute(profileId, body);
+       if (!mounted.current || !isCurrent() || intent !== writeIntent.current) return;
+       if (!matchesSharedReceipt(receipt, profileId, body)) throw new Error(t('shared.mismatch'));
+-      acceptedRevision.current = Math.max(acceptedRevision.current, receipt.revision);
+-      onActive(true);
+-      pendingRef.current = null; setAck(receipt); setPending(null); setPreview(null); setNotice(t('shared.saved'));
+-      await readCurrent();
++      acceptedRevision.current = Math.max(acceptedRevision.current, receipt.revision); onActive(true);
++      acknowledge(receipt, body); await readCurrent();
+     } catch (cause) { if (mounted.current && isCurrent() && intent === writeIntent.current) {
+       const conflict = cause instanceof ApiError && cause.status === 409;
+       const expired = cause instanceof ApiError && cause.status === 402;
+-      pendingRef.current = { body, state: conflict ? 'conflict' : expired ? 'expired' : 'uncertain' };
+-      setPending(pendingRef.current);
++      const unresolved: PendingWrite = { ...next, state: conflict ? 'conflict' : expired ? 'expired' : 'uncertain' };
++      pendingRef.current = unresolved; setPending(unresolved);
++      if (journal.current) persist({ ...journal.current, pending: unresolved });
+       setNotice(conflict ? t('shared.conflict') : expired ? t('shared.readonly') : t('shared.uncertain'));
+       if (conflict) { setPreview(null); await readCurrent(); }
+     } }
+@@ -390,6 +508,9 @@
+       {busy === 'read' && <p role="status">{t('shared.loading')}</p>}
+       {error && <p role="alert">{error}</p>}
+       {notice && <p role="status">{notice}</p>}
++      {(restored || localDirty) && <p role="status">{t('shared.recoveryDraft')}</p>}
++      {recoveryWarning && <p role="alert">{recoveryWarning}</p>}
++      {(recoveryWarning || localDirty || pending) && <button type="button" className="btn btn--sm" disabled={busy === 'save'} onClick={resetLocal}>{t('shared.recoveryReset')}</button>}
+       <button type="button" className="btn btn--sm" disabled={busy !== null} onClick={() => void readCurrent()}>{t('shared.refresh')}</button>
+       {ack && <p role="status">{t('shared.acceptedRevision')} {ack.revision}</p>}
+       {current?.view && <RouteView title={t('shared.current')} view={current.view} allowed={allowed} onTarget={onTarget} />}
+@@ -417,13 +538,13 @@
+             onClick={() => addId(item.id)}>{t('shared.add')} {t('shared.programmeNumber')} {index + 1}</button>
+             <details><summary>{t('shared.reference')}</summary><span style={{ overflowWrap: 'anywhere' }}>{item.id}</span></details></div>)}</div>
+         <div className="field"><label htmlFor="shared-manual-id">{t('shared.savedId')}</label>
+-          <input id="shared-manual-id" value={manualId} maxLength={32} onChange={event => setManualId(event.target.value)} />
++          <input id="shared-manual-id" value={manualId} maxLength={32} onChange={event => edit(old => old, { id: event.target.value })} />
+           <p className="xs muted">{t('shared.savedIdHint')}</p>
+           <button type="button" className="btn btn--sm" disabled={!manualId.trim() || draft.ids.length >= 20} onClick={() => addId(manualId)}>{t('shared.addId')}</button></div>
+         <div style={grid}>
+           <div className="field"><label htmlFor="shared-start">{t('shared.startsOn')}</label><input id="shared-start" type="date" value={draft.starts_on}
+             onChange={event => edit(old => ({ ...old, starts_on: event.target.value }))} /></div>
+-          <div className="field"><label htmlFor="shared-timezone">{t('shared.timezone')}</label><input id="shared-timezone" value={draft.timezone}
++          <div className="field"><label htmlFor="shared-timezone">{t('shared.timezone')}</label><input id="shared-timezone" value={draft.timezone} maxLength={80}
+             onChange={event => edit(old => ({ ...old, timezone: event.target.value }))} /></div>
+           <div className="field"><label htmlFor="shared-budget">{t('shared.weeklyMinutes')}</label><input id="shared-budget" type="number" min="30" max="1260" value={draft.weekly}
+             onChange={event => edit(old => ({ ...old, weekly: event.target.value }))} /></div>
+@@ -461,11 +582,11 @@
+           </div>)}
+           <fieldset><legend>{t('shared.olderReview')}</legend><div style={grid}>
+             <div className="field"><label htmlFor="shared-own-attempt">{t('shared.attemptId')}</label><input id="shared-own-attempt" value={manualReview.attempt_id}
+-              onChange={event => setManualReview(old => ({ ...old, attempt_id: event.target.value }))} /></div>
++              maxLength={36} onChange={event => edit(old => old, { review: { ...manualReviewRef.current, attempt_id: event.target.value } })} /></div>
+             <div className="field"><label htmlFor="shared-own-lesson">{t('shared.lessonId')}</label><input id="shared-own-lesson" value={manualReview.lesson_id}
+-              onChange={event => setManualReview(old => ({ ...old, lesson_id: event.target.value }))} /></div>
++              maxLength={80} onChange={event => edit(old => old, { review: { ...manualReviewRef.current, lesson_id: event.target.value } })} /></div>
+             <div className="field"><label htmlFor="shared-own-version">{t('shared.contentVersion')}</label><input id="shared-own-version" value={manualReview.content_version}
+-              onChange={event => setManualReview(old => ({ ...old, content_version: event.target.value }))} /></div>
++              maxLength={40} onChange={event => edit(old => old, { review: { ...manualReviewRef.current, content_version: event.target.value } })} /></div>
+           </div><button type="button" className="btn btn--sm" disabled={draft.reviews.length >= 400} onClick={() => {
+             const candidate = manualReview;
+             if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(candidate.attempt_id)
+@@ -474,8 +595,8 @@
+               || draft.reviews.some(item => item.attempt_id === candidate.attempt_id)) {
+               setError(t('shared.invalidReview')); return;
+             }
+-            edit(old => ({ ...old, reviews: [...old.reviews, { ...candidate, exam: '', minutes: '' }] }));
+-            setManualReview({ attempt_id: '', lesson_id: '', content_version: '' });
++            edit(old => ({ ...old, reviews: [...old.reviews, { ...candidate, exam: '', minutes: '' }] }),
++              { review: { attempt_id: '', lesson_id: '', content_version: '' } });
+           }}>{t('shared.addReview')}</button></fieldset>
+           {draft.reviews.map((review, index) => <div className="panel panel--sunken" key={review.attempt_id}>
+             <p>{t('shared.review')} {index + 1}</p>
+@@ -500,11 +621,16 @@
+           <button type="button" className="btn btn--primary" disabled={busy !== null || !!pending || !allowed} onClick={savePreview}>{t('shared.save')}</button>
+         </section>}
+         {pending && <div className="stack" role="status">
+-          <p>{pending.state === 'conflict' ? t('shared.conflict') : pending.state === 'expired' ? t('shared.readonly') : pending.state === 'uncertain' ? t('shared.uncertain') : t('shared.saving')}</p>
++          <p>{pending.state === 'not_sent' ? t('shared.recoveryNotSent') : pending.state === 'conflict' ? t('shared.conflict') : pending.state === 'expired' ? t('shared.readonly') : pending.state === 'uncertain' ? t('shared.uncertain') : t('shared.saving')}</p>
+           <details><summary>{t('shared.originalIntent')}</summary><p className="xs muted" style={{ overflowWrap: 'anywhere' }}>{pending.body.client_write_uuid}</p></details>
+           {pending.state !== 'sending' && <button type="button" className="btn" disabled={busy !== null || !allowed || pending.state === 'expired'} onClick={retryOriginal}>{t('shared.retryOriginal')}</button>}
+           {pending.state === 'conflict' && <button type="button" className="btn" disabled={!visiblePreview || busy !== null}
+-            onClick={() => { pendingRef.current = null; setPending(null); }}>{t('shared.newIntent')}</button>}
++            onClick={() => {
++              const original = journal.current;
++              if (original && persist({ ...original, pending: null, dirty: true })) {
++                pendingRef.current = null; setPending(null); publishRisk();
++              }
++            }}>{t('shared.newIntent')}</button>}
+         </div>}
+       </section>
+     </div>

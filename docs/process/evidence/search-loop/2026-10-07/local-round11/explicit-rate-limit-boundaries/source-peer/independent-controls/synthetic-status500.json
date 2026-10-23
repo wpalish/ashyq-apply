@@ -1,0 +1,160 @@
+{
+  "scenario": "synthetic-status500",
+  "checks": [
+    {
+      "case": "synthetic_non429_status_not_reinterpreted",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "case": "only_one_synthetic_inner_dispatch",
+      "expected": 1,
+      "actual": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "synthetic_control_not_vendor_integration",
+      "expected": {
+        "initialize": 0,
+        "notifications/initialized": 0,
+        "tools/call": 0
+      },
+      "actual": {
+        "initialize": 0,
+        "notifications/initialized": 0,
+        "tools/call": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "actual_native_methods_unchanged",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "case": "owned_mock_clients_closed",
+      "expected": true,
+      "actual": true,
+      "status": "PASS"
+    },
+    {
+      "case": "all_original_source_pins_preserved",
+      "expected": {
+        "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+        "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+        "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+        "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+        "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+        "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+        "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+      },
+      "actual": {
+        "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+        "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+        "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+        "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+        "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+        "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+        "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+      },
+      "status": "PASS"
+    },
+    {
+      "case": "all_proposed_source_pins_preserved",
+      "expected": {
+        "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+        "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+        "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+      },
+      "actual": {
+        "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+        "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+        "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+      },
+      "status": "PASS"
+    }
+  ],
+  "counts": {
+    "PASS": 7,
+    "RED": 0
+  },
+  "events": [
+    {
+      "error": {
+        "type": "SearchUnavailable",
+        "reason": "rate limited",
+        "http_status": 500,
+        "message": "synthetic typed refusal"
+      },
+      "response": null
+    },
+    {
+      "error": {
+        "type": "SearchUnavailable",
+        "reason": "rate limited",
+        "http_status": 500,
+        "message": "exa_mcp reported an earlier rate limit; this request was not sent"
+      },
+      "response": null
+    }
+  ],
+  "mock_HTTP_events": [],
+  "mock_HTTP_counts": {
+    "initialize": 0,
+    "notifications/initialized": 0,
+    "tools/call": 0
+  },
+  "child_state": {
+    "until": {
+      "exa_mcp": 400.0
+    },
+    "origin": {
+      "exa_mcp": [
+        400.0,
+        500,
+        "rate limited"
+      ]
+    }
+  },
+  "fake_sleeps": [],
+  "synthetic_resolutions": [],
+  "native_methods": {
+    "search": "ExaMcpSearchProvider.search",
+    "_search_once": "ExaMcpSearchProvider._search_once",
+    "_post": "ExaMcpSearchProvider._post",
+    "_initialize": "ExaMcpSearchProvider._initialize"
+  },
+  "original_source_before": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "original_source_after": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "proposed_source_before": {
+    "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+  },
+  "proposed_source_after": {
+    "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+  },
+  "real_network_calls": 0,
+  "primary_reset_calls": 0,
+  "qualification": "Only final synthetic-status500 uses a test provider; other controls use actual factory/Exa/MCP methods with MockTransport. Local charge proves attempt, not HTTP dispatch."
+}

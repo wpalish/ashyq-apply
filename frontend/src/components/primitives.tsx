@@ -1,6 +1,7 @@
 /** Small shared building blocks. */
 
 import type { ReactNode } from 'react';
+import { useTranslation } from '@/lib/useTranslation';
 import { STATUS_LABEL, STATUS_MEANING, humanize, type Tone } from '@/lib/format';
 
 const TONE_CLASS: Record<Tone, string> = {
@@ -30,6 +31,21 @@ export function Chip({
  * plain-English meaning as its tooltip so the abbreviation is never the only
  * thing the reader can get at.
  */
+/** A save acknowledgement comes only from the screen's resolved operation. */
+export function SaveFeedback({ saving, saved, dirty, failed, uncertain = false }: {
+  saving: boolean; saved: boolean; dirty: boolean; failed: boolean; uncertain?: boolean;
+}) {
+  const { locale }=useTranslation();
+  const labels=locale==='en' ? ['Saving…','Review the save notice above. Your current draft is retained.','Not saved. Your edits are still in this form.','Saved','Unsaved changes'] : locale==='kk' ? ['Сақталуда…','Жоғарыдағы сақтау хабарламасын тексеріңіз. Ағымдағы жоба сақталған.','Сақталмады. Өзгерістер пішінде қалды.','Сақталды','Сақталмаған өзгерістер'] : ['Сохраняем…','Проверь сообщение о сохранении выше. Текущий черновик сохранён в браузере.','Не сохранено. Изменения остались в форме.','Сохранено','Есть несохранённые изменения'];
+  return <span className="save-feedback" role="status" aria-live="polite" aria-atomic="true">
+    {saving ? <span className="row row--tight muted xs"><span className="spinner" aria-hidden="true" />{labels[0]}</span>
+      : uncertain ? <span className="xs muted">{labels[1]}</span>
+        : failed ? <span className="xs">{labels[2]}</span>
+        : saved && !dirty ? <Chip tone="ok">{labels[3]}</Chip>
+          : dirty ? <span className="xs muted">{labels[4]}</span> : null}
+  </span>;
+}
+
 export function StatusChip({ status, tone }: { status: string; tone: Tone }) {
   return (
     <Chip tone={tone} title={STATUS_MEANING[status] ?? status}>
@@ -72,7 +88,7 @@ export function Empty({ title, children }: { title: string; children?: ReactNode
 
 export function Loading({ label }: { label: string }) {
   return (
-    <div className="row" role="status" aria-live="polite">
+    <div className="row status-feedback" role="status" aria-live="polite" aria-atomic="true">
       <span className="spinner" aria-hidden="true" />
       <span className="muted small">{label}</span>
     </div>

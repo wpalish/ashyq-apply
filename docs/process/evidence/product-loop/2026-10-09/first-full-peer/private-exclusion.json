@@ -1,0 +1,12 @@
+{
+  "runner": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "sha256": "46e9866db102966fd42e07aa5b291411cbac1cca0a76f9b49551ca8a4fb919f5",
+    "bytes": 24472
+  },
+  "static_policy_lines": "109-115;118-171",
+  "policy": "Names starting .env; backend/data/ and artifacts/; path parts .git/.venv/node_modules/__pycache__ excluded from source map. Names drawn from tracked/nonignored source. Dependencies linked/copied separately and not source byte map.",
+  "source_map_violations": [],
+  "qualification": "This verifies source map selection and file hashes, not a read of private runtime data or a proof that dependency/runtime contents are empty.",
+  "native_skip_predicate_source_map_violations": []
+}

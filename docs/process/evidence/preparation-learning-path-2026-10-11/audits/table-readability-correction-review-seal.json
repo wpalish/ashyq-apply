@@ -1,0 +1,92 @@
+{
+  "status": "QUALIFIED_STATIC_ACCEPT_PENDING_FRESH_UI_GATES",
+  "created_utc": "2026-10-11T17:09:09.930318+00:00",
+  "scope": "Exact two-path CSS/native table delta only",
+  "review": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/audits/table-readability-correction-review.md",
+    "sha256": "494b81ecc0cc8d33168425b596d63b9e678b78e70cf9a95c168fa60c4db37f7f",
+    "bytes": 3528
+  },
+  "inputs": {
+    "receipt": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/table-readability-correction/RECEIPT.json",
+      "sha256": "e3d69a1dc96ae75d3188b32c128a1b9d064b328cd7722c27c135e455b1d5546f",
+      "bytes": 1021
+    },
+    "css_before": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/table-readability-correction/0-before.txt",
+      "sha256": "23d4e9dcecb94e3cc97f57dd65201f7dc09cf7fdf36b7cef54666bad366585a6",
+      "bytes": 42626
+    },
+    "css_after": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/table-readability-correction/0-after.txt",
+      "sha256": "6820400b329f9096aae2b7b507ea20d2746200f77f291ebbb44f9f4761b68530",
+      "bytes": 42650
+    },
+    "css_patch": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/table-readability-correction/0-correction.patch",
+      "sha256": "77c599a0c390712b9fcab1ab92cc789f7ca6d05d58692c8c95824831d4dab047",
+      "bytes": 847
+    },
+    "native_before": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/table-readability-correction/1-before.txt",
+      "sha256": "1f9e159319c4f94e6557f89019fefa10231e8db3506c1bd392656d0db7e46e7e",
+      "bytes": 6794
+    },
+    "native_after": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/table-readability-correction/1-after.txt",
+      "sha256": "bd34f2efb619f1096d24cc18829399876fccf1c0aa9424f663d10e85e0e5dca3",
+      "bytes": 7038
+    },
+    "native_patch": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/table-readability-correction/1-correction.patch",
+      "sha256": "1dcec0620eddb58b78bd24049138691068c3ad45a2c9eabcf949bae98b1b0ce6",
+      "bytes": 714
+    },
+    "current_css": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/styles/unimatch.css",
+      "sha256": "6820400b329f9096aae2b7b507ea20d2746200f77f291ebbb44f9f4761b68530",
+      "bytes": 42650
+    },
+    "current_new_native": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/e2e/learning-path.spec.ts",
+      "sha256": "bd34f2efb619f1096d24cc18829399876fccf1c0aa9424f663d10e85e0e5dca3",
+      "bytes": 7038
+    },
+    "current_renderer": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/components/TeachingText.tsx",
+      "sha256": "5436a3296aff35ad87c877aa423bf4cc6ccd5f8f81cce4e61bc89a635a24466e",
+      "bytes": 3758
+    },
+    "current_screen": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "bc84b35a426d654bdb541cfcd303d7165cc5bc0bb8d667668ddc73fde28c1e3a",
+      "bytes": 33911
+    },
+    "current_helper": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/e2e/helpers.ts",
+      "sha256": "f166d3e39fca3856c717270ff3c63089811320687ecf1502a2a3b21619d6fba6",
+      "bytes": 3955
+    },
+    "closed_native_source_map": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/e2e/20261011T165844Z-demo/source-before.json",
+      "sha256": "73a1add6d040284343f5df4a343e117c5ddb4d9faaea28aa7a13237f669ff974",
+      "bytes": 46467
+    }
+  },
+  "checks": {
+    "one_css_declaration_only": true,
+    "four_native_lines_added_only": true,
+    "all_original_new_native_bytes_preserved": true,
+    "both_patches_reconstruct_postimages": true,
+    "postimages_equal_current_source": true,
+    "preimages_equal_closed_native_map": true,
+    "renderer_screen_helper_equal_closed_native_map": true,
+    "inputs_stable_during_review": true
+  },
+  "reviewer_execution": "NOT_RUN",
+  "source_edits": false,
+  "closed_native_receipts_transfer_to_delta": false,
+  "backend_carry_reviewed": false,
+  "fresh_ui_gates": "PENDING"
+}

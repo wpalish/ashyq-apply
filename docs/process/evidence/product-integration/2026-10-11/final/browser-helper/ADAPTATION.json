@@ -1,0 +1,17 @@
+{
+  "run-native.py": {
+    "before_sha256": "257c64b18c34fdace6a24349ca3fb28161bd0e43cbc026765e2903daa20b9721",
+    "after_sha256": "b52f971067d8786597c5a842d44f643b3f05ad416815d4d6bd3df24097cb804a",
+    "changes": "owned ports only5209->5219 and8119->8129; relative lab root retained"
+  },
+  "runtime-child.py": {
+    "before_sha256": "c2626bca7b19e2374995660cee598d70af0ca3a0f7b7560d70030c80771ffa1f",
+    "after_sha256": "1832c5068850a3b3dd80645944f0ea6aa9e521f068e877a00305de2aade5d6f7",
+    "changes": "owned ports only5209->5219 and8119->8129; relative lab root retained"
+  },
+  "loopback-only.sb": {
+    "before_sha256": "b097677043ea7eb88a339117fa665a93484352e0d0e3e71b31094f9020b581e3",
+    "after_sha256": "45fd186509d0f0a9a3dbeae472811d3a231b6cd46b6aef49a9c361e1d6fb7e04",
+    "changes": "owned ports only5209->5219 and8119->8129; relative lab root retained"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "status": "ROOT_REVIEW_WRITE_AHEAD",
+  "at_utc": "2026-10-13T23:36:33.827002+00:00",
+  "paths": {
+    "frontend/src/types.ts": {
+      "preimage": "ce85951ba2bcb97581f7c15c7a97588a21d484a59e35155fe27097dde470ada5",
+      "postimage": "8394c122f1f145664017c463dbdf54d4a42f3ca53376ac9716825afda52b0f4b"
+    },
+    "frontend/src/lib/researchReadContext.ts": {
+      "preimage": null,
+      "postimage": "c727b4f96438fbaddd5bdb152021796b16370c442603038365110f00c66e1de7"
+    },
+    "frontend/src/lib/useResearchInputRead.ts": {
+      "preimage": null,
+      "postimage": "96db3c4bc5a0041ad91e2e8887dbd99e0acb4772139fd59d26a7b67505a95c47"
+    },
+    "frontend/src/lib/useResearchInputRead.test.tsx": {
+      "preimage": null,
+      "postimage": "62ec26a81ccec86a41ff131f52ec856fc9f318ebc6b5e1732eb32ee264f713c7"
+    },
+    "frontend/src/components/ResearchReadNotice.tsx": {
+      "preimage": null,
+      "postimage": "e15519d2cd24730895659fe2eac1df0e56e8361f5cdb7f8344a6e7bffdcc054c"
+    },
+    "frontend/src/components/ResearchReadNotice.test.tsx": {
+      "preimage": null,
+      "postimage": "e104343e4cdffc6bbd976536c01e9faa1723a4c8d4925c5260c9b228a4844eaa"
+    },
+    "frontend/src/App.tsx": {
+      "preimage": "fa98085b1de1733c438938846b37a0f21c5b8b48be1b7dea9cdc9f5d5742d1fa",
+      "postimage": "0c9ca0b340bc0d8f983e31cd27f9d66db9a379db351a82d49fa08a93dd698a52"
+    },
+    "frontend/src/lib/i18n.ts": {
+      "preimage": "6d5fd2103ccd0f29a09da654d76f05a83f11220aeca1f0ff706b6380c7c0bc70",
+      "postimage": "420af969b46e048905f1f6b40c11d68b75a07ab2308715bbb56da042a7280697"
+    }
+  },
+  "scope": "Existing GET run/context only, named sections and recorded assessment notice. Stable getter and rendered/synchronous/serial/mounted case-generation/run/profile-object fences. Unknown legacy/corrupt/current read failure explicit; retain only confirmed same-profile read. No local profile hash, research/rerank, stored result/history/receipt mutation. Original frozen G3 types untouched. Native backend consumes frontend/types.ts; final whole backend gate follows 6c and includes these changed bytes.",
+  "integration": "NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_UNCHANGED"
+}

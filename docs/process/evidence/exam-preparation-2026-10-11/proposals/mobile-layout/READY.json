@@ -1,0 +1,23 @@
+{
+  "status": "PROPOSED_READY_FOR_ROOT_REVIEW_AFTER_FREEZE",
+  "source_unchanged": true,
+  "source_actions": "NONE",
+  "gates_browser_test_runtime": "NOT_RUN",
+  "production_paths": [
+    "frontend/src/App.tsx",
+    "frontend/src/styles/unimatch.css"
+  ],
+  "test_path": "frontend/e2e/preparation.spec.ts",
+  "retained_tests": 3,
+  "added_tests": 2,
+  "no_added_skip": true,
+  "patch_sha256": "ece267daca36e3240e286a7bc6d6d1c4536190704cc58be32917a457feb79711",
+  "manifest_sha256": "779e67e6c0795a4f12faba1bd69f4337aeaf487f08ec5013dfdda70de5336eb8",
+  "proposed_sha256": {
+    "frontend/e2e/preparation.spec.ts": "0db6249c15197fe2156cd9f9bda70d10602d942f9b4c25f9cf42f8bf25b0da14",
+    "frontend/src/App.tsx": "5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26",
+    "frontend/src/styles/unimatch.css": "a33a9a3dd125b907c84d8e0c9b3c5f986ce5d7b56b8e3a0be1d19b300a819c04"
+  },
+  "prior_sealed_snapshot": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/proposals/mobile-layout-before-scroll-poll",
+  "native_scroll_observation": "expect.poll, unchanged default deadlines"
+}

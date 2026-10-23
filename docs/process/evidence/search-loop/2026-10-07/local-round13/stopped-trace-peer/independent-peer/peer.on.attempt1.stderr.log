@@ -1,0 +1,23 @@
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/on/backend/app/adapters/html_parse.py:20: MarkupResemblesLocatorWarning: The input looks more like a filename than markup. You may want to open this file and pass the filehandle into Beautiful Soup.
+  return BeautifulSoup(markup, parser)
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/runtime/on/backend/app/adapters/html_parse.py:20: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
+  return BeautifulSoup(markup, parser)
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/peer_native.py", line 228, in <module>
+    asyncio.run(main())
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/peer_native.py", line 216, in main
+    rows.append(await compatibility())
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-peer-review/peer_native.py", line 192, in compatibility
+    candidate = Candidate(ENTRY['name'], ENTRY['country'], search_queries_used=2)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Candidate.__init__() missing 1 required positional argument: 'city'

@@ -1,0 +1,54 @@
+{
+  "verdict": "ACCEPT_NARROW_REPAIR_PENDING_FRESH_GATES",
+  "author_ran_gates": false,
+  "old_assertions_byte_exact": true,
+  "native_spec_byte_exact": true,
+  "diff_sha256": "edb52728580617b96b5e6b0969a7040205135f543b43599672d7a8cb484dc41e",
+  "inputs": {
+    "harness/SAME_SELECTION_REPAIR_BEFORE.json": {
+      "sha256": "38373be97a00c3e61d10edf13dfc11e70d55bcd516ad15ab13aa51aa113fca9e",
+      "bytes": 240
+    },
+    "harness/SAME_SELECTION_REPAIR_AFTER.json": {
+      "sha256": "10311e65fe4b11d6aecf2dc53113f2baae6765ed0807d4d614422bfe9fb3cf03",
+      "bytes": 240
+    },
+    "evidence/e2e/20261011T130607Z-demo/run.json": {
+      "sha256": "2aa7f5e51598ea8b72726eaa75430b785b31e95479aad8de45211e89d37ce460",
+      "bytes": 1339
+    },
+    "evidence/e2e/20261011T130607Z-demo/junit.xml": {
+      "sha256": "811e64b8e715d2ca9f3e56ca10e62396f64bbf006ead05d39beddf88d26a0162",
+      "bytes": 22055
+    },
+    "proposals/mobile-layout/files/frontend/e2e/preparation.spec.ts": {
+      "sha256": "0db6249c15197fe2156cd9f9bda70d10602d942f9b4c25f9cf42f8bf25b0da14",
+      "bytes": 13218
+    },
+    "proposals/frontend/files/frontend/src/screens/PreparationScreen.tsx": {
+      "sha256": "f833211fa7caeff3564844ae8f08b78eef8770b56319c8feb8269e01d46ee71c",
+      "bytes": 22857
+    },
+    "proposals/frontend/files/frontend/src/screens/PreparationScreen.test.tsx": {
+      "sha256": "bb8769fc3adaa7c7749e5520c593817248e15ddbc3037dc030f1d2ccf1f4c16e",
+      "bytes": 18615
+    },
+    "owned-source/frontend/src/screens/PreparationScreen.tsx": {
+      "sha256": "0a63e84ab9ce69af742c25f9e33f909af510218d3cfe32420c99a154e5b5c451",
+      "bytes": 22984
+    },
+    "owned-source/frontend/src/screens/PreparationScreen.test.tsx": {
+      "sha256": "f5033339a95493e3337cccf278171c4049f7446c961328539be723d99705bdf1",
+      "bytes": 20250
+    },
+    "owned-source/frontend/e2e/preparation.spec.ts": {
+      "sha256": "0db6249c15197fe2156cd9f9bda70d10602d942f9b4c25f9cf42f8bf25b0da14",
+      "bytes": 13218
+    }
+  },
+  "review": {
+    "path": "same-selection-repair-review.md",
+    "sha256": "c08c8a71519c405f65099089c63cf992c1a74fea1f9a4ca44ac71989f0725c58",
+    "bytes": 5542
+  }
+}

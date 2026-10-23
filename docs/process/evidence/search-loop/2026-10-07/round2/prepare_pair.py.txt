@@ -1,0 +1,26 @@
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+WORK=Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO=WORK/'ashyq-apply'
+EVIDENCE=REPO/'docs/process/evidence/search-loop/2026-10-07/round2'
+EVIDENCE.mkdir(parents=True,exist_ok=True)
+request=json.loads((REPO/'docs/process/evidence/search-development/2026-10-07/scope-fix-repeat-request.prepared.json').read_text())
+arms=[]
+for arm,on in [('off1',False),('on1',True),('on2',True),('off2',False)]:
+    args=request['arguments'].copy()
+    args[args.index('--out')+1]=str(WORK/'search-loop-round2/pair'/arm)
+    if on: args.append('--site-branding-identity')
+    overrides=dict(request['environment_overrides'],TMPDIR=str(WORK/'search-loop-round2/pair-temp'/arm))
+    arms.append(dict(arm=arm,site_branding_identity=on,arguments=args,environment_overrides=overrides))
+document=dict(prepared_at=datetime.now(timezone.utc).isoformat(),status='PREPARED_NOT_RUN',
+    source_pin='freeze committed full-green source before first network action',
+    hypothesis='SI-1 exact first-party branding removes the confirmed early homepage identity loss',
+    cohort=request['cohort'],profile_sha256=request['profile_sha256'],split_sha256=request['split_sha256'],
+    arms=arms,stop_file=request['arguments'][request['arguments'].index('--stop-file')+1],
+    budget=dict(fetcher_calls=60,search_queries=6,active_ms=120000,inside_finalization_reserve_ms=3000),
+    readiness_status='No signed quality score. Stage gains require exact source and semantic review; access variation not causal credit.',
+    default_change=False,heldout_used=False,provider='existing keyed exa, no purchase or substitution')
+(EVIDENCE/'paired-request.prepared.json').write_text(json.dumps(document,ensure_ascii=False,indent=2)+'\n')
+print('Prepared four sequential same-source DEV arms, off/on/on/off')

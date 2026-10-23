@@ -1,0 +1,31 @@
+{
+  "probe_error_preserved": {
+    "tool_chunk_id": "a2a3d6",
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-normal-alias-report-preparation",
+    "argv": [
+      "rg",
+      "-n",
+      "registry[\"name\"]|id=f\"offline",
+      "work/ashyq-apply/backend/tests/test_live_discovery.py"
+    ],
+    "raw_error": "rg: work/ashyq-apply/backend/tests/test_live_discovery.py: IO error for operation on work/ashyq-apply/backend/tests/test_live_discovery.py: No such file or directory (os error 2)",
+    "qualification": "Author read-only probe used repo-relative path from own cwd. Corrected absolute-path probe chunkacb5f6 succeeded. Same original tool call continued to env audit and exited0."
+  },
+  "audit": {
+    "argv": [
+      "env",
+      "-i",
+      "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "audit.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-normal-alias-report-preparation",
+    "stdout": "audit.attempt1.stdout.log",
+    "stderr": "audit.attempt1.stderr.log",
+    "exit_code": 0,
+    "tool_chunk_id": "a2a3d6",
+    "script_sha256": "493fd271ec4de449f86fe17aa91546cc8b52ac14f56bf716c7c90d6c65f49c7a",
+    "native_methods_imported_or_called": 0
+  }
+}

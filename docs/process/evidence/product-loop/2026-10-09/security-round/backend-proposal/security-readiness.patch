@@ -1,0 +1,372 @@
+--- a/backend/app/config.py
++++ b/backend/app/config.py
+@@ -133,16 +133,18 @@
+     #: would let any client invent an address and walk around the limiter.
+     trust_proxy_headers: bool = False
+ 
+-    #: Who may read the moderation queue and act on it, as a comma-separated
+-    #: list of account emails.
++    #: Operator-provisioned immutable account IDs allowed to moderate the
++    #: deployment. Registering an email must never grant global privileges.
+     #:
+     #: Deliberately not a role in the database. A workspace owner is the admin
+     #: of their own tenant, and the community is not theirs — it spans every
+     #: workspace — so tenant roles cannot grant this. A setting the deployment
+     #: operator edits is crude, but it puts the decision where it belongs and
+-    #: needs no table, no grant flow and no way for one applicant to make
+-    #: themselves a moderator. A real deployment with more than a handful of
+-    #: moderators should replace it.
++    #: needs no table or in-product grant flow. Provision IDs only after
++    #: independently identifying the intended account.
++    moderator_user_ids: str = ""
++    #: Legacy setting retained for configuration compatibility only. A claimed
++    #: email does not prove mailbox ownership and grants no moderation access.
+     moderator_emails: str = ""
+ 
+     #: `/metrics` for a Prometheus scraper. It carries no applicant data, only
+@@ -204,6 +206,10 @@
+     @property
+     def moderator_email_list(self) -> list[str]:
+         return [e.strip().casefold() for e in self.moderator_emails.split(",") if e.strip()]
++
++    @property
++    def moderator_user_id_list(self) -> list[str]:
++        return [value.strip() for value in self.moderator_user_ids.split(",") if value.strip()]
+ 
+     def ensure_dirs(self) -> None:
+         directories = [self.cache_dir, self.export_dir]
+--- a/backend/app/main.py
++++ b/backend/app/main.py
+@@ -164,7 +164,7 @@
+     return request.client.host if request.client else "unknown"
+ 
+ 
+-def _secure(response: Response) -> Response:
++def _secure(response: Response, *, request: Request) -> Response:
+     """Apply the browser security policy to every response, including early refusals."""
+     response.headers["X-Content-Type-Options"] = "nosniff"
+     response.headers["X-Frame-Options"] = "DENY"
+@@ -177,6 +177,10 @@
+         "img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; "
+         "connect-src 'self'"
+     )
++    if request.url.path == "/api" or request.url.path.startswith("/api/"):
++        # These responses can contain profiles, account or conversation data.
++        # Apply this to refusals too, and override any route-level cache policy.
++        response.headers["Cache-Control"] = "no-store"
+     if settings.is_production and settings.cookie_secure:
+         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+     return response
+@@ -187,16 +191,18 @@
+     """Headers, same-site request checks and narrow abuse limits."""
+     unsafe = request.method in {"POST", "PUT", "PATCH", "DELETE"}
+     if settings.auth_enabled and unsafe:
+-        # SameSite=Strict is the primary CSRF control. These headers add a
+-        # second browser-level barrier without breaking CLI clients.
++        # SameSite=Lax keeps sessions on cross-site navigations. These checks
++        # refuse unsafe cross-site browser requests without breaking CLI clients.
+         if request.headers.get("sec-fetch-site", "").lower() == "cross-site":
+             return _secure(
+-                JSONResponse(status_code=403, content={"detail": "Cross-site request refused."})
++                JSONResponse(status_code=403, content={"detail": "Cross-site request refused."}),
++                request=request,
+             )
+         origin = request.headers.get("origin")
+         if origin and origin not in settings.cors_origin_list:
+             return _secure(
+-                JSONResponse(status_code=403, content={"detail": "Untrusted request origin."})
++                JSONResponse(status_code=403, content={"detail": "Untrusted request origin."}),
++                request=request,
+             )
+ 
+     path = request.url.path
+@@ -226,10 +232,11 @@
+                     status_code=429,
+                     content={"detail": "Too many requests. Try again in a minute."},
+                     headers={"Retry-After": "60"},
+-                )
++                ),
++                request=request,
+             )
+ 
+-    return _secure(await call_next(request))
++    return _secure(await call_next(request), request=request)
+ 
+ 
+ @app.middleware("http")
+--- a/backend/app/api/routes_social.py
++++ b/backend/app/api/routes_social.py
+@@ -1030,9 +1030,9 @@
+ 
+     A workspace owner administers their own tenant, and the community is not
+     theirs — it spans every workspace — so no tenant role can carry this. See
+-    `Settings.moderator_emails` for why that is a setting rather than a table.
+-    """
+-    if principal.email.casefold() not in config.get_settings().moderator_email_list:
++    `Settings.moderator_user_ids` for why that is a setting rather than a table.
++    """
++    if principal.user_id not in config.get_settings().moderator_user_id_list:
+         raise HTTPException(403, "This is the moderation queue for this deployment.")
+     return principal
+ 
+@@ -1208,8 +1208,8 @@
+         content=avatar.data,
+         media_type=avatar.content_type,
+         headers={
+-            # The bytes of one version never change, so a browser may keep
+-            # them; the URL carries a version that moves when the picture does.
++            # Version metadata identifies the picture. The API security
++            # middleware overrides caching with no-store, including avatars.
+             "Cache-Control": "private, max-age=86400",
+             "ETag": f'"{int(stamp.timestamp())}"',
+         },
+--- a/backend/tests/test_social_moderation.py
++++ b/backend/tests/test_social_moderation.py
+@@ -427,12 +427,15 @@
+ 
+ 
+ def sign_in_as_moderator(client: TestClient) -> None:
+-    """The one account the settings name. Registered on first use."""
++    """Provision the trusted fixture account by its immutable ID, not its email."""
++    from app import config
++
+     existing = client.post(
+         "/api/auth/login",
+         json={"email": "keeper@example.test", "password": "correct horse battery keeper"},
+     )
+     if existing.status_code == 200:
++        config.get_settings().moderator_user_ids = existing.json()["user_id"]
+         return
+     registered = client.post(
+         "/api/auth/register",
+@@ -444,3 +447,86 @@
+         },
+     )
+     assert registered.status_code == 201, registered.text
++    config.get_settings().moderator_user_ids = registered.json()["user_id"]
++
++
++class TestModeratorAccountProvisioning:
++    def test_registering_the_configured_email_does_not_grant_moderation(self, client):
++        from app.db import SessionLocal
++        from app.models import User
++
++        claimed_id = join_as(client, "keeper")
++        with SessionLocal() as session:
++            claimed = session.get(User, claimed_id)
++            assert claimed is not None and not claimed.email_verified
++        response = client.get("/api/social/moderation/reports")
++        assert response.status_code == 403, response.text
++
++    def test_claimed_email_cannot_remove_another_tenants_reported_content(self, client):
++        from app.db import SessionLocal
++        from app.models import ContentReport, Post
++
++        author = join_as(client, "protected-author")
++        post = client.post("/api/social/posts", json={"body": "Protected synthetic post"}).json()
++        client.post("/api/auth/logout")
++        join_as(client, "protected-reporter")
++        report = client.post(
++            "/api/social/reports",
++            json={"subject_type": "post", "subject_id": post["id"], "reason": "spam", "note": ""},
++        ).json()
++        client.post("/api/auth/logout")
++        impersonator = join_as(client, "keeper")
++        assert impersonator != author
++        denied = client.post(
++            f"/api/social/moderation/reports/{report['id']}",
++            json={"action": "remove", "note": "Unauthorized removal"},
++        )
++        assert denied.status_code == 403, denied.text
++        with SessionLocal() as session:
++            assert session.get(Post, post["id"]) is not None
++            retained = session.get(ContentReport, report["id"])
++            assert retained is not None and retained.status == "open"
++            assert retained.resolved_at is None and retained.resolved_by is None
++
++    def test_only_explicitly_provisioned_id_can_moderate_across_workspaces(self, client):
++        from app import config
++
++        join_as(client, "cross-workspace-author")
++        post = client.post("/api/social/posts", json={"body": "Synthetic moderation case"}).json()
++        client.post("/api/auth/logout")
++        join_as(client, "cross-workspace-reporter")
++        report = client.post(
++            "/api/social/reports",
++            json={"subject_type": "post", "subject_id": post["id"], "reason": "spam", "note": ""},
++        ).json()
++        client.post("/api/auth/logout")
++        trusted_id = join_as(client, "operator-provisioned")
++        assert client.get("/api/social/moderation/reports").status_code == 403
++        config.get_settings().moderator_user_ids = f" , {trusted_id}, , "
++        queue = client.get("/api/social/moderation/reports")
++        assert queue.status_code == 200
++        assert [item["id"] for item in queue.json()["items"]] == [report["id"]]
++        removed = client.post(
++            f"/api/social/moderation/reports/{report['id']}",
++            json={"action": "remove", "note": "Operator-provisioned account"},
++        )
++        assert removed.status_code == 200 and removed.json()["status"] == "actioned"
++        client.post("/api/auth/logout")
++        join_as(client, "another-workspace-owner")
++        assert client.get("/api/social/moderation/reports").status_code == 403
++        assert client.get(f"/api/social/posts/{post['id']}").status_code == 404
++
++    def test_recreating_the_same_email_does_not_inherit_a_provisioned_id(self, client):
++        from app import config
++
++        old_id = join_as(client, "keeper")
++        assert client.get("/api/social/moderation/reports").status_code == 403
++        config.get_settings().moderator_user_ids = old_id
++        assert client.get("/api/social/moderation/reports").status_code == 200
++        deleted = client.post(
++            "/api/auth/me/delete", json={"password": "correct horse battery keeper"}
++        )
++        assert deleted.status_code == 204
++        new_id = join_as(client, "keeper")
++        assert new_id != old_id
++        assert client.get("/api/social/moderation/reports").status_code == 403
+--- a/backend/tests/test_security.py
++++ b/backend/tests/test_security.py
+@@ -522,3 +522,141 @@
+         assert good.status_code == 200
+         disposition = good.headers["content-disposition"]
+         assert disposition == 'attachment; filename="ashyq-{}-approved.csv"'.format(run["id"][:8])
++
++
++class TestPrivateApiStorage:
++    @pytest.mark.parametrize(
++        "path", ["/api/auth/me", "/api/profiles", "/api/cases", "/api/social/me"]
++    )
++    def test_successful_private_api_responses_are_not_stored(self, auth_client, path):
++        client, _ = auth_client
++        register(client, "private-response")
++        response = client.get(path)
++        assert response.status_code == 200, response.text
++        assert response.headers["cache-control"] == "no-store"
++
++    def test_case_and_result_exports_are_not_stored(self, auth_client):
++        from app.db import SessionLocal
++        from app.models import Entitlement
++
++        client, _ = auth_client
++        principal = register(client, "private-export")
++        profile = client.post(
++            "/api/profiles", json=copy.deepcopy(DEMO_PROFILE.model_dump(mode="json"))
++        )
++        assert profile.status_code == 201
++        with SessionLocal() as session:
++            session.add(
++                Entitlement(
++                    organization_id=principal["organization_id"],
++                    profile_id=profile.json()["id"],
++                    kind="case_full",
++                    source="manual",
++                )
++            )
++            session.commit()
++        case_export = client.get(f"/api/profiles/{profile.json()['id']}/export")
++        assert case_export.status_code == 200 and "profile" in case_export.json()
++        assert case_export.headers["cache-control"] == "no-store"
++        run = client.post("/api/runs", json={"profile_id": profile.json()["id"], "demo_mode": True})
++        assert run.status_code == 202
++        result_export = client.get(f"/api/runs/{run.json()['id']}/export.json")
++        assert result_export.status_code == 200
++        assert result_export.headers["cache-control"] == "no-store"
++        assert "attachment" in result_export.headers["content-disposition"]
++
++    def test_auth_and_not_found_api_responses_are_not_stored(self, auth_client):
++        client, _ = auth_client
++        refused = client.get("/api/profiles")
++        assert refused.status_code == 401
++        assert refused.headers["cache-control"] == "no-store"
++        register(client, "private-missing")
++        missing = client.get("/api/profiles/not-an-owned-case")
++        assert missing.status_code == 404
++        assert missing.headers["cache-control"] == "no-store"
++
++    @pytest.mark.parametrize(
++        "headers", [{"Sec-Fetch-Site": "cross-site"}, {"Origin": "https://untrusted.example.test"}]
++    )
++    def test_csrf_refusals_are_not_stored(self, auth_client, headers):
++        client, _ = auth_client
++        response = client.post("/api/auth/login", json={}, headers=headers)
++        assert response.status_code == 403
++        assert response.headers["cache-control"] == "no-store"
++
++    def test_limiter_refusal_is_not_stored(self, auth_client):
++        client, settings = auth_client
++        settings.auth_rate_limit_per_minute = 1
++        register(client, "private-rate")
++        response = client.post(
++            "/api/auth/login", json={"email": "absent@example.test", "password": "x"}
++        )
++        assert response.status_code == 429
++        assert response.headers["retry-after"] == "60"
++        assert response.headers["cache-control"] == "no-store"
++
++    def test_avatar_api_route_caching_is_overridden_without_changing_the_image(self, auth_client):
++        from tests.test_avatar_bytes import png_with_text
++
++        client, _ = auth_client
++        principal = register(client, "private-avatar")
++        joined = client.put(
++            "/api/social/me",
++            json={
++                "status": None,
++                "target_city": "",
++                "target_major": "",
++                "bio": "",
++                "universities": [],
++                "dm_policy": "anyone",
++            },
++        )
++        assert joined.status_code == 200
++        uploaded = client.put(
++            "/api/social/me/avatar",
++            files={"file": ("synthetic.png", png_with_text(), "image/png")},
++        )
++        assert uploaded.status_code == 204
++        response = client.get(f"/api/social/avatars/{principal['user_id']}")
++        assert response.status_code == 200
++        assert response.content.startswith(b"\x89PNG")
++        assert response.headers["cache-control"] == "no-store"
++        assert "etag" in response.headers
++
++    def test_static_asset_headers_remain_cacheable_and_api_prefix_is_exact(
++        self, auth_client, tmp_path
++    ):
++        from starlette.responses import Response
++        from starlette.routing import Route
++        from starlette.staticfiles import StaticFiles
++
++        from app import main
++
++        client, _ = auth_client
++        asset = tmp_path / "assets"
++        asset.mkdir()
++        (asset / "synthetic.js").write_text("/* synthetic */")
++        main.app.mount("/security-static-assets", StaticFiles(directory=asset))
++        mount = main.app.routes[-1]
++        try:
++            response = client.get("/security-static-assets/synthetic.js")
++            assert response.status_code == 200
++            assert "cache-control" not in response.headers
++            assert "etag" in response.headers and "last-modified" in response.headers
++        finally:
++            main.app.routes.remove(mount)
++
++        async def cacheable_public_response(_request):
++            return Response(
++                headers={"Cache-Control": "public, max-age=31536000, immutable", "ETag": '"v1"'}
++            )
++
++        public_route = Route("/apiary/static.js", cacheable_public_response)
++        main.app.routes.append(public_route)
++        try:
++            public = client.get("/apiary/static.js")
++            assert public.status_code == 200
++            assert public.headers["cache-control"] == "public, max-age=31536000, immutable"
++            assert public.headers["etag"] == '"v1"'
++        finally:
++            main.app.routes.remove(public_route)

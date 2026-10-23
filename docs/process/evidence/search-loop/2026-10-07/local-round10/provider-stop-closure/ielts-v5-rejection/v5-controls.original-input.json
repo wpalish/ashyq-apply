@@ -1,0 +1,245 @@
+[
+  {
+    "case": "negative_short_role_overlap",
+    "inner": "<h2>IELTS Academic</h2><p>We do not require an overall minimum score 6.5.</p>",
+    "expected": {},
+    "reason": "No shorter score pattern may rescue a negated whole role"
+  },
+  {
+    "case": "negative_adverb_need",
+    "inner": "<h2>IELTS Academic</h2><p>We do not currently need an overall minimum score 6.5.</p>",
+    "expected": {},
+    "reason": "Negated required-role prefix with neutral adverb"
+  },
+  {
+    "case": "no_overall_minimum",
+    "inner": "<h2>IELTS Academic</h2><p>No overall minimum score 6.5 is required.</p>",
+    "expected": {},
+    "reason": "No requirement role"
+  },
+  {
+    "case": "tail_currently_not_required",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5 is not currently required.</p>",
+    "expected": {},
+    "reason": "Tail nonrequirement"
+  },
+  {
+    "case": "tail_cannot_be_required",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5 cannot be required.</p>",
+    "expected": {},
+    "reason": "Modal nonrequirement"
+  },
+  {
+    "case": "role_must_obtain",
+    "inner": "<h2>IELTS Academic</h2><p>Applicants must obtain a minimum score of 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Explicit obligation + numeric minimum role"
+  },
+  {
+    "case": "role_required_to_have",
+    "inner": "<h2>IELTS Academic</h2><p>Candidates are required to have a minimum band score of 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Explicit obligation + numeric role"
+  },
+  {
+    "case": "role_article_minimum",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum band score of 6.5 is required.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Initial article + numeric minimum role"
+  },
+  {
+    "case": "average_score",
+    "inner": "<h2>IELTS Academic</h2><p>Candidates usually achieve an average score of 6.5.</p>",
+    "expected": {},
+    "reason": "Descriptive average is not required floor"
+  },
+  {
+    "case": "recommended_score",
+    "inner": "<h2>IELTS Academic</h2><p>We recommend a score of 6.5.</p>",
+    "expected": {},
+    "reason": "Recommendation is not required floor"
+  },
+  {
+    "case": "recommend_minimum",
+    "inner": "<h2>IELTS Academic</h2><p>We recommend a minimum score of 6.5.</p>",
+    "expected": {},
+    "reason": "No new owned-role fallback through arbitrary sentence"
+  },
+  {
+    "case": "gpa_minimum",
+    "inner": "<h2>IELTS Academic</h2><p>GPA minimum score of 6.5.</p>",
+    "expected": {},
+    "reason": "Other numerical role preceding minimum"
+  },
+  {
+    "case": "fee_minimum",
+    "inner": "<h2>IELTS Academic</h2><p>The processing fee minimum is 6.5 CAD.</p>",
+    "expected": {},
+    "reason": "Fee is not exam band"
+  },
+  {
+    "case": "noncanonical_ratio",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5/100 is required.</p>",
+    "expected": {},
+    "reason": "Unsupported scale"
+  },
+  {
+    "case": "malformed_ratio",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5/9.50 is required.</p>",
+    "expected": {},
+    "reason": "Full denominator, no prefix salvage"
+  },
+  {
+    "case": "canonical_ratio",
+    "inner": "<h2>IELTS Academic</h2><p>A minimum score of 6.5/9 is required.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Explicit IELTS band scale"
+  },
+  {
+    "case": "component_only_role",
+    "inner": "<h2>IELTS Academic</h2><p>Candidates must achieve a minimum score of 6.5 in each component.</p>",
+    "expected": {
+      "ielts_min_subscore": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Each-component role is disjoint from overall"
+  },
+  {
+    "case": "compound_result_refusal",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic module results are presently not accepted. Overall minimum 6.5.</p>",
+    "expected": {},
+    "reason": "Compound exam result subject + refusal adverb"
+  },
+  {
+    "case": "modal_refusal_adverb",
+    "inner": "<h2>IELTS Academic</h2><p>We cannot presently accept IELTS Academic; overall minimum 6.5.</p>",
+    "expected": {},
+    "reason": "Modal negative acceptance, neutral adverb"
+  },
+  {
+    "case": "positive_adverb_accept",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic is presently accepted with overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Neutral adverb does not itself negate permission"
+  },
+  {
+    "case": "distinct_variant_refusal",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS General Training is currently not accepted. IELTS Academic is accepted with overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Refusing another exact variant does not withdraw Academic"
+  },
+  {
+    "case": "academic_population_general_variant",
+    "inner": "<p>For academic applicants, IELTS General Training is accepted with overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "general_training"
+      ]
+    },
+    "reason": "Academic applicant adjective does not identify exam variant"
+  },
+  {
+    "case": "academic_programmes_untyped_exam",
+    "inner": "<p>For academic programmes, IELTS is accepted with overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5
+    },
+    "reason": "Untyped IELTS label cannot inherit academic adjective"
+  },
+  {
+    "case": "parenthetical_academic",
+    "inner": "<p>IELTS (Academic) requires a minimum score of 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Adjacent parenthetical exam variant"
+  },
+  {
+    "case": "ukvi_adjacent",
+    "inner": "<p>IELTS Academic for UKVI is accepted with overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic",
+        "ukvi_academic"
+      ]
+    },
+    "reason": "Immediate named variant qualifier"
+  },
+  {
+    "case": "aria_self_menu",
+    "inner": "<h2 id=\"exam\" class=\"menu-title\">IELTS Academic</h2><section aria-labelledby=\"exam\"><p>Minimum score 6.5.</p></section>",
+    "expected": {},
+    "reason": "Ignored chrome heading cannot be revived by ARIA"
+  },
+  {
+    "case": "aria_ancestor_menu",
+    "inner": "<div role=\"navigation\"><h2 id=\"exam\">IELTS Academic</h2></div><section aria-labelledby=\"exam\"><p>Minimum score 6.5.</p></section>",
+    "expected": {},
+    "reason": "Ignored chrome ancestor cannot be revived"
+  },
+  {
+    "case": "aria_owned_roleheading",
+    "inner": "<div role=\"heading\" aria-level=\"2\" id=\"exam\">IELTS Academic</div><section aria-labelledby=\"exam\"><p>A minimum score of 6.5 is required.</p></section>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "Valid ARIA ownership in same semantic region"
+  },
+  {
+    "case": "aria_unrelated_region",
+    "inner": "<section><h2 id=\"exam\">IELTS Academic</h2></section><section aria-labelledby=\"exam\"><p>A minimum score of 6.5 is required.</p></section>",
+    "expected": {},
+    "reason": "ARIA sibling regions do not prove ownership"
+  },
+  {
+    "case": "academic_subheading_other_test",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic is accepted with overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    },
+    "reason": "IELTS statement positive no unrelated exam contamination"
+  }
+]

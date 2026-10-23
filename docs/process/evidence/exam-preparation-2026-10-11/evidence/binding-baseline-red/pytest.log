@@ -1,0 +1,575 @@
+..............................FFFFFFFFFF.FFFFFFFFFF                      [100%]
+=================================== FAILURES ===================================
+____ test_shared_legacy_page_does_not_turn_deadline_or_gpa_into_exam_goals _____
+
+    def test_shared_legacy_page_does_not_turn_deadline_or_gpa_into_exam_goals():
+        evidence = [
+            claim("admission_deadline", "2027-12-01", "deadline", source_url=SHARED_PAGE),
+            claim("min_gpa", 3.5, "gpa", source_url=SHARED_PAGE),
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 6.5, "overall", source_url=SHARED_PAGE),
+            claim(
+                "ielts_min_subscore", {"reading": 6.5, "writing": 6.5}, "bands", source_url=SHARED_PAGE
+            ),
+        ]
+        originals = [
+            check("Admission deadline", evidence[0], claim_ids=[SHARED_PAGE]),
+            check("Minimum GPA", evidence[1], claim_ids=[SHARED_PAGE]),
+            check("SAT total", evidence[2], claim_ids=[SHARED_PAGE]),
+            check("IELTS overall", evidence[3], claim_ids=[SHARED_PAGE]),
+            check("IELTS writing", evidence[4], published_value=6.5, claim_ids=[SHARED_PAGE]),
+            check("IELTS reading", evidence[4], published_value=6.5, claim_ids=[SHARED_PAGE]),
+        ]
+        rows = project_checks(originals, evidence, REQUESTED)
+>       assert [row.requirement_check for row in rows] == originals[2:]
+E       AssertionError: assert [RequirementC...rce wording')] == [RequirementC...rce wording')]
+E         
+E         At index 0 diff: RequirementCheck(requirement='Admission deadline', published_value='2027-12-01', applicant_value=None, status=<EligibilityStatus.PENDING: 'PENDING'>, is_hard_filter=False, explanation='Keep the original qualification.', claim_ids=['https://example.edu/admissions/shared-requirements'], published_scope='Exact source wording') != RequirementCheck(requirement='SAT total', published_value=1300, applicant_value=None, status=<EligibilityStatus.PENDING: 'PENDING'>, is_hard_filter=False, explanation='Keep the original qualification.', claim_ids=['https://example...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:230: AssertionError
+_ test_shared_url_component_binding_does_not_inherit_overall_or_sat[listening] _
+
+component = 'listening'
+
+    @pytest.mark.parametrize("component", ["listening", "reading", "writing", "speaking"])
+    def test_shared_url_component_binding_does_not_inherit_overall_or_sat(component):
+        bands = claim("ielts_min_subscore", {component: 6.5}, "band", source_url=SHARED_PAGE)
+        evidence = [
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 7, "overall", source_url=SHARED_PAGE),
+            bands,
+        ]
+        original = check(f"IELTS {component}", bands, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], evidence, REQUESTED)[0]
+>       assert row.claims == [bands] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 277493, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:257: AssertionError
+__ test_shared_url_component_binding_does_not_inherit_overall_or_sat[reading] __
+
+component = 'reading'
+
+    @pytest.mark.parametrize("component", ["listening", "reading", "writing", "speaking"])
+    def test_shared_url_component_binding_does_not_inherit_overall_or_sat(component):
+        bands = claim("ielts_min_subscore", {component: 6.5}, "band", source_url=SHARED_PAGE)
+        evidence = [
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 7, "overall", source_url=SHARED_PAGE),
+            bands,
+        ]
+        original = check(f"IELTS {component}", bands, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], evidence, REQUESTED)[0]
+>       assert row.claims == [bands] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 280874, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:257: AssertionError
+__ test_shared_url_component_binding_does_not_inherit_overall_or_sat[writing] __
+
+component = 'writing'
+
+    @pytest.mark.parametrize("component", ["listening", "reading", "writing", "speaking"])
+    def test_shared_url_component_binding_does_not_inherit_overall_or_sat(component):
+        bands = claim("ielts_min_subscore", {component: 6.5}, "band", source_url=SHARED_PAGE)
+        evidence = [
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 7, "overall", source_url=SHARED_PAGE),
+            bands,
+        ]
+        original = check(f"IELTS {component}", bands, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], evidence, REQUESTED)[0]
+>       assert row.claims == [bands] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 284079, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:257: AssertionError
+_ test_shared_url_component_binding_does_not_inherit_overall_or_sat[speaking] __
+
+component = 'speaking'
+
+    @pytest.mark.parametrize("component", ["listening", "reading", "writing", "speaking"])
+    def test_shared_url_component_binding_does_not_inherit_overall_or_sat(component):
+        bands = claim("ielts_min_subscore", {component: 6.5}, "band", source_url=SHARED_PAGE)
+        evidence = [
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 7, "overall", source_url=SHARED_PAGE),
+            bands,
+        ]
+        original = check(f"IELTS {component}", bands, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], evidence, REQUESTED)[0]
+>       assert row.claims == [bands] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 287261, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:257: AssertionError
+_ test_native_named_policy_types_only_bind_their_own_claim[SAT policy-sat_policy-optional-NOT_APPLICABLE-optional] _
+
+label = 'SAT policy', kind = 'sat_policy', value = 'optional'
+status = 'NOT_APPLICABLE', policy = 'optional'
+
+    @pytest.mark.parametrize(
+        "label,kind,value,status,policy",
+        [
+            ("SAT policy", "sat_policy", "optional", "NOT_APPLICABLE", "optional"),
+            ("Accepted IELTS test type", "ielts_accepted_types", ["academic"], "PENDING", "unknown"),
+            ("TOEFL total", "toefl_min_total", 90, "GAP", "alternatives_unresolved"),
+            ("Entrance examination", "entrance_exam_required", True, "PENDING", "unknown"),
+        ],
+    )
+    def test_native_named_policy_types_only_bind_their_own_claim(label, kind, value, status, policy):
+        target = claim(kind, value, "target", source_url=SHARED_PAGE)
+        evidence = [
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 6.5, "overall", source_url=SHARED_PAGE),
+            target,
+        ]
+        original = check(label, target, status=status, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], evidence, REQUESTED)[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 290619, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:280: AssertionError
+_ test_native_named_policy_types_only_bind_their_own_claim[Accepted IELTS test type-ielts_accepted_types-value1-PENDING-unknown] _
+
+label = 'Accepted IELTS test type', kind = 'ielts_accepted_types'
+value = ['academic'], status = 'PENDING', policy = 'unknown'
+
+    @pytest.mark.parametrize(
+        "label,kind,value,status,policy",
+        [
+            ("SAT policy", "sat_policy", "optional", "NOT_APPLICABLE", "optional"),
+            ("Accepted IELTS test type", "ielts_accepted_types", ["academic"], "PENDING", "unknown"),
+            ("TOEFL total", "toefl_min_total", 90, "GAP", "alternatives_unresolved"),
+            ("Entrance examination", "entrance_exam_required", True, "PENDING", "unknown"),
+        ],
+    )
+    def test_native_named_policy_types_only_bind_their_own_claim(label, kind, value, status, policy):
+        target = claim(kind, value, "target", source_url=SHARED_PAGE)
+        evidence = [
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 6.5, "overall", source_url=SHARED_PAGE),
+            target,
+        ]
+        original = check(label, target, status=status, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], evidence, REQUESTED)[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 293857, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:280: AssertionError
+_ test_native_named_policy_types_only_bind_their_own_claim[TOEFL total-toefl_min_total-90-GAP-alternatives_unresolved] _
+
+label = 'TOEFL total', kind = 'toefl_min_total', value = 90, status = 'GAP'
+policy = 'alternatives_unresolved'
+
+    @pytest.mark.parametrize(
+        "label,kind,value,status,policy",
+        [
+            ("SAT policy", "sat_policy", "optional", "NOT_APPLICABLE", "optional"),
+            ("Accepted IELTS test type", "ielts_accepted_types", ["academic"], "PENDING", "unknown"),
+            ("TOEFL total", "toefl_min_total", 90, "GAP", "alternatives_unresolved"),
+            ("Entrance examination", "entrance_exam_required", True, "PENDING", "unknown"),
+        ],
+    )
+    def test_native_named_policy_types_only_bind_their_own_claim(label, kind, value, status, policy):
+        target = claim(kind, value, "target", source_url=SHARED_PAGE)
+        evidence = [
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 6.5, "overall", source_url=SHARED_PAGE),
+            target,
+        ]
+        original = check(label, target, status=status, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], evidence, REQUESTED)[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 297120, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:280: AssertionError
+_ test_native_named_policy_types_only_bind_their_own_claim[Entrance examination-entrance_exam_required-True-PENDING-unknown] _
+
+label = 'Entrance examination', kind = 'entrance_exam_required', value = True
+status = 'PENDING', policy = 'unknown'
+
+    @pytest.mark.parametrize(
+        "label,kind,value,status,policy",
+        [
+            ("SAT policy", "sat_policy", "optional", "NOT_APPLICABLE", "optional"),
+            ("Accepted IELTS test type", "ielts_accepted_types", ["academic"], "PENDING", "unknown"),
+            ("TOEFL total", "toefl_min_total", 90, "GAP", "alternatives_unresolved"),
+            ("Entrance examination", "entrance_exam_required", True, "PENDING", "unknown"),
+        ],
+    )
+    def test_native_named_policy_types_only_bind_their_own_claim(label, kind, value, status, policy):
+        target = claim(kind, value, "target", source_url=SHARED_PAGE)
+        evidence = [
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+            claim("ielts_min_overall", 6.5, "overall", source_url=SHARED_PAGE),
+            target,
+        ]
+        original = check(label, target, status=status, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], evidence, REQUESTED)[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 300580, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:280: AssertionError
+_ test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[url] _
+
+reference = 'url'
+
+    @pytest.mark.parametrize("reference", ["url", "id", "id_and_url"])
+    def test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours(reference):
+        target = claim("ielts_min_overall", 6.5, "target", source_url=SHARED_PAGE)
+        evidence = [
+            target,
+            claim("ielts_min_overall", 7, "other-overall", source_url=SHARED_PAGE),
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+        ]
+        refs = {
+            "url": [SHARED_PAGE],
+            "id": [target.id],
+            "id_and_url": [target.id, SHARED_PAGE],
+        }[reference]
+        original = check("IELTS overall", target, claim_ids=refs)
+        row = project_checks([original], evidence, REQUESTED)[0]
+        assert row.requirement_check == original and row.claim_ids == refs
+        if reference == "url":
+>           assert row.claims == [] and row.evidence_state == "unknown" and row.policy == "unknown"
+E           AssertionError: assert ([ClaimOut(cla..., age_days=0)] == []
+E             
+E             Left contains 3 more items, first extra item: ClaimOut(claim_type=<ClaimType.IELTS_MIN_OVERALL: 'ielts_min_overall'>, normalized_value=6.5, original_text_excerpt=''...ERIFIED_CURRENT: 'VERIFIED_CURRENT'>, extraction_method='html_rule', notes='', id='target', is_stale=False, age_days=0)
+E             Use -v to get more diff)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:301: AssertionError
+_ test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[id_and_url] _
+
+reference = 'id_and_url'
+
+    @pytest.mark.parametrize("reference", ["url", "id", "id_and_url"])
+    def test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours(reference):
+        target = claim("ielts_min_overall", 6.5, "target", source_url=SHARED_PAGE)
+        evidence = [
+            target,
+            claim("ielts_min_overall", 7, "other-overall", source_url=SHARED_PAGE),
+            claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+        ]
+        refs = {
+            "url": [SHARED_PAGE],
+            "id": [target.id],
+            "id_and_url": [target.id, SHARED_PAGE],
+        }[reference]
+        original = check("IELTS overall", target, claim_ids=refs)
+        row = project_checks([original], evidence, REQUESTED)[0]
+        assert row.requirement_check == original and row.claim_ids == refs
+        if reference == "url":
+            assert row.claims == [] and row.evidence_state == "unknown" and row.policy == "unknown"
+            assert row.lesson_ids == [] and row.source_urls == []
+        else:
+>           assert row.claims == [target] and row.evidence_state == "current"
+E           AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E             
+E             Left contains 2 more items, first extra item: ClaimOut(claim_type=<ClaimType.IELTS_MIN_OVERALL: 'ielts_min_overall'>, normalized_value=7, original_text_excerpt='', ..._CURRENT: 'VERIFIED_CURRENT'>, extraction_method='html_rule', notes='', id='other-overall', is_stale=False, age_days=0)
+E             Use -v to get more diff)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:304: AssertionError
+_ test_exact_id_cannot_clear_a_known_different_ielts_requirement[ielts_min_overall-6.5-IELTS writing] _
+
+kind = 'ielts_min_overall', value = 6.5, label = 'IELTS writing'
+
+    @pytest.mark.parametrize(
+        "kind,value,label",
+        [
+            ("ielts_min_overall", 6.5, "IELTS writing"),
+            ("ielts_min_subscore", {"writing": 6.5}, "IELTS reading"),
+        ],
+    )
+    def test_exact_id_cannot_clear_a_known_different_ielts_requirement(kind, value, label):
+        target = claim(kind, value, source_url=SHARED_PAGE)
+        original = check(label, target)
+        row = project_checks([original], [target], REQUESTED)[0]
+        assert row.requirement_check == original and row.claim_ids == [target.id]
+>       assert row.claims == [] and row.evidence_state == "unknown" and row.lesson_ids == []
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == []
+E         
+E         Left contains one more item: ClaimOut(claim_type=<ClaimType.IELTS_MIN_OVERALL: 'ielts_min_overall'>, normalized_value=6.5, original_text_excerpt=''...ERIFIED_CURRENT: 'VERIFIED_CURRENT'>, extraction_method='html_rule', notes='', id='claim1', is_stale=False, age_days=0)
+E         Use -v to get more diff)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:321: AssertionError
+_ test_exact_id_cannot_clear_a_known_different_ielts_requirement[ielts_min_subscore-value1-IELTS reading] _
+
+kind = 'ielts_min_subscore', value = {'writing': 6.5}, label = 'IELTS reading'
+
+    @pytest.mark.parametrize(
+        "kind,value,label",
+        [
+            ("ielts_min_overall", 6.5, "IELTS writing"),
+            ("ielts_min_subscore", {"writing": 6.5}, "IELTS reading"),
+        ],
+    )
+    def test_exact_id_cannot_clear_a_known_different_ielts_requirement(kind, value, label):
+        target = claim(kind, value, source_url=SHARED_PAGE)
+        original = check(label, target)
+        row = project_checks([original], [target], REQUESTED)[0]
+        assert row.requirement_check == original and row.claim_ids == [target.id]
+>       assert row.claims == [] and row.evidence_state == "unknown" and row.lesson_ids == []
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == []
+E         
+E         Left contains one more item: ClaimOut(claim_type=<ClaimType.IELTS_MIN_SUBSCORE: 'ielts_min_subscore'>, normalized_value={'writing': 6.5}, original_...ERIFIED_CURRENT: 'VERIFIED_CURRENT'>, extraction_method='html_rule', notes='', id='claim1', is_stale=False, age_days=0)
+E         Use -v to get more diff)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:321: AssertionError
+_ test_unknown_component_and_unresolved_reference_do_not_borrow_shared_page_evidence _
+
+    def test_unknown_component_and_unresolved_reference_do_not_borrow_shared_page_evidence():
+        target = claim("ielts_min_overall", 6.5, source_url=SHARED_PAGE)
+        for original in (
+            check("IELTS vocabulary", target, claim_ids=[SHARED_PAGE]),
+            check("IELTS overall", target, claim_ids=[SHARED_PAGE, "unresolved-reference"]),
+        ):
+            row = project_checks([original], [target], REQUESTED)[0]
+            assert row.requirement_check == original and row.claim_ids == original.claim_ids
+>           assert row.evidence_state == "unknown" and row.policy == "unknown" and row.lesson_ids == []
+E           AssertionError: assert ('current' == 'unknown'
+E             
+E             - unknown
+E             + current)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:332: AssertionError
+_ test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[scope-unknown] _
+
+mode = 'scope', expected = 'unknown'
+
+    @pytest.mark.parametrize(
+        "mode,expected",
+        [("scope", "unknown"), ("stale", "stale"), ("unverified", "unknown"), ("conflict", "conflicted")],
+    )
+    def test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls(mode, expected):
+        updates = {
+            "scope": {
+                "scope": ClaimScope(
+                    university="Other", programme="BSc", degree="bachelor", intake="fall 2027"
+                )
+            },
+            "stale": {"is_stale": True},
+            "unverified": {"status": "UNVERIFIED"},
+            "conflict": {"status": "CONFLICTING"},
+        }[mode]
+        target = claim(
+            "ielts_min_subscore", {"reading": 6.5}, "band", source_url=SHARED_PAGE, **updates
+        )
+        other = claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE)
+        original = check("IELTS reading", target, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], [other, target], REQUESTED)[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 320264, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:358: AssertionError
+_ test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[stale-stale] _
+
+mode = 'stale', expected = 'stale'
+
+    @pytest.mark.parametrize(
+        "mode,expected",
+        [("scope", "unknown"), ("stale", "stale"), ("unverified", "unknown"), ("conflict", "conflicted")],
+    )
+    def test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls(mode, expected):
+        updates = {
+            "scope": {
+                "scope": ClaimScope(
+                    university="Other", programme="BSc", degree="bachelor", intake="fall 2027"
+                )
+            },
+            "stale": {"is_stale": True},
+            "unverified": {"status": "UNVERIFIED"},
+            "conflict": {"status": "CONFLICTING"},
+        }[mode]
+        target = claim(
+            "ielts_min_subscore", {"reading": 6.5}, "band", source_url=SHARED_PAGE, **updates
+        )
+        other = claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE)
+        original = check("IELTS reading", target, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], [other, target], REQUESTED)[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 323372, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:358: AssertionError
+_ test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[unverified-unknown] _
+
+mode = 'unverified', expected = 'unknown'
+
+    @pytest.mark.parametrize(
+        "mode,expected",
+        [("scope", "unknown"), ("stale", "stale"), ("unverified", "unknown"), ("conflict", "conflicted")],
+    )
+    def test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls(mode, expected):
+        updates = {
+            "scope": {
+                "scope": ClaimScope(
+                    university="Other", programme="BSc", degree="bachelor", intake="fall 2027"
+                )
+            },
+            "stale": {"is_stale": True},
+            "unverified": {"status": "UNVERIFIED"},
+            "conflict": {"status": "CONFLICTING"},
+        }[mode]
+        target = claim(
+            "ielts_min_subscore", {"reading": 6.5}, "band", source_url=SHARED_PAGE, **updates
+        )
+        other = claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE)
+        original = check("IELTS reading", target, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], [other, target], REQUESTED)[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 326570, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:358: AssertionError
+_ test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[conflict-conflicted] _
+
+mode = 'conflict', expected = 'conflicted'
+
+    @pytest.mark.parametrize(
+        "mode,expected",
+        [("scope", "unknown"), ("stale", "stale"), ("unverified", "unknown"), ("conflict", "conflicted")],
+    )
+    def test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls(mode, expected):
+        updates = {
+            "scope": {
+                "scope": ClaimScope(
+                    university="Other", programme="BSc", degree="bachelor", intake="fall 2027"
+                )
+            },
+            "stale": {"is_stale": True},
+            "unverified": {"status": "UNVERIFIED"},
+            "conflict": {"status": "CONFLICTING"},
+        }[mode]
+        target = claim(
+            "ielts_min_subscore", {"reading": 6.5}, "band", source_url=SHARED_PAGE, **updates
+        )
+        other = claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE)
+        original = check("IELTS reading", target, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], [other, target], REQUESTED)[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 329660, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:358: AssertionError
+_ test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control[True] _
+
+unresolved = True
+
+    @pytest.mark.parametrize("unresolved", [True, False])
+    def test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control(unresolved):
+        target = claim("ielts_min_subscore", {"reading": 6.5}, "band", source_url=SHARED_PAGE)
+        other = claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE)
+        conflict = Conflict(
+            claim_type="ielts_min_subscore",
+            subject="Synthetic reading minimum",
+            claim_ids=[target.id],
+            values=[{"reading": 6.5}, {"reading": 7}],
+            source_urls=[SHARED_PAGE],
+            preferred_claim_id=target.id,
+            question_for_admissions="Which reading minimum applies?",
+            unresolved=unresolved,
+        )
+        original = check("IELTS reading", target, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], [other, target], REQUESTED, conflicts=[conflict])[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 332734, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:378: AssertionError
+_ test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control[False] _
+
+unresolved = False
+
+    @pytest.mark.parametrize("unresolved", [True, False])
+    def test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control(unresolved):
+        target = claim("ielts_min_subscore", {"reading": 6.5}, "band", source_url=SHARED_PAGE)
+        other = claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE)
+        conflict = Conflict(
+            claim_type="ielts_min_subscore",
+            subject="Synthetic reading minimum",
+            claim_ids=[target.id],
+            values=[{"reading": 6.5}, {"reading": 7}],
+            source_urls=[SHARED_PAGE],
+            preferred_claim_id=target.id,
+            question_for_admissions="Which reading minimum applies?",
+            unresolved=unresolved,
+        )
+        original = check("IELTS reading", target, published_value=6.5, claim_ids=[SHARED_PAGE])
+        row = project_checks([original], [other, target], REQUESTED, conflicts=[conflict])[0]
+>       assert row.claims == [target] and row.requirement_check == original
+E       AssertionError: assert ([ClaimOut(cla..., age_days=0)] == [ClaimOut(cla..., age_days=0)]
+E         
+E         At index 0 diff: ClaimOut(claim_type=<ClaimType.SAT_MIN_TOTAL: 'sat_min_total'>, normalized_value=1300, original_text_excerpt='', source_url='https://example.edu/admissions/shared-requirements', page_title='', relevant_section='', official_domain=True, program=None, subject_key=None, intake=None, academic_year=None, accessed_at=datetime.datetime(2026, 10, 11, 13, 39, 25, 335821, tzinfo=datetime.timezone.utc), scope=ClaimScope(university='Synthetic', faculty=None, programme='BSc', degree='bachelor', intake='fall 2027', academic_year=None, population=None, nationality=Non...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show)
+
+/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py:378: AssertionError
+=========================== short test summary info ============================
+FAILED ::test_shared_legacy_page_does_not_turn_deadline_or_gpa_into_exam_goals
+FAILED ::test_shared_url_component_binding_does_not_inherit_overall_or_sat[listening]
+FAILED ::test_shared_url_component_binding_does_not_inherit_overall_or_sat[reading]
+FAILED ::test_shared_url_component_binding_does_not_inherit_overall_or_sat[writing]
+FAILED ::test_shared_url_component_binding_does_not_inherit_overall_or_sat[speaking]
+FAILED ::test_native_named_policy_types_only_bind_their_own_claim[SAT policy-sat_policy-optional-NOT_APPLICABLE-optional]
+FAILED ::test_native_named_policy_types_only_bind_their_own_claim[Accepted IELTS test type-ielts_accepted_types-value1-PENDING-unknown]
+FAILED ::test_native_named_policy_types_only_bind_their_own_claim[TOEFL total-toefl_min_total-90-GAP-alternatives_unresolved]
+FAILED ::test_native_named_policy_types_only_bind_their_own_claim[Entrance examination-entrance_exam_required-True-PENDING-unknown]
+FAILED ::test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[url]
+FAILED ::test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[id_and_url]
+FAILED ::test_exact_id_cannot_clear_a_known_different_ielts_requirement[ielts_min_overall-6.5-IELTS writing]
+FAILED ::test_exact_id_cannot_clear_a_known_different_ielts_requirement[ielts_min_subscore-value1-IELTS reading]
+FAILED ::test_unknown_component_and_unresolved_reference_do_not_borrow_shared_page_evidence
+FAILED ::test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[scope-unknown]
+FAILED ::test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[stale-stale]
+FAILED ::test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[unverified-unknown]
+FAILED ::test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[conflict-conflicted]
+FAILED ::test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control[True]
+FAILED ::test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control[False]
+20 failed, 31 passed in 0.63s

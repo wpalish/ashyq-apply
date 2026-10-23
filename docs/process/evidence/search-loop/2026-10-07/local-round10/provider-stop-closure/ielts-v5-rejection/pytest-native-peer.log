@@ -1,0 +1,17 @@
+
+==================================== ERRORS ====================================
+_ ERROR collecting work/local-round9/b-ielts-v5-review/tests/test_v4_modal_require.py _
+work/local-round9/b-ielts-v5-review/tests/test_v4_modal_require.py:10: in <module>
+    CASES = json.loads((replay.BASE / 'v4-modal-require.original-input.json').read_text())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../../.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../../.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-ielts-v5-review/v4-modal-require.original-input.json'
+=========================== short test summary info ============================
+ERROR work/local-round9/b-ielts-v5-review/tests/test_v4_modal_require.py - Fi...
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.10s

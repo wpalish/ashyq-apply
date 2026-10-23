@@ -1,0 +1,7 @@
+{
+  "status": "PREREQUISITE_FAILURE_NOT_PRODUCT_REPRODUCTION",
+  "original": "evidence/frontend-b-off/unit.log",
+  "cause": "primary frontend had no node_modules; native lab has existing qualified dependency tree",
+  "repair": "ignored local symlink to existing installed tree; no install/lockfile/network/source change",
+  "new_helper_sha256": "0f5cebef503f676fc1cfd36e405003412019e3c8797bc6101e46f40e4699cae7"
+}

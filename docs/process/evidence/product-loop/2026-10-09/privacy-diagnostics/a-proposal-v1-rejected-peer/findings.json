@@ -1,0 +1,43 @@
+{
+  "verdict": "REJECT_ORIGINAL_C9a2607_PENDING_DISJOINT_REVISION",
+  "author_READY_sha256": "9a2607d2007e4ae89516a629a79b61f2ef295018d10c9a9105e22aa9dfe16846",
+  "attempt3": {
+    "off": {
+      "cases": 11,
+      "passed": 3,
+      "failed": 8,
+      "errors": 0,
+      "skipped": 0
+    },
+    "on": {
+      "cases": 11,
+      "passed": 9,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "blockers": [
+    {
+      "file": "backend/app/adapters/requirements/web_requirements.py",
+      "line": 292,
+      "first_case": "successful offsite first target -> UnboundLocalError",
+      "stale_case": "previous HTTP404 -> wrong previous URL on later successful offsite",
+      "OFF_both_pass": true,
+      "ON_both_fail": true,
+      "scope": "synthetic typed successful-result native adapter boundary; actual Fetcher normally blocks offsite redirects/cache; not an egress claim"
+    }
+  ],
+  "real_SQL_API": [
+    "native Runner diagnostics/outcomes/_save and explicit fixture audit actual commit/fresh Session/native tenant API; OFF marker stored, ON marker absent",
+    "real JobStore enqueue/claim token1 -> unmocked Worker.execute/_dispatch -> native ResearchRunner failure/save/audit -> native JobStore.fail/backoff; OFF marker stored/logged, ON safe reason, no source I/O"
+  ],
+  "limitations": [
+    "SQLite only, no PostgreSQL or concurrent crash durability",
+    "synthetic Principal override tests tenant guard, not login/session",
+    "P4 fixture invokes native _audit explicitly; does not claim product automatic event",
+    "P5 synthetic stage input; native Worker/Runner/JobStore and persistence unmocked",
+    "heartbeat cancel settles after one event-loop yield; no synchronous reap guarantee",
+    "no full runtime/production/egress/quality/legal readiness claim"
+  ]
+}

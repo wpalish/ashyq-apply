@@ -1,0 +1,124 @@
+.........FFFFFF...                                                       [100%]
+=================================== FAILURES ===================================
+_ test_enabled_matches_independent_page_purpose[funding_eligibility_with_academic_conditions] _
+
+name = 'funding_eligibility_with_academic_conditions'
+body = '<p>This is a funding eligibility page for enrolled students.</p><h2>Curriculum</h2><p>Applicants must have completed .../p><h2>Funding opportunities</h2><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a>'
+expected = 'scholarship_index'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1077d1430>
+
+    @pytest.mark.parametrize('name,body,expected',CASES,ids=[x[0] for x in CASES])
+    def test_enabled_matches_independent_page_purpose(name,body,expected,monkeypatch):
+        monkeypatch.setattr(proposal,'PROGRAMME_IDENTITY_BEFORE_FUNDING',True)
+        actual=proposal.classify_page(url='https://example.edu/support/computer-science',html=page(body))
+>       assert actual.page_type.value==expected
+E       AssertionError: assert 'program_detail' == 'scholarship_index'
+E         
+E         - scholarship_index
+E         + program_detail
+
+test_independent_scoped_classifier.py:30: AssertionError
+_ test_enabled_matches_independent_page_purpose[explicit_sibling_section_scope] _
+
+name = 'explicit_sibling_section_scope'
+body = '<section id="curriculum"><h2>Curriculum</h2><p>Ask the office for advice.</p></section><section aria-label="Award eli...p></section><h2>Scholarships</h2><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a>'
+expected = 'scholarship_index'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10776a930>
+
+    @pytest.mark.parametrize('name,body,expected',CASES,ids=[x[0] for x in CASES])
+    def test_enabled_matches_independent_page_purpose(name,body,expected,monkeypatch):
+        monkeypatch.setattr(proposal,'PROGRAMME_IDENTITY_BEFORE_FUNDING',True)
+        actual=proposal.classify_page(url='https://example.edu/support/computer-science',html=page(body))
+>       assert actual.page_type.value==expected
+E       AssertionError: assert 'program_detail' == 'scholarship_index'
+E         
+E         - scholarship_index
+E         + program_detail
+
+test_independent_scoped_classifier.py:30: AssertionError
+_ test_enabled_matches_independent_page_purpose[role_navigation_academic_copy] _
+
+name = 'role_navigation_academic_copy'
+body = '<div role="navigation"><h2>Curriculum</h2><p>First-year courses and second-year modules.</p></div><h2>Scholarships</h...nities for enrolled students.</p><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a>'
+expected = 'scholarship_index'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10776ae10>
+
+    @pytest.mark.parametrize('name,body,expected',CASES,ids=[x[0] for x in CASES])
+    def test_enabled_matches_independent_page_purpose(name,body,expected,monkeypatch):
+        monkeypatch.setattr(proposal,'PROGRAMME_IDENTITY_BEFORE_FUNDING',True)
+        actual=proposal.classify_page(url='https://example.edu/support/computer-science',html=page(body))
+>       assert actual.page_type.value==expected
+E       AssertionError: assert 'program_detail' == 'scholarship_index'
+E         
+E         - scholarship_index
+E         + program_detail
+
+test_independent_scoped_classifier.py:30: AssertionError
+_ test_enabled_matches_independent_page_purpose[funding_eligibility_credits_without_progression] _
+
+name = 'funding_eligibility_credits_without_progression'
+body = '<p>This is a financial support eligibility page.</p><h2>Curriculum</h2><p>Applicants need courses worth 120 credits to qualify.</p><h2>Scholarships</h2><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a>'
+expected = 'scholarship_index'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107769910>
+
+    @pytest.mark.parametrize('name,body,expected',CASES,ids=[x[0] for x in CASES])
+    def test_enabled_matches_independent_page_purpose(name,body,expected,monkeypatch):
+        monkeypatch.setattr(proposal,'PROGRAMME_IDENTITY_BEFORE_FUNDING',True)
+        actual=proposal.classify_page(url='https://example.edu/support/computer-science',html=page(body))
+>       assert actual.page_type.value==expected
+E       AssertionError: assert 'program_detail' == 'scholarship_index'
+E         
+E         - scholarship_index
+E         + program_detail
+
+test_independent_scoped_classifier.py:30: AssertionError
+_ test_enabled_matches_independent_page_purpose[programme_negates_bursaries_not_degree] _
+
+name = 'programme_negates_bursaries_not_degree'
+body = '<h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed...er bursaries for this degree.</p><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a>'
+expected = 'program_detail'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10776a360>
+
+    @pytest.mark.parametrize('name,body,expected',CASES,ids=[x[0] for x in CASES])
+    def test_enabled_matches_independent_page_purpose(name,body,expected,monkeypatch):
+        monkeypatch.setattr(proposal,'PROGRAMME_IDENTITY_BEFORE_FUNDING',True)
+        actual=proposal.classify_page(url='https://example.edu/support/computer-science',html=page(body))
+>       assert actual.page_type.value==expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+test_independent_scoped_classifier.py:30: AssertionError
+_ test_enabled_matches_independent_page_purpose[programme_negates_funding_not_degree] _
+
+name = 'programme_negates_funding_not_degree'
+body = '<h2>Curriculum</h2><p>Students take first-year courses in programming and second-year modules in algorithms, followed...ssistance for this programme.</p><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a>'
+expected = 'program_detail'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1077d22a0>
+
+    @pytest.mark.parametrize('name,body,expected',CASES,ids=[x[0] for x in CASES])
+    def test_enabled_matches_independent_page_purpose(name,body,expected,monkeypatch):
+        monkeypatch.setattr(proposal,'PROGRAMME_IDENTITY_BEFORE_FUNDING',True)
+        actual=proposal.classify_page(url='https://example.edu/support/computer-science',html=page(body))
+>       assert actual.page_type.value==expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+test_independent_scoped_classifier.py:30: AssertionError
+=============================== warnings summary ===============================
+test_independent_scoped_classifier.py: 54 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED test_independent_scoped_classifier.py::test_enabled_matches_independent_page_purpose[funding_eligibility_with_academic_conditions]
+FAILED test_independent_scoped_classifier.py::test_enabled_matches_independent_page_purpose[explicit_sibling_section_scope]
+FAILED test_independent_scoped_classifier.py::test_enabled_matches_independent_page_purpose[role_navigation_academic_copy]
+FAILED test_independent_scoped_classifier.py::test_enabled_matches_independent_page_purpose[funding_eligibility_credits_without_progression]
+FAILED test_independent_scoped_classifier.py::test_enabled_matches_independent_page_purpose[programme_negates_bursaries_not_degree]
+FAILED test_independent_scoped_classifier.py::test_enabled_matches_independent_page_purpose[programme_negates_funding_not_degree]
+6 failed, 12 passed, 54 warnings in 0.08s

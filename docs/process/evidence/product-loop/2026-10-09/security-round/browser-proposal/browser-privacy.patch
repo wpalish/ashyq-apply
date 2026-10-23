@@ -1,0 +1,1162 @@
+--- a/frontend/src/App.tsx
++++ b/frontend/src/App.tsx
+@@ -189,7 +189,7 @@
+     // and the worker has not finished yet. Bouncing them off the screen they
+     // just asked for would be the redirect fighting the workflow.
+     documents: null,
+-    export: run ? null : 'Start research first',
++    export: run || savedProfile ? null : 'Save an applicant case first',
+     // The community does not depend on a research run, so nothing gates it.
+     feed: null,
+     discover: null,
+--- a/frontend/src/AuthGate.test.tsx
++++ b/frontend/src/AuthGate.test.tsx
+@@ -1,7 +1,9 @@
+-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
++import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+ import { beforeEach, describe, expect, it, vi } from 'vitest';
+ import { AuthGate } from './AuthGate';
+ import { api } from '@/api/client';
++import { StoreProvider, useStore } from '@/lib/store';
++import { adoptPointer, readDraftEnvelope, writeDraftEnvelope, writePointer } from '@/lib/caseDrafts';
+ import type { AuthPrincipal, AuthStatus } from '@/types';
+ 
+ const principal: AuthPrincipal = {
+@@ -114,3 +116,122 @@
+     expect(screen.getByTestId('legal-draft')).toHaveTextContent('not reviewed by a lawyer');
+   });
+ });
++
++
++// Native AuthGate -> StoreProvider hydration, with synthetic principal/case data only.
++const OWNER_KEY = 'ashyq.applicantOwner';
++function BrowserCaseProbe() {
++  const { profileDraft, hydrated } = useStore();
++  return <p data-testid="private-draft">{hydrated ? String(profileDraft.display_name) : 'loading'}</p>;
++}
++function privateGate() {
++  return render(<AuthGate><StoreProvider><BrowserCaseProbe /></StoreProvider></AuthGate>);
++}
++function localDraft(name: string) {
++  writePointer('profile', 'local:private-case');
++  writeDraftEnvelope('local:private-case', { display_name: name, context: { citizenship: 'Synthetic citizenship' } });
++}
++function authenticated(owner = principal): AuthStatus {
++  return { ...signedOut, authenticated: true, principal: owner };
++}
++
++describe('private browser state belongs to the authenticated principal and workspace', () => {
++  beforeEach(() => {
++    window.localStorage.clear();
++    window.sessionStorage.clear();
++    vi.spyOn(api, 'capabilities').mockResolvedValue({} as never);
++    vi.spyOn(api, 'cases').mockResolvedValue([]);
++    vi.spyOn(api, 'createProfile').mockResolvedValue({} as never);
++    vi.spyOn(api, 'validateProfile').mockResolvedValue({ gaps: [], can_proceed: true } as never);
++    vi.mocked(api.authStatus).mockResolvedValue(authenticated());
++  });
++
++  it('does not auto-import an unowned local draft, old pointers or docsDone into an authenticated case', async () => {
++    localDraft('Previous private applicant');
++    window.localStorage.setItem('unimatch.unsavedDraft', JSON.stringify({ display_name: 'Legacy applicant' }));
++    window.localStorage.setItem('ashyq.docsDone', '{"old-result::Passport":true}');
++    window.localStorage.setItem('unimatch.theme', 'dark');
++    privateGate();
++    await waitFor(() => expect(screen.getByTestId('private-draft')).not.toHaveTextContent('loading'));
++    expect(screen.getByTestId('private-draft')).not.toHaveTextContent('Previous private applicant');
++    expect(adoptPointer('profile')).toBeNull();
++    expect(window.localStorage.getItem('unimatch.unsavedDraft')).toBeNull();
++    expect(window.localStorage.getItem('ashyq.docsDone')).toBeNull();
++    expect(window.localStorage.getItem('unimatch.theme')).toBe('dark');
++    expect(api.createProfile).not.toHaveBeenCalled();
++  });
++
++  it('preserves the same authenticated owner local draft and pointer on reload', async () => {
++    const first = privateGate();
++    await screen.findByTestId('private-draft');
++    localDraft('Same-owner draft');
++    first.unmount();
++    privateGate();
++    await waitFor(() => expect(screen.getByTestId('private-draft')).toHaveTextContent('Same-owner draft'));
++    expect(adoptPointer('profile')).toBe('local:private-case');
++  });
++
++  it.each([
++    { ...principal, user_id: 'user-2' },
++    { ...principal, organization_id: 'org-2' },
++  ])('does not restore another user or organization local draft: %j', async (next) => {
++    const first = privateGate();
++    await screen.findByTestId('private-draft');
++    localDraft('A-only draft');
++    first.unmount();
++    vi.mocked(api.authStatus).mockResolvedValue(authenticated(next));
++    privateGate();
++    await waitFor(() => expect(screen.getByTestId('private-draft')).not.toHaveTextContent('loading'));
++    expect(screen.getByTestId('private-draft')).not.toHaveTextContent('A-only draft');
++    expect(readDraftEnvelope('local:private-case')).toBeNull();
++    expect(adoptPointer('profile')).toBeNull();
++  });
++
++  it('locks old private memory while a cross-tab owner transition awaits server revalidation', async () => {
++    let resolve!: (status: AuthStatus) => void;
++    const first = privateGate();
++    await waitFor(() => expect(screen.getByTestId('private-draft')).not.toHaveTextContent('loading'));
++    localDraft('A-only draft');
++    first.unmount();
++    privateGate();
++    await waitFor(() => expect(screen.getByTestId('private-draft')).toHaveTextContent('A-only draft'));
++    vi.mocked(api.authStatus).mockImplementation(() => new Promise((done) => { resolve = done; }));
++    window.localStorage.setItem(OWNER_KEY, 'auth:["user-2","org-2"]');
++    window.dispatchEvent(new StorageEvent('storage', { key: OWNER_KEY, newValue: 'auth:["user-2","org-2"]' }));
++    await waitFor(() => expect(screen.queryByTestId('private-draft')).not.toBeInTheDocument());
++    await waitFor(() => expect(resolve).toBeDefined());
++    await act(async () => { resolve(authenticated({ ...principal, user_id: 'user-2', organization_id: 'org-2' })); });
++    await waitFor(() => expect(screen.getByTestId('private-draft')).not.toHaveTextContent('loading'));
++    expect(screen.getByTestId('private-draft')).not.toHaveTextContent('A-only draft');
++  });
++
++  it('preserves explicit anonymous demo local draft controls', async () => {
++    vi.mocked(api.authStatus).mockResolvedValue({ enabled: false, authenticated: true, registration_enabled: false, principal: null });
++    const first = privateGate();
++    await screen.findByTestId('private-draft');
++    localDraft('Anonymous demo draft');
++    first.unmount();
++    privateGate();
++    await waitFor(() => expect(screen.getByTestId('private-draft')).toHaveTextContent('Anonymous demo draft'));
++  });
++
++  it('keeps an unbound legacy draft only when the server explicitly disables authentication for demo', async () => {
++    localDraft('Legacy anonymous demo');
++    vi.mocked(api.authStatus).mockResolvedValue({ enabled: false, authenticated: true, registration_enabled: false, principal: null });
++    privateGate();
++    await waitFor(() => expect(screen.getByTestId('private-draft')).toHaveTextContent('Legacy anonymous demo'));
++  });
++
++  it('does not bind an older status response over a newer cross-tab owner even before its event arrives', async () => {
++    let resolve!: (status: AuthStatus) => void;
++    vi.mocked(api.authStatus)
++      .mockImplementationOnce(() => new Promise((done) => { resolve = done; }))
++      .mockResolvedValue(authenticated({ ...principal, user_id: 'user-2', organization_id: 'org-2' }));
++    privateGate();
++    window.localStorage.setItem(OWNER_KEY, 'auth:["user-2","org-2"]');
++    await act(async () => { resolve(authenticated()); });
++    await waitFor(() => expect(screen.getByTestId('private-draft')).not.toHaveTextContent('loading'));
++    expect(window.localStorage.getItem(OWNER_KEY)).toBe('auth:["user-2","org-2"]');
++    expect(api.authStatus).toHaveBeenCalledTimes(2);
++  });
++});
+--- a/frontend/src/AuthGate.tsx
++++ b/frontend/src/AuthGate.tsx
+@@ -1,8 +1,9 @@
+-import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
++import { Fragment, useEffect, useState, type FormEvent, type ReactNode } from 'react';
+ import { ApiError, api } from '@/api/client';
+ import type { AuthStatus } from '@/types';
+ import { PublicLanding } from '@/components/PublicLanding';
+ import { LegalScreen } from '@/screens/LegalScreen';
++import { APPLICANT_OWNER_KEY, bindApplicantOwner } from '@/lib/applicantStorage';
+ 
+ export function AuthGate({ children }: { children: ReactNode }) {
+   const [status, setStatus] = useState<AuthStatus | null>(null);
+@@ -25,8 +26,43 @@
+     if (!status?.authenticated) document.documentElement.setAttribute('data-theme', 'light');
+   }, [status?.authenticated]);
+ 
+-  useEffect(() => {
+-    api.authStatus().then(setStatus).catch((e) => setError(e instanceof Error ? e.message : String(e)));
++  const acceptStatus = (next: AuthStatus) => {
++    bindApplicantOwner(next);
++    setStatus(next);
++  };
++
++  useEffect(() => {
++    let generation = 0;
++    const reloadPrincipal = () => {
++      const request = ++generation;
++      let ownerAtRequest: string | null;
++      try { ownerAtRequest = window.localStorage.getItem(APPLICANT_OWNER_KEY); }
++      catch {
++        setError('Browser storage is unavailable. Private draft restoration is locked.');
++        return;
++      }
++      api.authStatus().then((next) => {
++        if (request !== generation) return;
++        if (window.localStorage.getItem(APPLICANT_OWNER_KEY) !== ownerAtRequest) {
++          setStatus(null);
++          if (!window.localStorage.getItem(APPLICANT_OWNER_KEY)?.startsWith('transition:')) reloadPrincipal();
++          return;
++        }
++        bindApplicantOwner(next);
++        setStatus(next);
++      }).catch((e) => {
++        if (request === generation) setError(e instanceof Error ? e.message : String(e));
++      });
++    };
++    const changed = (event: StorageEvent) => {
++      if (event.key !== APPLICANT_OWNER_KEY) return;
++      ++generation;
++      setStatus(null); // Unmount private memory before asking which principal owns the cookie now.
++      if (!event.newValue?.startsWith('transition:')) reloadPrincipal();
++    };
++    window.addEventListener('storage', changed);
++    reloadPrincipal();
++    return () => { ++generation; window.removeEventListener('storage', changed); };
+   }, []);
+ 
+   useEffect(() => {
+@@ -62,7 +98,11 @@
+       </main>
+     );
+   }
+-  if (status.authenticated) return <>{children}</>;
++  if (status.authenticated) {
++    const owner = status.enabled
++      ? JSON.stringify([status.principal?.user_id, status.principal?.organization_id]) : 'demo';
++    return <Fragment key={owner}>{children}</Fragment>;
++  }
+   // Older servers do not advertise this capability and support recovery.
+   const passwordResetEnabled = status.password_reset_enabled !== false;
+   const backToSignIn = () => {
+@@ -80,7 +120,7 @@
+       else await api.register({
+         email, password, display_name: name, organization_name: organization,
+       });
+-      setStatus(await api.authStatus());
++      acceptStatus(await api.authStatus());
+     } catch (e) {
+       setError(e instanceof ApiError ? e.message : String(e));
+     } finally {
+@@ -109,7 +149,7 @@
+       try {
+         await api.confirmPasswordReset(resetToken, password);
+         window.location.hash = '';
+-        setStatus(await api.authStatus());
++        acceptStatus(await api.authStatus());
+       } catch (e) {
+         setError(e instanceof ApiError ? e.message : String(e));
+       } finally {
+@@ -178,8 +218,9 @@
+           </div>
+           <h1>{mode === 'login' ? 'Welcome back.' : 'Start your journey.'}</h1>
+           <p className="muted small" style={{ marginTop: 'var(--space-3)' }}>
+-            Applicant records stay isolated inside your organization. University research never
+-            sends profile data to third-party websites.
++            Applicant records belong to your workspace. University searches can use your degree,
++            subject and intake preferences. Your name, contacts, grades and budget are excluded
++            from those search queries.
+           </p>
+         </div>
+         {mode === 'register' && (
+--- /dev/null
++++ b/frontend/src/api/client.privacy.test.ts
+@@ -0,0 +1,105 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { api } from './client';
++import type { AuthPrincipal } from '@/types';
++
++const OWNER = 'ashyq.applicantOwner';
++const personA = 'auth:["user-a","org-a"]';
++const personB = 'auth:["user-b","org-b"]';
++const principalB: AuthPrincipal = {
++  user_id: 'user-b', organization_id: 'org-b', email: 'b@example.test',
++  display_name: 'Synthetic B', organization_name: 'B workspace', role: 'owner', local_development: false,
++};
++const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
++  status, headers: { 'Content-Type': 'application/json' },
++});
++function owner(value = personA) {
++  localStorage.setItem(OWNER, value);
++  sessionStorage.setItem(OWNER, value);
++}
++function applicantData() {
++  localStorage.setItem('ashyq.draft.local:synthetic-a', 'private synthetic draft');
++  localStorage.setItem('ashyq.docsDone', '{"synthetic-a::Passport":true}');
++  sessionStorage.setItem('ashyq.activeProfile', 'local:synthetic-a');
++  localStorage.setItem('ashyq.theme', 'dark');
++}
++beforeEach(() => { localStorage.clear(); sessionStorage.clear(); owner(); });
++afterEach(() => { vi.unstubAllGlobals(); });
++
++describe('actual API owner boundary around shared cookies', () => {
++  it('refuses stale-tab applicant mutation before any fetch under another owner', async () => {
++    const transport = vi.fn().mockResolvedValue(response({ id: 'badly-created' }));
++    vi.stubGlobal('fetch', transport);
++    localStorage.setItem(OWNER, personB); // Other tab changed the shared session; this tab still owns A memory.
++    await expect(api.createProfile({ display_name: 'Synthetic A private draft' })).rejects.toThrow(/workspace changed/);
++    expect(transport).not.toHaveBeenCalled();
++  });
++  it('rejects a late response after ownership changes instead of returning it into old memory', async () => {
++    let resolve!: (value: Response) => void;
++    const transport = vi.fn().mockReturnValue(new Promise<Response>((done) => { resolve = done; }));
++    vi.stubGlobal('fetch', transport);
++    const pending = api.getProfile('synthetic-a');
++    expect(transport).toHaveBeenCalledTimes(1);
++    localStorage.setItem(OWNER, personB);
++    resolve(response({ id: 'synthetic-a', display_name: 'A response' }));
++    await expect(pending).rejects.toThrow(/workspace changed/);
++  });
++  it('keeps ordinary same-owner request payload, URL, and cookie mode unchanged', async () => {
++    const returned = { id: 'synthetic-a', display_name: 'Synthetic A' };
++    const transport = vi.fn().mockResolvedValue(response(returned));
++    vi.stubGlobal('fetch', transport);
++    expect(await api.createProfile({ display_name: 'Synthetic A' })).toEqual(returned);
++    expect(transport).toHaveBeenCalledWith('/api/profiles', {
++      method: 'POST', body: '{"display_name":"Synthetic A"}', credentials: 'include',
++      headers: { 'Content-Type': 'application/json' },
++    });
++  });
++  it('locks old tab data while a login is pending and binds only the acknowledged new principal', async () => {
++    let resolve!: (value: Response) => void;
++    const transport = vi.fn().mockReturnValue(new Promise<Response>((done) => { resolve = done; }));
++    vi.stubGlobal('fetch', transport);
++    applicantData();
++    const login = api.login('b@example.test', 'synthetic password');
++    expect(localStorage.getItem(OWNER)).toMatch(/^transition:/);
++    await expect(api.createProfile({ display_name: 'A must not be sent' })).rejects.toThrow(/workspace changed/);
++    expect(transport).toHaveBeenCalledTimes(1);
++    resolve(response(principalB));
++    expect(await login).toEqual(principalB);
++    expect(localStorage.getItem(OWNER)).toBe(personB);
++    expect(sessionStorage.getItem(OWNER)).toBe(personB);
++    expect(localStorage.getItem('ashyq.draft.local:synthetic-a')).toBeNull();
++  });
++  it('does not let a late auth acknowledgment erase or replace a newer owner', async () => {
++    let resolve!: (value: Response) => void;
++    vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise<Response>((done) => { resolve = done; })));
++    applicantData();
++    const logout = api.logout();
++    localStorage.setItem(OWNER, personB);
++    localStorage.setItem('ashyq.draft.local:synthetic-b', 'new owner draft');
++    resolve(new Response(null, { status: 204 }));
++    await expect(logout).rejects.toThrow(/workspace changed/);
++    expect(localStorage.getItem(OWNER)).toBe(personB);
++    expect(localStorage.getItem('ashyq.draft.local:synthetic-b')).toBe('new owner draft');
++  });
++  it.each(['logout', 'deleteAccount'] as const)('clears applicant browser data only after %s succeeds', async (operation) => {
++    applicantData();
++    const transport = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
++    vi.stubGlobal('fetch', transport);
++    if (operation === 'logout') await api.logout();
++    else await api.deleteAccount('synthetic password', true);
++    expect(transport).toHaveBeenCalledTimes(1);
++    expect(localStorage.getItem('ashyq.draft.local:synthetic-a')).toBeNull();
++    expect(localStorage.getItem('ashyq.docsDone')).toBeNull();
++    expect(sessionStorage.getItem('ashyq.activeProfile')).toBeNull();
++    expect(localStorage.getItem('ashyq.theme')).toBe('dark');
++  });
++  it.each(['logout', 'deleteAccount'] as const)('retains applicant data and restores binding when %s fails', async (operation) => {
++    applicantData();
++    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ detail: 'Synthetic refusal' }, 403)));
++    const pending = operation === 'logout' ? api.logout() : api.deleteAccount('bad password', true);
++    await expect(pending).rejects.toThrow('Synthetic refusal');
++    expect(localStorage.getItem(OWNER)).toBe(personA);
++    expect(sessionStorage.getItem(OWNER)).toBe(personA);
++    expect(localStorage.getItem('ashyq.draft.local:synthetic-a')).toBe('private synthetic draft');
++    expect(sessionStorage.getItem('ashyq.activeProfile')).toBe('local:synthetic-a');
++  });
++});
+--- a/frontend/src/api/client.ts
++++ b/frontend/src/api/client.ts
+@@ -5,6 +5,11 @@
+  * because every screen surfaces the reason a request failed instead of showing
+  * an unexplained spinner.
+  */
++
++import {
++  beginApplicantTransition, bindApplicantOwner, checkApplicantOwner,
++  currentApplicantOwner, forgetApplicantBrowserData,
++} from '@/lib/applicantStorage';
+ 
+ import type {
+   Capabilities,
+@@ -123,6 +128,16 @@
+   path: string,
+   init?: RequestInit,
+ ): Promise<{ body: T; headers: Headers }> {
++  const authRoute = [
++    '/api/auth/status', '/api/auth/login', '/api/auth/register', '/api/auth/logout',
++    '/api/auth/password/reset-request', '/api/auth/password/reset',
++    '/api/auth/me/delete', '/api/auth/session/organization',
++  ].includes(path);
++  let owner: string | null = null;
++  if (!authRoute) {
++    try { owner = currentApplicantOwner(); }
++    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
++  }
+   let response: Response;
+   try {
+     response = await fetch(path, {
+@@ -141,14 +156,40 @@
+     throw new ApiError(0, 'Cannot reach the Unimatch API. Is the backend running on port 8099?');
+   }
+ 
++  if (!authRoute) {
++    try { checkApplicantOwner(owner); }
++    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
++  }
+   if (!response.ok) throw await failureFrom(response);
+ 
+   if (response.status === 204) return { body: undefined as T, headers: response.headers };
+-  return { body: (await response.json()) as T, headers: response.headers };
++  const body = (await response.json()) as T;
++  if (!authRoute) {
++    try { checkApplicantOwner(owner); }
++    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
++  }
++  return { body, headers: response.headers };
+ }
+ 
+ async function request<T>(path: string, init?: RequestInit): Promise<T> {
+   return (await requestWithHeaders<T>(path, init)).body;
++}
++
++/** Auth changes lock other tabs before the shared cookie changes; failed calls keep their data. */
++async function authTransition<T>(action: () => Promise<T>, acknowledged: (value: T) => void): Promise<T> {
++  const transition = beginApplicantTransition();
++  try {
++    const value = await action();
++    transition.check();
++    acknowledged(value);
++    return value;
++  } catch (error) { transition.restore(); throw error; }
++}
++
++async function authenticate(action: () => Promise<AuthPrincipal>): Promise<AuthPrincipal> {
++  return authTransition(action, (principal) => {
++    bindApplicantOwner({ enabled: true, authenticated: true, registration_enabled: false, principal });
++  });
+ }
+ 
+ export const api = {
+@@ -156,17 +197,21 @@
+     request<UniversityCatalogue>(`/api/universities${query({ ...params, offset: params.offset?.toString() })}`),
+   authStatus: () => request<AuthStatus>('/api/auth/status'),
+   register: (payload: { email: string; password: string; display_name: string; organization_name: string }) =>
+-    request<AuthPrincipal>('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
++    authenticate(() => request<AuthPrincipal>('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) })),
+   login: (email: string, password: string) =>
+-    request<AuthPrincipal>('/api/auth/login', {
++    authenticate(() => request<AuthPrincipal>('/api/auth/login', {
+       method: 'POST', body: JSON.stringify({ email, password }),
+-    }),
+-  logout: () => request<void>('/api/auth/logout', { method: 'POST' }),
+-  changePassword: (currentPassword: string, newPassword: string) =>
+-    request<AuthPrincipal>('/api/auth/password', {
+-      method: 'POST',
+-      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+-    }),
++    })),
++  logout: async () => {
++    currentApplicantOwner();
++    await authTransition(() => request<void>('/api/auth/logout', { method: 'POST' }), forgetApplicantBrowserData);
++  },
++  changePassword: (currentPassword: string, newPassword: string) => {
++    currentApplicantOwner();
++    return request<AuthPrincipal>('/api/auth/password', {
++      method: 'POST', body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
++    });
++  },
+   // The answer is the same whether or not the address has an account, so the
+   // form can never be used to find out who is registered.
+   requestPasswordReset: (email: string) =>
+@@ -175,24 +220,28 @@
+       body: JSON.stringify({ email }),
+     }),
+   confirmPasswordReset: (token: string, newPassword: string) =>
+-    request<AuthPrincipal>('/api/auth/password/reset', {
++    authenticate(() => request<AuthPrincipal>('/api/auth/password/reset', {
+       method: 'POST',
+       body: JSON.stringify({ token, new_password: newPassword }),
+-    }),
++    })),
+   organizations: () =>
+     request<{ id: string; name: string; role: string; current: boolean }[]>(
+       '/api/auth/organizations',
+     ),
+-  switchOrganization: (organizationId: string) =>
+-    request<AuthPrincipal>('/api/auth/session/organization', {
+-      method: 'POST',
+-      body: JSON.stringify({ organization_id: organizationId }),
+-    }),
+-  deleteAccount: (password: string, confirmDeleteData: boolean) =>
+-    request<void>('/api/auth/me/delete', {
+-      method: 'POST',
+-      body: JSON.stringify({ password, confirm_delete_data: confirmDeleteData }),
+-    }),
++  switchOrganization: async (organizationId: string) => {
++    currentApplicantOwner();
++    return authTransition(() => request<AuthPrincipal>('/api/auth/session/organization', {
++      method: 'POST', body: JSON.stringify({ organization_id: organizationId }),
++    }), (principal) => {
++      bindApplicantOwner({ enabled: true, authenticated: true, registration_enabled: false, principal });
++    });
++  },
++  deleteAccount: async (password: string, confirmDeleteData: boolean) => {
++    currentApplicantOwner();
++    await authTransition(() => request<void>('/api/auth/me/delete', {
++      method: 'POST', body: JSON.stringify({ password, confirm_delete_data: confirmDeleteData }),
++    }), forgetApplicantBrowserData);
++  },
+   cases: () => request<ApplicantCase[]>('/api/cases'),
+   health: () => request<{ status: string; demo_mode: boolean; schema_version: number }>('/api/health'),
+   capabilities: () => request<Capabilities>('/api/capabilities'),
+@@ -324,10 +373,17 @@
+    */
+   downloadExport: async (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) => {
+     const url = api.exportUrl(runId, fmt, decision);
++    let owner: string | null;
++    try { owner = currentApplicantOwner(); }
++    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+     const response = await fetch(url, { credentials: 'include' });
++    try { checkApplicantOwner(owner); }
++    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+     if (!response.ok) throw await failureFrom(response);
+ 
+     const blob = await response.blob();
++    try { checkApplicantOwner(owner); }
++    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+     const href = URL.createObjectURL(blob);
+     const link = document.createElement('a');
+     link.href = href;
+--- /dev/null
++++ b/frontend/src/lib/applicantStorage.ts
+@@ -0,0 +1,109 @@
++/** Origin storage holds applicant data, so its owner is a server principal, not a case name. */
++import type { AuthStatus } from '@/types';
++
++export const APPLICANT_OWNER_KEY = 'ashyq.applicantOwner';
++const SCOPED_PREFIX = 'ashyq.owner.';
++const DEMO = 'demo';
++const SIGNED_OUT = 'signed-out';
++
++function isApplicantKey(key: string): boolean {
++  return key.startsWith(SCOPED_PREFIX) || key.startsWith('ashyq.draft.')
++    || key.startsWith('unimatch.draft.')
++    || /^(?:ashyq|unimatch)\.(?:activeProfile|activeRun|unsavedDraft|docsDone)$/.test(key);
++}
++
++/** Remove applicant data only; appearance and unrelated origin storage are not ours. */
++function removeApplicantData(): void {
++  for (const storage of [window.localStorage, window.sessionStorage]) {
++    const keys = Array.from({ length: storage.length }, (_, i) => storage.key(i));
++    for (const key of keys) if (key && isApplicantKey(key)) storage.removeItem(key);
++  }
++}
++
++export function bindApplicantOwner(status: AuthStatus): string {
++  let owner = DEMO;
++  if (status.enabled) {
++    owner = SIGNED_OUT;
++    if (status.authenticated) {
++      const principal = status.principal;
++      if (!principal?.user_id || !principal.organization_id || principal.local_development) {
++        throw new Error('The server did not identify this workspace. Sign in again.');
++      }
++      owner = `auth:${JSON.stringify([principal.user_id, principal.organization_id])}`;
++    }
++  }
++  // Fail closed if storage cannot be inspected/cleared: do not hydrate an unknown owner's draft.
++  const previous = window.localStorage.getItem(APPLICANT_OWNER_KEY);
++  // Only an explicit auth-disabled server may keep an unbound legacy demo draft.
++  if (previous !== owner && !(owner === DEMO && previous === null)) removeApplicantData();
++  window.localStorage.setItem(APPLICANT_OWNER_KEY, owner);
++  window.sessionStorage.setItem(APPLICANT_OWNER_KEY, owner);
++  return owner;
++}
++
++/** Null means stale/signed-out: no applicant browser read or write is permitted. */
++export function applicantStorageKey(key: string): string | null {
++  try {
++    const current = window.localStorage.getItem(APPLICANT_OWNER_KEY);
++    const tab = window.sessionStorage.getItem(APPLICANT_OWNER_KEY);
++    // Existing direct anonymous/demo controls have no authenticated binding.
++    if (current === null && tab === null) return key;
++    if (tab !== current || !tab || tab === SIGNED_OUT || tab.startsWith('transition:')) return null;
++    return tab === DEMO ? key : `${SCOPED_PREFIX}${encodeURIComponent(tab)}.${key}`;
++  } catch {
++    return null;
++  }
++}
++
++/** Capture/check around async I/O. A stale tab must not use another person's shared cookie. */
++export function currentApplicantOwner(): string | null {
++  const current = window.localStorage.getItem(APPLICANT_OWNER_KEY);
++  const tab = window.sessionStorage.getItem(APPLICANT_OWNER_KEY);
++  if (current === null && tab === null) return null;
++  if (tab !== current || !tab || tab === SIGNED_OUT || tab.startsWith('transition:')) {
++    throw new Error('The signed-in workspace changed. Reload to continue.');
++  }
++  return tab;
++}
++
++export function checkApplicantOwner(expected: string | null): void {
++  if (currentApplicantOwner() !== expected) {
++    throw new Error('The signed-in workspace changed. Reload to continue.');
++  }
++}
++
++/** Lock other tabs before an auth call may replace the shared session cookie. */
++export function beginApplicantTransition(): { check: () => void; restore: () => void } {
++  const previous = window.localStorage.getItem(APPLICANT_OWNER_KEY);
++  const pending = `transition:${crypto.randomUUID()}`;
++  window.localStorage.setItem(APPLICANT_OWNER_KEY, pending);
++  return { check: () => {
++    if (window.localStorage.getItem(APPLICANT_OWNER_KEY) !== pending) {
++      throw new Error('The signed-in workspace changed. Reload to continue.');
++    }
++  }, restore: () => {
++    // A failed older request cannot overwrite a newer person's binding.
++    if (window.localStorage.getItem(APPLICANT_OWNER_KEY) !== pending) return;
++    if (previous === null) window.localStorage.removeItem(APPLICANT_OWNER_KEY);
++    else window.localStorage.setItem(APPLICANT_OWNER_KEY, previous);
++  } };
++}
++
++export function forgetApplicantBrowserData(): void {
++  removeApplicantData();
++  window.localStorage.setItem(APPLICANT_OWNER_KEY, SIGNED_OUT);
++  window.sessionStorage.setItem(APPLICANT_OWNER_KEY, SIGNED_OUT);
++}
++
++/** A case deletion retires marks for its returned result ids, not another case's checklist. */
++export function forgetDocumentMarks(resultIds: string[]): void {
++  const key = applicantStorageKey('ashyq.docsDone');
++  if (key === null) return;
++  try {
++    const marks: unknown = JSON.parse(window.localStorage.getItem(key) ?? '{}');
++    if (!marks || typeof marks !== 'object' || Array.isArray(marks)) return;
++    const kept = Object.fromEntries(Object.entries(marks).filter(([item]) =>
++      !resultIds.some((id) => item.startsWith(`${id}::`))));
++    window.localStorage.setItem(key, JSON.stringify(kept));
++  } catch { /* unusable optional marks cannot block an acknowledged case deletion */ }
++}
+--- a/frontend/src/lib/caseDrafts.ts
++++ b/frontend/src/lib/caseDrafts.ts
+@@ -15,6 +15,8 @@
+  * removed, so an old build's pointer is not lost across the upgrade.
+  */
+ 
++import { applicantStorageKey } from '@/lib/applicantStorage';
++
+ /** Keys were `unimatch.*` before the product was named. */
+ export function legacyKey(key: string): string {
+   return key.replace(/^ashyq\./, 'unimatch.');
+@@ -47,7 +49,8 @@
+ 
+ function readLocal(key: string): string | null {
+   try {
+-    return window.localStorage.getItem(key);
++    const scoped = applicantStorageKey(key);
++    return scoped === null ? null : window.localStorage.getItem(scoped);
+   } catch {
+     return null; // storage unavailable — never fatal
+   }
+@@ -55,7 +58,8 @@
+ 
+ function removeLocal(key: string): void {
+   try {
+-    window.localStorage.removeItem(key);
++    const scoped = applicantStorageKey(key);
++    if (scoped !== null) window.localStorage.removeItem(scoped);
+   } catch {
+     /* storage unavailable */
+   }
+@@ -63,7 +67,8 @@
+ 
+ function readSession(key: string): string | null {
+   try {
+-    return window.sessionStorage.getItem(key);
++    const scoped = applicantStorageKey(key);
++    return scoped === null ? null : window.sessionStorage.getItem(scoped);
+   } catch {
+     return null;
+   }
+@@ -71,8 +76,10 @@
+ 
+ function writeSession(key: string, value: string | null): void {
+   try {
+-    if (value === null) window.sessionStorage.removeItem(key);
+-    else window.sessionStorage.setItem(key, value);
++    const scoped = applicantStorageKey(key);
++    if (scoped === null) return;
++    if (value === null) window.sessionStorage.removeItem(scoped);
++    else window.sessionStorage.setItem(scoped, value);
+   } catch {
+     /* per-tab state is best-effort */
+   }
+@@ -88,7 +95,7 @@
+   const key = kind === 'profile' ? ACTIVE_PROFILE_KEY : ACTIVE_RUN_KEY;
+   let inherited: string | null = null;
+   try {
+-    inherited = window.localStorage.getItem(key) ?? window.localStorage.getItem(legacyKey(key));
++    inherited = readLocal(key) ?? readLocal(legacyKey(key));
+   } catch {
+     inherited = null;
+   }
+@@ -171,7 +178,8 @@
+   };
+   if (baseUpdatedAt) envelope.base_updated_at = baseUpdatedAt;
+   try {
+-    window.localStorage.setItem(slotKey(caseKey), JSON.stringify(envelope));
++    const scoped = applicantStorageKey(slotKey(caseKey));
++    if (scoped !== null) window.localStorage.setItem(scoped, JSON.stringify(envelope));
+   } catch {
+     /* storage unavailable — the draft still lives in memory this session */
+   }
+--- a/frontend/src/lib/store.test.tsx
++++ b/frontend/src/lib/store.test.tsx
+@@ -6,11 +6,12 @@
+  * then wrote demo data over the applicant's real profile — silent data loss.
+  */
+ 
+-import { act, render, screen, waitFor } from '@testing-library/react';
++import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+ import { useState } from 'react';
+ import { beforeEach, describe, expect, it, vi } from 'vitest';
+ import { StoreProvider, blankProfile, toDraft, useStore } from './store';
+ import { DEFAULT_PROFILE } from './defaultProfile';
++import { ExportScreen } from '@/screens/ExportScreen';
+ import { ApiError, api } from '@/api/client';
+ import type { ApplicantCase, RunView, StoredProfile } from '@/types';
+ 
+@@ -548,3 +549,111 @@
+     );
+   });
+ });
++
++
++function DeletionProbe() {
++  const { profileDraft, savedProfile, validation, deleteEverything, results } = useStore();
++  const [ack, setAck] = useState<unknown>(null);
++  return <>
++    <output data-testid="delete-draft">{JSON.stringify(profileDraft)}</output>
++    <output data-testid="delete-saved">{savedProfile?.id ?? 'none'}</output>
++    <output data-testid="delete-validation">{JSON.stringify(validation)}</output>
++    <output data-testid="delete-ack">{String(ack)}</output>
++    <output data-testid="delete-results">{results.map((result) => result.id).join(',')}</output>
++    <button onClick={async () => setAck(await deleteEverything())}>Delete via store</button>
++  </>;
++}
++function privacyCase(withRun = false) {
++  window.sessionStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
++  vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
++  vi.spyOn(api, 'deleteProfile').mockResolvedValue(undefined);
++  vi.spyOn(api, 'exportProfile').mockResolvedValue({ profile: { display_name: 'Synthetic own case' }, runs: [] });
++  vi.mocked(api.capabilities).mockResolvedValue({ demo_mode: true, guarantees: [], limits: [], currency: { rate_date: '2026-10-01', rate_source: 'synthetic' } } as never);
++  if (withRun) {
++    window.sessionStorage.setItem('ashyq.activeRun', 'run-for-case');
++    vi.spyOn(api, 'getRun').mockResolvedValue({ id: 'run-for-case', profile_id: REAL_PROFILE.id,
++      stage: 'awaiting_user_decision', job_running: false, cancelled: false, progress: 1,
++      results_count: 1, claims_recorded: 0, pages_checked: 0, demo_mode: true } as RunView);
++    vi.spyOn(api, 'results').mockResolvedValue([]);
++    vi.spyOn(api, 'summary').mockResolvedValue({} as never);
++  }
++}
++
++describe('case privacy controls acknowledge actual deletion', () => {
++  it('exports a saved profile with no research run without starting research', async () => {
++    privacyCase();
++    const start = vi.spyOn(api, 'startRun');
++    render(<StoreProvider><ExportScreen /></StoreProvider>);
++    fireEvent.click(await screen.findByTestId('export-profile'));
++    expect(await screen.findByLabelText('Stored profile data')).toHaveTextContent('Synthetic own case');
++    expect(screen.queryByTestId('export-csv')).not.toBeInTheDocument();
++    expect(start).not.toHaveBeenCalled();
++    expect(api.deleteProfile).not.toHaveBeenCalled();
++  });
++
++  it('deletes a saved zero-run case only after explicit confirmation', async () => {
++    privacyCase();
++    render(<StoreProvider><ExportScreen /></StoreProvider>);
++    const confirm = await screen.findByTestId('delete-confirm');
++    expect(api.deleteProfile).not.toHaveBeenCalled();
++    fireEvent.change(confirm, { target: { value: 'DELETE' } });
++    fireEvent.click(screen.getByTestId('delete-everything'));
++    await waitFor(() => expect(api.deleteProfile).toHaveBeenCalledWith(REAL_PROFILE.id));
++    expect(await screen.findByText(/Deleted. The profile/)).toBeInTheDocument();
++  });
++
++  it.each([403, 500])('keeps the actual case and does not show deletion success on HTTP %i', async (status) => {
++    privacyCase(true);
++    vi.mocked(api.deleteProfile).mockRejectedValue(new ApiError(status, 'Deletion refused'));
++    render(<StoreProvider><DeletionProbe /><ExportScreen /></StoreProvider>);
++    await waitFor(() => expect(screen.getByTestId('delete-saved')).toHaveTextContent(REAL_PROFILE.id));
++    fireEvent.change(await screen.findByTestId('delete-confirm'), { target: { value: 'DELETE' } });
++    fireEvent.click(screen.getByTestId('delete-everything'));
++    await waitFor(() => expect(api.deleteProfile).toHaveBeenCalled());
++    await act(async () => { await Promise.resolve(); });
++    expect(screen.queryByText(/Deleted. The profile/)).not.toBeInTheDocument();
++    expect(screen.getByTestId('delete-saved')).toHaveTextContent(REAL_PROFILE.id);
++    expect(screen.getByTestId('delete-draft')).toHaveTextContent(REAL_PROFILE.display_name);
++  });
++
++  it('returns an acknowledgment and clears only successful case draft memory and its marks', async () => {
++    privacyCase(true);
++    vi.mocked(api.results).mockResolvedValue([{ id: 'result-for-case' }] as never);
++    window.localStorage.setItem('ashyq.docsDone', '{"result-for-case::Passport":true,"other-case::Reference":true}');
++    render(<StoreProvider><DeletionProbe /></StoreProvider>);
++    await waitFor(() => expect(screen.getByTestId('delete-saved')).toHaveTextContent(REAL_PROFILE.id));
++    await waitFor(() => expect(screen.getByTestId('delete-results')).toHaveTextContent('result-for-case'));
++    fireEvent.click(screen.getByRole('button', { name: 'Delete via store' }));
++    await waitFor(() => expect(screen.getByTestId('delete-ack')).toHaveTextContent('true'));
++    expect(screen.getByTestId('delete-saved')).toHaveTextContent('none');
++    expect(screen.getByTestId('delete-draft')).not.toHaveTextContent(REAL_PROFILE.display_name);
++    expect(screen.getByTestId('delete-validation')).toHaveTextContent('null');
++    expect(window.sessionStorage.getItem('ashyq.activeProfile')).toBeNull();
++    expect(JSON.parse(window.localStorage.getItem('ashyq.docsDone')!)).toHaveProperty('other-case::Reference', true);
++    expect(JSON.parse(window.localStorage.getItem('ashyq.docsDone')!)).not.toHaveProperty('result-for-case::Passport');
++  });
++});
++
++let capturedPrivateActions: ReturnType<typeof useStore>;
++function PrivateActionProbe() {
++  capturedPrivateActions = useStore();
++  return <p>Private action source</p>;
++}
++describe('unmounted applicant actions cannot resume under a newly bound owner', () => {
++  it.each(['saveProfile', 'startRun'] as const)('refuses an old %s closure before creating the old private draft', async (operation) => {
++    window.localStorage.setItem('ashyq.applicantOwner', 'auth:["user-a","org-a"]');
++    window.sessionStorage.setItem('ashyq.applicantOwner', 'auth:["user-a","org-a"]');
++    const first = render(<StoreProvider><PrivateActionProbe /></StoreProvider>);
++    await waitFor(() => expect(capturedPrivateActions.hydrated).toBe(true));
++    const oldActions = capturedPrivateActions;
++    first.unmount();
++    window.localStorage.setItem('ashyq.applicantOwner', 'auth:["user-b","org-b"]');
++    window.sessionStorage.setItem('ashyq.applicantOwner', 'auth:["user-b","org-b"]');
++    const create = vi.spyOn(api, 'createProfile').mockResolvedValue(REAL_PROFILE);
++    const start = vi.spyOn(api, 'startRun').mockResolvedValue({ id: 'synthetic-run' } as RunView);
++    const pending = operation === 'saveProfile' ? oldActions.saveProfile() : oldActions.startRun(false);
++    await expect(pending).rejects.toThrow(/workspace changed/);
++    expect(create).not.toHaveBeenCalled();
++    expect(start).not.toHaveBeenCalled();
++  });
++});
+--- a/frontend/src/lib/store.tsx
++++ b/frontend/src/lib/store.tsx
+@@ -12,6 +12,7 @@
+ } from 'react';
+ import { ApiError, api, isPaymentRequired } from '@/api/client';
+ import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
++import { checkApplicantOwner, currentApplicantOwner, forgetDocumentMarks } from '@/lib/applicantStorage';
+ import {
+   adoptPointer, clearDraftSlot, isLocalCaseKey, migrateLegacyDraft, newLocalCaseKey,
+   readDraftEnvelope, writeDraftEnvelope, writePointer,
+@@ -80,7 +81,7 @@
+   rerank: (body: RerankIn) => Promise<void>;
+   /** The balanced list, refreshed with the results. */
+   shortlist: BalancedShortlist | null;
+-  deleteEverything: () => Promise<void>;
++  deleteEverything: () => Promise<boolean>;
+   clearError: () => void;
+   /** Set when a gated route answered 402. Null when nothing is locked. */
+   paywall: { profileId: string; priceKzt: number; casesLeft: number | null } | null;
+@@ -214,6 +215,19 @@
+   const hydrationPassRef = useRef(0);
+   const activeCaseKey: string | null = savedProfile?.id ?? localCaseKey;
+ 
++  const ownerAtMount = useRef(currentApplicantOwner());
++  const mountedRef = useRef(true);
++  const assertStoreOwner = useCallback(() => {
++    if (!mountedRef.current) throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.');
++    try { checkApplicantOwner(ownerAtMount.current); }
++    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
++  }, []);
++  useEffect(() => {
++    const generations = opGenRef;
++    mountedRef.current = true;
++    return () => { mountedRef.current = false; ++generations.current; };
++  }, []);
++
+   const fail = useCallback((e: unknown) => {
+     // A 401 is not something the user can act on from this screen. AuthGate
+     // asks /api/auth/status once, at mount, so a session that expires mid-use
+@@ -521,6 +535,7 @@
+   );
+ 
+   const saveProfile = useCallback(async () => {
++    assertStoreOwner();
+     const gen = ++opGenRef.current;
+     // The draft moves from its previous case key (a local case key on the very
+     // first save) to the saved profile id, so the old slot is retired with it.
+@@ -531,6 +546,8 @@
+       const saved = savedProfile
+         ? await api.updateProfile(savedProfile.id, profileDraft)
+         : await api.createProfile(profileDraft);
++      if (gen !== opGenRef.current) return;
++      assertStoreOwner();
+       const nextCases = await api.cases();
+       if (gen !== opGenRef.current) return;
+       setSavedProfile(saved);
+@@ -550,7 +567,7 @@
+     } finally {
+       if (gen === opGenRef.current) setLoading(false);
+     }
+-  }, [profileDraft, savedProfile, localCaseKey, fail]);
++  }, [profileDraft, savedProfile, localCaseKey, fail, assertStoreOwner]);
+ 
+   const switchCase = useCallback(async (profileId: string) => {
+     const gen = ++opGenRef.current;
+@@ -620,6 +637,7 @@
+   }, []);
+ 
+   const startRun = useCallback(async (demoMode: boolean, universityIds?: string[]) => {
++    assertStoreOwner();
+     const gen = ++opGenRef.current;
+     setLoading(true);
+     setError(null);
+@@ -628,6 +646,8 @@
+       if (!profile) {
+         const previousCaseKey = localCaseKey;
+         profile = await api.createProfile(profileDraft);
++        if (gen !== opGenRef.current) return;
++        assertStoreOwner();
+         const nextCases = await api.cases();
+         if (gen !== opGenRef.current) return;
+         setSavedProfile(profile);
+@@ -640,6 +660,7 @@
+         if (gen !== opGenRef.current) return;
+       }
+       const requestKey = crypto.randomUUID();
++      assertStoreOwner();
+       const started = universityIds
+         ? await api.startRun(profile.id, demoMode, requestKey, universityIds)
+         : await api.startRun(profile.id, demoMode, requestKey);
+@@ -672,7 +693,7 @@
+     } finally {
+       if (gen === opGenRef.current) setLoading(false);
+     }
+-  }, [profileDraft, savedProfile, localCaseKey, fail]);
++  }, [profileDraft, savedProfile, localCaseKey, fail, assertStoreOwner]);
+ 
+   const cancelRun = useCallback(async () => {
+     if (!run) return;
+@@ -774,10 +795,25 @@
+   }, [run, results, fail]);
+ 
+   const deleteEverything = useCallback(async () => {
+-    if (!savedProfile) return;
+-    try {
++    if (!savedProfile) return false;
++    try {
++      assertStoreOwner();
+       const caseKey = savedProfile.id;
++      const gen = ++opGenRef.current;
+       await api.deleteProfile(caseKey);
++      assertStoreOwner();
++      clearDraftSlot(caseKey);
++      forgetDocumentMarks(results.map((result) => result.id));
++      if (gen !== opGenRef.current) return false;
++      ++opGenRef.current; // An earlier case response must not resurrect the deleted case.
++      const blank = blankProfile();
++      setDraft(blank);
++      setBaseline(JSON.stringify(blank));
++      setDraftRestored(false);
++      setRestored(false);
++      setValidation(null);
++      setShortlist(null);
++      setPaywall(null);
+       setSavedProfile(null);
+       setLocalCaseKey(null);
+       setRun(null);
+@@ -785,12 +821,13 @@
+       setSummary(null);
+       writePointer('run', null);
+       writePointer('profile', null);
+-      clearDraftSlot(caseKey);
+-      setCases(await api.cases());
++      setCases((previous) => previous.filter((item) => item.id !== caseKey));
++      return true;
+     } catch (e) {
+       fail(e);
+-    }
+-  }, [savedProfile, fail]);
++      return false;
++    }
++  }, [savedProfile, results, fail, assertStoreOwner]);
+ 
+   const loadDemoProfile = useCallback(() => {
+     setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);
+--- /dev/null
++++ b/frontend/src/screens/DocumentsScreen.privacy.test.tsx
+@@ -0,0 +1,38 @@
++import { fireEvent, render, screen } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { DocumentsScreen } from './DocumentsScreen';
++import type { ProgramResult } from '@/types';
++
++const OWNER = 'ashyq.applicantOwner';
++const results = [{ id: 'synthetic-result', university: 'Synthetic University', program: 'Synthetic BSc',
++  user_decision: 'maybe', admission_deadline: null, scholarships: [], checklist: {
++    result_id: 'synthetic-result', university: 'Synthetic University', program: 'Synthetic BSc',
++    admission_documents: [], scholarship_documents: [], ordered_steps: [],
++    applicant_actions: [{ name: 'Passport', purpose: 'admission', owner: 'applicant',
++      lead_time_days: 0, note: null, official_url: null }],
++    school_actions: [], recommender_actions: [], certification_actions: [], unresolved: [],
++    completeness: 'partial', generated_at: null,
++  },
++}] as unknown as ProgramResult[];
++vi.mock('@/lib/store', () => ({ useStore: () => ({ results, run: null }) }));
++function owner(value: string) { localStorage.setItem(OWNER, value); sessionStorage.setItem(OWNER, value); }
++beforeEach(() => { localStorage.clear(); sessionStorage.clear(); owner('auth:["user-a","org-a"]'); });
++
++describe('native checklist mark owner scope', () => {
++  it('does not restore the previous person mark for even the same result/document id', () => {
++    const first = render(<DocumentsScreen />);
++    fireEvent.click(screen.getByRole('checkbox'));
++    expect(screen.getByRole('checkbox')).toBeChecked();
++    first.unmount();
++    owner('auth:["user-b","org-b"]');
++    render(<DocumentsScreen />);
++    expect(screen.getByRole('checkbox')).not.toBeChecked();
++  });
++  it('keeps a same-owner mark on ordinary remount without any collection or research', () => {
++    const first = render(<DocumentsScreen />);
++    fireEvent.click(screen.getByRole('checkbox'));
++    first.unmount();
++    render(<DocumentsScreen />);
++    expect(screen.getByRole('checkbox')).toBeChecked();
++  });
++});
+--- a/frontend/src/screens/DocumentsScreen.tsx
++++ b/frontend/src/screens/DocumentsScreen.tsx
+@@ -11,6 +11,7 @@
+ import { date, dateTime } from '@/lib/format';
+ import { api } from '@/api/client';
+ import { useStore } from '@/lib/store';
++import { applicantStorageKey } from '@/lib/applicantStorage';
+ import type { DocumentItem, ProgramResult } from '@/types';
+ import type { ScreenId } from '@/App';
+ 
+@@ -25,7 +26,8 @@
+ 
+ function loadDone(): Record<string, boolean> {
+   try {
+-    return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? '{}');
++    const scoped = applicantStorageKey(DONE_KEY);
++    return scoped === null ? {} : JSON.parse(window.localStorage.getItem(scoped) ?? '{}');
+   } catch {
+     return {};
+   }
+@@ -46,7 +48,8 @@
+     setDone((prev) => {
+       const next = { ...prev, [key]: !prev[key] };
+       try {
+-        window.localStorage.setItem(DONE_KEY, JSON.stringify(next));
++        const scoped = applicantStorageKey(DONE_KEY);
++        if (scoped !== null) window.localStorage.setItem(scoped, JSON.stringify(next));
+       } catch {
+         /* progress ticks are a convenience; storage being unavailable is fine */
+       }
+--- a/frontend/src/screens/ExportScreen.tsx
++++ b/frontend/src/screens/ExportScreen.tsx
+@@ -1,9 +1,9 @@
+ /**
+  * Screen 10 — Export and data deletion.
+  *
+- * Both directions of data portability in one place: take everything out, or
+- * erase all of it. Deletion is real and cascades to every run, result and
+- * claim — hence the typed confirmation.
++ * Export the saved profile and run list, or delete this case and its linked
++ * research records. These controls are not an account-wide export or a promise
++ * about audit retention or backups — hence the explicit case confirmation.
+  */
+ 
+ import { useState } from 'react';
+@@ -21,7 +21,7 @@
+   const [exported, setExported] = useState<Record<string, unknown> | null>(null);
+   const [deleted, setDeleted] = useState(false);
+ 
+-  if (!run) return <Empty title="Nothing to export yet">Start a research run first.</Empty>;
++  if (!run && !savedProfile && !deleted) return <Empty title="Nothing to export yet">Save an applicant case first.</Empty>;
+ 
+   const approved = results.filter((r) => r.user_decision === 'approved').length;
+ 
+@@ -31,21 +31,21 @@
+         <p className="screen__eyebrow">Step 09</p>
+         <h1 className="screen__title">Take it with you, or erase it</h1>
+         <p className="screen__lede">
+-          Every export carries the source link and the verification date for each row, so a
+-          spreadsheet is as auditable as this screen. Deletion is immediate and complete.
++          Shortlist exports carry the source link and verification date for each row.
++          You can also export or delete a saved case before research.
+         </p>
+       </div>
+ 
+       <div className="stack stack--loose">
+-        <div className="statband">
++        {run && <div className="statband">
+           <Stat value={results.length} label="Programmes" />
+           <Stat value={approved} label="Approved" />
+           <Stat value={summary?.with_conflicts ?? 0} label="Conflicts" />
+           <Stat value={run.claims_recorded} label="Claims" />
+           <Stat value={run.pages_checked} label="Pages read" />
+-        </div>
+-
+-        <Panel
++        </div>}
++
++        {run && <Panel
+           title="Export the shortlist"
+           hint="CSV for a spreadsheet, JSON for everything including every claim, XLSX for a three-sheet workbook: shortlist, evidence, and open questions."
+         >
+@@ -81,11 +81,11 @@
+               </div>
+             </Notice>
+           )}
+-        </Panel>
++        </Panel>}
+ 
+         <Panel
+           title="Export your own data"
+-          hint="Everything held about this applicant: the profile as entered and a list of every run."
++          hint="This saved case: the profile as entered and a list of its runs. This is not an account-wide export."
+         >
+           <div className="row">
+             <button
+@@ -159,17 +159,18 @@
+           </Panel>
+         )}
+ 
+-        <Panel title="Delete everything">
++        <Panel title="Delete this case">
+           {deleted ? (
+             <Notice kind="info">
+-              <div>Deleted. The profile, every run, result, claim and checklist are gone.</div>
++              <div>Deleted. The profile and its linked research records were removed from the active service.</div>
+             </Notice>
+           ) : (
+             <div className="stack">
+               <Notice kind="risk">
+                 <div>
+                   This erases the applicant profile and every research run, result, claim,
+-                  conflict and checklist attached to it. It cannot be undone.
++                  conflict and checklist attached to it. It cannot be undone here.
++                  Account data, audit records and backups are outside this case control.
+                 </div>
+               </Notice>
+               <div className="row">
+@@ -185,8 +186,7 @@
+                   className="btn btn--danger"
+                   disabled={confirm !== CONFIRM_WORD || !savedProfile}
+                   onClick={async () => {
+-                    await deleteEverything();
+-                    setDeleted(true);
++                    if (await deleteEverything()) setDeleted(true);
+                   }}
+                   data-testid="delete-everything"
+                 >
+@@ -197,11 +197,11 @@
+           )}
+         </Panel>
+ 
+-        <p className="xs faint">
++        {run && <p className="xs faint">
+           Run {run.id} · started {dateTime(run.started_at)} ·{' '}
+           {run.demo_mode ? 'demo corpus' : 'live sources'} · schema-backed audit log available at
+-          /api/audit (identifiers and actions only, never applicant data).
+-        </p>
++          /api/audit. Audit retention is separate from case deletion.
++        </p>}
+       </div>
+     </>
+   );

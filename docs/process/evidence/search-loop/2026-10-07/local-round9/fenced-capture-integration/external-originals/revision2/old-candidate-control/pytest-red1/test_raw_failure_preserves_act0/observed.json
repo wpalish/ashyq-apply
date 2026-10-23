@@ -1,0 +1,47 @@
+{
+  "case_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "programme_urls": [],
+  "ranked_urls": null,
+  "predictions": [
+    {
+      "key": "programme.exists",
+      "value": true,
+      "evidence": {
+        "url": "https://example.edu/degree",
+        "excerpt": "BSc Computer Science",
+        "scope": {
+          "university": "Test University",
+          "programme": "BSc Computer Science",
+          "degree": "bachelor",
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-07",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    }
+  ],
+  "telemetry": {
+    "http_fetches": 36,
+    "browser_fetches": 0,
+    "pdf_fetches": 0,
+    "search_calls": 0,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 1.0112887909635901,
+    "cost_usd": null,
+    "human_review_required": null,
+    "document_reads": null,
+    "document_seconds": null,
+    "document_stop": null
+  },
+  "page_outcomes": [],
+  "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+}

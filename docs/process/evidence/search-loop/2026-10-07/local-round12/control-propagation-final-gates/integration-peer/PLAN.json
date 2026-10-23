@@ -1,0 +1,29 @@
+{
+  "created_utc": "2026-10-08T04:34:56.977721+00:00",
+  "task": "Finite read-only primary integration audit; no tests/replays/imports",
+  "inputs": {
+    "A_ready": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/ready-manifest.json",
+    "A_ready_expected_sha256": "6776d1ccedabd3d668b167cd1d8184b2cd179e01989e73a778e6081c642589ab",
+    "root_source_before": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-before-999.json",
+    "root_source_after": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-after-999.json",
+    "root_integration": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-integration.json",
+    "root_AST": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-ast-delta.json",
+    "B_seed_ready": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/ready-manifest.json",
+    "B_app_pins": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/candidate-app-pins.json",
+    "current_full_run": "20261008T043357Z-check-0d98eeb3"
+  },
+  "checks": [
+    "all3appliedSHA and exactbytes matchAproposed",
+    "other996currentselectedsource hashes matchrootbefore999",
+    "all242current app matchesBseed pins",
+    "independentAST import+reraise-only native delta; oldtest definitions preserved",
+    "rootAST record agrees; source snapshot matchesapplied3",
+    "providerSTOP65b5 unchanged"
+  ],
+  "limits": [
+    "stdlib/opaque bytehash metadata only",
+    "no app imports/tests/DB/Git/repo writes/network/gold/scoring",
+    "freshfull underway; not completedgate/qualityclaim"
+  ],
+  "seal": "compactreport/receipt/standardfilesready, exact input hashes/source observations; no large duplicate source archive"
+}

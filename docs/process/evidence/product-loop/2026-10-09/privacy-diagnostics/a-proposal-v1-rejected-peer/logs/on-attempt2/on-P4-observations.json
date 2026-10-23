@@ -1,0 +1,250 @@
+{
+  "cost": {
+    "items": {},
+    "total": null,
+    "academic_year": "2027/28",
+    "source_urls": [],
+    "is_range": false
+  },
+  "adapters": [
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    },
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    },
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    },
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/: refused_privacy \u2014 post-study work rules unverified for Synthetic."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    },
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    }
+  ],
+  "run": {
+    "errors": [
+      "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+      "page fetch-failed: https://public.invalid/ (page_type unclassified): refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+    ],
+    "unknowns": [],
+    "retry_urls": []
+  },
+  "walk_outcomes": [
+    [
+      "https://public.invalid/",
+      "refused_privacy"
+    ]
+  ],
+  "trace": {
+    "institution": "Public University",
+    "domain": "public.invalid",
+    "sitemaps_declared": [],
+    "sitemaps_read": [],
+    "sitemap_urls_seen": 0,
+    "sitemap_urls_kept": 0,
+    "manual_seeds": {},
+    "selected": {},
+    "rejected_sample": [
+      [
+        "https://public.invalid/",
+        "could not be read (refused_privacy)"
+      ]
+    ],
+    "rejected_total": 1,
+    "errors": [],
+    "search_failures": [],
+    "search_limitations": [],
+    "field_sources": {},
+    "search_coverage": {},
+    "search_queries_attempted": 0,
+    "used_navigation_fallback": false,
+    "kept_by_link_text": [],
+    "walker": {
+      "catalogs_walked": 0,
+      "candidates": [],
+      "programs_confirmed": 0,
+      "outcomes": []
+    }
+  },
+  "logs": [
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.391775, 'msecs': 391.0, 'relativeCreated': 605.1959991455078, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.392029, 'msecs': 392.0, 'relativeCreated': 605.4501533508301, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.3920798, 'msecs': 392.0, 'relativeCreated': 605.5009365081787, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.392117, 'msecs': 392.0, 'relativeCreated': 605.5381298065186, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.392166, 'msecs': 392.0, 'relativeCreated': 605.5870056152344, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.3922088, 'msecs': 392.0, 'relativeCreated': 605.6299209594727, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.3922508, 'msecs': 392.0, 'relativeCreated': 605.6718826293945, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.392492, 'msecs': 392.0, 'relativeCreated': 605.9131622314453, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/: looks like credential-like parameter",
+      "args": "('https://public.invalid/', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 1010, 'funcName': '_get', 'created': 1791517701.3925388, 'msecs': 392.0, 'relativeCreated': 605.9598922729492, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 16685, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:48:21+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    }
+  ],
+  "catalogue_outcomes": [
+    [
+      "https://public.invalid/",
+      "refused_privacy"
+    ]
+  ],
+  "catalogue_identity": "https://public.invalid/",
+  "walk_candidates": [
+    {
+      "url": "https://public.invalid/",
+      "label": "BSc Mathematics",
+      "score": 5,
+      "source": "html"
+    }
+  ],
+  "sitemap_trace": {
+    "institution": "Public University",
+    "domain": "public.invalid",
+    "sitemaps_declared": [],
+    "sitemaps_read": [],
+    "sitemap_urls_seen": 0,
+    "sitemap_urls_kept": 0,
+    "manual_seeds": {},
+    "selected": {},
+    "rejected_sample": [],
+    "rejected_total": 0,
+    "errors": [
+      "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+    ],
+    "search_failures": [],
+    "search_limitations": [],
+    "field_sources": {},
+    "search_coverage": {},
+    "search_queries_attempted": 0,
+    "used_navigation_fallback": false,
+    "kept_by_link_text": [],
+    "walker": {
+      "catalogs_walked": 0,
+      "candidates": [],
+      "programs_confirmed": 0,
+      "outcomes": []
+    }
+  }
+}

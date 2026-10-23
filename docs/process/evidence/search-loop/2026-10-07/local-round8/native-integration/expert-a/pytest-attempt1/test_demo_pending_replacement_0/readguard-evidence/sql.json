@@ -1,0 +1,25 @@
+{
+  "queries": [
+    {
+      "at_ns": 810536192522625,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET demo_mode=?, settings_snapshot=?, worker_id=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "(1, '{\"demo_mode\": true, \"test_marker\": \"legacy\"}', 'iMac-Aliser.local:16836', '2026-10-07 23:11:19.688323', '2026-10-07 23:11:19.688488', '79cab889eae24885ab1cc7fbd0620ccd')"
+    },
+    {
+      "elapsed_ns": 96416,
+      "sql_prefix": "UPDATE research_runs SET demo_mode=?, settings_snapshot=?, worker_id=?, heartbeat_at=?, updated_at=?"
+    },
+    {
+      "at_ns": 810536192993291,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('79cab889eae24885ab1cc7fbd0620ccd',)"
+    },
+    {
+      "elapsed_ns": 19709,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    }
+  ],
+  "sql_errors": []
+}

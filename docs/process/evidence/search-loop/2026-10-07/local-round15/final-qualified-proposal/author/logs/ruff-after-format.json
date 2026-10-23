@@ -1,0 +1,1438 @@
+[
+  {
+    "cell": null,
+    "code": "SIM102",
+    "end_location": {
+      "column": 19,
+      "row": 229
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/evaluation/research/expert/controller.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "            if plan.get(\"timing_policy\") == \"expert_wall_only\" and (\n                resume.get(\"timing_policy\") != \"expert_wall_only\"\n                or type(resume.get(\"protective_wall_ms\")) is not int\n                or resume[\"protective_wall_ms\"] != 900_000\n                or not isinstance(previous_policy, dict)\n                or previous_policy.get(\"timing_policy\") != \"expert_wall_only\"\n                or previous_policy.get(\"thinking_in_tool_ms\") is not False\n                or type(previous_policy.get(\"protective_wall_ms\")) is not int\n                or previous_policy.get(\"protective_wall_ms\") != 900_000\n                or (\n                    previous_policy.get(\"max_fetcher_calls\"),\n                    previous_policy.get(\"max_search_queries\"),\n                    previous_policy.get(\"max_elapsed_ms\"),\n                )\n                != (60, 6, None)\n            ):\n                raise ValueError(\"Resume summary wall policy incomplete or contradictory\")",
+          "end_location": {
+            "column": 95,
+            "row": 230
+          },
+          "location": {
+            "column": 1,
+            "row": 213
+          }
+        }
+      ],
+      "message": "Combine `if` statements using `and`"
+    },
+    "location": {
+      "column": 13,
+      "row": 213
+    },
+    "message": "Use a single `if` statement instead of nested `if` statements",
+    "noqa_row": 213,
+    "url": "https://docs.astral.sh/ruff/rules/collapsible-if"
+  },
+  {
+    "cell": null,
+    "code": "SIM105",
+    "end_location": {
+      "column": 17,
+      "row": 54
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/evaluation/research/expert/selector.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "import contextlib\n",
+          "end_location": {
+            "column": 1,
+            "row": 16
+          },
+          "location": {
+            "column": 1,
+            "row": 16
+          }
+        },
+        {
+          "content": "with contextlib.suppress(ProcessLookupError)",
+          "end_location": {
+            "column": 12,
+            "row": 51
+          },
+          "location": {
+            "column": 9,
+            "row": 51
+          }
+        },
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 55
+          },
+          "location": {
+            "column": 1,
+            "row": 53
+          }
+        }
+      ],
+      "message": "Replace with `contextlib.suppress(ProcessLookupError)`"
+    },
+    "location": {
+      "column": 9,
+      "row": 51
+    },
+    "message": "Use `contextlib.suppress(ProcessLookupError)` instead of `try`-`except`-`pass`",
+    "noqa_row": 51,
+    "url": "https://docs.astral.sh/ruff/rules/suppressible-exception"
+  },
+  {
+    "cell": null,
+    "code": "SIM105",
+    "end_location": {
+      "column": 17,
+      "row": 435
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/evaluation/research/local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "import contextlib\n",
+          "end_location": {
+            "column": 1,
+            "row": 44
+          },
+          "location": {
+            "column": 1,
+            "row": 44
+          }
+        },
+        {
+          "content": "with contextlib.suppress(FileExistsError)",
+          "end_location": {
+            "column": 12,
+            "row": 432
+          },
+          "location": {
+            "column": 9,
+            "row": 432
+          }
+        },
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 436
+          },
+          "location": {
+            "column": 1,
+            "row": 434
+          }
+        }
+      ],
+      "message": "Replace with `contextlib.suppress(FileExistsError)`"
+    },
+    "location": {
+      "column": 9,
+      "row": 432
+    },
+    "message": "Use `contextlib.suppress(FileExistsError)` instead of `try`-`except`-`pass`",
+    "noqa_row": 432,
+    "url": "https://docs.astral.sh/ruff/rules/suppressible-exception"
+  },
+  {
+    "cell": null,
+    "code": "E731",
+    "end_location": {
+      "column": 71,
+      "row": 874
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/evaluation/research/local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "def wall_elapsed():\n        return max(0, math.ceil((clock() - began) * 1000))",
+          "end_location": {
+            "column": 71,
+            "row": 874
+          },
+          "location": {
+            "column": 5,
+            "row": 874
+          }
+        }
+      ],
+      "message": "Rewrite `wall_elapsed` as a `def`"
+    },
+    "location": {
+      "column": 5,
+      "row": 874
+    },
+    "message": "Do not assign a `lambda` expression, use a `def`",
+    "noqa_row": 874,
+    "url": "https://docs.astral.sh/ruff/rules/lambda-assignment"
+  },
+  {
+    "cell": null,
+    "code": "SIM105",
+    "end_location": {
+      "column": 17,
+      "row": 1224
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/evaluation/research/local_pilot.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 1221
+    },
+    "message": "Use `contextlib.suppress(OSError)` instead of `try`-`except`-`pass`",
+    "noqa_row": 1221,
+    "url": "https://docs.astral.sh/ruff/rules/suppressible-exception"
+  },
+  {
+    "cell": null,
+    "code": "SIM105",
+    "end_location": {
+      "column": 25,
+      "row": 1397
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/evaluation/research/local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "import contextlib\n",
+          "end_location": {
+            "column": 1,
+            "row": 44
+          },
+          "location": {
+            "column": 1,
+            "row": 44
+          }
+        },
+        {
+          "content": "with contextlib.suppress(Stopped)",
+          "end_location": {
+            "column": 20,
+            "row": 1385
+          },
+          "location": {
+            "column": 17,
+            "row": 1385
+          }
+        },
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 1398
+          },
+          "location": {
+            "column": 1,
+            "row": 1396
+          }
+        }
+      ],
+      "message": "Replace with `contextlib.suppress(Stopped)`"
+    },
+    "location": {
+      "column": 17,
+      "row": 1385
+    },
+    "message": "Use `contextlib.suppress(Stopped)` instead of `try`-`except`-`pass`",
+    "noqa_row": 1385,
+    "url": "https://docs.astral.sh/ruff/rules/suppressible-exception"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 64
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"case_id\": key,\n                \"university\": university,\n                \"domain\": domain,\n                \"request\": dict(\n                    university=university,\n                    programme=None,\n                    degree=\"bachelor\",\n                    field=\"computer science\",\n                    intake=\"fall 2027\",\n                    population=\"international\",\n                    qualification=\"KZ national secondary\",\n                    academic_year=None,\n                ),\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 64
+          },
+          "location": {
+            "column": 13,
+            "row": 50
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 50
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 50,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 18,
+      "row": 63
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                    \"university\": university,\n                    \"programme\": None,\n                    \"degree\": \"bachelor\",\n                    \"field\": \"computer science\",\n                    \"intake\": \"fall 2027\",\n                    \"population\": \"international\",\n                    \"qualification\": \"KZ national secondary\",\n                    \"academic_year\": None,\n                }",
+          "end_location": {
+            "column": 18,
+            "row": 63
+          },
+          "location": {
+            "column": 25,
+            "row": 54
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 25,
+      "row": 54
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 54,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 70
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"schema_version\": \"1\",\n        \"public_profile\": {\"education_system\": \"KZ national secondary\"},\n        \"cases\": cases,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 70
+          },
+          "location": {
+            "column": 12,
+            "row": 66
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 66
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 66,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 108
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"provider\": \"exa_mcp\",\n        \"cases\": list(p.COHORT),\n        \"source_snapshot\": str(source),\n        \"source_head\": \"synthetic-source\",\n        \"source_tree_sha256\": \"a\" * 64,\n        \"source_manifest\": str(manifest_path),\n        \"public_input\": str(public_path),\n        \"cycle_id\": \"synthetic-fresh\",\n        \"pins\": [\n            dict(path=str(public_path), sha256=p.sha(public_path)),\n            dict(path=str(manifest_path), sha256=p.sha(manifest_path)),\n        ],\n        \"retained_stop\": dict(path=str(old), sha256=p.sha(old)),\n        \"executables\": dict(python=\"/mock/python\", codex=\"/mock/codex\", sandbox=\"/mock/sandbox\"),\n        \"selector_model\": \"explicit-test-model\",\n        \"sealed_roots\": [str(tmp_path)],\n        \"profile_contract\": {\"qualification\": \"synthetic source/argv only\"},\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 108
+          },
+          "location": {
+            "column": 13,
+            "row": 90
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 90
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 90,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 67,
+      "row": 100
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"path\": str(public_path), \"sha256\": p.sha(public_path)}",
+          "end_location": {
+            "column": 67,
+            "row": 100
+          },
+          "location": {
+            "column": 13,
+            "row": 100
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 100
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 100,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 71,
+      "row": 101
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"path\": str(manifest_path), \"sha256\": p.sha(manifest_path)}",
+          "end_location": {
+            "column": 71,
+            "row": 101
+          },
+          "location": {
+            "column": 13,
+            "row": 101
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 101
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 101,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 61,
+      "row": 103
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"path\": str(old), \"sha256\": p.sha(old)}",
+          "end_location": {
+            "column": 61,
+            "row": 103
+          },
+          "location": {
+            "column": 23,
+            "row": 103
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 23,
+      "row": 103
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 103,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 94,
+      "row": 104
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"python\": \"/mock/python\", \"codex\": \"/mock/codex\", \"sandbox\": \"/mock/sandbox\"}",
+          "end_location": {
+            "column": 94,
+            "row": 104
+          },
+          "location": {
+            "column": 21,
+            "row": 104
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 21,
+      "row": 104
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 104,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 127
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"schema_version\": \"1\",\n        \"approved_by\": \"human-owner\",\n        \"plan_sha256\": p.sha(pp),\n        \"cycle_id\": value[\"cycle_id\"],\n        \"source_tree_sha256\": value[\"source_tree_sha256\"],\n        \"retained_stop_sha256\": p.sha(old),\n        \"provider\": \"exa_mcp\",\n        \"cases\": list(p.COHORT),\n        \"two_independent_experts\": True,\n        \"selector_model\": value[\"selector_model\"],\n        \"expert_timing_policy\": \"expert_wall_only\",\n        \"protective_wall_ms\": 900000,\n        \"authorization_id\": \"synthetic-untrusted-test-only\",\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 127
+          },
+          "location": {
+            "column": 13,
+            "row": 113
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 113
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 113,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 148
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"case_id\": \"synthetic\",\n        \"provider\": \"exa_mcp\",\n        \"log_prefix\": \"synthetic\",\n        \"strict_budget\": True,\n        \"max_calls\": 60,\n        \"max_search_queries\": 6,\n        \"max_ms\": None,\n        \"timing_policy\": \"expert_wall_only\",\n        \"protective_wall_ms\": 900000,\n        \"wall_elapsed_before_ms\": 0,\n        \"official_domains\": [\"example.edu\"],\n        \"budget_origin\": \"independent_full_budget\",\n        \"actions\": [dict(tool=\"fetcher\", url=\"https://example.edu/admissions\")],\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 148
+          },
+          "location": {
+            "column": 13,
+            "row": 134
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 134
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 134,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 76,
+      "row": 147
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"tool\": \"fetcher\", \"url\": \"https://example.edu/admissions\"}",
+          "end_location": {
+            "column": 76,
+            "row": 147
+          },
+          "location": {
+            "column": 18,
+            "row": 147
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 18,
+      "row": 147
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 147,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 205
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"fetcher_calls\": 0,\n        \"search_queries\": 0,\n        \"elapsed_ms\": 100,\n        \"blocked_search_queries\": 0,\n        \"network_http_requests\": 0,\n        \"max_fetcher_calls\": 60,\n        \"max_search_queries\": 6,\n        \"max_active_seconds\": 120,\n        \"finalization_reserve_ms\": 1000,\n        \"source_work_deadline_ms\": 119000,\n        \"strict_expert_budget\": True,\n        \"provider\": \"exa_mcp\",\n        \"active_time_basis\": basis,\n        \"provider_failure\": None,\n        \"protocol_persistence_error\": None,\n        \"stop_reason\": None,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 205
+          },
+          "location": {
+            "column": 14,
+            "row": 188
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 188
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 188,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 221
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"case_id\": case[\"case_id\"],\n        \"programme_urls\": [],\n        \"ranked_urls\": None,\n        \"predictions\": [],\n        \"telemetry\": dict(\n            http_fetches=0,\n            search_calls=0,\n            browser_fetches=0,\n            model_input_tokens=0,\n            jev_input_tokens=0,\n            latency_seconds=0.1,\n        ),\n        \"page_outcomes\": [],\n        \"error\": None,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 221
+          },
+          "location": {
+            "column": 16,
+            "row": 206
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 16,
+      "row": 206
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 206,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 218
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"http_fetches\": 0,\n            \"search_calls\": 0,\n            \"browser_fetches\": 0,\n            \"model_input_tokens\": 0,\n            \"jev_input_tokens\": 0,\n            \"latency_seconds\": 0.1,\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 218
+          },
+          "location": {
+            "column": 19,
+            "row": 211
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 19,
+      "row": 211
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 211,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 249
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"kind\": \"genuine-research-job\",\n        \"started\": True,\n        \"job_id\": \"synthetic-job\",\n        \"run_id\": \"synthetic-run\",\n        \"worker_id\": \"synthetic-worker\",\n        \"sqlite_case_database\": \"synthetic.db\",\n        \"claim_token\": 1,\n        \"lease_token\": 1,\n        \"native_enabled\": False,\n        \"native_ledger\": None,\n        \"observation_available\": True,\n        \"heartbeat_tasks\": 1,\n        \"heartbeat_done\": [True],\n        \"heartbeat_cancelled\": [True],\n        \"job_status\": \"succeeded\",\n        \"worker_jobs_done\": 1,\n        \"worker_jobs_failed\": 0,\n        \"recorded_worker_id\": None,\n        \"claim_records\": [],\n        \"page_outcomes\": [],\n        \"run_unknowns\": [],\n        \"run_errors\": [],\n        \"control_error\": None,\n        \"control_type\": None,\n        \"control_reason\": None,\n        \"control_message\": None,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 249
+          },
+          "location": {
+            "column": 16,
+            "row": 222
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 16,
+      "row": 222
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 222,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 260
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"canary\": dict(\n            institutions=[dict(institution=case[\"university\"], domain=case[\"domain\"], programs=[])],\n            totals={},\n            batch=[case[\"university\"]],\n            job_protocol=protocol,\n            run_error=\"\",\n        ),\n        \"claims\": [],\n        \"protocol_observation_available\": True,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 260
+          },
+          "location": {
+            "column": 11,
+            "row": 250
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 11,
+      "row": 250
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 250,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 257
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"institutions\": [dict(institution=case[\"university\"], domain=case[\"domain\"], programs=[])],\n            \"totals\": {},\n            \"batch\": [case[\"university\"]],\n            \"job_protocol\": protocol,\n            \"run_error\": \"\",\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 257
+          },
+          "location": {
+            "column": 16,
+            "row": 251
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 16,
+      "row": 251
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 251,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 99,
+      "row": 252
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"institution\": case[\"university\"], \"domain\": case[\"domain\"], \"programs\": []}",
+          "end_location": {
+            "column": 99,
+            "row": 252
+          },
+          "location": {
+            "column": 27,
+            "row": 252
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 27,
+      "row": 252
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 252,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 298
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"harness_sha256\": manifest[\"files\"][\"backend/evaluation/research/live.py\"],\n        \"mapping_sha256\": manifest[\"files\"][\"backend/evaluation/research/mapping.py\"],\n        \"cohort\": [case[\"case_id\"]],\n        \"search_provider\": \"exa_mcp\",\n        \"fenced_research_job\": True,\n        \"university_read_budget\": False,\n        \"research_job_protocol\": \"genuine-research-job\",\n        \"strict_expert_budget\": True,\n        \"shared_query_budget\": True,\n        \"browser_enabled\": False,\n        \"cold_fetcher_reads\": True,\n        \"site_branding_identity\": False,\n        \"subject_phrase_match\": False,\n        \"programme_identity_before_funding\": False,\n        \"seconds_per_case\": 120,\n        \"child_active_seconds\": 120,\n        \"max_fetcher_calls_per_case\": 60,\n        \"max_search_queries_per_case\": 6,\n        \"finalization_reserve_ms\": 1000,\n        \"source_work_deadline_ms\": 119000,\n        \"parent_process_reserve_seconds\": 15,\n        \"parent_process_timeout_seconds\": 135,\n        \"page_budget_counts\": \"every Fetcher.get invocation; cache hits consume a call\",\n        \"batch_attempted_case_ids\": [case[\"case_id\"]],\n        \"batch_completed_case_ids\": [case[\"case_id\"]],\n        \"batch_remaining_case_ids\": [],\n        \"batch_stop_reason\": None,\n        \"active_time_basis\": basis,\n        \"case_budgets\": {\n            case[\"case_id\"]: {\n                **budget,\n                \"parent_process_elapsed_seconds\": 0.2,\n                \"process_error\": None,\n                \"active_checkpoint_available\": True,\n            }\n        },\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 298
+          },
+          "location": {
+            "column": 14,
+            "row": 261
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 261
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 261,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 306
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"schema_version\": \"1\",\n        \"pipeline_sha\": source_plan[\"source_head\"],\n        \"captured_at\": datetime.now(UTC).isoformat(),\n        \"mode\": \"live\",\n        \"config\": config,\n        \"observations\": [observed],\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 306
+          },
+          "location": {
+            "column": 15,
+            "row": 299
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 15,
+      "row": 299
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 299,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 98,
+      "row": 318
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"http_status\": None, \"failure_reason\": \"rate limited\"}",
+          "end_location": {
+            "column": 98,
+            "row": 318
+          },
+          "location": {
+            "column": 45,
+            "row": 318
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 45,
+      "row": 318
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 318,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 66,
+      "row": 342
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"synthetic\": True, \"not_actual_OS_admission\": True}",
+          "end_location": {
+            "column": 66,
+            "row": 342
+          },
+          "location": {
+            "column": 16,
+            "row": 342
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 16,
+      "row": 342
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 342,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 380
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"tool\": \"fetcher\",\n        \"url\": \"https://\" + case[\"domain\"] + \"/admissions\",\n        \"query\": None,\n        \"domains\": [],\n        \"max_results\": None,\n        \"source_step\": None,\n        \"page\": None,\n        \"offset\": None,\n        \"section_offset\": None,\n        \"link_offset\": None,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 380
+          },
+          "location": {
+            "column": 14,
+            "row": 369
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 369
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 369,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 390
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"kind\": \"submit\" if observed else \"action\",\n        \"observation\": \"Source read; leave applicant scope unknown.\"\n        if observed\n        else \"Start independent official source read.\",\n        \"journal_sha256\": prompt[\"journal\"][\"journal_sha256\"],\n        \"action\": None if observed else action,\n        \"facts\": [],\n        \"question_findings\": [],\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 390
+          },
+          "location": {
+            "column": 14,
+            "row": 381
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 381
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 381,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 66,
+      "row": 472
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"tool\": \"fetcher\", \"url\": \"https://example.edu/\"}",
+          "end_location": {
+            "column": 66,
+            "row": 472
+          },
+          "location": {
+            "column": 18,
+            "row": 472
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 18,
+      "row": 472
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 472,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 100,
+      "row": 473
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"tool\": \"search_provider\", \"query\": \"admissions\", \"domains\": [\"example.edu\"], \"max_results\": 1}",
+          "end_location": {
+            "column": 100,
+            "row": 473
+          },
+          "location": {
+            "column": 12,
+            "row": 473
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 473
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 473,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 588
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"plan\": gate.plan,\n        \"source_manifest\": p.read(Path(gate.plan[\"source_manifest\"])),\n        \"identities\": IdentityMap(version=\"synthetic\", bindings=[]),\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 588
+          },
+          "location": {
+            "column": 14,
+            "row": 584
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 584
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 584,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 604
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"kind\": \"award\",\n                \"source_url\": \"https://rug.nl/award\",\n                \"subject\": \"Synthetic Merit Award\",\n                \"key\": \"scholarships.synthetic_merit\",\n                \"notes\": \"synthetic namespace, not correctness label\",\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 604
+          },
+          "location": {
+            "column": 13,
+            "row": 598
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 598
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 598,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 623
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"id\": \"synthetic-claim\",\n        \"claim_type\": claim.claim_type.value,\n        \"source_url\": claim.source_url,\n        \"accessed_at\": \"2026-01-01T00:00:00\",\n        \"payload\": payload,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 623
+          },
+          "location": {
+            "column": 14,
+            "row": 617
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 617
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 617,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 92,
+      "row": 930
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"name\": row[\"university\"], \"homepage\": \"https://www.\" + row[\"domain\"] + \"/\"}",
+          "end_location": {
+            "column": 92,
+            "row": 930
+          },
+          "location": {
+            "column": 17,
+            "row": 930
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 17,
+      "row": 930
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 930,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 961
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"snapshot\": str(source),\n        \"repository\": str(source),\n        \"source_status\": \"\",\n        \"source_head\": \"synthetic\",\n        \"source_tree_sha256\": \"b\" * 64,\n        \"files\": {\n            str(file.relative_to(source)): p.sha(file)\n            for file in [\n                registry,\n                scripts / \"canary_discovery.py\",\n                backend / \"evaluation/research/data/identity_bindings.reviewed.json\",\n            ]\n        },\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 961
+          },
+          "location": {
+            "column": 16,
+            "row": 947
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 16,
+      "row": 947
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 947,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 972
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"status\": \"passed\",\n            \"suite\": \"full\",\n            \"steps\": [dict(exit_code=0) for _ in range(13)],\n            \"source\": {\"source_tree_sha256\": \"b\" * 64},\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 972
+          },
+          "location": {
+            "column": 9,
+            "row": 967
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 9,
+      "row": 967
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 967,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 37,
+      "row": 970
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"exit_code\": 0}",
+          "end_location": {
+            "column": 37,
+            "row": 970
+          },
+          "location": {
+            "column": 20,
+            "row": 970
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 20,
+      "row": 970
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 970,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 18,
+      "row": 1025
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                    \"id\": \"fact1\",\n                    \"question\": \"OTHER\",\n                    \"claim_key\": \"unmapped.admissions_info\",\n                    \"value_json\": '\"Synthetic admissions source information\"',\n                    \"source_step\": 1,\n                    \"quotation\": \"Synthetic admissions source information\",\n                    \"location\": dict(kind=\"text\", block_id=None, section_path=[], page=None),\n                    \"scope\": scope,\n                }",
+          "end_location": {
+            "column": 18,
+            "row": 1025
+          },
+          "location": {
+            "column": 17,
+            "row": 1016
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 17,
+      "row": 1016
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 1016,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 90,
+      "row": 1023
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"kind\": \"text\", \"block_id\": None, \"section_path\": [], \"page\": None}",
+          "end_location": {
+            "column": 90,
+            "row": 1023
+          },
+          "location": {
+            "column": 30,
+            "row": 1023
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 30,
+      "row": 1023
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 1023,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 75,
+      "row": 1074
+    },
+    "filename": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend/tests/test_local_pilot.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"tool\": \"fetcher\", \"url\": \"https://rug.nl/admissions\"}",
+          "end_location": {
+            "column": 75,
+            "row": 1074
+          },
+          "location": {
+            "column": 22,
+            "row": 1074
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 22,
+      "row": 1074
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "noqa_row": 1074,
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  }
+]

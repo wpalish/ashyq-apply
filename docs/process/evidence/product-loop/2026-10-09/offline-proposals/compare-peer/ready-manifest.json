@@ -1,0 +1,81 @@
+{
+  "status": "QUALIFIED_ACCEPT_FOR_ROOT_INTEGRATION",
+  "files": {
+    "C-READY.json": {
+      "sha256": "ed68b8867897e8c1c99c09cb47a5687c0759c96eadbdad581ae25a378154b3ba",
+      "bytes": 1271
+    },
+    "C-packet-pins.json": {
+      "sha256": "d440d5f31e4fbddc8161c6f563d713c1d0b3d87824c1bbb40ff66762a6578e68",
+      "bytes": 6205
+    },
+    "C-proposal.patch": {
+      "sha256": "bd372c709c3dc1faafe9855ba2d285afd315382a607abe959249111c0cbce371",
+      "bytes": 17742
+    },
+    "PLAN.json": {
+      "sha256": "d79bb547aa5fcdae5d5715ee48442cd2b5c409439d6df1372a324b80b21b38c8",
+      "bytes": 760
+    },
+    "REPORT.md": {
+      "sha256": "61041c1ba01361372e92080bde8a7fadb0adf641d5c3cfe8fe91a5c9672ead63",
+      "bytes": 3851
+    },
+    "admitted-C.json": {
+      "sha256": "b2eabc0f2c476846e58bfa1e39d4bc3eb8cd37caa0cd08c87b63c00382439206",
+      "bytes": 762
+    },
+    "execution.json": {
+      "sha256": "1d2b03597edc3107f98ac80d9a12f114dfe2acad894a03e78c4295e8ea1b3c0b",
+      "bytes": 1065
+    },
+    "legacy-preservation.json": {
+      "sha256": "4f1cab64e2994d172318e3b50fd1025b941be1af51ede18bf7cfe3aee24d8f6f",
+      "bytes": 101
+    },
+    "logs/network/network-31615.json": {
+      "sha256": "b18c374390603dba519dc3a9fa1ce5f3d511510aa1fdf6ecbf5408ac3c5b4c49",
+      "bytes": 27
+    },
+    "logs/peer.junit.xml": {
+      "sha256": "ac6d7e541362da2d0b24b795b52922cd48fabf78eb2e4fec4a0e6a02d8ab01b9",
+      "bytes": 3314
+    },
+    "logs/peer.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "logs/peer.stdout.log": {
+      "sha256": "e70e58bc8d0f9cecff2a55e3319fe360487fdcd7b36e441498dcd9b111d478f4",
+      "bytes": 801
+    },
+    "peer-controls.test.tsx": {
+      "sha256": "e16545da0610322ce976a289a4a52b23ee1e3d651d2738d20e380a17ab4b713c",
+      "bytes": 6335
+    },
+    "primary-before.json": {
+      "sha256": "faf5008030ac60a592d0a4269e7e598d6e6e33b4aaccf2aa2a3920d48711e294",
+      "bytes": 871
+    },
+    "receipt.json": {
+      "sha256": "28e5cdc8ec27268f201a3fddf238f26c8f35ec0297beaa7dcece35cbcd76063d",
+      "bytes": 1335
+    },
+    "runtime-source-pins.json": {
+      "sha256": "9580e5326ec90263e894fddba1dc3f37cf11026576e82af6b4fb332b5af7a512",
+      "bytes": 11659
+    },
+    "support/deny-network.cjs": {
+      "sha256": "302649862d747e49142d4896fb0b84c798bc79150c3ec8c1374706e2a6aee63a",
+      "bytes": 917
+    }
+  },
+  "selected_file_count": 17,
+  "selected_total_bytes": 57016,
+  "excluded": [
+    "owned runtime",
+    "dependency symlink",
+    "Vite cache"
+  ],
+  "qualification": "Exact native/source proof, no visual/full/live acceptance"
+}

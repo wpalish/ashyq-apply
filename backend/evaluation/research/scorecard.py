@@ -76,6 +76,8 @@ class Arm:
     repetitions: list[Capture] = field(default_factory=list)
     #: case id -> (access, pages checked, pages failed) from the raw trace.
     access: dict[str, tuple[str, int, int]] = field(default_factory=dict)
+    expected_cases: set[str] = field(default_factory=set)
+    expected_repetitions: int = 1
 
 
 def _answered(predictions: list[Prediction]) -> list[Prediction]:
@@ -192,23 +194,26 @@ def core_coverage(capture: Capture) -> dict[str, list[str]]:
     return out
 
 
-def cost(capture: Capture) -> dict[str, dict[str, float | None]]:
+def cost(capture: Capture) -> dict[str, dict[str, Any]]:
     """Case id -> queries, reads and seconds, with the budget's verdict."""
-    out: dict[str, dict[str, float | None]] = {}
+    out: dict[str, dict[str, Any]] = {}
     for o in capture.observations:
         t = o.telemetry
-        row: dict[str, float | None] = {
+        row: dict[str, Any] = {
             "search_calls": t.search_calls,
             "http_fetches": t.http_fetches,
-            "latency_seconds": round(t.latency_seconds, 1) if t.latency_seconds else None,
+            "latency_seconds": t.latency_seconds,
         }
-        over = [k for k, limit in BUDGET.items() if (row.get(k) or 0) > limit]
+        # Compare recorded values: rounding made 120.004 seconds pass a 120s cap.
+        # Missing counters are unknown, never a free pass.
+        over = [k for k, limit in BUDGET.items() if row[k] is not None and row[k] > limit]
         row["over_budget"] = len(over)
+        row["missing_telemetry"] = [k for k in BUDGET if row[k] is None]
         out[o.case_id] = row
     return out
 
 
-def load_run(run_dir: Path) -> dict[str, Arm]:
+def load_run(run_dir: Path, *, expected_cases: set[str] | None = None) -> dict[str, Arm]:
     """Arms of a paired run, each with its captures merged per repetition."""
     per_arm: dict[str, dict[str, list[Path]]] = defaultdict(lambda: defaultdict(list))
     for capture_path in sorted(run_dir.glob("*/*/capture.json")):
@@ -217,14 +222,41 @@ def load_run(run_dir: Path) -> dict[str, Arm]:
             per_arm[match["arm"]][match["case"]].append(capture_path)
     if not per_arm:
         single = run_dir / "capture.json" if run_dir.is_dir() else run_dir
-        arm = Arm(name="run", repetitions=[_read(single)])
+        capture = _read(single)
+        planned = capture.config.get("cohort", [])
+        if not isinstance(planned, list):
+            raise ValueError("Capture cohort must contain case ids")
+        planned_ids: set[str] = set()
+        for case in planned:
+            if not isinstance(case, str):
+                raise ValueError("Capture cohort must contain case ids")
+            planned_ids.add(case)
+        arm = Arm(
+            name="run",
+            repetitions=[capture],
+            expected_cases=planned_ids if expected_cases is None else expected_cases,
+        )
         return {"run": arm}
     arms: dict[str, Arm] = {}
-    for name, cases in sorted(per_arm.items()):
-        arm = Arm(name=name)
-        depth = max(len(paths) for paths in cases.values())
+    inferred_cases = {case for cases in per_arm.values() for case in cases}
+    for directory in run_dir.iterdir():
+        match = _ARM_DIR.match(directory.name)
+        if directory.is_dir() and match:
+            inferred_cases.add(match["case"])
+    if expected_cases is not None and inferred_cases - expected_cases:
+        raise ValueError("Paired artifact contains cases outside the requested cohort")
+    expected_cases = inferred_cases if expected_cases is None else expected_cases
+    # ABBA promises two repetitions of each arm, even when files are missing.
+    for name in ("off", "on"):
+        cases = per_arm[name]
+        arm = Arm(name=name, expected_cases=expected_cases, expected_repetitions=2)
+        depth = max((len(paths) for paths in cases.values()), default=0)
         for index in range(depth):
-            parts = [_read(paths[index]) for paths in cases.values() if index < len(paths)]
+            parts = [
+                _read_case(paths[index], case_id)
+                for case_id, paths in cases.items()
+                if index < len(paths)
+            ]
             merged = parts[0].model_copy(
                 update={"observations": [o for part in parts for o in part.observations]}
             )
@@ -241,6 +273,13 @@ def _read(path: Path) -> Capture:
     return Capture.model_validate_json(path.read_text(encoding="utf-8"))
 
 
+def _read_case(path: Path, case_id: str) -> Capture:
+    capture = _read(path)
+    if [o.case_id for o in capture.observations] != [case_id]:
+        raise ValueError(f"Paired capture observations do not match directory case {case_id}")
+    return capture
+
+
 def _access(raw_path: Path) -> tuple[str, int, int]:
     try:
         raw = json.loads(raw_path.read_text(encoding="utf-8"))
@@ -254,9 +293,39 @@ def _access(raw_path: Path) -> tuple[str, int, int]:
         return ("unknown", 0, 0)
 
 
+def completeness(arm: Arm, expected_cases: set[str]) -> dict[str, Any]:
+    """An absent row is unobserved; an in-progress row is unfinished."""
+    missing: list[dict[str, Any]] = []
+    unfinished: list[dict[str, Any]] = []
+    for index in range(max(arm.expected_repetitions, len(arm.repetitions))):
+        observations = arm.repetitions[index].observations if index < len(arm.repetitions) else []
+        observed = {o.case_id for o in observations}
+        missing.extend(
+            {"case": case, "repetition": index + 1} for case in sorted(expected_cases - observed)
+        )
+        unfinished.extend(
+            {"case": o.case_id, "repetition": index + 1}
+            for o in observations
+            if o.error == "CAPTURE_IN_PROGRESS"
+        )
+    return {
+        "status": "incomplete" if missing or unfinished else "complete",
+        "expected_cases": sorted(expected_cases),
+        "expected_repetitions": arm.expected_repetitions,
+        "missing": missing,
+        "unfinished": unfinished,
+    }
+
+
 def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False) -> dict[str, Any]:
     """The scorecard as data: metrics, label outcomes, changes, core, cost."""
     card: dict[str, Any] = {"dataset_version": dataset.version, "arms": {}}
+    expected_cases = set().union(
+        *(
+            arm.expected_cases | {o.case_id for c in arm.repetitions for o in c.observations}
+            for arm in arms.values()
+        )
+    )
     for name, arm in arms.items():
         reps = []
         for capture in arm.repetitions:
@@ -270,9 +339,18 @@ def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False)
                     "cost": cost(capture),
                 }
             )
-        card["arms"][name] = {"repetitions": reps, "access": arm.access}
+        card["arms"][name] = {
+            "repetitions": reps,
+            "access": arm.access,
+            "completeness": completeness(arm, expected_cases),
+        }
     if {"off", "on"} <= set(arms):
         card["changes"] = stable_changes(card["arms"]["off"], card["arms"]["on"])
+    card["measurement_status"] = (
+        "complete"
+        if all(a["completeness"]["status"] == "complete" for a in card["arms"].values())
+        else "incomplete"
+    )
     card["targets"] = check_targets(card)
     return card
 
@@ -291,17 +369,40 @@ def stable_changes(off: dict[str, Any], on: dict[str, Any]) -> dict[str, list[st
     never_on = set.union(*on_hits) if on_hits else set()
     always_off = set.intersection(*off_hits) if off_hits else set()
     never_off = set.union(*off_hits) if off_hits else set()
-    everything = never_on | never_off
-    gained = sorted(always_on - never_off)
-    lost = sorted(always_off - never_on)
+    unassessed_cases = {
+        item["case"]
+        for arm in (off, on)
+        for kind in ("missing", "unfinished")
+        for item in arm["completeness"][kind]
+    }
+    unassessed = {key for key in never_on | never_off if key.split(":", 1)[0] in unassessed_cases}
+    everything = (never_on | never_off) - unassessed
+    gained = sorted((always_on - never_off) - unassessed)
+    lost = sorted((always_off - never_on) - unassessed)
     unstable = sorted(everything - always_on - always_off - set(gained) - set(lost))
-    return {"gained": gained, "lost": lost, "unstable": unstable}
+    return {
+        "gained": gained,
+        "lost": lost,
+        "unstable": unstable,
+        "unassessed_cases": sorted(unassessed_cases),
+    }
 
 
 def check_targets(card: dict[str, Any]) -> list[dict[str, Any]]:
     """Each Definition-of-Done target, judged on the worst repetition of each arm."""
     rows = []
     for name, arm in card["arms"].items():
+        complete = arm["completeness"]["status"] == "complete"
+        rows.append(
+            {
+                "arm": name,
+                "metric": "capture_complete",
+                "worst": len(arm["completeness"]["missing"])
+                + len(arm["completeness"]["unfinished"]),
+                "target": "== 0",
+                "met": complete,
+            }
+        )
         for metric, (op, target) in TARGETS.items():
             values = [rep["metrics"][metric]["value"] for rep in arm["repetitions"]]
             known = [v for v in values if v is not None]
@@ -315,11 +416,17 @@ def check_targets(card: dict[str, Any]) -> list[dict[str, Any]]:
                     "metric": metric,
                     "worst": worst,
                     "target": f"{op} {target}",
-                    "met": met,
+                    "met": met if complete and len(known) == len(values) else None,
                 }
             )
         over = sum(
             1 for rep in arm["repetitions"] for row in rep["cost"].values() if row["over_budget"]
+        )
+        unknown = sum(
+            1
+            for rep in arm["repetitions"]
+            for row in rep["cost"].values()
+            if row["missing_telemetry"]
         )
         rows.append(
             {
@@ -327,7 +434,8 @@ def check_targets(card: dict[str, Any]) -> list[dict[str, Any]]:
                 "metric": "cases_over_budget",
                 "worst": over,
                 "target": "== 0",
-                "met": over == 0,
+                "met": False if over else True if complete and not unknown else None,
+                "unknown_cases": unknown,
             }
         )
     return rows
@@ -348,6 +456,15 @@ _SHOWN = (
 def render(card: dict[str, Any]) -> str:
     """The scorecard as Markdown, short enough to read in a PR."""
     lines = [f"# Scorecard — corpus {card['dataset_version']}", ""]
+    lines += [
+        f"Measurement: **{card['measurement_status']}**. Missing/unfinished captures do not establish a stable change or a passed target.",
+        "",
+    ]
+    for name, arm in card["arms"].items():
+        for kind in ("missing", "unfinished"):
+            for item in arm["completeness"][kind]:
+                lines.append(f"- {name}#{item['repetition']} {item['case']}: {kind}")
+    lines.append("")
     columns = [
         (name, i, rep)
         for name, arm in card["arms"].items()
@@ -378,6 +495,7 @@ def render(card: dict[str, Any]) -> str:
         ]
         lines.append(f"**Stable losses** ({len(ch['lost'])}): " + (", ".join(ch["lost"]) or "none"))
         lines.append(f"Unstable ({len(ch['unstable'])}): " + (", ".join(ch["unstable"]) or "none"))
+        lines.append("Unassessed cases: " + (", ".join(ch["unassessed_cases"]) or "none"))
     lines += [
         "",
         "## Targets (worst repetition)",
@@ -388,10 +506,9 @@ def render(card: dict[str, Any]) -> str:
     for row in card["targets"]:
         worst = row["worst"]
         shown = f"{worst:.3f}" if isinstance(worst, float) else str(worst)
-        lines.append(
-            f"| {row['arm']} | {row['metric']} | {shown} | {row['target']} | {'yes' if row['met'] else 'NO'} |"
-        )
-    last_arm = list(card["arms"])[-1]
+        verdict = "unknown" if row["met"] is None else "yes" if row["met"] else "NO"
+        lines.append(f"| {row['arm']} | {row['metric']} | {shown} | {row['target']} | {verdict} |")
+    last_arm = next(name for name in reversed(card["arms"]) if card["arms"][name]["repetitions"])
     rep = card["arms"][last_arm]["repetitions"][0]
     lines += ["", f"## Wrong claims ({last_arm}, every repetition)", ""]
     # The same fact quoted from several pages, or in several repetitions, is
@@ -443,10 +560,20 @@ def main(argv: list[str] | None = None) -> int:
         default=Path(__file__).parent / "data" / "ground_truth.reviewed9.json",
     )
     parser.add_argument("--allow-drafts", action="store_true")
+    parser.add_argument(
+        "--expected-cases",
+        nargs="+",
+        help="requested case ids, including cases with no saved capture directory",
+    )
     parser.add_argument("--out", type=Path, help="write the full scorecard as JSON here")
     args = parser.parse_args(argv)
     dataset = Dataset.model_validate_json(args.dataset.read_text(encoding="utf-8"))
-    card = build(dataset, load_run(args.run_dir), allow_drafts=args.allow_drafts)
+    expected_cases = set(args.expected_cases) if args.expected_cases is not None else None
+    card = build(
+        dataset,
+        load_run(args.run_dir, expected_cases=expected_cases),
+        allow_drafts=args.allow_drafts,
+    )
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1",
+  "at_utc": "2026-10-12T17:49:21Z",
+  "reviewer": "/root/open_search_solutions",
+  "status": "SOURCE_ONLY_NO_NEW_FINITE_DELTA_BLOCKER_NOT_RUN",
+  "input_packet": "proposals/g3-api-static-format1/SEAL.json",
+  "input_packet_sha256": "acbc216142e5cf7c8493308bbbdbdedc7fbfcaa4e78f452df0bf1c62feaa2d76",
+  "verified_packet_members": 29,
+  "text_reconstructed_exact_postimages": 6,
+  "review": {
+    "path": "G3_API_STATIC_FORMAT1_INDEPENDENT_REVIEW.md",
+    "sha256": "2f7da71c31b70ddaa9a5744260173a84a2aeea1c36b783ed497f51b1450d66c5",
+    "bytes": 4991
+  },
+  "findings": [],
+  "independent_ast_execution": "NOT_RUN",
+  "app_imports": "NOT_RUN",
+  "lint_typecheck_collection_tests_db_runtime": "NOT_RUN",
+  "application_git_handoff_helper_config_edits": "NONE",
+  "qualification_boundary": "Finite source delta only; root saved AST proof read and attributed, not rerun; no API runtime, integration, release, CI or deployment claim."
+}

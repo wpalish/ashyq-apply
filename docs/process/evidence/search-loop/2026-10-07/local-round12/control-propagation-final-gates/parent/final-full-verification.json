@@ -1,0 +1,204 @@
+{
+  "time": "2026-10-08T04:49:36.142723+00:00",
+  "status": "FRESH_FULL_13_OF_13_PASS_EXACT_SELECTED_SOURCE",
+  "run_id": "20261008T043357Z-check-0d98eeb3",
+  "head": "d076e435cb1a6247f171ffb2411c6ab79a0ba857",
+  "snapshot_sha256": "d64864f76f0cf73cf0fa1b602ecf9ae9b2033b278bf4d877a5f68a9b949e68c0",
+  "source_manifest_file_sha256": "50b483a439dd19f3a872af8b1eca3caba2e4f70f3a1898470e0c42db977e5084",
+  "source_prefix_paths": 999,
+  "SQLite_unique": 4330,
+  "PG_unique": 4330,
+  "same_backend_identities": true,
+  "native_two_files_each_DB": {
+    "backend-sqlite": 99,
+    "backend-postgresql": 99
+  },
+  "added_cases_each_DB": {
+    "backend-sqlite": 18,
+    "backend-postgresql": 18
+  },
+  "old_backend_cases_preserved": 4312,
+  "SQLite_coverage_percent": 95.26,
+  "full_elapsed_seconds": 907.170683,
+  "steps": [
+    {
+      "name": "ruff",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/ruff.log",
+      "exit_code": 0,
+      "seconds": 0.13
+    },
+    {
+      "name": "ruff-format",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/ruff-format.log",
+      "exit_code": 0,
+      "seconds": 0.04
+    },
+    {
+      "name": "mypy",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend/.venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/mypy.log",
+      "exit_code": 0,
+      "seconds": 11.89
+    },
+    {
+      "name": "backend-sqlite",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--cov=app",
+        "--cov-fail-under=92",
+        "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/backend-sqlite.xml"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/backend-sqlite.log",
+      "exit_code": 0,
+      "seconds": 452.76
+    },
+    {
+      "name": "frontend-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/frontend-typecheck.log",
+      "exit_code": 0,
+      "seconds": 3.09
+    },
+    {
+      "name": "frontend-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/frontend-lint.log",
+      "exit_code": 0,
+      "seconds": 1.35
+    },
+    {
+      "name": "frontend-tests",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--run"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/frontend-tests.log",
+      "exit_code": 0,
+      "seconds": 4.32
+    },
+    {
+      "name": "frontend-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/frontend-build.log",
+      "exit_code": 0,
+      "seconds": 4.37
+    },
+    {
+      "name": "backend-postgresql",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend/.venv/bin/python",
+        "scripts/pg.py",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/backend-postgresql.xml"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/backend-postgresql.log",
+      "exit_code": 0,
+      "seconds": 326.25
+    },
+    {
+      "name": "e2e",
+      "command": [
+        "npm",
+        "run",
+        "e2e"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/e2e.log",
+      "exit_code": 0,
+      "seconds": 68.42
+    },
+    {
+      "name": "e2e-auth",
+      "command": [
+        "npm",
+        "run",
+        "e2e:auth"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/e2e-auth.log",
+      "exit_code": 0,
+      "seconds": 8.09
+    },
+    {
+      "name": "pip-audit",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend/.venv/bin/python",
+        "-m",
+        "pip_audit",
+        "-r",
+        "requirements.txt"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/pip-audit.log",
+      "exit_code": 0,
+      "seconds": 13.53
+    },
+    {
+      "name": "npm-audit",
+      "command": [
+        "npm",
+        "audit",
+        "--audit-level=high"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/npm-audit.log",
+      "exit_code": 0,
+      "seconds": 0.6
+    }
+  ],
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "quality": "UNSCORED; no fresh live, production or accepted quality gain; container/hosted CI not performed"
+}

@@ -1,0 +1,25 @@
+{
+  "created_utc": "2026-10-08T04:39:22.986450+00:00",
+  "task": "Finite hash/size/original-copy audit of2 repository evidence archives",
+  "archives": {
+    "control-propagation-proposal": {
+      "receipt_sha256": "2e8f2247395084457d344521116abf03c0fba0ce749b547ec7c8fe6cd14cffdb",
+      "physical_selected_files": 126,
+      "selected_bytes": 1469777
+    },
+    "control-propagation-seed": {
+      "receipt_sha256": "a01506787c624e7dfbe3fc7e7876f339183e242f960ce7e9b6a747b6553f0708",
+      "physical_selected_files": 26,
+      "selected_bytes": 176641
+    }
+  },
+  "checks": [
+    "each archive row actual SHA/bytes/original opaque-byte equality",
+    "physical members exactlyrootselection +topreceipt",
+    "A6776/B2b84origin manifests and members verified",
+    "B511fb seed whole286 original files verified;265candidate notduplicated;21noncandidate originals selected",
+    "current root sourceafter999 +provider STOP65b5 unchanged"
+  ],
+  "scope": "stdlibonly opaque hashes/code metadata; no app imports/tests/Git/network/DB/semantic corpus/gold/scorer; physical copies are not unique experiments; sourcefull still pending",
+  "outputs": "compact REPORT/receipt/standardfilesready; original errors preserved; no duplicate candidate/source corpus tree"
+}

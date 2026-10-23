@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-09T04:08:07.239398+00:00",
+  "status": "QUALIFIED_CORRECTED_NATIVE_ACCEPTED_PENDING_FULL",
+  "proposal_READY_sha256": "2dd776c38d489df632fc84a89e87331943e5af8d1b33ccb48feb43c2a9f4c3f3",
+  "peer_READY_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-correction-review/READY.json",
+  "peer_READY_sha256": "60cc8f31dc9038e3a8678028341f97708fea415b96ca026cd444b13252784a30",
+  "portable_READY_sha256": "4730997b9942f573b3c24976f358c014928a566ab1693293de63610fa02ca4b8",
+  "integration_plan_sha256": "80c63a44c35fd262eca8ff4720c18b1e3d31ab11fcd89dfcd37bf12f8495a02b",
+  "accepted_paths": {
+    "backend/app/adapters/cost/web_costs.py": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+    "backend/app/adapters/discovery/catalog_walker.py": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+    "backend/app/adapters/discovery/live_discovery.py": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+    "backend/app/adapters/documents/web_documents.py": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+    "backend/app/adapters/fetching.py": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+    "backend/app/adapters/government/web_government.py": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+    "backend/app/adapters/requirements/web_requirements.py": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+    "backend/app/adapters/scholarship/web_scholarships.py": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+    "backend/app/adapters/search/intent.py": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+    "backend/app/jobs/worker.py": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+    "backend/app/pipeline/runner.py": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+    "backend/tests/test_fetch_pii_hops.py": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+    "backend/tests/test_rejected_diagnostics.py": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+    "backend/tests/test_rejected_diagnostics_persistence.py": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9"
+  },
+  "native": {
+    "ON_pass": 13,
+    "ON_fail": 0,
+    "OFF_pass": 3,
+    "OFF_semantic_fail": 10,
+    "warnings": 3,
+    "qualification": "Six author groups, existing-hop case, four independent subcases and two portable SQL/API repetitions; not13unique security findings. Exactly2 persistence boundaries on ownedSQLite; explicit synthetic Principal, no login or PostgreSQL proof."
+  },
+  "root_review": "Root independently reviewed C11 source diffs, both corrected ordinary branches, targeted safe constructor/logging, actual A SQL/API/nativeWorker proof and portable2 code. C9/A original rejection retained. Ordinary compatibility/zeroClaims/typed partial/unresolved facts/budgets/control flow remain. Recover/nav refusal propagation remains source-only; no universal detector/egress/serialization coverage. Prepared apply/queue initial guard gaps fixed before any application; final prepared-tool review pending.",
+  "qualification": "Local synthetic/native source increment only. Full source gates, production, legal/operator/consent, actual research quality and Docker remain pending/notrun; no historical raw cleanup, resets, live, new extraction defaults, labels or gold approval."
+}

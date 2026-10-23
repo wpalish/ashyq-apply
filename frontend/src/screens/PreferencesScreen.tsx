@@ -5,6 +5,8 @@
  * defensible if the user can see and change what produced it.
  */
 
+import { useTranslation } from '@/lib/useTranslation';
+import { BookPreferences } from '@/components/BookPreferences';
 import { useState } from 'react';
 import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
@@ -45,6 +47,7 @@ const WEIGHT_LABELS: Record<string, string> = {
 };
 
 export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
+  const { locale } = useTranslation(); const ru=locale!=='en';
   const {
     profileDraft, setProfileDraft, startRun, loading, capabilities, validation, run, rerank,
   } = useStore();
@@ -100,7 +103,7 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
     setRecomputed(false);
   };
 
-  return (
+  const legacy = (
     <>
       <div className="screen__head">
         <p className="screen__eyebrow">Your journey · Preferences</p>
@@ -420,4 +423,5 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
       </div>
     </>
   );
+  return ru ? <BookPreferences advanced={legacy} demoMode={demoMode} onDemoMode={setDemoModeOverride} disabled={demoMode===undefined||loading||(validation?!validation.can_proceed:false)} onStart={async()=>{if(demoMode===undefined)return;await startRun(demoMode);onStarted();}}/> : legacy;
 }

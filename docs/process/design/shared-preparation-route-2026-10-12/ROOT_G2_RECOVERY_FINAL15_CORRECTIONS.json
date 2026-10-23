@@ -1,0 +1,14 @@
+{
+  "status": "ROOT_DESIGN_CORRECTIONS_FINAL15_ONLY_NOT_APPLIED_NOT_RUN",
+  "at_utc": "2026-10-12T03:59:52.261085+00:00",
+  "predecessor": "G2_RECOVERY_WRITE_AHEAD_RECONCILED_V1.json",
+  "paths_allowlist_unchanged": 15,
+  "source_head": "e891bbdf",
+  "decisions": [
+    "Matching observed ACK retained separately even if browser retirement fails; warn accepted server receipt/local pending journal and do not label same ACK UUID outcome unknown or offer its PUT retry. Newer different pending intent never cleared.",
+    "Keep meaningful manual input/manual review or disabled exam values omitted from accepted input dirty after ACK, in addition to newer-generation edits.",
+    "After confirmed402/expired and restored allowed access, user may create fresh preview then explicitly retire rejected original pending via exact journalCAS and use reviewed new intent; draft remains. Fresh UUID only on next explicit save; no automatic mutation/access change."
+  ],
+  "runtime": "NOT_RUN",
+  "application_writer": "root_only"
+}

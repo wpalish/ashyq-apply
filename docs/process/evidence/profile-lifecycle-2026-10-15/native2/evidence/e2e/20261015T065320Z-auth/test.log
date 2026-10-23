@@ -1,0 +1,12 @@
+
+Running 7 tests using 1 worker
+
+  ✓  1 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:32:1 › native core: research, owned records, Today, second session, export and case deletion (20.0s)
+  ✓  2 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:51:3 › profile native different-field merge across two real contexts (3.9s)
+  ✓  3 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:51:3 › profile native same-field choice/newer typing across two real contexts (3.0s)
+  ✓  4 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:97:1 › profile native lost committed create ACK: reload and exact original UUID replay (2.7s)
+  ✓  5 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:129:3 › profile native ordinary delayed update ACK retains newer typing on immediate reload (2.1s)
+  ✓  6 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:129:3 › profile native ordinary delayed create ACK retains newer typing on immediate reload (1.8s)
+  ✓  7 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:154:1 › profile native abandons research before POST while optional metadata is delayed (1.9s)
+
+  7 passed (38.2s)

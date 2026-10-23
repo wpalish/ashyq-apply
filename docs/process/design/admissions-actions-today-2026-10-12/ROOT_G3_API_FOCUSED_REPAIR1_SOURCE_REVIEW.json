@@ -1,0 +1,46 @@
+{
+  "status": "ROOT_ORDINARY_FINITE_SOURCE_REVIEW_AND_PEER_SEALS_VERIFIED_NOT_EXECUTED",
+  "at_utc": "2026-10-13T06:12:42.359974+00:00",
+  "grant_sha256": "b786a779c02610a7077bb7c172d2de1ac3621baf928d9aaa7ce373b6f84ea60b",
+  "verified_seals": [
+    {
+      "path": "proposals/g3-api-focused-route-repair1/SEAL.json",
+      "sha256": "b595e87d4f0a2d7b1cef2c11adae1131034f21b287438bfe031d31ac1f809d52",
+      "verified_members": 8
+    },
+    {
+      "path": "proposals/g3-api-focused-fixture-repair1/SEAL.json",
+      "sha256": "3085b5585273d3ad1137b7fcaa2a6982553d117a454369c8debc41f1954842a1",
+      "verified_members": 5
+    },
+    {
+      "path": "proposals/g3-api-focused-fixture-format1/SEAL.json",
+      "sha256": "55dab4fd5f0e35e04459a0df7b3ee88e3d62ddd680901b595d71e665b84ab6dd",
+      "verified_members": 5
+    },
+    {
+      "path": "G3_API_FOCUSED_FIXTURE_REPAIR1_INDEPENDENT_REVIEW_SEAL.json",
+      "sha256": "785a4294f26d481e0c099c7e62963be97fde31e3271ff2054017a748b9930932",
+      "verified_members": 1
+    },
+    {
+      "path": "G3_API_FOCUSED_ROUTE_REPAIR1_INDEPENDENT_REVIEW.SEAL.json",
+      "sha256": "bf16c028f565afe88b71b80b4dfc2721a9487840fa6b099c2e196f9554048993",
+      "verified_members": 15
+    }
+  ],
+  "full_read_scope": [
+    "route three literal edits and exact full inverse",
+    "Today four fixture spans and full per-slot ref/order/minutes unchanged",
+    "format one whitespace-only line consolidation",
+    "both complete independent reports"
+  ],
+  "predecessor_source_count": 786,
+  "allowed_paths": [
+    "backend/app/api/routes_admissions_actions.py",
+    "backend/tests/test_today.py"
+  ],
+  "native_domain_schema_other_tests_configs_unchanged": true,
+  "runtime": "NOT_RUN",
+  "ui": "NOT_APPLIED"
+}

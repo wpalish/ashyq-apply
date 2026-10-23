@@ -1,0 +1,15 @@
+{
+  "status": "EXTERNAL_ONLY_NOT_GRANTED_NOT_APPLIED",
+  "baseline": "ab8e3d4e",
+  "paths": {
+    "frontend/src/types.ts": "ce85951ba2bcb97581f7c15c7a97588a21d484a59e35155fe27097dde470ada5",
+    "frontend/src/lib/researchReadContext.ts": null,
+    "frontend/src/lib/useResearchInputRead.ts": null,
+    "frontend/src/lib/useResearchInputRead.test.tsx": null,
+    "frontend/src/components/ResearchReadNotice.tsx": null,
+    "frontend/src/components/ResearchReadNotice.test.tsx": null,
+    "frontend/src/App.tsx": "fa98085b1de1733c438938846b37a0f21c5b8b48be1b7dea9cdc9f5d5742d1fa",
+    "frontend/src/lib/i18n.ts": "6d5fd2103ccd0f29a09da654d76f05a83f11220aeca1f0ff706b6380c7c0bc70"
+  },
+  "scope": "Typed owned read context, common historical assessment/source-age and named profile-section notice; separate read of existing GET run on saved profile object/case generation/run ID change with rendered/synchronous/serial fence. No local profile hashing/fake server status, no Store data overwrite/auto re-run/rerank/network provider. Real native full6a1 currently frozen."
+}

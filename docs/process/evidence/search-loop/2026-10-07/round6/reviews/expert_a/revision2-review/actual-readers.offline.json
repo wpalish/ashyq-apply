@@ -1,0 +1,981 @@
+{
+  "network_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "repo_edits": 0,
+  "proposal_sha256": "bd21146bff824c059defa47ce2a1e5e3490d34822a2485c3b4dfb16116ae5303",
+  "script_sha256": "3094ec66b2c8194fa334605c5ef54d98b9c361704fe54d9d6ef97be6a5fe4f23",
+  "wits_source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+  "wits_body_sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87",
+  "wits_metadata_sha256": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c",
+  "wits_metadata_content_hash": "8b22d01f5430f83d9e4e9aa90e927ee586a78c5823bbb1d89ddbedbc4d5e2a0c",
+  "wits_title": "Computer Science - Wits University",
+  "wits_off_on_on_off": [
+    {
+      "enabled": false,
+      "classification": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "reader": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='Computer Science - Wits University' signals='2 award links; no award identity of its own' chars=6834 degrees=[]",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": true,
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Computer Science - Wits University' at bachelor level"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": "Computer Science - Wits University",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "reader": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": true,
+      "classification": {
+        "page_type": "program_detail",
+        "confidence": 0.75,
+        "signals": [
+          "single programme 'Computer Science - Wits University' at bachelor level"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": "Computer Science - Wits University",
+        "degree_level": "bachelor",
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "reader": {
+        "claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_claims": [
+          {
+            "claim_type": "program_exists",
+            "normalized_value": {
+              "program": "Computer Science - Wits University",
+              "degree": "bachelor",
+              "language": null,
+              "matched_because": "page subject 'Computer Science - Wits University' covers every requested subject word"
+            },
+            "original_text_excerpt": "Computer Science - Wits University",
+            "source_url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "page_title": "Computer Science - Wits University",
+            "relevant_section": "Programme identity",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": "fall2027",
+            "academic_year": "2027/28",
+            "accessed_at": "2026-10-07T19:22:46.996008Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.9,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ],
+        "exists_count": 1,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: no statement about the application window for fall2027; intake status is unknown, not open."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "program_detail"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "fetched-ok",
+            "page_type": "program_detail",
+            "detail": "1 claims read from this page",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    },
+    {
+      "enabled": false,
+      "classification": {
+        "page_type": "scholarship_index",
+        "confidence": 0.8,
+        "signals": [
+          "2 award links",
+          "no award identity of its own"
+        ],
+        "title": "Computer Science - Wits University",
+        "subject": null,
+        "degree_level": null,
+        "language_of_instruction": null,
+        "academic_year": null,
+        "language_evidence": null
+      },
+      "reader": {
+        "claims": [],
+        "exists_claims": [],
+        "exists_count": 0,
+        "errors": [
+          "Topic search not run: discovery used the 6-query budget",
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+        ],
+        "page_types": [
+          [
+            "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "scholarship_index"
+          ]
+        ],
+        "page_outcomes": [
+          {
+            "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+            "category": "classifier-rejected",
+            "page_type": "scholarship_index",
+            "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='Computer Science - Wits University' signals='2 award links; no award identity of its own' chars=6834 degrees=[]",
+            "readable_chars": 6834
+          }
+        ],
+        "saved_byte_lookup_calls": [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+        ],
+        "intake_open_count": 0
+      }
+    }
+  ],
+  "semantic_reader_controls": [
+    {
+      "case": "funding_eligibility_with_academic_conditions",
+      "html_sha256": "ab06b52aee6286c5ef3461cd183c9d1eaeec7bb04263f527616f3c00c5fa2a5d",
+      "expected_classification": "scholarship_index",
+      "phases": [
+        {
+          "enabled": false,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=232 degrees=[]",
+                "readable_chars": 232
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        },
+        {
+          "enabled": true,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=232 degrees=[]",
+                "readable_chars": 232
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "case": "explicit_sibling_section_scope",
+      "html_sha256": "e4c0442b0c32bd10a82ba908eb167f841b001fe8d42a8e8c6b6d34f174e1628c",
+      "expected_classification": "scholarship_index",
+      "phases": [
+        {
+          "enabled": false,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=212 degrees=[]",
+                "readable_chars": 212
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        },
+        {
+          "enabled": true,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=212 degrees=[]",
+                "readable_chars": 212
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "case": "role_navigation_academic_copy",
+      "html_sha256": "9edc20f2c7fe3b3a984db848d099ffbadb867a800d787c8279b59fad88bfe065",
+      "expected_classification": "scholarship_index",
+      "phases": [
+        {
+          "enabled": false,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=196 degrees=[]",
+                "readable_chars": 196
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        },
+        {
+          "enabled": true,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=196 degrees=[]",
+                "readable_chars": 196
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "case": "funding_eligibility_credits_without_progression",
+      "html_sha256": "74ca6eee00c1ca71657a87f47f7a1a66d20a80434a11143e0992dff971f7e830",
+      "expected_classification": "scholarship_index",
+      "phases": [
+        {
+          "enabled": false,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=200 degrees=[]",
+                "readable_chars": 200
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        },
+        {
+          "enabled": true,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=200 degrees=[]",
+                "readable_chars": 200
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "case": "genuine_curriculum_optional_module_eligibility",
+      "html_sha256": "35e52e5321b42c4bea1515e6b2756f6cb4bc675bb279a2518d244d566aa6cfd1",
+      "expected_classification": "program_detail",
+      "phases": [
+        {
+          "enabled": false,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=253 degrees=[]",
+                "readable_chars": 253
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        },
+        {
+          "enabled": true,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=253 degrees=[]",
+                "readable_chars": 253
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "case": "genuine_bachelor_negates_different_master_degree",
+      "html_sha256": "04cace1252023ded6617f5b6f718207d08ffdd61f9d4fb9ea1ea43ba480f0b3c",
+      "expected_classification": "program_detail",
+      "phases": [
+        {
+          "enabled": false,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=249 degrees=[]",
+                "readable_chars": 249
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        },
+        {
+          "enabled": true,
+          "reader": {
+            "claims": [],
+            "exists_claims": [],
+            "exists_count": 0,
+            "errors": [
+              "Topic search not run: discovery used the 6-query budget",
+              "https://example.edu/support/computer-science: classified as scholarship_index; no requirement can be read from this kind of page."
+            ],
+            "page_types": [
+              [
+                "https://example.edu/support/computer-science",
+                "scholarship_index"
+              ]
+            ],
+            "page_outcomes": [
+              {
+                "url": "https://example.edu/support/computer-science",
+                "category": "classifier-rejected",
+                "page_type": "scholarship_index",
+                "detail": "classified as scholarship_index; no requirement can be read from this kind of page. title='BSc Computer Science' signals='2 award links; no award identity of its own' chars=249 degrees=[]",
+                "readable_chars": 249
+              }
+            ],
+            "saved_byte_lookup_calls": [
+              "https://example.edu/support/computer-science"
+            ],
+            "intake_open_count": 0
+          }
+        }
+      ]
+    }
+  ],
+  "scholarship_links_off_on": [
+    true,
+    false
+  ],
+  "raw_award_links": [
+    "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+  ],
+  "lists_awards_below": false,
+  "funding_reader_controls": [
+    {
+      "enabled": false,
+      "mode": "programme_fallback",
+      "saved_byte_lookup_calls": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body supplied for this followed URL; outcome unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "No official scholarship page is known for University of the Witwatersrand; the programme page is read as a funding index instead, and awards are recorded only from award pages.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body supplied for this followed URL; outcome unknown"
+      ],
+      "pages_checked": 2,
+      "pages_failed": 1
+    },
+    {
+      "enabled": true,
+      "mode": "programme_fallback",
+      "saved_byte_lookup_calls": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body supplied for this followed URL; outcome unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "No official scholarship page is known for University of the Witwatersrand; the programme page is read as a funding index instead, and awards are recorded only from award pages.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body supplied for this followed URL; outcome unknown"
+      ],
+      "pages_checked": 2,
+      "pages_failed": 1
+    },
+    {
+      "enabled": false,
+      "mode": "explicit_primary",
+      "saved_byte_lookup_calls": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body supplied for this followed URL; outcome unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body supplied for this followed URL; outcome unknown"
+      ],
+      "pages_checked": 2,
+      "pages_failed": 1
+    },
+    {
+      "enabled": true,
+      "mode": "explicit_primary",
+      "saved_byte_lookup_calls": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body supplied for this followed URL; outcome unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body supplied for this followed URL; outcome unknown"
+      ],
+      "pages_checked": 2,
+      "pages_failed": 1
+    },
+    {
+      "enabled": false,
+      "mode": "linked_depth_one",
+      "saved_byte_lookup_calls": [
+        "https://www.wits.ac.za/offline-review/funding-index",
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "page_types": [
+        [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "scholarship_index"
+        ]
+      ],
+      "page_outcomes": [
+        {
+          "url": "https://www.wits.ac.za/offline-review/funding-index",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "http_error — Offline: no retained body supplied for this followed URL; outcome unknown",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as scholarship_index; read as a funding index, and the awards it links are followed.",
+        "https://www.wits.ac.za/study-at-wits/financial-aid-and-scholarships-administration: http_error — Offline: no retained body supplied for this followed URL; outcome unknown"
+      ],
+      "pages_checked": 3,
+      "pages_failed": 1
+    },
+    {
+      "enabled": true,
+      "mode": "linked_depth_one",
+      "saved_byte_lookup_calls": [
+        "https://www.wits.ac.za/offline-review/funding-index",
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science"
+      ],
+      "scholarships": [],
+      "claims": [],
+      "page_types": [
+        [
+          "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "program_detail"
+        ]
+      ],
+      "page_outcomes": [
+        {
+          "url": "https://www.wits.ac.za/offline-review/funding-index",
+          "category": "fetched-ok",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "readable_chars": 0
+        },
+        {
+          "url": "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science",
+          "category": "classifier-rejected",
+          "page_type": "program_detail",
+          "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /study-at-wits/financial-aid-and-scholarships-administration)",
+          "readable_chars": 0
+        }
+      ],
+      "errors": [
+        "https://www.wits.ac.za/course-finder/undergraduate/science/computer-science: classified as program_detail, not an award page; no scholarship recorded."
+      ],
+      "pages_checked": 2,
+      "pages_failed": 0
+    }
+  ],
+  "funding_binding": "Only classify_page is patched; returned page_type is converted to production PageType so production is comparisons use the installed enum singleton. Classifier class/allowlist otherwise untouched. Synthetic index is routing fixture, not a university fact. Missing target bodies are unknown HTTP_ERROR."
+}

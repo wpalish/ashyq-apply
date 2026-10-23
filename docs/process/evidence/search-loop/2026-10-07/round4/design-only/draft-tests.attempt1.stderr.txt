@@ -1,0 +1,74 @@
+test_A_backwards_utc_on_resume_fails_closed (test_draft_guard.DraftGuardTests.test_A_backwards_utc_on_resume_fails_closed) ... ok
+test_A_early_uni_expires_while_other_uni_work_runs (test_draft_guard.DraftGuardTests.test_A_early_uni_expires_while_other_uni_work_runs) ... ok
+test_A_restart_downtime_spends_absolute_deadline (test_draft_guard.DraftGuardTests.test_A_restart_downtime_spends_absolute_deadline) ... ok
+test_B_hard_crash_consumes_unsettled_full_reservation (test_draft_guard.DraftGuardTests.test_B_hard_crash_consumes_unsettled_full_reservation) ... ok
+test_B_other_uni_gap_excluded_focused_work_carried (test_draft_guard.DraftGuardTests.test_B_other_uni_gap_excluded_focused_work_carried) ... ok
+test_adapter_memo_no_fetcher_invocation_no_charge (test_draft_guard.DraftGuardTests.test_adapter_memo_no_fetcher_invocation_no_charge) ... ok
+test_all_focused_waits_cpu_and_serialization_spend_clock (test_draft_guard.DraftGuardTests.test_all_focused_waits_cpu_and_serialization_spend_clock) ... ok
+test_bad_state_and_silent_new_episode_rejected (test_draft_guard.DraftGuardTests.test_bad_state_and_silent_new_episode_rejected) ... ok
+test_cache_hit_is_charged_without_forcing_cache_off (test_draft_guard.DraftGuardTests.test_cache_hit_is_charged_without_forcing_cache_off) ... ok
+test_cancel_flag_checked_before_io (test_draft_guard.DraftGuardTests.test_cancel_flag_checked_before_io) ... ok
+test_completed_adapter_evidence_survives_later_budget_stop_sketch (test_draft_guard.DraftGuardTests.test_completed_adapter_evidence_survives_later_budget_stop_sketch) ... ok
+test_cross_domain_government_charged_to_active_uni (test_draft_guard.DraftGuardTests.test_cross_domain_government_charged_to_active_uni) ... ok
+test_deadline_no_new_read_at_120 (test_draft_guard.DraftGuardTests.test_deadline_no_new_read_at_120) ... ok
+test_foreign_task_cancel_propagates (test_draft_guard.DraftGuardTests.test_foreign_task_cancel_propagates) ... ok
+test_internal_robots_retry_redirect_mock_exchanges_not_extra_gets (test_draft_guard.DraftGuardTests.test_internal_robots_retry_redirect_mock_exchanges_not_extra_gets) ... ok
+test_known_limitation_sync_cpu_is_detected_after_it_returns (test_draft_guard.DraftGuardTests.test_known_limitation_sync_cpu_is_detected_after_it_returns) ... ok
+test_lost_fence_before_reservation_no_io (test_draft_guard.DraftGuardTests.test_lost_fence_before_reservation_no_io) ... ok
+test_lost_fence_cannot_refund_active_reservation (test_draft_guard.DraftGuardTests.test_lost_fence_cannot_refund_active_reservation) ... ok
+test_multiple_programmes_and_stages_share_identity (test_draft_guard.DraftGuardTests.test_multiple_programmes_and_stages_share_identity) ... ERROR
+test_restart_read_reservation_not_refunded (test_draft_guard.DraftGuardTests.test_restart_read_reservation_not_refunded) ... ok
+test_scope_timer_cancels_an_inflight_wait_without_new_io (test_draft_guard.DraftGuardTests.test_scope_timer_cancels_an_inflight_wait_without_new_io) ... Executing <Task pending name='Task-102' coro=<DraftGuardTests.test_scope_timer_cancels_an_inflight_wait_without_new_io() running at /Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/test_draft_guard.py:217> cb=[_run_until_complete_cb() at /Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py:181] created at /Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:100> took 120.001 seconds
+ok
+test_settings_replacement_preserves_envelope_and_opaque_query_state (test_draft_guard.DraftGuardTests.test_settings_replacement_preserves_envelope_and_opaque_query_state) ... ok
+test_sixty_successes_sixty_first_blocked (test_draft_guard.DraftGuardTests.test_sixty_successes_sixty_first_blocked) ... ERROR
+test_unscoped_read_rejected_and_nested_same_key_not_restarted (test_draft_guard.DraftGuardTests.test_unscoped_read_rejected_and_nested_same_key_not_restarted) ... ok
+
+======================================================================
+ERROR: test_multiple_programmes_and_stages_share_identity (test_draft_guard.DraftGuardTests.test_multiple_programmes_and_stages_share_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/test_draft_guard.py", line 43, in test_multiple_programmes_and_stages_share_identity
+    with self.guard.scope("catalogue:1"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft_guard.py", line 168, in scope
+    self.remaining()  # Detect synchronous CPU overrun on return.
+    ^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft_guard.py", line 127, in remaining
+    raise BudgetStopped(state["stop_reason"])
+draft_guard.BudgetStopped: read_cap
+
+======================================================================
+ERROR: test_sixty_successes_sixty_first_blocked (test_draft_guard.DraftGuardTests.test_sixty_successes_sixty_first_blocked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/test_draft_guard.py", line 29, in test_sixty_successes_sixty_first_blocked
+    with self.guard.scope("catalogue:1"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft_guard.py", line 168, in scope
+    self.remaining()  # Detect synchronous CPU overrun on return.
+    ^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a/draft_guard.py", line 127, in remaining
+    raise BudgetStopped(state["stop_reason"])
+draft_guard.BudgetStopped: read_cap
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.023s
+
+FAILED (errors=2)

@@ -1,0 +1,41 @@
+--- qualified/check_queue.py@e5d7c351
++++ prepared/check_repaired_queue.py@02a31772
+@@ -12,22 +12,22 @@
+ REPO = ROOT / 'work/ashyq-apply'
+ TASK = ROOT / 'work/security-round2'
+ BUNDLE = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner')
+-OUT = TASK / 'native-queue'
+-PINS = json.loads((TASK / 'applied-source-pins.json').read_text())
+-RECEIPT_PATH = TASK / 'application-receipt.json'
++OUT = TASK / 'repaired-native-queue'
++PINS = json.loads((TASK / 'repaired-source-pins.json').read_text())
++RECEIPT_PATH = TASK / 'test-repair-application-receipt.json'
+ RECEIPT = json.loads(RECEIPT_PATH.read_text())
+ PINS_SHA = RECEIPT['source34_pins_sha256']
+-assert RECEIPT['status'] == 'EXACT_SOURCE_APPLIED_FULL_PENDING' and len(PINS) == 34
+-assert hashlib.sha256((TASK / 'applied-source-pins.json').read_bytes()).hexdigest() == PINS_SHA
++assert RECEIPT['status'] == 'EXACT_TEST_REPAIR_APPLIED_FULL_PENDING' and len(PINS) == 34
++assert hashlib.sha256((TASK / 'repaired-source-pins.json').read_bytes()).hexdigest() == PINS_SHA
+ RECEIPT_SHA = hashlib.sha256(RECEIPT_PATH.read_bytes()).hexdigest()
+-HEAD = (TASK / 'applied-head.txt').read_text().strip()
++HEAD = (TASK / 'repaired-head.txt').read_text().strip()
+ BRANCH = 'task/product-privacy-diagnostics'
+ STOP = ROOT / 'work/local-round7/provider-STOP.json'
+ STOP_SHA = '65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d'
+ sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+ 
+ def verify():
+-    assert sha(TASK / 'applied-source-pins.json') == PINS_SHA
++    assert sha(TASK / 'repaired-source-pins.json') == PINS_SHA
+     assert sha(RECEIPT_PATH) == RECEIPT_SHA
+     assert subprocess.check_output(['git', '-C', str(REPO), 'rev-parse', 'HEAD'], text=True).strip() == HEAD
+     assert subprocess.check_output(['git', '-C', str(REPO), 'branch', '--show-current'], text=True).strip() == BRANCH
+@@ -94,7 +94,7 @@
+             assert [r['name'] for r in data['steps']] == expected_steps[suite]
+             assert all(r['exit_code'] == 0 for r in data['steps'])
+     records.append({'suite': suite, 'argv': argv, 'head': HEAD,
+-        'source_pins_sha256': sha(TASK / 'applied-source-pins.json'),
++        'source_pins_sha256': sha(TASK / 'repaired-source-pins.json'),
+         'started_at': start, 'finished_at': datetime.now(timezone.utc).isoformat(),
+         'exit_code': code, 'owned_runs': owned})
+     (OUT / 'execution.json').write_text(json.dumps(records, indent=2) + '\n')

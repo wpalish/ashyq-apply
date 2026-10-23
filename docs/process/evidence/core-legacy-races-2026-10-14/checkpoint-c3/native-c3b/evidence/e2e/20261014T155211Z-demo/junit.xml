@@ -1,0 +1,60 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="26.359981">
+<testsuite name="profile-writes.spec.ts" timestamp="2026-10-14T15:52:14.476Z" hostname="desktop-chromium" tests="1" failures="1" skipped="0" time="23.354" errors="0">
+<testcase name="profile native lost committed create ACK: reload and exact original UUID replay" classname="profile-writes.spec.ts" time="23.354">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/video.webm]]
+
+[[ATTACHMENT|test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<failure message="expect(locator).toBeVisible() failed" type="expect.toBeVisible">
+<![CDATA[  [desktop-chromium] › profile-writes.spec.ts:97:1 › profile native lost committed create ACK: reload and exact original UUID replay 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Saved', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 20000ms
+      - waiting for getByText('Saved', { exact: true })
+
+
+      122 |   expect(accepted.request().postDataJSON()).toEqual(originalBody);
+      123 |   const after=await page.request.get('/api/profiles');expect((await after.json()).map((p:{id:string})=>p.id).sort()).toEqual(beforeIds.sort());
+    > 124 |   await expect(page.getByText('Saved',{exact:true})).toBeVisible();
+          |                                                      ^
+      125 |   await info.attach('original-command-recovery',{body:JSON.stringify({profile_id:body.id,revision:1,same_uuid:true,same_body:true,no_duplicate:true,committed_ack_dropped:true}),contentType:'application/json'});
+      126 | });
+      127 |
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:124:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../../2026-10-14-profile-recovery/native-c3b/evidence/e2e/20261014T155211Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../../../../2026-10-14-profile-recovery/native-c3b/evidence/e2e/20261014T155211Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../../2026-10-14-profile-recovery/native-c3b/evidence/e2e/20261014T155211Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../2026-10-14-profile-recovery/native-c3b/evidence/e2e/20261014T155211Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../2026-10-14-profile-recovery/native-c3b/evidence/e2e/20261014T155211Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+</testcase>
+</testsuite>
+</testsuites>

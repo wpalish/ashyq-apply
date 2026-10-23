@@ -1,0 +1,2302 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 3914,
+    "sha256": "8e0352ee97bd8c16770eec14a2b928a38dd4b2f91497a049dd853c23666963dd"
+  },
+  {
+    "path": "application-start.json",
+    "bytes": 546,
+    "sha256": "ca618612be955394aa0bbceda8eaa852167400b7593e2d992ae11b8ce7bd621b"
+  },
+  {
+    "path": "apply_reviewed_source.py",
+    "bytes": 5837,
+    "sha256": "f05a8e43a7f6666531442c2aab04728ae5ea6d473b732a76b204dc6c160d1f07"
+  },
+  {
+    "path": "archive_checkpoint.py",
+    "bytes": 9324,
+    "sha256": "32666afec2028faef9c86b5889d24d4cfb8e5110287f298dac3b33727ccc1b47"
+  },
+  {
+    "path": "checkpoint_in_progress.py",
+    "bytes": 4867,
+    "sha256": "a285f69282ed2668578674b713976c628c414f31e05a3763fd99957ecf8e2c40"
+  },
+  {
+    "path": "checkpoint_review.py",
+    "bytes": 8076,
+    "sha256": "a450b4998bd691055da0eb9bb071f2897a60be1105fc8175cfb305cfcf09f117"
+  },
+  {
+    "path": "funding-heading.proposal.txt",
+    "bytes": 10534,
+    "sha256": "b2ec05460d8250bdbcd425b3b2f4d09c2a7cca94a309abd46eca345623faaa5f"
+  },
+  {
+    "path": "gates/alembic-heads.log",
+    "bytes": 20,
+    "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+  },
+  {
+    "path": "gates/backend-gates.json",
+    "bytes": 2213,
+    "sha256": "0a41f852272766af12e84247953edbc5323356bce7850d459d8b4366866f8376"
+  },
+  {
+    "path": "gates/backend-pytest.log",
+    "bytes": 16617,
+    "sha256": "f0ff30c18216953103e266b526c02314f5bbdce801c3d8f0bdbc6db40df40370"
+  },
+  {
+    "path": "gates/demo-comparison.json",
+    "bytes": 487,
+    "sha256": "b730ec04687bebaf643fdeec5a75daddade2cfd4a945bff45af07e18933ebcaa"
+  },
+  {
+    "path": "gates/demo-migration.log",
+    "bytes": 2642,
+    "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a"
+  },
+  {
+    "path": "gates/demo.log",
+    "bytes": 2569,
+    "sha256": "6eb5fb3190c4699cbea6b5781062c9dc844265d4786b5495dc45fc80b28245d8"
+  },
+  {
+    "path": "gates/format.log",
+    "bytes": 28,
+    "sha256": "5365fd90dbf9a59e4547035afae05a4ef2f3af1483412125bb66acbaac38c9eb"
+  },
+  {
+    "path": "gates/frontend-build.log",
+    "bytes": 7315,
+    "sha256": "cd73260f6b3fdadba0161d70141a1e4fac8beb5676b4cfcdf939d0da33e8760c"
+  },
+  {
+    "path": "gates/frontend-gates.json",
+    "bytes": 717,
+    "sha256": "e18114da6daf89ce48fa139af7075a0d9556e3158a5cdd0b235f2d199149afa2"
+  },
+  {
+    "path": "gates/frontend-lint.log",
+    "bytes": 65,
+    "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a"
+  },
+  {
+    "path": "gates/frontend-tests.log",
+    "bytes": 14547,
+    "sha256": "277ea33ecc40e9767f1744180cac0684af0e7735252de1b6a9e70a79ef11b3b6"
+  },
+  {
+    "path": "gates/frontend-typecheck.log",
+    "bytes": 53,
+    "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+  },
+  {
+    "path": "gates/mypy.log",
+    "bytes": 8737,
+    "sha256": "bedab0bfc47688c4b980c6c31b2ad59249e6de4540970261b6b9bed5dfc80b8e"
+  },
+  {
+    "path": "gates/ruff.log",
+    "bytes": 19,
+    "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  {
+    "path": "parent-caller-import-only.diff",
+    "bytes": 878,
+    "sha256": "fd047fd883cfa9b257a15e76537f67adcd2a55b658eddf713b6a8e31ec8659aa"
+  },
+  {
+    "path": "parent-focused-wrong-file.log",
+    "bytes": 69,
+    "sha256": "b5ebcb34173c327df412a57252d959a54222b37e7cf24e18d109cdc2253f82b0"
+  },
+  {
+    "path": "parent-focused.log",
+    "bytes": 320,
+    "sha256": "1b1dd813b14cf2a48a2d87cd92255160e846f47eec6ab9cbc526dd59fd2c24c0"
+  },
+  {
+    "path": "parent-mypy-first.log",
+    "bytes": 8737,
+    "sha256": "bedab0bfc47688c4b980c6c31b2ad59249e6de4540970261b6b9bed5dfc80b8e"
+  },
+  {
+    "path": "pr-body.md",
+    "bytes": 1610,
+    "sha256": "4652971c7018468a1d297918be5d6f69a9e8a6b7521a184d1e8864ad238e0e52"
+  },
+  {
+    "path": "prepare_capture_controls.py",
+    "bytes": 852,
+    "sha256": "7cada4822b86beda4b3aceeabea006b38fbd8a738f171eaebc27b329ba705218"
+  },
+  {
+    "path": "prepare_gate_scripts.py",
+    "bytes": 958,
+    "sha256": "328419d3f2621327791528f8f74f93f62beb2b95c7e5ec0249a9494a7df99146"
+  },
+  {
+    "path": "prepare_repository_controls.py",
+    "bytes": 3508,
+    "sha256": "72b493418f251260478254d61ec7036c7cbf5b09b7301dcb391586e7c75c02c6"
+  },
+  {
+    "path": "programme_funding_scope.fixture.json",
+    "bytes": 102611,
+    "sha256": "9a98facaae18d585e7915ce6b2dd80aca2fcf48d4a1ee940b2e4da77adaca1f6"
+  },
+  {
+    "path": "rejected-candidates/README.md",
+    "bytes": 1272,
+    "sha256": "d5e74e37e3d3c375bd90524539b01ab4742db17e365c610fe1ac3e2439741fda"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/expert-a-negative-controls.json",
+    "bytes": 15925,
+    "sha256": "4be1b6b239784e89a2fe841f4c335f0f7e1c3fe8abcdc08aa6566dd5af01db27"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/independent-replay.json",
+    "bytes": 106309,
+    "sha256": "d2ba60ff71c55d948925453c6dec4f9c644d4f52f4e719e136aad355c83d9719"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/legacy_page_classifier.py",
+    "bytes": 37051,
+    "sha256": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/programme-identity-before-funding.patch",
+    "bytes": 5115,
+    "sha256": "d549e820b6090395dfd3fcba67ebf43e195c06953d8078a76c48a0805c0df526"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/proposed_page_classifier.py",
+    "bytes": 41166,
+    "sha256": "ed79828af03c2ec2664705b13d1e04328c29fa5e433465cb703035dacf8135e6"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/pytest-existing.log",
+    "bytes": 80,
+    "sha256": "fbdc38bb22ab9d4d108abbac2db93d82b0ba41432f10b852f0bcab0f5bdcf50b"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/pytest-proposal.log",
+    "bytes": 735,
+    "sha256": "cd3959252d4bbeb72562ba9d5fe714269aaa74dcf00125136538d21c8e72ce08"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/pytest-red.log",
+    "bytes": 10509,
+    "sha256": "ccd7d20cb283163fa0404a5b7d5f07afa0d36e514218433d7115b3506fa4eb6f"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/rejection.json",
+    "bytes": 1557,
+    "sha256": "0d3e8800516abd19710af96219bece895b9a9247b1dca50b6ba124a6cae0da51"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/replay_classifier.py",
+    "bytes": 22859,
+    "sha256": "55a81a6953b4cb6524d9e4875252c047523793084cea320a850572633b8d5b2e"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/review.ru.md",
+    "bytes": 10231,
+    "sha256": "cc0a9559a42cc0fec26fd042d3ac0e6e86ad108480532b929023a18267f8f9d2"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/ruff.log",
+    "bytes": 19,
+    "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/source-manifest.json",
+    "bytes": 2421,
+    "sha256": "5024c2707d24d4acddc03340e83bdda67c416cbd8adeed2cb4492c72039c3ead"
+  },
+  {
+    "path": "rejected-candidates/rejected-academic-content-v1/test_programme_funding_scope.py",
+    "bytes": 3977,
+    "sha256": "a502f059d62710d1e6fdf741c7d8f52f5920be5cca9c739e57f07726e1b4f434"
+  },
+  {
+    "path": "rejected-candidates/rejected-heading-only/independent-replay.json",
+    "bytes": 72800,
+    "sha256": "f83790a2554f993f8d14f5e7e6a021b965b27b66c0207ffbdac49ae9b013fbec"
+  },
+  {
+    "path": "rejected-candidates/rejected-heading-only/independent-root-negative-replay.json",
+    "bytes": 1799,
+    "sha256": "1619659a5a1e90e30375bcb23387ef424fabfdcd52b4197c40a2e49e28149b8c"
+  },
+  {
+    "path": "rejected-candidates/rejected-heading-only/programme-identity-before-funding.patch",
+    "bytes": 2382,
+    "sha256": "12ebf610a41c354632804152f6034942922a34b075822d5ec039f8d926283722"
+  },
+  {
+    "path": "rejected-candidates/rejected-heading-only/proposed_page_classifier.py",
+    "bytes": 38820,
+    "sha256": "795efb42206816b22f6eeb6e32cbc5a4b2222218792eca0b516a33ee8adc55f7"
+  },
+  {
+    "path": "rejected-candidates/rejected-heading-only/rejection.json",
+    "bytes": 866,
+    "sha256": "dd4b6ce09cc37cca20e57d9909f254ff2a975eae8d1227566a0ab40657d844ea"
+  },
+  {
+    "path": "rejected-candidates/rejected-heading-only/replay_classifier.py",
+    "bytes": 14800,
+    "sha256": "92765a9877eb74808af9039386cb816fad992469b0593ca9a6dcfa4609da4c85"
+  },
+  {
+    "path": "rejected-candidates/rejected-heading-only/root-funding-negative.json",
+    "bytes": 1474,
+    "sha256": "bc55d52907ef8855d25dbcf96b2eb9134daaf4708bb587d8480625a18942a063"
+  },
+  {
+    "path": "rejected-candidates/rejected-heading-only/source-manifest.json",
+    "bytes": 288,
+    "sha256": "a182751bd1ac8383d64a4f6b8f9de7ccde1c7c4dae45ce66afd63f7256ca7eb2"
+  },
+  {
+    "path": "rejected-candidates/rejected-title-only/funding-heading.proposal.txt",
+    "bytes": 10534,
+    "sha256": "b2ec05460d8250bdbcd425b3b2f4d09c2a7cca94a309abd46eca345623faaa5f"
+  },
+  {
+    "path": "rejected-candidates/rejected-title-only/independent-negative-replay.json",
+    "bytes": 6035,
+    "sha256": "4b2b938f73f229b365bb8a10ef34ac21f7de936b88663e8a0ec04a8fa03eb458"
+  },
+  {
+    "path": "rejected-candidates/rejected-title-only/wits-heading.proposal-replay.json",
+    "bytes": 397,
+    "sha256": "c564fc57bd111ee0e92c3591216fb2bd04afc598e2865c2312ebc66cfc57d1a4"
+  },
+  {
+    "path": "rejected-candidates/revision2/expert-a-negative-controls.json",
+    "bytes": 15925,
+    "sha256": "4be1b6b239784e89a2fe841f4c335f0f7e1c3fe8abcdc08aa6566dd5af01db27"
+  },
+  {
+    "path": "rejected-candidates/revision2/independent-replay.json",
+    "bytes": 135981,
+    "sha256": "32304bf44aece2929f7733bb4005e7a45bdd1e3728e15a6a777b54e866346340"
+  },
+  {
+    "path": "rejected-candidates/revision2/legacy_page_classifier.py",
+    "bytes": 37051,
+    "sha256": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158"
+  },
+  {
+    "path": "rejected-candidates/revision2/programme-identity-before-funding.patch",
+    "bytes": 6724,
+    "sha256": "df94273e9a2ebd3d920a954993011f9c82830f4b0833703f5cdf78a2360d31ad"
+  },
+  {
+    "path": "rejected-candidates/revision2/proposed_page_classifier.py",
+    "bytes": 42732,
+    "sha256": "bd21146bff824c059defa47ce2a1e5e3490d34822a2485c3b4dfb16116ae5303"
+  },
+  {
+    "path": "rejected-candidates/revision2/pytest-proposal.log",
+    "bytes": 746,
+    "sha256": "de7494ec66f4146c129ec6ed6e4b5bcc861bdfe258bb645c572204263b2f042a"
+  },
+  {
+    "path": "rejected-candidates/revision2/pytest-red.log",
+    "bytes": 15498,
+    "sha256": "4ebe209ca012059d9b9b439db05a1e2c05873796c7c0d6b5c0eb0b5229482203"
+  },
+  {
+    "path": "rejected-candidates/revision2/replay.log",
+    "bytes": 253,
+    "sha256": "f04ca297890eb123f945c94693cf5addd781126c486f690cba5061b2478af999"
+  },
+  {
+    "path": "rejected-candidates/revision2/replay_classifier.py",
+    "bytes": 24585,
+    "sha256": "4d6ec15b12400f1ac340722ee31cccb43269f0cd432a8a3d233db3516f962ffa"
+  },
+  {
+    "path": "rejected-candidates/revision2/review.ru.md",
+    "bytes": 4362,
+    "sha256": "c50071fa6bb600fbf6424e28ad6a04003f29d9f9dfb40c5b1c7394269999dfb4"
+  },
+  {
+    "path": "rejected-candidates/revision2/ruff.log",
+    "bytes": 19,
+    "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  {
+    "path": "rejected-candidates/revision2/source-manifest.json",
+    "bytes": 2423,
+    "sha256": "74c8b45a42481e284f84537f6d49cee409f96e1dfe2cc95c0de5f9af2750d81f"
+  },
+  {
+    "path": "rejected-candidates/revision2/test_programme_funding_scope.py",
+    "bytes": 3977,
+    "sha256": "a502f059d62710d1e6fdf741c7d8f52f5920be5cca9c739e57f07726e1b4f434"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/applied-import-order.diff",
+    "bytes": 614,
+    "sha256": "c7539668ff22572fa490e3e7a274881b985bfcfd7859af6607c813c2abf75e12"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/harness-controls.offline.json",
+    "bytes": 124012,
+    "sha256": "d1f0863f74bcf744a1daec2fa45974d2011c14fccba8aa977286a97a2cafe76a"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/import-comparison.note.txt",
+    "bytes": 368,
+    "sha256": "352ea89f13bc3fd1577887bd3fcb66ee7b015ac3f0b57b812a9607d5b52fcd5e"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/initial-pytest.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/initial-pytest.stdout.txt",
+    "bytes": 99,
+    "sha256": "6c51dd2925294bb87b519975230be3492ab182f9fda3e254719c1354c906691c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/initial-test_independent_cli_choices.py",
+    "bytes": 10600,
+    "sha256": "9d671182959306f159d7ddd8bbdeb601ecb44cf36dde65b07580b75d2282e883"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop0/capture/20261007T210124Z/capture.json",
+    "bytes": 2730,
+    "sha256": "92be95615117fa3ee23e8486f17832ee4feb6f7f8743f761da604bd4dac7ecf6"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop0/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 27,
+    "sha256": "e0a0250c47d9730f99a5bf8bdd15ca5f39611d9ce9fc8bdc4c3393ae0066b178"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop0/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop0/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop1/capture/20261007T210124Z/capture.json",
+    "bytes": 2729,
+    "sha256": "568d40cb36562c65a148abd4895dfcf21ec5385ab4193f369071641caa28cb80"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop1/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 27,
+    "sha256": "e0a0250c47d9730f99a5bf8bdd15ca5f39611d9ce9fc8bdc4c3393ae0066b178"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop1/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop1/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop2/capture/20261007T210124Z/capture.json",
+    "bytes": 2850,
+    "sha256": "2ac8175a8bb3b4b27ab0303a717dcf3890922d65b5958ab0c0d42c41909ab790"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop2/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 103,
+    "sha256": "472972deb9f347fab673ff96580ee2bd2d9a58178c0110ee4d3d6a8bac6ad481"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop2/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop2/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop3/capture/20261007T210124Z/capture.json",
+    "bytes": 2851,
+    "sha256": "915df1894cd978e4024ec3e4e2211c65a2c8a87a43cedc836e74408c4ae0b095"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop3/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 103,
+    "sha256": "472972deb9f347fab673ff96580ee2bd2d9a58178c0110ee4d3d6a8bac6ad481"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop3/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop3/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop4/capture/20261007T210124Z/capture.json",
+    "bytes": 2706,
+    "sha256": "13f6beefca7307e9729f46da9bdea81576c2bad012037f94234bfae1a2b3e1b9"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop4/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop4/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop5/capture/20261007T210124Z/capture.json",
+    "bytes": 2706,
+    "sha256": "10d17219f6b06286497129a7fd52e9fb9456ec1eff57c196ec4c18eb5baeed17"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop5/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_child_budget_failure_stop5/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe0/capture/20261007T210124Z/capture.json",
+    "bytes": 3551,
+    "sha256": "f964400337e6d756f36c7daf09eb5070823125a805b742329fe71138cbb45fc8"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe0/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe0/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe0/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe0/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe0/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe0/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe1/capture/20261007T210124Z/capture.json",
+    "bytes": 3550,
+    "sha256": "a27a1ba81c294849ebbed9e0ea228a8c8d7aa247ee6542e2d9948b215b4eafc1"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe1/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe1/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe1/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe1/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe1/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe1/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe2/capture/20261007T210124Z/capture.json",
+    "bytes": 3551,
+    "sha256": "12b14c5d965b67b39d757d0c9cbbd2bcd8b84cbc4c646f649267a98ceb85243d"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe2/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe2/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe2/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe2/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe2/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe2/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe3/capture/20261007T210124Z/capture.json",
+    "bytes": 3550,
+    "sha256": "d49b540aa0556c37b128a377118b2381992ac8e5eee5f67796b139aa18223e5a"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe3/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe3/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe3/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe3/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe3/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_pf_choice_stays_independe3/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_prestart_synthetic_refusa0/capture/20261007T210124Z/capture.json",
+    "bytes": 829,
+    "sha256": "53da7facd92aec6e2bf5ba48d82ad74159437e242aac3176c79f189fe31bba82"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_prestart_synthetic_refusa0/synthetic-STOP.json",
+    "bytes": 43,
+    "sha256": "b4e0993a082ce77dfdb2f8365389e17f72d741a065a4d4e879dbd21ca95df88c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_prestart_synthetic_refusa1/capture/20261007T210124Z/capture.json",
+    "bytes": 828,
+    "sha256": "ab71fcf2b1952cb3901ce9bcb6606054bd7dc55282637e0d1479c2d36150ef27"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_prestart_synthetic_refusa1/synthetic-STOP.json",
+    "bytes": 43,
+    "sha256": "b4e0993a082ce77dfdb2f8365389e17f72d741a065a4d4e879dbd21ca95df88c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_prestart_synthetic_refusa2/capture/20261007T210124Z/capture.json",
+    "bytes": 828,
+    "sha256": "ab71fcf2b1952cb3901ce9bcb6606054bd7dc55282637e0d1479c2d36150ef27"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_prestart_synthetic_refusa2/synthetic-STOP.json",
+    "bytes": 43,
+    "sha256": "b4e0993a082ce77dfdb2f8365389e17f72d741a065a4d4e879dbd21ca95df88c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_prestart_synthetic_refusa3/capture/20261007T210124Z/capture.json",
+    "bytes": 829,
+    "sha256": "53da7facd92aec6e2bf5ba48d82ad74159437e242aac3176c79f189fe31bba82"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_prestart_synthetic_refusa3/synthetic-STOP.json",
+    "bytes": 43,
+    "sha256": "b4e0993a082ce77dfdb2f8365389e17f72d741a065a4d4e879dbd21ca95df88c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve0/capture/20261007T210124Z/capture.json",
+    "bytes": 3552,
+    "sha256": "e43e0e1a7792f883169b39e1c394574512cd234ee0c5f3669b3a5fcbf0606ca0"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve0/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve0/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve0/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve0/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve0/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve0/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve1/capture/20261007T210124Z/capture.json",
+    "bytes": 3552,
+    "sha256": "13e20de4cea2fe27ecc1210733dfc1539de5786a52d48aaec03fe430e070922d"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve1/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve1/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve1/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve1/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve1/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve1/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve2/capture/20261007T210124Z/capture.json",
+    "bytes": 3552,
+    "sha256": "b1ff1878db497d7356e2b9219be7b413a233822867e009b971058db6807f5191"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve2/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve2/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve2/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve2/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve2/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve2/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve3/capture/20261007T210124Z/capture.json",
+    "bytes": 3552,
+    "sha256": "9a313edb341c42707507a77c1c06d1aaddc29d8361e37a33271b9c884e69c4a3"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve3/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve3/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve3/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve3/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve3/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve3/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve4/capture/20261007T210124Z/capture.json",
+    "bytes": 3553,
+    "sha256": "fe34bea4e473a2f8abeb734dfc9b28a17b561f98b6b345b28ecb5d87d6632832"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve4/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve4/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve4/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve4/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve4/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve4/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve5/capture/20261007T210124Z/capture.json",
+    "bytes": 3552,
+    "sha256": "e8f30f41dd7149f0de13cad1c863ede7c3f5a3f34406b36ef877f14ff2cedecd"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve5/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve5/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve5/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve5/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve5/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve5/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve6/capture/20261007T210124Z/capture.json",
+    "bytes": 3552,
+    "sha256": "cf400fc15e72af390317fc174bd17295bec4066df98a9ec8ad47d314a61d819f"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve6/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve6/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve6/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve6/capture/20261007T210124Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve6/capture/20261007T210124Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_real_batch_parser_resolve6/capture/20261007T210124Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re0/capture/20261007T210124Z/capture.json",
+    "bytes": 1428,
+    "sha256": "e7fa93122b237cd211d3b6c0611d66886977643aedf0a9148edee0a357921b9c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re0/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re0/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re0/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re0/synthetic-STOP.json",
+    "bytes": 44,
+    "sha256": "897a28f1455a1a3b9a90f4bdc7154227098cec5c012efb6da7b6a4485846a6d5"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re1/capture/20261007T210124Z/capture.json",
+    "bytes": 1427,
+    "sha256": "4650095df7ef04c7abcb2cc15eb2a73555a6a421a3712f66ea9e50e9c8edefe5"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re1/capture/20261007T210124Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re1/capture/20261007T210124Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re1/capture/20261007T210124Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp/test_sentinel_between_cases_re1/synthetic-STOP.json",
+    "bytes": 44,
+    "sha256": "897a28f1455a1a3b9a90f4bdc7154227098cec5c012efb6da7b6a4485846a6d5"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop0/capture/20261007T210219Z/capture.json",
+    "bytes": 2730,
+    "sha256": "d17c79df8b10d95ccb616d40db0c9da79b9120a8029854f948ee024d043793b4"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop0/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 27,
+    "sha256": "e0a0250c47d9730f99a5bf8bdd15ca5f39611d9ce9fc8bdc4c3393ae0066b178"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop0/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop0/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop1/capture/20261007T210219Z/capture.json",
+    "bytes": 2729,
+    "sha256": "64e67e9a51dc39843bc91db1eaddd2ae860d14972bcd3b1fe9332416e9ea4095"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop1/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 27,
+    "sha256": "e0a0250c47d9730f99a5bf8bdd15ca5f39611d9ce9fc8bdc4c3393ae0066b178"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop1/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop1/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop2/capture/20261007T210219Z/capture.json",
+    "bytes": 2851,
+    "sha256": "4cd1ebd58f932bb329f887efe5da58383753512aed747e64cc4abfe2a5642782"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop2/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 103,
+    "sha256": "472972deb9f347fab673ff96580ee2bd2d9a58178c0110ee4d3d6a8bac6ad481"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop2/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop2/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop3/capture/20261007T210219Z/capture.json",
+    "bytes": 2851,
+    "sha256": "31641b63a84dc9aa98c4cc64f862c4e255baef9d658ad214465c1052b891918e"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop3/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 103,
+    "sha256": "472972deb9f347fab673ff96580ee2bd2d9a58178c0110ee4d3d6a8bac6ad481"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop3/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop3/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop4/capture/20261007T210219Z/capture.json",
+    "bytes": 2707,
+    "sha256": "4ef94b20c88b2fbabd2ec2df051d12bac22dcf730ca181d58e37c3f640fbea37"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop4/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop4/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop5/capture/20261007T210219Z/capture.json",
+    "bytes": 2706,
+    "sha256": "f52aa4f89e128b33a0efa81b99c53e66ae3c7547616fd69398bb16f9935caf92"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop5/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_child_budget_failure_stop5/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/capture.json",
+    "bytes": 3550,
+    "sha256": "92b84c42a369bbe6149a2a8473ab3c951622ef7e5f1965cebd3c6eb2b077728e"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe0/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/capture.json",
+    "bytes": 3550,
+    "sha256": "edeb6c132784b973ea84efa5caf7272cfe8b2c3bd9f21eeb81d9594852570775"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe1/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/capture.json",
+    "bytes": 3550,
+    "sha256": "1b790d96c97ccf71fc51890226a2e286ce94dd1e748e7aead453a50f78b227f6"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe2/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/capture.json",
+    "bytes": 3545,
+    "sha256": "469f5850c84511ae29ec6f73e4b8ca48e9867b8ec586fd920fd726a9e31c86bf"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_pf_choice_stays_independe3/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_prestart_synthetic_refusa0/capture/20261007T210219Z/capture.json",
+    "bytes": 829,
+    "sha256": "3669d9f7eadb10f09cffd199d9ebfe03ee54825d9a8872947cd5830cbd9cb054"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_prestart_synthetic_refusa0/synthetic-STOP.json",
+    "bytes": 43,
+    "sha256": "b4e0993a082ce77dfdb2f8365389e17f72d741a065a4d4e879dbd21ca95df88c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_prestart_synthetic_refusa1/capture/20261007T210219Z/capture.json",
+    "bytes": 828,
+    "sha256": "19db2428f13e15d92bfab583e9705eb2e505e946ec13a7b6c96fbf60d17c1b21"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_prestart_synthetic_refusa1/synthetic-STOP.json",
+    "bytes": 43,
+    "sha256": "b4e0993a082ce77dfdb2f8365389e17f72d741a065a4d4e879dbd21ca95df88c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_prestart_synthetic_refusa2/capture/20261007T210219Z/capture.json",
+    "bytes": 828,
+    "sha256": "19db2428f13e15d92bfab583e9705eb2e505e946ec13a7b6c96fbf60d17c1b21"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_prestart_synthetic_refusa2/synthetic-STOP.json",
+    "bytes": 43,
+    "sha256": "b4e0993a082ce77dfdb2f8365389e17f72d741a065a4d4e879dbd21ca95df88c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_prestart_synthetic_refusa3/capture/20261007T210219Z/capture.json",
+    "bytes": 829,
+    "sha256": "3669d9f7eadb10f09cffd199d9ebfe03ee54825d9a8872947cd5830cbd9cb054"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_prestart_synthetic_refusa3/synthetic-STOP.json",
+    "bytes": 43,
+    "sha256": "b4e0993a082ce77dfdb2f8365389e17f72d741a065a4d4e879dbd21ca95df88c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/capture.json",
+    "bytes": 3553,
+    "sha256": "24820e0a593a61d22d686831b871d7c58035dd92e8eddc8f058188c6c919eef7"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve0/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/capture.json",
+    "bytes": 3551,
+    "sha256": "29949a52c3685c254730ac8e2f2b366d93acc05aa25ed51f28701903f50dfdba"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve1/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/capture.json",
+    "bytes": 3552,
+    "sha256": "9babc67ed313bc1b14a79009a63aab0f150512fcfd04da7245535eeac2c30782"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve2/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/capture.json",
+    "bytes": 3553,
+    "sha256": "39d1c80014cf21075763598eedb137fcbca25405b36b81feb5892ed0833f929f"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve3/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/capture.json",
+    "bytes": 3553,
+    "sha256": "72f8250b68ae05210d7db818550af21027f72bd1069d8031f9bba3dfd0a8acb3"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve4/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/capture.json",
+    "bytes": 3552,
+    "sha256": "7c9344631732163668c5a4d0334e08a7eaaba8a1f5bf4364b369c9dcac730559"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve5/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/capture.json",
+    "bytes": 3552,
+    "sha256": "307ea9db193c2f5c9817939f2f238c624b85638293f42f60f7a34be1b5e55ad3"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/offline-review-b.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/offline-review-b.json",
+    "bytes": 399,
+    "sha256": "367423d0beef797979b793122e48b74c49c729e42ada695fe8d8c9c39d36aa75"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_real_batch_parser_resolve6/capture/20261007T210219Z/offline-review-b.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re0/capture/20261007T210219Z/capture.json",
+    "bytes": 1428,
+    "sha256": "79d76c5edfabd01a8f5ec8f29383b223a8ed8e881c65bbbd3154e2f5759ebc14"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re0/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re0/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re0/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re0/synthetic-STOP.json",
+    "bytes": 44,
+    "sha256": "897a28f1455a1a3b9a90f4bdc7154227098cec5c012efb6da7b6a4485846a6d5"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re1/capture/20261007T210219Z/capture.json",
+    "bytes": 1427,
+    "sha256": "ebb75cd0158920f9c828ee4e6d106824e4e39da8a6c45c754ad7bfceff906fc0"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re1/capture/20261007T210219Z/offline-review-a.budget.json",
+    "bytes": 28,
+    "sha256": "80a48b0d9ec2d58f79a4ab5c7849c299e37e2585e984ec41fae7ce664e391591"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re1/capture/20261007T210219Z/offline-review-a.json",
+    "bytes": 399,
+    "sha256": "3255b0f3224a3eff73e98f517f4887e2ec222b64e101931d55b46720af9b9125"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re1/capture/20261007T210219Z/offline-review-a.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest-temp-final/test_sentinel_between_cases_re1/synthetic-STOP.json",
+    "bytes": 44,
+    "sha256": "897a28f1455a1a3b9a90f4bdc7154227098cec5c012efb6da7b6a4485846a6d5"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest.final.stdout.txt",
+    "bytes": 99,
+    "sha256": "873b262ca1e465ce2af6ec30ff6699ad8bfc5c5a07b773739cb4db50c9014b40"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/pytest.stdout.txt",
+    "bytes": 99,
+    "sha256": "6c51dd2925294bb87b519975230be3492ab182f9fda3e254719c1354c906691c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_child_budget_failure_stop0.json",
+    "bytes": 4372,
+    "sha256": "4c8881909736ddc5030cc75aa4f29db844ea427ca3c04f313910f22b1974ed11"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_child_budget_failure_stop1.json",
+    "bytes": 4364,
+    "sha256": "420567045aa713387a07aa8275bdd750d150b6ccc79c7a78297c6870b35d4eed"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_child_budget_failure_stop2.json",
+    "bytes": 4509,
+    "sha256": "a7b7444e06b63cbf89e830412299284a1f77c3a4a74049962f0ddf26fa4a9221"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_child_budget_failure_stop3.json",
+    "bytes": 4502,
+    "sha256": "aadea74d3a6b0fb2629ff3011b0784442bb961d94c3b78e6a0ed1639f6e2cd1b"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_child_budget_failure_stop4.json",
+    "bytes": 4346,
+    "sha256": "c5d92dd59824a3831ae2dc23ba7b0014fbd080e9e3fdb7739819f0f06274e480"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_child_budget_failure_stop5.json",
+    "bytes": 4338,
+    "sha256": "b9108cfe2167b036d9f488b10dbf86293a046195f9985fa7880cc2327807a39c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_direct_real_child_parser_0.json",
+    "bytes": 206,
+    "sha256": "35c519fc5d81f6eff7035db158c1b7057e9be7111b1d3b0707cccb87773c6084"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_direct_real_child_parser_1.json",
+    "bytes": 204,
+    "sha256": "73fc4a9662f1c2c3cc2d2c9c5e60be1a4ab81ab66f31007bb917f0a23c84b51a"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_direct_real_child_parser_2.json",
+    "bytes": 250,
+    "sha256": "066eb277dc7787cc59b96db3500e77967d09a63840cd46a74f5c49709ad1597d"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_direct_real_child_parser_3.json",
+    "bytes": 253,
+    "sha256": "424bf3d05552d390d7cea9aa2ef5c2e52d87349793772b95c481e169793e8e57"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_direct_real_child_parser_4.json",
+    "bytes": 296,
+    "sha256": "584d60afdf531e5f114c48aba50ef3b4d55a5d92b5a538b6548778018a783be1"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_direct_real_child_parser_5.json",
+    "bytes": 296,
+    "sha256": "c8b37f6d4ee78f177b42e335f3e77339f6f464e0ab9581b25b21c49f538aef6a"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_direct_real_child_parser_6.json",
+    "bytes": 339,
+    "sha256": "228fda862dfb03ddc25e815441caeba84f94c283803dac41863ffbb67b10db93"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_pf_choice_stays_independe0.json",
+    "bytes": 6347,
+    "sha256": "3d406396d1ea2f79c300cd08cab919fa685747f6bddfb3aa1c8bd7496e5e58fa"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_pf_choice_stays_independe1.json",
+    "bytes": 6337,
+    "sha256": "f2df8199a57c4307e792265e82307144f9106e71a702e913062fbad3614147a4"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_pf_choice_stays_independe2.json",
+    "bytes": 6338,
+    "sha256": "fa1490b54948b81d0e8df9e657fc3cee01d32744b5dd0b9aa779e81d3f12bfd7"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_pf_choice_stays_independe3.json",
+    "bytes": 6323,
+    "sha256": "cb562ad3d8e6f833f785fd59e4289b87533b0816d126419038f8fdbed6d9db62"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_prestart_synthetic_refusa0.json",
+    "bytes": 1261,
+    "sha256": "46bbd446f506b9a1a2301931cc29d0adbfca3e0fc973b2e9fdaa9726e31bd819"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_prestart_synthetic_refusa1.json",
+    "bytes": 1259,
+    "sha256": "b083e6141a97dfec5f54a78ea91f423ecfcf2b1377a17b15b90dec5f71cc6942"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_prestart_synthetic_refusa2.json",
+    "bytes": 1305,
+    "sha256": "838c7059dc1bb15b5ed3893d34b25f0d37f29be88cbfababf76cb9d2acc00f9e"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_prestart_synthetic_refusa3.json",
+    "bytes": 1308,
+    "sha256": "a4b58c07c3c861d9a19b4c440413b4f5b71a805c0fcf376a22a252d6ab02df2c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_real_batch_parser_resolve0.json",
+    "bytes": 6238,
+    "sha256": "4faa810b451c6e3f649504f65f302759c5a886fda98996d982c8b43617343120"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_real_batch_parser_resolve1.json",
+    "bytes": 6227,
+    "sha256": "001cae9bc5fc72491fe523f23a809a2dc1209929eadc8628031b7e9f84bb3725"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_real_batch_parser_resolve2.json",
+    "bytes": 6274,
+    "sha256": "3613ca2c39fe7eb67f8193c21f397a6aad3e9019f3d0776880d820a13231e531"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_real_batch_parser_resolve3.json",
+    "bytes": 6285,
+    "sha256": "8f69362e5ed192a71a6ae1ee8fc352914d5d4e487561f233b6eae688e6459220"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_real_batch_parser_resolve4.json",
+    "bytes": 6328,
+    "sha256": "0be1013eb5219858880910da1d5fe53eef042511b52dd029e526098dce91966e"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_real_batch_parser_resolve5.json",
+    "bytes": 6320,
+    "sha256": "bca9eba631a366d1f42e406907ed06eb1f389970af39abc1cf7b000869c1951e"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_real_batch_parser_resolve6.json",
+    "bytes": 6363,
+    "sha256": "0ce180aac224e9a53a124d11ae32e0b96802d5b085cfd9a83578f8e24757f2c4"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_sentinel_between_cases_re0.json",
+    "bytes": 3001,
+    "sha256": "c10022e1d6c65a3a5a74544558c4a69b3a943058141ce18a7fd7e796363e7a84"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/raw-controls/test_sentinel_between_cases_re1.json",
+    "bytes": 2993,
+    "sha256": "b59baa6e448a2b6067bc0a6ed1619f26b05f15c406cab50eae99eafa5f1ef86e"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/receipt-before-import-check.json",
+    "bytes": 47715,
+    "sha256": "20b824d335d5f6f5f9582c7fb740d8adb723f896cf17fea3de499602e72b40c0"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/receipt.json",
+    "bytes": 48074,
+    "sha256": "8f7afaef3200989d5294cfa2dd70a5a9ca1a93b40cd58438b02c8add9cbd57bc"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/review-start.json",
+    "bytes": 1308,
+    "sha256": "5e026ac09eeeca39588afb00696bc950055c7ac5c47f0e7554bbe20963ef21b6"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/review.ru.md",
+    "bytes": 4553,
+    "sha256": "7b7cf9e0e782659623ec1f70cea9c2f20c673c724ff19d7eab65de36161a91cd"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/app/adapters/discovery/live_discovery.py",
+    "bytes": 95295,
+    "sha256": "702c67ee3e9c0be0c0f3a249dc8858dd9b6c91ec4a20e63ce3c86e4617640bb6"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/app/adapters/page_classifier.py",
+    "bytes": 43654,
+    "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/app/adapters/scholarship/web_scholarships.py",
+    "bytes": 61886,
+    "sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/app/adapters/search/intent.py",
+    "bytes": 12990,
+    "sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/app/catalogue/discovery.py",
+    "bytes": 11829,
+    "sha256": "717ea35eaddadc5b3db7a10c3b92280e6beb137f46b3bbffeadec46c08572b02"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/evaluation/research/live.py",
+    "bytes": 58549,
+    "sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/evaluation/research/mapping.py",
+    "bytes": 11675,
+    "sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/evaluation/research/schema.py",
+    "bytes": 6411,
+    "sha256": "313a92ebeadcd534b8731b5a3254a2f00ffbd9d99a16795b79d1d7a2d41ce924"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/source-pinned/backend/tests/test_programme_purpose_capture.py",
+    "bytes": 4002,
+    "sha256": "172fcbed89a25dccfa8ddac542a5de9426c1740376d74ab8405dce59c703253d"
+  },
+  {
+    "path": "reviews/expert_a/applied-harness-review/test_independent_cli_choices.py",
+    "bytes": 11018,
+    "sha256": "bf4e53006bcfca81ca4440d0e6afced22aa7e40fba34987ffbdebd05fe033a34"
+  },
+  {
+    "path": "reviews/expert_a/independent-readers.attempt1.stderr.txt",
+    "bytes": 1128,
+    "sha256": "a4abe33208576c8cce17d259df21c3c73747d5ece770fede211dfa28c4e44f7d"
+  },
+  {
+    "path": "reviews/expert_a/independent-readers.attempt1.stdout.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/independent-readers.offline.json",
+    "bytes": 36979,
+    "sha256": "9f9a94a4025dcac29ca09e8aafeaabf524eb6498ed6a15dd9720d50bbb270511"
+  },
+  {
+    "path": "reviews/expert_a/independent-readers.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/independent-readers.stdout.txt",
+    "bytes": 353,
+    "sha256": "dd6b9f64b94d9d8c9c4eee38854c368adcc0f8276c0ad7fa9d2e729fee90345d"
+  },
+  {
+    "path": "reviews/expert_a/independent-scope-negatives.offline.json",
+    "bytes": 15925,
+    "sha256": "4be1b6b239784e89a2fe841f4c335f0f7e1c3fe8abcdc08aa6566dd5af01db27"
+  },
+  {
+    "path": "reviews/expert_a/independent-scope-negatives.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/independent-scope-negatives.stdout.txt",
+    "bytes": 1573,
+    "sha256": "5dfc7c9925b50ecba4d27cabd5a4d8006f25b71d6984c37337f3f3d9e6424f4f"
+  },
+  {
+    "path": "reviews/expert_a/independent-scoped.tests.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/independent-scoped.tests.stdout.txt",
+    "bytes": 8068,
+    "sha256": "da0b4a7f621a229fa9175f868b6e0bd206bd46727182c04f37dbee36890698b7"
+  },
+  {
+    "path": "reviews/expert_a/proposal-pinned/programme-identity-before-funding.patch",
+    "bytes": 5115,
+    "sha256": "d549e820b6090395dfd3fcba67ebf43e195c06953d8078a76c48a0805c0df526"
+  },
+  {
+    "path": "reviews/expert_a/proposal-pinned/proposed_page_classifier.py",
+    "bytes": 41166,
+    "sha256": "ed79828af03c2ec2664705b13d1e04328c29fa5e433465cb703035dacf8135e6"
+  },
+  {
+    "path": "reviews/expert_a/proposal-pinned/source-manifest.json",
+    "bytes": 2421,
+    "sha256": "5024c2707d24d4acddc03340e83bdda67c416cbd8adeed2cb4492c72039c3ead"
+  },
+  {
+    "path": "reviews/expert_a/proposal-pinned/test_programme_funding_scope.py",
+    "bytes": 3977,
+    "sha256": "a502f059d62710d1e6fdf741c7d8f52f5920be5cca9c739e57f07726e1b4f434"
+  },
+  {
+    "path": "reviews/expert_a/replay_independent_readers.py",
+    "bytes": 6682,
+    "sha256": "71d69bd329c57b3a01f79a2c3e902df97b077e56d193b897e7194beace6e1411"
+  },
+  {
+    "path": "reviews/expert_a/replay_independent_scope_negatives.py",
+    "bytes": 5110,
+    "sha256": "c5859664e979e68e006f74c0fda1ecb5b2e0006b7cf1a904c0dbac37d48bf23f"
+  },
+  {
+    "path": "reviews/expert_a/retained-wits/1ad11c46fa894ecfacf4423150e42b74.body",
+    "bytes": 29400,
+    "sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87"
+  },
+  {
+    "path": "reviews/expert_a/retained-wits/1ad11c46fa894ecfacf4423150e42b74.meta.json",
+    "bytes": 515,
+    "sha256": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c"
+  },
+  {
+    "path": "reviews/expert_a/review-start.manifest.json",
+    "bytes": 1452,
+    "sha256": "4032e5a59ff14ee01662ed1888ed62fd1210b7bcbda830a7f1a90acddc632da0"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/actual-readers.offline.json",
+    "bytes": 39526,
+    "sha256": "e51d1207e88672e5b42dcca07ba3c8153908425929f2972027551570863ecf20"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/all-tests.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/all-tests.stdout.txt",
+    "bytes": 4449,
+    "sha256": "c9f0cc63a3473f022b1260a1a5126a122b903cc57c03d175eed11b08f93cf9cf"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/proposal-pinned/programme-identity-before-funding.patch",
+    "bytes": 6724,
+    "sha256": "df94273e9a2ebd3d920a954993011f9c82830f4b0833703f5cdf78a2360d31ad"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/proposal-pinned/proposed_page_classifier.py",
+    "bytes": 42732,
+    "sha256": "bd21146bff824c059defa47ce2a1e5e3490d34822a2485c3b4dfb16116ae5303"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/proposal-pinned/source-manifest.json",
+    "bytes": 2423,
+    "sha256": "74c8b45a42481e284f84537f6d49cee409f96e1dfe2cc95c0de5f9af2750d81f"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/proposal-pinned/test_programme_funding_scope.py",
+    "bytes": 3977,
+    "sha256": "a502f059d62710d1e6fdf741c7d8f52f5920be5cca9c739e57f07726e1b4f434"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/readers-replay.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/readers-replay.stdout.txt",
+    "bytes": 1828,
+    "sha256": "a5e2594e695871c6050bb371c8ecafb5832a0f653904325bd4109b4f40c87ada"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/receipt.json",
+    "bytes": 3103,
+    "sha256": "290bdc669b186e1c83d2142aefa78828620b8f4a80f9d8df459a9349a6733a35"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/replay_readers.py",
+    "bytes": 7778,
+    "sha256": "3094ec66b2c8194fa334605c5ef54d98b9c361704fe54d9d6ef97be6a5fe4f23"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/replay_scope.py",
+    "bytes": 4337,
+    "sha256": "ea5db523bd5c7914cbff2ea99c8b468caddc5a07bfbe5cac2a2cbc432baf0fb9"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/review-start.manifest.json",
+    "bytes": 1098,
+    "sha256": "9626535d04162cee83e991a25728ee8243bfcd20a78edd8c34a4e2a395ee13ba"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/review.ru.md",
+    "bytes": 6062,
+    "sha256": "e01223b9ef9525194f1bc8e5c2f069c9b5e1ef828c5a0d392aca7f3648be3e91"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/scope-controls.offline.json",
+    "bytes": 25479,
+    "sha256": "8b8b65064f7a360ea83b2ee1e004bb3e9bf4b52f09b6e1ef6f1e59bfc08928a6"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/scope-replay.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/scope-replay.stdout.txt",
+    "bytes": 2192,
+    "sha256": "7c35c9a51db00199d809258ba6ec5e0004e9a88caf44a9c141c28d468f8156b5"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/scope-tests.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/scope-tests.stdout.txt",
+    "bytes": 3329,
+    "sha256": "7771ba4e8ac89ccf61f3a01cddb73e66c1f89d22b97dcb4ec94aa8e232fc2386"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/test_readers.py",
+    "bytes": 2353,
+    "sha256": "2c68507ec3c0fdc6f047ce8a7b22031e008b3137ca08a0c6a8257af76a31f5dd"
+  },
+  {
+    "path": "reviews/expert_a/revision2-review/test_scope.py",
+    "bytes": 1387,
+    "sha256": "2176523e41c868ab3f111f3a732f6d3105c551799ddd475147aeb1b874c3f485"
+  },
+  {
+    "path": "reviews/expert_a/revision3/all-replay.offline.json",
+    "bytes": 153125,
+    "sha256": "476d9a5cd183d51edc7a795fd2f402802c3b9dd6257a823c7d9b1952c9383962"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-fixture-note.txt",
+    "bytes": 505,
+    "sha256": "8b57c1b2ff4cbfe1f9bacb3dcb885e32ec55b85c756e1fe4c3b74e17693273b7"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-pytest-frozen.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-pytest-frozen.stdout.txt",
+    "bytes": 10733,
+    "sha256": "5f36428178fa5c5190f3d09a6be062af526b9ced1cd71027350f4827cffd9a96"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-pytest-proposal.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-pytest-proposal.stdout.txt",
+    "bytes": 1839,
+    "sha256": "113e4f87c7948fae1c2dff060c764220c68a3a92c21afc81451b83fdb23f6d34"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-ruff-format-source.stderr.txt",
+    "bytes": 462,
+    "sha256": "28adeec3319439b944dd7a412513b5e166c0399ba4011cc87160fcecf8496b41"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-ruff-format-source.stdout.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-ruff-source.stderr.txt",
+    "bytes": 462,
+    "sha256": "28adeec3319439b944dd7a412513b5e166c0399ba4011cc87160fcecf8496b41"
+  },
+  {
+    "path": "reviews/expert_a/revision3/attempt1-ruff-source.stdout.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/before-final-controls-all-replay.offline.json",
+    "bytes": 137279,
+    "sha256": "81369464f9f646f37ceed5d29f00683ff5f553ca7a0055fcf89e0775b0dccb7b"
+  },
+  {
+    "path": "reviews/expert_a/revision3/before-final-controls-pytest-proposal.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/before-final-controls-pytest-proposal.final.stdout.txt",
+    "bytes": 630,
+    "sha256": "5395d8f87f1b565f0adad0caacf22de838f678656f44936b0ca6a3adbcf864f4"
+  },
+  {
+    "path": "reviews/expert_a/revision3/before-final-controls-replay-all.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/before-final-controls-replay-all.stdout.txt",
+    "bytes": 133,
+    "sha256": "988c1ea4df13b3e05ae344f79682d3b4a85293dcc807d9fd559dfcb2d26265fe"
+  },
+  {
+    "path": "reviews/expert_a/revision3/conftest.py",
+    "bytes": 766,
+    "sha256": "914b936285bf9fb7e73dbe79e4a5f41b67510f6a9810337159be3addeb95ac63"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pre-format-programme-identity-funding-links.patch",
+    "bytes": 12223,
+    "sha256": "139e1b30812c3dc43751cce5eae8af322f2f8b0f7a09e5c4439f5c19a660f48f"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pre-format-proposed_page_classifier.py",
+    "bytes": 43638,
+    "sha256": "cab5f4b90cecad3c354d059700fe1b6637f39bc30ca3b122a91969745a6be3e2"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pre-format-proposed_web_scholarships.py",
+    "bytes": 61886,
+    "sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pre-format-ruff-source.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pre-format-ruff-source.stdout.txt",
+    "bytes": 2951,
+    "sha256": "f5cbbbf8ffeb1c62b0e662a7dfb55238d5679bda33a63da7e49d48cf55f6021c"
+  },
+  {
+    "path": "reviews/expert_a/revision3/programme-identity-funding-links.patch",
+    "bytes": 12822,
+    "sha256": "d388913faaec50c5e98d03798645f16a608fddca7da16ce2fe9cbd40022a77ce"
+  },
+  {
+    "path": "reviews/expert_a/revision3/proposed_page_classifier.py",
+    "bytes": 43654,
+    "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c"
+  },
+  {
+    "path": "reviews/expert_a/revision3/proposed_web_scholarships.py",
+    "bytes": 61885,
+    "sha256": "b7330166872b63052c58acf8d4a1c3b8748f2239090684bf8f5f236d6043fea9"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pytest-frozen.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pytest-frozen.final.stdout.txt",
+    "bytes": 9696,
+    "sha256": "ae6b1facfe3614b57fe3866ea1f9f6f426f707a9ba7eab8b2edc8194338abbc0"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pytest-frozen.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pytest-frozen.stdout.txt",
+    "bytes": 9696,
+    "sha256": "d1b1c607db68802a5a6b39eef6a9b483240206adb239b46a492d52a0993414a1"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pytest-proposal.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pytest-proposal.final.stdout.txt",
+    "bytes": 630,
+    "sha256": "6d25419368ee19e46520247627dca6ff719f966d5476ad85aa1cfd1af1cc48f9"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pytest-proposal.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/pytest-proposal.stdout.txt",
+    "bytes": 630,
+    "sha256": "5395d8f87f1b565f0adad0caacf22de838f678656f44936b0ca6a3adbcf864f4"
+  },
+  {
+    "path": "reviews/expert_a/revision3/receipt.json",
+    "bytes": 5415,
+    "sha256": "2d2361c477edc06c625eab030c3345e166f0fbd8144ee99d44706ebc65996b00"
+  },
+  {
+    "path": "reviews/expert_a/revision3/replay-all.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/replay-all.stdout.txt",
+    "bytes": 100,
+    "sha256": "2e9d653fa154b754a7240730b935d954511dd039ada862396e42d8f5070baba2"
+  },
+  {
+    "path": "reviews/expert_a/revision3/replay_all.py",
+    "bytes": 4417,
+    "sha256": "9e6222aa6b9e66e4548e166a75bea5cb770e89d2ea1eecac51dd1add91122130"
+  },
+  {
+    "path": "reviews/expert_a/revision3/review.ru.md",
+    "bytes": 6091,
+    "sha256": "e31303e26a792015e795612e2219808f4ad41619e58314958dae216f3bdb5fe3"
+  },
+  {
+    "path": "reviews/expert_a/revision3/ruff-format-source.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/ruff-format-source.final.stdout.txt",
+    "bytes": 26,
+    "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+  },
+  {
+    "path": "reviews/expert_a/revision3/ruff-format-source.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/ruff-format-source.stdout.txt",
+    "bytes": 26,
+    "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+  },
+  {
+    "path": "reviews/expert_a/revision3/ruff-source.final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/ruff-source.final.stdout.txt",
+    "bytes": 19,
+    "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  {
+    "path": "reviews/expert_a/revision3/ruff-source.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reviews/expert_a/revision3/ruff-source.stdout.txt",
+    "bytes": 38,
+    "sha256": "aac3a0503d8b95052cc85fb9f1717dc82b74aa55853a5aa9749b41e30275d472"
+  },
+  {
+    "path": "reviews/expert_a/revision3/source-manifest.json",
+    "bytes": 3514,
+    "sha256": "0126abbd6a0f6a064ca42db09ea0e64c7d3f5930150161be3fa3d1c9ff6547d4"
+  },
+  {
+    "path": "reviews/expert_a/revision3/test_funding_discovery.py",
+    "bytes": 14002,
+    "sha256": "1e12ebe87dfb10f9d16e88ec2b4e56f3185d1536a0e8d0211b806027d8e8c726"
+  },
+  {
+    "path": "reviews/expert_a/root-funding-negative.original.json",
+    "bytes": 1474,
+    "sha256": "bc55d52907ef8855d25dbcf96b2eb9134daaf4708bb587d8480625a18942a063"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/page_classifier.py",
+    "bytes": 37051,
+    "sha256": "2f73f7c662ae0da1c31de6f23a9e068574c43f648a2472765a5398c2a093b158"
+  },
+  {
+    "path": "reviews/expert_a/source-original/backend/app/adapters/requirements/web_requirements.py",
+    "bytes": 43883,
+    "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2"
+  },
+  {
+    "path": "reviews/expert_a/test_independent_scoped_classifier.py",
+    "bytes": 1397,
+    "sha256": "39acbc1e4282b4cd0ef0634dd506fc0330ce2fcd3837627c17b95de3880bc335"
+  },
+  {
+    "path": "reviews/expert_a/wits-academic-blocks.offline.json",
+    "bytes": 2505,
+    "sha256": "a42f3896a767d3ad56de71efa8d6b2d98dd7dbcaa312fbf84fd929d84352f4d1"
+  },
+  {
+    "path": "root-funding-negative.json",
+    "bytes": 1474,
+    "sha256": "bc55d52907ef8855d25dbcf96b2eb9134daaf4708bb587d8480625a18942a063"
+  },
+  {
+    "path": "run_demo.py",
+    "bytes": 1876,
+    "sha256": "ee6cb512586779952fe3aee799c80632ddec5aa82ffc3809e3a83a1432f64baf"
+  },
+  {
+    "path": "run_frontend.py",
+    "bytes": 1164,
+    "sha256": "3ba209c52c4bfd576283c546b9ef49468257e148d86c411df35e1e286f84c27a"
+  },
+  {
+    "path": "run_gates.py",
+    "bytes": 2770,
+    "sha256": "9b226cbc296bf25d14243c2754faa6d3d706997872ec330627ba32ce0e632efc"
+  },
+  {
+    "path": "source-gates.json",
+    "bytes": 1564,
+    "sha256": "ce552d87e6323a56beaef9b3f293ed113f6cf1cfe31620a75991f40b825aca9c"
+  },
+  {
+    "path": "test_programme_funding_scope.proposed.py",
+    "bytes": 12252,
+    "sha256": "5a228f9ac09318da9199af77509542153757f33b9524fe35fce3b46afa017162"
+  },
+  {
+    "path": "test_programme_purpose_capture.proposed.py",
+    "bytes": 3962,
+    "sha256": "6554f82b15ed469cda93cca17d1d466ce3d6ca53ff9368879d1d94ff7bc493a3"
+  },
+  {
+    "path": "wits-heading.proposal-replay.json",
+    "bytes": 397,
+    "sha256": "c564fc57bd111ee0e92c3591216fb2bd04afc598e2865c2312ebc66cfc57d1a4"
+  },
+  {
+    "path": "wits-programme.classifier-diagnosis.json",
+    "bytes": 1051,
+    "sha256": "1b86e8aa5c47ebe2271009dae6ee16d7ae4de38c4aa648dabbd0e56d2caca223"
+  },
+  {
+    "path": "wits-programme.html",
+    "bytes": 29400,
+    "sha256": "88d1f716c82840fa66317ff1ceb42a152439a924d7625c0d2ef18a0f315f0a87"
+  },
+  {
+    "path": "wits-programme.meta.json",
+    "bytes": 515,
+    "sha256": "d54f742c251cd9cd36c06ee4b89a74a7c1ca701b829b5ffa99d6cc5701096b8c"
+  }
+]

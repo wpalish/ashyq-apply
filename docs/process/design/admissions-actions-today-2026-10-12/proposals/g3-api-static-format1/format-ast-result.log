@@ -1,0 +1,29 @@
+{
+  "status": "MECHANICAL_FORMAT_AST_EQUAL_NOT_RUNTIME_PROOF",
+  "files": {
+    "backend/app/api/routes_admissions_actions.py": {
+      "same_import_nodes": true,
+      "same_other_ast": true
+    },
+    "backend/app/main.py": {
+      "same_import_nodes": true,
+      "same_other_ast": true
+    },
+    "backend/app/api/routes_profile.py": {
+      "same_import_nodes": true,
+      "same_other_ast": true
+    },
+    "backend/tests/test_admissions_actions_api.py": {
+      "same_import_nodes": true,
+      "same_other_ast": true
+    },
+    "backend/tests/test_today.py": {
+      "same_import_nodes": true,
+      "same_other_ast": true
+    },
+    "backend/tests/test_admissions_actions_concurrency.py": {
+      "same_import_nodes": true,
+      "same_other_ast": true
+    }
+  }
+}

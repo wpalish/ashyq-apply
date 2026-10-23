@@ -1,0 +1,1 @@
+Exact applied diff changes only placement of the same bs4 BeautifulSoup import plus blank lines. Nonblank source sequence with that one import removed is identical. Initial exploratory assertion guessed PageType/constant import ordering; that assertion was wrong, not an application finding. Full actual diff confirms report import-only statement. No sources changed.

@@ -1,0 +1,38 @@
+{
+  "status": "CONFIRMED_INITIAL_REJECTION_ONLY_NEXT_REVISION_NOT_REVIEWED",
+  "A_manifest_sha256": "c3db062cd74f148c94a70113f2fe78385263295bf1a2600bdda0a69f03835554",
+  "original_files_verified": 15,
+  "native_dependencies_matched": 11,
+  "independent_original_replay": {
+    "PASS": 66,
+    "RED": 9,
+    "total": 75
+  },
+  "all_case_statuses_equal_to_A": true,
+  "independent_ownership": {
+    "total": 2,
+    "RED": 2
+  },
+  "material_original_cases": [
+    "entry_scope_read_cap.live",
+    "entry_scope_read_cap.catalogue",
+    "native_provider_refusal_then_read_cap",
+    "live_previous_success_then_capped_next",
+    "catalogue_previous_success_then_capped_next"
+  ],
+  "qualified_original_reds": 6,
+  "native_inner_controls": {
+    "PASS": 4,
+    "RED": 4,
+    "total": 8
+  },
+  "native_inner_reds_inherited": 4,
+  "strict_latch_proof": "in-memory only; no persisted STOP created",
+  "real_network_provider_model_calls": 0,
+  "denied_transport_attempts": 0,
+  "source_git_stop_label_score_writes": 0,
+  "mutable_A_next_revision_imported": false,
+  "historical_Groningen_or_Toronto_fix_proven": false,
+  "production_quality_gain": false,
+  "seal_attempt1": "Python stdin encoding error before execution; no files written; ASCII report retry"
+}

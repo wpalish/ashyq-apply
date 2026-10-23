@@ -1,0 +1,64 @@
+{
+  "scope": "FINITE_OWN_COPY_REPLAY",
+  "source_sha256": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "source_files": [
+    "app/adapters/search/__init__.py",
+    "app/adapters/search/retrieval.py",
+    "app/adapters/discovery/live_discovery.py"
+  ],
+  "ON_scenarios": [
+    "factory:meta",
+    "factory:no-retry",
+    "factory:http429",
+    "factory:timeout",
+    "factory:transport",
+    "factory:success",
+    "native:recovery-meta",
+    "native:expiry",
+    "retrieval:meta",
+    "retrieval:meta-unwrapped",
+    "retrieval:http429",
+    "caller:single-meta",
+    "caller:multi-meta",
+    "caller:single-429",
+    "caller:multi-429",
+    "state:stamp",
+    "state:expiry",
+    "state:isolation",
+    "state:reset",
+    "state:string-reason",
+    "state:stale",
+    "state:legacy-float"
+  ],
+  "OFF_comparators": [
+    "factory:meta",
+    "retrieval:meta",
+    "caller:single-meta",
+    "caller:multi-meta",
+    "factory:timeout",
+    "factory:transport",
+    "factory:success",
+    "native:recovery-meta"
+  ],
+  "normal_equality": [
+    "factory:timeout",
+    "factory:transport",
+    "factory:success",
+    "native:recovery-meta"
+  ],
+  "fresh_controls": [
+    "native factory already-created then new adapter after refusal",
+    "native expiry HTTP429 to typedNone and reverse",
+    "locally blocked retrieval charge1 vendor0",
+    "synthetic raw string vs enum type and metadata500 preservation"
+  ],
+  "harness_change": "Own copy only PLAN filename becomes REPLAY-PLAN.json; target proposed sources exact bytes. Parent no app imports. Fresh child sockets denied and only MockTransport dispatches."
+}

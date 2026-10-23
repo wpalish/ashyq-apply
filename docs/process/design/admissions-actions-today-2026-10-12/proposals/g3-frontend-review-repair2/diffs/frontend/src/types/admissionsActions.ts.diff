@@ -1,0 +1,92 @@
+--- a/frontend/src/types/admissionsActions.ts
++++ b/frontend/src/types/admissionsActions.ts
+@@ -296,7 +296,7 @@
+   && nullable(v.due, x => object(x) && fields(x, ['origin', 'local_date', 'timezone', 'official_deadline'])
+     && x.origin === 'applicant_entered' && date(x.local_date) && nullable(x.timezone, zone) && x.official_deadline === false);
+ const personal = (v: unknown) => object(v) && fields(v, ['label', 'responsible_actor', 'details', 'depends_on_task_ids'])
+-  && text(v.label, 200, 1) && ['applicant', 'school', 'recommender', 'third_party'].includes(String(v.responsible_actor))
++  && text(v.label, 200, 1) && typeof v.responsible_actor === 'string' && ['applicant', 'school', 'recommender', 'third_party'].includes(v.responsible_actor)
+   && details(v.details) && uniqueList(v.depends_on_task_ids, exact, 400);
+ const submission = (v: unknown) => object(v) && fields(v, ['entered_at', 'channel', 'reference', 'document_task_ids', 'confirmed_applicant_declaration'])
+   && moment(v.entered_at) && text(v.channel, 200, 1) && text(v.reference, 2000)
+@@ -338,6 +338,26 @@
+   return v.origin === 'legacy_v1' && fields(v, ['origin', 'profile_id', 'native_schema_version', 'revision', 'saved_settings_digest', 'settings_fingerprint'])
+     && v.native_schema_version === 'schedule-v1' && digest(v.saved_settings_digest) && digest(v.settings_fingerprint);
+ }
++/** Only typed G2 UUID/UTC fields normalize; six microsecond digits remain significant. */
++function nativeHeadUtc(value: string): string {
++  return value.replace(/^([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})(?:\.([0-9]{1,6}))?(?:Z|\+00:00)$/,
++    (_match, instant: string, fraction: string | undefined) => {
++      const micros = fraction?.padEnd(6, '0');
++      return `${instant}${micros && /[1-9]/.test(micros) ? `.${micros}` : ''}+00:00`;
++    });
++}
++function sameNativeHead(value: unknown, request: NativeHeadV1): boolean {
++  if (!isNativeHeadV1(value) || value.origin !== request.origin || value.profile_id !== request.profile_id
++    || value.native_schema_version !== request.native_schema_version || value.revision !== request.revision) return false;
++  if (value.origin === 'g2' && request.origin === 'g2') return value.client_write_uuid.toLowerCase() === request.client_write_uuid.toLowerCase()
++    && value.snapshot_digest === request.snapshot_digest && value.allocation_digest === request.allocation_digest
++    && nativeHeadUtc(value.accepted_at) === nativeHeadUtc(request.accepted_at);
++  if (value.origin === 'legacy_v2' && request.origin === 'legacy_v2') return value.persisted_sidecar_digest === request.persisted_sidecar_digest
++    && value.draft_fingerprint === request.draft_fingerprint && value.legacy_fingerprint === request.legacy_fingerprint
++    && value.observed_structural_fingerprint === request.observed_structural_fingerprint;
++  return value.origin === 'legacy_v1' && request.origin === 'legacy_v1'
++    && value.saved_settings_digest === request.saved_settings_digest && value.settings_fingerprint === request.settings_fingerprint;
++}
+ const mapping = (v: unknown) => object(v) && fields(v, ['task_id', 'legacy_key_digest', 'expected_binding_digest', 'source_preview_digest',
+   'legacy_value', 'confirmed_prepared_report', 'source_version', 'original_reported_at']) && exact(v.task_id) && digest(v.legacy_key_digest)
+   && nullable(v.expected_binding_digest, digest) && nullable(v.source_preview_digest, digest) && v.legacy_value === true
+@@ -355,7 +375,7 @@
+       && exact(v.task_id) && nullable(v.expected_binding_digest, digest) && isBindingSelectionV1(v.source) && digest(v.source_preview_digest);
+     case 'set_document_self_report': return fields(v, [...base, 'task_id', 'report']) && exact(v.task_id) && object(v.report)
+       && fields(v.report, ['state', 'entered_at', 'confirmed_personal_report'])
+-      && ['not_started', 'in_progress', 'prepared_reported', 'sent_reported', 'received_reported', 'not_needed_reported'].includes(String(v.report.state))
++      && typeof v.report.state === 'string' && ['not_started', 'in_progress', 'prepared_reported', 'sent_reported', 'received_reported', 'not_needed_reported'].includes(v.report.state)
+       && nullable(v.report.entered_at, moment) && v.report.confirmed_personal_report === true;
+     case 'set_personal_details': return fields(v, [...base, 'target', 'details']) && actionRef(v.target) && details(v.details);
+     case 'set_planning_status': return fields(v, [...base, 'application_id', 'status']) && exact(v.application_id) && (v.status === 'planning' || v.status === 'preparing');
+@@ -363,7 +383,7 @@
+     case 'declare_withdrawal': return fields(v, [...base, 'application_id', 'withdrawal']) && exact(v.application_id) && withdrawal(v.withdrawal);
+     case 'correct_declaration': return fields(v, [...base, 'application_id', 'prior_declaration', 'replacement', 'confirmed_correction'])
+       && exact(v.application_id) && event(v.prior_declaration) && object(v.prior_declaration)
+-      && ['declare_submission', 'declare_withdrawal', 'correct_declaration'].includes(String(v.prior_declaration.kind))
++      && typeof v.prior_declaration.kind === 'string' && ['declare_submission', 'declare_withdrawal', 'correct_declaration'].includes(v.prior_declaration.kind)
+       && typeof v.prior_declaration.revision === 'number' && v.prior_declaration.revision <= v.expected_revision
+       && v.confirmed_correction === true && object(v.replacement)
+       && ((v.replacement.kind === 'submission' && fields(v.replacement, ['kind', 'submission']) && submission(v.replacement.submission))
+@@ -387,7 +407,7 @@
+   && event(v.event_ref) && object(v.event_ref) && v.event_ref.kind === 'select_active_preparation';
+ const report = (v: unknown) => {
+   if (!object(v) || !fields(v, ['state', 'entered_at', 'accepted_at', 'actor', 'event_ref', 'binding_digest_at_report', 'origin', 'official_verification'])
+-    || !['not_started', 'in_progress', 'prepared_reported', 'sent_reported', 'received_reported', 'not_needed_reported'].includes(String(v.state))
++    || typeof v.state !== 'string' || !['not_started', 'in_progress', 'prepared_reported', 'sent_reported', 'received_reported', 'not_needed_reported'].includes(v.state)
+     || !nullable(v.entered_at, moment) || !nullable(v.accepted_at, utc) || !nullable(v.actor, actor)
+     || !nullable(v.event_ref, event) || !nullable(v.binding_digest_at_report, digest) || v.official_verification !== 'not_performed') return false;
+   if (v.origin === 'unreported') return v.state === 'not_started' && v.entered_at === null && v.accepted_at === null
+@@ -403,7 +423,7 @@
+ };
+ const applicationRecord = (v: unknown) => object(v) && fields(v, ['id', 'profile_id', 'target', 'label', 'details', 'status', 'created_ref', 'latest_ref', 'status_ref'])
+   && exact(v.id) && exact(v.profile_id) && target(v.target) && text(v.label, 200, 1) && details(v.details)
+-  && ['planning', 'preparing', 'submitted_declared', 'withdrawn_declared'].includes(String(v.status))
++  && typeof v.status === 'string' && ['planning', 'preparing', 'submitted_declared', 'withdrawn_declared'].includes(v.status)
+   && event(v.created_ref) && event(v.latest_ref) && nullable(v.status_ref, event);
+ const taskRecord = (v: unknown) => object(v) && fields(v, ['id', 'profile_id', 'application_id', 'origin', 'personal', 'binding', 'report', 'created_ref', 'latest_ref', 'binding_ref'])
+   && exact(v.id) && exact(v.profile_id) && nullable(v.application_id, exact) && personal(v.personal) && report(v.report)
+@@ -447,7 +467,7 @@
+   const request = v.request;
+   if (request.kind === 'select_active_preparation') return apps.length === 0 && tasks.length === 0 && object(delta.active_preparation)
+     && object(delta.active_preparation.event_ref) && delta.active_preparation.event_ref.event_id === v.event_id
+-    && delta.active_preparation.event_ref.revision === v.revision;
++    && delta.active_preparation.event_ref.revision === v.revision && sameNativeHead(delta.active_preparation.observed_head, request.observed_head);
+   if (delta.active_preparation !== null) return false;
+   if (request.kind === 'set_personal_details') return request.target.kind === 'application'
+     ? apps.length === 1 && tasks.length === 0 && object(apps[0]) && apps[0].id === request.target.id
+@@ -457,6 +477,8 @@
+     if (request.kind === 'rebind_source_task' || request.kind === 'set_document_self_report') return object(tasks[0]) && tasks[0].id === request.task_id;
+     if (request.kind === 'import_legacy_marks') return JSON.stringify(tasks.map(item => object(item) ? item.id : null))
+       === JSON.stringify(request.mappings.map(item => item.task_id));
++    if (request.kind === 'create_personal_task') return object(tasks[0]) && tasks[0].binding === null
++      && tasks[0].binding_ref === null && tasks[0].origin === 'applicant_entered';
+     return true;
+   }
+   return apps.length === 1 && tasks.length === 0 && (request.kind === 'create_application'

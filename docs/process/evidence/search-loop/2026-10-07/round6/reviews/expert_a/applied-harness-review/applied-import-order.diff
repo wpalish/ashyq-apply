@@ -1,0 +1,19 @@
+--- pinned-external
++++ applied
+@@ -12,6 +12,8 @@
+ from dataclasses import replace
+ from datetime import UTC, datetime
+ from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
++
++from bs4 import BeautifulSoup
+ 
+ from app.adapters.applicability import (
+     assess_degree_applicability,
+@@ -49,7 +51,6 @@
+ from app.schemas.claim import MAX_EXCERPT_CHARS
+ from app.schemas.money import Money
+ from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
+-from bs4 import BeautifulSoup
+ 
+ #: One official-award query after an empty walk for a confirmed programme.
+ SEARCH_FUNDING_FALLBACK = True

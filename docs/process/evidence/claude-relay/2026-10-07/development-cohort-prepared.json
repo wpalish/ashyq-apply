@@ -1,0 +1,71 @@
+{
+  "status": "PREPARED_NOT_RUN",
+  "selection": "first DEV ids in lexical order with a usable public-domain hint, one per country; no outcome-based selection",
+  "source_split": "backend/evaluation/research/expert/data/catalogue_split.2026-10-04.json",
+  "split_sha256": "4041fecd04e2613cb9800382dfeaa02d89c8a4bfdc970c122e8771f5ee6e257c",
+  "seed_sha256": "5ab134e331add59884ff5bca548dc17d5a428a7a5d69fdec09c7863babe08a58",
+  "not_in_heldout150": true,
+  "budgets": {
+    "queries": 6,
+    "reads": 60,
+    "seconds": 120
+  },
+  "cases": [
+    {
+      "university_id": "01d3bb22815c61aa8454283116cbd4fa",
+      "name": "Dalian University of Technology",
+      "country": "China (Mainland)",
+      "domain_hint": "dlut.edu.cn",
+      "site_hint": "http://www.dlut.edu.cn/",
+      "seed_id": "qs2027-464",
+      "facts_status": "UNKNOWN",
+      "programme_status": "UNVERIFIED",
+      "source": "existing catalogue seed"
+    },
+    {
+      "university_id": "01ea8dd78746c15f2655b59fd4f5deab",
+      "name": "Nagoya University",
+      "country": "Japan",
+      "domain_hint": "nagoya-u.ac.jp",
+      "site_hint": "http://www.nagoya-u.ac.jp/",
+      "seed_id": "qs2027-156",
+      "facts_status": "UNKNOWN",
+      "programme_status": "UNVERIFIED",
+      "source": "existing catalogue seed"
+    },
+    {
+      "university_id": "0386940c5cef525b3c8e7966868f5ed6",
+      "name": "University of Witwatersrand",
+      "country": "South Africa",
+      "domain_hint": "wits.ac.za",
+      "site_hint": "http://www.wits.ac.za/",
+      "seed_id": "qs2027-302",
+      "facts_status": "UNKNOWN",
+      "programme_status": "UNVERIFIED",
+      "source": "existing catalogue seed"
+    },
+    {
+      "university_id": "0480c3b293c219debd4325fe107ac27b",
+      "name": "Auckland University of Technology (AUT)",
+      "country": "New Zealand",
+      "domain_hint": "aut.ac.nz",
+      "site_hint": "http://www.aut.ac.nz/",
+      "seed_id": "qs2027-432",
+      "facts_status": "UNKNOWN",
+      "programme_status": "UNVERIFIED",
+      "source": "existing catalogue seed"
+    },
+    {
+      "university_id": "05e4d59f87261553f15d14b0cdb470d2",
+      "name": "California Institute of Technology (Caltech)",
+      "country": "United States of America",
+      "domain_hint": "caltech.edu",
+      "site_hint": "http://www.caltech.edu/",
+      "seed_id": "qs2027-007",
+      "facts_status": "UNKNOWN",
+      "programme_status": "UNVERIFIED",
+      "source": "existing catalogue seed"
+    }
+  ],
+  "next_step": "add opt-in seed-identity selectors to the evaluation canary; default cohort remains unchanged; baseline before tuning any general rule; stop globally on provider/auth/quota refusal; no purchase or provider swap"
+}

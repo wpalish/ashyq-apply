@@ -1,0 +1,10 @@
+{
+  "status": "WRITEAHEAD_CLOCK_COMPLETION_CONTROL",
+  "parent_receipt_sha256": "b2216b15b6e21b34f71de645d97276959ec0168339ed4a3a998a0964ff7b1e4b",
+  "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-genuine-canary/revision2/proposed",
+  "defect": "Successful source followed by persistence crossing original full case clock can still leave observation.error None",
+  "scope": "only final fenced checkpoint check full original clock before and after persistence; partial diagnostic without altering succeeded Job or native ledger; no new clock/caps/retries",
+  "controls": "actual raw write and first output write each advance clock3s; completed Job stays succeeded, capture gets existing wall clock error, original1s cap unchanged",
+  "network_calls": 0,
+  "repo_edits": false
+}

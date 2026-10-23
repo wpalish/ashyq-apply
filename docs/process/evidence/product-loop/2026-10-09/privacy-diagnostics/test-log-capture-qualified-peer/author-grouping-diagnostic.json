@@ -1,0 +1,21 @@
+{
+  "status": "PEER_AUTHOR_METADATA_SETUP_DIAGNOSTIC_CORRECTED_BEFORE_DELIVERY",
+  "initial_undelivered_packet": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/a-log-capture-repair-review",
+  "initial_READY": {
+    "sha256": "5f5d1a4095b4e0bb9ce0deb8150a3ed2abaaf17dc5009baffe11ca878fa879ec",
+    "bytes": 1266
+  },
+  "initial_findings": {
+    "sha256": "996ea00f17f0a0eda4115e99f57470439927c3a68b695bfb6612d8b95a74aa9f",
+    "bytes": 3232
+  },
+  "cause": "Initial subgroup classifier used a dot after module against classname::name IDs and omitted module-root hop cases. Total29/status/sameIDs proof was correct; only machine-readable subgroup values were incorrect.",
+  "correction": "Derive exact classname equality for 6+2, and exact module or module-dot prefix for21 old hop cases from immutable XML.",
+  "correct_counts": {
+    "diagnostic_groups": 6,
+    "portable_cases": 2,
+    "old_hop_parameterized": 21
+  },
+  "app_test_source_raw_results_changed": false,
+  "no_reexecution": true
+}

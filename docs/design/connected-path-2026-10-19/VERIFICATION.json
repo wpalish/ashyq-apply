@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-10-19T05:17:05.186640+00:00",
+  "baseline": "dbe9dccff36b49568d29ec50deec46c263ab44b4",
+  "source_manifest": "SOURCE_MANIFEST.json",
+  "gates": {
+    "frontend": "1029 PASS / 107 files",
+    "typecheck": "PASS",
+    "build": "PASS / inherited malformed interaction selectors repaired / no CSS syntax warnings",
+    "lint": "0 errors / 9 inherited warnings",
+    "backend": "UNCHANGED / NOT_RERUN",
+    "production": "NOT_DEPLOYED"
+  },
+  "native": {
+    "url": "http://127.0.0.1:18140",
+    "viewports": [
+      "1280x720",
+      "390x844"
+    ],
+    "case": "eb6861322a0245c1b2ec493c8f59b311",
+    "programme": "4c1133c3c604404c8d417c64bb81a001",
+    "document_task": "6ac35589303c498cbdc341e340fb3cc8",
+    "application": "b27b668fd13f42a09c45b474cfacd381",
+    "steps": [
+      "selected KU programme in plan",
+      "reviewed exact admission_documents[0] and source limitations",
+      "created source-bound task through native confirmed command",
+      "confirmed personal in_progress status",
+      "created prefilled programme application explicitly",
+      "updated personal date 2026-10-22 / Asia/Almaty",
+      "linked task to exact application through confirmed metadata command",
+      "reloaded and observed preserved task/status/date",
+      "observed personal application date in calendar",
+      "contextual document filtering and return navigation"
+    ],
+    "retained_synthetic_state": true
+  },
+  "limits": [
+    "Synthetic demo corpus does not establish university requirements.",
+    "Personal statuses are self-reports. No file uploaded or application submitted.",
+    "Date persisted by context update after trusted keyboard input, then reloaded; initial batched date fill did not update React state.",
+    "No new provider/search/security/model/deployment/backend gates.",
+    "Initial 3 frontend failures and intermediate nullable layout type error preserved separately; current gates passed.",
+    "Whole platform and production acceptance remain OPEN."
+  ]
+}

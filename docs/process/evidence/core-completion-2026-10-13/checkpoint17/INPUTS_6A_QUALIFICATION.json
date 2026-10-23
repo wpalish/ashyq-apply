@@ -1,0 +1,35 @@
+{
+  "status": "INPUT_PROVENANCE_AND_FRESHNESS_BACKEND_LOCALLY_VERIFIED_UI_NOT_INTEGRATED",
+  "at_utc": "2026-10-13T23:36:18.025893+00:00",
+  "tested_source_commit": "ab8e3d4e",
+  "native_full": {
+    "sqlite": {
+      "tests": 5826,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "coverage_percent": 94.18550992155053,
+      "exact_consumed_files": 645,
+      "primary_lab_before_after_equal": true,
+      "outside_attempts": 0,
+      "owned_cleanup_confirmed": true
+    },
+    "postgres": {
+      "tests": 5826,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "coverage_percent": 94.1808952468851,
+      "exact_consumed_files": 645,
+      "primary_lab_before_after_equal": true,
+      "outside_attempts": 0,
+      "owned_cleanup_confirmed": true
+    }
+  },
+  "static": "RUFF_FORMAT_MYPY415_PASS_SINGLE_HEAD_A0",
+  "limits": "Fenced actual normalized inputs; permanent mixed provenance; legacy unknown; detached GET current age does not rerank or rewrite saved evaluations/claims/receipts/history. No network/read DML.",
+  "frontend": "HISTORICAL848; read notices NOT_APPLIED",
+  "integration": "NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_RETAINED",
+  "remaining": "Read-context UI; retained selected-target personal edits and current claim status filter/count/paging; native Demo/Auth browser journey; live/release/operator gates separate."
+}

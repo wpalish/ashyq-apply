@@ -1,0 +1,1175 @@
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:14:1: E402 Module level import not at top of file
+   |
+12 | BASE = Path(__file__).resolve().parent
+13 | sys.path.insert(0, str(BASE))
+14 | import shadow_import
+   | ^^^^^^^^^^^^^^^^^^^^ E402
+15 |
+16 | shadow_import.install()
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:18:1: E402 Module level import not at top of file
+   |
+16 | shadow_import.install()
+17 |
+18 | import pytest
+   | ^^^^^^^^^^^^^ E402
+19 | from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+20 | from app.adapters.discovery.catalog_walker import CatalogWalker
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:19:1: E402 Module level import not at top of file
+   |
+18 | import pytest
+19 | from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+20 | from app.adapters.discovery.catalog_walker import CatalogWalker
+21 | from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:20:1: E402 Module level import not at top of file
+   |
+18 | import pytest
+19 | from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+20 | from app.adapters.discovery.catalog_walker import CatalogWalker
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+21 | from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
+22 | from app.adapters.fetching import Fetcher, FetchResult
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:21:1: E402 Module level import not at top of file
+   |
+19 | from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+20 | from app.adapters.discovery.catalog_walker import CatalogWalker
+21 | from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+22 | from app.adapters.fetching import Fetcher, FetchResult
+23 | from app.catalogue import discovery as catalogue
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:22:1: E402 Module level import not at top of file
+   |
+20 | from app.adapters.discovery.catalog_walker import CatalogWalker
+21 | from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
+22 | from app.adapters.fetching import Fetcher, FetchResult
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+23 | from app.catalogue import discovery as catalogue
+24 | from app.config import Settings
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:23:1: E402 Module level import not at top of file
+   |
+21 | from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
+22 | from app.adapters.fetching import Fetcher, FetchResult
+23 | from app.catalogue import discovery as catalogue
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+24 | from app.config import Settings
+25 | from app.domain.enums import ClaimStatus, ClaimType, DegreeLevel, PipelineStage
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:24:1: E402 Module level import not at top of file
+   |
+22 | from app.adapters.fetching import Fetcher, FetchResult
+23 | from app.catalogue import discovery as catalogue
+24 | from app.config import Settings
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+25 | from app.domain.enums import ClaimStatus, ClaimType, DegreeLevel, PipelineStage
+26 | from app.models import (
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:25:1: E402 Module level import not at top of file
+   |
+23 | from app.catalogue import discovery as catalogue
+24 | from app.config import Settings
+25 | from app.domain.enums import ClaimStatus, ClaimType, DegreeLevel, PipelineStage
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+26 | from app.models import (
+27 |     ApplicantProfileRow,
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:26:1: E402 Module level import not at top of file
+   |
+24 |   from app.config import Settings
+25 |   from app.domain.enums import ClaimStatus, ClaimType, DegreeLevel, PipelineStage
+26 | / from app.models import (
+27 | |     ApplicantProfileRow,
+28 | |     AuditEvent,
+29 | |     ClaimRow,
+30 | |     Job,
+31 | |     Organization,
+32 | |     ProgramResultRow,
+33 | |     ResearchRun,
+34 | | )
+   | |_^ E402
+35 |   from app.models import Base as ModelBase
+36 |   from app.models.jobs import JobStatus
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:35:1: E402 Module level import not at top of file
+   |
+33 |     ResearchRun,
+34 | )
+35 | from app.models import Base as ModelBase
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+36 | from app.models.jobs import JobStatus
+37 | from app.pipeline import read_budget
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:36:1: E402 Module level import not at top of file
+   |
+34 | )
+35 | from app.models import Base as ModelBase
+36 | from app.models.jobs import JobStatus
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+37 | from app.pipeline import read_budget
+38 | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:37:1: E402 Module level import not at top of file
+   |
+35 | from app.models import Base as ModelBase
+36 | from app.models.jobs import JobStatus
+37 | from app.pipeline import read_budget
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+38 | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+39 | from app.pipeline.runner import ResearchRunner
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:38:1: E402 Module level import not at top of file
+   |
+36 | from app.models.jobs import JobStatus
+37 | from app.pipeline import read_budget
+38 | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+39 | from app.pipeline.runner import ResearchRunner
+40 | from app.pipeline.state import RunState
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:39:1: E402 Module level import not at top of file
+   |
+37 | from app.pipeline import read_budget
+38 | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+39 | from app.pipeline.runner import ResearchRunner
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+40 | from app.pipeline.state import RunState
+41 | from app.schemas.claim import Claim
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:40:1: E402 Module level import not at top of file
+   |
+38 | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+39 | from app.pipeline.runner import ResearchRunner
+40 | from app.pipeline.state import RunState
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+41 | from app.schemas.claim import Claim
+42 | from app.schemas.profile import ApplicantProfileIn, ApplicationContext
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:41:1: E402 Module level import not at top of file
+   |
+39 | from app.pipeline.runner import ResearchRunner
+40 | from app.pipeline.state import RunState
+41 | from app.schemas.claim import Claim
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+42 | from app.schemas.profile import ApplicantProfileIn, ApplicationContext
+43 | from app.schemas.result import CostBreakdown, ProgramResult
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:42:1: E402 Module level import not at top of file
+   |
+40 | from app.pipeline.state import RunState
+41 | from app.schemas.claim import Claim
+42 | from app.schemas.profile import ApplicantProfileIn, ApplicationContext
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+43 | from app.schemas.result import CostBreakdown, ProgramResult
+44 | from sqlalchemy import create_engine, event, select, update
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:43:1: E402 Module level import not at top of file
+   |
+41 | from app.schemas.claim import Claim
+42 | from app.schemas.profile import ApplicantProfileIn, ApplicationContext
+43 | from app.schemas.result import CostBreakdown, ProgramResult
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+44 | from sqlalchemy import create_engine, event, select, update
+45 | from sqlalchemy.orm import sessionmaker
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:44:1: E402 Module level import not at top of file
+   |
+42 | from app.schemas.profile import ApplicantProfileIn, ApplicationContext
+43 | from app.schemas.result import CostBreakdown, ProgramResult
+44 | from sqlalchemy import create_engine, event, select, update
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+45 | from sqlalchemy.orm import sessionmaker
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:45:1: E402 Module level import not at top of file
+   |
+43 | from app.schemas.result import CostBreakdown, ProgramResult
+44 | from sqlalchemy import create_engine, event, select, update
+45 | from sqlalchemy.orm import sessionmaker
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:69:77: E702 Multiple statements on one line (semicolon)
+   |
+67 |     settings = Settings(_env_file=None, demo_mode=False, enable_browser_tier=False, cache_dir=tmp_path/'cache', fetch_delay_seconds=0,…
+68 |     s=factory()
+69 |     org=Organization(name='Offline synthetic test',slug='offline-readguard');s.add(org);s.flush()
+   |                                                                             ^ E702
+70 |     profile_row=ApplicantProfileRow(organization_id=org.id, payload=profile.model_dump(mode='json'))
+71 |     s.add(profile_row);s.flush()
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:69:88: E702 Multiple statements on one line (semicolon)
+   |
+67 |     settings = Settings(_env_file=None, demo_mode=False, enable_browser_tier=False, cache_dir=tmp_path/'cache', fetch_delay_seconds=0,…
+68 |     s=factory()
+69 |     org=Organization(name='Offline synthetic test',slug='offline-readguard');s.add(org);s.flush()
+   |                                                                                        ^ E702
+70 |     profile_row=ApplicantProfileRow(organization_id=org.id, payload=profile.model_dump(mode='json'))
+71 |     s.add(profile_row);s.flush()
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:71:23: E702 Multiple statements on one line (semicolon)
+   |
+69 |     org=Organization(name='Offline synthetic test',slug='offline-readguard');s.add(org);s.flush()
+70 |     profile_row=ApplicantProfileRow(organization_id=org.id, payload=profile.model_dump(mode='json'))
+71 |     s.add(profile_row);s.flush()
+   |                       ^ E702
+72 |     run=ResearchRun(profile_id=profile_row.id, demo_mode=False, stage='queued', stage_state=RunState.load(None).dump(), candidate_limi…
+73 |     s.add(run);s.flush()
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:73:15: E702 Multiple statements on one line (semicolon)
+   |
+71 |     s.add(profile_row);s.flush()
+72 |     run=ResearchRun(profile_id=profile_row.id, demo_mode=False, stage='queued', stage_state=RunState.load(None).dump(), candidate_limi…
+73 |     s.add(run);s.flush()
+   |               ^ E702
+74 |     job=Job(kind='research',run_id=run.id,status=JobStatus.RUNNING.value,attempts=1,worker_id='worker-one',available_at=datetime.now(U…
+75 |     s.add(job);s.commit()
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:75:15: E702 Multiple statements on one line (semicolon)
+   |
+73 |     s.add(run);s.flush()
+74 |     job=Job(kind='research',run_id=run.id,status=JobStatus.RUNNING.value,attempts=1,worker_id='worker-one',available_at=datetime.now(U…
+75 |     s.add(job);s.commit()
+   |               ^ E702
+76 |     runner=ResearchRunner(s,run,profile,settings,job_id=job.id,worker_id='worker-one',lease_token=1)
+77 |     yield SimpleNamespace(engine=engine,factory=factory,session=s,run=run,job=job,runner=runner,profile=profile,settings=settings,root…
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:78:14: E702 Multiple statements on one line (semicolon)
+   |
+76 |     runner=ResearchRunner(s,run,profile,settings,job_id=job.id,worker_id='worker-one',lease_token=1)
+77 |     yield SimpleNamespace(engine=engine,factory=factory,session=s,run=run,job=job,runner=runner,profile=profile,settings=settings,root…
+78 |     s.close();engine.dispose()
+   |              ^ E702
+   |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:105:20: E701 Multiple statements on one line (colon)
+    |
+103 | …     visible=counts(ctx)
+104 | …     seen.append({'url':url,'kwargs':kwargs,'durable':visible})
+105 | …     if callback:callback(len(seen))
+    |                  ^ E701
+106 | …     from app.domain.enums import FetchOutcome
+107 | …     return FetchResult(url=url,outcome=FetchOutcome(outcome),status_code=200 if outcome in {'ok','cached'} else None,from_cache=out…
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:115:30: E702 Multiple statements on one line (semicolon)
+    |
+113 | @pytest.mark.parametrize('outcome',['ok','cached','http_error','robots_disallowed','refused_privacy'])
+114 | async def test_60_actual_fetcher_get_then_no_original_61(context,monkeypatch,outcome):
+115 |     fetcher=activate(context);cand=candidate();seen=mock_original_get(monkeypatch,context,outcome=outcome)
+    |                              ^ E702
+116 |     with context.runner._university_read_scope(cand):
+117 |         for i in range(60):await fetcher.get('https://example.edu/'+str(i),use_cache=True)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:115:47: E702 Multiple statements on one line (semicolon)
+    |
+113 | @pytest.mark.parametrize('outcome',['ok','cached','http_error','robots_disallowed','refused_privacy'])
+114 | async def test_60_actual_fetcher_get_then_no_original_61(context,monkeypatch,outcome):
+115 |     fetcher=activate(context);cand=candidate();seen=mock_original_get(monkeypatch,context,outcome=outcome)
+    |                                               ^ E702
+116 |     with context.runner._university_read_scope(cand):
+117 |         for i in range(60):await fetcher.get('https://example.edu/'+str(i),use_cache=True)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:117:27: E701 Multiple statements on one line (colon)
+    |
+115 |     fetcher=activate(context);cand=candidate();seen=mock_original_get(monkeypatch,context,outcome=outcome)
+116 |     with context.runner._university_read_scope(cand):
+117 |         for i in range(60):await fetcher.get('https://example.edu/'+str(i),use_cache=True)
+    |                           ^ E701
+118 |         with pytest.raises(UniversityReadStopped,match='read_cap'):
+119 |             await fetcher.get('https://example.edu/blocked')
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:128:30: E702 Multiple statements on one line (semicolon)
+    |
+126 | @pytest.mark.asyncio
+127 | async def test_conditional_cache_arguments_are_preserved(context,monkeypatch):
+128 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context,outcome='cached')
+    |                              ^ E702
+129 |     with context.runner._university_read_scope(candidate()):
+130 |         await fetcher.get('https://example.edu/page',use_cache=False,etag='public-tag',if_modified_since='public-date')
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:137:30: E702 Multiple statements on one line (semicolon)
+    |
+135 | @pytest.mark.asyncio
+136 | async def test_same_university_all_programmes_and_stages_share_counter(context,monkeypatch):
+137 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                              ^ E702
+138 |     for stage in [PipelineStage.CANDIDATE_DISCOVERY,PipelineStage.PROGRAM_VERIFICATION,PipelineStage.FUNDING_DISCOVERY]:
+139 |         context.run.stage=stage.value
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:142:35: E701 Multiple statements on one line (colon)
+    |
+140 |         for programme in range(2):
+141 |             with context.runner._university_read_scope(candidate()):
+142 |                 for i in range(10):await fetcher.get(f'https://example.edu/{stage.value}/{programme}/{i}')
+    |                                   ^ E701
+143 |     assert len(seen)==60
+144 |     with pytest.raises(UniversityReadStopped,match='read_cap'):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:144:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+142 |                   for i in range(10):await fetcher.get(f'https://example.edu/{stage.value}/{programme}/{i}')
+143 |       assert len(seen)==60
+144 | /     with pytest.raises(UniversityReadStopped,match='read_cap'):
+145 | |         with context.runner._university_read_scope(candidate()):
+    | |________________________________________________________________^ SIM117
+146 |               await fetcher.get('https://gov.example.gov/permit')
+147 |       with context.runner._university_read_scope(candidate('u-two')):
+    |
+    = help: Combine `with` statements
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:154:30: E702 Multiple statements on one line (semicolon)
+    |
+152 | @pytest.mark.asyncio
+153 | async def test_worker_retry_and_stale_attempt_same_worker_never_reset(context,monkeypatch):
+154 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                              ^ E702
+155 |     with context.runner._university_read_scope(candidate()):
+156 |         for i in range(58):await fetcher.get(f'https://example.edu/old/{i}')
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:156:27: E701 Multiple statements on one line (colon)
+    |
+154 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+155 |     with context.runner._university_read_scope(candidate()):
+156 |         for i in range(58):await fetcher.get(f'https://example.edu/old/{i}')
+    |                           ^ E701
+157 |     with context.factory() as changer:
+158 |         changer.execute(update(Job).where(Job.id==context.job.id).values(attempts=2));changer.commit()
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:158:86: E702 Multiple statements on one line (semicolon)
+    |
+156 |         for i in range(58):await fetcher.get(f'https://example.edu/old/{i}')
+157 |     with context.factory() as changer:
+158 |         changer.execute(update(Job).where(Job.id==context.job.id).values(attempts=2));changer.commit()
+    |                                                                                      ^ E702
+159 |     with pytest.raises(LeaseLost):
+160 |         with context.runner._university_read_scope(candidate()):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:159:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+157 |       with context.factory() as changer:
+158 |           changer.execute(update(Job).where(Job.id==context.job.id).values(attempts=2));changer.commit()
+159 | /     with pytest.raises(LeaseLost):
+160 | |         with context.runner._university_read_scope(candidate()):
+    | |________________________________________________________________^ SIM117
+161 |               await fetcher.get('https://example.edu/stale')
+162 |       assert len(seen)==58
+    |
+    = help: Combine `with` statements
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:166:45: E702 Multiple statements on one line (semicolon)
+    |
+164 | …     run=newer.get(ResearchRun,context.run.id)
+165 | …     next_runner=ResearchRunner(newer,run,context.profile,context.settings,job_id=context.job.id,worker_id='worker-one',lease_token=…
+166 | …     next_runner._read_guard_enabled=True;next_runner._read_episode_fresh=False
+    |                                           ^ E702
+167 | …     f=next_runner._make_fetcher()
+168 | …     with next_runner._university_read_scope(candidate()):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:169:55: E702 Multiple statements on one line (semicolon)
+    |
+167 |         f=next_runner._make_fetcher()
+168 |         with next_runner._university_read_scope(candidate()):
+169 |             await f.get('https://example.edu/retry/1');await f.get('https://example.edu/retry/2')
+    |                                                       ^ E702
+170 |             with pytest.raises(UniversityReadStopped,match='read_cap'):
+171 |                 await f.get('https://example.edu/retry/3')
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:178:30: E702 Multiple statements on one line (semicolon)
+    |
+176 | @pytest.mark.asyncio
+177 | async def test_save_refreshes_stale_json_without_erasing_pending_counters(context,monkeypatch):
+178 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                              ^ E702
+179 |     with context.runner._university_read_scope(candidate()):
+180 |         await fetcher.get('https://example.edu/1')
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:187:37: E702 Multiple statements on one line (semicolon)
+    |
+185 |         ledger[read_budget.LEDGER_KEY]['episodes']['decision:'+context.job.id]['read_counts']['catalogue:u-one']=59
+186 |         ledger[read_budget.LEDGER_KEY]['opaque_query_ledger']={'queries_reserved':4}
+187 |         run.settings_snapshot=ledger;fresh.commit()
+    |                                     ^ E702
+188 |     context.run.settings_snapshot=stale
+189 |     context.run.pages_checked+=7
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:192:60: E701 Multiple statements on one line (colon)
+    |
+190 |     context.runner._save()
+191 |     assert counts(context)['catalogue:u-one']==59
+192 |     with context.runner._university_read_scope(candidate()):await fetcher.get('https://example.edu/60')
+    |                                                            ^ E701
+193 |     assert counts(context)['catalogue:u-one']==60
+194 |     with context.factory() as observer:
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:203:30: E702 Multiple statements on one line (semicolon)
+    |
+201 | @pytest.mark.asyncio
+202 | async def test_scope_less_or_unfenced_get_has_no_original_call(context,monkeypatch):
+203 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                              ^ E702
+204 |     with pytest.raises(UniversityReadStopped,match='missing_university_scope'):await fetcher.get('https://example.edu/none')
+205 |     context.runner.job_id=None
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:204:79: E701 Multiple statements on one line (colon)
+    |
+202 | async def test_scope_less_or_unfenced_get_has_no_original_call(context,monkeypatch):
+203 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+204 |     with pytest.raises(UniversityReadStopped,match='missing_university_scope'):await fetcher.get('https://example.edu/none')
+    |                                                                               ^ E701
+205 |     context.runner.job_id=None
+206 |     with pytest.raises(UniversityReadStopped,match='unfenced_episode'):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:206:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+204 |       with pytest.raises(UniversityReadStopped,match='missing_university_scope'):await fetcher.get('https://example.edu/none')
+205 |       context.runner.job_id=None
+206 | /     with pytest.raises(UniversityReadStopped,match='unfenced_episode'):
+207 | |         with context.runner._university_read_scope(candidate()):await fetcher.get('https://example.edu/unfenced')
+    | |________________________________________________________________^ SIM117
+208 |       assert seen==[]
+    |
+    = help: Combine `with` statements
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:207:64: E701 Multiple statements on one line (colon)
+    |
+205 |     context.runner.job_id=None
+206 |     with pytest.raises(UniversityReadStopped,match='unfenced_episode'):
+207 |         with context.runner._university_read_scope(candidate()):await fetcher.get('https://example.edu/unfenced')
+    |                                                                ^ E701
+208 |     assert seen==[]
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:213:30: E702 Multiple statements on one line (semicolon)
+    |
+211 | @pytest.mark.asyncio
+212 | async def test_cancel_is_not_budget_or_http_failure_and_does_not_reserve(context,monkeypatch):
+213 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                              ^ E702
+214 |     with context.runner._university_read_scope(candidate()):
+215 |         await fetcher.get('https://example.edu/1')
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:217:110: E702 Multiple statements on one line (semicolon)
+    |
+215 |         await fetcher.get('https://example.edu/1')
+216 |         with context.factory() as changer:
+217 |             changer.execute(update(ResearchRun).where(ResearchRun.id==context.run.id).values(cancelled=True));changer.commit()
+    |                                                                                                              ^ E702
+218 |         with pytest.raises(RunCancelled):await fetcher.get('https://example.edu/cancelled')
+219 |     assert len(seen)==1 and counts(context)['catalogue:u-one']==1
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:218:41: E701 Multiple statements on one line (colon)
+    |
+216 |         with context.factory() as changer:
+217 |             changer.execute(update(ResearchRun).where(ResearchRun.id==context.run.id).values(cancelled=True));changer.commit()
+218 |         with pytest.raises(RunCancelled):await fetcher.get('https://example.edu/cancelled')
+    |                                         ^ E701
+219 |     assert len(seen)==1 and counts(context)['catalogue:u-one']==1
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:227:53: E702 Multiple statements on one line (semicolon)
+    |
+225 |     started=asyncio.Event()
+226 |     async def wait_forever(fetcher,url,**kwargs):
+227 |         assert counts(context)['catalogue:u-one']==1;started.set();await asyncio.Event().wait()
+    |                                                     ^ E702
+228 |     monkeypatch.setattr(Fetcher,'_get',wait_forever)
+229 |     with context.runner._university_read_scope(candidate()):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:227:67: E702 Multiple statements on one line (semicolon)
+    |
+225 |     started=asyncio.Event()
+226 |     async def wait_forever(fetcher,url,**kwargs):
+227 |         assert counts(context)['catalogue:u-one']==1;started.set();await asyncio.Event().wait()
+    |                                                                   ^ E702
+228 |     monkeypatch.setattr(Fetcher,'_get',wait_forever)
+229 |     with context.runner._university_read_scope(candidate()):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:231:29: E702 Multiple statements on one line (semicolon)
+    |
+229 |     with context.runner._university_read_scope(candidate()):
+230 |         task=asyncio.create_task(fetcher.get('https://example.edu/pending'))
+231 |         await started.wait();task.cancel()
+    |                             ^ E702
+232 |         with pytest.raises(asyncio.CancelledError):await task
+233 |     assert counts(context)['catalogue:u-one']==1
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:232:51: E701 Multiple statements on one line (colon)
+    |
+230 |         task=asyncio.create_task(fetcher.get('https://example.edu/pending'))
+231 |         await started.wait();task.cancel()
+232 |         with pytest.raises(asyncio.CancelledError):await task
+    |                                                   ^ E701
+233 |     assert counts(context)['catalogue:u-one']==1
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:238:30: E702 Multiple statements on one line (semicolon)
+    |
+236 | @pytest.mark.asyncio
+237 | async def test_checkpoint_failure_prevents_original_io(context,monkeypatch):
+238 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                              ^ E702
+239 |     with context.runner._university_read_scope(candidate()):
+240 |         def refuse_commit():raise RuntimeError('offline injected DB commit refusal')
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:242:67: E701 Multiple statements on one line (colon)
+    |
+240 |         def refuse_commit():raise RuntimeError('offline injected DB commit refusal')
+241 |         monkeypatch.setattr(context.session,'commit',refuse_commit)
+242 |         with pytest.raises(RuntimeError,match='DB commit refusal'):await fetcher.get('https://example.edu/no-commit')
+    |                                                                   ^ E701
+243 |     context.session.rollback()
+244 |     assert seen==[] and counts(context)['catalogue:u-one']==0
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:250:67: E702 Multiple statements on one line (semicolon)
+    |
+248 | def test_corrupt_envelope_no_reset_no_io(context,invalid):
+249 |     activate(context)
+250 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:invalid};context.session.commit()
+    |                                                                   ^ E702
+251 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+252 |         with context.runner._university_read_scope(candidate()):pass
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:251:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+249 |       activate(context)
+250 |       context.run.settings_snapshot={read_budget.LEDGER_KEY:invalid};context.session.commit()
+251 | /     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+252 | |         with context.runner._university_read_scope(candidate()):pass
+    | |________________________________________________________________^ SIM117
+253 |       assert context.run.settings_snapshot[read_budget.LEDGER_KEY]==invalid
+    |
+    = help: Combine `with` statements
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:252:64: E701 Multiple statements on one line (colon)
+    |
+250 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:invalid};context.session.commit()
+251 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+252 |         with context.runner._university_read_scope(candidate()):pass
+    |                                                                ^ E701
+253 |     assert context.run.settings_snapshot[read_budget.LEDGER_KEY]==invalid
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:262:46: E701 Multiple statements on one line (colon)
+    |
+260 |     assert read_budget.university_key(a)==read_budget.university_key(b)
+261 |     assert read_budget.university_key(a)!=read_budget.university_key(c)
+262 |     with pytest.raises(UniversityReadStopped):read_budget.university_key(Candidate('', 'Example','City'))
+    |                                              ^ E701
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:267:30: E702 Multiple statements on one line (semicolon)
+    |
+265 | @pytest.mark.asyncio
+266 | async def test_real_catalogue_discovery_61_is_local_unknown(context,monkeypatch):
+267 |     fetcher=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                              ^ E702
+268 |     uni=SimpleNamespace(id='u-one',name='Test University',country='Example',city='City',domain='example.edu',registry_entry={'name':'…
+269 |     monkeypatch.setattr(catalogue,'retrieve',lambda *a,**k:[uni])
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:271:27: E701 Multiple statements on one line (colon)
+    |
+269 |     monkeypatch.setattr(catalogue,'retrieve',lambda *a,**k:[uni])
+270 |     async def deep(adapter,entry,profile,**kwargs):
+271 |         for i in range(61):await adapter.fetcher.get(f'https://example.edu/discovery/{i}')
+    |                           ^ E701
+272 |         return candidate(),DiscoveryTrace('Test University','example.edu')
+273 |     monkeypatch.setattr(catalogue.CatalogueDiscoveryAdapter,'_discover_one',deep)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:291:23: E701 Multiple statements on one line (colon)
+    |
+289 |         return FetchResult(url=url,outcome=FetchOutcome.OK)
+290 |     monkeypatch.setattr(Fetcher,'_get',success)
+291 |     for i in range(61):await f.get(f'https://example.edu/{i}')
+    |                       ^ E701
+292 |     assert read_budget.LEDGER_KEY not in context.run.settings_snapshot
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:302:24: E702 Multiple statements on one line (semicolon)
+    |
+300 | async def test_actual_disk_cache_hit_is_charged(context):
+301 |     from app.domain.enums import FetchOutcome
+302 |     f=activate(context);url='https://example.edu/degree'
+    |                        ^ E702
+303 |     f.cache.put(FetchResult(url=url,outcome=FetchOutcome.OK,status_code=200,content=b'BSc Computer Science',text='BSc Computer Scienc…
+304 |     with context.runner._university_read_scope(candidate()):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:308:67: E701 Multiple statements on one line (colon)
+    |
+306 |             page=await f.get(url)
+307 |             assert page.from_cache and counts(context)['catalogue:u-one']==i+1
+308 |         with pytest.raises(UniversityReadStopped,match='read_cap'):await f.get(url)
+    |                                                                   ^ E701
+309 |     assert f.stats['cached']==60
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:314:24: E702 Multiple statements on one line (semicolon)
+    |
+312 | @pytest.mark.asyncio
+313 | async def test_fence_loss_between_precheck_and_commit_rolls_back_charge(context,monkeypatch):
+314 |     f=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                        ^ E702
+315 |     with context.runner._university_read_scope(candidate()):
+316 |         original_save=context.runner._save
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:319:92: E702 Multiple statements on one line (semicolon)
+    |
+317 |         def race():
+318 |             with context.factory() as newer:
+319 |                 newer.execute(update(Job).where(Job.id==context.job.id).values(attempts=2));newer.commit()
+    |                                                                                            ^ E702
+320 |             original_save()
+321 |         monkeypatch.setattr(context.runner,'_save',race)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:322:38: E701 Multiple statements on one line (colon)
+    |
+320 |             original_save()
+321 |         monkeypatch.setattr(context.runner,'_save',race)
+322 |         with pytest.raises(LeaseLost):await f.get('https://example.edu/race')
+    |                                      ^ E701
+323 |     assert seen==[] and counts(context)['catalogue:u-one']==0
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:331:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+329 |       async def original(fetcher,url,**kwargs):raise ValueError('offline injected parse failure')
+330 |       monkeypatch.setattr(Fetcher,'_get',original)
+331 | /     with context.runner._university_read_scope(candidate()):
+332 | |         with pytest.raises(ValueError):await f.get('https://example.edu/broken')
+    | |_______________________________________^ SIM117
+333 |       assert counts(context)['catalogue:u-one']==1
+    |
+    = help: Combine `with` statements
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:332:39: E701 Multiple statements on one line (colon)
+    |
+330 |     monkeypatch.setattr(Fetcher,'_get',original)
+331 |     with context.runner._university_read_scope(candidate()):
+332 |         with pytest.raises(ValueError):await f.get('https://example.edu/broken')
+    |                                       ^ E701
+333 |     assert counts(context)['catalogue:u-one']==1
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:343:27: E701 Multiple statements on one line (colon)
+    |
+341 |     monkeypatch.setattr(catalogue,'retrieve',lambda *a,**k:[uni])
+342 |     async def discovered(adapter,entry,profile,**kwargs):
+343 |         for i in range(11):await adapter.fetcher.get(f'https://example.edu/discovery/{i}')
+    |                           ^ E701
+344 |         return candidate(),DiscoveryTrace('Test University','example.edu')
+345 |     async def requirements(adapter,cand,prog,intake):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:346:27: E701 Multiple statements on one line (colon)
+    |
+344 |         return candidate(),DiscoveryTrace('Test University','example.edu')
+345 |     async def requirements(adapter,cand,prog,intake):
+346 |         for i in range(25):await adapter.fetcher.get(f'https://example.edu/requirements/{i}')
+    |                           ^ E701
+347 |         return AdapterResult(claims=[program_claim()],pages_checked=25)
+348 |     async def cost(adapter,cand):return CostBreakdown(),AdapterResult()
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:351:27: E701 Multiple statements on one line (colon)
+    |
+349 |     async def government(adapter,country):return AdapterResult()
+350 |     async def scholarships(adapter,cand,prog,profile,**kwargs):
+351 |         for i in range(25):await adapter.fetcher.get(f'https://example.edu/funding/{i}')
+    |                           ^ E701
+352 |         return [],AdapterResult()
+353 |     monkeypatch.setattr(catalogue.CatalogueDiscoveryAdapter,'_discover_one',discovered)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:370:85: E702 Multiple statements on one line (semicolon)
+    |
+368 |     # Exact run_to_decision settings replacement on a later worker retry keeps 60.
+369 |     with context.factory() as change:
+370 |         change.execute(update(Job).where(Job.id==context.job.id).values(attempts=2));change.commit()
+    |                                                                                     ^ E702
+371 |     with context.factory() as newer:
+372 |         run=newer.get(ResearchRun,context.run.id)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:385:24: E702 Multiple statements on one line (semicolon)
+    |
+383 | async def test_actual_verify_later_cost_stop_keeps_completed_requirements(context,monkeypatch,existing):
+384 |     from app.pipeline import runner as runner_module
+385 |     f=activate(context);seen=mock_original_get(monkeypatch,context);cand=candidate()
+    |                        ^ E702
+386 |     context.runner._candidates=[cand]
+387 |     original=None
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:385:68: E702 Multiple statements on one line (semicolon)
+    |
+383 | async def test_actual_verify_later_cost_stop_keeps_completed_requirements(context,monkeypatch,existing):
+384 |     from app.pipeline import runner as runner_module
+385 |     f=activate(context);seen=mock_original_get(monkeypatch,context);cand=candidate()
+    |                                                                    ^ E702
+386 |     context.runner._candidates=[cand]
+387 |     original=None
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:393:58: E702 Multiple statements on one line (semicolon)
+    |
+391 |         from app.pipeline.runner import _to_out
+392 |         result.claims=[_to_out(claim,'old-claim')]
+393 |         context.runner._persist_result(result,[claim],[]);context.runner._save()
+    |                                                          ^ E702
+394 |         original=context.session.query(ClaimRow).one().payload.copy()
+395 |     async def requirements(adapter,cand,prog,intake):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:396:27: E701 Multiple statements on one line (colon)
+    |
+394 |         original=context.session.query(ClaimRow).one().payload.copy()
+395 |     async def requirements(adapter,cand,prog,intake):
+396 |         for i in range(40):await adapter.fetcher.get(f'https://example.edu/requirements/{i}')
+    |                           ^ E701
+397 |         return AdapterResult(claims=[program_claim('New completed degree identity')],pages_checked=40)
+398 |     async def cost(adapter,cand):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:399:27: E701 Multiple statements on one line (colon)
+    |
+397 |         return AdapterResult(claims=[program_claim('New completed degree identity')],pages_checked=40)
+398 |     async def cost(adapter,cand):
+399 |         for i in range(21):await adapter.fetcher.get(f'https://example.edu/cost/{i}')
+    |                           ^ E701
+400 |         return CostBreakdown(),AdapterResult()
+401 |     async def government(adapter,country):return AdapterResult()
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:428:31: E701 Multiple statements on one line (colon)
+    |
+426 |     async def stopped(*args,**kwargs):raise signal('offline_control')
+427 |     monkeypatch.setattr(walker,'walk_catalog',stopped)
+428 |     with pytest.raises(signal):await walker.walk(['https://example.edu/catalogue'])
+    |                               ^ E701
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:438:31: E701 Multiple statements on one line (colon)
+    |
+436 |     monkeypatch.setattr(adapter.sitemaps,'collect',stopped)
+437 |     entry={'name':'Test University','country':'Example','city':'City','homepage':'https://example.edu/'}
+438 |     with pytest.raises(signal):await adapter._discover_one(entry,context.profile)
+    |                               ^ E701
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:443:24: E702 Multiple statements on one line (semicolon)
+    |
+441 | @pytest.mark.asyncio
+442 | async def test_curated_fallback_real_discovery_loop_has_stable_scope(context,monkeypatch):
+443 |     f=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                        ^ E702
+444 |     monkeypatch.setattr(catalogue,'retrieve',lambda *a,**k:[])
+445 |     monkeypatch.setattr(LiveDiscoveryAdapter,'registry',lambda _: [{'name':'Test University','country':'Example','city':'City','homep…
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:447:27: E701 Multiple statements on one line (colon)
+    |
+445 |     monkeypatch.setattr(LiveDiscoveryAdapter,'registry',lambda _: [{'name':'Test University','country':'Example','city':'City','homep…
+446 |     async def deep(adapter,entry,profile,**kwargs):
+447 |         for i in range(61):await adapter.fetcher.get(f'https://example.edu/curated/{i}')
+    |                           ^ E701
+448 |         return Candidate(entry['name'],entry['country'],entry['city']),DiscoveryTrace(entry['name'],'example.edu')
+449 |     monkeypatch.setattr(LiveDiscoveryAdapter,'_discover_one',deep)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:459:24: E702 Multiple statements on one line (semicolon)
+    |
+457 | @pytest.mark.asyncio
+458 | async def test_documents_explicitly_do_not_claim_guard_contract_but_keep_ledger(context,monkeypatch):
+459 |     f=activate(context);mock_original_get(monkeypatch,context)
+    |                        ^ E702
+460 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/1')
+461 |     context.runner._candidates=[candidate()]
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:460:60: E701 Multiple statements on one line (colon)
+    |
+458 | async def test_documents_explicitly_do_not_claim_guard_contract_but_keep_ledger(context,monkeypatch):
+459 |     f=activate(context);mock_original_get(monkeypatch,context)
+460 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/1')
+    |                                                            ^ E701
+461 |     context.runner._candidates=[candidate()]
+462 |     built=await context.runner.collect_documents()
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:477:60: E701 Multiple statements on one line (colon)
+    |
+475 |             statements.append(statement)
+476 |     event.listen(context.session,'do_orm_execute',observed)
+477 |     with context.runner._university_read_scope(candidate()):pass
+    |                                                            ^ E701
+478 |     assert statements
+479 |     from sqlalchemy.dialects import postgresql
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:488:33: E702 Multiple statements on one line (semicolon)
+    |
+486 |     ledger=read_budget.new_ledger()
+487 |     key='decision:'+context.job.id
+488 |     ledger['active_episode']=key;ledger['episodes'][key]={'read_counts':{'catalogue:u-one':60}}
+    |                                 ^ E702
+489 |     if missing=='active_episode':ledger.pop('active_episode')
+490 |     else:ledger['episodes'].pop(key)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:489:33: E701 Multiple statements on one line (colon)
+    |
+487 |     key='decision:'+context.job.id
+488 |     ledger['active_episode']=key;ledger['episodes'][key]={'read_counts':{'catalogue:u-one':60}}
+489 |     if missing=='active_episode':ledger.pop('active_episode')
+    |                                 ^ E701
+490 |     else:ledger['episodes'].pop(key)
+491 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.session.commit()
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:490:9: E701 Multiple statements on one line (colon)
+    |
+488 |     ledger['active_episode']=key;ledger['episodes'][key]={'read_counts':{'catalogue:u-one':60}}
+489 |     if missing=='active_episode':ledger.pop('active_episode')
+490 |     else:ledger['episodes'].pop(key)
+    |         ^ E701
+491 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.session.commit()
+492 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:491:66: E702 Multiple statements on one line (semicolon)
+    |
+489 |     if missing=='active_episode':ledger.pop('active_episode')
+490 |     else:ledger['episodes'].pop(key)
+491 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.session.commit()
+    |                                                                  ^ E702
+492 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+493 |         with context.runner._university_read_scope(candidate()):pass
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:492:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+490 |       else:ledger['episodes'].pop(key)
+491 |       context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.session.commit()
+492 | /     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+493 | |         with context.runner._university_read_scope(candidate()):pass
+    | |________________________________________________________________^ SIM117
+494 |       assert context.run.settings_snapshot[read_budget.LEDGER_KEY]==ledger
+    |
+    = help: Combine `with` statements
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:493:64: E701 Multiple statements on one line (colon)
+    |
+491 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.session.commit()
+492 |     with pytest.raises(UniversityReadStopped,match='invalid_ledger'):
+493 |         with context.runner._university_read_scope(candidate()):pass
+    |                                                                ^ E701
+494 |     assert context.run.settings_snapshot[read_budget.LEDGER_KEY]==ledger
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:499:36: E702 Multiple statements on one line (semicolon)
+    |
+497 | def test_missing_retry_episode_never_resets_to_zero(context):
+498 |     activate(context)
+499 |     ledger=read_budget.new_ledger();ledger['active_episode']='decision:older-job'
+    |                                    ^ E702
+500 |     ledger['episodes']['decision:older-job']={'read_counts':{'catalogue:u-one':60}}
+501 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.job.attempts=2;context.session.commit()
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:501:66: E702 Multiple statements on one line (semicolon)
+    |
+499 |     ledger=read_budget.new_ledger();ledger['active_episode']='decision:older-job'
+500 |     ledger['episodes']['decision:older-job']={'read_counts':{'catalogue:u-one':60}}
+501 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.job.attempts=2;context.session.commit()
+    |                                                                  ^ E702
+502 |     context.runner.lease_token=2;context.runner._read_episode_fresh=False
+503 |     with pytest.raises(UniversityReadStopped,match='missing_retry_episode'):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:501:89: E702 Multiple statements on one line (semicolon)
+    |
+499 |     ledger=read_budget.new_ledger();ledger['active_episode']='decision:older-job'
+500 |     ledger['episodes']['decision:older-job']={'read_counts':{'catalogue:u-one':60}}
+501 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.job.attempts=2;context.session.commit()
+    |                                                                                         ^ E702
+502 |     context.runner.lease_token=2;context.runner._read_episode_fresh=False
+503 |     with pytest.raises(UniversityReadStopped,match='missing_retry_episode'):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:502:33: E702 Multiple statements on one line (semicolon)
+    |
+500 |     ledger['episodes']['decision:older-job']={'read_counts':{'catalogue:u-one':60}}
+501 |     context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.job.attempts=2;context.session.commit()
+502 |     context.runner.lease_token=2;context.runner._read_episode_fresh=False
+    |                                 ^ E702
+503 |     with pytest.raises(UniversityReadStopped,match='missing_retry_episode'):
+504 |         with context.runner._university_read_scope(candidate()):pass
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:503:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+501 |       context.run.settings_snapshot={read_budget.LEDGER_KEY:ledger};context.job.attempts=2;context.session.commit()
+502 |       context.runner.lease_token=2;context.runner._read_episode_fresh=False
+503 | /     with pytest.raises(UniversityReadStopped,match='missing_retry_episode'):
+504 | |         with context.runner._university_read_scope(candidate()):pass
+    | |________________________________________________________________^ SIM117
+505 |       assert context.run.settings_snapshot[read_budget.LEDGER_KEY]==ledger
+    |
+    = help: Combine `with` statements
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:504:64: E701 Multiple statements on one line (colon)
+    |
+502 |     context.runner.lease_token=2;context.runner._read_episode_fresh=False
+503 |     with pytest.raises(UniversityReadStopped,match='missing_retry_episode'):
+504 |         with context.runner._university_read_scope(candidate()):pass
+    |                                                                ^ E701
+505 |     assert context.run.settings_snapshot[read_budget.LEDGER_KEY]==ledger
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:510:24: E702 Multiple statements on one line (semicolon)
+    |
+508 | @pytest.mark.asyncio
+509 | async def test_new_real_job_is_explicit_new_episode_preserving_old_history(context,monkeypatch):
+510 |     f=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                        ^ E702
+511 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/old')
+512 |     old_job_id=context.job.id
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:511:60: E701 Multiple statements on one line (colon)
+    |
+509 | async def test_new_real_job_is_explicit_new_episode_preserving_old_history(context,monkeypatch):
+510 |     f=activate(context);seen=mock_original_get(monkeypatch,context)
+511 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/old')
+    |                                                            ^ E701
+512 |     old_job_id=context.job.id
+513 |     fresh=Job(kind='research',run_id=context.run.id,status='running',attempts=1,worker_id='worker-one',available_at=datetime.now(UTC))
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:514:31: E702 Multiple statements on one line (semicolon)
+    |
+512 |     old_job_id=context.job.id
+513 |     fresh=Job(kind='research',run_id=context.run.id,status='running',attempts=1,worker_id='worker-one',available_at=datetime.now(UTC))
+514 |     context.session.add(fresh);context.session.commit()
+    |                               ^ E702
+515 |     newer=ResearchRunner(context.session,context.run,context.profile,context.settings,job_id=fresh.id,worker_id='worker-one',lease_to…
+516 |     newer._read_guard_enabled=True;newer._read_episode_fresh=False
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:516:35: E702 Multiple statements on one line (semicolon)
+    |
+514 |     context.session.add(fresh);context.session.commit()
+515 |     newer=ResearchRunner(context.session,context.run,context.profile,context.settings,job_id=fresh.id,worker_id='worker-one',lease_to…
+516 |     newer._read_guard_enabled=True;newer._read_episode_fresh=False
+    |                                   ^ E702
+517 |     with newer._university_read_scope(candidate()):await newer._make_fetcher().get('https://example.edu/new')
+518 |     ledger=context.run.settings_snapshot[read_budget.LEDGER_KEY]
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:517:51: E701 Multiple statements on one line (colon)
+    |
+515 |     newer=ResearchRunner(context.session,context.run,context.profile,context.settings,job_id=fresh.id,worker_id='worker-one',lease_to…
+516 |     newer._read_guard_enabled=True;newer._read_episode_fresh=False
+517 |     with newer._university_read_scope(candidate()):await newer._make_fetcher().get('https://example.edu/new')
+    |                                                   ^ E701
+518 |     ledger=context.run.settings_snapshot[read_budget.LEDGER_KEY]
+519 |     assert ledger['episodes']['decision:'+old_job_id]['read_counts']['catalogue:u-one']==1
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:527:24: E702 Multiple statements on one line (semicolon)
+    |
+525 | @pytest.mark.asyncio
+526 | async def test_guard_off_checkpoint_with_existing_envelope_preserves_latest(context,monkeypatch):
+527 |     f=activate(context);mock_original_get(monkeypatch,context)
+    |                        ^ E702
+528 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/1')
+529 |     with context.factory() as change:
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:528:60: E701 Multiple statements on one line (colon)
+    |
+526 | async def test_guard_off_checkpoint_with_existing_envelope_preserves_latest(context,monkeypatch):
+527 |     f=activate(context);mock_original_get(monkeypatch,context)
+528 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/1')
+    |                                                            ^ E701
+529 |     with context.factory() as change:
+530 |         run=change.get(ResearchRun,context.run.id);replacement=deepcopy(run.settings_snapshot)
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:530:51: E702 Multiple statements on one line (semicolon)
+    |
+528 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/1')
+529 |     with context.factory() as change:
+530 |         run=change.get(ResearchRun,context.run.id);replacement=deepcopy(run.settings_snapshot)
+    |                                                   ^ E702
+531 |         replacement[read_budget.LEDGER_KEY]['episodes']['decision:'+context.job.id]['read_counts']['catalogue:u-one']=60
+532 |         run.settings_snapshot=replacement;change.commit()
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:532:42: E702 Multiple statements on one line (semicolon)
+    |
+530 |         run=change.get(ResearchRun,context.run.id);replacement=deepcopy(run.settings_snapshot)
+531 |         replacement[read_budget.LEDGER_KEY]['episodes']['decision:'+context.job.id]['read_counts']['catalogue:u-one']=60
+532 |         run.settings_snapshot=replacement;change.commit()
+    |                                          ^ E702
+533 |     monkeypatch.setattr(read_budget,'UNIVERSITY_READ_BUDGET',False)
+534 |     context.runner._read_guard_enabled=False
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:541:24: E702 Multiple statements on one line (semicolon)
+    |
+539 | @pytest.mark.asyncio
+540 | async def test_lock_order_job_then_run_and_both_nowait(context,monkeypatch):
+541 |     f=activate(context);mock_original_get(monkeypatch,context);locks=[]
+    |                        ^ E702
+542 |     def capture(state):
+543 |         statement=state.statement
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:541:63: E702 Multiple statements on one line (semicolon)
+    |
+539 | @pytest.mark.asyncio
+540 | async def test_lock_order_job_then_run_and_both_nowait(context,monkeypatch):
+541 |     f=activate(context);mock_original_get(monkeypatch,context);locks=[]
+    |                                                               ^ E702
+542 |     def capture(state):
+543 |         statement=state.statement
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:548:60: E701 Multiple statements on one line (colon)
+    |
+546 |             locks.append((str(statement),arg.nowait))
+547 |     event.listen(context.session,'do_orm_execute',capture)
+548 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/1')
+    |                                                            ^ E701
+549 |     assert len(locks)>=4
+550 |     for i in range(0,len(locks),2):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:559:24: E702 Multiple statements on one line (semicolon)
+    |
+557 | async def test_postgres_lock_unavailable_refuses_read_without_dispatch(context,monkeypatch):
+558 |     from sqlalchemy.exc import OperationalError
+559 |     f=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                        ^ E702
+560 |     with context.runner._university_read_scope(candidate()):
+561 |         def busy(*args,**kwargs):
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:571:24: E702 Multiple statements on one line (semicolon)
+    |
+569 | @pytest.mark.asyncio
+570 | async def test_parallel_same_episode_reads_never_exceed_60(context,monkeypatch):
+571 |     f=activate(context);seen=mock_original_get(monkeypatch,context)
+    |                        ^ E702
+572 |     async def one(i):
+573 |         try:
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:592:24: E702 Multiple statements on one line (semicolon)
+    |
+590 | @pytest.mark.asyncio
+591 | async def test_recheck_explicitly_excluded_and_ledger_preserved(context,monkeypatch):
+592 |     f=activate(context);mock_original_get(monkeypatch,context)
+    |                        ^ E702
+593 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/1')
+594 |     old=deepcopy(context.run.settings_snapshot[read_budget.LEDGER_KEY])
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:593:60: E701 Multiple statements on one line (colon)
+    |
+591 | async def test_recheck_explicitly_excluded_and_ledger_preserved(context,monkeypatch):
+592 |     f=activate(context);mock_original_get(monkeypatch,context)
+593 |     with context.runner._university_read_scope(candidate()):await f.get('https://example.edu/1')
+    |                                                            ^ E701
+594 |     old=deepcopy(context.run.settings_snapshot[read_budget.LEDGER_KEY])
+595 |     # A stale synthetic claim makes the real recheck entry point call decision stages.
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:596:26: E702 Multiple statements on one line (semicolon)
+    |
+594 |     old=deepcopy(context.run.settings_snapshot[read_budget.LEDGER_KEY])
+595 |     # A stale synthetic claim makes the real recheck entry point call decision stages.
+596 |     claim=program_claim();claim.accessed_at=datetime(2020,1,1,tzinfo=UTC)
+    |                          ^ E702
+597 |     context.session.add(ClaimRow(run_id=context.run.id,result_id=None,claim_type=claim.claim_type.value,status=claim.status.value,sou…
+598 |     context.session.commit()
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:612:37: E702 Multiple statements on one line (semicolon)
+    |
+610 | async def test_standalone_renderer_control_not_swallowed(context,signal):
+611 |     async def render(url):raise signal('offline renderer control')
+612 |     f=context.runner._make_fetcher();f._renderer=SimpleNamespace(render=render,catalog_payloads=[])
+    |                                     ^ E702
+613 |     walker=CatalogWalker(fetcher=f,domain='example.edu',degree='bachelor',fields=['computer science'])
+614 |     with pytest.raises(signal):await walker._read_catalogue('https://example.edu/catalogue')
+    |
+
+work/search-loop-round4/reviews/expert_b-readguard/test_production_readguard.py:614:31: E701 Multiple statements on one line (colon)
+    |
+612 |     f=context.runner._make_fetcher();f._renderer=SimpleNamespace(render=render,catalog_payloads=[])
+613 |     walker=CatalogWalker(fetcher=f,domain='example.edu',degree='bachelor',fields=['computer science'])
+614 |     with pytest.raises(signal):await walker._read_catalogue('https://example.edu/catalogue')
+    |                               ^ E701
+    |
+
+Found 129 errors (11 fixed, 118 remaining).
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

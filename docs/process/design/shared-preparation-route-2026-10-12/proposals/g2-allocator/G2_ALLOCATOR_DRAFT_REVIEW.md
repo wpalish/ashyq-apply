@@ -1,0 +1,32 @@
+# G2 allocator independent draft review
+
+**2026-10-12 · DRAFT snapshot · static review only · NOT_APPLIED / NOT_IMPORTED / NOT_RUN.** This is a review of two external proposal files, not an application or test result. The author was still writing the package. Reconcile findings against the eventual sealed file hashes before source use.
+
+## Inspected bytes and reference bounds
+
+| File | SHA-256 at inspection |
+| --- | --- |
+| `files/backend/app/schemas/shared_route.py` | `cd045f7eb3486d268e1154f2151b8ec65b4e22aa9c760bcbbb34a55ae2adbf80` |
+| `files/backend/app/domain/shared_route_allocator.py` | `bf9dcb969508063da627bc53cffe783373f83475ab575f14980cb81002648303` |
+
+Native read-only comparison: `backend/app/preparation/learning_pack.py` SHA `778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae`; `backend/app/schemas/learning_schedule.py` SHA `a5c26ea689d67aa68cf46936adc5057c854613a99691259282ba5ca64ea684b6`; `backend/app/schemas/preparation_graph.py` SHA `4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249`; `backend/app/schemas/study_schedule.py` SHA `259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f`. Contract comparison: `proposals/g2-design/TYPED_CONTRACT_DESIGN_V2.md` (design only). No source, Git, helper, app, test, browser, network, provider, or runtime action was performed.
+
+## Findings for the draft author
+
+1. **F1 — exact programme IDs are not strict at this DTO boundary.** `SharedRouteInputV1._route` (`shared_route.py:236–255`) rejects duplicate `selected_result_ids` but permits leading/trailing whitespace. Reused G1 `ResultId` only checks strict string/length; G1's actual `PreparationGraphRequest.exact_selection` (`preparation_graph.py:91–97`) also checks `value == value.strip()`. Example: `" result-id"` is a well-typed G2 selection yet not an exact G1 selection. Add that same rejection to the G2 input validator, retaining request order and whole-selection rejection. This belongs in `shared_route.py`; downstream G1 owner validation remains necessary.
+
+2. **F2 — output DTO alone does not bind IDs to the exact actions.** `SharedAllocationV1._allocation` (`shared_route.py:379–404`) checks uniqueness of `action_id` and `occurrence_id`, exact current lesson coverage, and the known lesson/exam association. `Digest` checks 64 lowercase hexadecimal characters. It does not verify `action_id == digest(exam, exact ref)` or the occurrence digest from action/date, nor does it bind review actions to the accepted input list. The pure allocator currently creates these IDs correctly (`shared_route_allocator.py:41–43, 260–269`), so **this is not an observed allocator misallocation**. It matters if a later save/replay path treats validation of a deserialized `SharedAllocationV1` as proof that a persisted receipt is intact. Keep that trust boundary explicit: validate the complete accepted receipt/digest against its stored accepted inputs, or validate locally derivable action/occurrence identities within the finite proposal paths. Do not accept a client-supplied allocation as authority.
+
+Neither finding calls for an edit to the native catalogue, legacy schedule, G1 graph, or dispatcher.
+
+## Static checks that align with the accepted design
+
+- `EXACT_LESSONS` matches the native three `TRACK_ORDER` streams and exact starter/pack versions (`shared_route.py:18–32`; `learning_pack.py:469–481, 499–509`). `FrozenExactCatalogue` requires all nine in order and independently supplied strict availability; Digital SAT interleaves Math and Reading/Writing while preserving within-track order (`shared_route_allocator.py:98–108`). The selected subset appears once even when multiple programmes are selected.
+- One shared `spent[monday]` and one `daily_spent` debit every scheduled whole action (`shared_route_allocator.py:232–273`). The Monday keys are local dates, not UTC timestamps; the input fixes a single IANA timezone, unique weekdays, and one 30–1260 minute weekly budget. A review longer than day/week capacity is removed whole, with its explicit minutes and exact ref retained (`:219–230`). No score gap or official requirement supplies minutes.
+- The cyclic cursor advances after a placement; an unfitting head can be deferred while the other exam's head is tried (`:239–277`). The head expiry loop runs before fitting, including after the first exam when a later own review has a retake window (`:161–165, 243–252`). The original action order determines final unallocated order (`:215, 304`). Entered exam days across both choices are excluded (`:146–158`).
+- Input/output guards cover strict native integers, explicit `True`, local ISO dates (not datetimes), UUID-shaped attempt IDs, finite half-band IELTS values, strict SAT score integers and partial target preservation (`shared_route.py:35–81, 125–174, 177–255`). The allocator revalidates `model_dump(mode="python")` snapshots of constructed input/catalogue/review instances before calculating or serializing JSON (`shared_route_allocator.py:209–214`); that path retains nonfinite values for rejection instead of JSON-normalizing them. No direct caller list/reference mutation is apparent in this static reading.
+- `first_exam_on`, optional retake, deadline and buffers are applicant-entered and bounded; the full input horizon is at most 365 days (`shared_route.py:187–201, 247–250`). `_dates` increments only while `cursor < end`, so `date.max` as the exclusive end does not increment beyond the calendar (`shared_route_allocator.py:146–158`). Timing is a buffer calculation, with readiness still `not_assessed` and applicability `unknown` (`shared_route.py:339–363`).
+
+## Reconciliation and limits
+
+At this inspection, the proposal test file and seal receipt did not yet exist. Static reading cannot establish Pydantic execution behavior, test coverage, allocator correctness under all inputs, DB ownership, replay integrity, or integration. Before application, compare sealed hashes with the DRAFT pins above, reread any changed lines, and check that additive tests cover F1; direct invalid/`model_construct` snapshots including NaN/Inf; partial target serialization; first-exam expiry draining into a retake review; `date.max`; week/day budget conservation; output ID tampering boundary; and immutable caller inputs. Upstream code must still supply verified owned reviews and exact availability; this pure function does not establish ownership or content availability itself.

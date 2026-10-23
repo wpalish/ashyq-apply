@@ -1,0 +1,67 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - button "Unimatch home": unimatch
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Funding comparison" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - paragraph: План / Стипендии и расходы
+  - heading "Стипендии и расходы" [level=1]
+  - paragraph: Оцени стоимость обучения и жизни, найди доступные стипендии и пойми, какие программы укладываются в твой бюджет.
+  - strong: Поступление 2027
+  - generic: Осень
+  - heading "Твой бюджет" [level=2]
+  - strong: USD 6 000
+  - text: в год
+  - button "Изменить"
+  - generic: В бюджете
+  - strong: "0"
+  - text: программ
+  - generic: Выше бюджета
+  - strong: "1"
+  - text: программ
+  - generic: Расчёт неполный
+  - strong: "0"
+  - generic: программ
+  - navigation "Финансирование":
+    - button "Программы"
+    - button "Стипендии"
+    - button "Расходы на жизнь"
+    - button "Полезные ресурсы"
+  - heading "Программы и финансирование" [level=2]
+  - checkbox "Только сохранённые" [checked]
+  - text: Только сохранённые
+  - article:
+    - heading "KU Leuven" [level=3]
+    - paragraph: BSc Informatics
+    - generic: Расчёт доступен
+    - generic: Ориентировочные расходы в год
+    - strong: 18 424 USD · 2026/27
+    - button "Показать разбивку"
+    - button "Разобрать финансирование":
+      - text: Разобрать финансирование
+  - complementary:
+    - generic: Указанные суммы — ориентировочные. Точные расходы зависят от программы, города и образа жизни. Стипендия не гарантируется и может требовать отдельной заявки.
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.

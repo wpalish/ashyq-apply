@@ -1,0 +1,365 @@
+{
+  "case_id": "01d3bb22815c61aa8454283116cbd4fa",
+  "university": "Dalian University of Technology",
+  "domain": "dlut.edu.cn",
+  "review_status": "unreviewed",
+  "requested_scope": {
+    "citizenship": "Kazakhstan / international",
+    "level": "Bachelor",
+    "field": "Computer Science",
+    "intake": "fall 2027 / 2027-28"
+  },
+  "final_state": "partial",
+  "wall_start": "2026-10-07T15:59:02.882532+00:00",
+  "finished_at": "2026-10-07T16:15:51.745382+00:00",
+  "finalization_reason": "Original 15-minute wall guard reached while resumed run completed; tool-time budget not exhausted. No timer reset.",
+  "budget": {
+    "fetcher_calls": 11,
+    "elapsed_ms": 35455,
+    "search_queries": 3,
+    "stop_reason": null,
+    "next_log_number": 15
+  },
+  "questions": [
+    {
+      "id": "Q0",
+      "status": "unresolved",
+      "answer": null,
+      "historical_or_general_support": {
+        "programme": "Computer Science and Technology",
+        "level": "Undergraduate programme",
+        "school_address": "No.2 Linggong Road, Ganjingzi District, Dalian City, Liaoning Province",
+        "degree_title": null,
+        "exact_campus": null,
+        "international_route_language": null
+      },
+      "evidence_ids": [
+        "programme",
+        "catalogue",
+        "pdf_en_blocked",
+        "pdf_zh_blocked"
+      ],
+      "unknown_reason": "Exact international bachelor admission, awarded degree, campus, language and 2027 availability not tied together by an accessible official source."
+    },
+    {
+      "id": "Q1",
+      "status": "unresolved",
+      "answer": null,
+      "historical_or_general_support": {
+        "2026_english_route": {
+          "TOEFL": 80,
+          "IELTS": 5.5,
+          "Duolingo": 100,
+          "alternatives": "High-school English instruction certificate; official English-language-country exemption; possible interview/written evaluation if no above proof."
+        },
+        "2026_chinese_science_route": {
+          "HSK_level": 4,
+          "minimum_score": 180,
+          "validity_years": 2
+        }
+      },
+      "evidence_ids": [
+        "english",
+        "chinese"
+      ],
+      "unknown_reason": "Neither language route has been confirmed for exact CS programme in fall 2027."
+    },
+    {
+      "id": "Q2",
+      "status": "unresolved",
+      "answer": null,
+      "historical_or_general_support": {
+        "2026_requirements": [
+          "Non-Chinese citizenship",
+          "Age 18–25, under-18 exception with guardian in Dalian",
+          "High-school diploma / expected graduation then diploma before enrolment",
+          "Complete high-school transcripts",
+          "CSCA before submission from academic year 2026/2027"
+        ],
+        "numeric_GPA_minimum": null,
+        "Kazakhstan_qualification_equivalence": null
+      },
+      "evidence_ids": [
+        "school"
+      ],
+      "unknown_reason": "2027 full qualification conditions and Kazakhstan school qualification equivalence not confirmed; no numeric GPA minimum established."
+    },
+    {
+      "id": "Q3",
+      "status": "unresolved",
+      "answer": null,
+      "historical_or_general_support": {
+        "admission_2026": "2025-11-01 until June 2026, day unspecified in bachelor guide",
+        "DUT_scholarship_2026": "2025-11-01 through 2026-06-30"
+      },
+      "evidence_ids": [
+        "deadline",
+        "scholarship_2026"
+      ],
+      "unknown_reason": "2027 deadline not located; the official 2026 dates cannot be transferred."
+    },
+    {
+      "id": "Q4",
+      "status": "unresolved",
+      "answer": null,
+      "historical_or_general_support": {
+        "currency": "CNY",
+        "tuition_2026_english_per_year": 25500,
+        "tuition_2026_chinese_science_technology_per_year": 20500,
+        "application_fee_2026": 800,
+        "accommodation_2026_per_month": {
+          "Nanshan_single": 600,
+          "international_double": 1200,
+          "international_single": 1800
+        },
+        "total_annual_cost": null
+      },
+      "evidence_ids": [
+        "cost_en",
+        "cost_zh"
+      ],
+      "unknown_reason": "2027 amount and exact CS route not confirmed; no complete annual living/insurance/other cost total proven."
+    },
+    {
+      "id": "Q5",
+      "status": "unresolved",
+      "answer": null,
+      "historical_or_general_support": {
+        "name": "DUT President’s Scholarship for International Students",
+        "undergraduate_awards": "Partial awards: Level 1 tuition waiver; Level 2 tuition and accommodation waiver per revised 2025 measures; 2026 application page describes partial as tuition-only",
+        "graduate_only_full_award": "Full award living allowance cannot be assigned to bachelor applicants"
+      },
+      "evidence_ids": [
+        "scholarship",
+        "scholarship_2026"
+      ],
+      "unknown_reason": "Scholarship mechanism confirmed generally but 2027 CS award availability/amount not confirmed; general rules and 2026 application page have different partial-award descriptions."
+    },
+    {
+      "id": "Q6",
+      "status": "unresolved",
+      "answer": null,
+      "historical_or_general_support": {
+        "general_international_bachelor_eligibility": true,
+        "criteria": "High school/equivalent; excellent academic records; under 25; annual criteria; interview and entrance-test requirement per rules"
+      },
+      "evidence_ids": [
+        "eligible",
+        "scholarship_2026"
+      ],
+      "unknown_reason": "General international undergraduate eligibility is confirmed; Kazakhstan nationality-specific and exact 2027 CS eligibility remain unresolved. No exclusion or guarantee inferred."
+    }
+  ],
+  "evidence": {
+    "programme": {
+      "action": 13,
+      "official_url": "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+      "final_url": "https://cs.dlut.edu.cn/ENGLISH/education/Undergraduate_Education.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-013.json",
+      "raw_sha256": "0f94bf86e828726eb4aeac5785144475cafdcf4667b28fae1dcfc3cd8df2d422",
+      "excerpt": "Introduction to Undergraduate Training Programs in Computer Science and Technology",
+      "excerpt_scope": "General undergraduate programme description; no intake-year or international admission/language confirmation.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Introduction to Undergraduate Training Programs in Computer Science and Technology\n\n1. Cultivation Orientation:\n  Based on the first-class research universities and national first-class undergraduate programme, our school takes advantage of the ESI global top 1‰ of the discipline of computer science and faces the frontiers of computer science and the needs of the national major strategies to cultivate academic leaders, social leaders and engineering leaders. They are expected to have a strong sense of responsibility for the nation and society, ",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "3cea578137001f0faef452770bb0f77b096650082a45301de54442d240bce39f",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "english": {
+      "action": 2,
+      "official_url": "https://sie.dlut.edu.cn/info/1179/2480.htm",
+      "final_url": "https://sie.dlut.edu.cn/info/1179/2480.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-002.json",
+      "raw_sha256": "760d42807ec6701a441c1f7af7b25dde6ecd3b67b3cd9df0c7b01409430f71f2",
+      "excerpt": "2026 Bachelor Programs (English-taught); TOEFL score must be 80 or higher, and the IELTS score must be 5.5 or higher, and the Duolingo score must be 100 or higher.",
+      "excerpt_scope": "2026 English-taught bachelor route, not exact Computer Science or 2027.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "English-Taught Program, requirement of English proficiency certificate as following ：\n(1) \nTo submit a TOEFL or IELTS or Duolingo transcript, in principle, the TOEFL score must be 80 or higher, and the IELTS score must be 5.5 or higher, and the Duolingo score must be 100 or higher.\n;\n(2) the applicants that use English as the language of instruction at high school, may use the language certificate issued by the high school;\n(3) Applicants from countries where English is the official language are exempt from proof of English language proficiency.\nIf the applicant cannot provide the above proof,the final tutor and department could evaluate your language level according to the interview or written test.\n5. China Scholastic Competency Assessment(CSCA) transcript, scanned document.\n6. Self Statement/Study Plan\n：\nThe language should be written in English or Chinese，not less than 600 words，please following “\nAttch 1\n Self Statement Study Plan”",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "5a477087827f8770d2ab7391ec61078ef6dbb776438df5dedd5a4e98092e1c49",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "school": {
+      "action": 2,
+      "official_url": "https://sie.dlut.edu.cn/info/1179/2480.htm",
+      "final_url": "https://sie.dlut.edu.cn/info/1179/2480.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-002.json",
+      "raw_sha256": "760d42807ec6701a441c1f7af7b25dde6ecd3b67b3cd9df0c7b01409430f71f2",
+      "excerpt": "High School Diploma and Transcript; Starting from the 2026/2027 academic year, applicants must participate in the China Scholastic Competency Assessment(CSCA).",
+      "excerpt_scope": "2026 guide; ongoing CSCA language starts 2026/2027, not an exact 2027 full qualification confirmation.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "1. Non-Chinese Citizen;\n2. Age between 18 to 25 years old and in good health;\n3. High School Diploma and Transcript (If you have not graduated at the time of application, you must provide a certificate of pre-graduation or expected graduation certificate.And than,obtain a high school diploma at the latest before enrolment);\n4. Satisfy the language proficiency requirements for the Major speciality;\n5. Starting from the 2026/2027 academic year, applicants must participate in the \"the China Scholastic Competency Assessment(CSCA)\" (hereinafter referred to as the CSCA Test) before submitting the application. The test results will be one of the essential materials for our university's review and admission;\n6. Comply with the regulations of the Ministry of Education’s document. [2020] No.12 and the relevant regulations of our university. \n※High school graduates under 18 years of age, with a guardian in China (Dalian) can also apply.\nⅡ\n. \nBachelor Program Major List (English-taught)\n \nPleas following Attachment 1\nⅢ\n.\nFreshman Enrollment\nEnrollment and registration for 2026 will take place in early September, subject to the requirements of the Admission Letter.\n \nⅣ\n. \nFees (CNY)\n \nTuition (CNY)\nPrograms\nDuration\nTuition/Year\nApplication Fe",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "a35f58f733772b83abf5915882912826eb9a779718b9a2728ff3fb80ce490f72",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "chinese": {
+      "action": 3,
+      "official_url": "https://sie.dlut.edu.cn/info/1179/2479.htm",
+      "final_url": "https://sie.dlut.edu.cn/info/1179/2479.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-003.json",
+      "raw_sha256": "c2c846dadf20745991af2fa9dedc1e741bdbfb476d6662326e3f6b198367a179",
+      "excerpt": "majors related to science,engineering, economics and management, the requirement is the new HSK test Level 4 and a minimum score of 180.",
+      "excerpt_scope": "2026 Chinese-taught bachelor route; HSK two-year validity stated.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Chinese-Taught Program，requirement of HSK Level and Score（2 years validity）as following ：\n(1) majors related to science,engineering, economics and management, the requirement is the new HSK test Level 4 and a minimum score of 180.\n(2)majors related to humanities and foreign languages, the requirement is the new HSK test Level 5 and a minimum score of 180.\n5. China Scholastic Competency Assessment(CSCA) transcript, scanned document.\nAccording to Document No. 47 〔2025〕 of the China Scholarship Council (CSC), applicants applying for the Chinese Language undergraduate program at the School of International Education who can provide a valid HSK 4 ",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "b7f3e603c4be9c1715cbd0890a75461dfea13a7a42dad8b123a01a750c4375b1",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "deadline": {
+      "action": 2,
+      "official_url": "https://sie.dlut.edu.cn/info/1179/2480.htm",
+      "final_url": "https://sie.dlut.edu.cn/info/1179/2480.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-002.json",
+      "raw_sha256": "760d42807ec6701a441c1f7af7b25dde6ecd3b67b3cd9df0c7b01409430f71f2",
+      "excerpt": "Enrollment and registration for 2026 will take place in early September; Applications will be accepted from November 1st 2025 until June of the following year.",
+      "excerpt_scope": "2026 bachelor admission; guide does not specify June day.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Applications will be accepted from November 1st 2025 until June of the following year.\nⅥ\n. \nRequired Documents\n1. \n《Dalian University of Technology Application Form For International Student》\n（Finish the Online Application, the form will be auto-forming）.\n2. \nNotarized High School Diploma\n：\nIf the a",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "d27b4c9d1d5180b8ca63c972be0fece6871981e6c68e3704017dafdab0323bd7",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "cost_en": {
+      "action": 2,
+      "official_url": "https://sie.dlut.edu.cn/info/1179/2480.htm",
+      "final_url": "https://sie.dlut.edu.cn/info/1179/2480.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-002.json",
+      "raw_sha256": "760d42807ec6701a441c1f7af7b25dde6ecd3b67b3cd9df0c7b01409430f71f2",
+      "excerpt": "Fees (CNY); Undergraduates (English-taught Programs); Four Years; Tuition/Year; 25,500; Application Fee; 800; Nanshan Dormitory 600/Month; International Student Dormitory Double 1200/Month; Single 1800/Month.",
+      "excerpt_scope": "2026 general bachelor fees, not exact matched CS/2027 total cost.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Fees (CNY)\n \nTuition (CNY)\nPrograms\nDuration\nTuition/Year\nApplication Fee\nUndergraduates\n(English-taught Programs)\nFour Years\n25,500\n800\nAccommodation (CNY)\nStay Duration\nDormitory\nRoom Type\nRoom Facilities\nFee per Bed\n1 month or longer\nNanshan Dormitory\nSingle\nPrivate bedroom with shared bathroom (toilet&shower), shared living room\n600/Month\nInternational Student Dormitory\nDouble\nTwin beds with En-suite bathroom (toilet & shower), shared kitchen, laundry room, study lounge\n1200/Month\nSingle\nSingle bed with En-suite bathroom (toilet & shower), shared kitchen, laundry room, study lounge\n1800/Month\nUnder 1 month\nInternational Student Dormitory\nDouble\nTwin beds with En-suite bathroom (toilet & shower), shared kitchen, laundry room, study lounge\n80/Day\nSingle\nSingle bed with En-suite bathroom (toilet & shower), shared kitchen, laundry room, study lounge\n120/Day\n \nⅤ\n. \nApplication Time\nApplications will be accepted from November 1st 2025 until June of the following year.\nⅥ\n. \nRequired Documents\n1. \n《Dalian University of Technology Application Form For International Student》\n（Finish the Online Application, the form will be auto-forming）.\n2. \nNotarized High School Diploma\n：\nIf the applicant is a student, he/she must submit a certificate of enrolment issued by the school he/she is attending. Documents in languages other than Chinese or English must be attached with notarized translatio",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "2cd163ddc9d9cd7ccece46faac9603589e5eba4310e805359e17d624b3b30779",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "cost_zh": {
+      "action": 3,
+      "official_url": "https://sie.dlut.edu.cn/info/1179/2479.htm",
+      "final_url": "https://sie.dlut.edu.cn/info/1179/2479.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-003.json",
+      "raw_sha256": "c2c846dadf20745991af2fa9dedc1e741bdbfb476d6662326e3f6b198367a179",
+      "excerpt": "Undergraduates (Sciences & Technology, Economics & Management); 20,500",
+      "excerpt_scope": "2026 Chinese-taught science/technology tuition per year in CNY, exact international CS programme match unresolved.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Fees (CNY)\nTuition (CNY)\nPrograms\nDuration\nTuition/Year\nApplication Fee\nUndergraduates\n(Chinese, Foreign Languages, Humanities & Social Sciences)\nFour Years\n19,500\n800\nUndergraduates\n(Sciences & Technology, Economics & Management)\n20,500\nUndergraduates\n(Architecture)\n22,500\nUndergraduates\n(Art Design)\n25,000\nAccommodation (CNY)\n \nStay Duration\nDormitory\nRoom Type\nRoom Facilities\nFee per Bed\n1 month or longer\nNanshan Dormitory\nSingle\nPrivate bedroom with shared bathroom (toilet&shower), shared living room\n600/Month\nInternational Student Dormitory\nDouble\nTwin beds with En-suite bathroom (toilet & shower), shared kitchen, laundry room, study lounge\n1200/Month\nSingle\nSingle bed with En-suite bat",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "0c9e80e203d30eae1b156dfa4274b332ee3991f5d5826de03d395e9c9595fbee",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "scholarship": {
+      "action": 4,
+      "official_url": "https://sie.dlut.edu.cn/info/1349/27452.htm",
+      "final_url": "https://sie.dlut.edu.cn/info/1349/27452.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-004.json",
+      "raw_sha256": "ef12ace6c4e772753a4911e3f0a06fae3a6f0acea795b895c4f1443ca2582ee1",
+      "excerpt": "Partial Awards (for both undergraduates and graduates); Level 1: Tuition waived only; Level 2: Tuition and accommodation fees waived.",
+      "excerpt_scope": "President scholarship management measures revised 2025; annual plan and adjustment retained, not a 2027 award offer.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Article 7\nThe President’s Scholarship is divided into Full and Partial awards. The number of awards granted each year is determined according to the University’s annual plan.\nArticle 8\nFull Awards (for graduate students only)\nTuition and on-campus accommodation fees are waived.\nMonthly living allowance: RMB 1,500 for master’s students; RMB 1,800 for doctoral students.\nInternational travel expenses and one-time settlement costs are not covered.\nPartial Awards (for both undergraduates and graduates)\nLevel 1: Tuition waived only, with other expenses borne by the student.\nLevel 2: Tuition and accommodation fees waived, with other expenses borne by the student.\nThe University reserves the right to adjust the scholarship amounts based on actual circumstances.\nArticle 9\nThe number of new scholarship recipients each year will be dynamically adjusted based on the actual enrollment and check-in figures from the previous year.\nChapter 3 Scholarship Allocation, Application, Evaluation, and Disburs",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "ceab5e5b46f13ca620dc8d3489ca3a9df72944db98e709f796a73bb01e66c60a",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "eligible": {
+      "action": 4,
+      "official_url": "https://sie.dlut.edu.cn/info/1349/27452.htm",
+      "final_url": "https://sie.dlut.edu.cn/info/1349/27452.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-004.json",
+      "raw_sha256": "ef12ace6c4e772753a4911e3f0a06fae3a6f0acea795b895c4f1443ca2582ee1",
+      "excerpt": "International undergraduate, master’s, or doctoral candidates may apply for the scholarship, provided their application materials meet the requirements and their academic records are outstanding.",
+      "excerpt_scope": "General international bachelor eligibility in revised 2025 measures. Kazakhstan-specific / 2027 exact offer not confirmed.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Article 10 Allocation of Scholarships\nInternational undergraduate, master's, or doctoral candidates may apply for the scholarship, provided their application materials meet the requirements and their academic records are outstanding. Applications are generally submitted individually. However, a limited number of places may be reserved for outstanding candidates recommended by Chinese embassies or consulates, friendship associations, individual sponsors, or partner institutions with which the University has an exchange agreement.\nArticle 11 How to Apply\nApplicants must complete the online application within the prescribed period and upload the required documents. Partner institutions, schools, educational organizations, or individuals wishing to recommend candidates must submit the recommendation package to the School of International Education (SIE) before the deadline. However, the cand",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "894648befc46fcdebebbdac06b303ab5c720168c1489041125164ff7f0ff0e20",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "scholarship_2026": {
+      "action": 6,
+      "official_url": "https://sie.dlut.edu.cn/English/Scholarship1/DUT_Scholarship/DUT_Scholarship.htm",
+      "final_url": "https://sie.dlut.edu.cn/English/Scholarship1/DUT_Scholarship/DUT_Scholarship.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-006.json",
+      "raw_sha256": "0bd4121a3ae6ed27bfabebad8021356c2169ae87e1a1b0cab5d4c03ca8cfbc66",
+      "excerpt": "Bachelor degree Scholarship (only for new students); high school (secondary school) diploma, excellent academic achievement, and under the age of 25. Bachelor Degree Students: From November 1, 2025 to June 30, 2026.",
+      "excerpt_scope": "2026 DUT scholarship application route; cannot transfer deadline to 2027.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "Bachelor degree Scholarship (only for new students)\n:\nThe scholarship is only for the students who would like to study bachelor degree program at DUT. The applicants should have high school (secondary school) diploma, excellent academic achievement, and under the age of 25. \n2.\nMaster degree Scholarship (only for new students)\n:\nThe scholarship is only for the students who would like to study master degree program at DUT. The applicants should have bachelor degree, excellent academic achievement. For the applicants outside China, should submit two recomm",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "04f1f66a1ab957ad8a02cdccd647f1cc1ab8bb38a520780f9f21be67a755fc0b",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    },
+    "pdf_en_blocked": {
+      "action": 8,
+      "official_url": "https://sie.dlut.edu.cn/system/_content/download.jsp?urltype=news.DownloadAttachUrl&owner=1894224773&wbfileid=7852A2D15F011466D1A7879875C127FF",
+      "final_url": "https://sie.dlut.edu.cn/system/_content/download.jsp?urltype=news.DownloadAttachUrl&owner=1894224773&wbfileid=7852A2D15F011466D1A7879875C127FF",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-008.json",
+      "raw_sha256": "72f7bd4783e312ac75dcc3eb59f4e79325f45f240534f3f5ee463f427be52fa5",
+      "excerpt": "Fetcher outcome: refused_privacy. No document content obtained.",
+      "excerpt_scope": "2026 English-taught bachelor major-list PDF download denied by production Fetcher.",
+      "outcome_status": "blocked",
+      "outcome": "refused_privacy",
+      "verbatim_excerpt": "",
+      "verbatim_excerpt_normalization": "No readable content; production Fetcher outcome refused_privacy."
+    },
+    "pdf_zh_blocked": {
+      "action": 9,
+      "official_url": "https://sie.dlut.edu.cn/system/_content/download.jsp?urltype=news.DownloadAttachUrl&owner=1894224773&wbfileid=479173BB9983D0EB81E37C3A6120C905",
+      "final_url": "https://sie.dlut.edu.cn/system/_content/download.jsp?urltype=news.DownloadAttachUrl&owner=1894224773&wbfileid=479173BB9983D0EB81E37C3A6120C905",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-009.json",
+      "raw_sha256": "5a8526682b699400c298b82af13f7b29c443fe762e1b0f2adde6cc82eccaf2f7",
+      "excerpt": "Fetcher outcome: refused_privacy. No document content obtained.",
+      "excerpt_scope": "2026 Chinese-taught bachelor major-list PDF download denied by production Fetcher.",
+      "outcome_status": "blocked",
+      "outcome": "refused_privacy",
+      "verbatim_excerpt": "",
+      "verbatim_excerpt_normalization": "No readable content; production Fetcher outcome refused_privacy."
+    },
+    "catalogue": {
+      "action": 7,
+      "official_url": "https://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm",
+      "final_url": "https://sie.dlut.edu.cn/English/Admissions/Degree_Programs/Bachelor_Programs1.htm",
+      "raw_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/dalian/raw/dalian-007.json",
+      "raw_sha256": "f1b62a3099a9451b76b5ffcee6ec0e7510c57d57ed86b48e4fd2f2c6e467c0ca",
+      "excerpt": "2026 Bachelor Programs (English-taught); 2026 Bachelor Programs (Chinese-taught)",
+      "excerpt_scope": "Read catalogue lists 2026 guides; no 2027 guide found in this page. Not evidence that 2027 intake is absent.",
+      "outcome_status": "success",
+      "outcome": "ok",
+      "verbatim_excerpt": "2026 Bachelor Programs (English-taught)\n\nBachelor Program (English-taught) Admission Qualifications1. Non-Chinese citizen2. Age between 18 to 25 years old...\n\n 21\n \nOct.\n\n2026 Bachelor Programs (Chinese-taught)\n\nBachelor Program (Chinese-taught) Admission Qualifications1. Non-Chinese citizen2. Age between 18 to 25 year...\n\n 02\n \nJan.\n\nDUT Chinese Language (International Chinese Language Education) Bachelor Program\n\nDUT CHINESE LANGUAGE (INTERNATIONAL CHINESE LANGUAGE EDUCATION)BACHELOR PROGRAMPr",
+      "verbatim_excerpt_normalization": "Exact controller-readable text substring.",
+      "verbatim_excerpt_sha256": "b495c712726895fe2d9f41a10422dd371edecf8885e6807b9bd00182185fd142",
+      "excerpt_processing": "Existing excerpt normalizes line/table layout; verbatim_excerpt supplies direct retained text."
+    }
+  },
+  "provider_discovery_not_fact_evidence": [
+    1,
+    5,
+    10
+  ],
+  "website_or_policy_partial_outcomes": [
+    8,
+    9
+  ],
+  "negative_findings": [],
+  "ordinary_shared_repo_expert": "Not OS-blind; restricted to own evidence and controller, no gold/algorithm outcomes/other-expert reports read.",
+  "evidence_validation": {
+    "at": "2026-10-07T16:25:59.823409+00:00",
+    "raw_hashes_verified": 14,
+    "failures": [],
+    "schema_review": "unreviewed",
+    "semantic_review": "unreviewed"
+  },
+  "local_finalization_note": "Dalian draft writer hit local Python3.9 errors; saved successfully with existing backend venv at16:15:51UTC. Nagoya first query began16:15:28UTC while Dalian final save was being repaired. No Dalian network action began after original wall guard; no timer reset/replay."
+}

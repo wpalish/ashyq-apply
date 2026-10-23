@@ -1,0 +1,84 @@
+{
+  "captured_at_utc": "2026-10-11T14:59:03.468017+00:00",
+  "status": "STATIC_ACCEPT_FOR_NATIVE_GATES_GATES_NOT_RUN_BY_REVIEWER",
+  "source_reads": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "4c1245463393efc9b0b6a6bffa81b70392a126cecd5bb4f5c5802bbc575a31b5",
+      "bytes": 23805
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/StudySchedulePanel.tsx",
+      "sha256": "243e1c50d9a7778c64a8b9b0d21a713dd91c3cb75839d1d9c4d080c437b5b31f",
+      "bytes": 23749
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/StudySchedulePanel.test.tsx",
+      "sha256": "d69df8e812b06f95c61c79ea0bb484b2146794f9b816d97c3c27faf326f61542",
+      "bytes": 15764
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/api/client.ts",
+      "sha256": "8db9654816c8c692e75d91f6ad119bdd735aa9680f9ea3f2d55982a6fd091f0a",
+      "bytes": 23868
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/api/client.preparation.test.ts",
+      "sha256": "439d40c141d5780b339f3be85edb8544681d3dfa35fc0dde30d990aff9565eff",
+      "bytes": 7541
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/types.ts",
+      "sha256": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4",
+      "bytes": 24494
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/styles/unimatch.css",
+      "sha256": "751743b4eb56eefa45b23f688d9e4f36335a26f62d7c740575021fa81440bd72",
+      "bytes": 41643
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/e2e/preparation.spec.ts",
+      "sha256": "e69aafdb16e7f5f62cfafc1eacc4968297637505749b57522230ab60f78461e2",
+      "bytes": 25755
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/e2e/auth-journey.spec.ts",
+      "sha256": "b3daa53010f34fbead33023cfe9bd46c52a4b5e94d45745ad6a6c65d25292cb3",
+      "bytes": 8481
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/tsconfig.json",
+      "sha256": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928",
+      "bytes": 725
+    }
+  ],
+  "contract": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/CONTRACT.md",
+    "sha256": "69af1120e0f6d91598f78e3b77426582fbb78ec74bd5b40884cd13c9d83b3edf",
+    "bytes": 4560
+  },
+  "initial_read_frame": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/audits/frontend-integrated-review-pins.json",
+    "sha256": "619e37b1d729c480f59ba7ddbc7fdc90befb7d54e223585dbc5c3927f3f394df",
+    "bytes": 2766
+  },
+  "root_changes_since_initial_read": [
+    "frontend/src/screens/StudySchedulePanel.tsx",
+    "frontend/src/screens/StudySchedulePanel.test.tsx"
+  ],
+  "sealed_test_byte_equal": false,
+  "sealed_panel_changed_only_by_root_required_score_hunk": true,
+  "required_score_delta": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/audits/frontend-integrated-required-score.diff",
+    "sha256": "626fdeec386e26f42f0f2b447535663192c992c7bf8e7985658dffb51abb5515",
+    "bytes": 2095
+  },
+  "first_eleven_component_controls_and_fixture_prefix_byte_equal": true,
+  "root_disclosure_test_delta": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/audits/frontend-integrated-disclosure-test.diff",
+    "sha256": "1d14f31acf91775e3e24cf05e0e284e27cf325979657396c2b7e4871a17a3284",
+    "bytes": 1376
+  },
+  "runtime_or_gates_executed_by_reviewer": false
+}

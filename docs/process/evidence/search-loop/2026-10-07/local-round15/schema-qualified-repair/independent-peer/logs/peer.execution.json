@@ -1,0 +1,130 @@
+[
+  {
+    "name": "native21",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-o",
+      "addopts=",
+      "-o",
+      "cache_dir=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/tmp/pytest-cache",
+      "--basetemp",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/tmp/native21",
+      "--junitxml",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/native21.xml",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend/tests/test_local_pilot.py",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend/tests/test_expert_catalogue_trace.py::test_complete_findings_are_unreviewed_and_match_the_saved_source"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend",
+    "environment": {
+      "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/home",
+      "PATH": "/usr/bin:/bin",
+      "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/tmp",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "UNIMATCH_DEMO_MODE": "true",
+      "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+      "UNIMATCH_SEARCH_PROVIDER": "none",
+      "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend"
+    },
+    "exit_code": 0,
+    "started": "2026-10-08T08:43:52.259894+00:00",
+    "ended": "2026-10-08T08:43:53.343763+00:00"
+  },
+  {
+    "name": "ruff",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "-m",
+      "ruff",
+      "check",
+      "evaluation/research/expert/controller.py",
+      "evaluation/research/expert/models.py",
+      "evaluation/research/expert/selector.py",
+      "evaluation/research/local_pilot.py",
+      "evaluation/research/pilot_admission.py",
+      "tests/test_local_pilot.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend",
+    "environment": {
+      "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/home",
+      "PATH": "/usr/bin:/bin",
+      "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/tmp",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "UNIMATCH_DEMO_MODE": "true",
+      "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+      "UNIMATCH_SEARCH_PROVIDER": "none",
+      "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend"
+    },
+    "exit_code": 0,
+    "started": "2026-10-08T08:43:53.343935+00:00",
+    "ended": "2026-10-08T08:43:53.433643+00:00"
+  },
+  {
+    "name": "format",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "-m",
+      "ruff",
+      "format",
+      "--check",
+      "evaluation/research/expert/controller.py",
+      "evaluation/research/expert/models.py",
+      "evaluation/research/expert/selector.py",
+      "evaluation/research/local_pilot.py",
+      "evaluation/research/pilot_admission.py",
+      "tests/test_local_pilot.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend",
+    "environment": {
+      "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/home",
+      "PATH": "/usr/bin:/bin",
+      "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/tmp",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "UNIMATCH_DEMO_MODE": "true",
+      "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+      "UNIMATCH_SEARCH_PROVIDER": "none",
+      "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend"
+    },
+    "exit_code": 0,
+    "started": "2026-10-08T08:43:53.433775+00:00",
+    "ended": "2026-10-08T08:43:53.481469+00:00"
+  },
+  {
+    "name": "mypy",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "-m",
+      "mypy",
+      "--config-file",
+      "mypy.ini",
+      "--cache-dir",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/tmp/mypy-cache",
+      "evaluation/research/expert/controller.py",
+      "evaluation/research/expert/models.py",
+      "evaluation/research/expert/selector.py",
+      "evaluation/research/local_pilot.py",
+      "evaluation/research/pilot_admission.py",
+      "tests/test_local_pilot.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend",
+    "environment": {
+      "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/home",
+      "PATH": "/usr/bin:/bin",
+      "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/tmp",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "UNIMATCH_DEMO_MODE": "true",
+      "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+      "UNIMATCH_SEARCH_PROVIDER": "none",
+      "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend"
+    },
+    "exit_code": 0,
+    "started": "2026-10-08T08:43:53.481592+00:00",
+    "ended": "2026-10-08T08:44:02.216774+00:00"
+  }
+]

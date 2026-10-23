@@ -346,8 +346,20 @@ class ApplicantProfileIn(Base):
     weights_override: bool = False
 
 
+class ProfileWriteReceipt(Base):
+    """Immutable acceptance metadata; the profile in a reply is current, not historical."""
+
+    command_id: str
+    kind: Literal["create", "update", "persisted_rerank"]
+    profile_id: str
+    expected_revision: int | None
+    accepted_revision: int = Field(ge=1)
+
+
 class ApplicantProfile(ApplicantProfileIn):
     id: str
+    revision: int = Field(ge=1)
+    write_receipt: ProfileWriteReceipt | None = None
     created_at: str
     updated_at: str
 

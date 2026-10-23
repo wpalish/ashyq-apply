@@ -1,0 +1,78 @@
+{
+  "mode": "offline adapter replay with original cached sources only",
+  "baseline_source": "89fc891228d9b8987fce19b2ddc0254d69837c2e",
+  "network_calls": 0,
+  "request": "synthetic Bachelor computer science, fall2027",
+  "before": {
+    "source_reads_from_retained_cache": [
+      "https://en.nagoya-u.ac.jp/admissions/japan/language/"
+    ],
+    "claims": [
+      {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 5.5,
+        "original_text_excerpt": "No Japanese language requirement to participate English proficiency requirement for non-native English speakers: TOEFL: 550 (CBT=213; iBT=79) TOEIC: 730 IELTS: overall band score of 5.5 Or equivalent scores Exemption available for students studying full-time at universities where English is the medium of instruction Learn more about NUPACE",
+        "source_url": "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+        "page_title": "Language requirements | Admissions | Nagoya University",
+        "relevant_section": "English language requirements",
+        "official_domain": true,
+        "program": "computer science (bachelor)",
+        "subject_key": null,
+        "intake": "fall 2027",
+        "academic_year": "2027/28",
+        "accessed_at": "2026-10-07T16:50:17.275211Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": null,
+          "intake": null,
+          "academic_year": null,
+          "population": "international",
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.8,
+        "status": "NEEDS_OFFICIAL_CLARIFICATION",
+        "extraction_method": "html_rule",
+        "notes": "The page states this conditionally ('about'); it is not settled."
+      }
+    ],
+    "page_outcomes": [
+      {
+        "url": "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+        "category": "fetched-ok",
+        "page_type": "general_admissions",
+        "detail": "1 claims read from this page",
+        "readable_chars": 2484
+      }
+    ]
+  },
+  "after": {
+    "source_reads_from_retained_cache": [
+      "https://en.nagoya-u.ac.jp/admissions/japan/language/"
+    ],
+    "claims": [],
+    "page_outcomes": [
+      {
+        "url": "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+        "category": "no-pattern-match",
+        "page_type": "general_admissions",
+        "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+        "readable_chars": 2484
+      }
+    ]
+  },
+  "source": {
+    "url": "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+    "fetched_at": "2026-10-07T16:50:17.275211+00:00",
+    "body_byte_sha256": "8b2f118cb5dcba242cdf0852918bb68dc4ee2b681378b4c87967a579054b6327",
+    "metadata_content_hash": "8013d43ae24d9bc70de6880a30a272e2d9fbd58ab7c7fc9c8c271ab7f64eed35",
+    "computed_fetcher_content_hash": "8013d43ae24d9bc70de6880a30a272e2d9fbd58ab7c7fc9c8c271ab7f64eed35",
+    "hash_semantics": "NFKC normalized whitespace-collapsed html_to_text; distinct from raw bytes"
+  },
+  "excluded_sections": 1,
+  "scope_result": "exchange-only IELTS5.5 removed; full-degree minimum stays unknown"
+}

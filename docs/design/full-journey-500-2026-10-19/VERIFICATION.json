@@ -1,0 +1,47 @@
+{
+  "time": "2026-10-19T06:32:43.054617+00:00",
+  "directory": {
+    "institutions": 500,
+    "histories": 500,
+    "websites": 500,
+    "local_images": 500,
+    "duplicate_hashes": 0,
+    "receipt_hashes_match": true
+  },
+  "image_kinds": {
+    "site_icons": 492,
+    "emblems": 2,
+    "institutional_logos": 6
+  },
+  "frontend": {
+    "tests": 1033,
+    "files": 108,
+    "status": "PASS"
+  },
+  "backend_catalogue": {
+    "tests": 51,
+    "status": "PASS",
+    "warnings": 1,
+    "scope": "data identity/catalogue focused only"
+  },
+  "typecheck": "PASS",
+  "lint": {
+    "errors": 0,
+    "inherited_warnings": 9
+  },
+  "build": {
+    "status": "PASS",
+    "warning": "index519.63kB and lazy catalogue600.15kB exceed500kB warning threshold; catalogue gzip95.94kB"
+  },
+  "source_paths": 560,
+  "runtime_import": "500 seed records;501 universities total;36 non-catalogue table hashes unchanged during import, before subsequent native synthetic user actions",
+  "limits": [
+    "Full backend/mypy/native suite NOT_RERUN; inherited release gates remain open",
+    "No live programme research/production/security/evaluation/heldout work",
+    "All500 identity histories sourced, not a fresh500-university admissions acceptance",
+    "Public Wikipedia API429 after200; later static Wikimedia429:stopped without retry; original response bodies NOT_CAPTURED",
+    "Some genuine site icons16px; no500 print-quality full logos claim",
+    "Historical imported stats not current/fresh independently verified facts",
+    "Initial frontend, schema-version and fixture failures retained; only final named logs qualify final results"
+  ]
+}

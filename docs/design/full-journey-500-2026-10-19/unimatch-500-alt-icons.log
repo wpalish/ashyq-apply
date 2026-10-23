@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/scripts/catalogue/cache_alternative_icons.py", line 11, in <module>
+    control,_=read('nonexistent-unimatch-negative-control.invalid');control_sha=hashlib.sha256(control).hexdigest();rows=json.loads((ROOT/'frontend/src/data/universityDirectory.json').read_text());receipt=[]
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/scripts/catalogue/cache_alternative_icons.py", line 10, in read
+    with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'UnimatchCatalogue/1.0'}),timeout=15) as f:return f.read(500000),url
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 214, in urlopen
+    return opener.open(url, data, timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 523, in open
+    response = meth(req, response)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 632, in http_response
+    response = self.parent.error(
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 561, in error
+    return self._call_chain(*args)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 494, in _call_chain
+    result = func(*args)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py", line 641, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found

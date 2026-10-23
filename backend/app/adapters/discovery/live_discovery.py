@@ -28,20 +28,23 @@ crawl of it.
 
 from __future__ import annotations
 
+import asyncio
 import gzip
+import hashlib
 import json
 import logging
 import re
 from collections.abc import Callable
+from contextlib import AbstractContextManager, nullcontext
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
-from app.adapters.fetching import Fetcher, same_source_site
+from app.adapters.fetching import Fetcher, FetchResult, fetch_diagnostic_url, same_source_site
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
@@ -49,10 +52,17 @@ from app.adapters.page_classifier import (
     classify_page,
 )
 from app.adapters.search.ontology import canonical_field, load_ontology
-from app.domain.enums import FetchOutcome
+from app.domain.enums import DegreeLevel, FetchOutcome
 from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import (
+    PageReadProof,
+    ProgrammeObservation,
+    ProgrammeObservationSet,
+    observation_id,
+)
 from app.schemas.result import RankingEntry
 
 if TYPE_CHECKING:  # pragma: no cover - the seam is only needed as an annotation
@@ -392,17 +402,19 @@ def canonical_url(url: str) -> str:
     """
     try:
         parts = urlparse(url.strip())
+        host = (parts.hostname or "").lower()
+        port = parts.port
     except ValueError:
+        # Invalid brackets, host syntax and ports are rejected at the caller's
+        # URL boundary. Canonicalization itself must not abort a candidate set.
         return url.strip()
     if not parts.scheme or not parts.netloc:
         return url.strip()
 
-    host = (parts.hostname or "").lower()
-    if parts.port and not (
-        (parts.scheme == "http" and parts.port == 80)
-        or (parts.scheme == "https" and parts.port == 443)
+    if port and not (
+        (parts.scheme == "http" and port == 80) or (parts.scheme == "https" and port == 443)
     ):
-        host = f"{host}:{parts.port}"
+        host = f"{host}:{port}"
 
     path = re.sub(r"/{2,}", "/", parts.path) or "/"
     if len(path) > 1:
@@ -509,8 +521,13 @@ def with_strong_aliases(fields: list[str]) -> list[str]:
 def degree_level_named(url: str) -> str | None:
     """The degree level a URL names in its path, if it names one at all."""
     path = (urlparse(url).path or "").lower()
-    for level, slugs in _DEGREE_SLUGS.items():
-        if any(re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in slugs):
+    # A full foundation marker wins over the nested "bachelor" word in
+    # "pre-bachelor", or a degree marker elsewhere in a preparatory route.
+    levels = ("foundation", *(level for level in _DEGREE_SLUGS if level != "foundation"))
+    for level in levels:
+        if any(
+            re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in _DEGREE_SLUGS[level]
+        ):
             return level
     return None
 
@@ -588,6 +605,11 @@ def looks_like_catalogue(url: str) -> bool:
     return bool(_CATALOGUE_PATH.search(path))
 
 
+#: Off until an off/on/on/off capture and an owner default decision.
+#: Require an ordered subject phrase instead of collecting words across a title.
+SUBJECT_PHRASE_MATCH = False
+
+
 def matches_field_text(label: str, fields: list[str]) -> bool:
     """Whether a link's own text names one of the applicant's subjects.
 
@@ -596,7 +618,18 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     lead is ``/data-computer-science`` behind the text "Data & Computer
     Science", which no path pattern for "programmes" would ever match.
     """
-    words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
+    label_words = re.findall(r"[a-z]+", label.lower())
+    # Preserve an applicant's exact short subject (Law, Art) without matching
+    # a substring, an alias, or a conjunction with another subject. Academic
+    # wrappers may surround it; every other token rules out this narrow match.
+    short_fillers = _TITLE_FILLER | {"a", "an", "of", "in", "the", "ba", "bsc", "llb"}
+    for field_name in fields:
+        field_words = re.findall(r"[a-z]+", field_name.lower())
+        if len(field_words) == 1 and field_words[0] in {"law", "art"}:
+            wanted_short = field_words[0]
+            if wanted_short in label_words and set(label_words) - {wanted_short} <= short_fillers:
+                return True
+    words = {w for w in label_words if len(w) > 3}
     if not words:
         return False
     own = {f.lower() for f in fields}
@@ -604,6 +637,18 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
         wanted = {w for w in re.split(r"[^a-z]+", field_name.lower()) if len(w) > 3}
         if not wanted or not wanted <= words:
             continue
+        if SUBJECT_PHRASE_MATCH:
+            field_words = re.findall(r"[a-z]+", field_name.lower())
+            if not any(
+                label_words[i : i + len(field_words)] == field_words
+                for i in range(len(label_words) - len(field_words) + 1)
+            ):
+                continue
+            # A precise multiword strong alias names the field even when its
+            # parent degree adds other words. Ambiguous one-word aliases
+            # retain the existing extra-subject restriction below.
+            if len(field_words) > 1:
+                return True
         if field_name.lower() in own:
             return True
         # An alias names the field only when nothing else in the title names
@@ -647,7 +692,7 @@ def _public_requested_fields(profile: ApplicantProfileIn, trace: DiscoveryTrace)
                     continue
                 _reject_applicant_data("field", field_name)
             except ValueError:
-                # QueryPrivacyError embeds the raw value. Never log it here.
+                # Rejected fields are not public source identity. Do not echo them here.
                 continue
             trace.public_fields.append(field_name)
     return trace.public_fields
@@ -806,8 +851,9 @@ class DiscoveryTrace:
     public_fields: list[str] | None = None
     #: Subjects assigned a provider query in this run, for coverage accounting.
     queried_fields: list[str] = field(default_factory=list)
-    #: Provider queries discovery sent for this institution; later stages
-    #: spend only what remains of the per-institution query budget.
+    #: Search-seam attempts charged to this institution, including local
+    #: wrapper refusals; not proof of vendor HTTP dispatch. The historical
+    #: field name is retained. Later stages spend only the remaining budget.
     search_queries_sent: int = 0
     search_coverage: dict[str, int] = field(default_factory=dict)
     used_navigation_fallback: bool = False
@@ -822,6 +868,10 @@ class DiscoveryTrace:
         # Bounded: a large sitemap would otherwise produce a huge trace.
         if len(self.rejected) < 200:
             self.rejected.append((url, reason))
+
+    def charge_search_query_attempt(self) -> None:
+        """Reserve one seam attempt; a local refusal is not HTTP dispatch."""
+        self.search_queries_sent += 1
 
     def as_dict(self) -> dict:
         return {
@@ -840,10 +890,19 @@ class DiscoveryTrace:
             "search_limitations": self.search_limitations,
             "field_sources": self.field_sources,
             "search_coverage": self.search_coverage,
+            "search_queries_attempted": self.search_queries_sent,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
             "walker": dict(self.walker),
         }
+
+
+def _remaining_search_query_budget(trace: DiscoveryTrace) -> int:
+    from app.adapters.search import intent as intent_module
+
+    if not intent_module.SHARED_QUERY_BUDGET:
+        return intent_module.DEFAULT_QUERY_BUDGET
+    return max(0, intent_module.DEFAULT_QUERY_BUDGET - trace.search_queries_sent)
 
 
 def _remember_field_source(
@@ -901,7 +960,8 @@ def parse_sitemap(text: str) -> tuple[list[str], list[str]]:
     except ElementTree.ParseError:
         # Some sites serve a plain-text list of URLs. Accept that too.
         lines = [ln.strip() for ln in text.splitlines() if ln.strip().startswith("http")]
-        return [], lines[:MAX_SITEMAP_URLS]
+        # One unread URL lets collect report a genuinely truncated text list.
+        return [], lines[: MAX_SITEMAP_URLS + 1]
 
     tag = root.tag.lower()
     locations = [
@@ -956,10 +1016,20 @@ class SitemapReader:
                 trace.reject(url, "sitemap is off the institution's domain")
                 continue
 
+            if trace.sitemap_urls_seen >= MAX_SITEMAP_URLS:
+                trace.errors.append(
+                    "Sitemap URL scan budget reached; remaining sitemap documents were not read."
+                )
+                trace.sitemap_urls_kept = len(pages)
+                return pages
             attempted_documents += 1
             result = await self.fetcher.get(url)
             if not result.ok:
-                trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
+                trace.errors.append(
+                    f"{fetch_diagnostic_url(url, result)}: {result.outcome.value} — {result.error}"[
+                        :300
+                    ]
+                )
                 if result.outcome == FetchOutcome.TOO_LARGE:
                     # A site-wide export exceeded the bounded page reader.
                     # More bulk siblings can exhaust the host's time budget
@@ -978,6 +1048,13 @@ class SitemapReader:
             for child in children:
                 queue.append((child, depth + 1))
             for location in locations:
+                if trace.sitemap_urls_seen >= MAX_SITEMAP_URLS:
+                    trace.errors.append(
+                        f"stopped after reading {MAX_SITEMAP_URLS:,} sitemap URLs; "
+                        "the sitemap is larger than we read"
+                    )
+                    trace.sitemap_urls_kept = len(pages)
+                    return pages
                 trace.sitemap_urls_seen += 1
                 canonical = canonical_url(location)
                 if canonical in seen_pages:
@@ -989,13 +1066,6 @@ class SitemapReader:
                 if keep is not None and not keep(canonical):
                     continue
                 pages.append(canonical)
-                if trace.sitemap_urls_seen >= MAX_SITEMAP_URLS:
-                    trace.errors.append(
-                        f"stopped after reading {MAX_SITEMAP_URLS:,} sitemap URLs; "
-                        "the sitemap is larger than we read"
-                    )
-                    trace.sitemap_urls_kept = len(pages)
-                    return pages
 
         trace.sitemap_urls_kept = len(pages)
         return pages
@@ -1033,12 +1103,19 @@ class LiveDiscoveryAdapter:
         registry_path: Path | None = None,
         *,
         page_recorder: PageRecorder | None = None,
+        research_scope: Callable[[Candidate], AbstractContextManager] | None = None,
+        observation_recorder: Callable[[ProgrammeObservation], None] | None = None,
     ) -> None:
+        self.research_scope = research_scope
+        self.observation_recorder = observation_recorder
+        self.confirmed_observations = ProgrammeObservationSet()
         self.fetcher = fetcher
         self.registry_path = registry_path or REGISTRY_PATH
         self.sitemaps = SitemapReader(fetcher)
         #: Populated per run, so a caller can report why discovery found what it did.
         self.traces: list[DiscoveryTrace] = []
+        #: Observed prefixes only; a propagated control never completes a candidate.
+        self.interrupted_traces: list[DiscoveryTrace] = []
         #: Wired by the runner when fetched pages should feed source_pages
         #: (dormant while None — discovery runs byte-identically without it).
         self.page_recorder = page_recorder
@@ -1054,6 +1131,47 @@ class LiveDiscoveryAdapter:
         if not self.registry_path.exists():
             return []
         return json.loads(self.registry_path.read_text())
+
+    def _publish_programme_page(
+        self,
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+        result: FetchResult,
+        page: PageClassification,
+    ) -> None:
+        """No await between accepted page validation and its fenced publication."""
+        if page.page_type not in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
+            return
+        final = canonical_url(result.final_url or result.url)
+        domain = trace.domain or urlparse(final).netloc
+        page_type: Literal["program_detail", "intake_specific_program"] = (
+            "program_detail"
+            if page.page_type == PageType.PROGRAM_DETAIL
+            else "intake_specific_program"
+        )
+        observed = ProgrammeObservation(
+            id=observation_id(trace.institution, domain, final),
+            institution=trace.institution,
+            domain=domain,
+            programme_url=final,
+            requested_degree=profile.context.level,
+            reads=(
+                PageReadProof(
+                    content_hash=hashlib.sha256(result.text.encode()).hexdigest(),
+                    fetched_at=result.fetched_at,
+                    page_type=page_type,
+                    classified_degree=DegreeLevel(page.degree_level) if page.degree_level else None,
+                    classified_subject=page.subject,
+                ),
+            ),
+        )
+        next_set = self.confirmed_observations.add(observed)
+        if next_set == self.confirmed_observations:
+            return
+        if self.observation_recorder is not None:
+            self.observation_recorder(observed)
+        # A refused fence never looks like locally accepted publication.
+        self.confirmed_observations = next_set
 
     def _search_provider_or_none(self) -> SearchProvider | None:
         """The configured provider, or ``None`` when there is none.
@@ -1094,19 +1212,46 @@ class LiveDiscoveryAdapter:
         entries = entries[:limit]
 
         self.traces = []
+        self.interrupted_traces = []
         self.walker_outcomes = []
+        self.confirmed_observations = ProgrammeObservationSet()
         out: list[Candidate] = []
         for entry in entries:
-            candidate, trace = await self._discover_one(entry, profile)
+            seed = Candidate(
+                name=entry["name"], country=entry["country"], city=entry.get("city", "")
+            )
+            trace = DiscoveryTrace(institution=seed.name, domain="")
+            try:
+                with self.research_scope(seed) if self.research_scope else nullcontext():
+                    candidate, trace = await self._discover_one(entry, profile, trace=trace)
+            except (asyncio.CancelledError, RunCancelled, LeaseLost):
+                self.interrupted_traces.append(trace)
+                raise
+            except UniversityReadStopped as stopped:
+                if stopped.reason == "checkpoint_busy":
+                    raise
+                candidate = seed
+                candidate.search_queries_used = trace.search_queries_sent
+                trace.search_limitations.append(
+                    f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
+                )
             self.traces.append(trace)
             out.append(candidate)
         return out
 
     async def _discover_one(
-        self, entry: dict, profile: ApplicantProfileIn
+        self,
+        entry: dict,
+        profile: ApplicantProfileIn,
+        *,
+        search_queries_used: int = 0,
+        trace: DiscoveryTrace | None = None,
     ) -> tuple[Candidate, DiscoveryTrace]:
         domain = urlparse(entry["homepage"]).netloc
-        trace = DiscoveryTrace(institution=entry["name"], domain=domain)
+        if trace is None:
+            trace = DiscoveryTrace(institution=entry["name"], domain=domain)
+        trace.domain = domain
+        trace.search_queries_sent = max(trace.search_queries_sent, search_queries_used)
 
         candidate = Candidate(
             name=entry["name"],
@@ -1163,6 +1308,8 @@ class LiveDiscoveryAdapter:
 
         try:
             await self.sitemaps.collect(entry["homepage"], domain, trace, keep)
+        except (UniversityReadStopped, RunCancelled, LeaseLost):
+            raise
         except Exception as exc:  # a malformed sitemap must not end the run
             trace.errors.append(f"sitemap discovery failed: {type(exc).__name__}: {exc}")
 
@@ -1241,7 +1388,9 @@ class LiveDiscoveryAdapter:
                 break
             result = await self.fetcher.get(url)
             if not result.ok:
-                trace.reject(url, f"could not be read ({result.outcome.value})")
+                trace.reject(
+                    fetch_diagnostic_url(url, result), f"could not be read ({result.outcome.value})"
+                )
                 continue
             if not same_source_site(url, result.final_url or url):
                 trace.reject(url, "programme redirected off the institution's site")
@@ -1252,6 +1401,7 @@ class LiveDiscoveryAdapter:
                 trace.reject(url, reason)
                 continue
             confirmed.append(url)
+            self._publish_programme_page(trace, profile, result, page)
             if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
                 _remember_field_source(
                     trace,
@@ -1312,15 +1462,17 @@ class LiveDiscoveryAdapter:
                 trace.reject(url, reason)
                 refused.add(url)
                 trace.field_sources.pop(canonical_url(url), None)
-            elif len(_distinct_fields(list(profile.context.intended_fields))) > 1:
-                _remember_field_source(
-                    trace,
-                    url=url,
-                    subject=page.subject or "",
-                    fields=fields,
-                    basis="classified_programme_page",
-                    source_url=result.final_url or url,
-                )
+            else:
+                self._publish_programme_page(trace, profile, result, page)
+                if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
+                    _remember_field_source(
+                        trace,
+                        url=url,
+                        subject=page.subject or "",
+                        fields=fields,
+                        basis="classified_programme_page",
+                        source_url=result.final_url or url,
+                    )
 
         if refused:
             selected[PageCategory.PROGRAM_PAGE] = [
@@ -1375,6 +1527,8 @@ class LiveDiscoveryAdapter:
         )
         try:
             walks = await walker.walk(catalogues[:WALKER_MAX_CATALOGS])
+        except (UniversityReadStopped, RunCancelled, LeaseLost):
+            raise
         except Exception as exc:  # a walker failure must not end discovery
             trace.errors.append(f"catalog walker failed: {type(exc).__name__}: {exc}"[:300])
             return
@@ -1444,6 +1598,13 @@ class LiveDiscoveryAdapter:
         from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import discover_candidates
 
+        query_budget = _remaining_search_query_budget(trace)
+        if not query_budget:
+            trace.search_limitations.append(
+                f"Programme search not run at {entry['name']}: earlier searches used "
+                "the per-institution query budget."
+            )
+            return
         provider = self._search_provider_or_none()
         if provider is None:
             return
@@ -1499,18 +1660,24 @@ class LiveDiscoveryAdapter:
             )
 
         try:
-            report = await discover_candidates(provider, intent, fetch=read, top_k=10)
+            report = await discover_candidates(
+                provider,
+                intent,
+                query_budget=query_budget,
+                fetch=read,
+                top_k=10,
+                on_query_attempt=trace.charge_search_query_attempt,
+            )
         except SearchError as exc:
             trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
             return
-        trace.search_queries_sent += len(report.queries_run)
 
         trace.search_failures.extend(report.failure_diagnostics)
         if report.throttled:
             trace.search_limitations.append(
-                f"Search at {entry['name']} stopped: {report.provider} answered "
-                "HTTP 429, so the remaining query families were not sent. This "
-                "is a quota stop, not a search that found nothing."
+                f"Search at {entry['name']} stopped: {report.provider} reported "
+                "a rate limit, so the remaining query families were not sent. "
+                "Discovery remains incomplete after this rate-limit stop."
             )
         pages = selected[PageCategory.PROGRAM_PAGE]
         if RECOVER_SEARCH_CANDIDATES:
@@ -1567,7 +1734,7 @@ class LiveDiscoveryAdapter:
         """Search distinct subjects under one institution-wide paid/read budget."""
         from app.adapters.search import SearchError
         from app.adapters.search.base import search_failure_diagnostic
-        from app.adapters.search.intent import DEFAULT_QUERY_BUDGET, DiscoveryIntent
+        from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
 
         fields = _distinct_fields(list(profile.context.intended_fields))
@@ -1593,7 +1760,8 @@ class LiveDiscoveryAdapter:
                 f"Search coverage limited at {entry['name']}: {skipped} requested subject(s) "
                 "failed query privacy validation and were not searched."
             )
-        chosen = intents[:DEFAULT_QUERY_BUDGET]
+        query_budget = _remaining_search_query_budget(trace)
+        chosen = intents[:query_budget]
         trace.queried_fields = [intent.field for intent in chosen]
         if len(intents) > len(chosen):
             trace.search_limitations.append(
@@ -1617,7 +1785,7 @@ class LiveDiscoveryAdapter:
             return
 
         query_budgets = [1] * len(chosen)
-        for slot in range(DEFAULT_QUERY_BUDGET - len(chosen)):
+        for slot in range(query_budget - len(chosen)):
             query_budgets[slot % len(chosen)] += 1
         hop_budgets = [0] * len(chosen)
         for slot in range(DEFAULT_HOP_ENTRY_POINTS):
@@ -1644,25 +1812,25 @@ class LiveDiscoveryAdapter:
                     fetch=read,
                     hop_entry_points=hop_budget,
                     top_k=10,
+                    on_query_attempt=trace.charge_search_query_attempt,
                 )
             except SearchError as exc:
                 trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
                 continue
             reports.append((intent.field, report))
             trace.search_failures.extend(report.failure_diagnostics)
-            # Counted before a throttle stop: the queries sent before the 429
+            # Counted before a throttle stop: queries attempted before the rate limit
             # were spent, and leaving them out understated the run's cost.
             query_count += len(report.queries_run)
-            trace.search_queries_sent += len(report.queries_run)
             failed_count += len(report.failed_queries)
             if report.throttled:
                 # One rate-limit answer ends the run's searching, not just this
                 # subject's: the remaining subjects would each re-send a query
-                # into a quota that has already refused.
+                # into an endpoint that has already reported a rate limit.
                 trace.search_limitations.append(
-                    f"Search at {entry['name']} stopped: {provider.name} answered "
-                    "HTTP 429, so the remaining subjects were not searched. This "
-                    "is a quota stop, not a search that found nothing."
+                    f"Search at {entry['name']} stopped: {provider.name} reported "
+                    "a rate limit, so the remaining subjects were not searched. "
+                    "Discovery remains incomplete after this rate-limit stop."
                 )
                 break
             for reason, count in report.rejection_counts.items():
@@ -1767,8 +1935,12 @@ class LiveDiscoveryAdapter:
             checked += 1
             result = await self.fetcher.get(found.url)
             if not result.ok:
-                pending.append(found.url)
-                trace.reject(found.url, f"search lead unresolved ({result.outcome.value})")
+                if result.outcome != FetchOutcome.REFUSED_PRIVACY:
+                    pending.append(found.url)
+                trace.reject(
+                    fetch_diagnostic_url(found.url, result),
+                    f"search lead unresolved ({result.outcome.value})",
+                )
                 continue
             if not same_source_site(found.url, result.final_url or found.url):
                 trace.reject(found.url, "search lead redirected off the institution's site")
@@ -1852,6 +2024,8 @@ class LiveDiscoveryAdapter:
                 continue
             pages.append(found.url)
             added += 1
+            if basis == "classified_programme_page":
+                self._publish_programme_page(trace, profile, result, page)
             if multi_requested:
                 _remember_field_source(
                     trace,
@@ -1984,7 +2158,7 @@ class LiveDiscoveryAdapter:
             result = await self.fetcher.get(start)
             if not result.ok:
                 trace.errors.append(
-                    f"navigation fallback: {start} unreachable ({result.outcome.value})"
+                    f"navigation fallback: {fetch_diagnostic_url(start, result)} unreachable ({result.outcome.value})"
                 )
                 continue
             if not same_source_site(start, result.final_url or start):
@@ -2085,8 +2259,12 @@ def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
-        url = urljoin(base, anchor["href"]).split("#")[0]
-        if urlparse(url).scheme not in ("http", "https"):
+        try:
+            url = urljoin(base, anchor["href"]).split("#")[0]
+            scheme = urlparse(url).scheme
+        except ValueError:
+            continue
+        if scheme not in ("http", "https"):
             continue
         if not same_institution(url, domain):
             continue

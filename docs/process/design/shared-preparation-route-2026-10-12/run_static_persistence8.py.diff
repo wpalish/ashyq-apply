@@ -1,0 +1,10 @@
+--- run_static_persistence7.py
++++ run_static_persistence8.py
+@@ -1,6 +1,6 @@
+ import fcntl,hashlib,json,os,subprocess,time
+ from pathlib import Path
+-root=Path(__file__).resolve().parent;source=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source');out=root/'evidence/static-persistence7';out.mkdir(parents=True,exist_ok=False)
++root=Path(__file__).resolve().parent;source=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source');out=root/'evidence/static-persistence8';out.mkdir(parents=True,exist_ok=False)
+ lock=Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/.run.lock').open('r+')
+ fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+ def pins():

@@ -1,0 +1,112 @@
+{
+  "kind": "NEW remaining-only three cases after offline bounded-page-cap protocol repair",
+  "prior_revalidation_sha256": "acece8df76e278dcdea8d201b636e889f8488f932c794600ad040ab702f80ebf",
+  "created_at": "2026-10-07T22:38:02.237004+00:00",
+  "source_head": "7277c154bda838688268b7a07d4286ed8f4688ce",
+  "source_tree_sha256": "b18f63fe7bf47773ffd6f97ef0cea45967a4fa061dd616da0aafa5723389826b",
+  "source_matches_full_checked_executable_files": true,
+  "package_plan_sha256": "6701c0b0734c237b75ad935d6175b490be84fa49537c6a152d2cd00db7262715",
+  "package_runner_sha256": "4d5a09536e04c28ee5d93fa83b6281b0215b6b154c6f8516865578245ea90484",
+  "controller_sha256": "2cc2a53d1c6d1d1a0d5b33a65b1482f6a139dcf92ecf27e172092015b5b4edca",
+  "ordered_cases": [
+    "hku",
+    "ntu",
+    "kaist"
+  ],
+  "provider": "exa_mcp",
+  "model_calls": 0,
+  "network_location": "local computer, not Fly",
+  "commands": [
+    {
+      "case": "hku",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/source/backend/.venv/bin/python",
+        "-m",
+        "evaluation.research.live",
+        "--live",
+        "--case",
+        "hku",
+        "--seconds-per-case",
+        "120",
+        "--max-pages",
+        "60",
+        "--search-provider",
+        "exa_mcp",
+        "--shared-query-budget",
+        "--out",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v3/execution/hku/capture",
+        "--strict-expert-budget",
+        "--stop-file",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+        "--finalization-reserve-ms",
+        "3000"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/source/backend"
+    },
+    {
+      "case": "ntu",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/source/backend/.venv/bin/python",
+        "-m",
+        "evaluation.research.live",
+        "--live",
+        "--case",
+        "ntu",
+        "--seconds-per-case",
+        "120",
+        "--max-pages",
+        "60",
+        "--search-provider",
+        "exa_mcp",
+        "--shared-query-budget",
+        "--out",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v3/execution/ntu/capture",
+        "--strict-expert-budget",
+        "--stop-file",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+        "--finalization-reserve-ms",
+        "3000"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/source/backend"
+    },
+    {
+      "case": "kaist",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/source/backend/.venv/bin/python",
+        "-m",
+        "evaluation.research.live",
+        "--live",
+        "--case",
+        "kaist",
+        "--seconds-per-case",
+        "120",
+        "--max-pages",
+        "60",
+        "--search-provider",
+        "exa_mcp",
+        "--shared-query-budget",
+        "--out",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/remaining3-v3/execution/kaist/capture",
+        "--strict-expert-budget",
+        "--stop-file",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+        "--finalization-reserve-ms",
+        "3000"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261007T220539Z-live-6d0aa77b/source/backend"
+    }
+  ],
+  "limits": {
+    "reads": 60,
+    "queries": 6,
+    "active_ms": 120000,
+    "source_work_ms": 117000,
+    "finalization_reserve_ms": 3000
+  },
+  "expert_controller_started": false,
+  "heldout_used": false,
+  "automatic_scoring": false,
+  "query_policy": "Unchanged frozen algorithm planner; actual query/action traces retained",
+  "on_first_new_refusal": "global stop without retry/substitution/reset/purchase",
+  "missing_or_invalid_checkpoint": "stop remaining cases, protocol unknown; no invented score"
+}

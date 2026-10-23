@@ -1,0 +1,105 @@
+{
+  "status": "PREPARED_NOT_APPLIED_NOT_RUN",
+  "root_reported_source_head": "731e241c",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source",
+  "changed_files": [
+    {
+      "path": "backend/app/domain/preparation.py",
+      "before_sha256": "c66f4a31a656f2e664bf90b75e6130085ab31471335103057ca7a610c74cfcc4",
+      "after_sha256": "07cf2c70355847b76affbe72564b80841bad9009af671056e6b38c2d098295b4"
+    },
+    {
+      "path": "backend/tests/test_preparation_domain.py",
+      "before_sha256": "44a2026015add0eb2d331f12a1ddc905ae186deae33391c478bbf1c71e28a802",
+      "after_sha256": "c2682c6b37be1955cd7453c87b671b69c92b0a238f4b9d5766edd7139240aa5e",
+      "original_byte_prefix_retained": true,
+      "new_test_functions": 8,
+      "new_parametrized_cases_without_fixture_multiplier": 21
+    },
+    {
+      "path": "backend/tests/test_preparation_api.py",
+      "before_sha256": "cd8ab75b35869824c998473f085ea64b64ac166e663040a15d463706b35686ff",
+      "after_sha256": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437",
+      "original_byte_prefix_retained": true,
+      "new_test_functions": 2,
+      "new_parametrized_cases_without_fixture_multiplier": 4
+    }
+  ],
+  "unchanged_helpers_ast": [
+    "combine_states",
+    "_claim_state",
+    "_policy"
+  ],
+  "test_counts": {
+    "new_pure_cases": 21,
+    "new_api_cases": 8,
+    "new_total_per_native_phase": 29,
+    "retained_pure_cases": 30,
+    "retained_api_cases": 92,
+    "expected_foundation_cases_per_native_phase": 151,
+    "conditional_expected_full_count_if_no_other_backend_change": 4682
+  },
+  "test_details": {
+    "backend/tests/test_preparation_domain.py": {
+      "new_functions": [
+        "test_shared_legacy_page_does_not_turn_deadline_or_gpa_into_exam_goals",
+        "test_shared_url_component_binding_does_not_inherit_overall_or_sat",
+        "test_native_named_policy_types_only_bind_their_own_claim",
+        "test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours",
+        "test_exact_id_cannot_clear_a_known_different_ielts_requirement",
+        "test_unknown_component_and_unresolved_reference_do_not_borrow_shared_page_evidence",
+        "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls",
+        "test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control"
+      ],
+      "new_case_count": 21,
+      "original_assert_nodes": 19,
+      "proposed_assert_nodes": 45
+    },
+    "backend/tests/test_preparation_api.py": {
+      "new_functions": [
+        "test_plan_shared_legacy_page_excludes_nonexam_checks_and_binds_each_exam_component",
+        "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim"
+      ],
+      "new_case_count": 4,
+      "original_assert_nodes": 91,
+      "proposed_assert_nodes": 111
+    }
+  },
+  "read_only_sources": [
+    {
+      "path": "backend/app/domain/eligibility.py",
+      "sha256": "ec246fc2c2b6953c901d3ba1658e92f26a20d7dd678d3434d05cd72512bf0387"
+    },
+    {
+      "path": "backend/app/adapters/applicability.py",
+      "sha256": "35ff5b19b0f09b7104e2a42a14a7833015add18cd468f754d18fe5c20e4fd576"
+    },
+    {
+      "path": "backend/app/api/routes_preparation.py",
+      "sha256": "9468402ee1ba94377b5d1f1ddde0f5f5c7eb98212eeb2100f2f055af4f6aca5b"
+    },
+    {
+      "path": "backend/app/schemas/result.py",
+      "sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974"
+    },
+    {
+      "path": "backend/app/schemas/claim.py",
+      "sha256": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794"
+    },
+    {
+      "path": "backend/app/schemas/preparation.py",
+      "sha256": "c02c040d842a97a41240a4ee9735df86a2cd4f9d6bb4bc6160174fd16e6e62d8"
+    },
+    {
+      "path": "backend/app/domain/enums.py",
+      "sha256": "a72d0935767d4b1cfe37c3c255674bfdaa23a368fb3b0ed21a8a782b7e18db42"
+    },
+    {
+      "path": "backend/ruff.toml",
+      "sha256": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc"
+    }
+  ],
+  "runtime_test_execution": false,
+  "source_or_git_writes": false,
+  "protected_payload_read_or_score": false
+}

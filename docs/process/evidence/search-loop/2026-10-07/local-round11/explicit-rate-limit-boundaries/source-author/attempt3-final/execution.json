@@ -1,0 +1,777 @@
+{
+  "execution": [
+    {
+      "mode": "off",
+      "scenario": "factory:meta",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:meta\", \"PASS\": 5, \"RED\": 2, \"total\": 7}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-meta.off.log",
+      "sha256": "ee952da3d24a8844fd06c3a55ceba857d09409285f1043d9da99fed616dd091c"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:meta",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:meta\", \"PASS\": 7, \"RED\": 0, \"total\": 7}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-meta.on.log",
+      "sha256": "d55197aa023b5fd9465d502376ffe80d1afa33d73748a40520984670de211628"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:no-retry",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:no-retry\", \"PASS\": 5, \"RED\": 2, \"total\": 7}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-no-retry.off.log",
+      "sha256": "644dceb3ed717dea36b157baed25971d62eb3554747ba4b79c4dbf2daefb7e77"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:no-retry",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:no-retry\", \"PASS\": 7, \"RED\": 0, \"total\": 7}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-no-retry.on.log",
+      "sha256": "ce4dc5e232cd53a957d6bb41146567db9fb5cbe4e0a95e81b1810e1cbf51f0c7"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:http429",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:http429\", \"PASS\": 7, \"RED\": 0, \"total\": 7}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-http429.off.log",
+      "sha256": "0a1be20776341af201ee42d67d356686d2c88b15289c2e0843f3464b6800e838"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:http429",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:http429\", \"PASS\": 7, \"RED\": 0, \"total\": 7}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-http429.on.log",
+      "sha256": "1ac4e43d79314b5dc046b989de7b7d625ed1e07f83fb7f734bbbdefeea6278cc"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:success",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:success\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-success.off.log",
+      "sha256": "743a712b411d53d713e6facffc28130918154120f525db149912ddeca4abc70b"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:success",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:success\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-success.on.log",
+      "sha256": "0cc232e6cc0938b435a0ed6bfead8bb701be8f388bfee94e2489a61fb048462d"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:transport",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:transport\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-transport.off.log",
+      "sha256": "1d83eb3609c3849b760911acf64e392aa164493b53d0d7261ce56148e82592b9"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:transport",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:transport\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-transport.on.log",
+      "sha256": "2cc80aa82e04a897cbff1bcf316e3ae7e135732041aef08224d23ac4eeee4a25"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:timeout",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:timeout\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-timeout.off.log",
+      "sha256": "a44d15997048c3750a12df8ade66322f220b3ce419abd323c1483289f4465404"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:timeout",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:timeout\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-timeout.on.log",
+      "sha256": "72d37b9b9df65629b97fbc3016de40ab4a36aa56c294b9f8a29f93326992c0b6"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:meta-false",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:meta-false\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-meta-false.off.log",
+      "sha256": "c52baf51c4438a2d662e516a3f338c211f609d003ae841aedd5bc6a654604a08"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:meta-false",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:meta-false\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-meta-false.on.log",
+      "sha256": "35b47c46f3cb1da61e05bb5cb82aa7bce9ca3496000436983a51e26a342c9052"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:meta-one",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:meta-one\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-meta-one.off.log",
+      "sha256": "4b84759695add339a5f0e38e3e240b8db43a65f9d39babf303e5ae527b1e42d9"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:meta-one",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:meta-one\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-meta-one.on.log",
+      "sha256": "3d631c4465dac34141d14ac7a59a89c74a834e97cbe4d95be35c138602f10699"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:meta-string",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:meta-string\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-meta-string.off.log",
+      "sha256": "a9013f48384ae5a3a5a50e7023b1819f97982ff4559f528d7c042877f932fd4e"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:meta-string",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:meta-string\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-meta-string.on.log",
+      "sha256": "fc71e15ae2e6c31cb5a6abbdd29914c4adbf68189c3916406d19691bc96ae2a3"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:vendor-text",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:vendor-text\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-vendor-text.off.log",
+      "sha256": "a3d4d8d15f5734b6d1bc2f81db1c1c5414135a499ba62af371b2e08bfb882d34"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:vendor-text",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:vendor-text\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-vendor-text.on.log",
+      "sha256": "728e19894eec6de1e21c4e9d63b954ad20f40ad629b473281505021487dbd6bd"
+    },
+    {
+      "mode": "off",
+      "scenario": "factory:vendor-error",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"factory:vendor-error\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-vendor-error.off.log",
+      "sha256": "50d12d805f41625254511fb33fd2e9c28ea3f5af61bcbfd4b874012664986148"
+    },
+    {
+      "mode": "on",
+      "scenario": "factory:vendor-error",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"factory:vendor-error\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/factory-vendor-error.on.log",
+      "sha256": "815416b4753aeef01e5d790b73f71638c35fb288ea9bdee2f53e641c924599dd"
+    },
+    {
+      "mode": "off",
+      "scenario": "retrieval:meta",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"retrieval:meta\", \"PASS\": 3, \"RED\": 2, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-meta.off.log",
+      "sha256": "e62d332e3032b051f11fb93c1763268afd73114226c361e51be50544588b0998"
+    },
+    {
+      "mode": "on",
+      "scenario": "retrieval:meta",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"retrieval:meta\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-meta.on.log",
+      "sha256": "5f59185891807434f53c209cfab446fd29513f9d0642b9f3ed13d4c3ad222849"
+    },
+    {
+      "mode": "off",
+      "scenario": "retrieval:no-retry",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"retrieval:no-retry\", \"PASS\": 3, \"RED\": 2, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-no-retry.off.log",
+      "sha256": "3d9c16b52b7fbf8e411f979c764edd24106a6b5dc5c38dcac6a42c598014030d"
+    },
+    {
+      "mode": "on",
+      "scenario": "retrieval:no-retry",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"retrieval:no-retry\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-no-retry.on.log",
+      "sha256": "001019bd9107f39aa368caa4d6592d7a7497ca34a7fa89baf8416644ec09b3a1"
+    },
+    {
+      "mode": "off",
+      "scenario": "retrieval:http429",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"retrieval:http429\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-http429.off.log",
+      "sha256": "1a81c0ef92a0ba51e6b558acc5606154866edbe0ca2b295a24cc7046a1897a5f"
+    },
+    {
+      "mode": "on",
+      "scenario": "retrieval:http429",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"retrieval:http429\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-http429.on.log",
+      "sha256": "23cfcfc92521075f08d8616c815f9c4405a5eafd57fbc97172b36946dad32d4f"
+    },
+    {
+      "mode": "off",
+      "scenario": "retrieval:success",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"retrieval:success\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-success.off.log",
+      "sha256": "d31273d6d630ca50a88210c1e3f8095a7c150d823c74e2104b4a939bd120d72a"
+    },
+    {
+      "mode": "on",
+      "scenario": "retrieval:success",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"retrieval:success\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-success.on.log",
+      "sha256": "bf6558c9d2f771fb4e7bbb55c031dc7574f14475fb3623d437f76891b574581f"
+    },
+    {
+      "mode": "off",
+      "scenario": "retrieval:transport",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"retrieval:transport\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-transport.off.log",
+      "sha256": "4efcdc837746c8c0cdbd3f0afa686451e97567defa4cededbe5e4d4bede38af0"
+    },
+    {
+      "mode": "on",
+      "scenario": "retrieval:transport",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"retrieval:transport\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-transport.on.log",
+      "sha256": "1db0551d57b010bb94c3d0422d721c07d48785413064420792771883b3e2f5ca"
+    },
+    {
+      "mode": "off",
+      "scenario": "retrieval:timeout",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"retrieval:timeout\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-timeout.off.log",
+      "sha256": "e08c7e4be9a5494867288b9eff59e488f1970350094eb3a35af43ab595fd1d66"
+    },
+    {
+      "mode": "on",
+      "scenario": "retrieval:timeout",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"retrieval:timeout\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-timeout.on.log",
+      "sha256": "53d283aca4003934d3e2c8daff662b1f6a0e15a312a1810732538fd5d0966bb0"
+    },
+    {
+      "mode": "off",
+      "scenario": "retrieval:vendor-error",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"retrieval:vendor-error\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-vendor-error.off.log",
+      "sha256": "b7e09a1727445991124951d562ee10e979c304d970fb6ed5e43fd26decc18c0e"
+    },
+    {
+      "mode": "on",
+      "scenario": "retrieval:vendor-error",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"retrieval:vendor-error\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-vendor-error.on.log",
+      "sha256": "ee87757486e49d630801cf48fa550cde51077b5a087bd9da66300690befd19c7"
+    },
+    {
+      "mode": "off",
+      "scenario": "caller:single-meta",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"caller:single-meta\", \"PASS\": 4, \"RED\": 2, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-single-meta.off.log",
+      "sha256": "898472bfa4e28ddd1e5a8c0fa3de3f036d950c8389440f4c05a8ab6a3bb0cf91"
+    },
+    {
+      "mode": "on",
+      "scenario": "caller:single-meta",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"caller:single-meta\", \"PASS\": 6, \"RED\": 0, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-single-meta.on.log",
+      "sha256": "1c114b173395f831ad4979a32ef5d05c1dc4a2226e948143aaa4c42ac24731d4"
+    },
+    {
+      "mode": "off",
+      "scenario": "caller:multi-meta",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"caller:multi-meta\", \"PASS\": 3, \"RED\": 3, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-multi-meta.off.log",
+      "sha256": "d2b492aab3c83283a8c1f55f893593e9cc85899c3145fda2bd7730e657d357c5"
+    },
+    {
+      "mode": "on",
+      "scenario": "caller:multi-meta",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"caller:multi-meta\", \"PASS\": 6, \"RED\": 0, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-multi-meta.on.log",
+      "sha256": "f5ce6b6b1a2f9f2d3422e4c9f83d2122c805130741fe014092c85261a853185f"
+    },
+    {
+      "mode": "off",
+      "scenario": "caller:single-429",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"caller:single-429\", \"PASS\": 5, \"RED\": 1, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-single-429.off.log",
+      "sha256": "0a15f7edd4927835a1078b08d7dbae95979d53bdb8bae9658173e2f93686f66b"
+    },
+    {
+      "mode": "on",
+      "scenario": "caller:single-429",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"caller:single-429\", \"PASS\": 6, \"RED\": 0, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-single-429.on.log",
+      "sha256": "3757ba3c2bdb60497a952bda4c0537029abe8ed16fd8114fe3538b4cb6ba6d30"
+    },
+    {
+      "mode": "off",
+      "scenario": "caller:multi-429",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"caller:multi-429\", \"PASS\": 5, \"RED\": 1, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-multi-429.off.log",
+      "sha256": "ba8fe72b556a805986592a438b766dd2e547208eb2849f8d3821a7f2861b1b56"
+    },
+    {
+      "mode": "on",
+      "scenario": "caller:multi-429",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"caller:multi-429\", \"PASS\": 6, \"RED\": 0, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-multi-429.on.log",
+      "sha256": "a59284b7825718924685739d180090e3f2f33d5de14c3fe67a6d993220d35d04"
+    },
+    {
+      "mode": "off",
+      "scenario": "caller:single-success",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"caller:single-success\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-single-success.off.log",
+      "sha256": "5fa35b4a934c81d08fd364595a5eb68b061437b9fb9778117fbc0bfe3ff462a9"
+    },
+    {
+      "mode": "on",
+      "scenario": "caller:single-success",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"caller:single-success\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-single-success.on.log",
+      "sha256": "3443db0c3cc6aeac6842b0313582f3c9630d864a1714aec5eaa63532d77d6fd6"
+    },
+    {
+      "mode": "off",
+      "scenario": "caller:multi-success",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"caller:multi-success\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-multi-success.off.log",
+      "sha256": "f2b514c15dc47d8e94929e3dedb8ca335121e303fe059c42e5d0432513f71909"
+    },
+    {
+      "mode": "on",
+      "scenario": "caller:multi-success",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"caller:multi-success\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/caller-multi-success.on.log",
+      "sha256": "ebf848cadf77804ba2dcb5761730641b97b89a3c632bfb8facdf423d112d768d"
+    },
+    {
+      "mode": "off",
+      "scenario": "native:expiry",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"native:expiry\", \"PASS\": 2, \"RED\": 4, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/native-expiry.off.log",
+      "sha256": "feb66ffa7c517e799149539f85deb3fe47a7feb9d7aca3385226cc798e7954d8"
+    },
+    {
+      "mode": "on",
+      "scenario": "native:expiry",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"native:expiry\", \"PASS\": 6, \"RED\": 0, \"total\": 6}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/native-expiry.on.log",
+      "sha256": "804967f75f7cc8f8425c15ee26c6a292895b156f055de9ac6b5714db98326cdd"
+    },
+    {
+      "mode": "off",
+      "scenario": "native:recovery-meta",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"native:recovery-meta\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/native-recovery-meta.off.log",
+      "sha256": "35ae08f0e3bd3da19be5b075a1dfb50e58bba191b21900502404396f0665dc2a"
+    },
+    {
+      "mode": "on",
+      "scenario": "native:recovery-meta",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"native:recovery-meta\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/native-recovery-meta.on.log",
+      "sha256": "707acdb42d274d1c986197a42c47c9be13e619ace02834d25355b794f64bb7f5"
+    },
+    {
+      "mode": "off",
+      "scenario": "retrieval:meta-unwrapped",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"retrieval:meta-unwrapped\", \"PASS\": 3, \"RED\": 2, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-meta-unwrapped.off.log",
+      "sha256": "01b02bff8bf42f4b14904812378c87930e480a68fbd595ad4124a0db32488b71"
+    },
+    {
+      "mode": "on",
+      "scenario": "retrieval:meta-unwrapped",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"retrieval:meta-unwrapped\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/retrieval-meta-unwrapped.on.log",
+      "sha256": "a53bf7f787fdef280ea13123cb54bd1e9ed13cb78db60bf6d91658df28a47530"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:stamp",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:stamp\", \"PASS\": 2, \"RED\": 1, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-stamp.off.log",
+      "sha256": "b46ce78d4545e331f700e6c5c099c0fda54addc2a6ca7fa9211abc2bb5bdfec1"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:stamp",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:stamp\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-stamp.on.log",
+      "sha256": "e5b891d3f6a63102981f21ae2c71519353f02b50867115f0c3a301c5da1e5112"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:expiry",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:expiry\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-expiry.off.log",
+      "sha256": "12c9a9c0ae452869dc08ed3948a6080c614bf1facd5258774f68edcd4a9fac2f"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:expiry",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:expiry\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-expiry.on.log",
+      "sha256": "0597a9ad137d0060a30bdeec8ac5550df6a4e78ca098dad495847b6f19113ce7"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:isolation",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:isolation\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-isolation.off.log",
+      "sha256": "7902c0dff933b5c1d56ce7e0cef36dd243fab1384a4c5513691403811d7ae2c0"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:isolation",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:isolation\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-isolation.on.log",
+      "sha256": "7485a4e775f5227ac7c7eed55bc9652851000c0ee2077f69102e6d973195172b"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:stale",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:stale\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-stale.off.log",
+      "sha256": "e8e32b4a811efbd6da6c655aa6698efd8873b2edcae39ec538b101a2893b12a4"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:stale",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:stale\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-stale.on.log",
+      "sha256": "b6ad61a296b3a4b4899501625dd01ef06db3559b218024a3f52b5ac2b4ab2275"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:reset",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:reset\", \"PASS\": 4, \"RED\": 1, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-reset.off.log",
+      "sha256": "2ec5b2405ca9b62a6ec4a4c00dcc9541ab49de60e2102eee9811497cf442385b"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:reset",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:reset\", \"PASS\": 5, \"RED\": 0, \"total\": 5}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-reset.on.log",
+      "sha256": "b9380d1494a4f8c6ecded6afe6a520357914512ea7f0fc82b6a3050d873beff9"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:string-reason",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:string-reason\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-string-reason.off.log",
+      "sha256": "3a3500dc2622721b5dcc54a77e8e2bede78a59668f3fa8d065bd46a9a6978d60"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:string-reason",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:string-reason\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-string-reason.on.log",
+      "sha256": "8a338805a08b84f3724b77bc516ae688a526315105c9ff0c5a2a9907fe4ea53e"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:vendor-text",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:vendor-text\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-vendor-text.off.log",
+      "sha256": "8097a4caf1a29b3ad62c07fd8f2e8d5f5ff1b6799fc37d06f2011c96eaee5283"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:vendor-text",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:vendor-text\", \"PASS\": 4, \"RED\": 0, \"total\": 4}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-vendor-text.on.log",
+      "sha256": "c254c247ec0f60d6090028d939a03290f4deb75344ecd19429590ee8c32612a8"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:429-untyped",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:429-untyped\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-429-untyped.off.log",
+      "sha256": "bf3e957d5b546f7f1f5c1fe89bacd7301751d190bd26690bcbf28fd27298ca89"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:429-untyped",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:429-untyped\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-429-untyped.on.log",
+      "sha256": "306230727ee5ccace3ca537553b44e3893b0ddbb4a9754f1b52490b9c6d7bc34"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:500-typed",
+      "exit": 1,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:500-typed\", \"PASS\": 2, \"RED\": 1, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-500-typed.off.log",
+      "sha256": "e09acba8ba4917267066aad9e6948f6caf2c91f53f19d4b506ab2728259d4e66"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:500-typed",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:500-typed\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-500-typed.on.log",
+      "sha256": "1a1a1aab2bc713af18019a3b57b982213ee29c2ee96b15d34b016ec873a5b4fb"
+    },
+    {
+      "mode": "off",
+      "scenario": "state:legacy-float",
+      "exit": 0,
+      "stdout": "{\"mode\": \"off\", \"scenario\": \"state:legacy-float\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-legacy-float.off.log",
+      "sha256": "c94c2b220f5e02905c9e46a8708cea812e7149d665c1af4570d82c1268a00e48"
+    },
+    {
+      "mode": "on",
+      "scenario": "state:legacy-float",
+      "exit": 0,
+      "stdout": "{\"mode\": \"on\", \"scenario\": \"state:legacy-float\", \"PASS\": 3, \"RED\": 0, \"total\": 3}\n",
+      "log": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/a-explicit-rate-limit-proposal/attempt3-final/state-legacy-float.on.log",
+      "sha256": "b127876d24a0783b15333dd58ac8138686f6289fc8278be6d7348a43de5cc816"
+    }
+  ],
+  "counts": {
+    "off": {
+      "PASS": 147,
+      "RED": 24,
+      "exceptions": 0,
+      "total": 171
+    },
+    "on": {
+      "PASS": 171,
+      "RED": 0,
+      "exceptions": 0,
+      "total": 171
+    }
+  },
+  "whole_output_equality": [
+    {
+      "scenario": "native:recovery-meta",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "factory:success",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "factory:transport",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "factory:timeout",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "factory:meta-false",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "factory:meta-one",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "factory:meta-string",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "factory:vendor-text",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "factory:vendor-error",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "retrieval:success",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "retrieval:transport",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "retrieval:timeout",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "retrieval:vendor-error",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "caller:single-success",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    },
+    {
+      "scenario": "caller:multi-success",
+      "status": "PASS",
+      "compared": [
+        "outputs",
+        "query_seam_attempts",
+        "mock_HTTP_events",
+        "mock_HTTP_counts",
+        "fake_clock_sleeps"
+      ]
+    }
+  ]
+}

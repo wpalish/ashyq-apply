@@ -1,0 +1,7 @@
+{
+  "status": "NOT_COPIED_GUARD_REJECTION",
+  "packet": "c-legal-review",
+  "manifest_sha256": "ca30560937f3297969d52504bfa7c17587394e87c2d473fb3b203ea25e327b32",
+  "reason": "Generic path guard rejected three allowlisted owned public test/config source supports under runtime/. Guard validated all paths before making the destination; no partial packet or app source copied.",
+  "repair": "Permit only exact runtime/package.json, runtime/vitest.config.mjs, runtime/src/test-setup.ts for this packet, each still sealed SHA/byte checked. No recursive runtime, data, dependency, environment or private file copying."
+}

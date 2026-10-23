@@ -1,0 +1,906 @@
+{
+ "run_id": 37545452839,
+ "artifact": "expert-recovery-37545452839",
+ "requested_cases": [
+  "groningen",
+  "delft",
+  "aalto",
+  "vienna",
+  "warsaw",
+  "ubc",
+  "toronto",
+  "hku",
+  "ntu",
+  "kaist"
+ ],
+ "original_captures": [
+  {
+   "file": "aalto-off/20261006T232039Z/capture.json",
+   "sha256": "1a9ab96f5eba956cedb28dd0f86702f6552cffb04674261fea9e39930704b41f",
+   "case": "aalto",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2024-2026",
+    "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028",
+    "https://www.aalto.fi/en/minors/computer-science-l-minor"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 4,
+    "latency_seconds": 35.77076588299997,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "aalto-off/20261006T235330Z/capture.json",
+   "sha256": "c66c974d3244394c264df2d242f0918dc143a952fcd446932e8681ebdcc098b3",
+   "case": "aalto",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 1,
+    "http_fetches": 1,
+    "latency_seconds": 11.18324414100016,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "aalto-on/20261006T232116Z/capture.json",
+   "sha256": "35850cd90260bba2fe5e2e806d3da461354b24caea09246a7cb379040a50ef9a",
+   "case": "aalto",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2024-2026",
+    "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028",
+    "https://www.aalto.fi/en/minors/computer-science-l-minor"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 4,
+    "latency_seconds": 24.699469482999973,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "aalto-on/20261006T235312Z/capture.json",
+   "sha256": "dd87d930420cea31bbb390522b32a21c5880d9190240e4a3b58083f3569ba3a2",
+   "case": "aalto",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2024-2026",
+    "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028",
+    "https://www.aalto.fi/en/programmes/curriculum-2024-2026-34"
+   ],
+   "cost": {
+    "search_calls": 4,
+    "http_fetches": 1,
+    "latency_seconds": 17.029213372999948,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "delft-off/20261006T231855Z/capture.json",
+   "sha256": "d45a3288401ced6cd276068aefab5abfaef9caba0a1ecc0f4c9a3b4e146b3d07",
+   "case": "delft",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "cost",
+    "scholarship"
+   ],
+   "programme_urls": [
+    "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+    "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bsc-computer-science-and-engineering"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 30,
+    "latency_seconds": 50.17904990200003,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "delft-off/20261006T235418Z/capture.json",
+   "sha256": "cfba95d566942ef9ff47bcf5f3e4054e1882d4dea2d4881fc1390d0b40589773",
+   "case": "delft",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "cost",
+    "scholarship"
+   ],
+   "programme_urls": [
+    "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+   ],
+   "cost": {
+    "search_calls": 1,
+    "http_fetches": 17,
+    "latency_seconds": 25.336068026999783,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "delft-on/20261006T231946Z/capture.json",
+   "sha256": "31cef94c3bd5f63a3a2f7fc17831a4de844bbfb78952fb8fed5f63fe0fbca4f9",
+   "case": "delft",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english",
+    "cost",
+    "scholarship"
+   ],
+   "programme_urls": [
+    "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+    "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bsc-computer-science-and-engineering"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 33,
+    "latency_seconds": 50.874702428000035,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "delft-on/20261006T235343Z/capture.json",
+   "sha256": "e51df7e96d1d7c3cd250d009ce430b6c7ab8ff07e7b14c8d4ebb0f09fabb39e1",
+   "case": "delft",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english",
+    "cost",
+    "scholarship"
+   ],
+   "programme_urls": [
+    "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+   ],
+   "cost": {
+    "search_calls": 1,
+    "http_fetches": 20,
+    "latency_seconds": 33.69991458599998,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "groningen-off/20261006T231516Z/capture.json",
+   "sha256": "7b91d9c08e1b0600a656a25de94d49bd5fe2bf81f59126bb3ed0f32992a8378e",
+   "case": "groningen",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+   "core_answers": [
+    "deadline",
+    "cost"
+   ],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 52,
+    "latency_seconds": 115.01122905499999,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "groningen-off/20261006T235605Z/capture.json",
+   "sha256": "bbb831e721640295b5b4bb4716a1279e9f09ff5a5ab206909cedb0078b615e91",
+   "case": "groningen",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "deadline",
+    "cost"
+   ],
+   "programme_urls": [
+    "https://www.rug.nl/bachelors/computing-science"
+   ],
+   "cost": {
+    "search_calls": 1,
+    "http_fetches": 42,
+    "latency_seconds": 71.84726607499988,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "groningen-on/20261006T231712Z/capture.json",
+   "sha256": "ec36e18512bb82dcf41796af6fec923c0a5fac10e370d798afa74e45059e2c32",
+   "case": "groningen",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "deadline",
+    "cost"
+   ],
+   "programme_urls": [
+    "https://www.rug.nl/bachelors/computing-science",
+    "https://www.rug.nl/bachelors/computing-science?lang=en"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 57,
+    "latency_seconds": 100.73718118699998,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "groningen-on/20261006T235445Z/capture.json",
+   "sha256": "45be0fb711123ce41073264fb7d6dd8dc770b800f01086ff670ec9a59ea9c93f",
+   "case": "groningen",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "deadline",
+    "cost"
+   ],
+   "programme_urls": [
+    "https://www.rug.nl/bachelors/computing-science"
+   ],
+   "cost": {
+    "search_calls": 1,
+    "http_fetches": 46,
+    "latency_seconds": 78.78576007200036,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "hku-off/20261006T233058Z/capture.json",
+   "sha256": "d44c9d1903243f8e67327d1f889fd88dce75cd5ee5d1e315489f17db711340fd",
+   "case": "hku",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 24,
+    "latency_seconds": 61.583516491999944,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "hku-off/20261006T234333Z/capture.json",
+   "sha256": "a0276b747e259e373dccfc868a5d7bc2d2ea95b994ca4ca885784cd304eded3d",
+   "case": "hku",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 25,
+    "latency_seconds": 37.409151559000065,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "hku-on/20261006T233201Z/capture.json",
+   "sha256": "1bdaa428597ccf2bc11f285da166792fa191b73166adc72a8696d9dc525644dd",
+   "case": "hku",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 25,
+    "latency_seconds": 37.182773004999945,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "hku-on/20261006T234249Z/capture.json",
+   "sha256": "7988a6e7a13877f7b95f414b59901a342ec2c299de0d757eaafe0c6e293798c5",
+   "case": "hku",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 25,
+    "latency_seconds": 41.539222092000045,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "kaist-off/20261006T233547Z/capture.json",
+   "sha256": "f610f967dca4d607d01d300283813e9114708328c737909993080bb15db448e0",
+   "case": "kaist",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 34,
+    "latency_seconds": 78.93390715100008,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "kaist-off/20261006T233850Z/capture.json",
+   "sha256": "8482ee0fbafc957eb8463af4370b6e914ed22ba9f63a049cd6d95638d2b57d51",
+   "case": "kaist",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 34,
+    "latency_seconds": 49.23951190700018,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "kaist-on/20261006T233708Z/capture.json",
+   "sha256": "3140ecbdd9ed2a94ebd004626e4ae21d9db1d2bac68925564dbeaa9b7bf02fbf",
+   "case": "kaist",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 34,
+    "latency_seconds": 50.87593971000001,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "kaist-on/20261006T233800Z/capture.json",
+   "sha256": "93439b0847704b637d99dc153b69c4e3a07d401956673aeb44cce4e0e78e0216",
+   "case": "kaist",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 34,
+    "latency_seconds": 48.241905519000056,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "ntu-off/20261006T233240Z/capture.json",
+   "sha256": "c8269988413bc22415ffd09fc0243192293a21072603e76df4243e2a75fcdfed",
+   "case": "ntu",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english",
+    "deadline",
+    "scholarship",
+    "scholarship_international"
+   ],
+   "programme_urls": [
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+   ],
+   "cost": {
+    "search_calls": 4,
+    "http_fetches": 44,
+    "latency_seconds": 89.94011008400003,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "ntu-off/20261006T234117Z/capture.json",
+   "sha256": "c3c498f3d08feb2e7202074cc8c392cab1ba340e44d233011d89106bd4e566cb",
+   "case": "ntu",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english",
+    "deadline",
+    "scholarship",
+    "scholarship_international"
+   ],
+   "programme_urls": [
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+   ],
+   "cost": {
+    "search_calls": 4,
+    "http_fetches": 44,
+    "latency_seconds": 90.63627229999997,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "ntu-on/20261006T233412Z/capture.json",
+   "sha256": "183e6c63c440611d1432d985055478aa5ff06c099ec6eab0bf8c5b72b8bd1022",
+   "case": "ntu",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english",
+    "deadline",
+    "scholarship",
+    "scholarship_international"
+   ],
+   "programme_urls": [
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+   ],
+   "cost": {
+    "search_calls": 4,
+    "http_fetches": 47,
+    "latency_seconds": 94.07938872499994,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "ntu-on/20261006T233941Z/capture.json",
+   "sha256": "c0595f1a4cd57da2ea5c9ce3a4f2c085a7af726ec7e487a41c22823162c61c90",
+   "case": "ntu",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english",
+    "deadline",
+    "scholarship",
+    "scholarship_international"
+   ],
+   "programme_urls": [
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+    "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+   ],
+   "cost": {
+    "search_calls": 4,
+    "http_fetches": 47,
+    "latency_seconds": 94.78254268799992,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "toronto-off/20261006T232949Z/capture.json",
+   "sha256": "75ae7711dee58038449d1feb8e4b378129bf879a55dd733bc3fc959fca5f940b",
+   "case": "toronto",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+    "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 29,
+    "latency_seconds": 38.539040659999955,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "toronto-off/20261006T234447Z/capture.json",
+   "sha256": "b56dc78d4e0e21600ca1529811d3ecbacadb89ce86fd9cdbcb55e2c203ebb674",
+   "case": "toronto",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+    "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 30,
+    "latency_seconds": 25.54009971100004,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "toronto-on/20261006T233029Z/capture.json",
+   "sha256": "984c013af29b22c1ce37f2ad511938a600c7ccb9a3c1a08dac2e080450205beb",
+   "case": "toronto",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+    "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 30,
+    "latency_seconds": 27.63811172999999,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "toronto-on/20261006T234412Z/capture.json",
+   "sha256": "8eff71e173cf820654d23732043bf2dc2e66b5586c933529d5b7ba6de3944e78",
+   "case": "toronto",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+    "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 31,
+    "latency_seconds": 33.88477137299992,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "ubc-off/20261006T232657Z/capture.json",
+   "sha256": "4b100bd7aa4c536bb0347dd8bc29bc6deaf266868d611a449f6afad8e90b6802",
+   "case": "ubc",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english"
+   ],
+   "programme_urls": [
+    "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+    "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+    "https://you.ubc.ca/programs/computer-science-okanagan-bsc"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 44,
+    "latency_seconds": 85.16533567700003,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "ubc-off/20261006T234652Z/capture.json",
+   "sha256": "b6fce16d25ec2de5afa4657ad1a921f4822a5ed9227f6f076d3014b5fb21cf13",
+   "case": "ubc",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english"
+   ],
+   "programme_urls": [
+    "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+    "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+    "https://you.ubc.ca/programs/computer-science-okanagan-bsc"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 40,
+    "latency_seconds": 69.65135719699992,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "ubc-on/20261006T232823Z/capture.json",
+   "sha256": "c973009159bd1ace01e059720eff372fba30b79e8338c0baf36b707ee1ab6f90",
+   "case": "ubc",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english",
+    "deadline"
+   ],
+   "programme_urls": [
+    "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+    "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+    "https://you.ubc.ca/programs/computer-science-okanagan-bsc"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 48,
+    "latency_seconds": 84.02021676100003,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "ubc-on/20261006T234515Z/capture.json",
+   "sha256": "14057052db24d351daa56b7c7562389a330f2ae9239c5c44f01a9e85c916086b",
+   "case": "ubc",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "english",
+    "deadline"
+   ],
+   "programme_urls": [
+    "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+    "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+    "https://you.ubc.ca/programs/computer-science-okanagan-bsc"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 49,
+    "latency_seconds": 95.64685255800009,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "vienna-off/20261006T232142Z/capture.json",
+   "sha256": "59c73841f120a339682e008b79ecd859d4912297f9698b1c78e953d11fae4c6b",
+   "case": "vienna",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "deadline"
+   ],
+   "programme_urls": [
+    "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 45,
+    "latency_seconds": 77.97159259399996,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "vienna-off/20261006T235215Z/capture.json",
+   "sha256": "4dc5d46c370a7c66f1ceb0e420d2988f5a73e91e368617ae85d6c13e8fb22155",
+   "case": "vienna",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "deadline"
+   ],
+   "programme_urls": [
+    "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 45,
+    "latency_seconds": 55.47933699100031,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "vienna-on/20261006T232302Z/capture.json",
+   "sha256": "ac7033a1785ffcdca778f6fe3e19399e3c717d80dd651fbfbddc4835c95dc2d2",
+   "case": "vienna",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "deadline"
+   ],
+   "programme_urls": [
+    "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 45,
+    "latency_seconds": 56.22308393200001,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "vienna-on/20261006T235056Z/capture.json",
+   "sha256": "bf726d5d5e96934a94faf1eaa7c5312a13ebe890d53cb3172d80eba15fda1a26",
+   "case": "vienna",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [
+    "deadline"
+   ],
+   "programme_urls": [
+    "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 45,
+    "latency_seconds": 77.44531265299975,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "warsaw-off/20261006T232400Z/capture.json",
+   "sha256": "7b7f3ce0197d34de0d7e900aba82138fbe2f49225334311a8b8fbcf5424101d3",
+   "case": "warsaw",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+    "http://informatorects.uw.edu.pl/en/programme?q=S1-INF",
+    "https://informatorects.uw.edu.pl/en/programmes-first/IN/S1-INF"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 49,
+    "latency_seconds": 94.9956021349999,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "warsaw-off/20261006T234935Z/capture.json",
+   "sha256": "f72e67f67aaed62b413c73219acbcf9b5d561671505783244925b058afaf1362",
+   "case": "warsaw",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+    "http://informatorects.uw.edu.pl/en/programme?q=S1-INF",
+    "https://informatorects.uw.edu.pl/en/programmes-first/IN/S1-INF"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 49,
+    "latency_seconds": 79.6933345299999,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "warsaw-on/20261006T232537Z/capture.json",
+   "sha256": "74dea5eae26759a80a9354ba1942f4328cbf497dde831a0fea4e310a3473ee42",
+   "case": "warsaw",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+    "http://informatorects.uw.edu.pl/en/programme?q=S1-INF",
+    "https://informatorects.uw.edu.pl/en/programmes-first/IN/S1-INF"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 49,
+    "latency_seconds": 78.529717839,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  },
+  {
+   "file": "warsaw-on/20261006T234803Z/capture.json",
+   "sha256": "e6d9d9f59df5db5912f816014bd529288665a255769e24f7d9ff0f944440eeba",
+   "case": "warsaw",
+   "pipeline_sha": "d5597f4fd2d08f00d6e1a83d29df4225dc9a1330",
+   "error": null,
+   "core_answers": [],
+   "programme_urls": [
+    "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+    "http://informatorects.uw.edu.pl/en/programme?q=S1-INF",
+    "https://informatorects.uw.edu.pl/en/programmes-first/IN/S1-INF"
+   ],
+   "cost": {
+    "search_calls": 6,
+    "http_fetches": 49,
+    "latency_seconds": 90.17091797500007,
+    "over_budget": 0,
+    "missing_telemetry": []
+   }
+  }
+ ],
+ "arms": {
+  "off": {
+   "completeness": {
+    "status": "complete",
+    "expected_cases": [
+     "aalto",
+     "delft",
+     "groningen",
+     "hku",
+     "kaist",
+     "ntu",
+     "toronto",
+     "ubc",
+     "vienna",
+     "warsaw"
+    ],
+    "expected_repetitions": 2,
+    "missing": [],
+    "unfinished": []
+   },
+   "repetitions": [
+    {
+     "core_numerator": 10,
+     "core_denominator_observed": 60,
+     "core_denominator_planned": 60
+    },
+    {
+     "core_numerator": 10,
+     "core_denominator_observed": 60,
+     "core_denominator_planned": 60
+    }
+   ]
+  },
+  "on": {
+   "completeness": {
+    "status": "complete",
+    "expected_cases": [
+     "aalto",
+     "delft",
+     "groningen",
+     "hku",
+     "kaist",
+     "ntu",
+     "toronto",
+     "ubc",
+     "vienna",
+     "warsaw"
+    ],
+    "expected_repetitions": 2,
+    "missing": [],
+    "unfinished": []
+   },
+   "repetitions": [
+    {
+     "core_numerator": 12,
+     "core_denominator_observed": 60,
+     "core_denominator_planned": 60
+    },
+    {
+     "core_numerator": 12,
+     "core_denominator_observed": 60,
+     "core_denominator_planned": 60
+    }
+   ]
+  }
+ },
+ "error_counts": {
+  "complete": 39,
+  "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED": 1
+ },
+ "observed_core": {
+  "numerator": 44,
+  "denominator": 240
+ },
+ "planned_core_denominator": 240,
+ "over_budget": []
+}

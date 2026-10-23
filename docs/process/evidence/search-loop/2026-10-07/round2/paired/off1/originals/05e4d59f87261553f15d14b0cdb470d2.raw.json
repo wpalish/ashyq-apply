@@ -1,0 +1,107 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-07T18:57:40.733860+00:00",
+    "duration_seconds": 12.0,
+    "run_error": "",
+    "batch": [
+      "California Institute of Technology"
+    ],
+    "institutions": [
+      {
+        "catalogue_id": "05e4d59f87261553f15d14b0cdb470d2",
+        "institution": "California Institute of Technology",
+        "country": "United States",
+        "domain": "caltech.edu",
+        "access": "PARTIALLY_BLOCKED",
+        "robots_disallowed_requests": 1,
+        "pages_checked": 3,
+        "pages_failed": 1,
+        "failures": [
+          [
+            "https://caltech.edu/",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ]
+        ],
+        "outcomes": {
+          "robots_disallowed": 1,
+          "ok": 2
+        },
+        "discovered": {},
+        "discovery_trace": {
+          "institution": "California Institute of Technology",
+          "domain": "caltech.edu",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for California Institute of Technology; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        },
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": false,
+        "discovery_notes": "Institution candidate; programme, cost and requirements need research.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {},
+        "page_types": {},
+        "page_diagnostics": []
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 0,
+      "blocked": 1,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 0,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {},
+      "page_types": {},
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 0,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 0,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 2,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

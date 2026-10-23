@@ -1,0 +1,89 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - button "Unimatch home": unimatch
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Профиль абитуриента" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - strong: Загружена сохранённая анкета
+  - heading "Личные данные" [level=1]
+  - paragraph: Заполни основную информацию. Её можно будет изменить в любой момент.
+  - complementary "Разделы анкеты":
+    - navigation "Profile steps":
+      - button "Личные данные"
+      - button "Учёба"
+      - button "Экзамены"
+      - button "Активности"
+      - button "Проверка"
+      - button "Бюджет"
+  - generic "Тестовые данные и чистая анкета"
+  - heading "Личные данные" [level=2]
+  - generic: Имя
+  - textbox "Имя": Тестовый
+  - generic: Фамилия
+  - textbox "Фамилия": Путь 500
+  - generic: Гражданство
+  - textbox "Гражданство": Kazakhstan
+  - generic: Страна проживания
+  - textbox "Страна проживания": Kazakhstan
+  - heading "Образование" [level=2]
+  - generic: Уровень обучения
+  - combobox "Уровень обучения":
+    - option "Подготовительная программа"
+    - option "Бакалавриат" [selected]
+    - option "Магистратура"
+    - option "Докторантура"
+  - generic: Система образования
+  - textbox "Система образования": Kazakhstan national secondary (attestat)
+  - generic: Страна обучения
+  - textbox "Страна обучения": Kazakhstan
+  - generic: Окончание школы
+  - textbox "Окончание школы": 2027-05-25
+  - heading "Планы" [level=2]
+  - generic: Планируемый год поступления
+  - spinbutton "Планируемый год поступления": "2027"
+  - generic: Желаемая страна обучения
+  - textbox "Желаемая страна обучения":
+    - /placeholder: Любая страна
+    - text: Netherlands, Germany, Canada, Finland, Belgium
+  - generic "Дополнительные данные анкеты"
+  - option "Foundation"
+  - option "Bachelor" [selected]
+  - option "Master"
+  - option "PhD"
+  - option "Fall" [selected]
+  - option "Spring"
+  - option "Summer"
+  - option "Winter"
+  - option "national" [selected]
+  - option "ib"
+  - option "a level"
+  - option "ap"
+  - option "us high_school"
+  - option "other"
+  - button "Сохранить как черновик"
+  - button "Сохранить и продолжить →"
+  - generic "Profile recovery history for this tab"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.

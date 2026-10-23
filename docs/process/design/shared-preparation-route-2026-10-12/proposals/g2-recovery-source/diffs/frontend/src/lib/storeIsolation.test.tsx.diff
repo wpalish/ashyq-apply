@@ -1,0 +1,42 @@
+--- a/frontend/src/lib/storeIsolation.test.tsx
++++ b/frontend/src/lib/storeIsolation.test.tsx
+@@ -3,6 +3,7 @@
+ import { ApiError, api } from '@/api/client';
+ import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
+ import { StoreProvider, useStore } from '@/lib/store';
++import { sharedRouteRecoveryBinding } from '@/lib/sharedRouteRecovery';
+ import type { ProgramResult, RunView } from '@/types';
+ const profile = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), id, display_name: `Saved ${id}`, created_at: '2026-01-01', updated_at: '2026-01-01' });
+ const run = (id: string) => ({ id, stage: 'failed', job_running: false, job_status: 'failed' }) as unknown as RunView;
+@@ -17,6 +18,7 @@
+ function deferred<T>() { let resolve!:(v:T)=>void;let reject!:(e:unknown)=>void;const promise=new Promise<T>((r,j)=>{resolve=r;reject=j;});return{promise,resolve,reject}; }
+ beforeEach(()=>{
+  localStorage.clear();sessionStorage.clear();sessionStorage.setItem('ashyq.activeProfile','A');sessionStorage.setItem('ashyq.activeRun','a');
++ localStorage.setItem('ashyq.applicantOwner','demo');sessionStorage.setItem('ashyq.applicantOwner','demo');
+  vi.spyOn(api,'capabilities').mockResolvedValue({} as never);vi.spyOn(api,'cases').mockResolvedValue([]);vi.spyOn(api,'validateProfile').mockResolvedValue({gaps:[],can_proceed:true,blocking_count:0,summary:'ok'});vi.spyOn(api,'shortlist').mockResolvedValue({} as never);
+  vi.spyOn(api,'getProfile').mockImplementation(async id=>profile(id) as never);vi.spyOn(api,'getRun').mockResolvedValue(run('a'));vi.spyOn(api,'listRuns').mockResolvedValue([run('b')]);vi.spyOn(api,'results').mockImplementation(async id=>[row(`${id}-row`)]);vi.spyOn(api,'summary').mockImplementation(async id=>({total:id==='b'?2:1}) as never);
+ });
+@@ -38,7 +40,10 @@
+  const old=deferred<ProgramResult>();vi.spyOn(api,'saveNotes').mockReturnValue(old.promise);render(<StoreProvider><Probe/></StoreProvider>);await flush();fireEvent.click(screen.getByText('notes'));await flush();fireEvent.click(screen.getByText('B'));await flush();old.reject(new ApiError(500,'Old A notes failure'));await flush();expect(screen.getByTestId('error')).toHaveTextContent('');
+ });
+ it('a late deletion response for A does not clear B',async()=>{
++ const journalA=sharedRouteRecoveryBinding(undefined,'A')!; const journalB=sharedRouteRecoveryBinding(undefined,'B')!;
++ sessionStorage.setItem(journalA.key,'A unresolved local command');sessionStorage.setItem(journalB.key,'B newer local draft');
+  const old=deferred<void>();vi.spyOn(api,'deleteProfile').mockReturnValue(old.promise);render(<StoreProvider><Probe/></StoreProvider>);await flush();fireEvent.click(screen.getByText('delete'));await flush();fireEvent.click(screen.getByText('B'));await flush();old.resolve();await flush();expect(screen.getByTestId('case')).toHaveTextContent('B');expect(screen.getByTestId('run')).toHaveTextContent('b');
++ expect(sessionStorage.getItem(journalA.key)).toBeNull();expect(sessionStorage.getItem(journalB.key)).toBe('B newer local draft');
+ });
+ it('starting a new run already invalidates a refresh from its predecessor',async()=>{
+  const old=deferred<ProgramResult[]>();vi.spyOn(api,'updateProfile').mockResolvedValue(profile('A') as never);vi.spyOn(api,'startRun').mockResolvedValue(run('new-run'));
+@@ -52,3 +57,12 @@
+  vi.useFakeTimers();vi.mocked(api.getProfile).mockRejectedValue(new ApiError(404,'Missing synthetic profile'));vi.mocked(api.getRun).mockRejectedValue(new ApiError(404,'Missing synthetic run'));
+  const v=render(<StoreProvider><Probe/></StoreProvider>);await flush();expect(sessionStorage.getItem('ashyq.activeProfile')).toBeNull();fireEvent.click(screen.getByText('edit'));await act(async()=>{vi.advanceTimersByTime(600);});await flush();v.unmount();render(<StoreProvider><Probe/></StoreProvider>);await flush();expect(screen.getByTestId('draft')).toHaveTextContent('Recovered fresh edit');expect(screen.getByTestId('case')).toHaveTextContent('none');
+ });
++
++it('a failed case deletion retains the exact own route journal and another case journal',async()=>{
++ const journalA=sharedRouteRecoveryBinding(undefined,'A')!;const journalB=sharedRouteRecoveryBinding(undefined,'B')!;
++ sessionStorage.setItem(journalA.key,'A original unresolved UUID/body');sessionStorage.setItem(journalB.key,'B local input');
++ vi.spyOn(api,'deleteProfile').mockRejectedValue(new ApiError(403,'Synthetic delete refusal'));
++ render(<StoreProvider><Probe/></StoreProvider>);await flush();fireEvent.click(screen.getByText('delete'));await flush();
++ expect(screen.getByTestId('case')).toHaveTextContent('A');expect(screen.getByTestId('error')).toHaveTextContent('Synthetic delete refusal');
++ expect(sessionStorage.getItem(journalA.key)).toBe('A original unresolved UUID/body');expect(sessionStorage.getItem(journalB.key)).toBe('B local input');
++});

@@ -1,0 +1,45 @@
+[
+  {
+    "check": "green-final",
+    "exit_code": 0,
+    "command": [
+      "/usr/local/bin/node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--root",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/c-compare-preparation-proposal/runtime",
+      "--config",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/c-compare-preparation-proposal/runtime/vitest.config.mjs",
+      "--configLoader",
+      "runner",
+      "--reporter",
+      "verbose"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/c-compare-preparation-proposal/runtime"
+  },
+  {
+    "check": "typecheck",
+    "exit_code": 0,
+    "command": [
+      "/usr/local/bin/node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "-p",
+      "tsconfig.json"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/c-compare-preparation-proposal/runtime"
+  },
+  {
+    "check": "lint",
+    "exit_code": 0,
+    "command": [
+      "/usr/local/bin/node",
+      "node_modules/eslint/bin/eslint.js",
+      "src/components/ComparePanel.tsx",
+      "src/components/ComparePanel.preparation.test.tsx",
+      "--max-warnings",
+      "0"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round3/c-compare-preparation-proposal/runtime"
+  }
+]

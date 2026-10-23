@@ -1,0 +1,261 @@
+..............................................................FFFF...... [ 57%]
+..................................F....FF..F......FFFF                   [100%]
+=================================== FAILURES ===================================
+_______ test_enabled_semantic_controls[own_programme_secondary_funding] ________
+
+name = 'own_programme_secondary_funding'
+url = 'https://example.edu/bachelors/computer-science'
+html = '<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bac...a href="/award/a">Alpha Scholarship</a></li><li><a href="/award/b">Beta Scholarship</a></li></ul></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+_______ test_enabled_semantic_controls[bare_programme_secondary_funding] _______
+
+name = 'bare_programme_secondary_funding'
+url = 'https://example.edu/bachelors/computer-science'
+html = '<html><head><title>Computer Science | Bachelor | University</title></head><body><main><h1>Computer Science</h1><p>Thi...a href="/award/a">Alpha Scholarship</a></li><li><a href="/award/b">Beta Scholarship</a></li></ul></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+_________ test_enabled_semantic_controls[programme_structure_synonym] __________
+
+name = 'programme_structure_synonym', url = 'https://example.edu/degree'
+html = '<html><head><title>Bachelor of Science in Mathematics</title></head><body><main><h1>Bachelor of Science in Mathematic...a href="/award/a">Alpha Scholarship</a></li><li><a href="/award/b">Beta Scholarship</a></li></ul></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+___________ test_enabled_semantic_controls[programme_secondary_faq] ____________
+
+name = 'programme_secondary_faq'
+url = 'https://example.edu/bachelors/computer-science'
+html = '<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bac...a href="/award/a">Alpha Scholarship</a></li><li><a href="/award/b">Beta Scholarship</a></li></ul></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_faq' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_faq
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+_________ test_enabled_semantic_controls[nested_academic_subsections] __________
+
+name = 'nested_academic_subsections'
+url = 'https://example.edu/bachelors/computer-science'
+html = '<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><p>This three-year bac...a href="/award/a">Alpha Scholarship</a></li><li><a href="/award/b">Beta Scholarship</a></li></ul></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+_ test_enabled_semantic_controls[expert_a_programme_negates_bursaries_not_degree] _
+
+name = 'expert_a_programme_negates_bursaries_not_degree'
+url = 'https://example.edu/support/computer-science'
+html = '<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>... degree.</p><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+_ test_enabled_semantic_controls[expert_a_programme_negates_funding_not_degree] _
+
+name = 'expert_a_programme_negates_funding_not_degree'
+url = 'https://example.edu/support/computer-science'
+html = '<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>...ogramme.</p><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+__ test_enabled_semantic_controls[expert_a_real_academic_same_block_positive] __
+
+name = 'expert_a_real_academic_same_block_positive'
+url = 'https://example.edu/support/computer-science'
+html = '<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>...Funding</h2><a href="/awards/one">Alpha Scholarship</a><a href="/awards/two">Beta Scholarship</a></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+_ test_enabled_semantic_controls[real_programme_aria_navigation_does_not_close] _
+
+name = 'real_programme_aria_navigation_does_not_close'
+url = 'https://example.edu/degree'
+html = '<html><head><title>BSc Computer Science</title></head><body><main><h1>BSc Computer Science</h1><h2>Curriculum</h2><p>...a href="/award/a">Alpha Scholarship</a></li><li><a href="/award/b">Beta Scholarship</a></li></ul></main></body></html>'
+expected = 'program_detail'
+
+    @pytest.mark.parametrize("name,url,html,expected", CASES, ids=[case[0] for case in CASES])
+    def test_enabled_semantic_controls(name, url, html, expected):
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        found = candidate.classify_page(url=url, html=html)
+>       assert found.page_type.value == expected
+E       AssertionError: assert 'scholarship_index' == 'program_detail'
+E         
+E         - program_detail
+E         + scholarship_index
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:59: AssertionError
+______________ test_actual_retained_wits_off_on_on_off[html_only] ______________
+
+include_text = False
+
+    @pytest.mark.parametrize("include_text", [False, True], ids=["html_only", "original_text"])
+    def test_actual_retained_wits_off_on_on_off(include_text):
+        raw = replay.BODY.read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == replay.EXPECTED_BODY_SHA
+        html = raw.decode()
+        text = readable_text(html) if include_text else ""
+        results = []
+        for enabled in (False, True, True, False):
+            candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = enabled
+            results.append(asdict(candidate.classify_page(url=replay.URL, html=html, text=text)))
+        assert (
+            results[0]
+            == results[3]
+            == asdict(legacy.classify_page(url=replay.URL, html=html, text=text))
+        )
+>       assert [r["page_type"].value for r in results] == [
+            "scholarship_index",
+            "program_detail",
+            "program_detail",
+            "scholarship_index",
+        ]
+E       AssertionError: assert ['scholarship...arship_index'] == ['scholarship...arship_index']
+E         
+E         At index 1 diff: 'scholarship_index' != 'program_detail'
+E         Use -v to get more diff
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:80: AssertionError
+____________ test_actual_retained_wits_off_on_on_off[original_text] ____________
+
+include_text = True
+
+    @pytest.mark.parametrize("include_text", [False, True], ids=["html_only", "original_text"])
+    def test_actual_retained_wits_off_on_on_off(include_text):
+        raw = replay.BODY.read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == replay.EXPECTED_BODY_SHA
+        html = raw.decode()
+        text = readable_text(html) if include_text else ""
+        results = []
+        for enabled in (False, True, True, False):
+            candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = enabled
+            results.append(asdict(candidate.classify_page(url=replay.URL, html=html, text=text)))
+        assert (
+            results[0]
+            == results[3]
+            == asdict(legacy.classify_page(url=replay.URL, html=html, text=text))
+        )
+>       assert [r["page_type"].value for r in results] == [
+            "scholarship_index",
+            "program_detail",
+            "program_detail",
+            "scholarship_index",
+        ]
+E       AssertionError: assert ['scholarship...arship_index'] == ['scholarship...arship_index']
+E         
+E         At index 1 diff: 'scholarship_index' != 'program_detail'
+E         Use -v to get more diff
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:80: AssertionError
+___ test_actual_requirements_reader_keeps_identity_quote_and_unknown_intake ____
+
+    @pytest.mark.asyncio
+    async def test_actual_requirements_reader_keeps_identity_quote_and_unknown_intake():
+        html = replay.BODY.read_text()
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = False
+        off = await replay.reader_replay(candidate.classify_page, html)
+        candidate.PROGRAMME_IDENTITY_BEFORE_FUNDING = True
+        on = await replay.reader_replay(candidate.classify_page, html)
+        assert off["claims"] == []
+>       assert len(on["claims"]) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py:96: AssertionError
+=============================== warnings summary ===============================
+work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py: 413 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[own_programme_secondary_funding]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[bare_programme_secondary_funding]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[programme_structure_synonym]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[programme_secondary_faq]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[nested_academic_subsections]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[expert_a_programme_negates_bursaries_not_degree]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[expert_a_programme_negates_funding_not_degree]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[expert_a_real_academic_same_block_positive]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_enabled_semantic_controls[real_programme_aria_navigation_does_not_close]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_actual_retained_wits_off_on_on_off[html_only]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_actual_retained_wits_off_on_on_off[original_text]
+FAILED work/search-loop-round6/reviews/expert_b/revision2/test_programme_funding_scope.py::test_actual_requirements_reader_keeps_identity_quote_and_unknown_intake
+12 failed, 114 passed, 413 warnings in 0.57s

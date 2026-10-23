@@ -1,0 +1,137 @@
+{
+  "status": "PASS",
+  "steps": [
+    {
+      "step": "migrate",
+      "argv": [
+        "/usr/bin/sandbox-exec",
+        "-p",
+        "(version 1)(allow default)(deny network*)",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+        "-m",
+        "alembic",
+        "upgrade",
+        "head"
+      ],
+      "exit_code": 0
+    },
+    {
+      "step": "seed",
+      "argv": [
+        "/usr/bin/sandbox-exec",
+        "-p",
+        "(version 1)(allow default)(deny network*)",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+        "seed_demo.py"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "rows": [
+    {
+      "university": "University of Groningen",
+      "score": 0.7946847724648439,
+      "bucket": "PLAUSIBLE"
+    },
+    {
+      "university": "KU Leuven",
+      "score": 0.7763283721524047,
+      "bucket": "PLAUSIBLE"
+    },
+    {
+      "university": "University of Tokyo",
+      "score": 0.6966551546807824,
+      "bucket": "PLAUSIBLE"
+    },
+    {
+      "university": "University of Toronto",
+      "score": 0.6946826987728376,
+      "bucket": "PLAUSIBLE"
+    },
+    {
+      "university": "Eindhoven University of Technology",
+      "score": 0.5049752469181039,
+      "bucket": "NEEDS_CLARIFICATION"
+    },
+    {
+      "university": "University of Amsterdam",
+      "score": 0.5049752469181039,
+      "bucket": "NEEDS_CLARIFICATION"
+    },
+    {
+      "university": "McGill University",
+      "score": 0.5049752469181039,
+      "bucket": "NEEDS_CLARIFICATION"
+    },
+    {
+      "university": "University of Vienna",
+      "score": 0.49354196437865444,
+      "bucket": "AMBITIOUS"
+    },
+    {
+      "university": "National University of Singapore",
+      "score": 0.42945542015454136,
+      "bucket": "AMBITIOUS"
+    },
+    {
+      "university": "Aalto University",
+      "score": 0.4062431224921457,
+      "bucket": "OUT_OF_BUDGET"
+    },
+    {
+      "university": "University of British Columbia",
+      "score": 0.40064535322214034,
+      "bucket": "OUT_OF_BUDGET"
+    },
+    {
+      "university": "University of Oslo",
+      "score": 0.37111091983174194,
+      "bucket": "NEEDS_CLARIFICATION"
+    },
+    {
+      "university": "Arizona State University",
+      "score": 0.2952319129974366,
+      "bucket": "OUT_OF_BUDGET"
+    },
+    {
+      "university": "Technical University of Munich",
+      "score": 0.2771119106026563,
+      "bucket": "OUT_OF_BUDGET"
+    },
+    {
+      "university": "University of Edinburgh",
+      "score": 0.2631328593697471,
+      "bucket": "NEEDS_CLARIFICATION"
+    },
+    {
+      "university": "Trinity College Dublin",
+      "score": 0.25409706085441824,
+      "bucket": "OUT_OF_BUDGET"
+    },
+    {
+      "university": "University of Warsaw",
+      "score": 0.2516470661037826,
+      "bucket": "OUT_OF_BUDGET"
+    },
+    {
+      "university": "EPFL",
+      "score": 0.0,
+      "bucket": "EXCLUDED"
+    },
+    {
+      "university": "University of Melbourne",
+      "score": 0.0,
+      "bucket": "EXCLUDED"
+    },
+    {
+      "university": "Delft University of Technology",
+      "score": 0.0,
+      "bucket": "EXCLUDED"
+    }
+  ],
+  "source_before_after_equal": true,
+  "source_count": 481,
+  "own_synthetic_db": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/seed-final25/owned-runtime/synthetic.db",
+  "scope": "Native seed_demo order, no live/model/provider/production/quality metric; OS denies all IP network. Corpus copied before execution to owned mutable directory.",
+  "historical_unknown_input_namespace": "Direct seed is not API pending marker; legacy unknown retained."
+}

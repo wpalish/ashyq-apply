@@ -1,0 +1,185 @@
+{
+  "queries": [
+    {
+      "at_ns": 810535963398416,
+      "thread": 8419598720,
+      "sql": "INSERT INTO jobs (kind, queue, run_id, idempotency_key, status, priority, attempts, max_attempts, available_at, lease_expires_at, heartbeat_at, worker_id, cancel_requested, payload, last_error, started_at, finished_at, id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "params": "('research', 'default', '125ab03967ba44a4a2c503ed25ed47f7', None, 'succeeded', 0, 1, 3, '2026-10-07 23:11:19.459072', None, None, 'worker-one', 0, '{}', '', None, None, 'db7a0875534943788dba4fd3867f9ee0', '2026-10-07 23:11:19.459357', '2026-10-07 23:11:19.459357')"
+    },
+    {
+      "elapsed_ns": 103209,
+      "sql_prefix": "INSERT INTO jobs (kind, queue, run_id, idempotency_key, status, priority, attempts, max_attempts, av"
+    },
+    {
+      "at_ns": 810535963705958,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET settings_snapshot=?, started_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"university_research_budget_v1\": {\"version\": 1, \"read_limit\": 60, \"active_episode\": \"decision:db7a0875534943788dba4fd3867f9ee0\", \"episodes\": {\"decision:db7a0875534943788dba4fd3867f9ee0\": {\"read_counts\": {\"catalogue:u-one\": 60}}}}}', '2020-01-01 00:00:00.000000', '2026-10-07 23:11:19.459673', '125ab03967ba44a4a2c503ed25ed47f7')"
+    },
+    {
+      "elapsed_ns": 20958,
+      "sql_prefix": "UPDATE research_runs SET settings_snapshot=?, started_at=?, updated_at=? WHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810535964105375,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('125ab03967ba44a4a2c503ed25ed47f7',)"
+    },
+    {
+      "elapsed_ns": 20916,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810535967034208,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = ? AND jobs.run_id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ?",
+      "params": "('fedff1834ea34e91bd5a0599c9139a3f', '125ab03967ba44a4a2c503ed25ed47f7', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 27250,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = ? AND jobs.run_id = ? AND jobs.status = ? AND jobs.work"
+    },
+    {
+      "at_ns": 810535967277833,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET heartbeat_at=jobs.heartbeat_at, updated_at=? WHERE jobs.id = ? AND jobs.run_id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ?",
+      "params": "('2026-10-07 23:11:19.463248', 'fedff1834ea34e91bd5a0599c9139a3f', '125ab03967ba44a4a2c503ed25ed47f7', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 119708,
+      "sql_prefix": "UPDATE jobs SET heartbeat_at=jobs.heartbeat_at, updated_at=? WHERE jobs.id = ? AND jobs.run_id = ? A"
+    },
+    {
+      "at_ns": 810535967504916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('125ab03967ba44a4a2c503ed25ed47f7',)"
+    },
+    {
+      "elapsed_ns": 3709,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810535967883500,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, stage_state=?, settings_snapshot=?, worker_id=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('profile_validation', '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:11:19.462764+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Checking the profile for gaps that would weaken the result\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"program_verification\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"completed\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}}', '{\"demo_mode\": false, \"candidate_limit\": 2, \"verify_limit\": 2, \"candidate_l"
+    },
+    {
+      "elapsed_ns": 41750,
+      "sql_prefix": "UPDATE research_runs SET stage=?, stage_state=?, settings_snapshot=?, worker_id=?, heartbeat_at=?, u"
+    },
+    {
+      "at_ns": 810535968184416,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ? RETURNING id",
+      "params": "('2026-10-07 23:13:19.463572', '2026-10-07 23:11:19.463572', '2026-10-07 23:11:19.464154', 'fedff1834ea34e91bd5a0599c9139a3f', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 28125,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status ="
+    },
+    {
+      "at_ns": 810535968901625,
+      "thread": 8419598720,
+      "sql": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "params": "('4a75640b4cb94dbeb56dd77e589d6945', 'system', 'profile_validated', 'run', '125ab03967ba44a4a2c503ed25ed47f7', '{\"gaps\": 7}', '990ae57fde594ae88b3608c34efce344', '2026-10-07 23:11:19.464864', '2026-10-07 23:11:19.464865')"
+    },
+    {
+      "elapsed_ns": 101916,
+      "sql_prefix": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, create"
+    },
+    {
+      "at_ns": 810535969129291,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:11:19.462764+00:00\", \"finished_at\": \"2026-10-07T23:11:19.464519+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"program_verification\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"completed\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}}', '2026-10-07 23:11:1"
+    },
+    {
+      "elapsed_ns": 21709,
+      "sql_prefix": "UPDATE research_runs SET stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810535969275875,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ? RETURNING id",
+      "params": "('2026-10-07 23:13:19.464585', '2026-10-07 23:11:19.464585', '2026-10-07 23:11:19.465249', 'fedff1834ea34e91bd5a0599c9139a3f', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 25333,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status ="
+    },
+    {
+      "at_ns": 810535969747541,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('125ab03967ba44a4a2c503ed25ed47f7',)"
+    },
+    {
+      "elapsed_ns": 23125,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810535969893375,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = ?",
+      "params": "('fedff1834ea34e91bd5a0599c9139a3f',)"
+    },
+    {
+      "elapsed_ns": 14750,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = ?"
+    },
+    {
+      "at_ns": 810535970258541,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('candidate_discovery', '{\"queued\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"profile_validation\": {\"status\": \"done\", \"started_at\": \"2026-10-07T23:11:19.462764+00:00\", \"finished_at\": \"2026-10-07T23:11:19.464519+00:00\", \"error\": \"\", \"detail\": \"7 gaps found: 0 blocking, 2 high-impact. Research can run; results affected by the gaps above will be marked.\", \"items_done\": 0, \"items_total\": 0}, \"candidate_discovery\": {\"status\": \"running\", \"started_at\": \"2026-10-07T23:11:19.465916+00:00\", \"finished_at\": null, \"error\": \"\", \"detail\": \"Searching catalogues and rankings for candidate universities\", \"items_done\": 0, \"items_total\": 0}, \"program_verification\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"funding_discovery\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"assessment\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"awaiting_user_decision\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"document_collection\": {\"status\": \"pending\", \"started_at\": null, \"finished_at\": null, \"error\": \"\", \"detail\": \"\", \"items_done\": 0, \"items_total\": 0}, \"completed\": {\"status\": \"pending\", \"started_at\""
+    },
+    {
+      "elapsed_ns": 86167,
+      "sql_prefix": "UPDATE research_runs SET stage=?, stage_state=?, heartbeat_at=?, updated_at=? WHERE research_runs.id"
+    },
+    {
+      "at_ns": 810535970471458,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ? RETURNING id",
+      "params": "('2026-10-07 23:13:19.465954', '2026-10-07 23:11:19.465954', '2026-10-07 23:11:19.466445', 'fedff1834ea34e91bd5a0599c9139a3f', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 22792,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status ="
+    },
+    {
+      "at_ns": 810535973420750,
+      "thread": 8419598720,
+      "sql": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "params": "('4a75640b4cb94dbeb56dd77e589d6945', 'system', 'run_failed', 'run', '125ab03967ba44a4a2c503ed25ed47f7', '{\"error\": \"module \\'tests.readguard_support\\' has no attribute \\'DiscoveryTrace\\'\"}', '30ac42974e3c427e9e822f52100bec43', '2026-10-07 23:11:19.469391', '2026-10-07 23:11:19.469391')"
+    },
+    {
+      "elapsed_ns": 116375,
+      "sql_prefix": "INSERT INTO audit_events (organization_id, actor, action, entity_type, entity_id, detail, id, create"
+    },
+    {
+      "at_ns": 810535973674458,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=?, errors=?, finished_at=?, worker_id=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('failed', '[\"AttributeError: module \\'tests.readguard_support\\' has no attribute \\'DiscoveryTrace\\'\"]', '2026-10-07 23:11:19.469183', None, '2026-10-07 23:11:19.469216', '2026-10-07 23:11:19.469643', '125ab03967ba44a4a2c503ed25ed47f7')"
+    },
+    {
+      "elapsed_ns": 31333,
+      "sql_prefix": "UPDATE research_runs SET stage=?, errors=?, finished_at=?, worker_id=?, heartbeat_at=?, updated_at=?"
+    },
+    {
+      "at_ns": 810535973831291,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status = ? AND jobs.worker_id = ? AND jobs.attempts = ? RETURNING id",
+      "params": "('2026-10-07 23:13:19.469226', '2026-10-07 23:11:19.469226', '2026-10-07 23:11:19.469805', 'fedff1834ea34e91bd5a0599c9139a3f', 'running', 'worker-one', 1)"
+    },
+    {
+      "elapsed_ns": 21167,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=?, heartbeat_at=?, updated_at=? WHERE jobs.id = ? AND jobs.status ="
+    }
+  ],
+  "sql_errors": []
+}

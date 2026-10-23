@@ -1,0 +1,682 @@
+{
+  "network_calls": 0,
+  "provider_network_calls": 0,
+  "source_sha_before": {
+    "backend/app/catalogue/discovery.py": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+    "backend/app/catalogue/retrieval.py": "134f1b22f857c26603ff6e83bb5b975a661d57d96fa2a0c62297d3ef35c6ed8b",
+    "backend/app/adapters/discovery/live_discovery.py": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f",
+    "backend/app/adapters/discovery/catalog_walker.py": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7",
+    "backend/app/adapters/search/retrieval.py": "ccbe3611602762f8f9ff3729bc75e76bbce7b9a04388e74ae561e996a46e1d7b",
+    "backend/evaluation/research/live.py": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+  },
+  "source_sha_after": {
+    "backend/app/catalogue/discovery.py": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+    "backend/app/catalogue/retrieval.py": "134f1b22f857c26603ff6e83bb5b975a661d57d96fa2a0c62297d3ef35c6ed8b",
+    "backend/app/adapters/discovery/live_discovery.py": "b1d7e8f34a3cb59a3a93a1606aee191256e32f5d08e4ba71bc08d75a03521c4f",
+    "backend/app/adapters/discovery/catalog_walker.py": "218fbb73f8baa455449a9853ff0ad6769c0a9f6ebdb9d42cf551922bd66a01a7",
+    "backend/app/adapters/search/retrieval.py": "ccbe3611602762f8f9ff3729bc75e76bbce7b9a04388e74ae561e996a46e1d7b",
+    "backend/evaluation/research/live.py": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+  },
+  "source_unchanged": true,
+  "source_functions": {
+    "_site_branding": {
+      "line": 34,
+      "end_line": 64,
+      "sha256": "ae620248f47641c7332e101cd9de3c1785101efc5be87fd1043056337e34555b"
+    },
+    "_enrich": {
+      "line": 122,
+      "end_line": 140,
+      "sha256": "299caee7cf66b084e61600a57e8f7f3157fe55229b602621e60fef0ffb7ee69d"
+    },
+    "_identify_site": {
+      "line": 142,
+      "end_line": 174,
+      "sha256": "11086a248cffff5fdbd6f10e18f8da4ca9a2c9fdae23d37778e94612405ce9a1"
+    },
+    "_probe_site": {
+      "line": 176,
+      "end_line": 253,
+      "sha256": "27ccbb28cb50abe8924365f08aeeb79ece9b5f3c77ad86af73b4b5d2585370a7"
+    }
+  },
+  "shared_stop_before": null,
+  "shared_stop_after": null,
+  "shared_stop_unchanged": true,
+  "cases": [
+    {
+      "capture": "baseline",
+      "case_id": "0386940c5cef525b3c8e7966868f5ed6",
+      "capture_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline/20261007T164735Z",
+      "raw_sha256": "471c5342db23403cd7330d397e4adc312f52f44c3324bb979520e6766c17cce4",
+      "budget_sha256": "23af0c4c653a9bf792f035fb24f399546cea17cce5f476b545940fd9605b2fdf",
+      "db_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-lsaouqcu/canary.db",
+      "db_sha256": "1bd3c4667ea58ea0ead422ecf4745da57e00c1ede5b8f3aaea3cd7a32db043af",
+      "db_unchanged": true,
+      "identity_record": {
+        "id": "0386940c5cef525b3c8e7966868f5ed6",
+        "name": "University of Witwatersrand",
+        "aliases": [
+          "University of Witwatersrand"
+        ],
+        "country": "South Africa",
+        "city": "Johannesburg",
+        "domain": "wits.ac.za",
+        "domain_status": "seed",
+        "registry_entry": null
+      },
+      "seed_official_site": "http://www.wits.ac.za/",
+      "normalized_known_names": [
+        "university of witwatersrand",
+        "university of witwatersrand"
+      ],
+      "recorded_fetcher_calls": 3,
+      "recorded_search_queries": 1,
+      "recorded_elapsed_ms": 11970,
+      "recorded_stop_reason": null,
+      "recorded_provider_failure": null,
+      "institution_pages_checked": 3,
+      "institution_failures": [],
+      "discovery_trace": {
+        "institution": "University of Witwatersrand",
+        "domain": "wits.ac.za",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Official website identity not established for University of Witwatersrand; candidate retained without verified programme facts."
+        ],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "cache_evidence": [
+        {
+          "url": "https://wits.ac.za/",
+          "final_url": "https://www.wits.ac.za",
+          "status_code": 200,
+          "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-lsaouqcu/cache/6d/6d0abd05a42bf42dea98ec94c6aee354.meta.json",
+          "meta_sha256": "38af003c4572680a9fc329a5fefe66c1521cdeaab68cc82b95c92aa7004a1e18",
+          "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-lsaouqcu/cache/6d/6d0abd05a42bf42dea98ec94c6aee354.body",
+          "body_sha256": "e422c97d4a37d3449b99dfb3578a8b3fb09e84b3648ba162f6feb5442e7feb0f",
+          "fetcher_content_hash": "3542e63f67f96127cd7718fcf05a126f043079b5c71617b1faad59ab90691eea",
+          "title": "Home - Wits University",
+          "h1": [
+            "Straight From the ‘Gram"
+          ],
+          "original_identity_text": "home wits university straight from the gram",
+          "og_site_names": [],
+          "copyright_blocks": [
+            "Copyright © 2026 - University of the Witwatersrand, Johannesburg."
+          ]
+        },
+        {
+          "url": "https://www.wits.ac.za/",
+          "final_url": "https://www.wits.ac.za/",
+          "status_code": 200,
+          "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-lsaouqcu/cache/7e/7eb8f66e5e3799173a4614921bdb7f21.meta.json",
+          "meta_sha256": "4a256d8d43ff8a8a380693525b1b527a544b1e2acc26ad59c2c13c1f2aec232d",
+          "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-lsaouqcu/cache/7e/7eb8f66e5e3799173a4614921bdb7f21.body",
+          "body_sha256": "c5791197e50f7bfe91d5531faecdc4912a0843ee1034f0f079fd102362fd1ace",
+          "fetcher_content_hash": "3542e63f67f96127cd7718fcf05a126f043079b5c71617b1faad59ab90691eea",
+          "title": "Home - Wits University",
+          "h1": [
+            "Straight From the ‘Gram"
+          ],
+          "original_identity_text": "home wits university straight from the gram",
+          "og_site_names": [],
+          "copyright_blocks": [
+            "Copyright © 2026 - University of the Witwatersrand, Johannesburg."
+          ]
+        }
+      ],
+      "offline_reproduction": [
+        {
+          "enabled": false,
+          "homepage_probe_urls": [
+            "https://wits.ac.za/",
+            "https://www.wits.ac.za/",
+            "https://www.wits.ac.za/"
+          ],
+          "offline_fetch_calls": 3,
+          "synthetic_provider_queries": [
+            {
+              "query": "\"University of Witwatersrand\" \"South Africa\" official university website",
+              "max_results": 3
+            }
+          ],
+          "downstream_stage_entered": false,
+          "entry": [],
+          "proofs_memory_only": [],
+          "candidate_programmes": [],
+          "limitations": [
+            "Official website identity not established for University of Witwatersrand; candidate retained without verified programme facts."
+          ]
+        },
+        {
+          "enabled": true,
+          "homepage_probe_urls": [
+            "https://wits.ac.za/"
+          ],
+          "offline_fetch_calls": 1,
+          "synthetic_provider_queries": [],
+          "downstream_stage_entered": true,
+          "entry": [
+            {
+              "name": "University of Witwatersrand",
+              "country": "South Africa",
+              "city": "Johannesburg",
+              "homepage": "https://www.wits.ac.za"
+            }
+          ],
+          "proofs_memory_only": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.wits.ac.za",
+              "accessed_at": "2026-10-07T16:50:23.174014+00:00",
+              "excerpt": "Copyright © 2026 - University of the Witwatersrand, Johannesburg.",
+              "name": "University of Witwatersrand",
+              "domain": "wits.ac.za",
+              "verification_status": "site_identity_checked",
+              "identity_basis": "homepage_copyright_owner"
+            }
+          ],
+          "candidate_programmes": [],
+          "limitations": []
+        }
+      ],
+      "reconstruction_limit": "Provider root lists are synthetic from observed roots; original response text/order was not retained. Stage-entry marker is not programme verification."
+    },
+    {
+      "capture": "baseline",
+      "case_id": "05e4d59f87261553f15d14b0cdb470d2",
+      "capture_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline/20261007T164735Z",
+      "raw_sha256": "f9958e281586dd2582a7c48e2692658b860bbbf98e27865dcbc303eccb6d76f9",
+      "budget_sha256": "4fa16ce92af75078026c3fdacb597c6ccd5e05b5487e61ab11b45ab0636a311d",
+      "db_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-bostmz9k/canary.db",
+      "db_sha256": "1a82fa04aee131d571f4b6b38e7ca06a97d60c8665bdbeb52ab4ddbc26f6e887",
+      "db_unchanged": true,
+      "identity_record": {
+        "id": "05e4d59f87261553f15d14b0cdb470d2",
+        "name": "California Institute of Technology",
+        "aliases": [
+          "California Institute of Technology",
+          "California Institute of Technology (Caltech)",
+          "Caltech"
+        ],
+        "country": "United States",
+        "city": "Pasadena",
+        "domain": "caltech.edu",
+        "domain_status": "seed",
+        "registry_entry": null
+      },
+      "seed_official_site": "http://www.caltech.edu/",
+      "normalized_known_names": [
+        "california institute of technology",
+        "california institute of technology",
+        "california institute of technology",
+        "caltech"
+      ],
+      "recorded_fetcher_calls": 4,
+      "recorded_search_queries": 1,
+      "recorded_elapsed_ms": 14702,
+      "recorded_stop_reason": null,
+      "recorded_provider_failure": null,
+      "institution_pages_checked": 4,
+      "institution_failures": [
+        [
+          "https://caltech.edu/",
+          "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+        ],
+        [
+          "https://catalog-prod.resources.caltech.edu/",
+          "http_error: HTTP 403"
+        ]
+      ],
+      "discovery_trace": {
+        "institution": "California Institute of Technology",
+        "domain": "caltech.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Official website identity not established for California Institute of Technology; candidate retained without verified programme facts."
+        ],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "cache_evidence": [
+        {
+          "url": "https://www.caltech.edu/",
+          "final_url": "https://www.caltech.edu/",
+          "status_code": 200,
+          "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-bostmz9k/cache/b9/b9296da9bc0cac1dbac6b68130e5f383.meta.json",
+          "meta_sha256": "44000f04a53767e7273a900a7ae9e1f042a43531d9cae89c46a46c63274f38a3",
+          "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-bostmz9k/cache/b9/b9296da9bc0cac1dbac6b68130e5f383.body",
+          "body_sha256": "8b397250e121b2ca303abd012100cfcfbd1484b8d0efa0866d4eb116726d3936",
+          "fetcher_content_hash": "a50d95e9ec3558b2412af4ed7c2c691fde1fd47349027e717508bb05177af399",
+          "title": "Home\n  \n\n     - \n    \n    www.caltech.edu",
+          "h1": [
+            "Caltech Homepage"
+          ],
+          "original_identity_text": "home www caltech edu caltech homepage",
+          "og_site_names": [
+            "California Institute of Technology"
+          ],
+          "copyright_blocks": []
+        }
+      ],
+      "offline_reproduction": [
+        {
+          "enabled": false,
+          "homepage_probe_urls": [
+            "https://caltech.edu/",
+            "https://www.caltech.edu/",
+            "https://www.caltech.edu/",
+            "https://catalog-prod.resources.caltech.edu/"
+          ],
+          "offline_fetch_calls": 4,
+          "synthetic_provider_queries": [
+            {
+              "query": "\"California Institute of Technology\" \"United States\" official university website",
+              "max_results": 3
+            }
+          ],
+          "downstream_stage_entered": false,
+          "entry": [],
+          "proofs_memory_only": [],
+          "candidate_programmes": [],
+          "limitations": [
+            "Official website identity not established for California Institute of Technology; candidate retained without verified programme facts."
+          ]
+        },
+        {
+          "enabled": true,
+          "homepage_probe_urls": [
+            "https://caltech.edu/",
+            "https://www.caltech.edu/"
+          ],
+          "offline_fetch_calls": 2,
+          "synthetic_provider_queries": [],
+          "downstream_stage_entered": true,
+          "entry": [
+            {
+              "name": "California Institute of Technology",
+              "country": "United States",
+              "city": "Pasadena",
+              "homepage": "https://www.caltech.edu/"
+            }
+          ],
+          "proofs_memory_only": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.caltech.edu/",
+              "accessed_at": "2026-10-07T16:50:50.640033+00:00",
+              "excerpt": "California Institute of Technology",
+              "name": "California Institute of Technology",
+              "domain": "caltech.edu",
+              "verification_status": "site_identity_checked",
+              "identity_basis": "homepage_og_site_name"
+            }
+          ],
+          "candidate_programmes": [],
+          "limitations": []
+        }
+      ],
+      "reconstruction_limit": "Provider root lists are synthetic from observed roots; original response text/order was not retained. Stage-entry marker is not programme verification."
+    },
+    {
+      "capture": "repeat",
+      "case_id": "0386940c5cef525b3c8e7966868f5ed6",
+      "capture_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat/20261007T172952Z",
+      "raw_sha256": "cc488c913629cd68f718e990bb89d1ab06e9cae9911f10b974c06686c1ab62c1",
+      "budget_sha256": "1f59f0a5c738fb663fad51db38ba7d6f2cbe836cbb14f19fc146a55982fb3807",
+      "db_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-dfflsxvu/canary.db",
+      "db_sha256": "56a92c530ec9a6414773fb28f023ae5ae30a6be55d47157bd179944fdc84ab77",
+      "db_unchanged": true,
+      "identity_record": {
+        "id": "0386940c5cef525b3c8e7966868f5ed6",
+        "name": "University of Witwatersrand",
+        "aliases": [
+          "University of Witwatersrand"
+        ],
+        "country": "South Africa",
+        "city": "Johannesburg",
+        "domain": "wits.ac.za",
+        "domain_status": "seed",
+        "registry_entry": null
+      },
+      "seed_official_site": "http://www.wits.ac.za/",
+      "normalized_known_names": [
+        "university of witwatersrand",
+        "university of witwatersrand"
+      ],
+      "recorded_fetcher_calls": 3,
+      "recorded_search_queries": 1,
+      "recorded_elapsed_ms": 9529,
+      "recorded_stop_reason": null,
+      "recorded_provider_failure": null,
+      "institution_pages_checked": 3,
+      "institution_failures": [],
+      "discovery_trace": {
+        "institution": "University of Witwatersrand",
+        "domain": "wits.ac.za",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Official website identity not established for University of Witwatersrand; candidate retained without verified programme facts."
+        ],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "cache_evidence": [
+        {
+          "url": "https://wits.ac.za/",
+          "final_url": "https://www.wits.ac.za",
+          "status_code": 200,
+          "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-dfflsxvu/cache/6d/6d0abd05a42bf42dea98ec94c6aee354.meta.json",
+          "meta_sha256": "c18df8a86d8921f46f87b43cba7aebc3f5217af8b6c541e57a1b0506d46b78cb",
+          "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-dfflsxvu/cache/6d/6d0abd05a42bf42dea98ec94c6aee354.body",
+          "body_sha256": "d9bb621e8a95c6fa09e3cbdb63a58f11d85134d64d500e7de9cb0b8c8e064c58",
+          "fetcher_content_hash": "3542e63f67f96127cd7718fcf05a126f043079b5c71617b1faad59ab90691eea",
+          "title": "Home - Wits University",
+          "h1": [
+            "Straight From the ‘Gram"
+          ],
+          "original_identity_text": "home wits university straight from the gram",
+          "og_site_names": [],
+          "copyright_blocks": [
+            "Copyright © 2026 - University of the Witwatersrand, Johannesburg."
+          ]
+        },
+        {
+          "url": "https://www.wits.ac.za/",
+          "final_url": "https://www.wits.ac.za/",
+          "status_code": 200,
+          "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-dfflsxvu/cache/7e/7eb8f66e5e3799173a4614921bdb7f21.meta.json",
+          "meta_sha256": "31ca11eb417c50fb9670b05540e13c82a6c78cae3c10a9fe2c0c37c81c9d50c1",
+          "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-dfflsxvu/cache/7e/7eb8f66e5e3799173a4614921bdb7f21.body",
+          "body_sha256": "6cc400de954dd205365931f0b0487727d62c0778d857207bc9b2aff33fce404d",
+          "fetcher_content_hash": "3542e63f67f96127cd7718fcf05a126f043079b5c71617b1faad59ab90691eea",
+          "title": "Home - Wits University",
+          "h1": [
+            "Straight From the ‘Gram"
+          ],
+          "original_identity_text": "home wits university straight from the gram",
+          "og_site_names": [],
+          "copyright_blocks": [
+            "Copyright © 2026 - University of the Witwatersrand, Johannesburg."
+          ]
+        }
+      ],
+      "offline_reproduction": [
+        {
+          "enabled": false,
+          "homepage_probe_urls": [
+            "https://wits.ac.za/",
+            "https://www.wits.ac.za/",
+            "https://www.wits.ac.za/"
+          ],
+          "offline_fetch_calls": 3,
+          "synthetic_provider_queries": [
+            {
+              "query": "\"University of Witwatersrand\" \"South Africa\" official university website",
+              "max_results": 3
+            }
+          ],
+          "downstream_stage_entered": false,
+          "entry": [],
+          "proofs_memory_only": [],
+          "candidate_programmes": [],
+          "limitations": [
+            "Official website identity not established for University of Witwatersrand; candidate retained without verified programme facts."
+          ]
+        },
+        {
+          "enabled": true,
+          "homepage_probe_urls": [
+            "https://wits.ac.za/"
+          ],
+          "offline_fetch_calls": 1,
+          "synthetic_provider_queries": [],
+          "downstream_stage_entered": true,
+          "entry": [
+            {
+              "name": "University of Witwatersrand",
+              "country": "South Africa",
+              "city": "Johannesburg",
+              "homepage": "https://www.wits.ac.za"
+            }
+          ],
+          "proofs_memory_only": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.wits.ac.za",
+              "accessed_at": "2026-10-07T17:32:33.648778+00:00",
+              "excerpt": "Copyright © 2026 - University of the Witwatersrand, Johannesburg.",
+              "name": "University of Witwatersrand",
+              "domain": "wits.ac.za",
+              "verification_status": "site_identity_checked",
+              "identity_basis": "homepage_copyright_owner"
+            }
+          ],
+          "candidate_programmes": [],
+          "limitations": []
+        }
+      ],
+      "reconstruction_limit": "Provider root lists are synthetic from observed roots; original response text/order was not retained. Stage-entry marker is not programme verification."
+    },
+    {
+      "capture": "repeat",
+      "case_id": "05e4d59f87261553f15d14b0cdb470d2",
+      "capture_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat/20261007T172952Z",
+      "raw_sha256": "56de23d2e64a5f010f975a31b22dad9f87a4045bc895dc19a9c6e803a4c4c4c5",
+      "budget_sha256": "f9b75e4d07069876e9c0f6e3a8dd48684ca2232c8ab729d1995762dcdcf473f6",
+      "db_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-xnrq_uq6/canary.db",
+      "db_sha256": "f71bd93e0029df24ed0c0284a57a7bb8ec644b93e38421b2e9ef32dacd27455e",
+      "db_unchanged": true,
+      "identity_record": {
+        "id": "05e4d59f87261553f15d14b0cdb470d2",
+        "name": "California Institute of Technology",
+        "aliases": [
+          "California Institute of Technology",
+          "California Institute of Technology (Caltech)",
+          "Caltech"
+        ],
+        "country": "United States",
+        "city": "Pasadena",
+        "domain": "caltech.edu",
+        "domain_status": "seed",
+        "registry_entry": null
+      },
+      "seed_official_site": "http://www.caltech.edu/",
+      "normalized_known_names": [
+        "california institute of technology",
+        "california institute of technology",
+        "california institute of technology",
+        "caltech"
+      ],
+      "recorded_fetcher_calls": 4,
+      "recorded_search_queries": 1,
+      "recorded_elapsed_ms": 14220,
+      "recorded_stop_reason": null,
+      "recorded_provider_failure": null,
+      "institution_pages_checked": 3,
+      "institution_failures": [
+        [
+          "https://caltech.edu/",
+          "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+        ]
+      ],
+      "discovery_trace": {
+        "institution": "California Institute of Technology",
+        "domain": "caltech.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Official website identity not established for California Institute of Technology; candidate retained without verified programme facts."
+        ],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "cache_evidence": [
+        {
+          "url": "https://en.wikipedia.org/",
+          "final_url": "https://en.wikipedia.org/wiki/Main_Page",
+          "status_code": 200,
+          "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-xnrq_uq6/cache/a8/a84d071ec579b6058d11326044b495b6.meta.json",
+          "meta_sha256": "02937a540674bd1e1a67b5c42ab04d395574b1032279974d1fb5431da94b9b74",
+          "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-xnrq_uq6/cache/a8/a84d071ec579b6058d11326044b495b6.body",
+          "body_sha256": "5526e958f3df5022a4ae404b65f68f3de97bbff171a3aeca0f324a9794b0fffe",
+          "fetcher_content_hash": "d11d792b766dfae1a6a62a0363b8ac53274334173c4552878a729b7617f17929",
+          "title": "Wikipedia, the free encyclopedia",
+          "h1": [
+            "Main Page",
+            "Welcome to Wikipedia"
+          ],
+          "original_identity_text": "wikipedia the free encyclopedia main page welcome to wikipedia",
+          "og_site_names": [],
+          "copyright_blocks": []
+        },
+        {
+          "url": "https://www.caltech.edu/",
+          "final_url": "https://www.caltech.edu/",
+          "status_code": 200,
+          "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-xnrq_uq6/cache/b9/b9296da9bc0cac1dbac6b68130e5f383.meta.json",
+          "meta_sha256": "6fef50a7e9c5b98ed994a989937cea1c98926f2c74707a31c02a5118c350abba",
+          "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-repeat-temp/canary-xnrq_uq6/cache/b9/b9296da9bc0cac1dbac6b68130e5f383.body",
+          "body_sha256": "fcd7ffa44a9a04f65790776dc6de5cb6cf748e8864cb833e1dc65f95031a2da3",
+          "fetcher_content_hash": "8cb5f4931bdd9e48ddbf4d62ecda5029ea40d72166495d80c6331a063a849663",
+          "title": "Home\n  \n\n     - \n    \n    www.caltech.edu",
+          "h1": [
+            "Caltech Homepage"
+          ],
+          "original_identity_text": "home www caltech edu caltech homepage",
+          "og_site_names": [
+            "California Institute of Technology"
+          ],
+          "copyright_blocks": []
+        }
+      ],
+      "offline_reproduction": [
+        {
+          "enabled": false,
+          "homepage_probe_urls": [
+            "https://caltech.edu/",
+            "https://www.caltech.edu/",
+            "https://www.caltech.edu/",
+            "https://en.wikipedia.org/"
+          ],
+          "offline_fetch_calls": 4,
+          "synthetic_provider_queries": [
+            {
+              "query": "\"California Institute of Technology\" \"United States\" official university website",
+              "max_results": 3
+            }
+          ],
+          "downstream_stage_entered": false,
+          "entry": [],
+          "proofs_memory_only": [],
+          "candidate_programmes": [],
+          "limitations": [
+            "Official website identity not established for California Institute of Technology; candidate retained without verified programme facts."
+          ]
+        },
+        {
+          "enabled": true,
+          "homepage_probe_urls": [
+            "https://caltech.edu/",
+            "https://www.caltech.edu/"
+          ],
+          "offline_fetch_calls": 2,
+          "synthetic_provider_queries": [],
+          "downstream_stage_entered": true,
+          "entry": [
+            {
+              "name": "California Institute of Technology",
+              "country": "United States",
+              "city": "Pasadena",
+              "homepage": "https://www.caltech.edu/"
+            }
+          ],
+          "proofs_memory_only": [
+            {
+              "kind": "site_identity",
+              "source_url": "https://www.caltech.edu/",
+              "accessed_at": "2026-10-07T17:34:32.551675+00:00",
+              "excerpt": "California Institute of Technology",
+              "name": "California Institute of Technology",
+              "domain": "caltech.edu",
+              "verification_status": "site_identity_checked",
+              "identity_basis": "homepage_og_site_name"
+            }
+          ],
+          "candidate_programmes": [],
+          "limitations": []
+        }
+      ],
+      "reconstruction_limit": "Provider root lists are synthetic from observed roots; original response text/order was not retained. Stage-entry marker is not programme verification."
+    }
+  ]
+}

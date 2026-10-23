@@ -5,19 +5,35 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import asdict
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from typing import Literal
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
+from sqlalchemy import and_, or_
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.paywall import access_for_run, require_full_access
+from app.api.preparation_transactions import lock_owned_preparation_profile
+from app.api.profile_commands import (
+    accepted_command,
+    begin_profile_creation,
+    command_binding,
+    command_event,
+    profile_out,
+    receipt,
+    replay_profile,
+)
+from app.api.profile_revision import require_profile_revision, store_profile_revision
 from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import Bucket, ClaimStatus, UserDecision
+from app.domain.freshness import DEFAULT_MAX_AGE_DAYS, MAX_AGE_DAYS
 from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
+from app.domain.result_read import claim_read, result_read
 from app.export import calendar, tabular
 from app.jobs.source_scanner import enqueue_reextract
 from app.models import (
@@ -28,15 +44,20 @@ from app.models import (
     ProgramResultRow,
     SourcePage,
 )
+from app.models.base import ensure_utc
 from app.payments.entitlements import free_view, truncate_shortlist
 from app.pipeline.runner import apply_fit_labels, store_result
+from app.schemas.claim import ClaimOut
 from app.schemas.profile import (
+    ApplicantProfile,
     ApplicantProfileIn,
     FundingNeeds,
     Preferences,
     PriorityGroup,
+    ProfileWriteReceipt,
     ScoringWeights,
 )
+from app.schemas.research_read import ProgramResultReadV1
 from app.schemas.result import DecisionIn, ProgramResult
 from app.security import Principal, get_principal
 
@@ -104,7 +125,7 @@ def _sorted(results: list[ProgramResult], sort: Sort) -> list[ProgramResult]:
     return sorted(results, key=keys[sort])
 
 
-@router.get("/results", response_model=list[ProgramResult])
+@router.get("/results", response_model=list[ProgramResultReadV1])
 def list_results(
     run_id: str,
     decision: str | None = None,
@@ -115,7 +136,7 @@ def list_results(
     sort: Sort = "key",
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> list[ProgramResult]:
+) -> list[ProgramResultReadV1]:
     _profile_id, allowed = access_for_run(session, run_id, principal)
     rows = _results(
         session,
@@ -127,13 +148,17 @@ def list_results(
         bucket=bucket,
     )
     results = _sorted([ProgramResult.model_validate(r.payload) for r in rows], sort)
+    now = datetime.now(UTC)
     if allowed:
-        return results
+        return [result_read(result, now) for result in results]
     # Truncated, not refused: a free user must see that results exist and
     # roughly what they are, or there is nothing to buy. Cut after sorting, so
     # the visible rows are the top of the ranking rather than an arbitrary slice.
     settings = get_settings()
-    return [free_view(r) for r in truncate_shortlist(results, settings.free_shortlist_rows)]
+    return [
+        result_read(free_view(r), now, evidence_available=False)
+        for r in truncate_shortlist(results, settings.free_shortlist_rows)
+    ]
 
 
 @router.get("/summary", response_model=ShortlistSummary)
@@ -163,18 +188,18 @@ def summary(
     )
 
 
-@router.get("/results/{result_id}", response_model=ProgramResult)
+@router.get("/results/{result_id}", response_model=ProgramResultReadV1)
 def get_result(
     run_id: str,
     result_id: str,
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> ProgramResult:
+) -> ProgramResultReadV1:
     require_full_access(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
-    return ProgramResult.model_validate(row.payload)
+    return result_read(ProgramResult.model_validate(row.payload), datetime.now(UTC))
 
 
 class RefreshOut(BaseModel):
@@ -268,7 +293,7 @@ def set_decision(
     """
     # The result id alone is not authority: resolve the run through the
     # principal's organization first, exactly as every read route does.
-    owned_run(session, run_id, principal)
+    _profile_id, allowed = access_for_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -296,7 +321,7 @@ def set_decision(
         )
     )
     session.commit()
-    return result
+    return result if allowed else free_view(result)
 
 
 class NotesIn(BaseModel):
@@ -317,7 +342,7 @@ def set_notes(
     a row the applicant had not decided anything about - so an undecided row
     started claiming it was decided the moment they typed a reminder in it.
     """
-    owned_run(session, run_id, principal)
+    _profile_id, allowed = access_for_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -337,7 +362,7 @@ def set_notes(
         )
     )
     session.commit()
-    return result
+    return result if allowed else free_view(result)
 
 
 @router.get("/claims")
@@ -361,12 +386,52 @@ def list_claims(
     q = session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
     if result_id:
         q = q.filter(ClaimRow.result_id == result_id)
-    if status:
+    now = datetime.now(UTC)
+    if status in {ClaimStatus.VERIFIED_CURRENT.value, ClaimStatus.POSSIBLY_STALE.value}:
+        # Use the same inclusive windows as the detached read BEFORE count/paging.
+        # Authoritative row columns determine lifecycle/type/read moment; no DML.
+        aged = or_(
+            *[
+                and_(
+                    ClaimRow.claim_type == kind.value,
+                    ClaimRow.accessed_at <= now - timedelta(days=days),
+                )
+                for kind, days in MAX_AGE_DAYS.items()
+            ],
+            and_(
+                ClaimRow.claim_type.notin_([kind.value for kind in MAX_AGE_DAYS]),
+                ClaimRow.accessed_at <= now - timedelta(days=DEFAULT_MAX_AGE_DAYS),
+            ),
+        )
+        if status == ClaimStatus.VERIFIED_CURRENT.value:
+            q = q.filter(ClaimRow.status == status, ~aged)
+        else:
+            q = q.filter(
+                or_(
+                    ClaimRow.status == status,
+                    and_(ClaimRow.status == ClaimStatus.VERIFIED_CURRENT.value, aged),
+                )
+            )
+    elif status:
         q = q.filter(ClaimRow.status == status)
     response.headers["X-Total-Count"] = str(q.count())
     return [
-        {"id": c.id, "result_id": c.result_id, **c.payload}
-        for c in q.order_by(ClaimRow.claim_type).limit(limit).offset(offset).all()
+        {
+            "result_id": c.result_id,
+            **claim_read(
+                ClaimOut.model_validate(
+                    {
+                        **c.payload,
+                        "id": c.id,
+                        "status": c.status,
+                        "claim_type": c.claim_type,
+                        "accessed_at": ensure_utc(c.accessed_at),
+                    }
+                ),
+                now,
+            ).model_dump(mode="json"),
+        }
+        for c in q.order_by(ClaimRow.claim_type, ClaimRow.id).limit(limit).offset(offset).all()
     ]
 
 
@@ -529,12 +594,18 @@ class RerankOut(BaseModel):
     rows: int
     gamma: float
     weights_source: str
+    profile: ApplicantProfile | None = None
+    write_receipt: ProfileWriteReceipt | None = None
 
 
 @router.post("/rerank", response_model=RerankOut)
 def rerank(
     run_id: str,
     payload: RerankIn,
+    expected_profile_revision: int | None = Header(
+        default=None, alias="X-Expected-Profile-Revision", ge=1
+    ),
+    command_id: UUID | None = Header(default=None, alias="Idempotency-Key"),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RerankOut:
@@ -546,7 +617,33 @@ def rerank(
     """
     settings = get_settings()
     run = owned_run(session, run_id, principal)
-    profile_row = session.get(ApplicantProfileRow, run.profile_id)
+    profile_id = run.profile_id
+    profile_row: ApplicantProfileRow | None
+    digest = command_binding(
+        "persisted_rerank",
+        payload.model_dump(mode="json"),
+        target=run_id,
+        expected_revision=expected_profile_revision,
+    )
+    if payload.persist:
+        begin_profile_creation(session, principal)
+        prior = accepted_command(session, command_id, principal, digest)
+        if prior is not None:
+            current = replay_profile(session, prior, principal)
+            return RerankOut(
+                **prior.detail["outcome"], profile=current, write_receipt=receipt(prior)
+            )
+        profile_row = lock_owned_preparation_profile(session, profile_id, principal)
+        prior = accepted_command(session, command_id, principal, digest)
+        if prior is not None:
+            current = replay_profile(session, prior, principal)
+            return RerankOut(
+                **prior.detail["outcome"], profile=current, write_receipt=receipt(prior)
+            )
+        require_profile_revision(session, profile_row, expected_profile_revision)
+        run = owned_run(session, run_id, principal)
+    else:
+        profile_row = session.get(ApplicantProfileRow, profile_id)
     if profile_row is None:  # pragma: no cover - a run cannot outlive its profile
         raise HTTPException(404, "Applicant case not found")
 
@@ -574,20 +671,43 @@ def rerank(
         session.add(row)
 
     if payload.persist:
-        profile_row.payload = profile.model_dump(mode="json")
-        session.add(profile_row)
-    session.add(
-        AuditEvent(
+        assert expected_profile_revision is not None
+        store_profile_revision(session, profile_row, profile, expected_profile_revision)
+    outcome = {"rows": len(rows), "gamma": gamma, "weights_source": source}
+    if payload.persist:
+        event = command_event(
+            principal,
+            command_id,
+            "persisted_rerank",
+            profile_id,
+            digest,
+            expected_profile_revision,
+            profile_row.revision,
+            run_id=run_id,
+            outcome=outcome,
+        )
+    else:
+        event = AuditEvent(
             organization_id=principal.organization_id,
             actor=f"user:{principal.user_id[:8]}",
             action="results_reranked",
             entity_type="run",
             entity_id=run_id,
-            detail={"rows": len(rows), "gamma": gamma, "persisted": payload.persist},
+            detail={"rows": len(rows), "gamma": gamma, "persisted": False},
         )
+    session.add(event)
+    try:
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(
+            409, "This command identity was accepted for a different request."
+        ) from None
+    return RerankOut(
+        **outcome,
+        profile=profile_out(profile_row, event) if payload.persist else None,
+        write_receipt=receipt(event) if payload.persist else None,
     )
-    session.commit()
-    return RerankOut(rows=len(rows), gamma=gamma, weights_source=source)
 
 
 class ShortlistOut(BaseModel):

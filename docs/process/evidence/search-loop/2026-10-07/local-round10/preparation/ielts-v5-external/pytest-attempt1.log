@@ -1,0 +1,43 @@
+..F..................................................................... [ 39%]
+........................................................................ [ 78%]
+.......................................                                  [100%]
+=================================== FAILURES ===================================
+_ test_a19_preserved_input_with_qualified_year_ambiguity[negated_require_verb] _
+
+case = {'case': 'negated_require_verb', 'semantic_expectation': 'explicit nonrequirement', 'expected_numeric': {}, 'body': '<...on requirements</h1><h2>IELTS Academic</h2><p>We do not require an overall minimum 6.5.</p></main></body></html>', ...}
+
+    @pytest.mark.parametrize('case',A,ids=lambda c:c['case'])
+    def test_a19_preserved_input_with_qualified_year_ambiguity(case):
+     url='https://example.edu/english-testing' if case['case']=='native_unknown_permission' else 'https://admissions.example.edu/admission-requirements'
+     outputs=[asyncio.run(replay.read(url,case['body'],domain='example.edu',**kw)) for kw in ({'old':True},{'on':False},{'on':True})]
+     assert outputs[0]==outputs[1]
+     assert [o['page_type'] for o in outputs[0]['page_outcomes']]==[o['page_type'] for o in outputs[2]['page_outcomes']]
+     values={c['claim_type']:c['normalized_value'] for c in outputs[2]['claims'] if c['claim_type'] in TYPES}
+     if case['case']=='native_unknown_permission':
+      assert not values and outputs[2]['page_outcomes'][0]['page_type']=='unknown'
+     elif case['case']=='local_year_title_conflict':
+      # Original raw RED remains. Parent-qualified ambiguity is None, not assumed2024.
+      assert values['ielts_min_overall']==6.5
+      assert all(c['academic_year'] is None and c['scope']['academic_year'] is None for c in outputs[2]['claims'] if c['claim_type'] in TYPES)
+>    elif not case['expected_numeric']:assert not values
+                                       ^^^^^^^^^^^^^^^^^
+E    AssertionError: assert not {'ielts_min_overall': 6.5, 'ielts_accepted_types': ['academic']}
+
+work/local-round9/a-ielts-v5-proposal/tests/test_a_independent.py:21: AssertionError
+=============================== warnings summary ===============================
+work/local-round9/a-ielts-v5-proposal/tests/test_a_independent.py: 546 warnings
+work/local-round9/a-ielts-v5-proposal/tests/test_b17.py: 541 warnings
+work/local-round9/a-ielts-v5-proposal/tests/test_owned_ielts.py: 1460 warnings
+work/local-round9/a-ielts-v5-proposal/tests/test_parent15.py: 240 warnings
+work/local-round9/a-ielts-v5-proposal/tests/test_v3_boundaries.py: 128 warnings
+work/local-round9/a-ielts-v5-proposal/tests/test_v4_additional.py: 459 warnings
+work/local-round9/a-ielts-v5-proposal/tests/test_v4_grammar.py: 976 warnings
+work/local-round9/a-ielts-v5-proposal/tests/test_v4_modal_require.py: 151 warnings
+work/local-round9/a-ielts-v5-proposal/tests/test_variant_decline.py: 28 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED work/local-round9/a-ielts-v5-proposal/tests/test_a_independent.py::test_a19_preserved_input_with_qualified_year_ambiguity[negated_require_verb]
+1 failed, 182 passed, 4529 warnings in 8.80s

@@ -1,0 +1,66 @@
+{
+  "doctor": {
+    "run_id": "20261009T043815Z-doctor-9e79d26c",
+    "steps_passed": 5,
+    "summary_sha256": "f90ed32ea116baaffcda49b9b4d6bb38e81f17153c4dde4fae504a988c16d5d4",
+    "finished_at": "2026-10-09T04:38:16.746326+00:00"
+  },
+  "core": {
+    "run_id": "20261009T043817Z-check-6eaf0e18",
+    "steps_passed": 8,
+    "summary_sha256": "560a077e0e6c07fe84d02281e79d7383ba073c7bc30c53c8d8477f9634c9e3ab",
+    "finished_at": "2026-10-09T04:47:25.662916+00:00",
+    "sqlite": {
+      "passed": 4392,
+      "warnings": 32,
+      "pytest_seconds": 497.55,
+      "unique_case_ids": 4392,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "case_id_set_sha256": "046ca428446f833b2dc2747badc95d4387396935f917dff1feadb2acae754d78",
+      "coverage_percent": 95.27,
+      "coverage_qualification": "SQLite measured"
+    }
+  },
+  "full": {
+    "run_id": "20261009T044726Z-check-2e9670eb",
+    "steps_passed": 13,
+    "summary_sha256": "6db1a2ef6b6bccb42ee8db81d82c93a6c1de37a7668f148b3dc4ef591848951f",
+    "finished_at": "2026-10-09T05:04:11.914969+00:00",
+    "sqlite": {
+      "passed": 4392,
+      "warnings": 32,
+      "pytest_seconds": 495.5,
+      "unique_case_ids": 4392,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "case_id_set_sha256": "046ca428446f833b2dc2747badc95d4387396935f917dff1feadb2acae754d78",
+      "coverage_percent": 95.27,
+      "coverage_qualification": "SQLite measured"
+    },
+    "postgresql": {
+      "passed": 4392,
+      "warnings": 32,
+      "pytest_seconds": 361.42,
+      "unique_case_ids": 4392,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "case_id_set_sha256": "046ca428446f833b2dc2747badc95d4387396935f917dff1feadb2acae754d78",
+      "coverage_percent": null,
+      "coverage_qualification": "PostgreSQL NOT measured; no --cov argument"
+    },
+    "frontend_tests": 357,
+    "frontend_test_files": 34,
+    "demo_e2e_passed": 79,
+    "demo_e2e_old_skip": 1,
+    "auth_e2e_passed": 6,
+    "pip_audit": "No known vulnerabilities found",
+    "npm_audit": "found 0 vulnerabilities",
+    "mypy_source_files": 388,
+    "containers": "NOT_RUN; Docker unavailable",
+    "privacy_scope": "Two portable persistence tests construct own SQLite even in PostgreSQL suite; not native PG/concurrency/production privacy proof."
+  }
+}

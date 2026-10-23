@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="2" failures="2" errors="0" time="0.061592458">
+    <testsuite name="src/screens/ExportScreen.native-peer.test.tsx" timestamp="2026-10-09T02:21:37.288Z" hostname="iMac-Aliser.local" tests="2" failures="2" errors="0" skipped="0" time="0.061592458">
+        <testcase classname="src/screens/ExportScreen.native-peer.test.tsx" name="independent native Store delete/export integration &gt; clears an opened JSON after real Store acknowledgment and refuses late Show/download copies" time="0.04783125">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;marker&quot;: &quot;first-owned-JSON&quot;
+}
+&lt;/pre&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;marker&quot;: &quot;first-owned-JSON&quot;
+}
+&lt;/pre&gt; instead
+ ❯ src/screens/ExportScreen.native-peer.test.tsx:49:62
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.native-peer.test.tsx" name="independent native Store delete/export integration &gt; keeps selected case B when native Store rejects a superseded deletion and late A export" time="0.012668167">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;marker&quot;: &quot;first-owned-JSON&quot;
+}
+&lt;/pre&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;marker&quot;: &quot;first-owned-JSON&quot;
+}
+&lt;/pre&gt; instead
+ ❯ src/screens/ExportScreen.native-peer.test.tsx:60:62
+            </failure>
+        </testcase>
+    </testsuite>
+</testsuites>

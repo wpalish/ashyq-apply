@@ -1,0 +1,281 @@
+{
+  "schema_version": "g3-focused-api2-secondary-diagnosis-pins-v1",
+  "status": "SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "authority": "Parent /root delegated source-only diagnosis, no source mutation",
+  "evidence_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z",
+  "recorded_result": {
+    "tests": 192,
+    "failures": 48,
+    "errors": 0,
+    "skips": 0,
+    "pytest_exit": 1,
+    "duration_seconds": 72.141,
+    "outer_phase": "sqlite",
+    "second_outer_postgres_phase": "NOT_RUN",
+    "coverage": null
+  },
+  "assigned_failure_groups": {
+    "saved_unreadable": 10,
+    "catalogue_versions": 2,
+    "record_not_found": 4,
+    "write_error_classification": 4
+  },
+  "parent_owned_source_unreadable": 28,
+  "source_before_after_equal": true,
+  "evidence_pins": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/result.json",
+      "sha256": "8cdcf4a3cd0b6d1f68d501fcf5408a3ac4f5f70020a8b7ac12d768ae26c86d40",
+      "bytes": 4609
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/sqlite/result.json",
+      "sha256": "658d4a5a4e9e0943647714b6463cc209ef34327cbe7a8cecbaff0e8e234da738",
+      "bytes": 4051
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/sqlite/junit.xml",
+      "sha256": "3c4c549fcdf223424e2f2bf029a254ac6281cb588a9bf5fd8dd472c9f6dc6a78",
+      "bytes": 83312
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/sqlite/pytest.log",
+      "sha256": "2bf5def1063148cead28922b0038dd7341b73e5f1e77b561aabc1a1da472b355",
+      "bytes": 210817
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/sqlite/source-before.json",
+      "sha256": "16b303741aba0506d6fdb7428164e3f15254851698d54b8e2000e38e6d9de2e0",
+      "bytes": 73374
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/sqlite/source-after.json",
+      "sha256": "16b303741aba0506d6fdb7428164e3f15254851698d54b8e2000e38e6d9de2e0",
+      "bytes": 73374
+    }
+  ],
+  "source_pins": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_admissions_actions.py",
+      "sha256": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983",
+      "bytes": 96501,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/domain/admissions_actions.py",
+      "sha256": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8",
+      "bytes": 57318,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/schemas/admissions_actions.py",
+      "sha256": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+      "bytes": 59070,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/models/research.py",
+      "sha256": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+      "bytes": 11415,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/models/admissions_actions.py",
+      "sha256": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+      "bytes": 4037,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/preparation/catalogue.py",
+      "sha256": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+      "bytes": 15018,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/preparation/learning_pack.py",
+      "sha256": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+      "bytes": 57596,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/domain/shared_route_allocator.py",
+      "sha256": "da57a45f674133db42995138842d0ce8b904cea09f3b57e7abb0b851f776913b",
+      "bytes": 13791,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_admissions_actions_api.py",
+      "sha256": "af984816e28aa0af12f69c49eba8dff5d555c5804a4cbd7d887f5106440eea6a",
+      "bytes": 53504,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_today.py",
+      "sha256": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16",
+      "bytes": 22088,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_admissions_actions_concurrency.py",
+      "sha256": "987429f69ef3784ee84f46e06fd123e62b8535577746fc453eeddb032b20b3d8",
+      "bytes": 53396,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_preparation_api.py",
+      "sha256": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437",
+      "bytes": 33923,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_shared_route_api.py",
+      "sha256": "84c166681851a448e24aaeb14bcdab4587777c47e3e137027760130c9fcfeee8",
+      "bytes": 41286,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_admissions_actions.py",
+      "sha256": "43603f435a86b89808d7fc5d9811f215f5e17d1d1cc9e0e533bfca72459de724",
+      "bytes": 73126,
+      "matches_actual_gate_before_and_after": true
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_shared_route.py",
+      "sha256": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+      "bytes": 40211,
+      "matches_actual_gate_before_and_after": true
+    }
+  ],
+  "assigned_nodes": [
+    {
+      "node_id": "tests/test_admissions_actions_api.py::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[sqlite-https://example.edu/synthetic-programme-actionable_unverified]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_api.py::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[sqlite-https://example.edu/synthetic-programme?token=SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_api.py::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[sqlite-javascript:SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_api.py::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[sqlite-http://127.0.0.1/SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_api.py::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[postgres-https://example.edu/synthetic-programme-actionable_unverified]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_api.py::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[postgres-https://example.edu/synthetic-programme?token=SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_api.py::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[postgres-javascript:SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_api.py::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[postgres-http://127.0.0.1/SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_today.py::test_explicit_selected_origin_wins_and_failed_selected_plan_preserves_personal_summary[sqlite]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_today.py:306: in test_explicit_selected_origin_wins_and_failed_selected_plan_preserves_personal_summary\n    value = today(lab)\n            ^^^^^^^^^^\ntests/test_today.py:65: in today\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_today.py::test_explicit_selected_origin_wins_and_failed_selected_plan_preserves_personal_summary[postgres]",
+      "group": "saved_unreadable",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "raw_trace": "tests/test_today.py:306: in test_explicit_selected_origin_wins_and_failed_selected_plan_preserves_personal_summary\n    value = today(lab)\n            ^^^^^^^^^^\ntests/test_today.py:65: in today\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node_id": "tests/test_today.py::test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_budget[sqlite]",
+      "group": "catalogue_versions",
+      "message": "AssertionError: assert {'learning-pa...026-10-11-v1'} == {'starter-2026-10-11-v1'}\n  \n  Extra items in the left set:\n  'learning-pack-2026-10-11-v1'\n  Use -v to get more diff",
+      "raw_trace": "tests/test_today.py:166: in test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_budget\n    assert {t[\"ref\"][\"content_version\"] for t in plan[\"study_actions\"]} == {attempt[\"version\"]}\nE   AssertionError: assert {'learning-pa...026-10-11-v1'} == {'starter-2026-10-11-v1'}\nE     \nE     Extra items in the left set:\nE     'learning-pack-2026-10-11-v1'\nE     Use -v to get more diff"
+    },
+    {
+      "node_id": "tests/test_today.py::test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_budget[postgres]",
+      "group": "catalogue_versions",
+      "message": "AssertionError: assert {'learning-pa...026-10-11-v1'} == {'starter-2026-10-11-v1'}\n  \n  Extra items in the left set:\n  'learning-pack-2026-10-11-v1'\n  Use -v to get more diff",
+      "raw_trace": "tests/test_today.py:166: in test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_budget\n    assert {t[\"ref\"][\"content_version\"] for t in plan[\"study_actions\"]} == {attempt[\"version\"]}\nE   AssertionError: assert {'learning-pa...026-10-11-v1'} == {'starter-2026-10-11-v1'}\nE     \nE     Extra items in the left set:\nE     'learning-pack-2026-10-11-v1'\nE     Use -v to get more diff"
+    },
+    {
+      "node_id": "tests/test_today.py::test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order[sqlite-Pacific/Kiritimati]",
+      "group": "record_not_found",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nassert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code",
+      "raw_trace": "tests/test_today.py:411: in test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order\n    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:239: in new_personal\n    return accepted(\ntests/test_admissions_actions_api.py:106: in accepted\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nE   assert 404 == 200\nE    +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "node_id": "tests/test_today.py::test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order[sqlite-America/Los_Angeles]",
+      "group": "record_not_found",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nassert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code",
+      "raw_trace": "tests/test_today.py:411: in test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order\n    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:239: in new_personal\n    return accepted(\ntests/test_admissions_actions_api.py:106: in accepted\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nE   assert 404 == 200\nE    +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "node_id": "tests/test_today.py::test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order[postgres-Pacific/Kiritimati]",
+      "group": "record_not_found",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nassert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code",
+      "raw_trace": "tests/test_today.py:411: in test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order\n    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:239: in new_personal\n    return accepted(\ntests/test_admissions_actions_api.py:106: in accepted\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nE   assert 404 == 200\nE    +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "node_id": "tests/test_today.py::test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order[postgres-America/Los_Angeles]",
+      "group": "record_not_found",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nassert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code",
+      "raw_trace": "tests/test_today.py:411: in test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order\n    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:239: in new_personal\n    return accepted(\ntests/test_admissions_actions_api.py:106: in accepted\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nE   assert 404 == 200\nE    +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[sqlite-False]",
+      "group": "write_error_classification",
+      "message": "AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\n  \n  At index 0 diff: 409 != 503\n  Use -v to get more diff",
+      "raw_trace": "tests/test_admissions_actions_concurrency.py:1008: in test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent\n    g3_expect_action_error((response.status_code, response.json()), \"write_unconfirmed\")\ntests/test_admissions_actions_concurrency.py:844: in g3_expect_action_error\n    assert response == (expected.status, {\"detail\": expected.detail})\nE   AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\nE     \nE     At index 0 diff: 409 != 503\nE     Use -v to get more diff"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[sqlite-True]",
+      "group": "write_error_classification",
+      "message": "AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\n  \n  At index 0 diff: 409 != 503\n  Use -v to get more diff",
+      "raw_trace": "tests/test_admissions_actions_concurrency.py:1008: in test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent\n    g3_expect_action_error((response.status_code, response.json()), \"write_unconfirmed\")\ntests/test_admissions_actions_concurrency.py:844: in g3_expect_action_error\n    assert response == (expected.status, {\"detail\": expected.detail})\nE   AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\nE     \nE     At index 0 diff: 409 != 503\nE     Use -v to get more diff"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[postgres-False]",
+      "group": "write_error_classification",
+      "message": "AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\n  \n  At index 0 diff: 409 != 503\n  Use -v to get more diff",
+      "raw_trace": "tests/test_admissions_actions_concurrency.py:1008: in test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent\n    g3_expect_action_error((response.status_code, response.json()), \"write_unconfirmed\")\ntests/test_admissions_actions_concurrency.py:844: in g3_expect_action_error\n    assert response == (expected.status, {\"detail\": expected.detail})\nE   AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\nE     \nE     At index 0 diff: 409 != 503\nE     Use -v to get more diff"
+    },
+    {
+      "node_id": "tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[postgres-True]",
+      "group": "write_error_classification",
+      "message": "AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\n  \n  At index 0 diff: 409 != 503\n  Use -v to get more diff",
+      "raw_trace": "tests/test_admissions_actions_concurrency.py:1008: in test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent\n    g3_expect_action_error((response.status_code, response.json()), \"write_unconfirmed\")\ntests/test_admissions_actions_concurrency.py:844: in g3_expect_action_error\n    assert response == (expected.status, {\"detail\": expected.detail})\nE   AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\nE     \nE     At index 0 diff: 409 != 503\nE     Use -v to get more diff"
+    }
+  ],
+  "source_causality_boundary": "Original exception for saved_unreadable is suppressed in HTTP/short JUnit; evidence query ambiguity is strong static diagnosis, not a new executable reproduction",
+  "executed_by_this_author": {
+    "application_imports": false,
+    "AST": false,
+    "format_lint_collection_tests": false,
+    "DB": false,
+    "network_provider": false,
+    "source_edits": false,
+    "git_handoff": false
+  }
+}

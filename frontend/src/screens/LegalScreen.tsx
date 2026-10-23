@@ -1,28 +1,29 @@
 /**
  * Privacy policy and terms of use.
  *
- * Drafts, and they say so at the top. The product holds an applicant's
- * education history, financial situation and citizenship, and its users are
- * mostly school leavers - which in most jurisdictions means some of them are
- * minors. Shipping without any statement at all was the worse option; shipping
- * a page that pretends to be reviewed would be worse still.
- *
- * Every factual claim below is true of the code today. When one stops being
- * true, this page is wrong and has to change with it.
+ * Draft notice bound to the audited software behavior. The operator's legal
+ * details, actual hosting, recipients and minors procedure remain unresolved.
+ * Recheck the notice when processing behavior or deployment facts change.
  */
 
+import { BookLegal } from '@/components/BookLegal';
+import { useTranslation } from '@/lib/useTranslation';
 import { Notice, Panel } from '@/components/primitives';
 
-const UPDATED = '4 September 2026';
+const UPDATED = '9 October 2026';
+const VERSION = '2026-10-09.draft1';
 
 export function LegalScreen() {
+  const {locale}=useTranslation(); const ru=locale!=='en';
   return (
     <>
+      {ru&&<BookLegal/>}
+      <details className="book-legal-original" open={ru?undefined:true}><summary>{ru?'Полная исходная редакция проекта (English)':'Legal drafts'}</summary>
       <div className="screen__head">
         <p className="screen__eyebrow">LEGAL / PRIVACY</p>
         <h1 className="screen__title">Privacy with <span className="find-yellow">clarity.</span></h1>
         <p className="screen__lede">
-          What Unimatch stores, what it never does, and what is still owed to you.
+          Understand where your data goes, who can see it, and how to export or delete it.
         </p>
       </div>
 
@@ -37,6 +38,16 @@ export function LegalScreen() {
           </div>
         </Notice>
 
+        <Panel title="Your data at a glance" hint={`Notice version ${VERSION}`}>
+          <div className="stack stack--tight small" data-testid="privacy-summary">
+            <p>Your applicant case belongs to a workspace. Members of that workspace can access its cases; workspace privacy is not a promise that only one person can see them.</p>
+            <p>Joining the community is a separate choice. A saved programme or collected checklist does not send an application to a university.</p>
+            <p>Use Export to download or delete a saved case, and Account to close your account. These are different actions. Closing an account does not erase a workspace that still has other members.</p>
+            <p data-testid="privacy-operator-gap">The legal operator, privacy contact, actual database and backup locations, recipients and retention schedule must be confirmed for this deployment before this draft can be published as its final notice.</p>
+            <p data-testid="privacy-consent-gap">Registration does not currently record an accepted notice version or a legal representative’s authorization. A policy page alone is not evidence of consent.</p>
+          </div>
+        </Panel>
+
         <Panel title="Privacy policy (draft)" hint={`Last updated ${UPDATED}`}>
           <div className="stack stack--tight small">
             <p>
@@ -49,13 +60,12 @@ export function LegalScreen() {
             <p>
               <strong>Accounts.</strong> When authentication is enabled, an account holds an email
               address, a display name and a password that is stored only as a scrypt hash. A
-              session is an opaque random token; no applicant data is placed in a browser cookie.
-              An append-only audit trail records who did what, and holds identifiers and actions
-              only — never applicant data.
+              session is an opaque random token; no applicant profile is placed in the session cookie. The browser also stores local drafts, case pointers, theme preferences and document ticks; those are not encrypted storage.
+              An append-only audit trail records identifiers, actions and operation details, which can include error text or payment metadata. It is not a guarantee that every stored error is free of personal data. Logs require access, minimization and retention controls; identifiers are not anonymous data.
             </p>
             <p>
               <strong>The community is public, and it is the only part that is.</strong>{' '}
-              Everything above stays inside your workspace. The community does not: if you create
+              The applicant case is shared inside its workspace rather than public. The community is different: if you create
               a community profile, your display name, the city, major and universities you say you
               are aiming at, the status you choose, your description of yourself, and every post
               and reply you write are visible to every other signed-in applicant, including people
@@ -74,29 +84,19 @@ export function LegalScreen() {
             </p>
             <p>
               <strong>Private messages.</strong> Conversations are stored so both people can read
-              them, and are visible to nobody else — with one exception, which exists so that
+              them, and are visible to nobody else through ordinary conversation endpoints — with one exception, which exists so that
               harassment can be dealt with: either person in a conversation can report a message,
               and reporting it shows that message to a moderator. Who may write to you first is
-              your setting, and it starts narrow.
+              your setting, and it starts narrow. Messages are not end-to-end encrypted: authorized operators with database access can technically access stored content. Leaving the community is not the same as deleting the account or a conversation.
             </p>
             <p>
-              <strong>What leaves the service.</strong> Requests to universities&apos; own public
-              pages, which never carry your data: the fetcher refuses to place applicant
-              information in an outbound URL, honours robots.txt, reads nothing behind a login and
-              bypasses no CAPTCHA. If password-reset email is configured, your address reaches the
-              configured SMTP provider. There is no analytics, no advertising, no tracking pixel
-              and no third-party script — the browser is told so by the content security policy.
+              <strong>What leaves the service.</strong> University-page reads and configured search-provider queries use privacy-validated programme, degree, intake and public audience context, which may derive from your preferences. The normal query contract excludes the full profile, identity, contact details, grades and budget; it is not a promise that every query is anonymous. The fetcher honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is enabled, your email address and reset message reach the configured mail provider. If you choose a payment, the payment provider receives the information required for that transaction; a masked phone in our database does not mean the provider received only a masked phone. Hosting and network operators can process connection metadata. Their actual identities, countries and retention terms must be disclosed by this deployment. No advertising or analytics SDK is present in the reviewed application source; that is not a verification of every deployed infrastructure log.
             </p>
             <p>
-              <strong>What you can do with it.</strong> Export the complete record for a case
-              (profile, runs, results, claims, conflicts and the audit trail) as JSON, and delete
-              a case or the whole account. Deleting an account deletes its organisation&apos;s
-              cases and their runs with it.
+              <strong>What you can do with it.</strong> Export the case record the API makes available as JSON, and delete a case or your account. The case export is not an export of every account, payment, community or operational record. Account deletion erases workspaces where you are the only member; a shared workspace and its cases remain for its other members. A deletion error must not be reported as success. Security audit records, operational job records, recipients’ copies and backups require their own retention and deletion review; deleting a live case is not proof that every copy everywhere disappeared.
             </p>
             <p>
-              <strong>How long it is kept.</strong> Until you delete it. The operator of a given
-              deployment sets its own backup retention; backups contain the same applicant data
-              and must be treated the same way.
+              <strong>How long it is kept.</strong> The current application has deletion controls but no universal automatic expiry for every data class. The operator must publish a purpose-based retention schedule for profiles, account records, payments, audit/job records and backups, and demonstrate that it is applied. Backup settings and a planned deletion procedure are not evidence that a backup was actually erased. Exports you download remain on your device until you remove them.
             </p>
             <p>
               <strong>Applicants under 18.</strong> The product is built for people applying to
@@ -129,9 +129,7 @@ export function LegalScreen() {
               so that check takes seconds.
             </p>
             <p>
-              <strong>No warranty.</strong> The software is provided as-is under the MIT licence,
-              without warranty of any kind. A missed deadline or a misread requirement remains
-              yours to bear, which is why the sources are on every screen.
+              <strong>Service limits and your rights.</strong> Published pages, estimates and extraction can be incomplete or wrong. Check a material deadline, fee or condition before acting. The MIT licence applies to the source code; it does not remove any mandatory consumer or personal-data rights you have when using an operated service. Paid-service terms, refund rules and the responsible operator must be supplied before a purchase; this draft does not invent them.
             </p>
             <p>
               <strong>Acceptable use.</strong> Do not use the service to harvest data about other
@@ -164,12 +162,14 @@ export function LegalScreen() {
         </Panel>
         <Panel title="Data processing (draft)">
           <div className="stack stack--tight small">
-            <p>Your private applicant case and research evidence are stored within your workspace. Public community information is created separately and only when you choose to join.</p>
-            <p>Research requests read public university sources without placing applicant data in outbound URLs. A complete case record can be exported, and cases or accounts can be deleted using the controls in the app.</p>
-            <p>These statements describe current product behavior. They still require legal review for the deployment and the jurisdictions where applicants live.</p>
+            <p>Your applicant case and research evidence are accessible within your workspace; this is organization-level access. Public community information is created separately and only when you choose to join.</p>
+            <p>Research reads public university sources using a bounded, privacy-validated target that may derive from degree, field and intake preferences, without a full applicant profile, identity, grades or budget in the normal query contract. The case record available from the API can be exported; case and account deletion have the separate scope explained above.</p>
+            <p data-testid="privacy-ai-boundary">The transcript endpoint parses PDFs locally into suggestions. Configuration also supports an optional TypeSafe decision capability using programme information and public link state; an active product call path was not established by this source audit. A research privacy setting does not prove profile-aware AI processing, consent or a no-training contract. Before adding one, disclose its input fields, recipients, retention and training terms and obtain any required authorization.</p>
+            <p>These statements describe reviewed source behavior. They still require legal review and deployment evidence, especially localization, international transfers and minors. No certification, penetration-test result or legal compliance is claimed.</p>
           </div>
         </Panel>
       </div>
+      </details>
     </>
   );
 }

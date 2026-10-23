@@ -1,0 +1,9 @@
+{
+  "command": "ruff check external proposed test under own backend cwd",
+  "exit": 1,
+  "issues": [
+    "I001 external path not native package discovery",
+    "F401 Path/FetchResult/FetchOutcome unused after P6 removal"
+  ],
+  "native_runtime_failure": false
+}

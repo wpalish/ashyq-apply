@@ -1,0 +1,61 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "frozen-source",
+  "captured_at": "20261008T003419Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 40,
+    "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+    "search_before_navigation": false,
+    "university_read_budget": true,
+    "fenced_research_job": true,
+    "research_job_protocol": "genuine-research-job",
+    "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit",
+    "site_branding_identity": false,
+    "subject_phrase_match": false,
+    "programme_identity_before_funding": false,
+    "shared_query_budget": true,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen"
+    ],
+    "selection": "curated",
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14"
+  },
+  "observations": [
+    {
+      "case_id": "groningen",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [],
+      "error": null
+    }
+  ]
+}

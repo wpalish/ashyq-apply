@@ -1,0 +1,21 @@
+......F...........                                                       [100%]
+=================================== FAILURES ===================================
+__________________ test_owned_process_timeout_kills_own_group __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a01b6b0>
+
+    def test_owned_process_timeout_kills_own_group(monkeypatch):
+        calls=[]
+        class Process:
+            pid=424242;returncode=None
+            def communicate(self,**_kwargs):raise subprocess.TimeoutExpired('synthetic',1)
+            def wait(self):calls.append('wait');return -9
+        monkeypatch.setattr(s.subprocess,'Popen',lambda *_a,**k:(calls.append(k['start_new_session']) or Process()));monkeypatch.setattr(s.os,'killpg',lambda pid,signal:calls.append((pid,signal)))
+>       with pytest.raises(subprocess.TimeoutExpired):s.run_owned_process(['synthetic'],timeout=1)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: run_owned_process() missing 1 required keyword-only argument: 'cwd'
+
+tests/test_local_pilot.py:125: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_local_pilot.py::test_owned_process_timeout_kills_own_group
+1 failed, 17 passed in 0.69s

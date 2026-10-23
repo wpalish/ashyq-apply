@@ -1,0 +1,76 @@
+Browser tab: 1010110417, Title: "Unilight Portfolio", URL: "https://portfolio.unilight.asia/share".
+1 AXWebArea Unilight Portfolio, URL: portfolio.unilight.asia/share
+	2 container
+		3 text Расскажи, как ты поступал(а)
+		4 link Description: Экосистема Unilight, Value: unilight.asia/
+		5 link Description: Unilight Portfolio — на главную, Value: portfolio.unilight.asia/
+		6 container
+			7 link Description: Платформа, Value: portfolio.unilight.asia/#platform
+			8 link Description: Как это работает, Value: portfolio.unilight.asia/#how
+			9 link Description: Вопросы, Value: portfolio.unilight.asia/#faq
+		10 button Светлая тема
+		11 container Язык / Тіл / Language
+			12 checkbox KZ, Value: 0
+			13 checkbox RU, Value: 1
+			14 checkbox EN, Value: 0
+		15 link Description: Мой кабинет, Value: portfolio.unilight.asia/dashboard
+		16 text — ДЛЯ ПОСТУПИВШИХ
+		17 heading Расскажи, как ты поступал(а), Value: 1
+			18 text Расскажи, как ты поступал(а)
+		19 text Школьникам больше всего нужен честный опыт: что реально сработало, какие были ошибки, сколько на самом деле пришлось работать. Отказы тоже очень ценны: они показывают реальную картину. ИИ-наставник Unilight будет опираться на такие истории, отвечая ученикам.
+		20 container
+			21 heading Куда подавал(а), Value: 2
+				22 text Куда подавал(а)
+			23 container
+				24 text Университет *
+				25 text field (settable) Университет *
+			26 container
+				27 text Страна
+				28 text field (settable) Страна
+			29 container
+				30 text Год подачи
+				31 text field (settable) Год подачи
+			32 container
+				33 text Результат
+				34 pop up button (collapsed, settable) Результат, Value: Выбери…, Secondary Actions: Expand
+					35 menu
+						36 (selected) Выбери…
+						37 Поступил(а)
+						38 Поступил(а) и учится
+						39 Лист ожидания
+						40 Отказ
+			41 container
+				42 text Направление
+				43 text field (settable) Направление
+			44 container
+				45 text Школа
+				46 text field (settable) Школа
+			47 container
+				48 text Твой профиль на момент подачи
+				49 text entry area (settable) Твой профиль на момент подачи GPA, экзамены (IELTS, SAT), главные олимпиады и активности
+				50 text GPA, экзамены (IELTS, SAT), главные олимпиады и активности
+			51 heading Твоя история, Value: 2
+				52 text Твоя история
+			53 container
+				54 text Как всё было? *
+				55 text entry area (settable) Как всё было? * С какого класса начал(а) готовиться, что делал(а), сколько времени и сил это заняло. Минимум 100 символов.
+				56 text С какого класса начал(а) готовиться, что делал(а), сколько времени и сил это заняло. Минимум 100 символов.
+			57 container
+				58 text Что, по-твоему, сработало больше всего?
+				59 text entry area (settable) Что, по-твоему, сработало больше всего?
+			60 container
+				61 text Какие были ошибки? Что сделал(а) бы иначе?
+				62 text entry area (settable) Какие были ошибки? Что сделал(а) бы иначе?
+			63 container
+				64 text Совет школьникам, которые хотят туда же
+				65 text entry area (settable) Совет школьникам, которые хотят туда же
+			66 container
+				67 text Контакт для уточнений (необязательно)
+				68 text field (settable) Контакт для уточнений (необязательно) Telegram или почта. Видит только команда, в ответах ИИ не показывается.
+				69 text Telegram или почта. Видит только команда, в ответах ИИ не показывается.
+			70 container
+				71 checkbox (settable, integer) Value: 0, Description: Я согласен(на), что Unilight использует мою историю в обезличенном виде (без имени и контактов) для ответов ИИ-наставника и материалов для школьников.
+				72 text Я согласен(на), что Unilight использует мою историю в обезличенном виде (без имени и контактов) для ответов ИИ-наставника и материалов для школьников.
+			73 button Отправить историю
+
+The focused UI element is 1 AXWebArea Unilight Portfolio, URL: portfolio.unilight.asia/share

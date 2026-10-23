@@ -1,0 +1,67 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Поиск абитуриентов" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - paragraph: Сообщество
+  - heading "Найти людей" [level=1]
+  - paragraph: Общайся с другими абитуриентами, делись опытом, задавай вопросы и находи единомышленников по всему миру.
+  - generic: Город
+  - textbox "Город":
+    - /placeholder: Astana
+  - generic: Университет
+  - textbox "Университет":
+    - /placeholder: KBTU
+  - generic: Специальность
+  - textbox "Специальность":
+    - /placeholder: Computer science
+  - generic: Статус
+  - combobox "Статус":
+    - option "Любой статус" [selected]
+    - option "Поступил"
+    - option "В листе ожидания"
+  - button "Demo Member (synthetic) Synthetic city · Computer Science Статус не указан University of Groningen Открыть профиль":
+    - generic: DM
+    - generic: Demo Member (synthetic)
+    - generic: Synthetic city · Computer Science
+    - generic "Абитуриент не сказал, на каком он этапе.": Статус не указан
+    - generic: University of Groningen
+    - generic: Открыть профиль
+  - button "UI Review (synthetic) Synthetic city · Computer Science Статус не указан University of Groningen Открыть профиль":
+    - generic: UR
+    - generic: UI Review (synthetic)
+    - generic: Synthetic city · Computer Science
+    - generic "Абитуриент не сказал, на каком он этапе.": Статус не указан
+    - generic: University of Groningen
+    - generic: Открыть профиль
+  - note:
+    - strong: Вместе легче
+    - text: Реальные истории, полезные советы и поддержка на пути к обучению за рубежом.
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

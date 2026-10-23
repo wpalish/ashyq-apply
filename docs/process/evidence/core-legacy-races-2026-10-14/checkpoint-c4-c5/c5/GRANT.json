@@ -1,0 +1,25 @@
+{
+  "paths": [
+    {
+      "path": "frontend/src/lib/store.tsx",
+      "sha256": "8950ceb936ca104784477c2897d4b954225622f126cff9ae648d2339ef04c5b2",
+      "size": 58550
+    },
+    {
+      "path": "frontend/src/lib/profileCommands.ts",
+      "sha256": "2a18bec74f42d8761352dfa213f3fb8ad0e32392f14aa65184a73758eec99a75",
+      "size": 5474
+    },
+    {
+      "path": "frontend/src/lib/store.profileWrites.test.tsx",
+      "sha256": "404efc039100e71a3b2462065d019c1ae45b1dc348546e005df9af54a42e89e2",
+      "size": 6825
+    },
+    {
+      "path": "frontend/src/lib/profileCommands.test.ts",
+      "sha256": "56f6f1dd4fd448e32e69e253bc018e68c77d15af2ef5e4d483acdde920fe65e0",
+      "size": 2864
+    }
+  ],
+  "scope": "test first immediate reload during conflict GET/newer typing, then own tab mutable latest_draft alongside immutable original command; original UUID/body/base/draft remain unchanged; comparison writes exact draft base immediately"
+}

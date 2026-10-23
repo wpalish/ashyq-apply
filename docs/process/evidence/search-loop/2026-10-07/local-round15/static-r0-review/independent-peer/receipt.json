@@ -1,0 +1,43 @@
+{
+  "time": "2026-10-08T07:29:14.815338+00:00",
+  "decision": "R0_NOT_ACCEPTED_STATIC_FINDINGS_ONLY",
+  "r0_manifest_sha256": "5c252dfd3e167a8470ca58d73d135b998a8a5322a051fd96b89edd2662b66796",
+  "verified_r0_files": 5,
+  "r0_prepost_equal": true,
+  "primary_12_and_STOP_unchanged": true,
+  "own_findings": 5,
+  "runtime_reproductions": 0,
+  "imports_tests_network_CLI_model_SQL_labels_scorer": 0,
+  "selected_files_count": 7,
+  "selected_files_bytes": 36024,
+  "files": {
+    "PLAN.json": {
+      "sha256": "864f87543f75ec99c120dcf3f03726c1e17e6fcebe6afe20bdf89299e78567a3",
+      "bytes": 1383
+    },
+    "source-post.json": {
+      "sha256": "640bab0bc35f7d85f67338ffe1056512f5bbe34d3a2a9cc916e9314d3cc39f72",
+      "bytes": 3055
+    },
+    "controller.py.review.diff": {
+      "sha256": "a3b8740c0bba20c39423f328c36162e6afa4c4fd603d2bdd007d5f6a604092c9",
+      "bytes": 9815
+    },
+    "models.py.review.diff": {
+      "sha256": "2488a62d032a3c57b87e50d5fdc70ce1afbdc4b2aa0776a84742998ff9267f75",
+      "bytes": 5505
+    },
+    "selector.py.review.diff": {
+      "sha256": "97b5563718f20e487094ea6fd8ff04b56d1b6cf3a4343c7eb0e2647623456fde",
+      "bytes": 2621
+    },
+    "findings.json": {
+      "sha256": "320c8eea3f25eba7adaae1cb974d3839cf7d51b5eb95861a9081916b55eb0e3b",
+      "bytes": 3526
+    },
+    "REPORT.ru.md": {
+      "sha256": "48aefa2eef7fc4edab1795566d3622017c4aec5a956ffceca60cce764b9e77b5",
+      "bytes": 10119
+    }
+  }
+}

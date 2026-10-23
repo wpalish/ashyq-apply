@@ -1,0 +1,160 @@
+{
+  "utc": "2026-10-09T04:10:36.354069+00:00",
+  "final_tools": {
+    "integration-plan.json": "80c63a44c35fd262eca8ff4720c18b1e3d31ab11fcd89dfcd37bf12f8495a02b",
+    "apply_sources.py": "057a2496b7d22c731520928d39cc4cd9b4cc127b4676efed5545f372e0fa41c2",
+    "check_queue.py": "e5d7c351b882fed0c6096a88058972e867f937e945c0c125aeb6a5666cf741f2"
+  },
+  "initial_READY_sha256": "58de4b366a285f59937ce0279cf0ede8f95c06a2cde4d92ccfd87a231f3a56e6",
+  "initial_report_sha256": "8c8cdcbc05c4e1fd2900bed771e029f5ae6e1e7ef7f8c058b6bb1beab6207ede",
+  "source14": [
+    {
+      "path": "backend/app/adapters/cost/web_costs.py",
+      "before_sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+      "proposed_sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "proposed_bytes": 9177,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/cost/web_costs.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/adapters/discovery/catalog_walker.py",
+      "before_sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "proposed_sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "proposed_bytes": 33397,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/discovery/catalog_walker.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "before_sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "proposed_sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "proposed_bytes": 97093,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/discovery/live_discovery.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/adapters/documents/web_documents.py",
+      "before_sha256": "2249d096c3623661d7f2620a3dd34e5e4404e23b0db49dff760e7605f07fdd3b",
+      "proposed_sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "proposed_bytes": 36438,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/documents/web_documents.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/adapters/fetching.py",
+      "before_sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "proposed_sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "proposed_bytes": 49209,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/fetching.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/adapters/government/web_government.py",
+      "before_sha256": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82",
+      "proposed_sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "proposed_bytes": 3331,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/government/web_government.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/adapters/requirements/web_requirements.py",
+      "before_sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "proposed_sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "proposed_bytes": 43972,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/requirements/web_requirements.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/adapters/scholarship/web_scholarships.py",
+      "before_sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "proposed_sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "proposed_bytes": 62107,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/scholarship/web_scholarships.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/adapters/search/intent.py",
+      "before_sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+      "proposed_sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "proposed_bytes": 13298,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/search/intent.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/jobs/worker.py",
+      "before_sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "proposed_sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "proposed_bytes": 21770,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/jobs/worker.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/app/pipeline/runner.py",
+      "before_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "proposed_sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "proposed_bytes": 98012,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/pipeline/runner.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/tests/test_fetch_pii_hops.py",
+      "before_sha256": "8696d69d94db618d9f84322e5af747daf81a784d25aed5a8c354e10a97f661fc",
+      "proposed_sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "proposed_bytes": 28880,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/tests/test_fetch_pii_hops.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/tests/test_rejected_diagnostics.py",
+      "before_sha256": null,
+      "proposed_sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "proposed_bytes": 24483,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/tests/test_rejected_diagnostics.py",
+      "primary_and_source_symlink": false
+    },
+    {
+      "path": "backend/tests/test_rejected_diagnostics_persistence.py",
+      "before_sha256": null,
+      "proposed_sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+      "proposed_bytes": 10710,
+      "proposed_source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-persistence-test-port/proposed/backend/tests/test_rejected_diagnostics_persistence.py",
+      "primary_and_source_symlink": false
+    }
+  ],
+  "previous20_sha256": "22ca29438dadb49deb393941ed6d67624301418118f0dd501b63949a41a2a1df",
+  "previous20_count": 20,
+  "previous20_current_match_and_disjoint": true,
+  "union_count": 34,
+  "C2_READY_sha256": "2dd776c38d489df632fc84a89e87331943e5af8d1b33ccb48feb43c2a9f4c3f3",
+  "portable_READY_sha256": "4730997b9942f573b3c24976f358c014928a566ab1693293de63610fa02ca4b8",
+  "portable_final_peer_READY_sha256": "60cc8f31dc9038e3a8678028341f97708fea415b96ca026cd444b13252784a30",
+  "root_acceptance": {
+    "exists": true,
+    "sha256": "f4af612d22fb22d94db3dce0472bbdb84b9dd8c8d4615ccc611ebc135b467074",
+    "status": "QUALIFIED_CORRECTED_NATIVE_ACCEPTED_PENDING_FULL",
+    "proposal_READY_sha256": "2dd776c38d489df632fc84a89e87331943e5af8d1b33ccb48feb43c2a9f4c3f3",
+    "portable_READY_sha256": "4730997b9942f573b3c24976f358c014928a566ab1693293de63610fa02ca4b8",
+    "peer_READY_sha256": "60cc8f31dc9038e3a8678028341f97708fea415b96ca026cd444b13252784a30",
+    "integration_plan_sha256": "80c63a44c35fd262eca8ff4720c18b1e3d31ab11fcd89dfcd37bf12f8495a02b",
+    "accepted_paths_match14": true,
+    "peer_READY_actual_sha256": "60cc8f31dc9038e3a8678028341f97708fea415b96ca026cd444b13252784a30"
+  },
+  "primary_current_head": "57a603de35a1ea8817814e8bc29e7ab4f8829726",
+  "primary_branch": "task/product-privacy-diagnostics",
+  "primary_status_porcelain": " M docs/process/CLAUDE_SEARCH_RELAY_2026-10-07.md\n M docs/process/HANDOFF.md\n M docs/process/SEARCH_LOOP_LEDGER_2026-10-07.md\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-corrected-native-peer/\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-portable-persistence-tests/\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-proposal-v1-rejected-peer/\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/deployment-current-source-check.md\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/integration-plan.json\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/release-config-original-history/\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/release-config-qualified-review/\n?? docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/root-native-acceptance.json\n",
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "runner_source": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+    "sha256": "46e9866db102966fd42e07aa5b291411cbac1cca0a76f9b49551ca8a4fb919f5",
+    "reviewed_ranges": "104-176,214-286,286-328,329-457",
+    "not_executed": true
+  },
+  "future_input_existence": {
+    "integration-pre-apply-head.txt": false,
+    "application-receipt.json": false,
+    "applied-source-pins.json": false,
+    "applied-head.txt": false,
+    "native-queue": false
+  },
+  "execution_primary_git_network_test_server_container_count": 0
+}

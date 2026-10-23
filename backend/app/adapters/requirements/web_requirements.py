@@ -33,7 +33,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, same_source_site
+from app.adapters.fetching import Fetcher, fetch_diagnostic_url, same_source_site
 from app.adapters.matching import degree_matches, program_matches
 from app.adapters.page_classifier import (
     PageType,
@@ -41,6 +41,7 @@ from app.adapters.page_classifier import (
     degree_level_of,
     full_degree_titles,
 )
+from app.adapters.requirements.section_scope import full_degree_sections
 from app.adapters.scope_reader import read_scope
 from app.adapters.search.ontology import titles_name_same_programme
 from app.adapters.structured_extraction import extract_table_requirements
@@ -265,10 +266,11 @@ class WebRequirementsAdapter:
             out.pages_checked += 1
             if not res.ok:
                 out.pages_failed += 1
-                out.errors.append(f"{target.url}: {res.outcome.value} — {res.error}")
+                failed_url = fetch_diagnostic_url(target.url, res)
+                out.errors.append(f"{failed_url}: {res.outcome.value} — {res.error}")
                 out.page_outcomes.append(
                     PageOutcome(
-                        url=target.url,
+                        url=failed_url,
                         category="fetch-failed",
                         detail=f"{res.outcome.value} — {res.error}",
                     )
@@ -366,6 +368,12 @@ class WebRequirementsAdapter:
             # TY-1: the year the applicant asked for, kept apart from the year
             # the page states first, so a fee table picks the applicant's row.
             builder.requested_academic_year = self.academic_year
+            # A shared language page can publish different rules for exchange
+            # and full-degree applicants. Keep the original verifier context,
+            # but neither table nor prose requirements may use exchange rules.
+            sections = full_degree_sections(res.text, text) if not res.is_pdf else None
+            requirement_html = sections.html if sections else res.text
+            requirement_prose = sections.prose if sections else (text,)
 
             if not page.accepts("requirements"):
                 # A catalogue listing confirms existence by the T29 contract
@@ -398,7 +406,7 @@ class WebRequirementsAdapter:
                     # whatever type it reads as. Only the structural IELTS reader runs;
                     # verbatim and domain checks still apply to what it reads.
                     tabled = extract_table_requirements(
-                        build_document_ir(res.text, page_url), builder
+                        build_document_ir(requirement_html, page_url), builder
                     )
                     if tabled:
                         out.claims.extend(builder.claims)
@@ -460,19 +468,24 @@ class WebRequirementsAdapter:
                 # already answered is dropped, so one page never states two
                 # IELTS minimums from two readings of itself.
                 tabled = (
-                    extract_table_requirements(build_document_ir(res.text, page_url), builder)
+                    extract_table_requirements(
+                        build_document_ir(requirement_html, page_url), builder
+                    )
                     if not res.is_pdf
                     else []
                 )
-                before = len(builder.claims)
-                extract_requirements(text, builder)
                 answered = {c.claim_type for c in tabled}
-                builder.claims[before:] = [
-                    c for c in builder.claims[before:] if c.claim_type not in answered
-                ]
+                for prose in requirement_prose:
+                    before = len(builder.claims)
+                    extract_requirements(prose, builder)
+                    builder.claims[before:] = [
+                        c for c in builder.claims[before:] if c.claim_type not in answered
+                    ]
+                    answered.update(c.claim_type for c in builder.claims[before:])
             self._claim_intake_state(page, text, intake, builder, out)
-            self._claim_english_test_types(text, builder)
-            self._claim_english_waiver(text, builder)
+            for prose in requirement_prose:
+                self._claim_english_test_types(prose, builder)
+                self._claim_english_waiver(prose, builder)
             self._claim_fees(text, builder)
             if (
                 TOPIC_SEARCH

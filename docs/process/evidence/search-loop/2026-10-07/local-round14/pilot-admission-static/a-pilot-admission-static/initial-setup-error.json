@@ -1,0 +1,11 @@
+{
+  "tool_chunk": "02ba92",
+  "error": "FileNotFoundError: own parent local-round14 did not exist; mkdir omitted parents=True",
+  "read_only_followups": [
+    "rg work/local-round14 missing",
+    "rg HANDOFF LIVE_RESUME_PLAN_AFTER_STOP references",
+    "rg controller filename inventory"
+  ],
+  "command_exit": "overall 0 from last rg, despite setup failure",
+  "qualification": "author preparation error; not application/controller failure; PLAN did not predate these limited reads"
+}

@@ -1,0 +1,35 @@
+"""Offline fault controls over the actual measured first arm, not synthetic success."""
+import copy
+import json
+from pathlib import Path
+from pair_validation import validate_capture
+
+ROOT=Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round2')
+RUN=ROOT/'pair/off1/20261007T185255Z'
+capture=json.loads((RUN/'capture.json').read_text());expected=capture['config']['cohort']
+sha=capture['pipeline_sha'];aut='0480c3b293c219debd4325fe107ac27b'
+assert not validate_capture(capture,expected,False,sha,RUN)
+assert not (RUN/(aut+'.raw.json')).exists()
+controls=[]
+mutations=[('time_overrun','elapsed_ms',120001),('read_overrun','fetcher_calls',61),
+    ('query_overrun','search_queries',7),('missing_counter','elapsed_ms',None),
+    ('bool_counter','search_queries',True),('unfinished_checkpoint','active_checkpoint_available',False),
+    ('provider_failure','provider_failure',{'http_status':402}),
+    ('parent_process_failure','process_error','BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED'),
+    ('unknown_stop','stop_reason','unknown')]
+for name,key,value in mutations:
+    changed=copy.deepcopy(capture);changed['config']['case_budgets'][aut][key]=value
+    errors=validate_capture(changed,expected,False,sha,RUN);assert errors,name
+    controls.append(dict(control=name,errors=errors))
+for name,mutate in [('missing_case',lambda c:c['observations'].pop()),
+    ('in_progress',lambda c:c['observations'][3].update(error='CAPTURE_IN_PROGRESS')),
+    ('missing_raw_without_timeout',lambda c:c['observations'][3].update(error=None)),
+    ('wrong_flag',lambda c:c['config'].update(site_branding_identity=True))]:
+    changed=copy.deepcopy(capture);mutate(changed)
+    errors=validate_capture(changed,expected,False,sha,RUN);assert errors,name
+    controls.append(dict(control=name,errors=errors))
+result=dict(real_bounded_terminal_outcome_accepted=True,source_run=str(RUN),
+    missing_aut_raw_recorded=True,provider_failure=None,controls=controls,network_actions=0,
+    interpretation='Known clean in-cap source-work exhaustion remains a measured limited result; all faults rejected')
+(ROOT/'controller-validation.offline.json').write_text(json.dumps(result,indent=2)+'\n')
+print('Actual bounded timeout accepted;13 independent fault controls rejected; no network')

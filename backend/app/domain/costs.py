@@ -223,6 +223,9 @@ def compute_funding_gap(
     # Stacking needs consent from both sides: the award being added must say it
     # stacks, and the primary award must not forbid being combined.
     stackable_total = 0.0
+    stackable_year_mismatch = False
+    reference_year = cost.academic_year or primary.academic_year
+    reference_label = "the cost" if cost.academic_year else f"'{primary_s.name}'"
     others_offering_to_stack = [s for s in eligible if s is not primary_s and s.stackable == "yes"]
     if primary_s.stackable == "no":
         if others_offering_to_stack:
@@ -235,11 +238,27 @@ def compute_funding_gap(
             amt = _award_amount(s, tuition, target_currency)
             if amt is not None:
                 stackable_total += amt.amount
+                # Every added award is part of the arithmetic. The primary
+                # award's current year cannot make an older add-on current.
+                if amt.academic_year:
+                    if reference_year is None:
+                        # Even if cost and primary years are unknown, two
+                        # known, different add-on years must not become a clean zero.
+                        reference_year = amt.academic_year
+                        reference_label = f"'{s.name}'"
+                    elif reference_year != amt.academic_year:
+                        stackable_year_mismatch = True
+                        warnings.append(
+                            f"'{s.name}': amount is published for {amt.academic_year}, "
+                            f"but {reference_label} is published for {reference_year}. "
+                            "These figures are not directly comparable."
+                        )
 
-    year_mismatch = bool(
+    primary_year_mismatch = bool(
         cost.academic_year and primary.academic_year and cost.academic_year != primary.academic_year
     )
-    if year_mismatch:
+    year_mismatch = primary_year_mismatch or stackable_year_mismatch
+    if primary_year_mismatch:
         warnings.append(
             f"Cost is published for {cost.academic_year} but the award amount for "
             f"{primary.academic_year}. The figures below are not directly comparable."

@@ -1,0 +1,165 @@
+{
+  "persisted": {
+    "errors": [
+      "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+      "page fetch-failed: https://public.invalid/ (page_type unclassified): refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+    ],
+    "unknowns": [
+      "prior unresolved source"
+    ],
+    "retry_urls": [],
+    "audit_detail": {
+      "errors": [
+        "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    },
+    "stage": "queued",
+    "pages_checked": 1,
+    "pages_failed": 1
+  },
+  "API": {
+    "id": "581d4a4496504451836c3c85d12f6fcc",
+    "profile_id": "c3f9a899ba0442c0a1bfe3c7e5be2f4a",
+    "stage": "queued",
+    "demo_mode": true,
+    "cancelled": false,
+    "progress": 0.0,
+    "candidates_found": 0,
+    "programs_verified": 0,
+    "pages_checked": 1,
+    "pages_failed": 1,
+    "claims_recorded": 0,
+    "candidate_limit": 40,
+    "verify_limit": 20,
+    "fetch_tiers": {},
+    "results_count": 0,
+    "decided_count": 0,
+    "stages": [
+      {
+        "stage": "profile_validation",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "candidate_discovery",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "program_verification",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "funding_discovery",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "assessment",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "awaiting_user_decision",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "document_collection",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "completed",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      }
+    ],
+    "errors": [
+      "https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+      "page fetch-failed: https://public.invalid/ (page_type unclassified): refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+    ],
+    "unknowns": [
+      "prior unresolved source"
+    ],
+    "retry_urls": [],
+    "settings": {},
+    "created_at": "2026-10-09T03:49:00.674218",
+    "started_at": null,
+    "finished_at": null,
+    "job_running": false,
+    "job_error": "",
+    "job_id": null,
+    "job_status": null,
+    "job_attempts": 0,
+    "stale": false,
+    "worker_id": "synthetic-peer",
+    "heartbeat_at": "2026-10-09T03:49:00.681240",
+    "recovery_count": 0,
+    "next_recheck_at": null
+  },
+  "fetch_stats": {
+    "ok": 0,
+    "refused_privacy": 1,
+    "cached": 0,
+    "robots_disallowed": 0,
+    "robots_crawl_delay": 0,
+    "http_error": 0,
+    "timeout": 0,
+    "network_unavailable": 0,
+    "unparseable": 0,
+    "blocked": 0,
+    "too_large": 0
+  },
+  "API_auth": "native tenant guard with explicit synthetic Principal dependency; no session login proof"
+}

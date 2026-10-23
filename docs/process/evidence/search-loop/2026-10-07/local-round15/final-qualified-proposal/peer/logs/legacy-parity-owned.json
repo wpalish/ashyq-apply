@@ -1,0 +1,54 @@
+{
+  "executions": [
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/parity_owned.py",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/parity/original"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/legacy-runtime/backend",
+      "environment": {
+        "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/home",
+        "PATH": "/usr/bin:/bin",
+        "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/tmp",
+        "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/legacy-runtime/backend",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "UNIMATCH_DEMO_MODE": "true",
+        "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+        "UNIMATCH_SEARCH_PROVIDER": "none"
+      },
+      "exit_code": 0,
+      "started": "2026-10-08T08:11:47.400426+00:00",
+      "ended": "2026-10-08T08:11:47.549740+00:00"
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/parity_owned.py",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/parity/final"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend",
+      "environment": {
+        "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/home",
+        "PATH": "/usr/bin:/bin",
+        "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/tmp",
+        "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "UNIMATCH_DEMO_MODE": "true",
+        "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+        "UNIMATCH_SEARCH_PROVIDER": "none"
+      },
+      "exit_code": 0,
+      "started": "2026-10-08T08:11:47.549871+00:00",
+      "ended": "2026-10-08T08:11:47.699612+00:00"
+    }
+  ],
+  "whole_json_bytes_equal": true,
+  "raw_bytes_equal": true,
+  "bytes": 3905,
+  "sha256": "ed1dba39ae7d7ff2ac086ae25ed8d85ba77d68ab7fe2eec8f337f494c3528c53",
+  "raw_bytes": 1725,
+  "raw_sha256": "5611c9eb1846406d284a219fb2840777517ffa1c9de3809b1f16569a6c529b92",
+  "fixture_source_sha256": "e78457e17f3b3ab96b24b5b3d7385ca0f0bf6a3ac42ab94bf34347b1d7ca4566",
+  "qualification": "one native original/final legacy synthetic fixture; fixed clock/synthetic Fetcher result; model_dump, canonical trace/packet digests, journal, raw/summary and legacy55 diagnostic; no runtime/model/network guarantee"
+}

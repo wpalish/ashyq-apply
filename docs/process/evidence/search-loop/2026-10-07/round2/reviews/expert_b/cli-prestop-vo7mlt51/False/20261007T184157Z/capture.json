@@ -1,0 +1,43 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "captured_at": "20261007T184157Z",
+  "mode": "live",
+  "config": {
+    "strict_expert_budget": true,
+    "search_provider": "exa",
+    "site_branding_identity": false,
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "max_search_queries_per_case": 6,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "selection": "curated",
+    "batch_stop_reason": "external_provider_failure",
+    "batch_attempted_case_ids": [],
+    "batch_remaining_case_ids": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ]
+  },
+  "observations": []
+}

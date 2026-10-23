@@ -1,0 +1,50 @@
+{
+  "schema_version": "external-source-seal-v1",
+  "sealed_at_utc": "2026-10-12T15:55:26.231676+00:00",
+  "status": "SEALED_EXTERNAL_TEST_ONLY_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_COLLECTED_NOT_RUN",
+  "root_sole_application_writer": true,
+  "author_agent": "/root/product_function_gaps",
+  "first_packet_seal_sha256": "f7a436b4e558bc45521f7814303d8939b72c34972a247fedb1e79a83e3860546",
+  "source_paths": {
+    "backend/tests/test_admissions_actions_concurrency.py": {
+      "preimage_sha256": "2600ce96177333b48dbcaddc71b343544ad645f535cb1210af23f821b5692054",
+      "postimage_sha256": "901f626e5c1c8dbe11365b8f71765d1084688985f8ab15fae41d6d1bc1dba840",
+      "postimage_size": 30607,
+      "postimage_member": "files/backend/tests/test_admissions_actions_concurrency.py",
+      "original_member": "originals/backend/tests/test_admissions_actions_concurrency.py",
+      "diff_member": "UUID_COLUMN_REPAIR.diff"
+    }
+  },
+  "members": {
+    "FIRST_PACKET_REFERENCE.json": {
+      "sha256": "7298196c881cf77fbbf3d2a9bcc06278f8771799bc1130116e88d11dee1fdc49",
+      "size": 1088
+    },
+    "README.md": {
+      "sha256": "e6d7c323361ef6be052bacf0c08844a118b909a3aa912a0eb22d54c1ece32666",
+      "size": 1388
+    },
+    "ROOT_AUTHORIZATION_AND_REASON.json": {
+      "sha256": "4710601957cca10587b1dfc7c0a77acef37a9c337cf970760f0f4bdf8e4b8768",
+      "size": 868
+    },
+    "UUID_COLUMN_REPAIR.diff": {
+      "sha256": "4ddc25c1c9a08332ab5c10c859318a401c6d453c6b58389cd6d4c3e5959626f0",
+      "size": 1540
+    },
+    "files/backend/tests/test_admissions_actions_concurrency.py": {
+      "sha256": "901f626e5c1c8dbe11365b8f71765d1084688985f8ab15fae41d6d1bc1dba840",
+      "size": 30607
+    },
+    "originals/backend/tests/test_admissions_actions_concurrency.py": {
+      "sha256": "2600ce96177333b48dbcaddc71b343544ad645f535cb1210af23f821b5692054",
+      "size": 30592
+    }
+  },
+  "textual_substitution_count": 3,
+  "source_only_ast_parse": "PASS",
+  "all_original_assertions_and_functions_preserved": true,
+  "intended_test_count_not_collected_not_run": 38,
+  "first_packet_all_members_unchanged": true,
+  "prohibited_actions_performed": []
+}

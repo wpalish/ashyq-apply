@@ -1,0 +1,178 @@
+{
+  "baseline": "61f7166541498cd693c05242480c681bd63e3cb8",
+  "utc": "2026-10-14T14:39:50.217651+00:00",
+  "paths": [
+    {
+      "path": "frontend/src/types.ts",
+      "exists": true,
+      "sha256": "8394c122f1f145664017c463dbdf54d4a42f3ca53376ac9716825afda52b0f4b",
+      "size": 39635
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "exists": true,
+      "sha256": "3506a602131cd49dc5eb8fa62e3821509e3a5d06b4de42b0dcb0f9e3d4699c2f",
+      "size": 28418
+    },
+    {
+      "path": "frontend/src/lib/store.tsx",
+      "exists": true,
+      "sha256": "01cc6c9ba755554264ce1cffcd00451e366409e1f378e54a594987d28bd018c2",
+      "size": 46126
+    },
+    {
+      "path": "frontend/src/screens/ProfileScreen.tsx",
+      "exists": true,
+      "sha256": "a24d5105cb953dec01a334ba4a30bb5f75f64cca860aa34f509cd51c2702e0a1",
+      "size": 42420
+    },
+    {
+      "path": "frontend/src/lib/profileCommands.ts",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/lib/profileMerge.ts",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/components/ProfileRecoveryPanel.tsx",
+      "exists": false
+    },
+    {
+      "path": "backend/app/api/profile_revision.py",
+      "exists": true,
+      "sha256": "16c8026e2e72fe48317ae10922b5e8a2486e7f312cc82dbce2a79854b25a8146",
+      "size": 2815
+    },
+    {
+      "path": "backend/app/api/profile_commands.py",
+      "exists": false
+    },
+    {
+      "path": "backend/app/api/routes_profile.py",
+      "exists": true,
+      "sha256": "4820e05ceb3842e7372876af38cd91ea54f1a18b2907b521767cb85bcb432302",
+      "size": 18822
+    },
+    {
+      "path": "backend/app/api/routes_results.py",
+      "exists": true,
+      "sha256": "92202ef4d412ab46ee0f4375ce2e07ca57d5fb15a4e63c58f62fed7f8b95ad41",
+      "size": 26114
+    },
+    {
+      "path": "backend/app/schemas/profile.py",
+      "exists": true,
+      "sha256": "1386f0cda1bd8157a8259b257f5ceec9eb511ee705f4793648c8d6d699a5eeae",
+      "size": 14880
+    },
+    {
+      "path": "backend/tests/test_profile_commands.py",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/lib/profileCommands.test.ts",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/lib/profileMerge.test.ts",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/lib/store.profileWrites.test.tsx",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/api/client.profile.test.ts",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/components/ProfileRecoveryPanel.test.tsx",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/lib/caseDrafts.ts",
+      "exists": true,
+      "sha256": "9447cde514450ec60b79b7ac2182d0819fbd826f3d054c23fd35a493ec9ea058",
+      "size": 9238
+    },
+    {
+      "path": "frontend/src/lib/draftIdentity.test.tsx",
+      "exists": true,
+      "sha256": "c307e02e43749727ca4037bbf7441e07d17403a32e56dab170fcca9b35b8ea82",
+      "size": 11319
+    },
+    {
+      "path": "frontend/src/lib/securityMergeFixtures.ts",
+      "exists": true,
+      "sha256": "b80b5ec2d659a300010168e85bd31252f5acb39ed5566057393eefc86b504a20",
+      "size": 3883
+    },
+    {
+      "path": "frontend/src/lib/useResearchInputRead.test.tsx",
+      "exists": true,
+      "sha256": "62ec26a81ccec86a41ff131f52ec856fc9f318ebc6b5e1732eb32ee264f713c7",
+      "size": 4127
+    },
+    {
+      "path": "frontend/src/screens/ExportScreen.caseSwitch.test.tsx",
+      "exists": true,
+      "sha256": "c0f226d1f242682459f254848bd9b9283ec25fe12aa6afa351443b36e74ea4a0",
+      "size": 8503
+    },
+    {
+      "path": "frontend/src/screens/ProfileScreen.feedback.test.tsx",
+      "exists": true,
+      "sha256": "10435c9032f85945ab5e8860e70364773f12f2b70ec6a297ca95cd41fcdd8e86",
+      "size": 7384
+    },
+    {
+      "path": "frontend/src/lib/profileWriteFixtures.ts",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/lib/drafts.test.tsx",
+      "exists": true,
+      "sha256": "9910fc766394e833412158994f9e2d5844954f2df7fc34f6c3225b6c27cb3994",
+      "size": 26228
+    },
+    {
+      "path": "frontend/src/lib/productRecovery.test.tsx",
+      "exists": true,
+      "sha256": "fcb9c9685306d797d401c892b9588ceb1c98dbf20caf0aa4c29fe2f51a9ec755",
+      "size": 6507
+    },
+    {
+      "path": "frontend/src/lib/store.test.tsx",
+      "exists": true,
+      "sha256": "c931d85257d275f85e789b37cbf92d7c756a4973a7c7521c05f94701281ed9be",
+      "size": 41883
+    },
+    {
+      "path": "frontend/src/lib/store.startRunProfile.test.tsx",
+      "exists": true,
+      "sha256": "d84f1e5973f5274446f67b4b0fa3a82658fc90ddd27dbc69a74f8723a64a541d",
+      "size": 5159
+    },
+    {
+      "path": "frontend/src/lib/storeIsolation.test.tsx",
+      "exists": true,
+      "sha256": "3ffc325eb2f8f6053ece13ab59ab208a951baa0f6e80fefefb09ed406524fe98",
+      "size": 14941
+    },
+    {
+      "path": "frontend/src/screens/PreferencesScreen.runtime.test.tsx",
+      "exists": true,
+      "sha256": "8641654136e2dbf0af72ea058e02aa0e6bca0867287cfe4221e5a8a9c348576f",
+      "size": 2554
+    },
+    {
+      "path": "frontend/src/screens/ProfileLists.runtime.test.tsx",
+      "exists": true,
+      "sha256": "8ed682ffaf37267fec72b2597e7d140f53d4e4973092638e9969b0ad9a23ee2d",
+      "size": 4058
+    }
+  ],
+  "source_status": "NOT_APPLIED",
+  "scope": "C2 caller/recovery/conflict + minimal server audit acceptance; no migration, no G3 changes; root only"
+}

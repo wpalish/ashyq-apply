@@ -1,0 +1,57 @@
+{
+  "lane": "off",
+  "exit": 1,
+  "pytest": {
+    "passed": 78,
+    "failed": 12,
+    "skipped": 0,
+    "error": 0
+  },
+  "collected": 90,
+  "original_app_before": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "original_app_after": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f"
+  },
+  "proposal_app_before": {
+    "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+  },
+  "proposal_app_after": {
+    "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+  },
+  "test_before": {
+    "tests/test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "tests/test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "tests/test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  },
+  "test_after": {
+    "tests/test_search_throttle_latch.py": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+    "tests/test_search_layer_budget_fixes.py": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+    "tests/test_exa_mcp.py": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596"
+  },
+  "native_method_identity_unchanged": true,
+  "target_files": {
+    "search": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/__init__.py",
+    "retrieval": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/retrieval.py",
+    "live": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py"
+  },
+  "socket_DNS_realtransport_denied": true,
+  "app_repo_primarySTOP_or_throttle_reset": false
+}

@@ -1,0 +1,15 @@
+proposed/app/adapters/discovery/confirmed_routing.py:30: error: Argument 1 to "frozenset" has incompatible type "list[str | None]"; expected "Iterable[str]"  [arg-type]
+proposed/app/adapters/discovery/confirmed_routing.py:123: error: Need type annotation for "seen_levels" (hint: "seen_levels: set[<type>] = ...")  [var-annotated]
+proposed/app/catalogue/discovery.py:13: error: Module "app.adapters.discovery.live_discovery" has no attribute "retained_partial"  [attr-defined]
+proposed/app/catalogue/discovery.py:114: error: Need type annotation for "publication" (hint: "publication: list[<type>] = ...")  [var-annotated]
+proposed/app/catalogue/discovery.py:117: error: Module has no attribute "RETAIN_CONFIRMED_DISCOVERY_PARTIAL"  [attr-defined]
+proposed/app/catalogue/discovery.py:135: error: Module has no attribute "RETAIN_CONFIRMED_DISCOVERY_PARTIAL"  [attr-defined]
+proposed/app/catalogue/discovery.py:139: error: Module has no attribute "RETAIN_CONFIRMED_DISCOVERY_PARTIAL"  [attr-defined]
+proposed/app/catalogue/discovery.py:141: error: Module has no attribute "RETAIN_CONFIRMED_DISCOVERY_PARTIAL"  [attr-defined]
+proposed/app/catalogue/discovery.py:176: error: Module has no attribute "RETAIN_CONFIRMED_DISCOVERY_PARTIAL"  [attr-defined]
+proposed/app/catalogue/discovery.py:187: error: Unexpected keyword argument "confirmation_publisher" for "_discover_one" of "LiveDiscoveryAdapter"  [call-arg]
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py:1154: note: "_discover_one" of "LiveDiscoveryAdapter" defined here
+proposed/app/catalogue/discovery.py:187: error: Unexpected keyword argument "confirmation_publisher" for "_discover_one" of "LiveDiscoveryAdapter"  [call-arg]
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py:1154: note: "_discover_one" of "LiveDiscoveryAdapter" defined here
+proposed/app/adapters/discovery/live_discovery.py:1169: error: Need type annotation for "publication" (hint: "publication: list[<type>] = ...")  [var-annotated]
+Found 12 errors in 3 files (checked 4 source files)

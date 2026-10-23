@@ -1,0 +1,188 @@
+{
+  "persisted": {
+    "run_stage": "failed",
+    "run_errors": [
+      "QueryPrivacyError: field='Mathematics A_SQL_WORKER_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query."
+    ],
+    "run_unknowns": [
+      "prior unresolved source"
+    ],
+    "job_status": "queued",
+    "job_attempts": 1,
+    "job_last_error": "QueryPrivacyError: field='Mathematics A_SQL_WORKER_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.",
+    "job_available_at": "2026-10-09 03:49:28.578349",
+    "audit": [
+      {
+        "action": "run_failed",
+        "detail": {
+          "error": "field='Mathematics A_SQL_WORKER_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query."
+        }
+      }
+    ]
+  },
+  "API": {
+    "id": "e2946570797b4f57831d631920ba8fdc",
+    "profile_id": "d61426bffaef479abfbc1aeeee4d8393",
+    "stage": "failed",
+    "demo_mode": true,
+    "cancelled": false,
+    "progress": 0.0,
+    "candidates_found": 0,
+    "programs_verified": 0,
+    "pages_checked": 0,
+    "pages_failed": 0,
+    "claims_recorded": 0,
+    "candidate_limit": 40,
+    "verify_limit": 20,
+    "fetch_tiers": {},
+    "results_count": 0,
+    "decided_count": 0,
+    "stages": [
+      {
+        "stage": "profile_validation",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "candidate_discovery",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "program_verification",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "funding_discovery",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "assessment",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "awaiting_user_decision",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "document_collection",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "completed",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      }
+    ],
+    "errors": [
+      "QueryPrivacyError: field='Mathematics A_SQL_WORKER_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query."
+    ],
+    "unknowns": [
+      "prior unresolved source"
+    ],
+    "retry_urls": [],
+    "settings": {
+      "demo_mode": true,
+      "candidate_limit": 40,
+      "verify_limit": 20,
+      "candidate_limit_source": "server default",
+      "academic_year": "2026/27",
+      "target_currency": "USD",
+      "respect_robots": true,
+      "university_ids": []
+    },
+    "created_at": "2026-10-09T03:48:58.567361",
+    "started_at": "2026-10-09T03:48:58.572477",
+    "finished_at": "2026-10-09T03:48:58.576118",
+    "job_running": false,
+    "job_error": "",
+    "job_id": null,
+    "job_status": null,
+    "job_attempts": 0,
+    "stale": false,
+    "worker_id": null,
+    "heartbeat_at": "2026-10-09T03:48:58.576231",
+    "recovery_count": 0,
+    "next_recheck_at": null
+  },
+  "logs": [
+    {
+      "message": "running job 6f66d383 (research) attempt 1",
+      "exc_info": false,
+      "context": "('6f66d383', 'research', 1)"
+    },
+    {
+      "message": "run e2946570797b4f57831d631920ba8fdc failed",
+      "exc_info": true,
+      "context": "('e2946570797b4f57831d631920ba8fdc',)"
+    },
+    {
+      "message": "job 6f66d383 failed",
+      "exc_info": true,
+      "context": "('6f66d383',)"
+    },
+    {
+      "message": "job 6f66d383 -> queued",
+      "exc_info": false,
+      "context": "('6f66d383', 'queued')"
+    },
+    {
+      "message": "HTTP Request: GET http://testserver/api/runs/e2946570797b4f57831d631920ba8fdc \"HTTP/1.1 200 OK\"",
+      "exc_info": false,
+      "context": "('GET', URL('http://testserver/api/runs/e2946570797b4f57831d631920ba8fdc'), 'HTTP/1.1', 200, 'OK')"
+    },
+    {
+      "message": "HTTP Request: GET http://testserver/api/runs/e2946570797b4f57831d631920ba8fdc \"HTTP/1.1 404 Not Found\"",
+      "exc_info": false,
+      "context": "('GET', URL('http://testserver/api/runs/e2946570797b4f57831d631920ba8fdc'), 'HTTP/1.1', 404, 'Not Found')"
+    }
+  ],
+  "Worker_dispatch": "native unmocked",
+  "synthetic_boundary": "injected stage exception only",
+  "API_job_selection": "future-backoff job may be filtered by native _view; durable Job.last_error checked separately"
+}

@@ -1,0 +1,22 @@
+{
+  "status": "EXTERNAL_SOURCE_REVIEW_NOT_EXECUTED",
+  "guard_blocks": {
+    "isActionRequestV1": {
+      "sha256": "fb606e6da9cdf867fcc6f3a0b693a4f0a5f37919d03113c346d4478299a0fb60",
+      "exact_equal": true
+    },
+    "isActionWriteReceiptShapeV1": {
+      "sha256": "97905ae8a13b81210726c7490ee9e2c6f5875f53828b8a2b79d3cb7282355a9d",
+      "exact_equal": true
+    },
+    "isActionsCurrentOutV1": {
+      "sha256": "bd513062f8720f79cecb626ca98c12ab5bfaf98c564eb3f03f5a9a01e307a03b",
+      "exact_equal": true
+    },
+    "isActionsHistoryOutV1": {
+      "sha256": "c2bc58b4827be0d03eaab53b85e8d24f64da1844a87a9724fb1f49e1a2857685",
+      "exact_equal": true
+    }
+  },
+  "note": "Exact frozen V1 guard blocks unchanged. Additive generic version guards close manual V2 nullable context and receipt target checks. No execution or integration claim."
+}

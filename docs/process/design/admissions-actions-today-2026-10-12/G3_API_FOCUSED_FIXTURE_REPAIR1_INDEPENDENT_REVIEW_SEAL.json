@@ -1,0 +1,163 @@
+{
+  "schema_version": "g3-focused-fixture-repair1-independent-review-seal-v1",
+  "reviewer": "/root/open_search_solutions",
+  "status": "SEALED_EXTERNAL_SOURCE_ONLY_NO_BLOCKER_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "reviewed_at_utc": "2026-10-13T06:03:20Z",
+  "member_count": 1,
+  "members": [
+    {
+      "path": "G3_API_FOCUSED_FIXTURE_REPAIR1_INDEPENDENT_REVIEW.md",
+      "sha256": "043fa17248cca63a010a3dcb729201c0dfe9e7a1f87df586911e5d4d0897b8eb",
+      "bytes": 6506
+    }
+  ],
+  "reviewed_packet_seals": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-repair1/SEAL.json",
+      "sha256": "3085b5585273d3ad1137b7fcaa2a6982553d117a454369c8debc41f1954842a1",
+      "declared_member_count": 5
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-format1/SEAL.json",
+      "sha256": "55dab4fd5f0e35e04459a0df7b3ee88e3d62ddd680901b595d71e665b84ab6dd",
+      "declared_member_count": 5
+    }
+  ],
+  "verified_members": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-repair1/MANIFEST.json",
+      "sha256": "c8e6d9cafa5217c627537b1432e0f51a333a6e55531c79e643220e1936a4d848",
+      "bytes": 1978
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-repair1/README.md",
+      "sha256": "4d006956369d00ff61e0a8d07cc3d94dc99a5289b7fb73d4f91deb22d85b6675",
+      "bytes": 3301
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-repair1/diffs/backend/tests/test_today.py.diff",
+      "sha256": "abb1629dc1be88cac9bc5889491038995004bfd5822432a78ff11e061038ac5a",
+      "bytes": 3237
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-repair1/files/backend/tests/test_today.py",
+      "sha256": "0acb3fcdbb9929fb921920fbcdb57f5d50bd63ef025e38d4871aa432b0c8a86d",
+      "bytes": 23268
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-repair1/originals/backend/tests/test_today.py",
+      "sha256": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16",
+      "bytes": 22088
+    },
+    {
+      "sha256": "bbd6576b994cfad091979c23bfdd19d42b19912e27bbed6b1e70ea1c6f6fb4ea",
+      "bytes": 878,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-format1/MANIFEST.json"
+    },
+    {
+      "sha256": "dce6b5d324b91eb801aa415245f4f3c76d701f0a3995de15b4de6762bc7017e9",
+      "bytes": 437,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-format1/format.diff"
+    },
+    {
+      "sha256": "413a709001976657cb743636fd34e48fc41d8d302d665460d3f874b3313da127",
+      "bytes": 19,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-format1/format.log"
+    },
+    {
+      "sha256": "0acb3fcdbb9929fb921920fbcdb57f5d50bd63ef025e38d4871aa432b0c8a86d",
+      "bytes": 23268,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-format1/inputs/backend/tests/test_today.py"
+    },
+    {
+      "sha256": "2505c188aeb0d37eea2cdd4762a57279500e9e98d979cebad1175abaf958693b",
+      "bytes": 23260,
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-format1/postimages/backend/tests/test_today.py"
+    }
+  ],
+  "primary_preimage": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_today.py",
+    "sha256": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16",
+    "bytes": 22088,
+    "still_matches_packet_preimage_at_inspection": true
+  },
+  "final_external_postimage": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-format1/postimages/backend/tests/test_today.py",
+    "sha256": "2505c188aeb0d37eea2cdd4762a57279500e9e98d979cebad1175abaf958693b",
+    "bytes": 23260
+  },
+  "grant": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_API_FOCUSED_REPAIR1_GRANT.json",
+    "sha256": "b786a779c02610a7077bb7c172d2de1ac3621baf928d9aaa7ce373b6f84ea60b"
+  },
+  "native_support_pins": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/domain/admissions_actions.py",
+      "sha256": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_shared_route_api.py",
+      "sha256": "84c166681851a448e24aaeb14bcdab4587777c47e3e137027760130c9fcfeee8"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_preparation_api.py",
+      "sha256": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_preparation_graph_api.py",
+      "sha256": "61d52735b742a9a527e78331965a19a2a7f55d7ab76db947c2e380e77afd7987"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_admissions_actions_api.py",
+      "sha256": "af984816e28aa0af12f69c49eba8dff5d555c5804a4cbd7d887f5106440eea6a"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_admissions_actions_concurrency.py",
+      "sha256": "987429f69ef3784ee84f46e06fd123e62b8535577746fc453eeddb032b20b3d8"
+    }
+  ],
+  "independent_preservation": {
+    "method": "ordinary full source/diff reads; four exact textual inverse spans and one exact format inverse; no AST/import/runtime",
+    "four_fixture_inverse": {
+      "checks": [
+        {
+          "change": 1,
+          "exact_post_span_count": 1
+        },
+        {
+          "change": 2,
+          "exact_post_span_count": 1
+        },
+        {
+          "change": 3,
+          "exact_post_span_count": 1
+        },
+        {
+          "change": 4,
+          "exact_post_span_count": 1
+        }
+      ],
+      "equal": true,
+      "original_length": 22088,
+      "post_length": 23268
+    },
+    "format_inverse": {
+      "exact_one_inverse": true,
+      "old_span_count": 1,
+      "new_span_count": 1,
+      "original_fixture_sha": "0acb3fcdbb9929fb921920fbcdb57f5d50bd63ef025e38d4871aa432b0c8a86d",
+      "formatted_sha": "2505c188aeb0d37eea2cdd4762a57279500e9e98d979cebad1175abaf958693b"
+    },
+    "blocker_count": 0
+  },
+  "runtime": {
+    "application": "NOT_APPLIED_BY_REVIEWER",
+    "imports": "NOT_RUN",
+    "ast": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "db": "NOT_ACCESSED",
+    "gates": "NOT_RUN_BY_REVIEWER",
+    "qualification": "ROOT_EXECUTABLE_GATES_REMAIN_SEPARATE"
+  }
+}
+

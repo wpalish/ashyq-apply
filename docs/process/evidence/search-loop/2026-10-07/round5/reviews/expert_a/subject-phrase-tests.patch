@@ -1,0 +1,229 @@
+--- /dev/null
++++ b/backend/tests/test_subject_phrase_guard.py
+@@ -0,0 +1,226 @@
++"""Independent behavioural controls for the opt-in ordered subject phrase guard.
++
++No evaluation labels or provider fixtures. Expected off/on results are explicit;
++short abbreviations and the existing raw-own-field policy are not expanded.
++"""
++
++import socket
++
++import pytest
++from app.adapters.discovery import live_discovery as discovery
++from app.adapters.page_classifier import PageClassification, PageType
++from app.adapters.search.ontology import load_ontology
++
++CS = ["computer science"]
++AUT_DATA = "Data Science Major - Bachelor of Computer and Information Sciences"
++AUT_CS = "Computer Science Major - Bachelor of Computer and Information Sciences"
++
++
++@pytest.fixture(autouse=True)
++def forbid_network(monkeypatch):
++    def denied(*args, **kwargs):
++        raise AssertionError("Offline controls must not use network")
++
++    monkeypatch.setattr(socket, "getaddrinfo", denied)
++    monkeypatch.setattr(socket, "create_connection", denied)
++    monkeypatch.setattr(socket.socket, "connect", denied)
++
++
++@pytest.mark.parametrize("enabled", [False, True])
++@pytest.mark.parametrize(
++    "label",
++    [
++        "Computer Science",
++        "COMPUTER SCIENCE",
++        "BSc Computer Science",
++        AUT_CS,
++        "Data & Computer Science",
++        "Bachelor of Computing (Hons) in Computer Science",
++        "Computing Science",
++        "BSc Computing Science",
++        "Computing Science (Bachelor)",
++        "Informatics",
++        "BSc Informatics",
++        "Bachelor of Informatics",
++        "Bachelor of Computing",
++        "Computing (Honours)",
++        "Computer-Science",
++        "Computer–Science",
++        "Computer—Science",
++        "Computer‑Science",
++        "Computer\nScience",
++        "Computer\tScience",
++        "Computer\u00a0Science",
++        "Computer\u200bScience",
++        "Computer (Science)",
++        "Computer Science with Artificial Intelligence",
++    ],
++)
++def test_existing_positive_subject_titles_remain_supported(monkeypatch, enabled, label):
++    monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", enabled)
++    assert discovery.matches_field_text(label, CS)
++
++
++@pytest.mark.parametrize("enabled", [False, True])
++@pytest.mark.parametrize(
++    "label,legacy",
++    [
++        (AUT_DATA, True),
++        ("Computer Engineering with Data Science", True),
++        ("Computer Applications and Science", True),
++        ("Computer (Bachelor of Science)", True),
++        ("Science of Computer", True),
++        ("Science Computing", True),
++        ("Computing Bachelor of Science", True),
++        ("Science Major - Bachelor of Computing", True),
++        ("Data Science", False),
++        ("Software Engineering", False),
++        ("Artificial Intelligence", False),
++        ("Business Informatics", False),
++        ("Cloud Computing", False),
++        ("Computing and Data Science", False),
++        ("Computer Sciences", False),
++        ("ComputerScience", False),
++        ("Computer ScienceX", False),
++        ("Computer scientific studies", False),
++        ("Computer information science", True),
++    ],
++)
++def test_cross_title_word_bags_are_rejected_when_enabled(monkeypatch, enabled, label, legacy):
++    monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", enabled)
++    assert discovery.matches_field_text(label, CS) is (False if enabled else legacy)
++
++
++@pytest.mark.parametrize("enabled", [False, True])
++@pytest.mark.parametrize(
++    "label,field,legacy,strict",
++    [
++        ("Bachelor of Public Health", "Public Health", True, True),
++        (
++            "Public Administration - Bachelor of Health Science",
++            "Public Health",
++            True,
++            False,
++        ),
++        ("Science of Political Administration", "Political Science", True, False),
++        ("Bachelor of Political Science", "Political Science", True, True),
++        ("Music degree - Therapy track", "Music Therapy", True, False),
++        ("Music Therapy (Bachelor)", "Music Therapy", True, True),
++        ("Arts programme", "Arts and Law", True, False),
++        ("Arts and Law", "Arts and Law", True, True),
++        ("Egyptology", "Egyptology", True, True),
++        ("CS", "CS", False, False),
++        ("Computer Science", "CS", False, False),
++        ("Compu\u00adter Science", "computer science", False, False),
++        ("Com-\nputer Science", "computer science", False, False),
++    ],
++)
++def test_rule_is_general_and_does_not_expand_unknown_abbreviations(
++    monkeypatch, enabled, label, field, legacy, strict
++):
++    monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", enabled)
++    assert discovery.matches_field_text(label, [field]) is (strict if enabled else legacy)
++
++
++def test_new_flag_is_off_by_default():
++    assert discovery.SUBJECT_PHRASE_MATCH is False
++
++
++@pytest.mark.parametrize(
++    "label,raw_field",
++    [("Cloud Computing", "computing"), ("Business Informatics", "informatics")],
++)
++def test_existing_raw_own_alias_asymmetry_is_explicitly_retained(monkeypatch, label, raw_field):
++    for enabled in (False, True):
++        monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", enabled)
++        assert not discovery.matches_field_text(label, CS)
++        assert discovery.matches_field_text(label, [raw_field])
++
++
++def test_precise_alias_with_long_parent_degree_remains_a_positive(monkeypatch):
++    label = "Computing Science Major - Bachelor of Computer and Information Sciences"
++    for enabled in (False, True):
++        monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", enabled)
++        assert discovery.matches_field_text(label, CS)
++
++
++def test_off_on_on_off_restores_legacy_behaviour(monkeypatch):
++    observed = []
++    for enabled in (False, True, True, False):
++        monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", enabled)
++        observed.append(
++            [
++                discovery.matches_field_text(label, CS)
++                for label in (AUT_DATA, AUT_CS, "Science Computing")
++            ]
++        )
++    assert observed == [
++        [True, True, True],
++        [False, True, False],
++        [False, True, False],
++        [True, True, True],
++    ]
++
++
++def test_profile_guard_consumes_phrase_result_and_keeps_degree_scope(monkeypatch):
++    monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", True)
++
++    def page(subject, degree="bachelor"):
++        return PageClassification(
++            PageType.PROGRAM_DETAIL, 0.9, subject=subject, degree_level=degree
++        )
++
++    assert discovery.profile_rejects(page(AUT_DATA), "bachelor", CS)
++    assert discovery.profile_rejects(page(AUT_CS), "bachelor", CS) is None
++    assert discovery.profile_rejects(page("Computing Science"), "bachelor", CS) is None
++    assert discovery.profile_rejects(page("Science Computing"), "bachelor", CS)
++    assert discovery.profile_rejects(page(AUT_CS, "master"), "bachelor", CS)
++
++
++def test_subject_attribution_keeps_the_named_requested_field(monkeypatch):
++    monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", True)
++    fields = ["computer science", "data science"]
++    assert discovery._field_named_by_subject(AUT_DATA, fields) == "data science"
++    assert discovery._field_named_by_subject(AUT_CS, fields) == "computer science"
++    assert discovery.matches_field_text(AUT_DATA, fields)
++    assert not discovery.matches_field_text(AUT_DATA, ["mathematics", "computer science"])
++
++
++def test_explicit_longer_subject_policy_is_not_changed(monkeypatch):
++    for enabled in (False, True):
++        monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", enabled)
++        assert discovery.matches_field_text("Computer Science and Engineering", CS)
++        assert discovery.matches_field_text("Computer and Information Science", CS) is (not enabled)
++
++
++def test_empty_or_nonmatching_fields_abstain(monkeypatch):
++    monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", True)
++    assert not discovery.matches_field_text(AUT_CS, [])
++    assert not discovery.matches_field_text("", CS)
++    assert not discovery.matches_field_text("Mathematics", CS)
++
++
++# All multiword strong aliases in the configured ontology, across every concept.
++
++MULTIWORD_ALIASES = [
++    (concept["label"], alias)
++    for concept in load_ontology().fields.values()
++    for alias in concept["strong_aliases"]
++    if len(alias.split()) > 1
++]
++
++
++@pytest.mark.parametrize("field,alias", MULTIWORD_ALIASES)
++def test_precise_multiword_alias_is_not_lost_under_a_parent_degree(monkeypatch, field, alias):
++    monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", True)
++    assert discovery.matches_field_text(
++        f"{alias.title()} Major - Bachelor of Other Subject", [field]
++    )
++
++
++@pytest.mark.parametrize("field,alias", MULTIWORD_ALIASES)
++def test_multiword_alias_must_not_be_reversed_or_split_by_degree_words(monkeypatch, field, alias):
++    monkeypatch.setattr(discovery, "SUBJECT_PHRASE_MATCH", True)
++    words = alias.split()
++    assert not discovery.matches_field_text("BSc " + " ".join(reversed(words)), [field])
++    assert not discovery.matches_field_text(" Major - Bachelor of ".join(words), [field])

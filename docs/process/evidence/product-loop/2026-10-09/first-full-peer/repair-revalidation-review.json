@@ -1,0 +1,54 @@
+{
+  "decision": "LITERAL_REPAIR_ACCEPTED_REVALIDATION_REQUIRED",
+  "first_full_status": "FAILED12/13",
+  "proposed_exact_delta": {
+    "path": "frontend/e2e/journey.spec.ts",
+    "line": 199,
+    "old": "page.getByText('2 approved')",
+    "new": "page.getByText('2 chosen by you')",
+    "preserve": "Every other assertion and downstream collection/documents/export path"
+  },
+  "source_pins": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/package.json": {
+      "sha256": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb",
+      "bytes": 1322
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/tsconfig.json": {
+      "sha256": "c75c4ef570cb9f38c3201446f6ac49f8d315e3e4949554af84a57f3df37ec928",
+      "bytes": 725
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/vite.config.ts": {
+      "sha256": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+      "bytes": 867
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/playwright.config.ts": {
+      "sha256": "f37cc93a48b1f6bc07bfa85ba0c4dbdab0b0d598187118f619d41d712460662e",
+      "bytes": 1716
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/playwright.auth.config.ts": {
+      "sha256": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+      "bytes": 3198
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/e2e/journey.spec.ts": {
+      "sha256": "16324e2deae1b5d20601e52b4a0efb09cbaa843e8c4cea3ca2f4ed26ac184198",
+      "bytes": 12668
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py": {
+      "sha256": "46e9866db102966fd42e07aa5b291411cbac1cca0a76f9b49551ca8a4fb919f5",
+      "bytes": 24472
+    }
+  },
+  "stage_input_boundary": {
+    "e2e": "reads journey.spec; failed desktop and mobile same assertion",
+    "e2e-auth": "matches auth-journey.spec only, but fresh paired e2e remains appropriate for own port/session isolation",
+    "frontend-typecheck": "tsconfig.include contains e2e",
+    "frontend-lint": "eslint src e2e --ext .ts,.tsx",
+    "frontend-build": "tsc -b consumes tsconfig.include e2e before Vite",
+    "frontend-tests": "vite test include src/**/*.test.{ts,tsx}; does not execute journey.spec",
+    "backend_ruff_format_mypy_pytest": "backend app/tests/evaluation paths only",
+    "pip-audit": "backend requirements.txt",
+    "npm-audit": "package dependency metadata, not journey.spec"
+  },
+  "recommendation": "Under parent requested condition, fresh full required for one final 13/13 claim because additional passed stages consume the changed E2E file. A narrower replay cannot be relabelled as one full13/13 run.",
+  "unknowns": "No execution of the repair or revalidation by this reviewer."
+}

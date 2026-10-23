@@ -1,0 +1,76 @@
+{
+  "time": "2026-10-08T05:40:40.279622+00:00",
+  "status": "PASS_FINITE_HASH_ORIGIN_INTEGRATION_AUDIT_ONLY",
+  "source999_equal": true,
+  "accepted3_exact_other996_unchanged": true,
+  "old_test_full_prefix": true,
+  "seed242_binding": true,
+  "archives": [
+    {
+      "archive": "stopped-trace-off-proof",
+      "receipt_sha256": "6d229a83a362a98dd3c604ab777143562c95ef0a369c9f6871b28b56a9bdcefb",
+      "selected_originals": 39,
+      "selected_bytes": 826289,
+      "physical_files_including_archive_receipt": 40,
+      "all_SHA_size_copy_original_equal": true,
+      "physical_membership_exact": true,
+      "original_receipt_status": "CONFIRMED_OFF_QUERY_DIAGNOSTIC_TRANSFER_LOSS_QUALIFIED_NO_PATCH_NO_OVERRUN_SQL_OR_QUALITY",
+      "qualification": "Original pending/preparation status retained; physical copies are not distinct experiments."
+    },
+    {
+      "archive": "stopped-trace-compatibility",
+      "receipt_sha256": "f60a58323e1d7573922c2bc0b5a7ec060143503cbed45bda58d60bdd174573c9",
+      "selected_originals": 25,
+      "selected_bytes": 220137,
+      "physical_files_including_archive_receipt": 26,
+      "all_SHA_size_copy_original_equal": true,
+      "physical_membership_exact": true,
+      "original_receipt_status": "STATIC_COMPATIBILITY_PREFLIGHT_ONLY_SIX_KWARGS_MOCKS_ONE_DIRECTCALL_EXACT_PROPOSAL_REVIEW_PENDING",
+      "qualification": "Original pending/preparation status retained; physical copies are not distinct experiments."
+    },
+    {
+      "archive": "stopped-trace-proposal",
+      "receipt_sha256": "91ed063efcdf125f43e3d7f3b4924edfd8b9f705be8e8b0ce205adb5d13b2e86",
+      "selected_originals": 80,
+      "selected_bytes": 2621795,
+      "physical_files_including_archive_receipt": 81,
+      "all_SHA_size_copy_original_equal": true,
+      "physical_membership_exact": true,
+      "original_receipt_status": "EXACT_EXTERNAL_PROPOSAL_ON250_OFF243_7_EXPECTED_RED_PENDING_PEER_NOT_APPLIED",
+      "qualification": "Original pending/preparation status retained; physical copies are not distinct experiments."
+    },
+    {
+      "archive": "stopped-trace-peer",
+      "receipt_sha256": "4b61391103f48d5e87264fb10233532fce84160e30e1eddcd54fca81ea5f1d3a",
+      "selected_originals": 99,
+      "selected_bytes": 2818659,
+      "physical_files_including_archive_receipt": 100,
+      "all_SHA_size_copy_original_equal": true,
+      "physical_membership_exact": true,
+      "original_receipt_status": "EXACT_INDEPENDENT_PEER_ACCEPTED_PRIMARY_APPLICATION_PENDING",
+      "qualification": "Original pending/preparation status retained; physical copies are not distinct experiments."
+    },
+    {
+      "archive": "stopped-trace-seed",
+      "receipt_sha256": "14777c220ea25ce7f65c09ba8054ec7c83ced4545d57dda7c1af957de7ebc054",
+      "selected_originals": 25,
+      "selected_bytes": 271573,
+      "physical_files_including_archive_receipt": 26,
+      "all_SHA_size_copy_original_equal": true,
+      "physical_membership_exact": true,
+      "original_receipt_status": "OWN_ISOLATED_SEED_EXACT_PROPOSED_APP242_PASS_PRIMARY_BINDING_PENDING",
+      "qualification": "Original pending/preparation status retained; physical copies are not distinct experiments."
+    }
+  ],
+  "primary_metadata_copies": 3,
+  "selected_originals_including_primary": 271,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "frozen_run": "20261008T053629Z-check-6693acd5",
+  "frozen_tree_sha256": "75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446",
+  "full_status_at_assignment": "RUNNING; NOT_A_FULL_PASS_CLAIM; FINAL_RAW_REVIEW_ASSIGNED_TO_B",
+  "unique_experiment_claim": false,
+  "semantic_controls_rerun": 0,
+  "app_imports_tests_SQL_Git_network_gold_scoring": 0,
+  "audit_sha256": "a91eab7db599d8c26ecd47acba6fd12362848d3efd27f5817880f4f1ccd2fdcb",
+  "execution_sha256": "ae0019b2460050432210ef0d363605b487822d4adb703495614b144a26f3c950"
+}

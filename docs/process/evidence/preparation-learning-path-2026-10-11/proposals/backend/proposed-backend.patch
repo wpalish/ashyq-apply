@@ -1,0 +1,1754 @@
+--- a/backend/app/api/routes_preparation.py
++++ b/backend/app/api/routes_preparation.py
+@@ -2,6 +2,7 @@
+ 
+ from __future__ import annotations
+ 
++from uuid import UUID
+ from zoneinfo import ZoneInfo
+ 
+ from fastapi import APIRouter, Depends, HTTPException, Query
+@@ -17,7 +18,13 @@
+ from app.domain.freshness import age_days, is_stale
+ from app.domain.preparation import NOTICE, combine_states, project_checks
+ from app.domain.study_schedule import build_schedule
+-from app.models import ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, StudyAttempt
++from app.models import (
++    ClaimRow,
++    ConflictRow,
++    ProgramResultRow,
++    ResearchRun,
++    StudyAttempt,
++)
+ from app.models.base import ensure_utc, utcnow
+ from app.models.study_schedule import StudyScheduleRow
+ from app.payments.entitlements import has_full_access
+@@ -26,13 +33,23 @@
+     CONTENT_VERSION,
+     LESSONS,
+     catalogue,
+-    get_lesson,
+-    grade,
+-    public_lesson,
+-    request_digest,
++)
++from app.preparation.learning_pack import (
++    PACK_VERSION,
++    completed_lesson_refs,
++    digest_dispatch,
++    grade_dispatch,
++    lesson_dispatch,
++    pack_catalogue,
++    use_learning_pack,
+ )
+ from app.schemas.claim import ClaimOut, Conflict
+ from app.schemas.preparation import (
++    LearningPackCatalogue,
++    LearningPackLesson,
++    LearningPackProgress,
++    LearningPackStudyAttemptIn,
++    LearningPackStudyAttemptOut,
+     PreparationAccess,
+     PreparationCatalogue,
+     PreparationLesson,
+@@ -40,6 +57,7 @@
+     PreparationProgress,
+     StudyAttemptIn,
+     StudyAttemptOut,
++    StudyAttemptReview,
+ )
+ from app.schemas.profile import ApplicantProfileIn
+ from app.schemas.result import RequirementCheck
+@@ -52,7 +70,11 @@
+ def _schedule_view(profile_id: str, row: StudyScheduleRow | None) -> StudyScheduleOut:
+     if row is None:
+         return StudyScheduleOut(
+-            profile_id=profile_id, revision=0, settings=None, schedule=None, updated_at=None
++            profile_id=profile_id,
++            revision=0,
++            settings=None,
++            schedule=None,
++            updated_at=None,
+         )
+     try:
+         settings = ScheduleSettings.model_validate(row.settings)
+@@ -100,7 +122,9 @@
+     query = session.query(StudyScheduleRow).filter(StudyScheduleRow.profile_id == profile_id)
+     if payload.expected_revision == 0:
+         row = StudyScheduleRow(
+-            profile_id=profile_id, revision=1, settings=payload.settings.model_dump(mode="json")
++            profile_id=profile_id,
++            revision=1,
++            settings=payload.settings.model_dump(mode="json"),
+         )
+         session.add(row)
+         try:
+@@ -128,10 +152,15 @@
+     return _schedule_view(profile_id, query.one())
+ 
+ 
+-def attempt_view(row: StudyAttempt) -> StudyAttemptOut:
++def attempt_view(row: StudyAttempt) -> StudyAttemptOut | LearningPackStudyAttemptOut:
+     created_at = ensure_utc(row.created_at)
+     assert created_at is not None
+-    return StudyAttemptOut(
++    view = (
++        LearningPackStudyAttemptOut
++        if any("text" in answer for answer in row.answers)
++        else StudyAttemptOut
++    )
++    return view(
+         id=row.id,
+         attempt_id=row.client_attempt_id,
+         profile_id=row.profile_id,
+@@ -156,9 +185,17 @@
+         )
+ 
+ 
+-@router.get("/api/preparation/catalogue", response_model=PreparationCatalogue)
+-def preparation_catalogue() -> PreparationCatalogue:
+-    return catalogue()
++@router.get(
++    "/api/preparation/catalogue",
++    response_model=PreparationCatalogue | LearningPackCatalogue,
++)
++def preparation_catalogue(
++    catalogue_version: str | None = Query(None, min_length=1, max_length=40),
++) -> PreparationCatalogue | LearningPackCatalogue:
++    try:
++        return pack_catalogue() if use_learning_pack(catalogue_version) else catalogue()
++    except ValueError as exc:
++        raise HTTPException(422, str(exc)) from exc
+ 
+ 
+ @router.get("/api/profiles/{profile_id}/preparation/access", response_model=PreparationAccess)
+@@ -172,7 +209,8 @@
+ 
+ 
+ @router.get(
+-    "/api/profiles/{profile_id}/preparation/lessons/{lesson_id}", response_model=PreparationLesson
++    "/api/profiles/{profile_id}/preparation/lessons/{lesson_id}",
++    response_model=PreparationLesson | LearningPackLesson,
+ )
+ def lesson(
+     profile_id: str,
+@@ -180,31 +218,34 @@
+     version: str = Query(..., min_length=1, max_length=40),
+     principal: Principal = Depends(get_principal),
+     session: Session = Depends(get_session),
+-) -> PreparationLesson:
++) -> PreparationLesson | LearningPackLesson:
+     owned_profile(session, profile_id, principal)
+     _require_access(session, principal)
+     try:
+-        return public_lesson(get_lesson(lesson_id, version))
++        return lesson_dispatch(lesson_id, version)
+     except ValueError as exc:
+         raise HTTPException(422, str(exc)) from exc
+ 
+ 
+-def _replay(row: StudyAttempt, digest: str) -> StudyAttemptOut:
++def _replay(row: StudyAttempt, digest: str) -> StudyAttemptOut | LearningPackStudyAttemptOut:
+     if row.request_digest != digest:
+         raise HTTPException(409, "Attempt UUID already belongs to a different payload")
+     return attempt_view(row)
+ 
+ 
+-@router.post("/api/profiles/{profile_id}/preparation/attempts", response_model=StudyAttemptOut)
++@router.post(
++    "/api/profiles/{profile_id}/preparation/attempts",
++    response_model=StudyAttemptOut | LearningPackStudyAttemptOut,
++)
+ def submit_attempt(
+     profile_id: str,
+-    payload: StudyAttemptIn,
+-    principal: Principal = Depends(get_principal),
+-    session: Session = Depends(get_session),
+-) -> StudyAttemptOut:
++    payload: StudyAttemptIn | LearningPackStudyAttemptIn,
++    principal: Principal = Depends(get_principal),
++    session: Session = Depends(get_session),
++) -> StudyAttemptOut | LearningPackStudyAttemptOut:
+     owned_profile(session, profile_id, principal)
+     client_id = str(payload.attempt_id)
+-    digest = request_digest(payload)
++    digest = digest_dispatch(payload)
+     query = session.query(StudyAttempt).filter(
+         StudyAttempt.profile_id == profile_id,
+         StudyAttempt.client_attempt_id == client_id,
+@@ -215,7 +256,7 @@
+         return _replay(existing, digest)
+     _require_access(session, principal)
+     try:
+-        answers, feedback, correct = grade(payload)
++        answers, feedback, correct = grade_dispatch(payload)
+     except ValueError as exc:
+         # No answer keys or explanations are included in validation errors.
+         raise HTTPException(422, str(exc)) from exc
+@@ -244,14 +285,59 @@
+     return attempt_view(row)
+ 
+ 
+-@router.get("/api/profiles/{profile_id}/preparation/progress", response_model=PreparationProgress)
++@router.get(
++    "/api/profiles/{profile_id}/preparation/attempts/{attempt_uuid}/review",
++    response_model=StudyAttemptReview,
++)
++def review_attempt(
++    profile_id: str,
++    attempt_uuid: UUID,
++    principal: Principal = Depends(get_principal),
++    session: Session = Depends(get_session),
++) -> StudyAttemptReview:
++    owned_profile(session, profile_id, principal)
++    row = (
++        session.query(StudyAttempt)
++        .filter(
++            StudyAttempt.profile_id == profile_id,
++            StudyAttempt.client_attempt_id == str(attempt_uuid),
++        )
++        .first()
++    )
++    if row is None:
++        raise HTTPException(404, "Attempt not found")
++    saved = attempt_view(row)
++    try:
++        original = lesson_dispatch(row.lesson_id, row.content_version)
++    except ValueError:
++        return StudyAttemptReview(
++            attempt=saved,
++            lesson=None,
++            notice="The original lesson version is not available. This is the unchanged saved receipt; no replacement content or score is inferred.",
++        )
++    return StudyAttemptReview(
++        attempt=saved,
++        lesson=original,
++        notice="Saved practice receipt and exact recorded content version. Familiar items are review, not unseen diagnosis or official scores.",
++    )
++
++
++@router.get(
++    "/api/profiles/{profile_id}/preparation/progress",
++    response_model=PreparationProgress | LearningPackProgress,
++)
+ def progress(
+     profile_id: str,
+     limit: int = Query(20, ge=1, le=100),
+-    principal: Principal = Depends(get_principal),
+-    session: Session = Depends(get_session),
+-) -> PreparationProgress:
+-    owned_profile(session, profile_id, principal)
++    catalogue_version: str | None = Query(None, min_length=1, max_length=40),
++    principal: Principal = Depends(get_principal),
++    session: Session = Depends(get_session),
++) -> PreparationProgress | LearningPackProgress:
++    owned_profile(session, profile_id, principal)
++    try:
++        pack = use_learning_pack(catalogue_version)
++    except ValueError as exc:
++        raise HTTPException(422, str(exc)) from exc
+     query = session.query(StudyAttempt).filter(StudyAttempt.profile_id == profile_id)
+     count, correct, total = query.with_entities(
+         func.count(StudyAttempt.id),
+@@ -269,7 +355,7 @@
+             if row[0] in known
+         }
+     )
+-    return PreparationProgress(
++    response = PreparationProgress(
+         profile_id=profile_id,
+         attempt_count=count,
+         correct=correct,
+@@ -282,6 +368,22 @@
+             .all()
+         ],
+     )
++    if pack:
++        refs = completed_lesson_refs(
++            [
++                (row[0], row[1])
++                for row in query.with_entities(StudyAttempt.lesson_id, StudyAttempt.content_version)
++                .distinct()
++                .all()
++            ]
++        )
++        return LearningPackProgress(
++            **response.model_dump(exclude={"completed_lesson_ids"}),
++            completed_lesson_ids=sorted(ref.lesson_id for ref in refs),
++            catalogue_version=PACK_VERSION,
++            completed_lessons=refs,
++        )
++    return response
+ 
+ 
+ @router.get("/api/profiles/{profile_id}/preparation/plan", response_model=PreparationPlan)
+--- a/backend/app/schemas/preparation.py
++++ b/backend/app/schemas/preparation.py
+@@ -6,7 +6,7 @@
+ from typing import Literal
+ from uuid import UUID
+ 
+-from pydantic import BaseModel, ConfigDict, Field
++from pydantic import BaseModel, ConfigDict, Field, field_validator
+ 
+ from app.schemas.claim import ClaimOut
+ from app.schemas.result import RequirementCheck
+@@ -116,13 +116,90 @@
+     created_at: datetime
+ 
+ 
++class ShortQuestion(Base):
++    id: str
++    prompt: str
++    answer_format: Literal["short_answer"] = "short_answer"
++    max_words: int = Field(ge=1, le=2)
++
++
++class ShortAnswer(Base):
++    model_config = ConfigDict(extra="forbid", str_strip_whitespace=False)
++    question_id: str = Field(min_length=1, max_length=80)
++    text: str = Field(min_length=1, max_length=100)
++
++    @field_validator("text")
++    @classmethod
++    def _nonblank_text(cls, value: str) -> str:
++        if not value.strip():
++            raise ValueError("Answer text cannot be blank")
++        return value
++
++
++class ShortAnswerFeedback(Base):
++    model_config = ConfigDict(extra="forbid", str_strip_whitespace=False)
++    question_id: str
++    selected_text: str
++    accepted_answers: list[str]
++    correct: bool
++    explanation: str
++
++
++class LearningPackStudyAttemptIn(Base):
++    attempt_id: UUID
++    lesson_id: str = Field(min_length=1, max_length=80)
++    version: str = Field(min_length=1, max_length=40)
++    answers: list[Answer | ShortAnswer] = Field(min_length=1, max_length=20)
++
++
++class LearningPackStudyAttemptOut(Base):
++    id: str
++    attempt_id: UUID
++    profile_id: str
++    lesson_id: str
++    version: str
++    answers: list[Answer | ShortAnswer]
++    correct: int
++    total: int
++    feedback: list[AnswerFeedback | ShortAnswerFeedback]
++    created_at: datetime
++
++
++class LearningPackLesson(Base):
++    id: str
++    track_id: TrackId
++    title: str
++    version: str
++    introduction: str
++    questions: list[Question | ShortQuestion]
++    unofficial: Literal[True] = True
++
++
++class LearningPackLessonSummary(LessonSummary):
++    version: str
++
++
++class LearningPackCatalogue(Base):
++    version: str
++    tracks: list[TrackSummary]
++    lessons: list[LearningPackLessonSummary]
++    exams: list[ExamSummary]
++    notice: str
++
++
++class StudyAttemptReview(Base):
++    attempt: StudyAttemptOut | LearningPackStudyAttemptOut
++    lesson: PreparationLesson | LearningPackLesson | None
++    notice: str
++
++
+ class PreparationProgress(Base):
+     profile_id: str
+     attempt_count: int
+     correct: int
+     answered: int
+     completed_lesson_ids: list[str]
+-    attempts: list[StudyAttemptOut]
++    attempts: list[StudyAttemptOut | LearningPackStudyAttemptOut]
+ 
+ 
+ class PreparationCheck(Base):
+@@ -142,3 +219,13 @@
+     evidence_state: EvidenceState
+     checks: list[PreparationCheck]
+     notice: str
++
++
++class CompletedLesson(Base):
++    lesson_id: str
++    version: str
++
++
++class LearningPackProgress(PreparationProgress):
++    catalogue_version: Literal["learning-pack-2026-10-11-v1"] = "learning-pack-2026-10-11-v1"
++    completed_lessons: list[CompletedLesson]
+--- /dev/null
++++ b/backend/app/preparation/learning_pack.py
+@@ -0,0 +1,634 @@
++"""Six reviewed original lessons; keys are private until a saved submission.
++
++Student teaching/examples/passages originate in the pinned original Week1 drafts.
++No score conversion, external calls, calendar writes or prerequisite attainment.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from dataclasses import dataclass
++
++from app.preparation.catalogue import (
++    CONTENT_VERSION,
++    LESSONS,
++    catalogue,
++    get_lesson,
++    grade,
++    public_lesson,
++    request_digest,
++)
++from app.schemas.preparation import (
++    Answer,
++    AnswerFeedback,
++    Choice,
++    CompletedLesson,
++    LearningPackCatalogue,
++    LearningPackLesson,
++    LearningPackLessonSummary,
++    LearningPackStudyAttemptIn,
++    PreparationLesson,
++    Question,
++    ShortAnswer,
++    ShortAnswerFeedback,
++    ShortQuestion,
++    StudyAttemptIn,
++    TrackId,
++    TrackSummary,
++)
++
++PACK_VERSION = "learning-pack-2026-10-11-v1"
++
++
++@dataclass(frozen=True)
++class ChoiceItem:
++    id: str
++    prompt: str
++    choices: tuple[tuple[str, str], ...]
++    correct_choice_id: str
++    explanation: str
++
++
++@dataclass(frozen=True)
++class ShortItem:
++    id: str
++    prompt: str
++    accepted_answers: tuple[str, ...]
++    max_words: int
++    explanation: str
++
++
++@dataclass(frozen=True)
++class PackLesson:
++    id: str
++    track_id: TrackId
++    title: str
++    introduction: str
++    items: tuple[ChoiceItem | ShortItem, ...]
++
++
++PACK_LESSONS: tuple[PackLesson, ...] = (
++    PackLesson(
++        id="sat-quadratic-structure-1",
++        track_id="sat_math",
++        title="Read quadratic structure before calculating",
++        introduction="### Learning goals\n\n- Read real zeros from a factored expression.\n- Read a vertex, opening direction and extreme value from vertex form.\n- Rewrite a simple quadratic by completing the square.\n- Recognize a repeated root without relying on trial-and-error substitution.\n\n### What to know\n\nA quadratic has a nonzero coefficient of the squared variable. Its form can make different information easy to see:\n\n| Form | Information it exposes |\n| --- | --- |\n| `a(x − r)(x − s)` | Real zeros `r` and `s`, when this real factorization exists. A zero is an input where the output equals zero. |\n| `a(x − h)² + k` | Vertex `(h, k)`. For `a > 0`, the minimum output is `k`; for `a < 0`, the maximum output is `k`. |\n| `ax² + bx + c` | The output at `x = 0` is `c`. Expansion can help check whether two forms are equivalent. |\n\nHere the domain is **all real numbers** unless a question restricts it. A real square is nonnegative, which is why a vertex-form extreme occurs when the squared expression equals zero. Notice that `x + 2` is `x − (−2)`; its vertex input is `−2`, not `2`. A negative leading coefficient changes a minimum into a maximum.\n\nFor a leading coefficient of one, complete the square by taking half the coefficient of `x`, squaring it, and balancing the added amount:\n\n`x² + bx + c = (x + b/2)² + c − (b/2)²`.\n\nThese facts concern a mathematical function. They do not imply that a contextual input outside an allowed time, distance or count is meaningful.\n\n### Worked example A — Two forms, two useful facts\n\nFor `f(x) = x² − 6x + 5`, find its zeros and its minimum value.\n\n1. The numbers `−1` and `−5` multiply to `5` and add to `−6`, so `f(x) = (x − 1)(x − 5)`.\n2. Either factor must equal zero for the product to be zero. The zeros are `1` and `5`.\n3. Complete the square: `x² − 6x + 5 = (x − 3)² − 9 + 5 = (x − 3)² − 4`.\n4. The smallest square is zero, achieved at `x = 3`. The minimum output is `−4`.\n5. Check: `f(3) = 9 − 18 + 5 = −4`. The vertex lies midway between the two zeros, which agrees with `(1 + 5)/2 = 3`.\n\nFactored form answered the zero question quickly; vertex form answered the extreme-value question quickly.\n\n### Worked example B — A negative coefficient\n\nFor `g(x) = −3(x + 2)² + 7`, find the maximum output and the output at zero.\n\n- Since `(x + 2)² ≥ 0`, multiplying it by `−3` produces a value no greater than zero. Therefore `g(x) ≤ 7`.\n- Equality occurs at `x = −2`, so the maximum output is `7` and the vertex is `(−2, 7)`.\n- At `x = 0`, `g(0) = −3(2)² + 7 = −12 + 7 = −5`.\n\n**Common trap:** reading the vertex input as `2`, or calling `7` a minimum despite the negative coefficient.\n\n### Practice — choose one answer for each item\n\n**Before checking:**Which questions require zeros, which require an extreme value, and which require equivalence? State what the form reveals before doing arithmetic.",
++        items=(
++            ChoiceItem(
++                id="sat-qstruct-1-q1",
++                prompt="The function `f(x) = (x − 4)² − 9` is defined for every real `x`. Which pair contains both real zeros of `f`?",
++                choices=(
++                    ("a", "`−7` and `−1`"),
++                    ("b", "`1` and `7`"),
++                    ("c", "`3` and `9`"),
++                    ("d", "`4` and `9`"),
++                ),
++                correct_choice_id="b",
++                explanation="Set `(x − 4)² = 9`, so `x − 4 = ±3` and `x = 1` or `7`. A reverses the shift; C and D do not make the output zero.",
++            ),
++            ChoiceItem(
++                id="sat-qstruct-1-q2",
++                prompt="For `g(x) = 2(x + 1)² + 5`, with real domain, which statement is true?",
++                choices=(
++                    ("a", "The minimum output is `2`, at `x = −1`."),
++                    ("b", "The maximum output is `5`, at `x = −1`."),
++                    ("c", "The minimum output is `5`, at `x = 1`."),
++                    ("d", "The minimum output is `5`, at `x = −1`."),
++                ),
++                correct_choice_id="d",
++                explanation="`2(x + 1)²` is nonnegative and reaches zero at `x = −1`, giving a minimum output of `5`. A confuses the coefficient with the output; B calls the upward-opening function's minimum a maximum; C has the vertex-input sign wrong.",
++            ),
++            ChoiceItem(
++                id="sat-qstruct-1-q3",
++                prompt="Which expression is equivalent to `x² + 10x + 21` for every real `x`?",
++                choices=(
++                    ("a", "`(x + 5)² − 4`"),
++                    ("b", "`(x + 5)² + 21`"),
++                    ("c", "`(x + 10)² − 79`"),
++                    ("d", "`(x − 5)² − 4`"),
++                ),
++                correct_choice_id="a",
++                explanation="`(x + 5)² − 4 = x² + 10x + 25 − 4 = x² + 10x + 21`. B gives constant `46`; C gives an `x` coefficient of `20`; D gives an `x` coefficient of `−10`.",
++            ),
++            ChoiceItem(
++                id="sat-qstruct-1-q4",
++                prompt="The function `h(x) = −(x − 2)(x − 8)` is defined for every real `x`. What is its maximum output?",
++                choices=(("a", "`−9`"), ("b", "`5`"), ("c", "`9`"), ("d", "`16`")),
++                correct_choice_id="c",
++                explanation="Expand and complete the square: `−(x − 2)(x − 8) = −x² + 10x − 16 = −(x − 5)² + 9`. The maximum output is `9`, at `x = 5`. A misses the outer negative; B is the maximizing input, not the output; D is not the vertex value.",
++            ),
++            ChoiceItem(
++                id="sat-qstruct-1-q5",
++                prompt="For which value of the real constant `c` does `x² − 8x + c = 0` have exactly one distinct real solution?",
++                choices=(("a", "`8`"), ("b", "`16`"), ("c", "`−16`"), ("d", "`64`")),
++                correct_choice_id="b",
++                explanation="`x² − 8x + c = (x − 4)² + c − 16`. The equation is `(x − 4)² = 16 − c`. There is exactly one distinct real solution when the right side is zero, so `c = 16` and `x = 4`. For A and C the right side is positive and there are two distinct real solutions; for D it is negative and there are none.",
++            ),
++        ),
++    ),
++    PackLesson(
++        id="sat-data-interpretation-1",
++        track_id="sat_math",
++        title="Interpret data without overstating it",
++        introduction="### Learning goals\n\n- Distinguish arithmetic mean, median and range.\n- Compute a combined mean using group sizes.\n- Understand the effect of changing one observation on the mean.\n- Separate an observed association from a causal conclusion.\n\n### What to know\n\n- **Arithmetic mean:** sum of all observations divided by the number of observations. Unless stated otherwise, each listed observation counts once.\n- **Median:** middle observation after sorting; for an even count, average the two middle observations.\n- **Range:** largest observation minus smallest observation. It is one measure of spread, not a complete description of the distribution.\n- **Combined mean:** combine the group totals, then divide by the combined count. If groups have different counts, averaging their means directly is generally wrong.\n- **One changed observation:** when the count remains `n` and the sum increases by `d`, the mean increases by `d/n`.\n- **Association:** two recorded variables may move together. Observational data alone do not establish that changing one variable causes a change in the other; other variables or selection effects may explain the pattern.\n\nAll data below are invented for instruction. They are not learner outcomes, admissions evidence or official test results. Treat the stated observations and means as exact; no weighting, missing records or rounding is implied unless explicitly stated.\n\n### Worked example A — The mean and median react differently\n\nFive measurements, in units, are `10, 12, 12, 14, 22`.\n\n1. Sum: `10 + 12 + 12 + 14 + 22 = 70`.\n2. Mean: `70/5 = 14` units.\n3. The list is already sorted. Its third observation is `12`, so the median is `12` units.\n4. Range: `22 − 10 = 12` units.\n\nIf the `22`-unit observation is removed, the remaining sum is `48` and the remaining count is `4`. The new mean is `48/4 = 12` units. The middle observations are `12` and `12`, so the new median is still `12` units.\n\nThis particular high observation affected the mean more than the median. Do not generalize that removing an observation can never change a median; the result depends on the actual data.\n\n### Worked example B — Combine totals, not just means\n\nGroup A has `24` observations with mean `16` units. Group B has `16` observations with mean `21` units. The groups do not overlap and contain every observation in the combined dataset.\n\n- Group A total: `24 × 16 = 384` units.\n- Group B total: `16 × 21 = 336` units.\n- Combined total: `384 + 336 = 720` units.\n- Combined count: `24 + 16 = 40`.\n- Combined mean: `720/40 = 18` units.\n\nThe unweighted average of the two group means, `(16 + 21)/2 = 18.5`, is incorrect here because the groups are not the same size.\n\n### Practice — choose one answer for each item\n\n**Before checking:**Write the count and sum for a mean question. For an inference question, distinguish what was observed from what would require a different study design.",
++        items=(
++            ChoiceItem(
++                id="sat-data-1-q1",
++                prompt="The five observations `6, 8, 8, 11, 17` are measured in the same units. What is the arithmetic mean minus the median?",
++                choices=(("a", "`0`"), ("b", "`2`"), ("c", "`3`"), ("d", "`10`")),
++                correct_choice_id="b",
++                explanation="The sum is `50`, so the mean is `10`. The middle observation is `8`, so the median is `8`. The requested difference is `10 − 8 = 2`. D is the mean alone; A and C are not the difference.",
++            ),
++            ChoiceItem(
++                id="sat-data-1-q2",
++                prompt="A dataset contains exactly ten observations. One observation, `20`, is replaced with `50`; all other observations are unchanged. By how much does the arithmetic mean increase?",
++                choices=(("a", "`30`"), ("b", "`5`"), ("c", "`3`"), ("d", "`2`")),
++                correct_choice_id="c",
++                explanation="The sum increases by `50 − 20 = 30` while the count remains `10`. The mean therefore increases by `30/10 = 3`. A is the change in the sum rather than in the mean; B and D use the wrong divisor or change.",
++            ),
++            ChoiceItem(
++                id="sat-data-1-q3",
++                prompt="Group M has twelve observations with arithmetic mean `8`. Group N has eighteen observations with arithmetic mean `13`. The groups are disjoint, and their combined dataset consists of all thirty observations. What is the combined arithmetic mean?",
++                choices=(("a", "`10.5`"), ("b", "`10`"), ("c", "`11`"), ("d", "`12`")),
++                correct_choice_id="c",
++                explanation="Group totals are `12 × 8 = 96` and `18 × 13 = 234`. The combined mean is `(96 + 234)/(12 + 18) = 330/30 = 11`. A averages two unequal-sized groups without weighting; B and D do not match the combined total.",
++            ),
++            ChoiceItem(
++                id="sat-data-1-q4",
++                prompt="A researcher recorded the following four observations. There was no random assignment and no controlled intervention.\n\n| Preparation time, minutes | A separate measurement, units |\n| --- | --- |\n| 20 | 62 |\n| 40 | 68 |\n| 60 | 74 |\n| 80 | 80 |\n\nWhich conclusion is supported by these observations alone?",
++                choices=(
++                    (
++                        "a",
++                        "Increasing preparation time causes every person's measurement to rise.",
++                    ),
++                    (
++                        "b",
++                        "Preparation time and the recorded measurement have a positive association in these four observations.",
++                    ),
++                    (
++                        "c",
++                        "The same relationship must hold for every person outside the recorded group.",
++                    ),
++                    (
++                        "d",
++                        "Preparation time is the only variable that could affect the measurement.",
++                    ),
++                ),
++                correct_choice_id="b",
++                explanation="Across these four observations, higher preparation times appear with higher measurement values. That is a positive association in the recorded data. No random assignment or controlled intervention supports the causal claim in A, the universal generalization in C, or the exclusion of every other influence in D.",
++            ),
++            ChoiceItem(
++                id="sat-data-1-q5",
++                prompt="Dataset A is `4, 6, 8, 10, 12`. Dataset B is `6, 7, 8, 9, 10`. Which statement is true?",
++                choices=(
++                    (
++                        "a",
++                        "Dataset A has a larger mean and a smaller range than Dataset B.",
++                    ),
++                    (
++                        "b",
++                        "Dataset B has a larger mean and a larger range than Dataset A.",
++                    ),
++                    ("c", "The datasets have the same mean and the same range."),
++                    (
++                        "d",
++                        "The datasets have the same mean, and Dataset B has a smaller range.",
++                    ),
++                ),
++                correct_choice_id="d",
++                explanation="Both sums are `40`, so both means are `40/5 = 8`. A's range is `12 − 4 = 8`; B's range is `10 − 6 = 4`. B therefore has the smaller range. A and B wrongly claim different means; C wrongly claims equal ranges.",
++            ),
++        ),
++    ),
++    PackLesson(
++        id="sat-grammar-transitions-1",
++        track_id="sat_reading_writing",
++        title="Use sentence structure and logical relationships",
++        introduction="### Learning goals\n\n- Match a verb to the head of its subject rather than to a nearby noun.\n- Join two independent clauses without a comma splice.\n- Choose a transition that expresses the actual relationship between ideas.\n- Keep items in a series grammatically parallel.\n\n### What to know\n\nUse standard formal written English for these questions. The passages are short and original; only the supplied context is relevant. A transition is not correct merely because it sounds formal.\n\n1. **Find the subject's head.** In “a collection of maps,” the head is singular “collection.” The plural noun inside the `of` phrase does not make the subject plural.\n2. **Identify independent clauses.** A clause with a subject and a finite predicate that can stand as a sentence is independent. A comma alone cannot join two such clauses in standard formal writing. A semicolon can join closely related independent clauses. A period can also separate them if the next sentence begins appropriately. Other punctuation can be valid in other contexts; inspect the actual choices.\n3. **Name the relationship before reading transitions.** Contrast: the second idea differs from an expectation. Result: the second idea follows from the first. Example: the second idea illustrates the first. Addition/similarity: the second supplies a compatible, related idea.\n4. **Keep parallel structures.** In “how to measure, compare, and record,” a single `to` can apply to all three base-form verbs. Mixing a verb with an unrelated noun phrase or a complete clause breaks the series.\n\n### Worked example A — Do not agree with the nearest noun\n\nDraft: “A collection of maps **are** stored in the cabinet.”\n\n- Subject head: `collection`, singular.\n- Intervening phrase: `of maps`; it describes the collection.\n- Corrected sentence: “A collection of maps **is** stored in the cabinet.”\n\nNow compare: “The maps in the collection **are** stored in the cabinet.” The head is plural `maps`; `are` is correct. The words after the head describe it but do not control the agreement.\n\n### Worked example B — A boundary and a relationship\n\nDraft: “The trail is short, the ascent is steep.”\n\nBoth parts can stand independently. A comma alone creates a comma splice. One grammatical revision is: “The trail is short; the ascent is steep.” To make the contrast explicit across two sentences: “The trail is short. **However,** the ascent is steep.”\n\nThe contrast is between an apparently easy short trail and a demanding ascent. “Consequently” would claim that being short produces the steep ascent, which the supplied information does not support. The semicolon fixes the boundary; the transition explains the relationship.\n\n### Worked example C — Parallel actions\n\nDraft: “The guide explains how to label a sample, measuring its mass, and record its temperature.”\n\nThe series begins with `to label`. Revise all three actions into parallel base-form verbs: “The guide explains how to **label** a sample, **measure** its mass, and **record** its temperature.” The `to` is shared by the series.\n\n### Practice — choose one answer for each item\n\n**Before checking:**Underline the subject head in G1, mark both clause subjects and predicates in G2, name the relationship in G3–G4, and compare the verb forms in G5.",
++        items=(
++            ChoiceItem(
++                id="sat-grammar-1-q1",
++                prompt="Choose the completion that makes the sentence grammatically correct in standard formal written English.\n\n“At the start of each session, the list of materials ___ on the workbench.”",
++                choices=(
++                    ("a", "`are`"),
++                    ("b", "`were`"),
++                    ("c", "`is`"),
++                    ("d", "`have been`"),
++                ),
++                correct_choice_id="c",
++                explanation="The singular subject head is `list`, so `is` agrees. The plural `materials` belongs to the describing phrase `of materials`. A, B and D use plural verb forms. No choice of singular past tense is offered, so tense does not create a second valid answer.",
++            ),
++            ChoiceItem(
++                id="sat-grammar-1-q2",
++                prompt="Choose the punctuation that correctly joins the two closely related independent clauses. Do not add or change any other words or capitalization.\n\n“The sample was small ___ the team collected more observations before drawing a conclusion.”",
++                choices=(
++                    ("a", "`,`"),
++                    ("b", "`;`"),
++                    ("c", "`, however,`"),
++                    ("d", "no punctuation"),
++                ),
++                correct_choice_id="b",
++                explanation="Both “The sample was small” and “the team collected more observations before drawing a conclusion” are independent clauses. A semicolon joins them correctly. A is a comma splice; C is also a comma splice because `however` is not a coordinating conjunction; D is a fused sentence. The question restricts the edit to the listed choices; other properly constructed revisions could also work.",
++            ),
++            ChoiceItem(
++                id="sat-grammar-1-q3",
++                prompt="“The archive's catalogue is described as a complete inventory of the collection. ___, several recently donated boxes remain unindexed.”\n\nWhich transition most logically completes the text?",
++                choices=(
++                    ("a", "`For example`"),
++                    ("b", "`However`"),
++                    ("c", "`Consequently`"),
++                    ("d", "`Similarly`"),
++                ),
++                correct_choice_id="b",
++                explanation="“Complete inventory” creates an expectation that every box is indexed, while “several … remain unindexed” contradicts that expectation. `However` signals this contrast. A suggests an illustration of completeness, C suggests a result of completeness, and D suggests similarity; none expresses the relationship supplied.",
++            ),
++            ChoiceItem(
++                id="sat-grammar-1-q4",
++                prompt="“The draft directions include two unnecessary turns that make the route harder to follow. ___, the editor removes those turns to make the directions simpler.”\n\nWhich transition most logically completes the text?",
++                choices=(
++                    ("a", "`Consequently`"),
++                    ("b", "`Nevertheless`"),
++                    ("c", "`For instance`"),
++                    ("d", "`In contrast`"),
++                ),
++                correct_choice_id="a",
++                explanation="The unnecessary turns make the directions harder to follow; removing them is the stated response to that problem. `Consequently` connects the problem with the resulting action. B and D signal contrast, while C would introduce an example rather than the resulting edit.",
++            ),
++            ChoiceItem(
++                id="sat-grammar-1-q5",
++                prompt="Choose the completion that preserves a grammatically parallel series.\n\n“The workshop teaches participants how to measure a sample, ___, and record the result.”",
++                choices=(
++                    ("a", "`comparing its mass`"),
++                    ("b", "`compare its mass`"),
++                    ("c", "`its mass comparison`"),
++                    ("d", "`the mass was compared`"),
++                ),
++                correct_choice_id="b",
++                explanation="`measure`, `compare`, and `record` are parallel base-form verbs sharing `how to`. A changes to an `-ing` form, C substitutes a noun phrase, and D substitutes a complete clause.",
++            ),
++        ),
++    ),
++    PackLesson(
++        id="ielts-reading-headings-1",
++        track_id="ielts_reading",
++        title="A heading must cover the paragraph",
++        introduction="**Skill mapping:** identify paragraph purpose; distinguish a main idea from a supporting detail; recognise paraphrase; compare scope of candidate headings.\n\n**Practice format:** matching headings. Five scored items, seven available headings. Two headings are unused.\n\n### Teaching material\n\nA heading summarises what a paragraph is doing. A paragraph may introduce a problem, explain a response, compare options or describe an unexpected result. One memorable noun is not enough to choose its heading.\n\nUse this sequence:\n\n1. Read the paragraph once without choosing. Ask: “What changes or what point is being made?”\n2. Give it a short temporary label in your own words.\n3. Read the first and last sentences again, then check the middle. A first sentence can introduce a different idea before the writer turns to the real point.\n4. Compare the scope of each heading. Reject one that covers only a small example, and reject one that adds a claim the paragraph does not make.\n5. Check the full set. Do not assign a leftover heading just because the others have been used.\n\nContrast words such as *however*, *rather than* and *instead* can signal the focus, but they are clues, not answers. A paragraph about the cost of cleaning a room is not necessarily about financing the initial building work.\n\n**Before answering:** beside each paragraph, write a three-to-seven-word label. This note is ungraded. Do not open the key until all five headings have been selected.\n\n### Original text — The room beside the old platform\n\n**A**\n\nWhen passenger trains stopped calling at Cedar Quay, the station building did not immediately lose its social role. For years, residents had met beneath its clock to exchange notices, wait for neighbours and arrange shared journeys. A café later occupied the ticket office, but a room beside the platform stayed empty. The local history group argued that the room's value was not simply its age or its wooden benches. It was one of the few places in the district that people already associated with meeting others. Finding a new use could continue that role after the railway service had ended.\n\n**B**\n\nThe first proposal was to convert the room permanently into an exhibition space. Before approving the drawings, however, the council allowed a two-week trial. Folding tables were brought in, and a paper plan of the room was pinned near the entrance. Visitors marked where they would sit, what they might bring and which activities they would prefer to do elsewhere. The organisers collected these comments before discussing any construction. Several popular suggestions had not appeared in the initial proposal. The trial was therefore a way of discovering what users wanted, rather than asking them to comment on a finished design.\n\n**C**\n\nWhat followed required fewer changes to the building than expected. The team left the internal walls in place and kept the old luggage labels above the doors. Instead of fixing a large desk to the floor, it bought small tables that could be pushed together or separated. Lightweight screens could divide a discussion group from people reading quietly, and a wheeled cupboard held supplies between sessions. Nothing in this arrangement required the room to have a single purpose. By changing the position of furniture, the volunteers could offer several uses while keeping the existing structure intact.\n\n**D**\n\nThe budget discussion initially focused on tables and lighting. Once the room began opening regularly, a different set of expenses became visible. Someone had to unlock it before each session, check it afterwards and clean the surfaces. The trial had relied on a few volunteers who happened to be free that fortnight; the permanent rota could not depend on the same arrangement. A record of these tasks showed that keeping the space available would cost more than the organisers had included in their first annual budget. They revised the plan to cover recurring work, not just the purchase of equipment.\n\n**E**\n\nFinally, the organisers had to decide which activities could happen at the same time. Some residents wanted a silent place to read, while others hoped to practise a language in pairs. Reserving the room for one group would have excluded the other. The solution was a published timetable: quiet use on several mornings, conversation sessions later in the day and a shared planning meeting once a month. The timetable was reviewed with both groups after its first month. The aim was not to select one winning activity, but to give different ways of working a predictable place in the week.\n\n### Questions 1–5\n\nChoose the correct heading **i–vii** for each paragraph. Use each selected heading once.\n\n| Heading | Text |\n| --- | --- |\n| i | Adjusting furniture instead of rebuilding |\n| ii | Recognising the cost of keeping a room open |\n| iii | Asking users to test ideas before a final decision |\n| iv | A timetable for different kinds of user |\n| v | A former meeting place with a continuing purpose |\n| vi | Funding the project by renting it to a shop |\n| vii | Replacing the old station with a new building |",
++        items=(
++            ChoiceItem(
++                id="ielts-reading-headings-1-q1",
++                prompt="Paragraph A: ____",
++                choices=(
++                    ("i", "Adjusting furniture instead of rebuilding"),
++                    ("ii", "Recognising the cost of keeping a room open"),
++                    ("iii", "Asking users to test ideas before a final decision"),
++                    ("iv", "A timetable for different kinds of user"),
++                    ("v", "A former meeting place with a continuing purpose"),
++                    ("vi", "Funding the project by renting it to a shop"),
++                    ("vii", "Replacing the old station with a new building"),
++                ),
++                correct_choice_id="v",
++                explanation="The opening contrasts the end of train services with a continuing social role. The final sentence explicitly says a new use could continue the meeting-place role. Benches and building age are supporting details.",
++            ),
++            ChoiceItem(
++                id="ielts-reading-headings-1-q2",
++                prompt="Paragraph B: ____",
++                choices=(
++                    ("i", "Adjusting furniture instead of rebuilding"),
++                    ("ii", "Recognising the cost of keeping a room open"),
++                    ("iii", "Asking users to test ideas before a final decision"),
++                    ("iv", "A timetable for different kinds of user"),
++                    ("v", "A former meeting place with a continuing purpose"),
++                    ("vi", "Funding the project by renting it to a shop"),
++                    ("vii", "Replacing the old station with a new building"),
++                ),
++                correct_choice_id="iii",
++                explanation="The council runs a trial before approving drawings; visitors contribute ideas before construction is discussed. This paragraph concerns the decision process, not the later furniture arrangement.",
++            ),
++            ChoiceItem(
++                id="ielts-reading-headings-1-q3",
++                prompt="Paragraph C: ____",
++                choices=(
++                    ("i", "Adjusting furniture instead of rebuilding"),
++                    ("ii", "Recognising the cost of keeping a room open"),
++                    ("iii", "Asking users to test ideas before a final decision"),
++                    ("iv", "A timetable for different kinds of user"),
++                    ("v", "A former meeting place with a continuing purpose"),
++                    ("vi", "Funding the project by renting it to a shop"),
++                    ("vii", "Replacing the old station with a new building"),
++                ),
++                correct_choice_id="i",
++                explanation="Walls remain in place; tables, screens and a cupboard can move. The paragraph explains how flexible furniture supplies different uses without rebuilding. The old labels alone are not its main idea.",
++            ),
++            ChoiceItem(
++                id="ielts-reading-headings-1-q4",
++                prompt="Paragraph D: ____",
++                choices=(
++                    ("i", "Adjusting furniture instead of rebuilding"),
++                    ("ii", "Recognising the cost of keeping a room open"),
++                    ("iii", "Asking users to test ideas before a final decision"),
++                    ("iv", "A timetable for different kinds of user"),
++                    ("v", "A former meeting place with a continuing purpose"),
++                    ("vi", "Funding the project by renting it to a shop"),
++                    ("vii", "Replacing the old station with a new building"),
++                ),
++                correct_choice_id="ii",
++                explanation="Unlocking, checking and cleaning are recurring work. These costs were missing from the annual budget. The issue is keeping the room open, not paying for its initial conversion through a shop.",
++            ),
++            ChoiceItem(
++                id="ielts-reading-headings-1-q5",
++                prompt="Paragraph E: ____",
++                choices=(
++                    ("i", "Adjusting furniture instead of rebuilding"),
++                    ("ii", "Recognising the cost of keeping a room open"),
++                    ("iii", "Asking users to test ideas before a final decision"),
++                    ("iv", "A timetable for different kinds of user"),
++                    ("v", "A former meeting place with a continuing purpose"),
++                    ("vi", "Funding the project by renting it to a shop"),
++                    ("vii", "Replacing the old station with a new building"),
++                ),
++                correct_choice_id="iv",
++                explanation="Quiet readers and conversation groups need different conditions. A reviewed weekly timetable gives both a predictable slot instead of choosing one activity.",
++            ),
++        ),
++    ),
++    PackLesson(
++        id="ielts-reading-completion-1",
++        track_id="ielts_reading",
++        title="Find the detail, then fit the answer",
++        introduction="**Skill mapping:** scan for a paraphrased detail; distinguish object/function/date/count; recover sufficient exact source words; check a grammar slot and stated answer limit.\n\n**Practice format:** sentence completion. Five scored items.\n\n### Teaching material\n\nScanning is useful only after you know what you are looking for. “What protects the objects?” and “What lists the objects?” may lead you to the same paragraph, but they require different answers.\n\nBefore scanning, identify the slot:\n\n- If an adjective is already supplied before the blank, identify the noun it describes without repeating that adjective.\n- Before *discussion cards*, a blank may need a quantity.\n- After *on a*, expect a singular countable noun phrase.\n- After *attend a*, expect an event, not a person or document.\n\nFind a likely paragraph using the question's meaning, not only a repeated word. Read the relevant sentence and at least one sentence around it. Then copy the necessary words from the text. Do not replace them with an attractive synonym when the instruction says to use words from the passage.\n\nCheck the completed sentence for meaning and grammar. Finally check the word limit. **No more than two words** is a maximum, not a requirement to use two words or copy every modifier. A shorter answer can be valid when its source words give the required meaning and fit the sentence. Do not repeat words already supplied in the question. Extra words can make the completed sentence ungrammatical or exceed the limit.\n\n**Before answering:** underline the required slot in each question. This note is ungraded. You may return to the passage as often as needed; this lesson does not impose an official exam time limit.\n\n### Original text — A museum in a travelling box\n\n**A**\n\nNorthgate Collection has a small exhibition room and a large group of schools that cannot regularly visit it. The museum's education team first tried sending photographs, but teachers reported that pupils asked questions about size, texture and how objects fitted together. The team therefore designed a travelling box. It would not contain valuable originals. Instead, it would lend carefully labelled replicas and activities that could be used in an ordinary classroom. The purpose was to support discussion, not to reproduce every part of a museum visit or replace a teacher's lesson.\n\n**B**\n\nEach box is a cardboard case with an internal frame. The replica objects sit in separate compartments divided by foam dividers. A paper inventory lists every object, while a photograph shows how the contents should be arranged before the case is closed. The packing team deliberately keeps these two documents separate: one helps a teacher check that nothing is missing, and the other makes returning the materials easier. A cloth pouch contains pieces used in a sorting activity. It is placed above the compartments rather than between the larger objects.\n\n**C**\n\nAlongside the replicas, each box contains 36 discussion cards. Some ask pupils to describe a feature before guessing its use; others encourage them to compare two possible explanations. The cards are not an answer book. At collection, the teacher checks the contents with a member of staff and records visible marks on a condition sheet. This prevents an existing mark being treated as new damage when the box returns. An inventory can confirm that an object is present, but it cannot record the condition in which it was borrowed.\n\n**D**\n\nBefore borrowing for the first time, a teacher must attend a briefing session. It lasts about half an hour and covers the packing sequence, the classroom activities and the distinction between a replica and an original object. Teachers do not have to pass a written test, and the session is not a lesson to be delivered word for word to pupils. It gives borrowers enough familiarity to use the materials confidently. A colleague can collect the case later, but the teacher responsible for the classroom work must have completed this introduction.\n\n**E**\n\nThe printed guide includes background notes and a download code. Teachers use that code to reach files containing larger versions of the photographs and printable activity sheets. The team chose not to put a memory stick in every box, because schools use different devices. The files do not contain extra questions that pupils need to finish the basic activities; those are already on the discussion cards. The digital material is an optional way to make an image easier for a class to see, not a requirement to use the box.\n\n**F**\n\nAt the end of a loan, staff compare the returned contents with the inventory and review any new marks alongside the condition sheet. They also invite a short comment from the teacher. These comments have led to small revisions, such as clearer packing photographs and a stronger pouch for the sorting pieces. The project is still a travelling collection, not a complete lesson programme. Its organisers judge success by whether the materials support worthwhile classroom questions, rather than by how many boxes leave the store in a week.\n\n### Questions 1–5\n\nComplete each sentence using **NO MORE THAN TWO WORDS AND/OR A NUMBER from the passage**. The final sentence must be grammatical. The word limit is a maximum; a sufficient one-word answer is allowed. Do not repeat words already supplied in the question or add an explanation in the answer blank.",
++        items=(
++            ShortItem(
++                id="ielts-reading-completion-1-q1",
++                prompt="The replicas sit in compartments separated by foam ____.",
++                accepted_answers=("dividers",),
++                max_words=2,
++                explanation="B states *foam dividers*. The question already supplies *foam*, so *dividers* completes *foam dividers*. Copying *foam dividers* into this blank would repeat *foam*. *Internal frame* names a different part.",
++            ),
++            ShortItem(
++                id="ielts-reading-completion-1-q2",
++                prompt="Each box contains ____ discussion cards.",
++                accepted_answers=("36",),
++                max_words=2,
++                explanation="C states the number of discussion cards directly. *Cards* is already supplied after the blank, so adding it would repeat the noun. One number; alternative number wording is not in this passage.",
++            ),
++            ShortItem(
++                id="ielts-reading-completion-1-q3",
++                prompt="Visible marks are recorded on a ____ when the teacher collects the box.",
++                accepted_answers=("condition sheet", "sheet"),
++                max_words=2,
++                explanation="C records visible marks on a condition sheet. Both *a condition sheet* and *a sheet* are grammatical and identify the evidenced recording surface here. The task does not require the modifier *condition*. *Inventory* is a different document used to count objects.",
++            ),
++            ShortItem(
++                id="ielts-reading-completion-1-q4",
++                prompt="A first-time borrower responsible for classroom work must attend a ____.",
++                accepted_answers=("briefing session", "briefing", "session"),
++                max_words=2,
++                explanation="D requires attendance at a briefing session. All three source-exact forms name that required introduction and fit *attend a*. A written test is explicitly not required. Neither the word limit nor the stem requires both words.",
++            ),
++            ShortItem(
++                id="ielts-reading-completion-1-q5",
++                prompt="Larger photographs and printable sheets are reached using a ____ in the guide.",
++                accepted_answers=("download code", "code"),
++                max_words=2,
++                explanation="E says teachers use this code to reach the image and sheet files. Both source-exact forms fit *using a* and identify the access detail. *Memory stick* names a rejected option. The modifier *download* is not compulsory under this stem.",
++            ),
++        ),
++    ),
++    PackLesson(
++        id="ielts-reading-features-1",
++        track_id="ielts_reading",
++        title="Match the feature to the right person",
++        introduction="**Skill mapping:** compare named sources/methods; track attribution across sentences; recognise paraphrase; use a repeated label when instructions allow it.\n\n**Practice format:** matching features. Five scored statements, four workshop leaders. A letter may be used more than once.\n\n### Teaching material\n\nA matching-features task can mention several people discussing the same topic. Repeated words such as *map*, *route* or *participant* may appear in every section. Match the distinctive action or view, not the shared topic.\n\nCreate a small table with three columns: *person / distinctive method / evidence*. Read each statement and identify its important relationship. “Separates waiting from walking” is more precise than “measures a journey.” Locate the passage section where that relationship is described, then read enough context to check attribution.\n\nDo not force every answer to be different. If the instructions permit repetition, two statements can describe the same person. Equally, the presence of a name near a sentence does not prove that every nearby view belongs to that person: look for reporting words and clear connections.\n\nA useful final check is to complete: “This is __ because the passage says __.” If your explanation relies on a fact about the person that you already knew, rather than this passage, reconsider the match. All workshop leaders in this lesson are fictional; no outside knowledge is required.\n\n**Before answering:** write one distinctive method beside each leader. This is an ungraded preparation note. Read all four sections before finalising answers.\n\n### Original text — Four maps of the same neighbourhood\n\nA design workshop asked four leaders to help participants represent one neighbourhood. Everyone could use the same blank outline, but the leaders disagreed about what a useful map should show. Their projects were not competing surveys of a real town. Each was a different way of examining the relationship between a route and the person describing it.\n\n**A · Mara Lin**\n\nMara began by asking long-term residents to draw a route from memory. Only afterwards did they walk it and compare their sketches with what they noticed on the ground. She was interested in places that one person included and another left out. An omission did not automatically mean a participant had made a mistake; it could show that a place played little part in that person's routine. When two residents remembered a location differently, Mara kept both accounts for discussion rather than asking the group to select a single correct memory. For her, the differences were part of the map's subject.\n\n**B · Oliver Mendez**\n\nOliver focused on the experience of getting from one place to another. Participants used a notebook to record the time spent moving and, in a separate column, time spent standing still. Waiting at a crossing or outside a busy entrance was not added to the walking total. Groups repeated a route so that one unusual delay would not dominate their account. Oliver said that a simple journey length could hide an important distinction: two routes might require similar movement, yet feel different because one included frequent pauses. His map therefore marked both the route and the places where those pauses occurred.\n\n**C · Priya Shah**\n\nPriya worked with copies of earlier published plans of the neighbourhood. She asked participants to compare what each plan chose to label, rather than to assume that the newest version explained everything. Every feature added to their final map carried the date and origin of the document from which it had been taken. If a feature appeared on only one plan, the label said so. Priya wanted readers to see how the representation had been assembled. The result was not an attempt to settle every historical question; it was a map that made the source of its information visible.\n\n**D · Niko Petrov**\n\nNiko invited people who had never visited the neighbourhood before. They noted sounds that helped them recognise where they were: a fountain, a covered walkway that changed the sound of footsteps, or a quieter stretch beside a wall. He preferred these first impressions to accounts from people who already knew where they were going. Familiar residents sometimes supplied a place name before explaining what they could actually hear. Niko's participants could not rely on those names. Their map grouped the sounds and descriptions they reported, without claiming that the map represented every visitor's experience.\n\nAt the final meeting, the leaders laid their work side by side. None proposed merging all four maps into one supposedly complete account. They asked readers to notice the question each map answered and the information it left open. A person choosing a map would first need to decide what they wanted to understand about the neighbourhood.\n\n### Questions 1–5\n\nMatch each statement with the correct leader **A–D**. **You may use any letter more than once.**\n\nA. Mara Lin\n\nB. Oliver Mendez\n\nC. Priya Shah\n\nD. Niko Petrov",
++        items=(
++            ChoiceItem(
++                id="ielts-reading-features-1-q1",
++                prompt="This leader recorded stationary delay separately from movement. ____",
++                choices=(
++                    ("a", "Mara Lin"),
++                    ("b", "Oliver Mendez"),
++                    ("c", "Priya Shah"),
++                    ("d", "Niko Petrov"),
++                ),
++                correct_choice_id="b",
++                explanation="B records moving time and stationary time in separate columns. Repeated routes reduce the influence of an unusual delay, but the key feature is the separation of the two kinds of time.",
++            ),
++            ChoiceItem(
++                id="ielts-reading-features-1-q2",
++                prompt="This leader treated a missing feature in a drawing as something worth discussing. ____",
++                choices=(
++                    ("a", "Mara Lin"),
++                    ("b", "Oliver Mendez"),
++                    ("c", "Priya Shah"),
++                    ("d", "Niko Petrov"),
++                ),
++                correct_choice_id="a",
++                explanation="A explicitly says an omission is not automatically a mistake; what a person leaves out can reflect their routine. No other leader analyses missing features in memory drawings.",
++            ),
++            ChoiceItem(
++                id="ielts-reading-features-1-q3",
++                prompt="This leader showed the date and origin of documentary information on the final map. ____",
++                choices=(
++                    ("a", "Mara Lin"),
++                    ("b", "Oliver Mendez"),
++                    ("c", "Priya Shah"),
++                    ("d", "Niko Petrov"),
++                ),
++                correct_choice_id="c",
++                explanation="C labels each added feature with its document's date and origin. Mara uses remembered accounts, but she does not create this documentary source label.",
++            ),
++            ChoiceItem(
++                id="ielts-reading-features-1-q4",
++                prompt="This leader preferred accounts from people encountering the area for the first time. ____",
++                choices=(
++                    ("a", "Mara Lin"),
++                    ("b", "Oliver Mendez"),
++                    ("c", "Priya Shah"),
++                    ("d", "Niko Petrov"),
++                ),
++                correct_choice_id="d",
++                explanation="D recruits people who have never visited before and prefers their first impressions to accounts from familiar residents. The statement paraphrases this selection rule.",
++            ),
++            ChoiceItem(
++                id="ielts-reading-features-1-q5",
++                prompt="This leader retained two different recollections instead of choosing one winner. ____",
++                choices=(
++                    ("a", "Mara Lin"),
++                    ("b", "Oliver Mendez"),
++                    ("c", "Priya Shah"),
++                    ("d", "Niko Petrov"),
++                ),
++                correct_choice_id="a",
++                explanation="A keeps conflicting recollections for discussion instead of selecting a correct memory. Reusing A is allowed; assigning an unused letter merely to make the answers different would ignore the instruction.",
++            ),
++        ),
++    ),
++)
++
++
++TRACK_ORDER: dict[TrackId, tuple[str, ...]] = {
++    "ielts_reading": (
++        "ielts-reading-1",
++        "ielts-reading-headings-1",
++        "ielts-reading-completion-1",
++        "ielts-reading-features-1",
++    ),
++    "sat_math": (
++        "sat-math-1",
++        "sat-quadratic-structure-1",
++        "sat-data-interpretation-1",
++    ),
++    "sat_reading_writing": ("sat-rw-1", "sat-grammar-transitions-1"),
++}
++
++
++def use_learning_pack(catalogue_version: str | None) -> bool:
++    if catalogue_version is None or catalogue_version == CONTENT_VERSION:
++        return False
++    if catalogue_version == PACK_VERSION:
++        return True
++    raise ValueError("Unknown catalogue version")
++
++
++def pack_catalogue() -> LearningPackCatalogue:
++    legacy = catalogue()
++    titles = {track.id: track.title for track in legacy.tracks}
++    originals = {lesson.id: lesson for lesson in LESSONS}
++    additions = {lesson.id: lesson for lesson in PACK_LESSONS}
++    summaries = []
++    for ids in TRACK_ORDER.values():
++        for lesson_id in ids:
++            lesson = originals[lesson_id] if lesson_id in originals else additions[lesson_id]
++            summaries.append(
++                LearningPackLessonSummary(
++                    id=lesson.id,
++                    track_id=lesson.track_id,
++                    title=lesson.title,
++                    question_count=len(lesson.items),
++                    version=CONTENT_VERSION if lesson_id in originals else PACK_VERSION,
++                )
++            )
++    return LearningPackCatalogue(
++        version=PACK_VERSION,
++        tracks=[
++            TrackSummary(id=track, title=titles[track], lesson_ids=list(ids))
++            for track, ids in TRACK_ORDER.items()
++        ],
++        lessons=summaries,
++        exams=legacy.exams,
++        notice=legacy.notice
++        + " This opt-in original learning pack adds six five-item lessons. Repeating familiar items is review, not unseen diagnosis; submission is not mastery. Pedagogy and learner validation remain pending.",
++    )
++
++
++def get_pack_lesson(lesson_id: str, version: str) -> PackLesson:
++    if version != PACK_VERSION:
++        raise ValueError("Unknown content version for lesson")
++    for lesson in PACK_LESSONS:
++        if lesson.id == lesson_id:
++            return lesson
++    raise ValueError("Unknown lesson for content version")
++
++
++def lesson_dispatch(lesson_id: str, version: str) -> PreparationLesson | LearningPackLesson:
++    if version == CONTENT_VERSION:
++        return public_lesson(get_lesson(lesson_id, version))
++    lesson = get_pack_lesson(lesson_id, version)
++    questions: list[Question | ShortQuestion] = []
++    for item in lesson.items:
++        if isinstance(item, ChoiceItem):
++            questions.append(
++                Question(
++                    id=item.id,
++                    prompt=item.prompt,
++                    choices=[Choice(id=key, text=text) for key, text in item.choices],
++                )
++            )
++        else:
++            questions.append(
++                ShortQuestion(id=item.id, prompt=item.prompt, max_words=item.max_words)
++            )
++    return LearningPackLesson(
++        id=lesson.id,
++        track_id=lesson.track_id,
++        title=lesson.title,
++        version=PACK_VERSION,
++        introduction=lesson.introduction,
++        questions=questions,
++    )
++
++
++def digest_dispatch(payload: StudyAttemptIn | LearningPackStudyAttemptIn) -> str:
++    if all(isinstance(answer, Answer) for answer in payload.answers):
++        # Keep legacy canonical bytes and normalization exactly, including replay.
++        return request_digest(StudyAttemptIn.model_validate(payload.model_dump()))
++    canonical = {
++        "lesson_id": payload.lesson_id,
++        "version": payload.version,
++        "answers": sorted(
++            (answer.model_dump() for answer in payload.answers),
++            key=lambda answer: answer["question_id"],
++        ),
++    }
++    return hashlib.sha256(
++        json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()
++    ).hexdigest()
++
++
++def normalize_short(text: str) -> str:
++    normalized = " ".join(text.casefold().split())
++    if normalized.endswith("."):
++        normalized = normalized[:-1].rstrip()
++    return normalized
++
++
++def grade_dispatch(
++    payload: StudyAttemptIn | LearningPackStudyAttemptIn,
++) -> tuple[list[dict], list[dict], int]:
++    if payload.version == CONTENT_VERSION:
++        if not all(isinstance(answer, Answer) for answer in payload.answers):
++            raise ValueError("Wrong answer format for question")
++        return grade(StudyAttemptIn.model_validate(payload.model_dump()))
++    lesson = get_pack_lesson(payload.lesson_id, payload.version)
++    answers = {answer.question_id: answer for answer in payload.answers}
++    if len(answers) != len(payload.answers) or set(answers) != {item.id for item in lesson.items}:
++        raise ValueError("Answer every question exactly once")
++    canonical_answers = [answer.model_dump() for answer in payload.answers]
++    feedback: list[dict] = []
++    response: AnswerFeedback | ShortAnswerFeedback
++    for item in lesson.items:
++        selected = answers[item.id]
++        if isinstance(item, ChoiceItem):
++            if not isinstance(selected, Answer):
++                raise ValueError("Wrong answer format for question")
++            if selected.choice_id not in {key for key, _ in item.choices}:
++                raise ValueError("Unknown choice for question")
++            response = AnswerFeedback(
++                question_id=item.id,
++                selected_choice_id=selected.choice_id,
++                correct_choice_id=item.correct_choice_id,
++                correct=selected.choice_id == item.correct_choice_id,
++                explanation=item.explanation,
++            )
++        else:
++            if not isinstance(selected, ShortAnswer):
++                raise ValueError("Wrong answer format for question")
++            normalized = normalize_short(selected.text)
++            accepted = {normalize_short(answer) for answer in item.accepted_answers}
++            response = ShortAnswerFeedback(
++                question_id=item.id,
++                selected_text=selected.text,
++                accepted_answers=list(item.accepted_answers),
++                correct=len(normalized.split()) <= item.max_words and normalized in accepted,
++                explanation=item.explanation,
++            )
++        feedback.append(response.model_dump())
++    return canonical_answers, feedback, sum(bool(item["correct"]) for item in feedback)
++
++
++def completed_lesson_refs(rows: list[tuple[str, str]]) -> list[CompletedLesson]:
++    allowed = {(lesson.id, CONTENT_VERSION) for lesson in LESSONS} | {
++        (lesson.id, PACK_VERSION) for lesson in PACK_LESSONS
++    }
++    known = sorted(set(rows) & allowed)
++    return [CompletedLesson(lesson_id=lesson_id, version=version) for lesson_id, version in known]
+--- /dev/null
++++ b/backend/tests/test_learning_pack_domain.py
+@@ -0,0 +1,333 @@
++"""Original pack format/content/version controls; no database or providers."""
++
++import hashlib
++import json
++from uuid import UUID
++
++import pytest
++from pydantic import ValidationError
++
++from app.preparation.catalogue import (
++    CONTENT_VERSION,
++    LESSONS,
++    catalogue,
++    get_lesson,
++    grade,
++    public_lesson,
++    request_digest,
++)
++from app.preparation.learning_pack import (
++    PACK_LESSONS,
++    PACK_VERSION,
++    TRACK_ORDER,
++    ChoiceItem,
++    ShortItem,
++    completed_lesson_refs,
++    digest_dispatch,
++    grade_dispatch,
++    lesson_dispatch,
++    normalize_short,
++    pack_catalogue,
++    use_learning_pack,
++)
++from app.schemas.preparation import LearningPackStudyAttemptIn, StudyAttemptIn
++
++SHORT_ID = "ielts-reading-completion-1"
++FIXED_UUID = UUID("251d4011-4ec6-4c6a-a6f9-3992204861c9")
++EXPECTED_KEYS = {
++    "sat-quadratic-structure-1": ["b", "d", "a", "c", "b"],
++    "sat-data-interpretation-1": ["b", "c", "c", "b", "d"],
++    "sat-grammar-transitions-1": ["c", "b", "b", "a", "b"],
++    "ielts-reading-headings-1": ["v", "iii", "i", "ii", "iv"],
++    "ielts-reading-features-1": ["b", "a", "c", "d", "a"],
++    SHORT_ID: [
++        "dividers",
++        "36",
++        "condition sheet",
++        "briefing session",
++        "download code",
++    ],
++}
++
++
++def pack_payload(lesson_id=SHORT_ID):
++    lesson = next(item for item in PACK_LESSONS if item.id == lesson_id)
++    answers = [
++        {
++            "question_id": item.id,
++            "text" if isinstance(item, ShortItem) else "choice_id": key,
++        }
++        for item, key in zip(lesson.items, EXPECTED_KEYS[lesson_id], strict=True)
++    ]
++    return LearningPackStudyAttemptIn(
++        attempt_id=FIXED_UUID,
++        lesson_id=lesson_id,
++        version=PACK_VERSION,
++        answers=answers,
++    )
++
++
++@pytest.mark.parametrize("lesson_id", EXPECTED_KEYS)
++def test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers(lesson_id):
++    payload = pack_payload(lesson_id)
++    answers, feedback, correct = grade_dispatch(payload)
++    assert correct == len(answers) == len(feedback) == 5
++    assert answers == [answer.model_dump() for answer in payload.answers]
++    assert all(item["correct"] and item["explanation"] for item in feedback)
++    assert len({answer["question_id"] for answer in answers}) == 5
++
++
++@pytest.mark.parametrize("lesson", LESSONS, ids=lambda lesson: lesson.id)
++def test_original_public_projection_digest_grade_are_exact(lesson):
++    assert (
++        lesson_dispatch(lesson.id, CONTENT_VERSION).model_dump()
++        == public_lesson(get_lesson(lesson.id, CONTENT_VERSION)).model_dump()
++    )
++    payload = StudyAttemptIn(
++        attempt_id=FIXED_UUID,
++        lesson_id=lesson.id,
++        version=CONTENT_VERSION,
++        answers=[
++            {"question_id": item.id, "choice_id": item.correct_choice_id} for item in lesson.items
++        ],
++    )
++    canonical = {
++        "lesson_id": lesson.id,
++        "version": CONTENT_VERSION,
++        "answers": sorted(
++            [answer.model_dump() for answer in payload.answers],
++            key=lambda answer: (answer["question_id"], answer["choice_id"]),
++        ),
++    }
++    frozen_digest = hashlib.sha256(
++        json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()
++    ).hexdigest()
++    assert digest_dispatch(payload) == request_digest(payload) == frozen_digest
++    assert grade_dispatch(payload) == grade(payload)
++    assert all(set(item) == {"question_id", "choice_id"} for item in canonical["answers"])
++
++
++def test_default_selector_and_original_catalogue_are_preserved():
++    assert not use_learning_pack(None) and not use_learning_pack(CONTENT_VERSION)
++    assert use_learning_pack(PACK_VERSION)
++    assert catalogue().version == CONTENT_VERSION
++    assert len(catalogue().lessons) == 3
++    with pytest.raises(ValueError, match="Unknown catalogue version"):
++        use_learning_pack("invented")
++
++
++def test_legacy_frozen_digest_matches_independent_literal_not_a_pack_projection():
++    payload = StudyAttemptIn(
++        attempt_id=FIXED_UUID,
++        lesson_id="ielts-reading-1",
++        version="starter-2026-10-11-v1",
++        answers=[
++            {"question_id": "ir-1", "choice_id": "b"},
++            {"question_id": "ir-2", "choice_id": "c"},
++            {"question_id": "ir-3", "choice_id": "a"},
++        ],
++    )
++    assert (
++        digest_dispatch(payload)
++        == "ee707dd54e851d0df1f8a7db54a78cbd148c0302a136cc1dc7e24dc99cde0c7b"
++    )
++
++
++def test_pack_orders_all_nine_lessons_and_versions_without_answer_keys():
++    result = pack_catalogue().model_dump(mode="json")
++    assert result["version"] == PACK_VERSION and len(result["lessons"]) == 9
++    assert {track["id"]: tuple(track["lesson_ids"]) for track in result["tracks"]} == TRACK_ORDER
++    assert [lesson["id"] for lesson in result["lessons"]] == [
++        lesson_id for ids in TRACK_ORDER.values() for lesson_id in ids
++    ]
++    starters = {lesson.id for lesson in LESSONS}
++    assert all(
++        item["version"] == (CONTENT_VERSION if item["id"] in starters else PACK_VERSION)
++        for item in result["lessons"]
++    )
++    assert result["exams"] == catalogue().model_dump(mode="json")["exams"]
++    assert not any(
++        f'"{field}":' in json.dumps(result)
++        for field in ("correct_choice_id", "accepted_answers", "explanation")
++    )
++
++
++@pytest.mark.parametrize("lesson_id", EXPECTED_KEYS)
++def test_initial_lessons_have_five_questions_full_material_and_no_private_keys(
++    lesson_id,
++):
++    result = lesson_dispatch(lesson_id, PACK_VERSION).model_dump(mode="json")
++    assert len(result["questions"]) == 5 and result["unofficial"]
++    assert len(result["introduction"]) > 1200
++    assert (
++        "Teacher key" not in result["introduction"]
++        and "Instructor answer key" not in result["introduction"]
++    )
++    assert not any(
++        f'"{field}":' in json.dumps(result)
++        for field in ("correct_choice_id", "accepted_answers", "explanation")
++    )
++    if lesson_id == SHORT_ID:
++        assert all(
++            question["answer_format"] == "short_answer" and question["max_words"] == 2
++            for question in result["questions"]
++        )
++    else:
++        assert all(
++            "choices" in question and "answer_format" not in question
++            for question in result["questions"]
++        )
++
++
++def test_all_question_ids_are_distinct_keys_known_and_explanations_present():
++    ids = [item.id for lesson in PACK_LESSONS for item in lesson.items]
++    assert len(ids) == len(set(ids)) == 30
++    assert all(len(lesson.items) == 5 for lesson in PACK_LESSONS)
++    for lesson in PACK_LESSONS:
++        for item in lesson.items:
++            assert item.prompt and item.explanation
++            if isinstance(item, ChoiceItem):
++                assert len(item.choices) == len({choice[0] for choice in item.choices})
++                assert item.correct_choice_id in {choice[0] for choice in item.choices}
++            else:
++                assert all(
++                    len(normalize_short(answer).split()) <= item.max_words
++                    for answer in item.accepted_answers
++                )
++
++
++@pytest.mark.parametrize(
++    "lesson_id,version",
++    [
++        ("sat-math-1", PACK_VERSION),
++        (SHORT_ID, CONTENT_VERSION),
++        (SHORT_ID, "old"),
++        ("unknown", PACK_VERSION),
++    ],
++)
++def test_exact_lesson_version_pairs_required(lesson_id, version):
++    with pytest.raises(ValueError):
++        lesson_dispatch(lesson_id, version)
++
++
++@pytest.mark.parametrize(
++    "item_index,text",
++    [
++        (0, "DIVIDERS."),
++        (1, "36"),
++        (2, "sheet"),
++        (2, "  CONDITION\tSHEET . "),
++        (3, "briefing"),
++        (3, "session"),
++        (3, "Briefing  session."),
++        (4, "code"),
++        (4, "download code"),
++    ],
++)
++def test_all_approved_short_forms_case_whitespace_one_period(item_index, text):
++    data = pack_payload().model_dump(mode="json")
++    data["answers"][item_index]["text"] = text
++    payload = LearningPackStudyAttemptIn.model_validate(data)
++    answers, feedback, correct = grade_dispatch(payload)
++    assert correct == 5
++    assert feedback[item_index]["selected_text"] == payload.answers[item_index].text
++    assert answers[item_index]["text"] == payload.answers[item_index].text
++
++
++@pytest.mark.parametrize(
++    "item_index,text",
++    [
++        (0, "foam dividers"),
++        (0, "divider"),
++        (0, "dividers.."),
++        (0, "dividers extra"),
++        (1, "thirty six"),
++        (2, "inventory"),
++        (2, "the condition sheet"),
++        (3, "written test"),
++        (4, "memory stick"),
++        (4, "codeword"),
++        (4, "code!"),
++    ],
++)
++def test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit(item_index, text):
++    data = pack_payload().model_dump(mode="json")
++    data["answers"][item_index]["text"] = text
++    _, feedback, correct = grade_dispatch(LearningPackStudyAttemptIn.model_validate(data))
++    assert correct == 4 and not feedback[item_index]["correct"]
++
++
++@pytest.mark.parametrize(
++    "failure",
++    ["missing", "duplicate", "unknown_question", "wrong_format", "unknown_choice"],
++)
++def test_invalid_question_sets_and_formats_fail_without_keys(failure):
++    data = pack_payload("sat-quadratic-structure-1").model_dump(mode="json")
++    if failure == "missing":
++        data["answers"].pop()
++    elif failure == "duplicate":
++        data["answers"][1] = data["answers"][0]
++    elif failure == "unknown_question":
++        data["answers"][0]["question_id"] = "not-in-lesson"
++    elif failure == "wrong_format":
++        data["answers"][0] = {
++            "question_id": data["answers"][0]["question_id"],
++            "text": "b",
++        }
++    else:
++        data["answers"][0]["choice_id"] = "unknown"
++    with pytest.raises(ValueError) as exc:
++        grade_dispatch(LearningPackStudyAttemptIn.model_validate(data))
++    assert "correct_choice_id" not in str(exc.value) and "explanation" not in str(exc.value)
++
++
++@pytest.mark.parametrize(
++    "answer", [{"text": "x" * 101}, {"text": ""}, {"text": "code", "choice_id": "a"}]
++)
++def test_short_input_bounds_and_exclusive_answer_shape(answer):
++    data = pack_payload().model_dump(mode="json")
++    data["answers"][0] = {"question_id": data["answers"][0]["question_id"], **answer}
++    with pytest.raises(ValidationError):
++        LearningPackStudyAttemptIn.model_validate(data)
++
++
++def test_short_digest_reorder_replay_and_raw_payload_conflicts():
++    payload = pack_payload()
++    reordered = payload.model_copy(update={"answers": list(reversed(payload.answers))})
++    assert digest_dispatch(reordered) == digest_dispatch(payload)
++    data = payload.model_dump(mode="json")
++    data["answers"][2]["text"] = "sheet"
++    assert digest_dispatch(LearningPackStudyAttemptIn.model_validate(data)) != digest_dispatch(
++        payload
++    )
++    assert grade_dispatch(LearningPackStudyAttemptIn.model_validate(data))[2] == 5
++
++
++def test_first_pack_receipt_preserves_raw_text_and_input_order_without_normalizing_storage():
++    data = pack_payload().model_dump(mode="json")
++    data["answers"][2]["text"] = "  CONDITION\tSHEET .  "
++    data["answers"].reverse()
++    submitted = LearningPackStudyAttemptIn.model_validate(data)
++    answers, feedback, correct = grade_dispatch(submitted)
++    assert answers == data["answers"] and correct == 5
++    assert feedback[2]["selected_text"] == "  CONDITION\tSHEET .  "
++    assert feedback[2]["correct"]
++    data["answers"][0]["text"] = "   "
++    with pytest.raises(ValidationError):
++        LearningPackStudyAttemptIn.model_validate(data)
++
++
++def test_completions_require_the_exact_registered_pair_and_do_not_imply_mastery():
++    rows = [
++        ("sat-math-1", CONTENT_VERSION),
++        (SHORT_ID, PACK_VERSION),
++        (SHORT_ID, CONTENT_VERSION),
++        ("sat-math-1", PACK_VERSION),
++        ("unknown", PACK_VERSION),
++        (SHORT_ID, PACK_VERSION),
++    ]
++    refs = [ref.model_dump() for ref in completed_lesson_refs(rows)]
++    assert refs == [
++        {"lesson_id": SHORT_ID, "version": PACK_VERSION},
++        {"lesson_id": "sat-math-1", "version": CONTENT_VERSION},
++    ]
+--- /dev/null
++++ b/backend/tests/test_learning_pack_api.py
+@@ -0,0 +1,377 @@
++"""Actual registered pack routes with existing isolated native SQLite/PG fixtures."""
++
++from datetime import timedelta
++from uuid import uuid4
++
++import pytest
++
++from app.models import (
++    ApplicantProfileRow,
++    AuditEvent,
++    Entitlement,
++    Job,
++    Order,
++    Organization,
++    ResearchRun,
++    StudyAttempt,
++    StudyScheduleRow,
++    Subscription,
++)
++from app.models.base import utcnow
++from app.preparation.catalogue import CONTENT_VERSION, catalogue
++from app.preparation.learning_pack import PACK_VERSION, TRACK_ORDER
++from tests.test_learning_pack_domain import EXPECTED_KEYS, SHORT_ID, pack_payload
++from tests.test_preparation_api import body, grant, url
++
++pytest_plugins = ("tests.test_preparation_api",)
++
++
++def payload(lesson_id=SHORT_ID):
++    data = pack_payload(lesson_id).model_dump(mode="json")
++    data["attempt_id"] = str(uuid4())
++    return data
++
++
++def test_opt_in_catalogue_leaves_default_serialization_exact(prep_lab):
++    client = prep_lab["client"]
++    expected = catalogue().model_dump(mode="json")
++    assert client.get("/api/preparation/catalogue").json() == expected
++    assert (
++        client.get(
++            "/api/preparation/catalogue", params={"catalogue_version": CONTENT_VERSION}
++        ).json()
++        == expected
++    )
++    result = client.get("/api/preparation/catalogue", params={"catalogue_version": PACK_VERSION})
++    assert result.status_code == 200
++    data = result.json()
++    assert len(data["lessons"]) == 9 and data["version"] == PACK_VERSION
++    assert {track["id"]: tuple(track["lesson_ids"]) for track in data["tracks"]} == TRACK_ORDER
++    assert "correct_choice_id" not in result.text and "accepted_answers" not in result.text
++    assert (
++        client.get(
++            "/api/preparation/catalogue", params={"catalogue_version": "unknown"}
++        ).status_code
++        == 422
++    )
++
++
++@pytest.mark.parametrize("lesson_id", EXPECTED_KEYS)
++def test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes(
++    prep_lab, lesson_id
++):
++    sub_id = grant(prep_lab, status="exhausted", quota=0)
++    with prep_lab["factory"]() as session:
++        profile = session.get(ApplicantProfileRow, prep_lab["case"])
++        original, updated = profile.payload, profile.updated_at
++    client = prep_lab["client"]
++    initial = client.get(url(prep_lab, f"lessons/{lesson_id}"), params={"version": PACK_VERSION})
++    assert initial.status_code == 200 and len(initial.json()["questions"]) == 5
++    assert (
++        "correct_choice_id" not in initial.text
++        and "accepted_answers" not in initial.text
++        and '"explanation"' not in initial.text
++    )
++    submitted = payload(lesson_id)
++    receipt = client.post(url(prep_lab, "attempts"), json=submitted)
++    assert receipt.status_code == 200
++    saved = receipt.json()
++    assert saved["answers"] == submitted["answers"] and saved["correct"] == saved["total"] == 5
++    assert all(item["correct"] and item["explanation"] for item in saved["feedback"])
++    assert saved["profile_id"] == prep_lab["case"] and saved["version"] == PACK_VERSION
++    progress = client.get(
++        url(prep_lab, "progress"), params={"catalogue_version": PACK_VERSION}
++    ).json()
++    assert progress["completed_lessons"] == [{"lesson_id": lesson_id, "version": PACK_VERSION}]
++    assert progress["completed_lesson_ids"] == [lesson_id]
++    assert progress["attempts"] == [saved] and progress["correct"] == progress["answered"] == 5
++    exported = client.get(f"/api/profiles/{prep_lab['case']}/export").json()
++    assert exported["study_attempts"] == [saved] and exported["profile"] == original
++    with prep_lab["factory"]() as session:
++        profile = session.get(ApplicantProfileRow, prep_lab["case"])
++        assert profile.payload == original and profile.updated_at == updated
++        assert session.get(Subscription, sub_id).case_quota == 0
++        assert (
++            session.query(ResearchRun).count()
++            == session.query(Job).count()
++            == session.query(Order).count()
++            == session.query(Entitlement).count()
++            == session.query(StudyScheduleRow).count()
++            == 0
++        )
++        assert not any("study" in event.action for event in session.query(AuditEvent).all())
++
++
++def test_short_normalization_replay_after_expiry_and_conflict_preserves_original_receipt(
++    prep_lab,
++):
++    sub_id = grant(prep_lab)
++    data = payload()
++    data["answers"][0]["text"] = "DIVIDERS."
++    data["answers"][2]["text"] = "sheet"
++    data["answers"][3]["text"] = "Briefing  session."
++    data["answers"][4]["text"] = "code"
++    client = prep_lab["client"]
++    result = client.post(url(prep_lab, "attempts"), json=data)
++    assert result.status_code == 200
++    receipt = result.json()
++    assert (
++        receipt["correct"] == 5 and receipt["feedback"][3]["selected_text"] == "Briefing  session."
++    )
++    assert receipt["feedback"][3]["accepted_answers"] == [
++        "briefing session",
++        "briefing",
++        "session",
++    ]
++    with prep_lab["factory"]() as session:
++        session.get(Subscription, sub_id).ends_at = utcnow() - timedelta(seconds=1)
++        session.commit()
++    data["answers"].reverse()
++    assert client.post(url(prep_lab, "attempts"), json=data).json() == receipt
++    assert client.get(url(prep_lab, "progress")).json()["attempts"] == [receipt]
++    data["answers"][0]["text"] = "download code"
++    assert client.post(url(prep_lab, "attempts"), json=data).status_code == 409
++    data["attempt_id"] = str(uuid4())
++    assert client.post(url(prep_lab, "attempts"), json=data).status_code == 402
++    assert (
++        client.get(
++            url(prep_lab, f"lessons/{SHORT_ID}"), params={"version": PACK_VERSION}
++        ).status_code
++        == 402
++    )
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == 1
++
++
++@pytest.mark.parametrize(
++    "failure",
++    [
++        "missing",
++        "duplicate",
++        "unknown_question",
++        "wrong_format",
++        "both_fields",
++        "too_long",
++        "wrong_version",
++        "unknown_choice",
++        "short_for_starter",
++    ],
++)
++def test_invalid_submissions_do_not_store_or_reveal_private_keys(prep_lab, failure):
++    grant(prep_lab)
++    data = payload()
++    if failure == "missing":
++        data["answers"].pop()
++    elif failure == "duplicate":
++        data["answers"][1] = data["answers"][0]
++    elif failure == "unknown_question":
++        data["answers"][0]["question_id"] = "unknown"
++    elif failure == "wrong_format":
++        data["answers"][0] = {
++            "question_id": data["answers"][0]["question_id"],
++            "choice_id": "a",
++        }
++    elif failure == "both_fields":
++        data["answers"][0]["choice_id"] = "a"
++    elif failure == "too_long":
++        data["answers"][0]["text"] = "x" * 101
++    elif failure == "wrong_version":
++        data["version"] = CONTENT_VERSION
++    elif failure == "unknown_choice":
++        data = payload("sat-quadratic-structure-1")
++        data["answers"][0]["choice_id"] = "unknown"
++    else:
++        data = body()
++        data["answers"][0] = {"question_id": "sm-1", "text": "b"}
++    response = prep_lab["client"].post(url(prep_lab, "attempts"), json=data)
++    assert response.status_code == 422
++    assert (
++        "correct_choice_id" not in response.text
++        and "accepted_answers" not in response.text
++        and '"explanation"' not in response.text
++    )
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == 0
++
++
++@pytest.mark.parametrize(
++    "lesson_id,version",
++    [("sat-math-1", PACK_VERSION), (SHORT_ID, CONTENT_VERSION), (SHORT_ID, "unknown")],
++)
++def test_lesson_version_is_bound_independently_of_catalogue(prep_lab, lesson_id, version):
++    grant(prep_lab)
++    result = prep_lab["client"].get(
++        url(prep_lab, f"lessons/{lesson_id}"), params={"version": version}
++    )
++    assert result.status_code == 422
++    assert "accepted_answers" not in result.text and "correct_choice_id" not in result.text
++
++
++def test_mixed_history_is_raw_and_legacy_top_level_progress_unchanged(prep_lab):
++    grant(prep_lab)
++    client = prep_lab["client"]
++    old = client.post(url(prep_lab, "attempts"), json=body()).json()
++    short = payload()
++    short["answers"][0]["text"] = "foam dividers"
++    new = client.post(url(prep_lab, "attempts"), json=short).json()
++    assert new["correct"] == 4
++    result = client.get(url(prep_lab, "progress"), params={"limit": 1}).json()
++    assert set(result) == {
++        "profile_id",
++        "attempt_count",
++        "correct",
++        "answered",
++        "completed_lesson_ids",
++        "attempts",
++    }
++    assert result["attempt_count"] == 2 and result["correct"] == 7 and result["answered"] == 8
++    assert result["completed_lesson_ids"] == ["sat-math-1"] and result["attempts"] == [new]
++    pack = client.get(url(prep_lab, "progress"), params={"catalogue_version": PACK_VERSION}).json()
++    assert pack["completed_lessons"] == [
++        {"lesson_id": SHORT_ID, "version": PACK_VERSION},
++        {"lesson_id": "sat-math-1", "version": CONTENT_VERSION},
++    ]
++    assert pack["attempts"] == [new, old]
++    assert "official_score" not in pack and "mastery" not in pack
++    assert (
++        client.get(url(prep_lab, "progress"), params={"catalogue_version": "unknown"}).status_code
++        == 422
++    )
++
++
++def test_foreign_case_pack_get_post_and_progress_return_404(prep_lab):
++    grant(prep_lab)
++    foreign_id = uuid4().hex
++    with prep_lab["factory"]() as session:
++        org = Organization(name="Foreign synthetic curriculum tenant", slug=uuid4().hex)
++        session.add(org)
++        session.flush()
++        original = session.get(ApplicantProfileRow, prep_lab["case"])
++        session.add(
++            ApplicantProfileRow(id=foreign_id, organization_id=org.id, payload=original.payload)
++        )
++        session.commit()
++    endpoint = f"/api/profiles/{foreign_id}/preparation"
++    client = prep_lab["client"]
++    assert (
++        client.get(endpoint + f"/lessons/{SHORT_ID}", params={"version": PACK_VERSION}).status_code
++        == 404
++    )
++    assert (
++        client.get(endpoint + "/progress", params={"catalogue_version": PACK_VERSION}).status_code
++        == 404
++    )
++    assert client.post(endpoint + "/attempts", json=payload()).status_code == 404
++
++
++def test_new_short_receipts_export_then_orm_delete_with_sqlite_fk_off(prep_lab):
++    grant(prep_lab)
++    client = prep_lab["client"]
++    result = client.post(url(prep_lab, "attempts"), json=payload())
++    assert result.status_code == 200
++    receipt = result.json()
++    assert client.get(f"/api/profiles/{prep_lab['case']}/export").json()["study_attempts"] == [
++        receipt
++    ]
++    if prep_lab["engine"].dialect.name == "sqlite":
++        with prep_lab["engine"].connect() as connection:
++            connection.exec_driver_sql("PRAGMA foreign_keys=OFF")
++            connection.commit()
++    assert client.delete(f"/api/profiles/{prep_lab['case']}").status_code == 204
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == 0
++    assert (
++        client.get(
++            url(prep_lab, "progress"), params={"catalogue_version": PACK_VERSION}
++        ).status_code
++        == 404
++    )
++
++
++@pytest.mark.parametrize("lesson_id", ["sat-math-1", "sat-quadratic-structure-1", SHORT_ID])
++def test_stored_review_uses_exact_version_and_remains_readable_after_expiry(prep_lab, lesson_id):
++    sub_id = grant(prep_lab)
++    data = body() if lesson_id == "sat-math-1" else payload(lesson_id)
++    client = prep_lab["client"]
++    submitted = client.post(url(prep_lab, "attempts"), json=data)
++    assert submitted.status_code == 200
++    receipt = submitted.json()
++    with prep_lab["factory"]() as session:
++        session.get(Subscription, sub_id).ends_at = utcnow() - timedelta(seconds=1)
++        session.commit()
++        before = session.query(StudyAttempt).count()
++        original = session.get(ApplicantProfileRow, prep_lab["case"]).payload
++    result = client.get(url(prep_lab, f"attempts/{data['attempt_id']}/review"))
++    assert result.status_code == 200
++    review = result.json()
++    assert review["attempt"] == receipt
++    assert review["lesson"]["id"] == lesson_id and review["lesson"]["version"] == receipt["version"]
++    assert len(review["lesson"]["questions"]) == receipt["total"]
++    assert not any(
++        key in question
++        for question in review["lesson"]["questions"]
++        for key in ("accepted_answers", "correct_choice_id", "explanation")
++    )
++    assert "review" in review["notice"]
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == before
++        assert session.get(ApplicantProfileRow, prep_lab["case"]).payload == original
++        assert session.get(Subscription, sub_id).case_quota == 0
++        assert (
++            session.query(ResearchRun).count()
++            == session.query(Job).count()
++            == session.query(StudyScheduleRow).count()
++            == 0
++        )
++
++
++def test_unknown_historical_version_returns_only_unchanged_stored_receipt(prep_lab):
++    grant(prep_lab)
++    client = prep_lab["client"]
++    data = payload()
++    result = client.post(url(prep_lab, "attempts"), json=data)
++    assert result.status_code == 200
++    receipt = result.json()
++    with prep_lab["factory"]() as session:
++        row = session.query(StudyAttempt).one()
++        row.content_version = "retired-historical-v1"
++        session.commit()
++    receipt["version"] = "retired-historical-v1"
++    result = client.get(url(prep_lab, f"attempts/{data['attempt_id']}/review"))
++    assert result.status_code == 200
++    assert result.json()["lesson"] is None
++    assert result.json()["attempt"] == receipt
++    assert "original lesson version is not available" in result.json()["notice"]
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).one().content_version == "retired-historical-v1"
++
++
++def test_review_requires_owned_case_and_that_cases_submitted_uuid(prep_lab):
++    grant(prep_lab)
++    client = prep_lab["client"]
++    data = payload()
++    assert client.post(url(prep_lab, "attempts"), json=data).status_code == 200
++    assert client.get(url(prep_lab, f"attempts/{uuid4()}/review")).status_code == 404
++    with prep_lab["factory"]() as session:
++        original = session.get(ApplicantProfileRow, prep_lab["case"])
++        org = Organization(name="Foreign synthetic review tenant", slug=uuid4().hex)
++        session.add(org)
++        session.flush()
++        foreign_id = uuid4().hex
++        same_org_id = uuid4().hex
++        session.add(
++            ApplicantProfileRow(id=foreign_id, organization_id=org.id, payload=original.payload)
++        )
++        session.add(
++            ApplicantProfileRow(
++                id=same_org_id, organization_id=original.organization_id, payload=original.payload
++            )
++        )
++        session.commit()
++    for case in (foreign_id, same_org_id):
++        assert (
++            client.get(
++                f"/api/profiles/{case}/preparation/attempts/{data['attempt_id']}/review"
++            ).status_code
++            == 404
++        )

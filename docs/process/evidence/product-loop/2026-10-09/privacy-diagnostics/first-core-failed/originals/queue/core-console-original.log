@@ -1,0 +1,48 @@
+Repository: /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply
+Branch: task/product-privacy-diagnostics
+HEAD: 08450f71e6bbeadd9a2212fbd6c9f96f5c428755
+
+[ruff] log: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/ruff.log
+[ruff] PASS (exit 0)
+
+[ruff-format] log: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/ruff-format.log
+[ruff-format] PASS (exit 0)
+
+[mypy] log: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/mypy.log
+[mypy] PASS (exit 0)
+
+[backend-sqlite] log: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/backend-sqlite.log
+[backend-sqlite] FAIL (exit 1)
+app/pipeline/read_budget.py                           68      4    94%
+app/pipeline/runner.py                               920     35    96%
+app/pipeline/state.py                                 63      5    92%
+app/schemas/__init__.py                                0      0   100%
+app/schemas/claim.py                                  68      0   100%
+app/schemas/money.py                                  20      0   100%
+app/schemas/profile.py                               223      1    99%
+app/schemas/result.py                                229      0   100%
+app/schemas/social.py                                106      0   100%
+app/security.py                                      121     14    88%
+----------------------------------------------------------------------
+TOTAL                                              15169    718    95%
+
+Required test coverage of 92% reached. Total coverage: 95.27%
+=========================== short test summary info ============================
+FAILED tests/test_rejected_diagnostics.py::test_p6_ordinary_source_status_budget_and_controlflow - assert False
+ +  where False = any(<generator object test_p6_ordinary_source_status_budget_and_controlflow.<locals>.<genexpr> at 0x119251e50>)
+1 failed, 4391 passed, 32 warnings in 513.31s (0:08:33)
+
+[frontend-typecheck] log: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/frontend-typecheck.log
+[frontend-typecheck] PASS (exit 0)
+
+[frontend-lint] log: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/frontend-lint.log
+[frontend-lint] PASS (exit 0)
+
+[frontend-tests] log: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/frontend-tests.log
+[frontend-tests] PASS (exit 0)
+
+[frontend-build] log: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/frontend-build.log
+[frontend-build] PASS (exit 0)
+
+Status: failed
+Results: /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/summary.json

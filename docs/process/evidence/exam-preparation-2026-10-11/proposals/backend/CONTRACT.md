@@ -1,0 +1,32 @@
+# Preparation foundation contract — PROPOSED, NOT APPLIED
+
+Version: `starter-2026-10-11-v1`. Saved case required for every endpoint below except public catalogue. No draft-save endpoint: unsubmitted answers remain only in the current form. No official score mutation, research enqueue or subscription-quota consumption. The owned integration source is unchanged by this proposal; runtime/native gates are NOT_RUN.
+
+## Endpoints and exact DTO keys
+
+- `GET /api/preparation/catalogue` → `{version, tracks:[{id,title,lesson_ids:string[]}], lessons:[{id,track_id,title,question_count:number}], exams:ExamSummary[], notice}`. Public original starters: tracks `ielts_reading`, `sat_math`, `sat_reading_writing`; lessons `ielts-reading-1`, `sat-math-1`, `sat-rw-1`. No answers/explanations in catalogue.
+- `GET /api/profiles/{profileId}/preparation/access` → `PreparationAccess = {allowed:boolean, reason:string, subscription_id:string|null, starts_at:string|null, ends_at:string|null, development_only:boolean}`. Reasons: `development_mode`, `subscription_term`, `no_eligible_subscription`. ACTIVE or EXHAUSTED grants prep only with valid started term; quota 0 does not revoke it. Pending/cancelled/expired/no-start/malformed dates do not grant. Payments disabled is explicit development access. Reads never change subscription state.
+- `GET /api/profiles/{profileId}/preparation/lessons/{lessonId}?version=starter-2026-10-11-v1` → `{id,track_id,title,version,introduction,questions:[{id,prompt,choices:[{id,text}]}],unofficial:true}`. Requires preparation access. Unknown lesson/version fails 422. No correct answer/explanation before submission.
+- `POST /api/profiles/{profileId}/preparation/attempts` body `{attempt_id:UUID,lesson_id:string,version:string,answers:[{question_id:string,choice_id:string}]}` → StudyAttempt below. All questions exactly once, all choice IDs known, exact content version, no free text. New submission requires preparation access. Same case + UUID + canonical same payload returns the same persisted row; changed payload with that UUID returns 409. Responses to valid complete attempts reveal deterministic feedback; it is practice only.
+- `GET /api/profiles/{profileId}/preparation/progress?limit=20` → `{profile_id,attempt_count,correct,answered,completed_lesson_ids:string[],attempts:StudyAttempt[]}`. Limit 1–100, latest first; aggregate totals cover all own submitted attempts. Current catalogue version determines completed lessons. Completion means submitted, not mastered. Existing own history remains readable after a subscription ends.
+- `GET /api/profiles/{profileId}/preparation/plan?result_id=<optional>` → `{profile_id,result_id:string|null,research_access:boolean,evidence_state,checks:PreparationCheck[],notice}`. `evidence_state`: `unknown|locked|current|stale|conflicted`. No result gives unknown, no invented thresholds. Result must belong to an owned case or 404. Research CASE_FULL is distinct from preparation access: locked result exposes no checks/claims. No rerun/fetch is triggered.
+
+`StudyAttempt = {id:string,attempt_id:UUID,profile_id:string,lesson_id:string,version:string,answers:[{question_id,choice_id}],correct:number,total:number,feedback:[{question_id,selected_choice_id,correct_choice_id,correct:boolean,explanation:string}],created_at:string}`.
+
+`PreparationCheck = {requirement_check:RequirementCheck,evidence_state,policy,claims:ClaimOut[],claim_ids:string[],source_urls:string[],lesson_ids:string[]}`. Check is preserved exactly, including status/explanation/published_scope. ClaimOut retains backend `scope` and original excerpt/status/source. References resolve original `claim_ids` as IDs **or URLs**; unresolved references never become proof. `policy`: `required|optional|waiver_check|alternatives_unresolved|unknown`. Bare labels/status do not establish current programme/intake scope. Alternatives/waivers are not silently decided; no generic maximum threshold or admission probability.
+
+Billing `EntitlementView` will gain optional `preparation_access:PreparationAccess|null` with the same DTO. Missing field in old fixtures conveys no prep entitlement. Pricing/order kinds and purchase flows remain unchanged: no new subscription checkout.
+
+## Ownership/error/lifecycle
+
+All case IDs resolve through current principal organization (foreign/missing → 404). Access-denied new lesson/attempt → 402 with detail `{code:"preparation_subscription_required",message:"An eligible started subscription term is required for preparation."}`; do not offer case-unlock as a purchase solution. Model/input errors → 422; reused UUID with different payload → 409. Persist UUID and immutable submit payload for network retry/doubleclick. No auto-submit on case/result switch. No saved case means UI asks to save/select a case; it makes no case-scoped request.
+
+Source/plan is a snapshot of currently stored evidence, not a live guarantee. Exact profile+caseEpoch+result/request intent fences remain the frontend's responsibility. Official results, official requirement dates and practice correctness are separate. No generated/copyrighted official exam questions, essays/audio/AI, band conversion or predicted admission score.
+
+## Additive public exam metadata
+
+`PreparationCatalogue.exams: ExamSummary[]` is required in the new catalogue response.
+`ExamSummary = {id: 'ielts_academic'|'digital_sat'|'toefl_ibt'|'det'|'hsk_hskk'|'csca', title: string, role: 'language'|'academic', course_status: 'starter'|'planned', track_ids: TrackId[], official_info_urls: string[], official_practice_urls: string[], notice: string, checked_date: string}`.
+IELTS and Digital SAT link only the actual starter tracks. TOEFL/DET/HSK/CSCA are planned, with empty track IDs and no fictional lessons. URLs are external link-only resources from the 2026-10-11 official audit; they are not fetched by this API. `notice` retains edition/recipient/validity qualifications. The current profile's legacy TOEFL fields are not silently migrated to the 2026 scale.
+
+Export adds `study_attempts: StudyAttempt[]` and `counts.study_attempts`. Historical replay of an already-submitted UUID remains readable after the term ends; a new UUID still requires access. Plan `current` requires recorded university/programme/degree/intake/applicant scope, official non-discovery evidence and freshness; it may therefore conservatively remain unknown for older partially scoped records. Any newer profile edit marks the stored result snapshot stale without re-evaluating its original check.

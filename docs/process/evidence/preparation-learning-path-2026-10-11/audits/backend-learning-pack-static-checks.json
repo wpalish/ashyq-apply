@@ -1,0 +1,622 @@
+{
+  "status": "STATIC_REVIEW_METADATA_NOT_RUNTIME_PROOF",
+  "ready_sha256": "5c58e287d796242de3af68be3fb5f5f6bbbbbc2e5103f849592c4a4ffe0adffd",
+  "ready": {
+    "status": "READY_FOR_INDEPENDENT_STATIC_REVIEW_NOT_APPLIED",
+    "manifest_sha256": "ecbd6f5946b64371023d5ab42739d3d8cbe876471f6ed025457f1cc6af772ba1",
+    "source_pins_sha256": "99d5facc6dfb5fee833683823658c4c52e7465034a04b7f18369be455dda5f60",
+    "patch_sha256": "0680c648726f291e8981dc6f5c0060eddb0565ad952d8085e214e0a13cf1e9fb",
+    "contract_sha256": "fa13b5868a1af9987ccbf398e51d924508f6a5e6af5989bbacbc685ba16a32df",
+    "source_test_paths": [
+      "backend/app/api/routes_preparation.py",
+      "backend/app/schemas/preparation.py",
+      "backend/app/preparation/learning_pack.py",
+      "backend/tests/test_learning_pack_domain.py",
+      "backend/tests/test_learning_pack_api.py"
+    ],
+    "native_runtime": "API_AND_FULL_NATIVE_NOT_RUN_BY_AUTHOR"
+  },
+  "manifest_entry_count": 40,
+  "all_manifest_hashes_bytes_match": true,
+  "manifest_checks": [
+    {
+      "path": "CONTRACT.md",
+      "ok": true
+    },
+    {
+      "path": "README.md",
+      "ok": true
+    },
+    {
+      "path": "source-pins.json",
+      "ok": true
+    },
+    {
+      "path": "proposed-backend.patch",
+      "ok": true
+    },
+    {
+      "path": "files/backend/app/api/routes_preparation.py",
+      "ok": true
+    },
+    {
+      "path": "files/backend/app/schemas/preparation.py",
+      "ok": true
+    },
+    {
+      "path": "files/backend/app/preparation/learning_pack.py",
+      "ok": true
+    },
+    {
+      "path": "files/backend/tests/test_learning_pack_domain.py",
+      "ok": true
+    },
+    {
+      "path": "files/backend/tests/test_learning_pack_api.py",
+      "ok": true
+    },
+    {
+      "path": "evidence/api-collection-ready.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/api-collection.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/authoring-first-error.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/collection-guard.json",
+      "ok": true
+    },
+    {
+      "path": "evidence/focused-final.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/focused-first.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/focused-frozen.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/focused-guard.json",
+      "ok": true
+    },
+    {
+      "path": "evidence/focused-junit.xml",
+      "ok": true
+    },
+    {
+      "path": "evidence/focused-ready.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/focused-seal.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/focused-second.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/format-final.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/format-fix.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/format-last-test-fix.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/format-native-fix.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/format-ready.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/format-receipt-final-fix.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/format-receipt-fix.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/format-seal.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/mypy-final.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/mypy-first.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/mypy-ready.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/mypy-seal.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/ruff-before.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/ruff-final.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/ruff-fix.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/ruff-native-fix.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/ruff-ready.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/ruff-receipt-fix.log",
+      "ok": true
+    },
+    {
+      "path": "evidence/ruff-seal.log",
+      "ok": true
+    }
+  ],
+  "all_source_preimages_afters_dependencies_content_pins_match": true,
+  "issues": [],
+  "unchanged_route_functions_ast": {
+    "_schedule_view": true,
+    "read_schedule": true,
+    "save_schedule": true,
+    "_require_access": true,
+    "access": true,
+    "plan": true
+  },
+  "legacy_schema_classes_ast_except_intentionally_extended_progress": {
+    "Base": true,
+    "PreparationAccess": true,
+    "TrackSummary": true,
+    "LessonSummary": true,
+    "ExamSummary": true,
+    "PreparationCatalogue": true,
+    "Choice": true,
+    "Question": true,
+    "PreparationLesson": true,
+    "Answer": true,
+    "StudyAttemptIn": true,
+    "AnswerFeedback": true,
+    "StudyAttemptOut": true,
+    "PreparationCheck": true,
+    "PreparationPlan": true
+  },
+  "item_count": 30,
+  "distinct_item_ids": 30,
+  "items": [
+    {
+      "lesson_id": "sat-quadratic-structure-1",
+      "item_id": "sat-qstruct-1-q1",
+      "draft_item_number": 1,
+      "expected_key_or_forms": "B",
+      "actual_key_or_forms": "b",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-quadratic-structure-1",
+      "item_id": "sat-qstruct-1-q2",
+      "draft_item_number": 2,
+      "expected_key_or_forms": "D",
+      "actual_key_or_forms": "d",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-quadratic-structure-1",
+      "item_id": "sat-qstruct-1-q3",
+      "draft_item_number": 3,
+      "expected_key_or_forms": "A",
+      "actual_key_or_forms": "a",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-quadratic-structure-1",
+      "item_id": "sat-qstruct-1-q4",
+      "draft_item_number": 4,
+      "expected_key_or_forms": "C",
+      "actual_key_or_forms": "c",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-quadratic-structure-1",
+      "item_id": "sat-qstruct-1-q5",
+      "draft_item_number": 5,
+      "expected_key_or_forms": "B",
+      "actual_key_or_forms": "b",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-data-interpretation-1",
+      "item_id": "sat-data-1-q1",
+      "draft_item_number": 1,
+      "expected_key_or_forms": "B",
+      "actual_key_or_forms": "b",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-data-interpretation-1",
+      "item_id": "sat-data-1-q2",
+      "draft_item_number": 2,
+      "expected_key_or_forms": "C",
+      "actual_key_or_forms": "c",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-data-interpretation-1",
+      "item_id": "sat-data-1-q3",
+      "draft_item_number": 3,
+      "expected_key_or_forms": "C",
+      "actual_key_or_forms": "c",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-data-interpretation-1",
+      "item_id": "sat-data-1-q4",
+      "draft_item_number": 4,
+      "expected_key_or_forms": "B",
+      "actual_key_or_forms": "b",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-data-interpretation-1",
+      "item_id": "sat-data-1-q5",
+      "draft_item_number": 5,
+      "expected_key_or_forms": "D",
+      "actual_key_or_forms": "d",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-grammar-transitions-1",
+      "item_id": "sat-grammar-1-q1",
+      "draft_item_number": 1,
+      "expected_key_or_forms": "C",
+      "actual_key_or_forms": "c",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-grammar-transitions-1",
+      "item_id": "sat-grammar-1-q2",
+      "draft_item_number": 2,
+      "expected_key_or_forms": "B",
+      "actual_key_or_forms": "b",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-grammar-transitions-1",
+      "item_id": "sat-grammar-1-q3",
+      "draft_item_number": 3,
+      "expected_key_or_forms": "B",
+      "actual_key_or_forms": "b",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-grammar-transitions-1",
+      "item_id": "sat-grammar-1-q4",
+      "draft_item_number": 4,
+      "expected_key_or_forms": "A",
+      "actual_key_or_forms": "a",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "sat-grammar-transitions-1",
+      "item_id": "sat-grammar-1-q5",
+      "draft_item_number": 5,
+      "expected_key_or_forms": "B",
+      "actual_key_or_forms": "b",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-headings-1",
+      "item_id": "ielts-reading-headings-1-q1",
+      "draft_item_number": 1,
+      "expected_key_or_forms": "v",
+      "actual_key_or_forms": "v",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-headings-1",
+      "item_id": "ielts-reading-headings-1-q2",
+      "draft_item_number": 2,
+      "expected_key_or_forms": "iii",
+      "actual_key_or_forms": "iii",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-headings-1",
+      "item_id": "ielts-reading-headings-1-q3",
+      "draft_item_number": 3,
+      "expected_key_or_forms": "i",
+      "actual_key_or_forms": "i",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-headings-1",
+      "item_id": "ielts-reading-headings-1-q4",
+      "draft_item_number": 4,
+      "expected_key_or_forms": "ii",
+      "actual_key_or_forms": "ii",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-headings-1",
+      "item_id": "ielts-reading-headings-1-q5",
+      "draft_item_number": 5,
+      "expected_key_or_forms": "iv",
+      "actual_key_or_forms": "iv",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-completion-1",
+      "item_id": "ielts-reading-completion-1-q1",
+      "draft_item_number": 1,
+      "expected_key_or_forms": [
+        "dividers"
+      ],
+      "actual_key_or_forms": [
+        "dividers"
+      ],
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-completion-1",
+      "item_id": "ielts-reading-completion-1-q2",
+      "draft_item_number": 2,
+      "expected_key_or_forms": [
+        "36"
+      ],
+      "actual_key_or_forms": [
+        "36"
+      ],
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-completion-1",
+      "item_id": "ielts-reading-completion-1-q3",
+      "draft_item_number": 3,
+      "expected_key_or_forms": [
+        "condition sheet",
+        "sheet"
+      ],
+      "actual_key_or_forms": [
+        "condition sheet",
+        "sheet"
+      ],
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-completion-1",
+      "item_id": "ielts-reading-completion-1-q4",
+      "draft_item_number": 4,
+      "expected_key_or_forms": [
+        "briefing session",
+        "briefing",
+        "session"
+      ],
+      "actual_key_or_forms": [
+        "briefing session",
+        "briefing",
+        "session"
+      ],
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-completion-1",
+      "item_id": "ielts-reading-completion-1-q5",
+      "draft_item_number": 5,
+      "expected_key_or_forms": [
+        "download code",
+        "code"
+      ],
+      "actual_key_or_forms": [
+        "download code",
+        "code"
+      ],
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-features-1",
+      "item_id": "ielts-reading-features-1-q1",
+      "draft_item_number": 1,
+      "expected_key_or_forms": "B",
+      "actual_key_or_forms": "b",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-features-1",
+      "item_id": "ielts-reading-features-1-q2",
+      "draft_item_number": 2,
+      "expected_key_or_forms": "A",
+      "actual_key_or_forms": "a",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-features-1",
+      "item_id": "ielts-reading-features-1-q3",
+      "draft_item_number": 3,
+      "expected_key_or_forms": "C",
+      "actual_key_or_forms": "c",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-features-1",
+      "item_id": "ielts-reading-features-1-q4",
+      "draft_item_number": 4,
+      "expected_key_or_forms": "D",
+      "actual_key_or_forms": "d",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    },
+    {
+      "lesson_id": "ielts-reading-features-1",
+      "item_id": "ielts-reading-features-1-q5",
+      "draft_item_number": 5,
+      "expected_key_or_forms": "A",
+      "actual_key_or_forms": "a",
+      "key_equal": true,
+      "prompt_in_original_draft_normalized": true,
+      "explanation_in_original_draft_normalized": true,
+      "semantic_explanation_review": "SUPPORTS_PROMPT_MANUALLY_VERIFIED"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "backend/app/api/routes_preparation.py",
+      "before_sha256": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3",
+      "after_sha256": "c7857f730f9e0d13aed2b3001cc98fb4b556fedc0d905da2eb077eaaa2f16691",
+      "after_bytes": 18005
+    },
+    {
+      "path": "backend/app/schemas/preparation.py",
+      "before_sha256": "c02c040d842a97a41240a4ee9735df86a2cd4f9d6bb4bc6160174fd16e6e62d8",
+      "after_sha256": "b88e53c64fab532e1662ee970a11cea4057bf5a1dcd473f73cfb3b2860d30cdc",
+      "after_bytes": 5600
+    },
+    {
+      "path": "backend/app/preparation/learning_pack.py",
+      "before_sha256": null,
+      "after_sha256": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+      "after_bytes": 57596
+    },
+    {
+      "path": "backend/tests/test_learning_pack_domain.py",
+      "before_sha256": null,
+      "after_sha256": "556a77d3a274e7d0487dc323ec1f6bed23b3fb9e9f70e0f899e3cd0e517d3c3c",
+      "after_bytes": 12009
+    },
+    {
+      "path": "backend/tests/test_learning_pack_api.py",
+      "before_sha256": null,
+      "after_sha256": "b5e05d339378d726dd509d1d5c260610ea143dd40eadbc4ef2981be47868b218",
+      "after_bytes": 15064
+    }
+  ],
+  "preserved_source_dependencies": {
+    "backend/app/preparation/catalogue.py": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+    "backend/app/models/study.py": "cd48802f039ef76f507328af22eb27735fab56ea5a25071bdca522053af59acc",
+    "backend/app/models/applicant.py": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb",
+    "backend/app/models/study_schedule.py": "3e0b0699cd723bd5b804fa836f24c69648e89d4c33e81483671dad43df81205c",
+    "backend/app/api/routes_profile.py": "a0d17726a21bfe3e3fa481dbf51514860db2f1033dc516eb3efce160dfb1ce55",
+    "backend/app/payments/preparation.py": "ab44ed538177c2ac765cd86ec326bb53c196c01927dc04565a9911fe50150a26",
+    "backend/app/domain/preparation.py": "07cf2c70355847b76affbe72564b80841bad9009af671056e6b38c2d098295b4",
+    "backend/app/domain/study_schedule.py": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+    "backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+    "backend/tests/test_preparation_api.py": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437",
+    "backend/tests/test_preparation_domain.py": "45c54b4a2dacb4b71e4b400da09c39979fe9df81949110f3aed1366df59e20c2",
+    "backend/tests/test_study_schedule.py": "02ec1c661b6f093ae2d96d81ab7df452d0853c7eba141d26c9a3798a9b47415a",
+    "backend/tests/test_study_schedule_api.py": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194",
+    "backend/tests/conftest.py": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6",
+    "frontend/src/screens/PreparationScreen.tsx": "4c1245463393efc9b0b6a6bffa81b70392a126cecd5bb4f5c5802bbc575a31b5"
+  },
+  "review_execution": "NO_APP_IMPORT_OR_EXECUTION_NO_TESTS_NO_NETWORK"
+}

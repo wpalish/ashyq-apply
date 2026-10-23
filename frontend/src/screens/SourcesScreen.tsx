@@ -8,10 +8,17 @@
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
 import { claimStatusTone, dateTime } from '@/lib/format';
+import { useTranslation } from '@/lib/useTranslation';
+import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { useStore } from '@/lib/store';
+import { BookSourcesScreen } from './BookSourcesScreen';
 
-export function SourcesScreen() {
-  const { results, summary } = useStore();
+export function SourcesScreen({ onProgress }: { onProgress?: () => void }) {
+  const { results: allResults, summary, run, savedProfile } = useStore(); const { t, locale } = useTranslation(); const target = useAdmissionsTarget();
+  const exactTarget = target?.target.kind === 'result' ? target : null;
+  const exactUnavailable = exactTarget !== null && (exactTarget.profileId !== savedProfile?.id || !allResults.some(result => result.id === exactTarget.target.id));
+  const results = useMemo(() => exactTarget ? exactUnavailable ? [] : allResults.filter(result => result.id === exactTarget.target.id) : allResults, [allResults, exactTarget, exactUnavailable]);
+  const researchLimits = [...(run?.errors ?? []), ...(run?.unknowns ?? [])];
   const [copied, setCopied] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'conflicts' | 'questions' | 'stale'>('all');
 
@@ -34,7 +41,9 @@ export function SourcesScreen() {
     return [...map.entries()].sort((a, b) => b[1] - a[1]);
   }, [results]);
 
+  if (exactUnavailable) return <Notice kind="warn">{t('today.targetMissing')}</Notice>;
   if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
+  if (locale !== 'en') return <BookSourcesScreen results={results} limits={researchLimits} demo={summary?.demo_data} onProgress={onProgress}/>;
 
   const copy = async (text: string, id: string) => {
     try {
@@ -59,6 +68,13 @@ export function SourcesScreen() {
       <div className="stack stack--loose">
         {summary?.demo_data && (
           <Notice kind="demo"><strong>Demo data.</strong> These claims and source addresses come from a bundled synthetic corpus.</Notice>
+        )}
+        {researchLimits.length > 0 && (
+          <Panel title="Research limitations">
+            <p className="small muted">These limits apply to the research as a whole. A programme with no recorded question does not establish that every requirement was checked.</p>
+            <details className="research-notes"><summary>View recorded research notes ({researchLimits.length})</summary><ul>{researchLimits.map((message, index) => <li key={index}>{message}</li>)}</ul></details>
+            {onProgress && <button className="btn btn--sm" type="button" onClick={onProgress}>Review research progress</button>}
+          </Panel>
         )}
         <div className="evidence-overview" aria-label="Evidence status">
           <div><strong>{verified}</strong><span>current verified claims</span></div>
@@ -140,7 +156,7 @@ export function SourcesScreen() {
             hint="Things no official source answered. They are reported rather than filled in with a guess."
           >
             {questions.length === 0 ? (
-              <p className="muted small">Nothing outstanding.</p>
+              <p className="muted small">No open questions recorded for the returned programmes.{researchLimits.length > 0 && ' Review the research limitations above before relying on these findings.'}</p>
             ) : (
               <div className="stack stack--tight">
                 {questions.map(({ result, question }, i) => (

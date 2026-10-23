@@ -1,0 +1,507 @@
+{
+  "status": "PREPARED_INDEPENDENT_EXPECTATIONS_NOT_IMPLEMENTATION_ACCEPTANCE",
+  "date": "2026-10-11",
+  "reviewer": "/root/audit_search_logic",
+  "pins": {
+    "sat_draft": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/SAT_WEEK1.md",
+      "sha256": "0445e9070186d577a4b5b8f549562821e7801c4a34b21695e7196438fe1fd802",
+      "bytes": 22060
+    },
+    "ielts_v1_draft": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/IELTS_READING_WEEK1.md",
+      "sha256": "96a01cc6286d969702297ed1f1434923e4d560ce82ae1b0a3ab2645b4868d959",
+      "bytes": 30912
+    },
+    "ielts_v2_draft": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/IELTS_READING_WEEK1_v2.md",
+      "sha256": "e4414505cdc5c3e807de315487685e024cbba583d53f9c872ffff4ea7806cddb",
+      "bytes": 34286
+    },
+    "sat_original_review": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/audits/sat-week1-content-review.md",
+      "sha256": "0a968af84d2482ae306f6f5e58c6c72067206e49f6f059b4cf816dbae370f256",
+      "bytes": 4627
+    },
+    "ielts_original_v1_finding": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/audits/ielts-week1-content-review.md",
+      "sha256": "84915a9bb6427b0fc9a1ec43c30cca13a24d6a905b218b1ecc7ca37132959fd3",
+      "bytes": 7216
+    },
+    "ielts_v2_correction_review": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/audits/ielts-week1-content-v2-review.md",
+      "sha256": "75ffbd3d7424624682d086fe51ada9403407ba5e2d865edd20a46146f9c4771b",
+      "bytes": 3717
+    },
+    "ielts_v1_pins": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/IELTS_READING_WEEK1.pins.json",
+      "sha256": "7d767d8b5127270b577176ad0bd1cb2edeec97d1ba9a88899722892754fefb2f",
+      "bytes": 2546
+    },
+    "ielts_v2_pins": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/IELTS_READING_WEEK1_v2.pins.json",
+      "sha256": "b1655c085f9cf9deb32898edde7e83d9b9467c2722adcf9642dc1ce39cfeb9c4",
+      "bytes": 4128
+    },
+    "legacy_catalogue": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/preparation/catalogue.py",
+      "sha256": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+      "bytes": 15018
+    },
+    "legacy_schema": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/schemas/preparation.py",
+      "sha256": "c02c040d842a97a41240a4ee9735df86a2cd4f9d6bb4bc6160174fd16e6e62d8",
+      "bytes": 3349
+    },
+    "legacy_routes": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/api/routes_preparation.py",
+      "sha256": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3",
+      "bytes": 14843
+    }
+  },
+  "item_count": 30,
+  "items": [
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "Q1",
+      "draft_item_id": "sat-qstruct-1-q1",
+      "draft_lesson_id": "sat-quadratic-structure-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "B",
+      "expected_meaning": "1 and 7",
+      "independent_reason": "(x - 4)^2 = 9 gives x = 4 +/- 3, hence 1 and 7."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "Q2",
+      "draft_item_id": "sat-qstruct-1-q2",
+      "draft_lesson_id": "sat-quadratic-structure-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "D",
+      "expected_meaning": "minimum 5 at x = -1",
+      "independent_reason": "A real square is nonnegative and coefficient 2 is positive; minimum 5 occurs at x = -1."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "Q3",
+      "draft_item_id": "sat-qstruct-1-q3",
+      "draft_lesson_id": "sat-quadratic-structure-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "A",
+      "expected_meaning": "(x + 5)^2 - 4",
+      "independent_reason": "Expanding (x + 5)^2 - 4 gives x^2 + 10x + 21."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "Q4",
+      "draft_item_id": "sat-qstruct-1-q4",
+      "draft_lesson_id": "sat-quadratic-structure-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "C",
+      "expected_meaning": "9",
+      "independent_reason": "h(x) = 9 - (x - 5)^2 over the real domain, so the maximum output is 9."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "Q5",
+      "draft_item_id": "sat-qstruct-1-q5",
+      "draft_lesson_id": "sat-quadratic-structure-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "B",
+      "expected_meaning": "16",
+      "independent_reason": "(x - 4)^2 = 16 - c has exactly one distinct real root when the right side is zero."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "D1",
+      "draft_item_id": "sat-data-1-q1",
+      "draft_lesson_id": "sat-data-interpretation-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "B",
+      "expected_meaning": "2",
+      "independent_reason": "Sum 50 / count 5 gives mean 10; median is 8; the difference is 2."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "D2",
+      "draft_item_id": "sat-data-1-q2",
+      "draft_lesson_id": "sat-data-interpretation-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "C",
+      "expected_meaning": "3",
+      "independent_reason": "The sum increases by 30 with count unchanged at 10, so the mean increases by 3."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "D3",
+      "draft_item_id": "sat-data-1-q3",
+      "draft_lesson_id": "sat-data-interpretation-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "C",
+      "expected_meaning": "11",
+      "independent_reason": "The disjoint group totals are 96 and 234, giving 330 over 30 observations."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "D4",
+      "draft_item_id": "sat-data-1-q4",
+      "draft_lesson_id": "sat-data-interpretation-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "B",
+      "expected_meaning": "positive association in these four observations",
+      "independent_reason": "The four recorded pairs have a positive association; no random assignment or controlled intervention supports a causal or universal claim."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "D5",
+      "draft_item_id": "sat-data-1-q5",
+      "draft_lesson_id": "sat-data-interpretation-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "D",
+      "expected_meaning": "equal means; B has the smaller range",
+      "independent_reason": "Both totals are 40 over 5 observations, giving mean 8; ranges are A = 8 and B = 4."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "G1",
+      "draft_item_id": "sat-grammar-1-q1",
+      "draft_lesson_id": "sat-grammar-transitions-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "C",
+      "expected_meaning": "is",
+      "independent_reason": "The subject head is singular list, rather than the intervening plural materials."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "G2",
+      "draft_item_id": "sat-grammar-1-q2",
+      "draft_lesson_id": "sat-grammar-transitions-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "B",
+      "expected_meaning": ";",
+      "independent_reason": "There are two independent clauses; the semicolon is the valid offered boundary when other edits are forbidden."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "G3",
+      "draft_item_id": "sat-grammar-1-q3",
+      "draft_lesson_id": "sat-grammar-transitions-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "B",
+      "expected_meaning": "However",
+      "independent_reason": "Claimed completeness contrasts with unindexed boxes; However expresses the supplied relationship."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "G4",
+      "draft_item_id": "sat-grammar-1-q4",
+      "draft_lesson_id": "sat-grammar-transitions-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "A",
+      "expected_meaning": "Consequently",
+      "independent_reason": "Removing unnecessary turns is the response to the difficulty those turns caused; Consequently expresses the result."
+    },
+    {
+      "draft": "sat_draft",
+      "draft_version": "sat-week1-original-2026-10-11-v1",
+      "draft_item": "G5",
+      "draft_item_id": "sat-grammar-1-q5",
+      "draft_lesson_id": "sat-grammar-transitions-1",
+      "format": "multiple_choice",
+      "expected_draft_choice": "B",
+      "expected_meaning": "compare its mass",
+      "independent_reason": "Parallel base verbs measure, compare and record share how to."
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "A heading must cover the paragraph",
+      "draft_item_number": 1,
+      "paragraph": "A",
+      "format": "matching_heading",
+      "expected_draft_choice": "v",
+      "independent_reason": "The station room retains its social meeting role after passenger trains stop.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "A heading must cover the paragraph",
+      "draft_item_number": 2,
+      "paragraph": "B",
+      "format": "matching_heading",
+      "expected_draft_choice": "iii",
+      "independent_reason": "The user trial occurs before approving drawings and construction.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "A heading must cover the paragraph",
+      "draft_item_number": 3,
+      "paragraph": "C",
+      "format": "matching_heading",
+      "expected_draft_choice": "i",
+      "independent_reason": "The walls remain while movable furniture supports different uses without rebuilding.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "A heading must cover the paragraph",
+      "draft_item_number": 4,
+      "paragraph": "D",
+      "format": "matching_heading",
+      "expected_draft_choice": "ii",
+      "independent_reason": "Unlocking, checking and cleaning are recurring expenses beyond the initial equipment purchase.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "A heading must cover the paragraph",
+      "draft_item_number": 5,
+      "paragraph": "E",
+      "format": "matching_heading",
+      "expected_draft_choice": "iv",
+      "independent_reason": "A reviewed timetable gives quiet readers and conversation groups predictable slots.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Find the detail, then fit the answer",
+      "draft_item_number": 1,
+      "paragraph": "B",
+      "format": "short_answer",
+      "accepted_normalized_forms": [
+        "dividers"
+      ],
+      "word_or_number_limit": 2,
+      "independent_reason": "The revised stem already supplies foam; dividers completes foam dividers without repetition.",
+      "implementation_item_id": null,
+      "negative_forms_must_not_receive_credit": [
+        "foam dividers",
+        "internal frame",
+        "divider",
+        "dividers.."
+      ]
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Find the detail, then fit the answer",
+      "draft_item_number": 2,
+      "paragraph": "C",
+      "format": "short_answer",
+      "accepted_normalized_forms": [
+        "36"
+      ],
+      "word_or_number_limit": 2,
+      "independent_reason": "The source gives 36; discussion cards already follows the blank.",
+      "implementation_item_id": null,
+      "negative_forms_must_not_receive_credit": [
+        "thirty six",
+        "36 cards",
+        "36.0",
+        "3 6"
+      ]
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Find the detail, then fit the answer",
+      "draft_item_number": 3,
+      "paragraph": "C",
+      "format": "short_answer",
+      "accepted_normalized_forms": [
+        "condition sheet",
+        "sheet"
+      ],
+      "word_or_number_limit": 2,
+      "independent_reason": "The condition sheet records existing visible marks; the inventory counts objects. Both sheet and condition sheet fit the stem.",
+      "implementation_item_id": null,
+      "negative_forms_must_not_receive_credit": [
+        "inventory",
+        "paper inventory",
+        "condition sheet extra",
+        "sheet condition",
+        "sheets"
+      ]
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Find the detail, then fit the answer",
+      "draft_item_number": 4,
+      "paragraph": "D",
+      "format": "short_answer",
+      "accepted_normalized_forms": [
+        "briefing session",
+        "briefing",
+        "session"
+      ],
+      "word_or_number_limit": 2,
+      "independent_reason": "The required borrower introduction is a briefing session; a written test is expressly not required. The stated shorter forms fit the stem.",
+      "implementation_item_id": null,
+      "negative_forms_must_not_receive_credit": [
+        "written test",
+        "teacher",
+        "briefings",
+        "briefing session please"
+      ]
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Find the detail, then fit the answer",
+      "draft_item_number": 5,
+      "paragraph": "E",
+      "format": "short_answer",
+      "accepted_normalized_forms": [
+        "download code",
+        "code"
+      ],
+      "word_or_number_limit": 2,
+      "independent_reason": "The code provides access to photos and printable sheets; a memory stick is explicitly rejected.",
+      "implementation_item_id": null,
+      "negative_forms_must_not_receive_credit": [
+        "memory stick",
+        "download code extra",
+        "codes",
+        "code!"
+      ]
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Match the feature to the right person",
+      "draft_item_number": 1,
+      "format": "matching_feature",
+      "expected_draft_choice": "B",
+      "expected_person": "Oliver",
+      "independent_reason": "Oliver keeps stationary delay and movement in separate notebook columns.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Match the feature to the right person",
+      "draft_item_number": 2,
+      "format": "matching_feature",
+      "expected_draft_choice": "A",
+      "expected_person": "Mara",
+      "independent_reason": "Mara treats omissions in memory drawings as potential evidence of a participant's routine.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Match the feature to the right person",
+      "draft_item_number": 3,
+      "format": "matching_feature",
+      "expected_draft_choice": "C",
+      "expected_person": "Priya",
+      "independent_reason": "Priya labels documentary features with the source date and origin.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Match the feature to the right person",
+      "draft_item_number": 4,
+      "format": "matching_feature",
+      "expected_draft_choice": "D",
+      "expected_person": "Niko",
+      "independent_reason": "Niko chooses first-time visitors and their unfamiliar impressions rather than familiar residents.",
+      "implementation_item_id": null
+    },
+    {
+      "draft": "ielts_v2_draft",
+      "draft_version": "reading-week1-2026-10-11-draft-v2",
+      "draft_lesson": "Match the feature to the right person",
+      "draft_item_number": 5,
+      "format": "matching_feature",
+      "expected_draft_choice": "A",
+      "expected_person": "Mara",
+      "independent_reason": "Mara retains differing recollections rather than selecting one correct memory.",
+      "implementation_item_id": null
+    }
+  ],
+  "normalization_contract": {
+    "allowed": [
+      "letter case",
+      "surrounding/repeated whitespace",
+      "one optional terminal full stop"
+    ],
+    "preserve": [
+      "word order",
+      "interior words",
+      "singular/plural endings",
+      "all other punctuation"
+    ],
+    "matching": "complete equality against this item closed accepted forms",
+    "no_substring_or_semantic_or_model_matching": true
+  },
+  "valid_normalization_controls": [
+    {
+      "item": 1,
+      "answer": "  DIVIDERS.  ",
+      "expected_credit": 1
+    },
+    {
+      "item": 2,
+      "answer": " 36. ",
+      "expected_credit": 1
+    },
+    {
+      "item": 3,
+      "answer": "Condition   SHEET.",
+      "expected_credit": 1
+    },
+    {
+      "item": 4,
+      "answer": "  SESSION  ",
+      "expected_credit": 1
+    },
+    {
+      "item": 5,
+      "answer": "CoDe.",
+      "expected_credit": 1
+    }
+  ],
+  "legacy_digest_expectation": {
+    "derivation": "Literal old canonical contract, no application import/execution; attempt UUID is not part of digest. Answer-order permutations have this same canonical form.",
+    "canonical_json": "{\"answers\":[{\"choice_id\":\"b\",\"question_id\":\"ir-1\"},{\"choice_id\":\"c\",\"question_id\":\"ir-2\"},{\"choice_id\":\"a\",\"question_id\":\"ir-3\"}],\"lesson_id\":\"ielts-reading-1\",\"version\":\"starter-2026-10-11-v1\"}",
+    "sha256": "ee707dd54e851d0df1f8a7db54a78cbd148c0302a136cc1dc7e24dc99cde0c7b",
+    "forbidden_v1_canonical_additions": [
+      "null text",
+      "new kind/type tags",
+      "null accepted_forms",
+      "new default answer fields"
+    ]
+  },
+  "review_boundary": {
+    "historical_independent_solving_receipts_retained": true,
+    "new_blind_solving_claim_for_this_ledger": false,
+    "sealed_implementation_read": false,
+    "application_execution": false,
+    "tests_or_runtime_or_network": false,
+    "source_or_git_changed": false,
+    "official_score_or_readiness_or_fullcourse_claim": false
+  }
+}

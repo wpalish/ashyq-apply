@@ -1,0 +1,8 @@
+..............................................                           [100%]
+=============================== warnings summary ===============================
+local-round8/a-genuine-canary/revision2/proposed/tests/test_canary_fenced_job.py: 20 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
+    cursor.execute(statement, parameters)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+46 passed, 20 warnings in 6.61s

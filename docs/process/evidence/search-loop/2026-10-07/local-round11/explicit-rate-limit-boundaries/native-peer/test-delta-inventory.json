@@ -1,0 +1,48 @@
+[
+  {
+    "path": "tests/test_search_throttle_latch.py",
+    "old_functions": 4,
+    "new_functions": 10,
+    "added_names": [
+      "test_exact_typed_cooldown_expiry_and_provider_isolation",
+      "test_reset_clears_actual_typed_origin_before_a_new_query",
+      "test_stale_origin_does_not_relabel_a_deliberately_injected_legacy_float",
+      "test_typed_origin_uses_one_deadline_with_a_ticking_clock",
+      "test_typed_status_none_is_shared_without_status_or_message_invention",
+      "test_vendor_text_and_untyped_reason_do_not_latch"
+    ],
+    "removed_names": [],
+    "changed_existing_names": [
+      "test_reset_forgets_the_refusal"
+    ]
+  },
+  {
+    "path": "tests/test_search_layer_budget_fixes.py",
+    "old_functions": 9,
+    "new_functions": 12,
+    "added_names": [
+      "test_a_throttled_run_records_status_and_incomplete_rate_limit_stop",
+      "test_explicit_rate_limit_charges_only_the_attempted_family",
+      "test_typed_status_none_caller_retains_safe_diagnostic_and_exact_query_charge",
+      "test_untyped_vendor_refusal_does_not_cut_query_families"
+    ],
+    "removed_names": [
+      "test_a_throttled_run_records_a_quota_stop_not_a_miss"
+    ],
+    "changed_existing_names": [
+      "test_a_throttle_ends_a_multi_subject_run"
+    ]
+  },
+  {
+    "path": "tests/test_exa_mcp.py",
+    "old_functions": 33,
+    "new_functions": 36,
+    "added_names": [
+      "test_factory_does_not_latch_when_the_approved_native_retry_recovers",
+      "test_factory_metadata_requires_boolean_true",
+      "test_factory_suppresses_only_post_escape_explicit_refusal"
+    ],
+    "removed_names": [],
+    "changed_existing_names": []
+  }
+]

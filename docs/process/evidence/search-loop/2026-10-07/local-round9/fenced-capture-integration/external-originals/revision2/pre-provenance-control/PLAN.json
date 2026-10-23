@@ -1,0 +1,12 @@
+{
+  "status": "PRE_PROVENANCE_REVISION2_NEGATIVE_CONTROL",
+  "source_hashes": {
+    "scripts/canary_discovery.py": "9687046d44ca9e542634f67d1b881ddb8158d882dbf09770d95fd57d836b4cd0",
+    "evaluation/research/live.py": "8cfb6272b0b7443ae141004aae5ecfa7ff996ce4d0a80e2ca5a9329aab05af6e"
+  },
+  "test_sha256": "d5c3444c66faab2dff3c3f445acd34d53ee57e833d860e05ebaf8227372aac23",
+  "controls": 1,
+  "expected": "raw generic RuntimeError lacks exact safe fixed message despite explicit outer budget cause",
+  "repo_edits": false,
+  "network_calls": 0
+}

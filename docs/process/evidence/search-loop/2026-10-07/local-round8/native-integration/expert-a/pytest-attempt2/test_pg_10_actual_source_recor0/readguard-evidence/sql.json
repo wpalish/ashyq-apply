@@ -1,0 +1,348 @@
+{
+  "queries": [
+    {
+      "at_ns": 810605364951000,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 63875,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810605365140083,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '3676945b6f754118aa5f5aea6c966ef2'}"
+    },
+    {
+      "elapsed_ns": 42167,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810605365566666,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': '3676945b6f754118aa5f5aea6c966ef2', 'run_id_1': '4e276dd34968400dbc455435673f8060', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 77084,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810605365748875,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 42666,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810605365895916,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 36334,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810605366221041,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET stage=%(stage)s::VARCHAR, settings_snapshot=%(settings_snapshot)s::JSON, started_at=%(started_at)s::TIMESTAMP WITH TIME ZONE, worker_id=%(worker_id)s::VARCHAR, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'stage': 'candidate_discovery', 'settings_snapshot': Json({'university_research_budget_v1': { ... (230 chars)), 'started_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 860516, tzinfo=datetime.timezone.utc), 'worker_id': 'worker-one', 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 861730, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 861970, tzinfo=datetime.timezone.utc), 'research_runs_id': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 102792,
+      "sql_prefix": "UPDATE research_runs SET stage=%(stage)s::VARCHAR, settings_snapshot=%(settings_snapshot)s::JSON, st"
+    },
+    {
+      "at_ns": 810605366583250,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER RETURNING jobs.id",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 23, 14, 28, 861745, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 861745, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 862334, tzinfo=datetime.timezone.utc), 'id_1': '3676945b6f754118aa5f5aea6c966ef2', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 67583,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(hear"
+    },
+    {
+      "at_ns": 810605366882250,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 48041,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810605367475083,
+      "thread": 8419598720,
+      "sql": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, program_results.university AS program_results_university, program_results.university_key AS program_results_university_key, program_results.country AS program_results_country, program_results.program AS program_results_program, program_results.eligibility AS program_results_eligibility, program_results.admissions_fit AS program_results_admissions_fit, program_results.funding_fit AS program_results_funding_fit, program_results.funding_classification AS program_results_funding_classification, program_results.score_total AS program_results_score_total, program_results.bucket AS program_results_bucket, program_results.user_decision AS program_results_user_decision, program_results.user_decision_reason AS program_results_user_decision_reason, program_results.user_notes AS program_results_user_notes, program_results.decided_at AS program_results_decided_at, program_results.payload AS program_results_payload, program_results.checklist AS program_results_checklist, program_results.id AS program_results_id, program_results.created_at AS program_results_created_at, program_results.updated_at AS program_results_updated_at \nFROM program_results \nWHERE program_results.run_id = %(run_id_1)s::VARCHAR AND program_results.dedupe_key = %(dedupe_key_1)s::VARCHAR",
+      "params": "{'run_id_1': '4e276dd34968400dbc455435673f8060', 'dedupe_key_1': 'example::test|computer-science|bachelor|fall 2027'}"
+    },
+    {
+      "elapsed_ns": 4489958,
+      "sql_prefix": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_resul"
+    },
+    {
+      "at_ns": 810605372388833,
+      "thread": 8419598720,
+      "sql": "INSERT INTO program_results (run_id, dedupe_key, university, university_key, country, program, eligibility, admissions_fit, funding_fit, funding_classification, score_total, bucket, user_decision, user_decision_reason, user_notes, decided_at, payload, id, created_at, updated_at) VALUES (%(run_id)s::VARCHAR, %(dedupe_key)s::VARCHAR, %(university)s::VARCHAR, %(university_key)s::VARCHAR, %(country)s::VARCHAR, %(program)s::VARCHAR, %(eligibility)s::VARCHAR, %(admissions_fit)s::VARCHAR, %(funding_fit)s::VARCHAR, %(funding_classification)s::VARCHAR, %(score_total)s, %(bucket)s::VARCHAR, %(user_decision)s::VARCHAR, %(user_decision_reason)s::VARCHAR, %(user_notes)s::VARCHAR, %(decided_at)s::TIMESTAMP WITH TIME ZONE, %(payload)s::JSON, %(id)s::VARCHAR, %(created_at)s::TIMESTAMP WITH TIME ZONE, %(updated_at)s::TIMESTAMP WITH TIME ZONE)",
+      "params": "{'run_id': '4e276dd34968400dbc455435673f8060', 'dedupe_key': 'example::test|computer-science|bachelor|fall 2027', 'university': 'Test University', 'university_key': 'prior-key', 'country': 'Example', 'program': 'BSc Computer Science', 'eligibility': 'NEEDS_OFFICIAL_CLARIFICATION', 'admissions_fit': 'INSUFFICIENT_DATA', 'funding_fit': 'UNKNOWN', 'funding_classification': 'UNKNOWN', 'score_total': 0.0, 'bucket': '', 'user_decision': 'undecided', 'user_decision_reason': '', 'user_notes': '', 'decided_at': None, 'payload': Json({'id': '39c9c8008e3d459a8699be6e7ff ... (2031 chars)), 'id': '39c9c8008e3d459a8699be6e7ff85b90', 'created_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 868123, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 868124, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "elapsed_ns": 4022708,
+      "sql_prefix": "INSERT INTO program_results (run_id, dedupe_key, university, university_key, country, program, eligi"
+    },
+    {
+      "at_ns": 810605376648791,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': '3676945b6f754118aa5f5aea6c966ef2', 'run_id_1': '4e276dd34968400dbc455435673f8060', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 75500,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810605376787791,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 43875,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810605376895250,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 36375,
+      "sql_prefix": "SELECT research_runs.started_at \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810605377288458,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 872752, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 873038, tzinfo=datetime.timezone.utc), 'research_runs_id': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 76500,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updat"
+    },
+    {
+      "at_ns": 810605377591458,
+      "thread": 8419598720,
+      "sql": "INSERT INTO claims (run_id, result_id, source_page_id, claim_type, status, superseded_at, superseded_by_id, source_url, source_specificity, accessed_at, payload, id, created_at, updated_at) VALUES (%(run_id)s::VARCHAR, %(result_id)s::VARCHAR, %(source_page_id)s::VARCHAR, %(claim_type)s::VARCHAR, %(status)s::VARCHAR, %(superseded_at)s::TIMESTAMP WITH TIME ZONE, %(superseded_by_id)s::VARCHAR, %(source_url)s::VARCHAR, %(source_specificity)s::VARCHAR, %(accessed_at)s::TIMESTAMP WITH TIME ZONE, %(payload)s::JSON, %(id)s::VARCHAR, %(created_at)s::TIMESTAMP WITH TIME ZONE, %(updated_at)s::TIMESTAMP WITH TIME ZONE)",
+      "params": "{'run_id': '4e276dd34968400dbc455435673f8060', 'result_id': '39c9c8008e3d459a8699be6e7ff85b90', 'source_page_id': None, 'claim_type': 'program_exists', 'status': 'VERIFIED_CURRENT', 'superseded_at': None, 'superseded_by_id': None, 'source_url': 'https://example.edu/degree', 'source_specificity': 'unknown', 'accessed_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 862770, tzinfo=datetime.timezone.utc), 'payload': Json({'claim_type': 'program_exists', 'n ... (575 chars)), 'id': 'f4405e9b44a24c59add84cea2c9f4b5b', 'created_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 873333, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 873333, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "elapsed_ns": 414000,
+      "sql_prefix": "INSERT INTO claims (run_id, result_id, source_page_id, claim_type, status, superseded_at, superseded"
+    },
+    {
+      "at_ns": 810605378162083,
+      "thread": 8419598720,
+      "sql": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(heartbeat_at)s::TIMESTAMP WITH TIME ZONE, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE jobs.id = %(id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER RETURNING jobs.id",
+      "params": "{'lease_expires_at': datetime.datetime(2026, 10, 7, 23, 14, 28, 872765, tzinfo=datetime.timezone.utc), 'heartbeat_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 872765, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 873913, tzinfo=datetime.timezone.utc), 'id_1': '3676945b6f754118aa5f5aea6c966ef2', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 74167,
+      "sql_prefix": "UPDATE jobs SET lease_expires_at=%(lease_expires_at)s::TIMESTAMP WITH TIME ZONE, heartbeat_at=%(hear"
+    },
+    {
+      "at_ns": 810605378674875,
+      "thread": 8419598720,
+      "sql": "SELECT claims.run_id AS claims_run_id, claims.result_id AS claims_result_id, claims.source_page_id AS claims_source_page_id, claims.claim_type AS claims_claim_type, claims.status AS claims_status, claims.superseded_at AS claims_superseded_at, claims.superseded_by_id AS claims_superseded_by_id, claims.source_url AS claims_source_url, claims.source_specificity AS claims_source_specificity, claims.accessed_at AS claims_accessed_at, claims.payload AS claims_payload, claims.id AS claims_id, claims.created_at AS claims_created_at, claims.updated_at AS claims_updated_at \nFROM claims",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 78083,
+      "sql_prefix": "SELECT claims.run_id AS claims_run_id, claims.result_id AS claims_result_id, claims.source_page_id A"
+    },
+    {
+      "at_ns": 810605379006916,
+      "thread": 8419598720,
+      "sql": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, program_results.university AS program_results_university, program_results.university_key AS program_results_university_key, program_results.country AS program_results_country, program_results.program AS program_results_program, program_results.eligibility AS program_results_eligibility, program_results.admissions_fit AS program_results_admissions_fit, program_results.funding_fit AS program_results_funding_fit, program_results.funding_classification AS program_results_funding_classification, program_results.score_total AS program_results_score_total, program_results.bucket AS program_results_bucket, program_results.user_decision AS program_results_user_decision, program_results.user_decision_reason AS program_results_user_decision_reason, program_results.user_notes AS program_results_user_notes, program_results.decided_at AS program_results_decided_at, program_results.payload AS program_results_payload, program_results.checklist AS program_results_checklist, program_results.id AS program_results_id, program_results.created_at AS program_results_created_at, program_results.updated_at AS program_results_updated_at \nFROM program_results",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 64959,
+      "sql_prefix": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_resul"
+    },
+    {
+      "at_ns": 810605380102833,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET pages_checked=%(pages_checked)s::INTEGER, updated_at=%(updated_at)s::TIMESTAMP WITH TIME ZONE WHERE research_runs.id = %(research_runs_id)s::VARCHAR",
+      "params": "{'pages_checked': 23, 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 875851, tzinfo=datetime.timezone.utc), 'research_runs_id': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 91667,
+      "sql_prefix": "UPDATE research_runs SET pages_checked=%(pages_checked)s::INTEGER, updated_at=%(updated_at)s::TIMEST"
+    },
+    {
+      "at_ns": 810605380642625,
+      "thread": 8419598720,
+      "sql": "INSERT INTO source_pages (url, registrable_domain, institution_key, etag, last_modified_header, content_hash, lastmod_seen, fetched_at, http_status, page_type, active_claims, id, created_at, updated_at) VALUES (%(url)s::VARCHAR, %(registrable_domain)s::VARCHAR, %(institution_key)s::VARCHAR, %(etag)s::VARCHAR, %(last_modified_header)s::VARCHAR, %(content_hash)s::VARCHAR, %(lastmod_seen)s::TIMESTAMP WITH TIME ZONE, %(fetched_at)s::TIMESTAMP WITH TIME ZONE, %(http_status)s::INTEGER, %(page_type)s::VARCHAR, %(active_claims)s::INTEGER, %(id)s::VARCHAR, %(created_at)s::TIMESTAMP WITH TIME ZONE, %(updated_at)s::TIMESTAMP WITH TIME ZONE) ON CONFLICT (url) DO UPDATE SET institution_key = coalesce(source_pages.institution_key, NULL), etag = %(param_1)s::VARCHAR, last_modified_header = %(param_2)s::VARCHAR, content_hash = %(param_3)s::VARCHAR, lastmod_seen = coalesce(source_pages.lastmod_seen, NULL), fetched_at = %(param_4)s::TIMESTAMP WITH TIME ZONE, http_status = %(param_5)s::INTEGER, page_type = %(param_6)s::VARCHAR, updated_at = %(param_7)s::TIMESTAMP WITH TIME ZONE",
+      "params": "{'url': 'https://example.edu/earlier-recorded-page', 'registrable_domain': 'example.edu', 'institution_key': None, 'etag': None, 'last_modified_header': None, 'content_hash': None, 'lastmod_seen': None, 'fetched_at': None, 'http_status': 200, 'page_type': 'program_detail', 'active_claims': 0, 'id': 'aba0e01694474a1282d4b19e2d395d1a', 'created_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 876380, tzinfo=datetime.timezone.utc), 'updated_at': datetime.datetime(2026, 10, 7, 23, 12, 28, 876381, tzinfo=datetime.timezone.utc), 'param_1': None, 'param_2': None, 'param_3': None, 'param_4': None, 'param_5': 200, 'param_6': 'program_detail', 'param_7': datetime.datetime(2026, 10, 7, 23, 12, 28, 875105, tzinfo=datetime.timezone.utc)}"
+    },
+    {
+      "elapsed_ns": 318833,
+      "sql_prefix": "INSERT INTO source_pages (url, registrable_domain, institution_key, etag, last_modified_header, cont"
+    },
+    {
+      "at_ns": 810605381340833,
+      "thread": 8419598720,
+      "sql": "SELECT source_pages.url AS source_pages_url, source_pages.registrable_domain AS source_pages_registrable_domain, source_pages.institution_key AS source_pages_institution_key, source_pages.etag AS source_pages_etag, source_pages.last_modified_header AS source_pages_last_modified_header, source_pages.content_hash AS source_pages_content_hash, source_pages.lastmod_seen AS source_pages_lastmod_seen, source_pages.fetched_at AS source_pages_fetched_at, source_pages.http_status AS source_pages_http_status, source_pages.page_type AS source_pages_page_type, source_pages.active_claims AS source_pages_active_claims, source_pages.id AS source_pages_id, source_pages.created_at AS source_pages_created_at, source_pages.updated_at AS source_pages_updated_at \nFROM source_pages \nWHERE source_pages.url = %(url_1)s::VARCHAR",
+      "params": "{'url_1': 'https://example.edu/earlier-recorded-page'}"
+    },
+    {
+      "elapsed_ns": 112208,
+      "sql_prefix": "SELECT source_pages.url AS source_pages_url, source_pages.registrable_domain AS source_pages_registr"
+    },
+    {
+      "at_ns": 810605382183333,
+      "thread": 8419598720,
+      "sql": "SELECT count(*) AS count_1 \nFROM (SELECT source_pages.url AS source_pages_url, source_pages.registrable_domain AS source_pages_registrable_domain, source_pages.institution_key AS source_pages_institution_key, source_pages.etag AS source_pages_etag, source_pages.last_modified_header AS source_pages_last_modified_header, source_pages.content_hash AS source_pages_content_hash, source_pages.lastmod_seen AS source_pages_lastmod_seen, source_pages.fetched_at AS source_pages_fetched_at, source_pages.http_status AS source_pages_http_status, source_pages.page_type AS source_pages_page_type, source_pages.active_claims AS source_pages_active_claims, source_pages.id AS source_pages_id, source_pages.created_at AS source_pages_created_at, source_pages.updated_at AS source_pages_updated_at \nFROM source_pages) AS anon_1",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 104417,
+      "sql_prefix": "SELECT count(*) AS count_1 \nFROM (SELECT source_pages.url AS source_pages_url, source_pages.registra"
+    },
+    {
+      "at_ns": 810605383640375,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.id \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR FOR UPDATE",
+      "params": "{'id_1': '3676945b6f754118aa5f5aea6c966ef2'}"
+    },
+    {
+      "elapsed_ns": 393250,
+      "sql_prefix": "SELECT jobs.id \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR FOR UPDATE"
+    },
+    {
+      "at_ns": 810605384142625,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 50458,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810605384267583,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '3676945b6f754118aa5f5aea6c966ef2'}"
+    },
+    {
+      "elapsed_ns": 39292,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810605384434125,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': '3676945b6f754118aa5f5aea6c966ef2', 'run_id_1': '4e276dd34968400dbc455435673f8060', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "at_ns": 810605384786958,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.id \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 58125,
+      "sql_prefix": "SELECT research_runs.id \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE N"
+    },
+    {
+      "at_ns": 810605385147166,
+      "thread": 8419598720,
+      "sql": "SELECT count(*) AS count_1 \nFROM (SELECT source_pages.url AS source_pages_url, source_pages.registrable_domain AS source_pages_registrable_domain, source_pages.institution_key AS source_pages_institution_key, source_pages.etag AS source_pages_etag, source_pages.last_modified_header AS source_pages_last_modified_header, source_pages.content_hash AS source_pages_content_hash, source_pages.lastmod_seen AS source_pages_lastmod_seen, source_pages.fetched_at AS source_pages_fetched_at, source_pages.http_status AS source_pages_http_status, source_pages.page_type AS source_pages_page_type, source_pages.active_claims AS source_pages_active_claims, source_pages.id AS source_pages_id, source_pages.created_at AS source_pages_created_at, source_pages.updated_at AS source_pages_updated_at \nFROM source_pages) AS anon_1",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 57042,
+      "sql_prefix": "SELECT count(*) AS count_1 \nFROM (SELECT source_pages.url AS source_pages_url, source_pages.registra"
+    },
+    {
+      "at_ns": 810605385578708,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.profile_id AS research_runs_profile_id, research_runs.stage AS research_runs_stage, research_runs.client_request_key AS research_runs_client_request_key, research_runs.demo_mode AS research_runs_demo_mode, research_runs.candidate_limit AS research_runs_candidate_limit, research_runs.verify_limit AS research_runs_verify_limit, research_runs.university_ids AS research_runs_university_ids, research_runs.cancelled AS research_runs_cancelled, research_runs.access_tier AS research_runs_access_tier, research_runs.candidates_found AS research_runs_candidates_found, research_runs.programs_verified AS research_runs_programs_verified, research_runs.pages_checked AS research_runs_pages_checked, research_runs.pages_failed AS research_runs_pages_failed, research_runs.claims_recorded AS research_runs_claims_recorded, research_runs.stage_state AS research_runs_stage_state, research_runs.fetch_tiers AS research_runs_fetch_tiers, research_runs.errors AS research_runs_errors, research_runs.unknowns AS research_runs_unknowns, research_runs.retry_urls AS research_runs_retry_urls, research_runs.settings_snapshot AS research_runs_settings_snapshot, research_runs.started_at AS research_runs_started_at, research_runs.finished_at AS research_runs_finished_at, research_runs.worker_id AS research_runs_worker_id, research_runs.heartbeat_at AS research_runs_heartbeat_at, research_runs.next_recheck_at AS research_runs_next_recheck_at, research_runs.recovery_count AS research_runs_recovery_count, research_runs.recheck_generation AS research_runs_recheck_generation, research_runs.id AS research_runs_id, research_runs.created_at AS research_runs_created_at, research_runs.updated_at AS research_runs_updated_at \nFROM research_runs \nWHERE research_runs.id = %(pk_1)s::VARCHAR",
+      "params": "{'pk_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 93000,
+      "sql_prefix": "SELECT research_runs.profile_id AS research_runs_profile_id, research_runs.stage AS research_runs_st"
+    },
+    {
+      "at_ns": 810605387079125,
+      "thread": 8419598720,
+      "sql": "SELECT claims.run_id AS claims_run_id, claims.result_id AS claims_result_id, claims.source_page_id AS claims_source_page_id, claims.claim_type AS claims_claim_type, claims.status AS claims_status, claims.superseded_at AS claims_superseded_at, claims.superseded_by_id AS claims_superseded_by_id, claims.source_url AS claims_source_url, claims.source_specificity AS claims_source_specificity, claims.accessed_at AS claims_accessed_at, claims.payload AS claims_payload, claims.id AS claims_id, claims.created_at AS claims_created_at, claims.updated_at AS claims_updated_at \nFROM claims",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 265500,
+      "sql_prefix": "SELECT claims.run_id AS claims_run_id, claims.result_id AS claims_result_id, claims.source_page_id A"
+    },
+    {
+      "at_ns": 810605387450125,
+      "thread": 8419598720,
+      "sql": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, program_results.university AS program_results_university, program_results.university_key AS program_results_university_key, program_results.country AS program_results_country, program_results.program AS program_results_program, program_results.eligibility AS program_results_eligibility, program_results.admissions_fit AS program_results_admissions_fit, program_results.funding_fit AS program_results_funding_fit, program_results.funding_classification AS program_results_funding_classification, program_results.score_total AS program_results_score_total, program_results.bucket AS program_results_bucket, program_results.user_decision AS program_results_user_decision, program_results.user_decision_reason AS program_results_user_decision_reason, program_results.user_notes AS program_results_user_notes, program_results.decided_at AS program_results_decided_at, program_results.payload AS program_results_payload, program_results.checklist AS program_results_checklist, program_results.id AS program_results_id, program_results.created_at AS program_results_created_at, program_results.updated_at AS program_results_updated_at \nFROM program_results",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 399458,
+      "sql_prefix": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_resul"
+    },
+    {
+      "at_ns": 810605388311125,
+      "thread": 8419598720,
+      "sql": "SELECT claims.run_id AS claims_run_id, claims.result_id AS claims_result_id, claims.source_page_id AS claims_source_page_id, claims.claim_type AS claims_claim_type, claims.status AS claims_status, claims.superseded_at AS claims_superseded_at, claims.superseded_by_id AS claims_superseded_by_id, claims.source_url AS claims_source_url, claims.source_specificity AS claims_source_specificity, claims.accessed_at AS claims_accessed_at, claims.payload AS claims_payload, claims.id AS claims_id, claims.created_at AS claims_created_at, claims.updated_at AS claims_updated_at \nFROM claims",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 57291,
+      "sql_prefix": "SELECT claims.run_id AS claims_run_id, claims.result_id AS claims_result_id, claims.source_page_id A"
+    },
+    {
+      "at_ns": 810605388457458,
+      "thread": 8419598720,
+      "sql": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, program_results.university AS program_results_university, program_results.university_key AS program_results_university_key, program_results.country AS program_results_country, program_results.program AS program_results_program, program_results.eligibility AS program_results_eligibility, program_results.admissions_fit AS program_results_admissions_fit, program_results.funding_fit AS program_results_funding_fit, program_results.funding_classification AS program_results_funding_classification, program_results.score_total AS program_results_score_total, program_results.bucket AS program_results_bucket, program_results.user_decision AS program_results_user_decision, program_results.user_decision_reason AS program_results_user_decision_reason, program_results.user_notes AS program_results_user_notes, program_results.decided_at AS program_results_decided_at, program_results.payload AS program_results_payload, program_results.checklist AS program_results_checklist, program_results.id AS program_results_id, program_results.created_at AS program_results_created_at, program_results.updated_at AS program_results_updated_at \nFROM program_results",
+      "params": "{}"
+    },
+    {
+      "elapsed_ns": 59500,
+      "sql_prefix": "SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_resul"
+    },
+    {
+      "at_ns": 810605388712000,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '4e276dd34968400dbc455435673f8060'}"
+    },
+    {
+      "elapsed_ns": 280833,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    }
+  ],
+  "sql_errors": [
+    {
+      "sqlstate": "55P03",
+      "sqlite_errorcode": null,
+      "type": "LockNotAvailable",
+      "statement": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "tested_head": "e5d12f58f915046cc0476a54e9e73cf6d9d39c40",
+  "serial_demo_then_auth": true,
+  "rows": [
+    {
+      "suite": "demo",
+      "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/e2e/20261012T001548Z-demo",
+      "tests": 102,
+      "passed": 101,
+      "skips": 1,
+      "failures": 0,
+      "errors": 0,
+      "source_paths": 419,
+      "source_unchanged": true,
+      "ports_clear": true,
+      "cleanup": [
+        {
+          "pgid": 14154,
+          "signal": "SIGTERM"
+        },
+        {
+          "pgid": 14130,
+          "signal": "SIGTERM"
+        }
+      ],
+      "junit_sha256": "7384eb089239e7a0fa88e1bedc69d660b4587e3f294c64f54ff17ea52279f124"
+    },
+    {
+      "suite": "auth",
+      "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/e2e/20261012T001831Z-auth",
+      "tests": 10,
+      "passed": 10,
+      "skips": 0,
+      "failures": 0,
+      "errors": 0,
+      "source_paths": 419,
+      "source_unchanged": true,
+      "ports_clear": true,
+      "cleanup": [
+        {
+          "pgid": 14606,
+          "signal": "SIGTERM"
+        },
+        {
+          "pgid": 14582,
+          "signal": "SIGTERM"
+        }
+      ],
+      "junit_sha256": "f78841f4bc514c41f98724797d5d17ba19d74639a0130851fbb7873176fc0bd9"
+    }
+  ],
+  "native_locked_branch": "NOT_COVERED; payments disabled; synthetic API gate only"
+}

@@ -1,0 +1,68 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-authorized-case-recovery/runtime/off/frontend[39m
+
+ [31m❯[39m src/lib/store.test.tsx [2m([22m[2m44 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[33m 327[2mms[22m[39m
+   [32m✓[39m profile restoration after a reload [2m(4)[22m
+     [32m✓[39m hydrates the editable draft from the stored profile[32m 15[2mms[22m[39m
+     [32m✓[39m never leaves the synthetic demo profile in the draft after restoring[32m 4[2mms[22m[39m
+     [32m✓[39m forgets the pointer when the stored profile is gone[32m 4[2mms[22m[39m
+     [32m✓[39m restores the profile even when no run is stored[32m 3[2mms[22m[39m
+   [32m✓[39m toDraft [2m(1)[22m
+     [32m✓[39m strips the server-side fields the API rejects on write[32m 0[2mms[22m[39m
+   [32m✓[39m blankProfile [2m(3)[22m
+     [32m✓[39m carries no synthetic scores[32m 0[2mms[22m[39m
+     [32m✓[39m is distinguishable from the demo profile[32m 0[2mms[22m[39m
+     [32m✓[39m carries no invented preferences or family budget into a cleared or new case[32m 1[2mms[22m[39m
+   [32m✓[39m a fresh browser opens a new applicant [2m(5)[22m
+     [32m✓[39m starts neutral when saved cases exist=false[32m 4[2mms[22m[39m
+     [32m✓[39m starts neutral when saved cases exist=true[32m 3[2mms[22m[39m
+     [32m✓[39m does not submit demo data when the applicant clicks save[32m 6[2mms[22m[39m
+     [32m✓[39m does not submit demo data when the applicant clicks start live[32m 4[2mms[22m[39m
+     [32m✓[39m still opens an explicitly selected saved synthetic case unchanged[32m 3[2mms[22m[39m
+   [32m✓[39m explicit demo loading [2m(1)[22m
+     [32m✓[39m only puts demo data in the draft when asked[32m 3[2mms[22m[39m
+   [32m✓[39m starting research twice [2m(2)[22m
+     [32m✓[39m joins the run already in flight instead of reporting a conflict[32m 1[2mms[22m[39m
+     [32m✓[39m sends an idempotency key so a retried request cannot start a second run[32m 1[2mms[22m[39m
+   [32m✓[39m document collection acknowledgement [2m(3)[22m
+     [32m✓[39m reports the actual API acknowledgement: true[32m 1[2mms[22m[39m
+     [32m✓[39m reports the actual API acknowledgement: false[32m 3[2mms[22m[39m
+     [32m✓[39m does not claim success or call the API without a run[32m 1[2mms[22m[39m
+   [32m✓[39m renaming the storage keys [2m(2)[22m
+     [32m✓[39m carries a session stored under the old name across, once[32m 2[2mms[22m[39m
+     [32m✓[39m prefers the new key when both exist[32m 2[2mms[22m[39m
+   [32m✓[39m unsaved edits [2m(5)[22m
+     [32m✓[39m knows the draft is dirty only after a real edit[32m 2[2mms[22m[39m
+     [32m✓[39m aligns a saved form with the server-normalized profile[32m 3[2mms[22m[39m
+     [32m✓[39m restores an unsaved draft after a reload without touching the saved profile[32m 2[2mms[22m[39m
+     [32m✓[39m discarding a restored draft returns to the saved profile[32m 1[2mms[22m[39m
+     [32m✓[39m never lets a restored draft become the saved profile by itself[32m 2[2mms[22m[39m
+   [32m✓[39m a session that dies mid-use [2m(2)[22m
+     [32m✓[39m reloads to the sign-in screen instead of showing an error banner[32m 54[2mms[22m[39m
+     [32m✓[39m still shows the banner for errors that are not about authentication[32m 4[2mms[22m[39m
+   [32m✓[39m case privacy controls acknowledge actual deletion [2m(5)[22m
+     [32m✓[39m exports a saved profile with no research run without starting research[32m 11[2mms[22m[39m
+     [32m✓[39m deletes a saved zero-run case only after explicit confirmation[32m 6[2mms[22m[39m
+     [32m✓[39m keeps the actual case and does not show deletion success on HTTP 403[32m 9[2mms[22m[39m
+     [32m✓[39m keeps the actual case and does not show deletion success on HTTP 500[32m 7[2mms[22m[39m
+     [32m✓[39m returns an acknowledgment and clears only successful case draft memory and its marks[32m 22[2mms[22m[39m
+   [32m✓[39m unmounted applicant actions cannot resume under a newly bound owner [2m(2)[22m
+     [32m✓[39m refuses an old saveProfile closure before creating the old private draft[32m 55[2mms[22m[39m
+     [32m✓[39m refuses an old startRun closure before creating the old private draft[32m 55[2mms[22m[39m
+   [31m❯[39m authenticated pointerless recovery reads only the authorized server case [2m(9)[22m
+[31m     [31m×[31m recovers latest run/results after logout removed every private pointer[39m[32m 8[2mms[22m[39m
+[31m     [31m×[31m uses first server-ordered authorized case when multiple cases exist[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m recovers a saved zero-run profile without creating research[39m[32m 2[2mms[22m[39m
+     [32m✓[39m keeps anonymous auth-disabled demo neutral despite saved server cases[32m 3[2mms[22m[39m
+     [32m✓[39m keeps an explicit local new case and its own unsaved draft[32m 3[2mms[22m[39m
+     [32m✓[39m keeps an empty authenticated workspace neutral[32m 3[2mms[22m[39m
+     [32m✓[39m reports a case-list failure instead of inventing recovered data[32m 3[2mms[22m[39m
+     [32m✓[39m keeps hydration closed while a server recovery waits, then honors newer new-case intent[32m 3[2mms[22m[39m
+[31m     [31m×[31m drops a late profile answer after the authenticated owner changes[39m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m40 passed[39m[22m[90m (44)[39m
+[2m   Start at [22m 06:05:22
+[2m   Duration [22m 868ms[2m (tests 41%, environment 34%, transform 12%, import 6%, setup 6%)[22m
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-authorized-case-recovery/logs/final-off/junit.xml

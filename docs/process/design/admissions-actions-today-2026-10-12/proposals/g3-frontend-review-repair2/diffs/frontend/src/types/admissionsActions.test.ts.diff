@@ -1,0 +1,15 @@
+--- a/frontend/src/types/admissionsActions.test.ts
++++ b/frontend/src/types/admissionsActions.test.ts
+@@ -93,3 +93,12 @@
+     expect(isActionRequestV1({ ...commands[9], prior_declaration: { event_id: 'event-a', revision: 2, kind: 'set_document_self_report' } })).toBe(false);
+   });
+ });
++
++describe('finite G3 enum scalar boundary repair', () => {
++  it.each(['array', 'object', 'boolean'])('refuses %s values instead of coercing command actor/report/declaration enums', shape => {
++    const invalid = (valid: string): unknown => shape === 'array' ? [valid] : shape === 'object' ? { value: valid } : true;
++    expect(isActionRequestV1({ ...commands[1], personal: { ...personal, responsible_actor: invalid('applicant') } })).toBe(false);
++    expect(isActionRequestV1({ ...commands[4], report: { state: invalid('prepared_reported'), entered_at: moment, confirmed_personal_report: true } })).toBe(false);
++    expect(isActionRequestV1({ ...commands[9], prior_declaration: { event_id: 'event-a', revision: 2, kind: invalid('declare_submission') } })).toBe(false);
++  });
++});

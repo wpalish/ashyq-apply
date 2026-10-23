@@ -1,0 +1,15 @@
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-recovery-review/support/static-check.cjs:7
+const out={};for(const [name,p] of Object.entries(pairs)){const old=parse(p[0]),next=parse(p[1]);if(name.endsWith('test.tsx')){const a=bodies(old),b=bodies(next);out[name]={old_templates:a.length,new_templates:b.length,old_bodies_exact:a.every(x=>b.includes(x)),missing:a.filter(x=>!b.includes(x)).length};}else if(name.includes('Shortlist')){const a=vars(old),b=vars(next);out[name]={same_expressions:Object.fromEntries(['rows','clearFilters','activeFilters','decideRow','renderTable'].map(k=>[k,a[k]===b[k]])),same_prop_signature:/export function ShortlistScreen([^\n]*)/.exec(old.text)[1]===/export function ShortlistScreen([^\n]*)/.exec(next.text)[1]};}else{const oldHint='Documents are collected only for programmes you approve — it is the expensive step, so it\n          runs on your shortlist rather than on all {result.university ? '' : ''}candidates. Approve\n          this row, then run “Collect documents”.';const newHint='Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan.\n          Use “Collect documents” in Plan to request their requirements. A collected checklist\n          does not mean an application is ready.';out[name]={hint_only:old.text.replace(oldHint,newHint)===next.text};}}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ^^^^^
+
+SyntaxError: Unexpected string
+    at wrapSafe (node:internal/modules/cjs/loader:1713:18)
+    at Module._compile (node:internal/modules/cjs/loader:1755:20)
+    at Object..js (node:internal/modules/cjs/loader:1913:10)
+    at Module.load (node:internal/modules/cjs/loader:1505:32)
+    at Function._load (node:internal/modules/cjs/loader:1309:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.23.1

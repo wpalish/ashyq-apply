@@ -1,0 +1,91 @@
+{
+  "status": "COMMANDS_2B_LOCALLY_VERIFIED_NOT_INTEGRATED_IN_DOCUMENT_SCREEN",
+  "at_utc": "2026-10-13T18:37:22.802951+00:00",
+  "baseline": "1a1f4a00",
+  "source_postimages": {
+    "frontend/src/lib/useAdmissionsActions.ts": "88df12acecf34cde72d8c3cb4f2297d0c29ff46920583ec7cc5b48ffa3b860af",
+    "frontend/src/lib/useAdmissionsActions.test.tsx": "2018094a5539bfda0e132103eb305d6284eaa6e34ec0f28c4588244100ef1668",
+    "frontend/src/components/AdmissionsRecoveryPanel.tsx": "cd1b49dbac938891c5a82e79c42f44a7a30688ae70adc7771b8dc32825e6c8dc",
+    "frontend/src/components/AdmissionsRecoveryPanel.test.tsx": "bace9b0bd205b697565e1896dd8a27314a28a178ab9100af4b2be1e41f93d19a",
+    "frontend/src/types/admissionsActions.ts": "aecd7211f5294cbbe53ecb470e114f3f2ff23d16e8976d3cd1b7bcf1df23ac5f",
+    "frontend/src/types/admissionsActions.test.ts": "28e4f79a2071dfb61da6aa6e9c7e937a1619202ebab7e0d42673bcdea7596781",
+    "frontend/src/lib/admissionsActionsRecovery.ts": "97d343266038194199326114667dfa6fb95dfd31f1ad3e627c85ce91829dd891",
+    "frontend/src/lib/i18n.ts": "8b0cfe2069619c12523528850467c7821e096e01d63572ba15ce9db6e94e1a44",
+    "frontend/src/test/admissionsFixtures.ts": "6b5e9d0e95ea635cbfc60f8dbf1afdf3925cad38d7d8a859e9f956ea3c7cc35a"
+  },
+  "frontend": {
+    "tests": 769,
+    "files": 68,
+    "build": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS_9_EXISTING_WARNINGS",
+    "result": {
+      "steps": [
+        {
+          "step": "typecheck",
+          "argv": [
+            "npm",
+            "run",
+            "typecheck"
+          ],
+          "exit_code": 0,
+          "seconds": 3.445998375005729
+        },
+        {
+          "step": "lint",
+          "argv": [
+            "npm",
+            "run",
+            "lint"
+          ],
+          "exit_code": 0,
+          "seconds": 1.7477110420004465
+        },
+        {
+          "step": "unit",
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "--run",
+            "--reporter=default",
+            "--reporter=junit",
+            "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/commands-frontend-2b2/frontend-junit.xml"
+          ],
+          "exit_code": 0,
+          "seconds": 8.685608874999161
+        },
+        {
+          "step": "build",
+          "argv": [
+            "npm",
+            "run",
+            "build"
+          ],
+          "exit_code": 0,
+          "seconds": 5.425961291999556
+        }
+      ],
+      "before_after_equal": true,
+      "status": "PASS"
+    }
+  },
+  "backend_exact_carry": {
+    "sqlite": {
+      "source_map_sha256": "d2bea8f1d94b630c4d3fe8acba9cca33b98bb9e010e3e468f100dc177ced654d",
+      "exact_consumed_files": 636,
+      "full_tests": 5765,
+      "coverage": 94.32577085208166
+    },
+    "postgres": {
+      "source_map_sha256": "d2bea8f1d94b630c4d3fe8acba9cca33b98bb9e010e3e468f100dc177ced654d",
+      "exact_consumed_files": 636,
+      "full_tests": 5765,
+      "coverage": 94.32103443376118
+    }
+  },
+  "verification": "Synthetic independently Node-signed wire fixtures; real browser crypto/journal/React, mocked existing API seam. No integrated server/browser acceptance yet. Lost postcommit response/replay, unchanged body/CAS, 409 comparison, storage-before-send, case ABA, matched receipt/current digests, failed freshGET, exact stored whitespace envelope, fresh own ACK event cleanup, duplicate click slot, owner current/history shapes; visible panel selection/conflict/storage/case guards. No new dependency or server DTO.",
+  "main_production": "NOT_CHANGED",
+  "search_quality": "NOT_MEASURED",
+  "original_STOPs": "NOT_CLEARED"
+}

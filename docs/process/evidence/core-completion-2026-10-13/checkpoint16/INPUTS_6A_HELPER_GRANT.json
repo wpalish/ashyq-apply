@@ -1,0 +1,45 @@
+{
+  "status": "HELPER_WRITE_AHEAD_NOT_EXECUTED",
+  "source": "backend-native9",
+  "destination": "backend-native10",
+  "source_pin_changes": {
+    "backend/app/schemas/research_read.py": {
+      "before": null,
+      "after": "286161adcb432df0b88e34ec48c8d554ed93c938c12cc3e8f6f65b8da26b415c"
+    },
+    "backend/app/domain/profile_input_provenance.py": {
+      "before": null,
+      "after": "45a96821018745f791d79e6bb3aac9a01fbc9acba14536711687b660d6fa3bb1"
+    },
+    "backend/app/domain/result_read.py": {
+      "before": null,
+      "after": "0fe3cdb1fd48d7d895c6e8a61da494d598a881a071516c43492b555744d737df"
+    },
+    "backend/app/api/routes_research.py": {
+      "before": "bd16cd962d4ff760e5f27b238f5ec8ed6b272aa8fe914a35ced0d9d48ba9499e",
+      "after": "fb5833ff618e731c70dd2ab4b08f8d1b4bbf70ddab770a8444218c20b4dd95b3"
+    },
+    "backend/app/api/routes_results.py": {
+      "before": "a70d50ae54b9efe02e9c495a045a644ab56d2903938b9c1ab99fb7cd1c868c09",
+      "after": "f225260d2fb7eae4daa4280569c3ba5672cc0f4bef1ffec142753e4485cd74a9"
+    },
+    "backend/app/pipeline/runner.py": {
+      "before": "17ee2e350a8ef2c11331b3328b6ab6c34ff7f4c54776da7d5d44871b3fd8dae9",
+      "after": "707aad3638c663b21cbe06c57094f04f1f1fab32a2f4f58aa482c0739c17c94c"
+    },
+    "backend/tests/test_research_input_provenance.py": {
+      "before": null,
+      "after": "33ecc5ecf7e4d550839cc14e7b76d385a5b8d9f073a4d819ce7aae9d6f0644b5"
+    },
+    "backend/tests/test_result_read_freshness.py": {
+      "before": null,
+      "after": "605103bf390cbf2a2664e1d00fd73b01b6ec6f221ef6c5db06f1b2caeb32d63b"
+    }
+  },
+  "fixed_diagnostic_targets": [
+    "tests/test_research_input_provenance.py",
+    "tests/test_result_read_freshness.py",
+    "tests/test_programme_observation_publication.py"
+  ],
+  "scope": "Clone exact existing guards/assets/runtime/probes/full/native fixtures/floor92. Pins extend only current8 source paths; diagnostic actual new input/freshness plus existing partial/cancel/lease controls. Full old mode unchanged bothDBs required afterward. No network/env/secret/userDB/STOP/heldout/benchmarks."
+}

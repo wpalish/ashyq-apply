@@ -1,0 +1,49 @@
+{
+  "strict_expert_budget": true,
+  "provider": "exa",
+  "max_fetcher_calls": 60,
+  "max_search_queries": 6,
+  "max_active_seconds": 120,
+  "finalization_reserve_ms": 0,
+  "source_work_deadline_ms": 120000,
+  "fetcher_calls": 36,
+  "search_queries": 0,
+  "blocked_search_queries": 0,
+  "network_http_requests": 0,
+  "elapsed_ms": 195,
+  "stop_reason": null,
+  "provider_failure": null,
+  "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+  "protocol_persistence_error": {
+    "stage": "raw",
+    "error_type": "OSError",
+    "original_error": null,
+    "original_control_type": null,
+    "job_protocol": {
+      "started": true,
+      "run_id": "33e039cdf035428e9a77cf063d56bdc6",
+      "job_id": "55c165d4de5743be802a0c6ff3724f7b",
+      "claim_token": 1,
+      "lease_token": 1,
+      "job_status": "succeeded",
+      "worker_id": "iMac-Aliser.local:22577",
+      "native_enabled": true,
+      "native_ledger": {
+        "version": 1,
+        "read_limit": 60,
+        "active_episode": "decision:55c165d4de5743be802a0c6ff3724f7b",
+        "episodes": {
+          "decision:55c165d4de5743be802a0c6ff3724f7b": {
+            "read_counts": {
+              "catalogue:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": 36
+            }
+          }
+        }
+      },
+      "observation_available": true,
+      "heartbeat_done": [
+        true
+      ]
+    }
+  }
+}

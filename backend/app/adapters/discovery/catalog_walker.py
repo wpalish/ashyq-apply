@@ -31,7 +31,7 @@ import logging
 import re
 from collections import Counter
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from urllib.parse import urljoin, urlparse
 
 from app.adapters.browser import BrowserFetcher
@@ -49,13 +49,21 @@ from app.adapters.discovery.live_discovery import (
     registrable_domain,
     same_institution,
 )
-from app.adapters.fetching import Fetcher, FetchResult, same_source_site
+from app.adapters.fetching import (
+    Fetcher,
+    FetchResult,
+    fetch_diagnostic_url,
+    privacy_safe_url,
+    same_source_site,
+)
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
     PageType,
     classify_page,
 )
+from app.domain.enums import FetchOutcome
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 
 log = logging.getLogger("unimatch.discovery.walker")
 
@@ -452,6 +460,8 @@ class CatalogWalker:
             top_n = WALKER_TOP_N if depth == 0 else WALKER_DESCENT_TOP_N
             try:
                 walk = await self.walk_catalog(catalogue_url, top_n=top_n)
+            except (UniversityReadStopped, RunCancelled, LeaseLost):
+                raise
             except Exception as exc:  # one broken catalogue must not end discovery
                 log.warning(
                     "catalog walk of %s failed: %s: %s",
@@ -502,7 +512,15 @@ class CatalogWalker:
         walk = CatalogWalk(catalogue_url=catalogue_url)
         html, payloads, catalogue_outcome = await self._read_catalogue(catalogue_url)
         if catalogue_outcome is not None:
-            walk.outcomes.append((catalogue_url, catalogue_outcome))
+            diagnostic_url = (
+                privacy_safe_url(catalogue_url)
+                if catalogue_outcome == FetchOutcome.REFUSED_PRIVACY.value
+                else catalogue_url
+            )
+            walk.outcomes.append((diagnostic_url, catalogue_outcome))
+            if catalogue_outcome == FetchOutcome.REFUSED_PRIVACY.value:
+                walk.catalogue_url = diagnostic_url
+                return walk
 
         drops: list[tuple[str, str]] = []
         links = extract_links(html, catalogue_url, self.domain, drops) if html else []
@@ -631,7 +649,17 @@ class CatalogWalker:
             page = classify_page(url=result.final_url or link.url, html=result.text)
         self._record(link.url, result, page)
         if not result.ok:
-            walk.outcomes.append((link.url, result.outcome.value))
+            diagnostic_url = fetch_diagnostic_url(link.url, result)
+            if result.outcome == FetchOutcome.REFUSED_PRIVACY:
+                # Candidate trace is a diagnostic record, not another source
+                # read. Keep the evaluated lead count without its rejected URL.
+                walk.candidates = [
+                    replace(candidate, url=diagnostic_url)
+                    if candidate.url == link.url
+                    else candidate
+                    for candidate in walk.candidates
+                ]
+            walk.outcomes.append((diagnostic_url, result.outcome.value))
             return
         assert page is not None
         # The walker asks exactly what the confirm stage asks, subject
@@ -673,6 +701,8 @@ class CatalogWalker:
         if callable(render) and isinstance(payloads, list):
             try:
                 rendered = await render(catalogue_url)
+            except (UniversityReadStopped, RunCancelled, LeaseLost):
+                raise
             except Exception as exc:  # a broken tier must not end the walk
                 log.warning("catalogue render failed for %s: %s", catalogue_url[:120], exc)
             else:
@@ -722,5 +752,7 @@ class CatalogWalker:
                 institution_key=None,
                 fetched_at=result.fetched_at,
             )
+        except (UniversityReadStopped, RunCancelled, LeaseLost):
+            raise
         except Exception as exc:
             log.warning("source_pages recording failed for %s: %s", record_url[:120], exc)

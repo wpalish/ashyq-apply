@@ -5,6 +5,8 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import re
+from contextlib import nullcontext
+from dataclasses import fields
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
@@ -20,7 +22,50 @@ from app.catalogue.retrieval import retrieve
 from app.domain.dedupe import normalize
 from app.domain.site_identity import registrable_domain
 from app.models import University, UniversityObservation
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import ProgrammeObservationSet
+
+# SI-1: additional first-party homepage branding. Off until measured and approved.
+SITE_BRANDING_IDENTITY = False
+
+
+def _branding_name(value: str) -> str:
+    """Keep ordered name words; only the optional article is insignificant."""
+    return " ".join(word for word in normalize(value).split() if word != "the")
+
+
+def _site_branding(
+    soup: BeautifulSoup, names: list[str], localities: tuple[str, ...] = ()
+) -> tuple[str, str] | None:
+    """Read site names and explicit copyright owners, never incidental mentions."""
+    full_names = [name for n in names if len(n) >= 8 and (name := _branding_name(n))]
+    known_localities = {normalize(place) for place in localities if place}
+    for meta in soup.select('meta[property="og:site_name"]'):
+        value = str(meta.get("content") or "").strip()
+        if value and _branding_name(value) in full_names:
+            return value, "homepage_og_site_name"
+    for node in soup.select("footer p, footer small"):
+        value = node.get_text(" ", strip=True)
+        if len(value) > 300:
+            continue
+        owner = re.match(
+            r"^\s*(?:copyright\s*(?:©|\(c\))?|©)\s*"
+            r"(?:\d{4}(?:\s*[-–]\s*\d{4})?\s*[-–—|,:.]?\s*)?(.*)$",
+            value,
+            re.IGNORECASE,
+        )
+        if owner is None:
+            continue
+        # A comma may introduce a known city/country, never an arbitrary legal
+        # entity suffix ("Example University, Foundation" is another owner).
+        owner_parts = re.split(r"[,|;]", owner.group(1))
+        if any(normalize(part) not in known_localities for part in owner_parts[1:]):
+            continue
+        owner_name = _branding_name(owner_parts[0])
+        if owner_name and owner_name in full_names:
+            return value, "homepage_copyright_owner"
+    return None
 
 
 class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
@@ -51,12 +96,15 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             # Older isolated evaluation harnesses intentionally have no catalogue.
             return await super().discover(profile, limit)
         self.traces = []
+        self.interrupted_traces = []
         self.walker_outcomes = []
+        self.confirmed_observations = ProgrammeObservationSet()
         candidates: list[Candidate] = []
         for index, uni in enumerate(rows):
             trace = DiscoveryTrace(institution=uni.name, domain=uni.domain or "")
             candidate = Candidate(
                 name=uni.name,
+                catalogue_id=uni.id,
                 country=uni.country,
                 city=uni.city,
                 discovery_source=f"local-catalogue:{uni.id}",
@@ -64,8 +112,19 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             )
             if index < self.live_limit:
                 try:
-                    candidate, trace = await asyncio.wait_for(
-                        self._enrich(uni, profile, candidate, trace), timeout=300
+                    with self.research_scope(candidate) if self.research_scope else nullcontext():
+                        candidate, trace = await asyncio.wait_for(
+                            self._enrich(uni, profile, candidate, trace), timeout=300
+                        )
+                except (asyncio.CancelledError, RunCancelled, LeaseLost):
+                    self.interrupted_traces.append(trace)
+                    raise
+                except UniversityReadStopped as stopped:
+                    if stopped.reason == "checkpoint_busy":
+                        raise
+                    candidate.search_queries_used = trace.search_queries_sent
+                    trace.search_limitations.append(
+                        f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
                     )
                 except TimeoutError:
                     trace.errors.append(
@@ -85,6 +144,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
         candidate: Candidate,
         trace: DiscoveryTrace,
     ) -> tuple[Candidate, DiscoveryTrace]:
+        trace.search_queries_sent = max(trace.search_queries_sent, candidate.search_queries_used)
         entry = uni.registry_entry
         if entry is None:
             entry = await self._identify_site(uni, trace)
@@ -92,9 +152,36 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             trace.search_limitations.append(
                 f"Official website identity not established for {uni.name}; candidate retained without verified programme facts."
             )
+            candidate.search_queries_used = trace.search_queries_sent
             return candidate, trace
-        enriched, discovered = await self._discover_one(entry, profile)
+        inner = DiscoveryTrace(
+            institution=entry["name"],
+            domain=trace.domain,
+            search_queries_sent=trace.search_queries_sent,
+        )
+        try:
+            enriched, discovered = await self._discover_one(
+                entry, profile, search_queries_used=trace.search_queries_sent, trace=inner
+            )
+        except (asyncio.CancelledError, RunCancelled, LeaseLost):
+            inner.search_failures[:0] = trace.search_failures
+            inner.search_limitations[:0] = trace.search_limitations
+            for observed in fields(trace):
+                if observed.name != "institution":
+                    setattr(trace, observed.name, getattr(inner, observed.name))
+            raise
+        except UniversityReadStopped as stopped:
+            if stopped.reason != "checkpoint_busy":
+                inner.search_failures[:0] = trace.search_failures
+                inner.search_limitations[:0] = trace.search_limitations
+                for observed in fields(trace):
+                    # The stopped seed owns the exported report's institution key.
+                    if observed.name != "institution":
+                        setattr(trace, observed.name, getattr(inner, observed.name))
+            raise
         discovered.search_failures[:0] = trace.search_failures
+        discovered.search_limitations[:0] = trace.search_limitations
+        enriched.catalogue_id = uni.id
         enriched.discovery_source = f"local-catalogue:{uni.id}; {enriched.discovery_source}"
         return enriched, discovered
 
@@ -108,8 +195,22 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
                 return entry
         # Missing or stale seed websites use the same explicitly configured
         # search provider. Only institution identity enters this query.
+        from app.adapters.search import intent as intent_module
+
+        if (
+            intent_module.SHARED_QUERY_BUDGET
+            and trace.search_queries_sent >= intent_module.DEFAULT_QUERY_BUDGET
+        ):
+            trace.search_limitations.append(
+                "Identity search not run: earlier searches used the "
+                f"{intent_module.DEFAULT_QUERY_BUDGET}-query budget."
+            )
+            return None
         try:
             provider = get_search_provider()
+            # Charge the seam attempt, including local wrapper refusal. This
+            # ledger is a budget, not proof of a vendor HTTP request.
+            trace.charge_search_query_attempt()
             response = await provider.search(
                 query=f'"{uni.name}" "{uni.country}" official university website', max_results=3
             )
@@ -163,18 +264,37 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             and re.search(rf"\b{re.escape(n)}\b", identity_text)
             for n in names
         ) and any(word in identity_text.split() for word in ("university", "college", "institute"))
+        excerpt = f"{title} {headings}".strip()
+        identity_basis = None
         if not long_match and not acronym_match:
-            return None
+            # Additional branding can corroborate an existing domain hint. It
+            # cannot authorize an unrelated host returned by a search provider.
+            branding = (
+                _site_branding(
+                    soup,
+                    [normalize(n) for n in [uni.name, *(uni.aliases or [])]],
+                    (uni.city or "", uni.country or ""),
+                )
+                if SITE_BRANDING_IDENTITY
+                and uni.domain
+                and registrable_domain(parts.hostname) == uni.domain
+                else None
+            )
+            if branding is None:
+                return None
+            excerpt, identity_basis = branding
         domain = registrable_domain(urlsplit(final).hostname or "")
         proof = {
             "kind": "site_identity",
             "source_url": final,
             "accessed_at": page.fetched_at.isoformat(),
-            "excerpt": f"{title} {headings}".strip(),
+            "excerpt": excerpt,
             "name": uni.name,
             "domain": domain,
             "verification_status": "site_identity_checked",
         }
+        if identity_basis is not None:
+            proof["identity_basis"] = identity_basis
         digest = hashlib.sha256(str(proof).encode()).hexdigest()
         observation_id = stable_id(f"{uni.id}/{digest}")
         if self.session.get(UniversityObservation, observation_id) is None:

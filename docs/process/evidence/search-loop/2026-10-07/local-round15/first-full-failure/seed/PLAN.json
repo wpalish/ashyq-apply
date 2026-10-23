@@ -1,0 +1,35 @@
+{
+  "status": "PREPARED_ONLY_WAIT_ROOT_APPLICATION_READY",
+  "created_utc": "2026-10-08T08:13:29.872957+00:00",
+  "primary": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "adapted_helper_origins": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-seed/execute_seed.py": "b1d151651b104fe68ce3d6fc1343d79ff14a0b6355a70935738fe0ce0d6a88d5",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-seed/guarded_child.py": "8aff1a1e814436df0fc18236e49ba98bee8aaa58903192b7a4f038a43feed51d",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-seed/candidate-source-pins.json": "90fe23e39a605f436a7b6c7f540208d016bef04de74a696c5d8bf5f8ac1a9e7c"
+  },
+  "safe_env_module": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+  "safe_env_sha256": "161f5f0df441465fee4ce03e4df406ff9389f0a0462b3541a77bb891cc2c20ac",
+  "python": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+  "retained_STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "commands": [
+    "heads",
+    "migrate",
+    "seed",
+    "inspect"
+  ],
+  "runtime": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/runtime",
+  "candidate": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/candidate",
+  "forbidden": [
+    "execution before APPLICATION READY",
+    "primary/environment DB",
+    "live/network/provider/model",
+    "Git/source changes",
+    "approve",
+    "secret config output"
+  ],
+  "purpose": "Synthetic compatibility only, not university quality, launch acceptance or official scoring",
+  "source_selection": "CURRENT exact app242+migrations21+seed_demo.py+alembic.ini; opaque copies/hash only; no .env/venv/data/private evaluation datasets"
+}

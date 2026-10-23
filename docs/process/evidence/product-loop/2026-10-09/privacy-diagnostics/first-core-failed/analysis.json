@@ -1,0 +1,74 @@
+{
+  "utc": "2026-10-09T04:29:27.124661+00:00",
+  "status": "FAILED_CORE_FULL_NOT_RUN",
+  "doctor": {
+    "environment_checks": 5,
+    "passed": 5,
+    "failed": 0,
+    "snapshot_manifest": "NOT_PRESENT_ENVIRONMENT_DOCTOR_ONLY"
+  },
+  "core": {
+    "gate_count": 8,
+    "passed": 7,
+    "failed": 1,
+    "failed_step": "backend-sqlite"
+  },
+  "backend_sqlite": {
+    "total": 4392,
+    "unique_case_identifiers": 4392,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 4391,
+    "warnings": 32,
+    "coverage_percent": 95.27,
+    "pytest_summary_seconds": 513.31,
+    "native_step_seconds": 515.8,
+    "junit_suite_attributes": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "4392",
+        "time": "511.250",
+        "timestamp": "2026-10-09T09:16:02.570199+05:00",
+        "hostname": "iMac-Aliser.local"
+      }
+    ]
+  },
+  "frontend": {
+    "test_files_passed": 34,
+    "tests_passed": 357
+  },
+  "static": {
+    "ruff_exit": 0,
+    "ruff_format_exit": 0,
+    "mypy_exit": 0,
+    "mypy_files": 388
+  },
+  "first_failure": {
+    "classname": "tests.test_rejected_diagnostics",
+    "name": "test_p6_ordinary_source_status_budget_and_controlflow",
+    "assertion": "assert any(\"Traceback\" in log[\"json\"] for log in captured(caplog))",
+    "source_location": "tests/test_rejected_diagnostics.py:615",
+    "message": "assert False\n +  where False = any(<generator object test_p6_ordinary_source_status_budget_and_controlflow.<locals>.<genexpr> at 0x119251e50>)",
+    "original_failure_text": "tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-676/test_p6_ordinary_source_status0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1195bef90>\ncaplog = <_pytest.logging.LogCaptureFixture object at 0x118c0d3a0>\n\n    def test_p6_ordinary_source_status_budget_and_controlflow(tmp_path, monkeypatch, caplog):\n        url = \"https://public.invalid/en/node/1008496?year=2027&language=en\"\n        assert find_pii(url) is None\n        resolved, requests = [], []\n    \n        def resolve(value):\n            resolved.append(value)\n            return public_dns(value)\n    \n        monkeypatch.setattr(\"app.adapters.fetching.check_url\", resolve)\n    \n        async def exercise():\n            async with Fetcher(tmp_path / \"p6\", delay_seconds=0, respect_robots=False) as f:\n                await f._client.aclose()\n    \n                def response(req):\n                    requests.append(str(req.url))\n                    return httpx.Response(404, headers={\"content-type\": \"text/html\"}, text=\"Not found\")\n    \n                f._client = httpx.AsyncClient(transport=httpx.MockTransport(response))\n                res = await f.get(url)\n                _, out = await WebCostAdapter(f, \"2027/28\").fetch(\n                    Candidate(\n                        name=\"Public University\", country=\"Synthetic\", city=\"Synthetic\", costs_url=url\n                    )\n                )\n                return res, out\n    \n        res, out = asyncio.run(exercise())\n        safe = intent(intake_year=2027, population_marker=\"international\")\n        queries = queries_for(safe)\n        trace = DiscoveryTrace(\"Public University\", \"public.invalid\")\n        assert _public_requested_fields(fake_profile([\"gpa 4.8\", \"Mathematics\"]), trace) == [\n            \"Mathematics\"\n        ]\n        # Generic exceptions still retain their useful ordinary traceback/diagnostic.\n        r, row, audits = runner(monkeypatch)\n    \n        class MemoryFetcher:\n            tier_counts: ClassVar[dict] = {}\n    \n            async def __aenter__(self):\n                return self\n    \n            async def __aexit__(self, *a):\n                return None\n    \n        monkeypatch.setattr(r, \"_make_fetcher\", MemoryFetcher)\n        monkeypatch.setattr(r, \"_make_browser\", lambda _: NS(enabled=False, close=AsyncMock()))\n        monkeypatch.setattr(r, \"_stage_validate\", AsyncMock())\n        failure = ValueError(\"ordinary bounded parse failure\")\n        monkeypatch.setattr(r, \"_stage_discover\", AsyncMock(side_effect=failure))\n        with pytest.raises(ValueError, match=\"ordinary bounded parse failure\") as caught:\n            asyncio.run(r.run_to_decision())\n        assert caught.value is failure\n        assert audits[0][\"detail\"][\"error\"] == \"ordinary bounded parse failure\"\n>       assert any(\"Traceback\" in log[\"json\"] for log in captured(caplog))\nE       assert False\nE        +  where False = any(<generator object test_p6_ordinary_source_status_budget_and_controlflow.<locals>.<genexpr> at 0x119251e50>)\n\ntests/test_rejected_diagnostics.py:615: AssertionError",
+    "cause": "NOT_DIAGNOSED_BY_COLLECTOR",
+    "preceding_rethrow_identity_and_audit_detail_assertions_passed": true,
+    "later_P6_assertions_not_reached": true
+  },
+  "source_head": "08450f71e6bbeadd9a2212fbd6c9f96f5c428755",
+  "source34_pins_sha256": "bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6",
+  "source_tree_sha256": "7a07649d1cb38feb22b45d917e03d2d48fab987936b960dacd384e4999358023",
+  "declared_source_files": 12104,
+  "snapshot_manifest_digest_matches_declared_map": true,
+  "full": "NOT_RUN",
+  "backend_postgresql": "NOT_RUN",
+  "demo_e2e": "NOT_RUN",
+  "auth_e2e": "NOT_RUN",
+  "dependency_audits": "NOT_RUN",
+  "containers": "NOT_RUN",
+  "production": "NOT_RUN",
+  "not_unique_additional_tests": "Doctor/core step counts and JUnit test cases are different units; no duplicate rerun is counted."
+}

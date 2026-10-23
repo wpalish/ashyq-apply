@@ -1,0 +1,60 @@
+{
+  "status": "SOURCE_CALL_GRAPH_QUALIFIED",
+  "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+  "functions": [
+    {
+      "name": "page_outcomes",
+      "start_line": 213,
+      "end_line": 225,
+      "calls": [
+        "_PAGE_OUTCOME_RE.match",
+        "found.append",
+        "list",
+        "match.groupdict",
+        "str"
+      ]
+    },
+    {
+      "name": "false_positives",
+      "start_line": 231,
+      "end_line": 337,
+      "calls": [
+        "any",
+        "by_type.get",
+        "by_type.setdefault",
+        "by_type.setdefault(claim['claim_type'], []).append",
+        "c['claim_type'].startswith",
+        "c['payload'].get",
+        "claim.get",
+        "claim['payload'].get",
+        "flag",
+        "found.append",
+        "json.dumps",
+        "json.dumps(c['payload']).lower",
+        "scholarship.name.lower"
+      ]
+    },
+    {
+      "name": "recall_metrics",
+      "start_line": 388,
+      "end_line": 407,
+      "calls": [
+        "(row.get('discovered') or {}).get",
+        "bool",
+        "len",
+        "row.get",
+        "sum"
+      ]
+    }
+  ],
+  "label_path_literal_nodes": [],
+  "qualification": "Native row diagnostics are not a certified score. Their function name does not prove gold/label access. Strict flow separately bypasses _jev_shadow; no application code imported or called.",
+  "root_initial_wrong_path": "scripts/canary_discovery.py at repo root did not exist; corrected by rg --files to backend/scripts/canary_discovery.py; read-only error only",
+  "not_performed": [
+    "app/evaluation imports",
+    "labels/scorer execution",
+    "live/model/provider requests",
+    "SQL",
+    "tests"
+  ]
+}

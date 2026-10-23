@@ -1,0 +1,73 @@
+{
+  "schema_version": "g3-frontend-literalstyle-repair1-independent-review-v1",
+  "status": "SEALED_EXTERNAL_SOURCE_ONLY_NO_BLOCKER_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "reviewer": "/root/open_search_solutions",
+  "inspected_at_utc": "2026-10-13T06:27:40Z",
+  "members": [
+    {
+      "path": "G3_FRONTEND_LITERALSTYLE_REPAIR1_INDEPENDENT_REVIEW.md",
+      "sha256": "756b1e2f2c47303112db5e2857899ab1b88818d42bd6b19423911182528abf7e",
+      "bytes": 3051
+    }
+  ],
+  "reviewed_packet": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-literalstyle-repair1/SEAL.json",
+    "sha256": "f7eb2b3b336a51b6e8385d8b5f4682a427672a60c25164ca231eb536feff092e",
+    "declared_member_count": 4
+  },
+  "verified_members": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-literalstyle-repair1/change.diff",
+      "sha256": "e34881017950d3538b3153e8dad1ec06a668b386f9808e7a301805c1aa5df5cc",
+      "bytes": 735
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-literalstyle-repair1/MANIFEST.json",
+      "sha256": "14d75d17bc4b8e78c12ff1868a42a2804d0ee944ee33c9d698080372aabdb984",
+      "bytes": 469
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-literalstyle-repair1/postimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "sha256": "259112fc1fa7f63118440333a8464fa27d1201b0cf5ef7ad6b9d71542724efc3",
+      "bytes": 60735
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-literalstyle-repair1/preimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "sha256": "56b67aeb473b1cf68a5eb6b97de3790dc1c8b461f859145c4936b2e75699cfed",
+      "bytes": 60739
+    }
+  ],
+  "preimage": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/admissionsActionsRecovery.test.ts",
+    "sha256": "56b67aeb473b1cf68a5eb6b97de3790dc1c8b461f859145c4936b2e75699cfed",
+    "bytes": 60739,
+    "primary_matches_at_inspection": true
+  },
+  "postimage": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-literalstyle-repair1/postimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+    "sha256": "259112fc1fa7f63118440333a8464fa27d1201b0cf5ef7ad6b9d71542724efc3",
+    "bytes": 60735
+  },
+  "independent_proof": {
+    "old_line": "      if (key === indexKey(binding) && !changed) { changed = true; owner('auth:[\\\"b\\\",\\\"org-b\\\"]'); }",
+    "new_line": "      if (key === indexKey(binding) && !changed) { changed = true; owner('auth:[\"b\",\"org-b\"]'); }",
+    "removed_double_quote_escape_count": 4,
+    "exact_single_line_inverse_equal": true,
+    "old_span_count": 1,
+    "new_span_count": 1,
+    "manifest_inverse_exact": false,
+    "independent_inverse_exact": true
+  },
+  "metadata_discrepancy": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-literalstyle-repair1/MANIFEST.json",
+    "field": "inverse_exact",
+    "recorded": false,
+    "independently_verified": true,
+    "original_preserved": true,
+    "source_blocker": false
+  },
+  "runtime_string_semantics": "Same single-quoted JavaScript value auth:[\"b\",\"org-b\"]; no source evaluation performed",
+  "blocker_count": 0,
+  "qualification": "SOURCE_ONLY_NO_RUNTIME_OR_APPLICATION_CLAIM"
+}
+

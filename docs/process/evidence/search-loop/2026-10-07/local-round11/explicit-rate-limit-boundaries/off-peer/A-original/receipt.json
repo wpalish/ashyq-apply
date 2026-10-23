@@ -1,0 +1,73 @@
+{
+  "sealed_utc": "2026-10-08T02:44:59.015143+00:00",
+  "decision": "CONFIRMED_NATIVE_DEFECT_PROOF_ONLY_NO_PATCH",
+  "PLAN_sha256": "fff9a44e4534855efe8c6473587bca23775550955bfb859704e0b31084f413a1",
+  "source_sha256_before_after": {
+    "app/adapters/search/__init__.py": "744352635429689ec1ce88dbc1bae19214c712d234afed568e4b9c3123dfc239",
+    "app/adapters/search/exa_mcp.py": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+    "app/adapters/search/retrieval.py": "5a909e274fb4861b60209409b08fd51ef8febacc0d6021a38326335740512034",
+    "app/adapters/search/base.py": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+    "app/adapters/network_policy.py": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f",
+    "app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "tests/test_exa_mcp.py": "8e2b0f6dd0e7c1fbb00ab39cfb653b9cfc6bf6cdf31eddd113b0a2c0f1e0b2db",
+    "tests/test_search_throttle_latch.py": "b599450b25c28fab0c2dcc6b9d2891f4e59845e6de3ccc02b628c0eb0eb6ad96"
+  },
+  "raw_count": 14,
+  "all_executed": {
+    "total": 75,
+    "PASS": 62,
+    "RED": 13
+  },
+  "qualified_correct_fixtures": {
+    "total": 70,
+    "PASS": 58,
+    "RED": 12
+  },
+  "initial_original": {
+    "total": 58,
+    "PASS": 47,
+    "RED": 11
+  },
+  "selector_error_original_retained": "factory-meta-false.original.json:4PASS/1RED; corrected fresh metaFalse5PASS, no expectation edits",
+  "material_findings": [
+    "factory ignores explicit RATE_LIMITED/http_statusNone; same/different/new-after-refusal adapters keep dispatching",
+    "retrieval loops6 original families on explicit RATE_LIMITED/http_statusNone; current HTTP429 comparator stops1"
+  ],
+  "native_retry_default_true_separate": "Meta native search does2 _search_once tool dispatches before final exception; repeat/family count must not be confused with this existing multiplicity",
+  "native_meta_error_preserved": {
+    "reason": "rate limited",
+    "http_status": null,
+    "tool_HTTP_response_status": 200
+  },
+  "HTTP429_unchanged_comparator": true,
+  "normal_success_transport_timeout_metaFalse_controls": "PASS",
+  "actual_methods_unmodified": [
+    "get_search_provider",
+    "_ThrottleLatch.search",
+    "ExaMcpSearchProvider.search",
+    "ExaMcpSearchProvider._search_once",
+    "ExaMcpSearchProvider._post",
+    "ExaMcpSearchProvider._initialize",
+    "retrieval.discover_candidates"
+  ],
+  "allowed_seams": [
+    "config.get_settings synthetic exa_mcp selection",
+    "httpx.AsyncClient constructor\u2192MockTransport only",
+    "synthetic network_policy DNS resolver",
+    "module-local fake monotonic/sleep, existing timeout/Lock unchanged",
+    "isolated no-retry=False flag control explicitly declared; source unchanged"
+  ],
+  "reset_primary_or_STOP": false,
+  "code_source_rule_proposal": false,
+  "forbidden_actions": {
+    "network_realDNS_provider_model": 0,
+    "app_Git_gold_labels_scoring_STOP_mutations": 0,
+    "installs_or_production_db": 0
+  },
+  "cleanup": {
+    "all_children_completed": true,
+    "all_MockHTTP_clients_closed": true,
+    "no_server_or_DB_created": true
+  },
+  "source_only_scope": "Native production methods; strict capture first-refusal latch is separate and not modified/tested as broken"
+}

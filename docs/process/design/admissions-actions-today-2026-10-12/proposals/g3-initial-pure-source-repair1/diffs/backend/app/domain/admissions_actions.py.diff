@@ -1,0 +1,36 @@
+--- a/backend/app/domain/admissions_actions.py
++++ b/backend/app/domain/admissions_actions.py
+@@ -183,6 +183,17 @@
+ def apply_action(previous: object | None, intent: object, trusted_context: object) -> ActionTransitionV1:
+     """Apply one reviewed closed command, with allocated IDs/time supplied explicitly."""
+     request = validate_request(intent)
++    prior_receipt: s.ActionWriteReceiptV1 | None = None
++    if isinstance(request, s.CorrectDeclarationV1):
++        # A supplied saved receipt is checked before ordinary context validation,
++        # including raw forged instance values; corruption is a safe saved error.
++        prior_raw: object = None
++        if isinstance(trusted_context, BaseModel):
++            prior_raw = trusted_context.__dict__.get("prior_declaration_receipt")
++        elif isinstance(trusted_context, dict):
++            prior_raw = trusted_context.get("prior_declaration_receipt")
++        if prior_raw is not None:
++            prior_receipt = validate_model(s.ActionWriteReceiptV1, prior_raw, "saved_unreadable")
+     context = validate_model(ActionContextV1, trusted_context)
+     old = validate_model(s.CaseActionsStateV1, previous, "saved_unreadable") if previous is not None else None
+     if old is not None and old.profile_id != context.profile_id:
+@@ -269,9 +280,13 @@
+         current_app = application(request.application_id)
+         replacement: s.CorrectionValue
+         if isinstance(request, s.CorrectDeclarationV1):
+-            prior = context.prior_declaration_receipt
+-            if prior is None or prior.profile_id != context.profile_id or prior.event_id != request.prior_declaration.event_id or prior.revision != request.prior_declaration.revision or prior.kind != request.prior_declaration.kind or prior.revision > revision or prior.applied_delta.declaration is None or prior.applied_delta.declaration.application_id != current_app.id:
++            prior = prior_receipt
++            if prior is None or prior.profile_id != context.profile_id or prior.event_id != request.prior_declaration.event_id or prior.revision != request.prior_declaration.revision or prior.kind != request.prior_declaration.kind or prior.revision > revision:
+                 raise ActionError("record_not_found")
++            # Full receipt validation established one exact application mutation
++            # even when an earlier correction explicitly returned to planning.
++            if prior.affected_refs.application_ids != [current_app.id] or prior.applied_delta.applications[0].id != current_app.id:
++                raise ActionError("invalid_transition")
+             corrected = request.prior_declaration
+             replacement = request.replacement
+         else:

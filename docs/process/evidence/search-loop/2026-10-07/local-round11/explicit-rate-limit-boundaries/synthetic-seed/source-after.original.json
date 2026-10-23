@@ -1,0 +1,24 @@
+{
+  "snapshot999_match": true,
+  "primary_app_file_count": 242,
+  "primary_all_app_match": true,
+  "parent_owned_primary_differences": [
+    {
+      "file": "backend/tests/test_exa_mcp.py",
+      "expected_snapshot": "f0368bd1d02e4ff99120f3ab8e23cf85fcc23e39d9f72c6504de8ebd55abf596",
+      "primary_now": "b0e53700afc97c458508d45e5404566bd730af0de1a4a355210c5d1f5b85fd6a"
+    },
+    {
+      "file": "backend/tests/test_search_layer_budget_fixes.py",
+      "expected_snapshot": "6a26fe2bf1728e3c3defb0be46a29056bb8274c2c6bd5ef12fa2c4bdcd2ff386",
+      "primary_now": "a037d3f48bff9da00879f289379e87938b1db58e903a373ec863f73a78ccf321"
+    },
+    {
+      "file": "backend/tests/test_search_throttle_latch.py",
+      "expected_snapshot": "93c18b13acd64df5fb77e0fba0052e01a06ce1c1174ce7cbcc3de5a9ca2a5dd0",
+      "primary_now": "e8ff78ba31ab5d0e037343153b8ae09b43d3fb583bd8abb1ff64ef815bebf101"
+    }
+  ],
+  "same_frozen_app_source_tree_context": "5f75d14eb0b26e523fb5dcd4c5d2719515572d89d124544b36e2e89b5da3424b",
+  "fullLOCAL_manifest_sha256": "cbbf9287d2f7122885f64018f75b9e7a2d6fdffc00a13f7c74bb72fe67edcb52"
+}

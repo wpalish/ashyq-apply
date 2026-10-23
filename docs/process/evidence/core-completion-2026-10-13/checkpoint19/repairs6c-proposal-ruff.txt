@@ -1,0 +1,21 @@
+repairs6c-proposal/backend/tests/test_result_read_freshness.py:174:29: E702 Multiple statements on one line (semicolon)
+    |
+172 | …     value.claim_type = kind
+173 | …     row = ClaimRow(run_id=run_id, claim_type=kind, status=lifecycle, source_url=value.source_url, accessed_at=at, source_specificit…
+174 | …     session.add(row);session.flush();value.id = row.id
+    |                       ^ E702
+175 | …     # Read metadata is authoritative in columns even if the old payload disagrees.
+176 | …     value.accessed_at = NOW
+    |
+
+repairs6c-proposal/backend/tests/test_result_read_freshness.py:174:45: E702 Multiple statements on one line (semicolon)
+    |
+172 | …     value.claim_type = kind
+173 | …     row = ClaimRow(run_id=run_id, claim_type=kind, status=lifecycle, source_url=value.source_url, accessed_at=at, source_specificit…
+174 | …     session.add(row);session.flush();value.id = row.id
+    |                                       ^ E702
+175 | …     # Read metadata is authoritative in columns even if the old payload disagrees.
+176 | …     value.accessed_at = NOW
+    |
+
+Found 7 errors (5 fixed, 2 remaining).

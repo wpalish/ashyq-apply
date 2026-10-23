@@ -1,0 +1,43 @@
+
+> unimatch-frontend@0.1.0 lint
+> eslint src e2e --ext .ts,.tsx
+
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx
+   368:6   warning  React Hook useCallback has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+   392:42  warning  The ref value 'validationSerialRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'validationSerialRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+   492:6   warning  React Hook useCallback has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+   638:6   warning  React Hook useEffect has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                            react-hooks/exhaustive-deps
+   735:5   warning  React Hook useCallback has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+   747:6   warning  React Hook useCallback has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+   803:6   warning  React Hook useCallback has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+  1037:6   warning  React Hook useCallback has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+  1041:6   warning  React Hook useCallback has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+  1045:6   warning  React Hook useCallback has a missing dependency: 'setDraft'. Either include it or remove the dependency array                                                                                                                                                                          react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/DiscoverScreen.tsx
+  51:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/FeedScreen.tsx
+  139:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx
+  62:54  warning  The ref value 'intent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'intent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationGraphPanel.tsx
+  318:98  warning  The ref value 'generation.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'generation.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/ProfileScreen.tsx
+  129:36  warning  The ref value 'methodsSerial.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'methodsSerial.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/SharedRoutePanel.tsx
+  370:45   warning  The ref value 'readIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'readIntent.current' to a variable inside the effect, and use that variable in the cleanup function        react-hooks/exhaustive-deps
+  370:70   warning  The ref value 'previewIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'previewIntent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  370:93   warning  The ref value 'writeIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'writeIntent.current' to a variable inside the effect, and use that variable in the cleanup function      react-hooks/exhaustive-deps
+  370:118  warning  The ref value 'historyIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'historyIntent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx
+  144:54  warning  The ref value 'intent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'intent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 20 problems (0 errors, 20 warnings)
+

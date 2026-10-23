@@ -1,0 +1,9 @@
+# Native Demo calendar test setup closure
+
+**Read-only source review; fresh native terminal receipt pending.** The failed Demo's `source-before.json` and `source-after.json` both pin `frontend/e2e/preparation.spec.ts` at SHA-256 `d9965ce8643d528d034257561ee9ff9ee87358443bb4e8a12efaa408f62499a0`. The current execution copy and root work copy match SHA-256 `4333ea72af5a366262a72f7e2eb3ab8eab4b7dfb39839303a12555d29d1e8f2c`. In-memory reversal of exactly the three new-test setup regions reconstructs the failed source's **full-file** `d9965ce...` hash, so the byte delta is confined to those regions.
+
+The new calendar test now reloads the page at its start, asserts the server's legacy weekly budget is `240`, asserts the reloaded form shows `240`, and checks that **Preview updated learning path** is enabled before clicking it. The previous `page.goto('/#/preparation')` stayed on the same hash and retained the preceding conflict test's dirty form at `180`; the saved desktop error context shows that form, server revision 4, and a correctly disabled Preview button before timeout.
+
+The preceding test's external update, expected **409**, old form value `180`, server value `240`, disabled **Save study plan**, and conflict screenshot assertions are byte-identical. The new test's preview, explicit save, exact lesson version, own submission, reload, own attempt review, legacy-settings equality and official-score equality remain byte-identical after the setup. No force click, arbitrary delay, API mock, assertion relaxation, production dirty-form change, or runner change is present in this file delta.
+
+This closes the identified **test setup** defect by source comparison. It does not claim the new Demo test, full Demo/Auth suites, or current static gate has passed; those require their independent terminal receipts after the pending runs finish.

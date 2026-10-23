@@ -1,0 +1,63 @@
+{
+  "decision": "R0_NOT_ACCEPTED_STATIC_FINDINGS_ONLY",
+  "r0_status": "UNTESTED_NOT_APPLICABLE",
+  "own_findings": [
+    {
+      "id": "B-R0-1",
+      "priority": "P1",
+      "kind": "static material runtime provenance gap",
+      "file": "local_pilot.py",
+      "lines": "183-189,81-94",
+      "problem": "Resolved executable target is pinned, but dispatched original executable path may be a symlink. verify_binding never re-resolves actual executable argv path. Retargeting it leaves old target hash valid and dispatches different bytes.",
+      "necessary_check": "Use resolved pinned targets consistently or compare current argv path resolution/hash before each dispatch.",
+      "runtime_reproduced": false
+    },
+    {
+      "id": "B-R0-2",
+      "priority": "P1",
+      "kind": "static material original-stream seal gap",
+      "file": "local_pilot.py",
+      "lines": "378-384,493-496",
+      "problem": "Accepted journal events bind each original selector SHA, but final replay covers only last submit stream. Sealing scans current file hashes without verifying earlier stream hashes/events and replaying all original completed decisions into final journal.",
+      "necessary_check": "Final gate rehash/replay all original turn files+accepted events against exact immutable prior/new journal chain; retain whole fact citation proof.",
+      "runtime_reproduced": false
+    },
+    {
+      "id": "B-R0-3",
+      "priority": "P2",
+      "kind": "static wall evidence validation gap",
+      "file": "expert/models.py",
+      "lines": "714-718,845-865",
+      "problem": "Per-record0<=wall_before<=wall_after<=900000 does not enforce cross-action monotonic wall or wall delta covering action elapsed. Final validate_trace carries only read/query/research elapsed counters; resume validates cross-record wall but final trace alone does not.",
+      "necessary_check": "Wall-only final whole-trace validation rejects decreasing wall counters and impossible action duration; legacy validation unchanged.",
+      "runtime_reproduced": false
+    },
+    {
+      "id": "B-R0-4",
+      "priority": "P2",
+      "kind": "static resume provenance gap without demonstrated cap overrun",
+      "file": "expert/controller.py",
+      "lines": "191-218,256-281",
+      "problem": "resume_summary policy checked for action_deadline only; new summary timing_policy/protective_wall/current summary budget fields are not bound to selected policy. Raw logs are checked, so this is contradictory summary acceptance rather than proven live overrun.",
+      "necessary_check": "Explicit wall-only summary/raw/plan agreement including caps/clock metadata; preserve old absent-mode legacy summaries.",
+      "runtime_reproduced": false
+    },
+    {
+      "id": "B-R0-5",
+      "priority": "P2",
+      "kind": "static malformed legacy error contract regression; outer route remains closed",
+      "file": "expert/models.py",
+      "lines": "709-710,739-741",
+      "problem": "Truthy non-dict tool_policy is dereferenced before type guard, now AttributeError instead of prior ValueError.",
+      "necessary_check": "Validate structured policy type before get; finite malformed policy rejection.",
+      "runtime_reproduced": false
+    }
+  ],
+  "root_parallel_findings_not_reproduced": [
+    "missing pre-university two real neutral probes",
+    "registry URL/domain mismatch",
+    "attempted lists append before successful gate reserve",
+    "sealed histories and influencing non-code input pins incomplete"
+  ],
+  "native_tests_or_imports": 0
+}

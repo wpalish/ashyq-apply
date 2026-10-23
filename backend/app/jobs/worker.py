@@ -17,6 +17,7 @@ import signal
 import sys
 from datetime import UTC, datetime, timedelta
 
+from app.adapters.search.intent import QueryPrivacyError
 from app.config import Settings, get_settings
 from app.db import session_scope
 from app.domain.enums import PipelineStage
@@ -24,6 +25,7 @@ from app.jobs.store import JobStore, worker_identity
 from app.logging_setup import configure_logging, set_correlation_id
 from app.models import ApplicantProfileRow, AuditEvent, Job, JobStatus, ResearchRun
 from app.models.base import ensure_utc
+from app.pipeline.control import UniversityReadStopped
 from app.pipeline.runner import LeaseLost, ResearchRunner, RunCancelled
 from app.schemas.profile import ApplicantProfileIn
 
@@ -148,7 +150,18 @@ class Worker:
             log.info("job %s cancelled", job_id[:8])
         except Exception as exc:
             self.jobs_failed += 1
-            log.exception("job %s failed", job_id[:8])
+            if isinstance(exc, UniversityReadStopped) and exc.reason == "checkpoint_busy":
+                # The checkpoint rolled back because another transaction holds
+                # its row. A failure UPDATE can wait on that same lock. Leave
+                # durable state untouched; after its lease expires the existing
+                # reaper reclaims this same job/episode with a new attempt token.
+                log.warning("job %s checkpoint busy; recovery deferred to lease reaper", job_id[:8])
+                return
+            if isinstance(exc, QueryPrivacyError):
+                # Do not serialize a chained rejected input through exc_info.
+                log.error("job %s failed: %s: %s", job_id[:8], type(exc).__name__, exc)
+            else:
+                log.exception("job %s failed", job_id[:8])
             with session_scope() as session:
                 status = JobStore(session, worker_id=self.worker_id).fail(
                     job_id, f"{type(exc).__name__}: {exc}", lease_token=lease_token

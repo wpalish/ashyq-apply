@@ -1,0 +1,5 @@
+{
+  "fixture": "existing tests.conftest.postgres_url finally server.cleanup() + shutil.rmtree",
+  "matching_live_postgres_server_processes": [],
+  "observation": "No matching local unittest PGDATA server process observed after pytest return; no processes were killed by reviewer."
+}

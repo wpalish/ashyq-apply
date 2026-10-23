@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="20" failures="19" errors="0" time="0.288632125">
+    <testsuite name="src/lib/store.profileValidation.test.tsx" timestamp="2026-10-14T04:56:13.355Z" hostname="iMac-Aliser.local" tests="7" failures="6" errors="0" skipped="0" time="0.035217167">
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="keeps the newer report after an old success" time="0.015348417">
+            <failure message="expected &apos;Old input&apos; to be &apos;New input accepted&apos; // Object.is equality" type="AssertionError">
+AssertionError: expected &apos;Old input&apos; to be &apos;New input accepted&apos; // Object.is equality
+
+Expected: &quot;New input accepted&quot;
+Received: &quot;Old input&quot;
+
+ ❯ src/lib/store.profileValidation.test.tsx:29:37
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="keeps the newer report after an old failure" time="0.004734917">
+            <failure message="expected undefined to be &apos;New input accepted&apos; // Object.is equality" type="AssertionError">
+AssertionError: expected undefined to be &apos;New input accepted&apos; // Object.is equality
+
+- Expected:
+&quot;New input accepted&quot;
+
++ Received:
+undefined
+
+ ❯ src/lib/store.profileValidation.test.tsx:29:37
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="hides the old report immediately when its checked draft changes" time="0.005077708">
+            <failure message="expected { gaps: [], can_proceed: true, …(2) } to be null" type="AssertionError">
+AssertionError: expected { gaps: [], can_proceed: true, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  &quot;blocking_count&quot;: 0,
+  &quot;can_proceed&quot;: true,
+  &quot;gaps&quot;: [],
+  &quot;summary&quot;: &quot;Old input&quot;,
+}
+
+ ❯ src/lib/store.profileValidation.test.tsx:33:106
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="rejects validation from an earlier case generation through &quot;B&quot;" time="0.002847625">
+            <failure message="expected { gaps: [], can_proceed: true, …(2) } to be null" type="AssertionError">
+AssertionError: expected { gaps: [], can_proceed: true, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  &quot;blocking_count&quot;: 0,
+  &quot;can_proceed&quot;: true,
+  &quot;gaps&quot;: [],
+  &quot;summary&quot;: &quot;Old case&quot;,
+}
+
+ ❯ src/lib/store.profileValidation.test.tsx:38:84
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="rejects validation from an earlier case generation through &quot;B&quot;" time="0.002384375">
+            <failure message="expected { gaps: [], can_proceed: true, …(2) } to be null" type="AssertionError">
+AssertionError: expected { gaps: [], can_proceed: true, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  &quot;blocking_count&quot;: 0,
+  &quot;can_proceed&quot;: true,
+  &quot;gaps&quot;: [],
+  &quot;summary&quot;: &quot;Old case&quot;,
+}
+
+ ❯ src/lib/store.profileValidation.test.tsx:38:84
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="rejects validation when edits returned to the same serialized draft" time="0.00162275">
+            <failure message="expected { gaps: [], can_proceed: true, …(2) } to be null" type="AssertionError">
+AssertionError: expected { gaps: [], can_proceed: true, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  &quot;blocking_count&quot;: 0,
+  &quot;can_proceed&quot;: true,
+  &quot;gaps&quot;: [],
+  &quot;summary&quot;: &quot;Earlier input generation&quot;,
+}
+
+ ❯ src/lib/store.profileValidation.test.tsx:43:100
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="debounces unsent input while checking the exact latest draft" time="0.001901875">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ProfileScreen.context.test.tsx" timestamp="2026-10-14T04:56:13.357Z" hostname="iMac-Aliser.local" tests="13" failures="13" errors="0" skipped="0" time="0.253414958">
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a conversion from an earlier case generation through &quot;B&quot;" time="0.04910875">
+            <failure message="expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 3.2, …(2) }" type="AssertionError">
+AssertionError: expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 3.2, …(2) }
+
+- Expected
++ Received
+
+  {
++   &quot;converted_value&quot;: 3.9,
+    &quot;raw_scale_label&quot;: &quot;Synthetic scale&quot;,
+    &quot;raw_scale_max&quot;: 5,
+-   &quot;raw_value&quot;: 3.2,
++   &quot;raw_value&quot;: 4.8,
+  }
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:43:17
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a conversion from an earlier case generation through &quot;B&quot;" time="0.020814625">
+            <failure message="expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.8, …(2) }" type="AssertionError">
+AssertionError: expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.8, …(2) }
+
+- Expected
++ Received
+
+  {
++   &quot;converted_value&quot;: 3.9,
+    &quot;raw_scale_label&quot;: &quot;Synthetic scale&quot;,
+    &quot;raw_scale_max&quot;: 5,
+    &quot;raw_value&quot;: 4.8,
+  }
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:43:17
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a preview after GPA editing, even when reverted: false" time="0.0171315">
+            <failure message="expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.1, …(2) }" type="AssertionError">
+AssertionError: expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.1, …(2) }
+
+- Expected
++ Received
+
+  {
++   &quot;converted_value&quot;: 3.9,
+    &quot;raw_scale_label&quot;: &quot;Synthetic scale&quot;,
+    &quot;raw_scale_max&quot;: 5,
+-   &quot;raw_value&quot;: 4.1,
++   &quot;raw_value&quot;: 4.8,
+  }
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:48:129
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a preview after GPA editing, even when reverted: true" time="0.013748459">
+            <failure message="expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.8, …(2) }" type="AssertionError">
+AssertionError: expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.8, …(2) }
+
+- Expected
++ Received
+
+  {
++   &quot;converted_value&quot;: 3.9,
+    &quot;raw_scale_label&quot;: &quot;Synthetic scale&quot;,
+    &quot;raw_scale_max&quot;: 5,
+    &quot;raw_value&quot;: 4.8,
+  }
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:48:129
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="ignores an old conversion success after a newer accepted preview" time="0.020658666">
+            <failure message="expected 2 to be 3.9 // Object.is equality" type="AssertionError">
+AssertionError: expected 2 to be 3.9 // Object.is equality
+
+- Expected
++ Received
+
+- 3.9
++ 2
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:56:33
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="ignores an old conversion error after a newer accepted preview" time="0.020537834">
+            <failure message="expected &lt;div …(1)&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/div&gt; to be null" type="AssertionError">
+AssertionError: expected &lt;div …(1)&gt;&lt;strong&gt;&lt;/strong&gt;&lt;/div&gt; to be null
+
+- Expected:
+null
+
++ Received:
+&lt;div
+  data-testid=&quot;conversion-error&quot;
+&gt;
+  &lt;strong&gt;
+    The conversion was not applied.
+  &lt;/strong&gt;
+   
+  Old refusal
+   Your grade is unchanged.
+&lt;/div&gt;
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:56:93
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="discards accepted transcript suggestions on case change through &quot;B&quot;" time="0.015337208">
+            <failure message="expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null" type="AssertionError">
+AssertionError: expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null
+
+- Expected:
+null
+
++ Received:
+&lt;button
+  class=&quot;btn btn--sm&quot;
+  data-testid=&quot;apply-academics.gpa&quot;
+  type=&quot;button&quot;
+&gt;
+  Use this
+&lt;/button&gt;
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:63:55
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="discards accepted transcript suggestions on case change through &quot;B&quot;" time="0.016000625">
+            <failure message="expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null" type="AssertionError">
+AssertionError: expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null
+
+- Expected:
+null
+
++ Received:
+&lt;button
+  class=&quot;btn btn--sm&quot;
+  data-testid=&quot;apply-academics.gpa&quot;
+  type=&quot;button&quot;
+&gt;
+  Use this
+&lt;/button&gt;
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:63:55
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a pending transcript response through &quot;B&quot;" time="0.016356167">
+            <failure message="expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null" type="AssertionError">
+AssertionError: expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null
+
+- Expected:
+null
+
++ Received:
+&lt;button
+  class=&quot;btn btn--sm&quot;
+  data-testid=&quot;apply-academics.gpa&quot;
+  type=&quot;button&quot;
+&gt;
+  Use this
+&lt;/button&gt;
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:70:55
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a pending transcript response through &quot;B&quot;" time="0.019562208">
+            <failure message="expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null" type="AssertionError">
+AssertionError: expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null
+
+- Expected:
+null
+
++ Received:
+&lt;button
+  class=&quot;btn btn--sm&quot;
+  data-testid=&quot;apply-academics.gpa&quot;
+  type=&quot;button&quot;
+&gt;
+  Use this
+&lt;/button&gt;
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:70:55
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="requires a fresh transcript choice after editing the input GPA" time="0.014027584">
+            <failure message="expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null" type="AssertionError">
+AssertionError: expected &lt;button type=&quot;button&quot; …(2)&gt;&lt;/button&gt; to be null
+
+- Expected:
+null
+
++ Received:
+&lt;button
+  class=&quot;btn btn--sm&quot;
+  data-testid=&quot;apply-academics.gpa&quot;
+  type=&quot;button&quot;
+&gt;
+  Use this
+&lt;/button&gt;
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:76:55
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="retains only the newest transcript read and its explicit suggestion" time="0.016038667">
+            <failure message="expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Newest reading
+Received:
+  Old reading" type="Error">
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Newest reading
+Received:
+  Old reading
+ ❯ src/screens/ProfileScreen.context.test.tsx:84:49
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="does not show methods returned for an earlier scale" time="0.012975333">
+            <failure message="expected &lt;button type=&quot;button&quot; …(3)&gt;&lt;/button&gt; to be null" type="AssertionError">
+AssertionError: expected &lt;button type=&quot;button&quot; …(3)&gt;&lt;/button&gt; to be null
+
+- Expected:
+null
+
++ Received:
+&lt;button
+  class=&quot;btn btn--sm&quot;
+  data-testid=&quot;convert-synthetic&quot;
+  title=&quot;Not official&quot;
+  type=&quot;button&quot;
+&gt;
+  Convert to 
+  4
+&lt;/button&gt;
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:91:137
+            </failure>
+        </testcase>
+    </testsuite>
+</testsuites>

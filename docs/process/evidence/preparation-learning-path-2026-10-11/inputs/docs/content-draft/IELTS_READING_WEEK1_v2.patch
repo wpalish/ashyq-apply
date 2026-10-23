@@ -1,0 +1,103 @@
+--- IELTS_READING_WEEK1.md
++++ IELTS_READING_WEEK1_v2.md
+@@ -2,7 +2,7 @@
+ 
+ **Статус:** ORIGINAL CONTENT DRAFT / SUBJECT QUALITY REVIEW PENDING / NOT INTEGRATED.
+ 
+-**Дата и версия:** 2026-10-11 · `reading-week1-2026-10-11-draft-v1`.
++**Дата и версия:** 2026-10-11 · `reading-week1-2026-10-11-draft-v2`.
+ 
+ Это следующий reviewable increment после существующего starter «stated evidence and inference»: **три новых урока и 15 новых scored practice items**, по 5 на урок. Это не полный IELTS course, не официальный mock и не оценка IELTS band. Existing foundation остаётся 3 урока/9 вопросов; этот файл не увеличивает число доступных в приложении уроков.
+ 
+@@ -11,6 +11,12 @@
+ **Предлагаемая аудитория:** learner, которому уже удобно читать связный английский текст и искать подтверждение ответа. CEFR, сложность IELTS и learning outcomes этого draft не калиброваны. Уроки могут потребовать поддержки преподавателя. Student-facing teaching/passages/questions на английском; редакторские границы на русском.
+ 
+ **Teacher/editor edition:** ключи и разборы намеренно включены для review. Перед learner delivery их надо отделить от первоначальных questions и показывать после отправки. Версия контента и принятые попытки должны сохраняться; старые записи не переписываются.
++
++## Что исправлено в v2
++
++Отдельный v1 сохранён без изменений. В его Lesson 2 правило «только полная указанная phrase» было слишком строгим: инструкция с максимумом в два слова допускала короткие, грамматически подходящие слова из passage. Предлагаемый grader мог бы ошибочно отклонять правильные ответы.
++
++В v2 вопрос 1 уже содержит *foam*, поэтому в blank требуется *dividers*; для вопросов 3–5 явно перечислены допустимые короткие варианты. Teaching объясняет максимум слов, а критерий review различает правильный смысл и допустимые формы ответа. Lesson 1, Lesson 3, passages и недельное расписание сохранены. Это исправление content/grading specification, не реализованный grader. Полная предметная приёмка по-прежнему PENDING.
+ 
+ ## Week 1 syllabus
+ 
+@@ -112,7 +118,7 @@
+ 
+ ## Lesson 2 — Find the detail, then fit the answer
+ 
+-**Skill mapping:** scan for a paraphrased detail; distinguish object/function/date/count; recover an exact noun phrase; check a grammar slot and stated answer limit.
++**Skill mapping:** scan for a paraphrased detail; distinguish object/function/date/count; recover sufficient exact source words; check a grammar slot and stated answer limit.
+ 
+ **Practice format:** sentence completion. Five scored items. This is a proposed short-answer format, not an existing API capability.
+ 
+@@ -122,14 +128,14 @@
+ 
+ Before scanning, identify the slot:
+ 
+-- After *separated by*, expect the material or objects doing the separating.
++- If an adjective is already supplied before the blank, identify the noun it describes without repeating that adjective.
+ - Before *discussion cards*, a blank may need a quantity.
+ - After *on a*, expect a singular countable noun phrase.
+ - After *attend a*, expect an event, not a person or document.
+ 
+ Find a likely paragraph using the question's meaning, not only a repeated word. Read the relevant sentence and at least one sentence around it. Then copy the necessary words from the text. Do not replace them with an attractive synonym when the instruction says to use words from the passage.
+ 
+-Check the completed sentence for meaning and grammar. Finally check the word limit. An answer can be a correct detail but still fail the task because extra words make the sentence ungrammatical or exceed the limit.
++Check the completed sentence for meaning and grammar. Finally check the word limit. **No more than two words** is a maximum, not a requirement to use two words or copy every modifier. A shorter answer can be valid when its source words give the required meaning and fit the sentence. Do not repeat words already supplied in the question. Extra words can make the completed sentence ungrammatical or exceed the limit.
+ 
+ **Before answering:** underline the required slot in each question. This note is ungraded. You may return to the passage as often as needed; this lesson does not impose an official exam time limit.
+ 
+@@ -161,9 +167,9 @@
+ 
+ ### Questions 1–5
+ 
+-Complete each sentence using **NO MORE THAN TWO WORDS AND/OR A NUMBER from the passage**. The final sentence must be grammatical. Do not add an explanation in the answer blank.
+-
+-1. The compartments containing replicas are separated by ____.
++Complete each sentence using **NO MORE THAN TWO WORDS AND/OR A NUMBER from the passage**. The final sentence must be grammatical. The word limit is a maximum; a sufficient one-word answer is allowed. Do not repeat words already supplied in the question or add an explanation in the answer blank.
++
++1. The replicas sit in compartments separated by foam ____.
+ 2. Each box contains ____ discussion cards.
+ 3. Visible marks are recorded on a ____ when the teacher collects the box.
+ 4. A first-time borrower responsible for classroom work must attend a ____.
+@@ -171,15 +177,21 @@
+ 
+ ### Teacher key and explanations — reveal after submission
+ 
+-| Item | Key | Location, grammar and reasoning |
+-| --- | --- | --- |
+-| 1 | **foam dividers** | B identifies what divides the compartments. *Cardboard case* describes the outside; *internal frame* is a different part. Two words, plural noun phrase. |
+-| 2 | **36** | C states the number of discussion cards directly. The word *cards* is already supplied after the blank, so adding it would repeat the noun. One number. |
+-| 3 | **condition sheet** | C records marks on this sheet. The inventory counts items but cannot record their borrowed condition. Two words after the supplied article *a*. |
+-| 4 | **briefing session** | D requires this introduction from the teacher responsible for the class. It is not a written test. Two words; the supplied *a* is not copied into the blank. |
+-| 5 | **download code** | E says teachers use this code to reach the image and sheet files. The printed guide contains it; *memory stick* is an option the team rejected. Two words. |
+-
+-**Draft grading contract:** one point for the listed answer that fits the sentence and limit. Ignore letter case and surrounding/repeated spaces. Accept `36` for item 2; no alternative numeric wording is specified in this draft. Do not accept a missing key word, a synonym not in the passage or an extra noun that makes the completed sentence ungrammatical. Punctuation at the end of an answer may be ignored. Subject reviewer must confirm this strictness before any automated grader is built.
++| Item | Accepted source-exact answers | Location, grammar and reasoning |
++| --- | --- | --- |
++| 1 | **dividers** | B states *foam dividers*. The question already supplies *foam*, so *dividers* completes *foam dividers*. Copying *foam dividers* into this blank would repeat *foam*. *Internal frame* names a different part. |
++| 2 | **36** | C states the number of discussion cards directly. *Cards* is already supplied after the blank, so adding it would repeat the noun. One number; alternative number wording is not in this passage. |
++| 3 | **condition sheet**; **sheet** | C records visible marks on a condition sheet. Both *a condition sheet* and *a sheet* are grammatical and identify the evidenced recording surface here. The task does not require the modifier *condition*. *Inventory* is a different document used to count objects. |
++| 4 | **briefing session**; **briefing**; **session** | D requires attendance at a briefing session. All three source-exact forms name that required introduction and fit *attend a*. A written test is explicitly not required. Neither the word limit nor the stem requires both words. |
++| 5 | **download code**; **code** | E says teachers use this code to reach the image and sheet files. Both source-exact forms fit *using a* and identify the access detail. *Memory stick* names a rejected option. The modifier *download* is not compulsory under this stem. |
++
++### Proposed grading contract — not implemented
++
++Award one practice point when an answer equals one of the **item-specific accepted forms above** after the documented normalization. For this proposal, normalize only letter case, surrounding/repeated whitespace and one optional final full stop. Preserve word order; do not remove interior words, singular/plural endings or other punctuation. The source-word/number limit applies to the normalized answer. Any additional semantically valid form found during human review must be added explicitly before release; the listed modifier rules must not silently reject a valid one-word answer.
++
++Use complete equality against that item's accepted forms, **not substring matching**. For example, *sheet* is accepted for item 3, but *paper inventory* is not accepted merely because it refers to a document. *Session* is accepted for item 4, but *written test* is not. *Code* is accepted for item 5, but *memory stick* is not. *Foam dividers* is rejected for the revised item 1 because the completed sentence would say *foam foam dividers*; that rejection follows the revised stem, not a demand for a longer phrase.
++
++Before a future grader is integrated, retain explicit checks for every accepted form (including *sheet*, *briefing*, *session* and *code*), case/whitespace normalization, the optional terminal full stop, wrong-item details, repeated provided words and answers exceeding the word/number limit. These are proposed acceptance criteria, **not executed tests**. Subject review and the new short-answer API/grader contract remain PENDING.
+ 
+ **Review task, ungraded:** write one row per item: *question asks for / text says / final answer*. For item 3, explicitly explain the difference between an inventory and a condition sheet. This teaches evidence discrimination, not guessing from the nearest noun.
+ 
+@@ -263,7 +275,7 @@
+ 
+ ### Что reviewer должен подтвердить
+ 
+-- Для каждого из 15 items существует единственный обоснованный key при данной инструкции; нет альтернативного heading/person/phrase с таким же основанием. Проверить особенно область heading A/C в Lesson 1, grammar/word-limit strictness Lesson 2 и повтор A в Lesson 3.
++- Для каждого из 15 items определить один подтверждённый passage смысл/соответствие. В Lesson 1/3 должен быть единственный обоснованный heading/person. В Lesson 2 нужно проверить все допустимые source-exact формы, грамматику и лимит; одинаковый правильный смысл может выражаться полной phrase или коротким словом. Проверить особенно область heading A/C в Lesson 1, варианты и revised stem Lesson 2 и повтор A в Lesson 3.
+ - Английский passage и teaching понятны, связны и без лишних подсказок/непреднамеренной неоднозначности; текстовая сложность измеряется отдельно, не объявляется IELTS band или CEFR без проверки.
+ - Все distractors и explanations используют только исходный passage. Не требуются культурные знания, реальная информация о городе/музее или догадки о человеке.
+ - Доказательная ссылка для каждого key указывает на точный абзац; исправления explanation не подменяют learner answer. Все оригинальные passages/keys остаются versioned.

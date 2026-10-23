@@ -1,0 +1,27 @@
+{
+  "step": "selected-tests",
+  "argv": [
+    [
+      "/Users/wpalish/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "src/screens/PreparationScreen.test.tsx",
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "src/api/client.preparation.test.ts",
+      "src/api/client.learningPath.test.ts",
+      "src/screens/StudySchedulePanel.test.tsx",
+      "src/components/TeachingText.test.tsx",
+      "--reporter=default",
+      "--reporter=junit",
+      "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/evidence/accepted/junit.xml"
+    ]
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend",
+  "started_at": "2026-10-11T16:17:21.414260+00:00",
+  "ended_at": "2026-10-11T16:17:22.556183+00:00",
+  "exit_code": 0,
+  "command_exit_codes": [
+    0
+  ],
+  "scope": "isolated exact dependency copy; selected mocked offline controls, not native E2E/root/source acceptance"
+}

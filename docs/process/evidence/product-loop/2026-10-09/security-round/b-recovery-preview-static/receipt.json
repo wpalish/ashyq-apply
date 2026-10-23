@@ -1,0 +1,62 @@
+{
+  "status": "QUALIFIED_ACCEPT",
+  "recorded_at": "2026-10-09T01:11:55.180146+00:00",
+  "review_kind": "SAVED_ONLY_EXACT_BINDING_PATH_DIFF",
+  "helper_sha256": "02c5c7bdd5488e3bf11a12b24addd6207674fc170ad0adb17044534f6c3599be",
+  "launcher_sha256": "1bb71a0c25a64c96ba1790618dd56fc3fa7eab1cdc121f7356a4a811567ba258",
+  "helper_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-security-ui-recovery-plan/verify_bound_ui_inputs.py",
+  "launcher_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview_auth_recovery.py",
+  "C_ready_sha256": "a5f4afe6697f396180e8783eadb53435d68f896cbda758ec1080a5435a28857e",
+  "C_files": {
+    "PLAN.md": {
+      "sha256": "f2a9b73839bed3c5c6f1347c0ad52f0eeb2730cafd3a4cfe4c53c1ff6ca04242",
+      "bytes": 15946
+    },
+    "verify_bound_ui_inputs.py": {
+      "sha256": "02c5c7bdd5488e3bf11a12b24addd6207674fc170ad0adb17044534f6c3599be",
+      "bytes": 10190
+    },
+    "binding-template.json": {
+      "sha256": "b2173315913e4b0b5638d786ec65b195ed0073de901594f4c6e4f892d73134e5",
+      "bytes": 1412
+    },
+    "test-data.json": {
+      "sha256": "6407e6f84dfaaa14e8da36fa48d6b20be13ad30412931ebed8407b517ffbfd95",
+      "bytes": 1917
+    },
+    "read-source-pins.json": {
+      "sha256": "4d4ec238eed5e1f974fcd14772ddfad98e22351c7fff84e6f44af5fe7eddd8d6",
+      "bytes": 8132
+    }
+  },
+  "C_all5_verified": true,
+  "helper_exact_only_substitutions": {
+    "applied-source-pins.json -> recovery-source-pins.json": 1,
+    "applied-head.txt -> recovery-head.txt": 2,
+    "native-queue/execution.json -> native-queue-recovery/execution.json": 1
+  },
+  "launcher_exact_only_substitutions": {
+    "applied-source-pins.json -> recovery-source-pins.json": 1
+  },
+  "old_accepted_helper_and_launcher_unchanged": true,
+  "material_blockers": [],
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "qualification": {
+    "execution": "NOT_RUN",
+    "recovery_source_head_full_queue_delta": "PENDING_NOT_BOUND",
+    "prior_failed_full": "No reused or relabeled PASS; original failed queue remains immutable",
+    "scope": "Static acceptance of exact filename-binding siblings. Inherits qualified verifier/launcher lifecycle acceptance only; does not confer ROOT GO/runtime readiness/full success. Root must bind new repaired source19/head and terminal passed native recovery full before launch.",
+    "unchanged_invariants": [
+      "No worker/seed/old DB copy",
+      "Fresh owned SQLite and lifetime sharedlock/cleanup",
+      "Source/env/STOP checks before/active/post",
+      "Proxy-free readiness and explicit env",
+      "Early exits/time cap remain nonzero",
+      "Finite seven synthetic UI captures/limitations unchanged"
+    ],
+    "reviewer_calls": "No tests, imports, processes, DB, ports, network/provider/model/browser/Git or primary mutation"
+  }
+}

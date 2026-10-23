@@ -1,0 +1,79 @@
+{
+  "phase": "sqlite",
+  "runtime": "/private/tmp/um-full-aa35ui2e",
+  "mode": "FOCUSED_DIAGNOSTIC_NOT_FULL",
+  "scope": "Focused native harness controls; NOT a full gate or coverage proof",
+  "os_probe": {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/focused-final3/20261011T234527391948Z/sqlite/network.sb",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/backend/.venv/bin/python",
+      "-I",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/backend-full/os_network_probe.py",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/focused-final3/20261011T234527391948Z/sqlite/os-network-probe.json"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_seconds": 0.089,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "pytest": {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/focused-final3/20261011T234527391948Z/sqlite/network.sb",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/backend-full/pytest_full.py",
+      "tests/test_preparation_graph.py",
+      "tests/test_preparation_graph_api.py",
+      "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/focused-final3/20261011T234527391948Z/sqlite/junit.xml",
+      "--tb=short",
+      "--basetemp=/private/tmp/um-full-aa35ui2e/tmp/pytest",
+      "-p",
+      "no:cacheprovider",
+      "-p",
+      "pytest_cov.plugin",
+      "-p",
+      "pytest_asyncio.plugin",
+      "-p",
+      "mock_endpoint_plugin"
+    ],
+    "exit_code": 1,
+    "timed_out": false,
+    "duration_seconds": 24.752,
+    "log_sha256": "96d29323e2245278351cb3e726ef6d8106c69918e430ef446f17336d237d3b3c"
+  },
+  "junit": {
+    "tests": 214,
+    "failures": 21,
+    "errors": 0,
+    "skips": 0,
+    "sha256": "695a77bcf5b4e8cafe31b7c629e66c533483872222bb10223a7c37279da76d7e"
+  },
+  "coverage_percent": null,
+  "outside_attempts": [],
+  "guard_startup_failures": [],
+  "guard_receipts": 1,
+  "pg_connection_events": 163,
+  "ipv6_trait_restored": true,
+  "app_preimported": false,
+  "status": "FOCUSED_DIAGNOSTIC_FAIL_NOT_FULL",
+  "source_unchanged_during_gate": true,
+  "owned_cluster_cleanup": [],
+  "active_cluster_markers": [],
+  "shutdown_confirmed": true,
+  "runtime_removed": true,
+  "evidence_hashes": {
+    "pytest.log": "96d29323e2245278351cb3e726ef6d8106c69918e430ef446f17336d237d3b3c",
+    "source-before.json": "1e9b0d0eaa7f783f0760c0349d2eba19fa751001f1f03bfeb76dd2c4f1f2540e",
+    "private-pg-probe.json": "b3a2e2c71025ab2ea8bfec81c7047a5e8204faa9684ccc51cb262f39a21d9a1f",
+    "source-after.json": "1e9b0d0eaa7f783f0760c0349d2eba19fa751001f1f03bfeb76dd2c4f1f2540e",
+    "os-network-probe.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "guard-6695.json": "3be0728018943a3aeeb5e627c2322d2d4682fcc6ca31bbe87b0ca6c3a84e14d3",
+    "os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+    "os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+    "network.sb": "fa6a1479b09eaa3dc739a5679a2eb66aacabc3c95fc6e54075a30f09ba34074d",
+    "junit.xml": "695a77bcf5b4e8cafe31b7c629e66c533483872222bb10223a7c37279da76d7e"
+  }
+}

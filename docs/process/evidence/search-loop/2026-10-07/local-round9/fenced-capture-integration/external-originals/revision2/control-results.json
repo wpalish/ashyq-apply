@@ -1,0 +1,66 @@
+{
+  "old-candidate-control/pytest-red1.xml": {
+    "passed": 0,
+    "failed": 5,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 3.626,
+    "by_module": {
+      "local-round8.a-genuine-canary.revision2.old-candidate-control.test_canary_fenced_job": 5
+    }
+  },
+  "pre-provenance-control/pytest-red1.xml": {
+    "passed": 0,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 0.359,
+    "by_module": {
+      "local-round8.a-genuine-canary.revision2.pre-provenance-control.test_canary_fenced_job": 1
+    }
+  },
+  "pytest-attempt1.xml": {
+    "passed": 46,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 6.602,
+    "by_module": {
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 29,
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+    }
+  },
+  "pytest-attempt2.xml": {
+    "passed": 46,
+    "failed": 2,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 7.096,
+    "by_module": {
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 31,
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+    }
+  },
+  "pytest-attempt3.xml": {
+    "passed": 46,
+    "failed": 2,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 7.109,
+    "by_module": {
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 31,
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+    }
+  },
+  "pytest-attempt4.xml": {
+    "passed": 48,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 6.962,
+    "by_module": {
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_canary_fenced_job": 31,
+      "local-round8.a-genuine-canary.revision2.proposed.tests.test_readguard_capture_protocol": 17
+    }
+  }
+}

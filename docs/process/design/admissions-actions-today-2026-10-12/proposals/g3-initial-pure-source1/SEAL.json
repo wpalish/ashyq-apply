@@ -1,0 +1,115 @@
+{
+  "schema_version": "external-source-proposal-seal-v1",
+  "created_on": "2026-10-12",
+  "status": [
+    "NOT_APPLIED",
+    "NOT_IMPORTED",
+    "NOT_RUN",
+    "NOT_ACCEPTED"
+  ],
+  "immutable_first_authored_snapshot": true,
+  "application_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "proposal_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-pure-source1",
+  "authority": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_SOURCE_GRANT.json",
+    "sha256": "2d69074ecf90d164b8535484004667feca1529c9eea92a8352acd503c190ceb2",
+    "accepted_contract_pins": {
+      "ROOT_G3_FINITE_CONTRACT_ACCEPTANCE.json": "f9ca10267d61139eb0dc5d48a854ff0f639815d75e27f69eaf3b0a8c04073d21",
+      "ROOT_G3_DESIGN_ACCEPTANCE.md": "81fc914fd0756436ebd3974ad7847131e90c5e19b64121fb2733b5fd36d8f70d",
+      "proposals/g3-design/G3_CONTRACT_DESIGN_V2.md": "7b3857d7a273e3bbb3b38644101a03fd41159bbc121b406b3a76ef929f3edbbb",
+      "proposals/g3-design/G3_IMPLEMENTATION_DEPENDENCY_MAP.md": "81171a86f90c11e19438efe760ad9e0cd4fcbc394c036a3ec7f9bb1143537bdb",
+      "proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM_FINAL_V2.md": "0c15b69b2cdb9347a1f30501822aeff4cf913f3e12d08635bdd1d30a7b525474",
+      "proposals/g3-design/G3_FINITE_CONTRACT_FREEZE_PROPOSAL.md": "f5acdae226110346798aca2ab8e51a40894e902adc5e2d4eb71b5c85740d839a",
+      "proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md": "9292ca3db7edb0a7423a97a8760da579bebf1cc68534d4f7282b2a1a50e51e8e",
+      "G3_SOURCE_BOUNDARY_PROPOSAL.md": "613cb42daeb2aba30ee1d4e5c6a016c8665dde61e92ffd7148f78a030fd16c1c"
+    },
+    "root_implementation_dispositions": {
+      "path": "ROOT_G3_INITIAL_IMPLEMENTATION_DISPOSITIONS.md",
+      "sha256": "bbacf306f96b8f877bb08c6f5be9dd46f3851c7497b0ea653aa9012d52c7da38"
+    }
+  },
+  "source_postimages": {
+    "backend/app/schemas/admissions_actions.py": {
+      "preimage": "ABSENT",
+      "postimage_sha256": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d",
+      "postimage_size": 53649,
+      "lines": 1151
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "preimage": "ABSENT",
+      "postimage_sha256": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86",
+      "postimage_size": 47972,
+      "lines": 714
+    },
+    "backend/tests/test_admissions_actions.py": {
+      "preimage": "ABSENT",
+      "postimage_sha256": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896",
+      "postimage_size": 47012,
+      "lines": 646
+    }
+  },
+  "preimages": {
+    "backend/app/schemas/admissions_actions.py": {
+      "state": "ABSENT",
+      "sha256": null,
+      "symlink_present": false
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "state": "ABSENT",
+      "sha256": null,
+      "symlink_present": false
+    },
+    "backend/tests/test_admissions_actions.py": {
+      "state": "ABSENT",
+      "sha256": null,
+      "symlink_present": false
+    }
+  },
+  "package_members": {
+    "NATIVE_READ_PINS.json": {
+      "sha256": "48c2eaf81bd6176c1c5517502bb521e9490dc454371873ce8b594cd5dafc13f9",
+      "size_bytes": 2261
+    },
+    "PREIMAGES.json": {
+      "sha256": "c722ac24ec270acf576da098bc3459908511236c3c7498851aa585fd71cd838a",
+      "size_bytes": 745
+    },
+    "README.md": {
+      "sha256": "7d6a4895688598cae39e5295de3efba045c7030cb46a5cb903c43427e90eed86",
+      "size_bytes": 10139
+    },
+    "diffs/backend/app/domain/admissions_actions.py.diff": {
+      "sha256": "94bdc85423f89d17582637c1005898b7332a843675ab17eff9fc3d70dacd8bf3",
+      "size_bytes": 48765
+    },
+    "diffs/backend/app/schemas/admissions_actions.py.diff": {
+      "sha256": "8d11039daafef3bbd93e2600be8afca99a51d3adcfc7af0694b29af74dafd5f9",
+      "size_bytes": 54881
+    },
+    "diffs/backend/tests/test_admissions_actions.py.diff": {
+      "sha256": "b5ff9cbc8913bd1a8ffebfd5b9f33f5ddf515597c4ac92eabff646fcbdf2f7d0",
+      "size_bytes": 47737
+    },
+    "files/backend/app/domain/admissions_actions.py": {
+      "sha256": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86",
+      "size_bytes": 47972
+    },
+    "files/backend/app/schemas/admissions_actions.py": {
+      "sha256": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d",
+      "size_bytes": 53649
+    },
+    "files/backend/tests/test_admissions_actions.py": {
+      "sha256": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896",
+      "size_bytes": 47012
+    }
+  },
+  "source_parse_only": {
+    "application_modules_imported": false,
+    "test_functions": 42,
+    "literal_parameterized_cases": 97,
+    "tests_collected": false,
+    "tests_run": false,
+    "ast_grammar_checked": true
+  },
+  "remaining_review_note": "Unformatted/untyped/unimported source; exact lexical embedded token-key boundary noted in README requires review. No later integration/persistence/API/UI scope."
+}

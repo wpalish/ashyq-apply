@@ -1,0 +1,90 @@
+....FFFFFF..                                                             [100%]
+=================================== FAILURES ===================================
+_ test_subscore_excerpt_must_belong_to_ielts_not_cael[https://future.utoronto.ca/english-language-requirements] _
+
+row = {'url': 'https://future.utoronto.ca/english-language-requirements', 'final_url': 'https://future.utoronto.ca/english-l.../folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/canary-30h03nn_/cache/02/0278354e2f298dfbc598e3ed812c521a.meta.json', ...}
+
+    @pytest.mark.parametrize('row',ENGLISH,ids=lambda r:r['url'])
+    def test_subscore_excerpt_must_belong_to_ielts_not_cael(row):
+        cs=claims(row,'ielts_min_subscore')
+        assert len(cs)==1
+        excerpt=cs[0]['original_text_excerpt'].lower()
+>       assert 'ielts' in excerpt and 'cael' not in excerpt, cs[0]
+E       AssertionError: {'claim_type': 'ielts_min_subscore', 'normalized_value': 6.0, 'original_text_excerpt': 'e Assessment (CAEL) including ...onto as a recipient institution. Resul', 'source_url': 'https://future.utoronto.ca/english-language-requirements', ...}
+E       assert ('ielts' in 'e assessment (cael) including cael online requirements the minimum score required to meet our english facility requir...e . submitting results sign in to your cael account and select university of toronto as a recipient institution. resul')
+
+work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py:27: AssertionError
+_ test_subscore_excerpt_must_belong_to_ielts_not_cael[https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements] _
+
+row = {'url': 'https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements', 'final_url': 'https://.../folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/canary-30h03nn_/cache/82/82277da5ae8b39d921744b316f2af191.meta.json', ...}
+
+    @pytest.mark.parametrize('row',ENGLISH,ids=lambda r:r['url'])
+    def test_subscore_excerpt_must_belong_to_ielts_not_cael(row):
+        cs=claims(row,'ielts_min_subscore')
+        assert len(cs)==1
+        excerpt=cs[0]['original_text_excerpt'].lower()
+>       assert 'ielts' in excerpt and 'cael' not in excerpt, cs[0]
+E       AssertionError: {'claim_type': 'ielts_min_subscore', 'normalized_value': 6.0, 'original_text_excerpt': 'uage Assessment (CAEL), includ...n. Results', 'source_url': 'https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements', ...}
+E       assert ('ielts' in 'uage assessment (cael), including cael online requirements: the minimum score required to meet our english facility r... submitting results: sign in to your cael account and select university of toronto as a recipient institution. results')
+
+work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py:27: AssertionError
+_ test_sibling_ib_qualification_must_not_scope_ielts_claim[https://future.utoronto.ca/english-language-requirements] _
+
+row = {'url': 'https://future.utoronto.ca/english-language-requirements', 'final_url': 'https://future.utoronto.ca/english-l.../folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/canary-30h03nn_/cache/02/0278354e2f298dfbc598e3ed812c521a.meta.json', ...}
+
+    @pytest.mark.parametrize('row',ENGLISH,ids=lambda r:r['url'])
+    def test_sibling_ib_qualification_must_not_scope_ielts_claim(row):
+        cs=claims(row,'ielts_min_overall')
+        assert len(cs)==1 and cs[0]['normalized_value']==6.5
+>       assert cs[0]['scope']['qualification'] is None, cs[0]
+E       AssertionError: {'claim_type': 'ielts_min_overall', 'normalized_value': 6.5, 'original_text_excerpt': 'line at ibo.org (select "Univer...IELTS website . Note: We do not accept', 'source_url': 'https://future.utoronto.ca/english-language-requirements', ...}
+E       assert 'IB' is None
+
+work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py:33: AssertionError
+_ test_sibling_ib_qualification_must_not_scope_ielts_claim[https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements] _
+
+row = {'url': 'https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements', 'final_url': 'https://.../folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/canary-30h03nn_/cache/82/82277da5ae8b39d921744b316f2af191.meta.json', ...}
+
+    @pytest.mark.parametrize('row',ENGLISH,ids=lambda r:r['url'])
+    def test_sibling_ib_qualification_must_not_scope_ielts_claim(row):
+        cs=claims(row,'ielts_min_overall')
+        assert len(cs)==1 and cs[0]['normalized_value']==6.5
+>       assert cs[0]['scope']['qualification'] is None, cs[0]
+E       AssertionError: {'claim_type': 'ielts_min_overall', 'normalized_value': 6.5, 'original_text_excerpt': 'rganization. You can make your ...cept the I', 'source_url': 'https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements', ...}
+E       assert 'IB' is None
+
+work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py:33: AssertionError
+____ test_document_supplementary_deadline_must_not_be_application_deadline _____
+
+    def test_document_supplementary_deadline_must_not_be_application_deadline():
+        row=next(r for r in ROWS if '/admissions/dates-deadlines' in r['url'])
+        cs=claims(row,'admission_deadline')
+>       assert not any(c['normalized_value']=='2027-02-01' for c in cs), cs
+E       AssertionError: [{'claim_type': 'admission_deadline', 'normalized_value': '2027-02-01', 'original_text_excerpt': 's Social Sciences Th...Join U of T website The', 'source_url': 'https://www.utm.utoronto.ca/future-students/admissions/dates-deadlines', ...}]
+E       assert not True
+E        +  where True = any(<generator object test_document_supplementary_deadline_must_not_be_application_deadline.<locals>.<genexpr> at 0x10e9d39f0>)
+
+work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py:39: AssertionError
+_______ test_review_of_applications_does_not_prove_credential_evaluation _______
+
+    def test_review_of_applications_does_not_prove_credential_evaluation():
+        row=next(r for r in ROWS if r['url']=='https://future.utoronto.ca/deadlines')
+>       assert not claims(row,'credential_evaluation_required')
+E       AssertionError: assert not [{'claim_type': 'credential_evaluation_required', 'normalized_value': True, 'original_text_excerpt': 'nsideration Pros...ho apply by November 7 and complete the necessary next st', 'source_url': 'https://future.utoronto.ca/deadlines', ...}]
+E        +  where [{'claim_type': 'credential_evaluation_required', 'normalized_value': True, 'original_text_excerpt': 'nsideration Pros...ho apply by November 7 and complete the necessary next st', 'source_url': 'https://future.utoronto.ca/deadlines', ...}] = claims({'url': 'https://future.utoronto.ca/deadlines', 'final_url': 'https://future.utoronto.ca/deadlines', 'fetched_at': '20.../folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/canary-30h03nn_/cache/93/93dc6e47570d646c6f8270f2148dd3de.meta.json', ...}, 'credential_evaluation_required')
+
+work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py:44: AssertionError
+=============================== warnings summary ===============================
+work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py: 134 warnings
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/bs4/builder/_lxml.py:124: DeprecationWarning: The 'strip_cdata' option of HTMLParser() has never done anything and will eventually be removed.
+    parser = parser(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py::test_subscore_excerpt_must_belong_to_ielts_not_cael[https://future.utoronto.ca/english-language-requirements]
+FAILED work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py::test_subscore_excerpt_must_belong_to_ielts_not_cael[https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements]
+FAILED work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py::test_sibling_ib_qualification_must_not_scope_ielts_claim[https://future.utoronto.ca/english-language-requirements]
+FAILED work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py::test_sibling_ib_qualification_must_not_scope_ielts_claim[https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements]
+FAILED work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py::test_document_supplementary_deadline_must_not_be_application_deadline
+FAILED work/local-round7/reviews/expert_b-topic-page-loss/test_retained_topic_red.py::test_review_of_applications_does_not_prove_credential_evaluation
+6 failed, 6 passed, 134 warnings in 1.94s

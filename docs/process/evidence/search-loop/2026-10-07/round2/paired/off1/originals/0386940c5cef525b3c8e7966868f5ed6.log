@@ -1,0 +1,10 @@
+search provider: exa
+get #1 start t=0s https://wits.ac.za/
+get #1 took 5.4s ok
+get #2 start t=6s https://www.wits.ac.za/
+get #2 took 1.5s ok
+search #1 took 3.0s (t=10s)
+get #3 start t=10s https://www.wits.ac.za/
+get #3 took 1.4s ok
+get #4 start t=12s https://en.wikipedia.org/
+get #4 took 2.3s ok

@@ -1,0 +1,15 @@
+{
+  "status": "C1_SERVER_REVISION_ONLY_BEFORE_CLIENT_REPLAY_INTEGRATION",
+  "paths": {
+    "backend/app/models/applicant.py": "8bfa6ec53deb2913bd0e06f2aff1f455f57beb981087ed706ea91da0ff1caaff",
+    "backend/app/schemas/profile.py": "b15ba3a8b4ee3519cee207caf2eb8504f22e1cb4b1039436ba4ce792850beff1",
+    "backend/app/api/routes_profile.py": "63cb5443dd3d38716594177f4adf4f9305f4fb91465bc817ff888c579f4960a6",
+    "backend/app/api/routes_results.py": "766779aecac5af4c9f188d22061586a0b40c1e07929893fd6049d46ed6064768",
+    "backend/app/api/profile_revision.py": null,
+    "backend/migrations/versions/a1b26e902028_profile_revision.py": null
+  },
+  "contract": "Additive row revision1; required X-Expected-Profile-Revision for PUT and persisted rerank, fresh owned organization/profile fence plus atomic conditional UPDATE, stale409/missing428; same normalized payload/name/revision, typed read/export revision; no unsafe legacy overwrite",
+  "pending": "C2 client/version/merge/original create intent and replay not applied; N09 not fully accepted, existing PUT/persist clients will require header fixture/client adaptation",
+  "verification": "C0 actual4 native FAIL bothDB, then same exact4 after source; static and whole/client gates later; preserve all old assertions",
+  "stops": "No live/production/heldout/model/secret/hosted change"
+}

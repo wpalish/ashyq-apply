@@ -1,0 +1,96 @@
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_exa_mcp.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Exa MCP discovery contract, exercised entirely through mock HTTP transport."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import asyncio
+ 6 | | import json
+ 7 | | from collections.abc import AsyncIterator, Callable
+ 8 | | from typing import Any
+ 9 | | from types import SimpleNamespace
+10 | |
+11 | | import httpx
+12 | | import pytest
+13 | |
+14 | | import app.adapters.search.exa_mcp as module
+15 | | from app.adapters.network_policy import BlockedRequest
+16 | | from app.adapters.search.base import (
+17 | |     SearchFailureReason,
+18 | |     SearchUnavailable,
+19 | |     search_failure_diagnostic,
+20 | | )
+21 | | from app.adapters.search.exa_mcp import (
+22 | |     EXA_MCP_URL,
+23 | |     MAX_RESPONSE_BYTES,
+24 | |     MAX_RESULTS_PER_QUERY,
+25 | |     PROTOCOL_VERSION,
+26 | |     ExaMcpSearchProvider,
+27 | | )
+28 | | from app.config import Settings
+   | |_______________________________^ I001
+29 |
+30 |   ROWS = [
+   |
+   = help: Organize imports
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_layer_budget_fixes.py:10:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 8 |   """
+ 9 |
+10 | / from __future__ import annotations
+11 | |
+12 | | from datetime import UTC, datetime
+13 | | from pathlib import Path
+14 | | from typing import ClassVar, cast
+15 | |
+16 | | import pytest
+17 | |
+18 | | from app.adapters.discovery.live_discovery import (
+19 | |     MAX_PAGES_PER_CATEGORY,
+20 | |     DiscoveryTrace,
+21 | |     LiveDiscoveryAdapter,
+22 | |     PageCategory,
+23 | | )
+24 | | from app.adapters.search import SearchProviderNotConfigured
+25 | | from app.adapters.search.base import (
+26 | |     SearchFailureReason,
+27 | |     SearchProvider,
+28 | |     SearchResponse,
+29 | |     SearchResult,
+30 | |     SearchUnavailable,
+31 | | )
+32 | | from app.adapters.search.intent import DiscoveryIntent
+33 | | from app.adapters.search.retrieval import discover_candidates
+34 | | from app.domain.enums import DegreeLevel
+35 | | from app.schemas.profile import ApplicantProfileIn
+   | |__________________________________________________^ I001
+36 |
+37 |   NAME = "University of Groningen"
+   |
+   = help: Organize imports
+
+work/local-round11/a-explicit-rate-limit-native-tests/proposed/tests/test_search_throttle_latch.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 6 |   """
+ 7 |
+ 8 | / from datetime import UTC, datetime
+ 9 | | from types import SimpleNamespace
+10 | | from typing import cast
+11 | |
+12 | | import pytest
+13 | |
+14 | | from app.adapters.search import (
+15 | |     THROTTLE_COOLDOWN_SECONDS,
+16 | |     SearchResponse,
+17 | |     SearchUnavailable,
+18 | |     _ThrottleLatch,
+19 | |     reset_search_throttle,
+20 | | )
+21 | | from app.adapters.search.base import SearchFailureReason
+   | |________________________________________________________^ I001
+   |
+   = help: Organize imports
+
+Found 3 errors.
+[*] 3 fixable with the `--fix` option.

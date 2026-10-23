@@ -1,0 +1,150 @@
+{
+  "status": "SEALED_QUALIFIED_ACCEPT_DRAFT_SOURCE",
+  "recorded_at": "2026-10-09T00:22:28.955355+00:00",
+  "owner": "c-legal-review",
+  "root_proposal_manifest_sha256": "a93602b72da3bbf1e9d2b878598780a59034313a66879889c46c53942fb89174",
+  "qualification": "Exact 12-file draft/source notice review; focused final 13 PASS, old OFF 9 PASS/4 semantic FAIL. Not consent/runtime compliance/production sign-off. Initial REQUEST_CHANGES retained.",
+  "files": {
+    "REPORT.md": {
+      "sha256": "cd4ccbb7317380fd2e39a3e6c824986849891404c8d960e3687ac265d8885c8a",
+      "bytes": 8156
+    },
+    "final-source-pins.json": {
+      "sha256": "7ea041806313d6384beb750dba58167ab7d462bd21e5f1cbe0450ca9aa7023f9",
+      "bytes": 9572
+    },
+    "review-history.json": {
+      "sha256": "308f7633a171629666ceff89d09b745b5d91ea97fcf2d84421e69f778167c4ba",
+      "bytes": 2964
+    },
+    "initial-source-pins.json": {
+      "sha256": "3e8a6416ea9b0c81f6a47f7dd1b8b40bb4a50881e0f653ecbbe700172bf19bb7",
+      "bytes": 5096
+    },
+    "test-summary.json": {
+      "sha256": "d4ad9bc5aea44b54783462a699cbdf93f42f833c3cdf330bc5be87b961de8fa8",
+      "bytes": 2377
+    },
+    "network-deny.cjs": {
+      "sha256": "e636c8543b167f3638cf1e5d2a7156e204045055e461b69392f5aa682a2b9d76",
+      "bytes": 1690
+    },
+    "old-off-startup.log": {
+      "sha256": "0a29f4ff8d024285231187cca107f0d9689a4fa3ae1fd8fae9c01c960adb8f9e",
+      "bytes": 1745
+    },
+    "old-off-semantic.log": {
+      "sha256": "5186df5f9e4ac14c831d5c2b2930a385f48060d459670d94d8f91b78a424c74e",
+      "bytes": 50136
+    },
+    "proposed-v1.log": {
+      "sha256": "4e216a39bcbb38a20da215ddc0a5685db1a1d5f23f2bd777a5186a9df8315e0e",
+      "bytes": 2040
+    },
+    "final-v3.log": {
+      "sha256": "46b6f78a9fa2908b6f2a28b990aa38d21f23583a10c622a62c14d05357ae2d20",
+      "bytes": 2237
+    },
+    "runtime/package.json": {
+      "sha256": "89c47db7851f89caec72da4f215ebc21cf1e294aeef3b45d2583562d846ab035",
+      "bytes": 33
+    },
+    "runtime/vitest.config.mjs": {
+      "sha256": "e6b874ae91729ea94717bafa07635bed3446d86b25cff460f437629f4bf9b82a",
+      "bytes": 700
+    },
+    "runtime/src/test-setup.ts": {
+      "sha256": "0cf6489527a501c58bb3874aa56a0ec4b3a1b78c5185d986ee62b6cfece9f01f",
+      "bytes": 164
+    },
+    "reviewed-final/CONSENT_SPEC_RU.md": {
+      "sha256": "7f922c0c4880c8ff7dafc4701fbf26a394eabcc1d99f027e3c4d906eec3c754b",
+      "bytes": 7904
+    },
+    "reviewed-final/DATA_RETENTION_AND_RIGHTS.md": {
+      "sha256": "bab30498960dbe79262c125775fd58afaea078a007639cbf5b30abd8e58fb606",
+      "bytes": 6225
+    },
+    "reviewed-final/INCIDENT_RESPONSE.md": {
+      "sha256": "77f68ee2bd50e8f2f6de4861b8ce6861af941d357b34bfd20580f67cc8452d29",
+      "bytes": 4708
+    },
+    "reviewed-final/LegalScreen.privacy.test.tsx": {
+      "sha256": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+      "bytes": 2492
+    },
+    "reviewed-final/LegalScreen.tsx": {
+      "sha256": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+      "bytes": 14729
+    },
+    "reviewed-final/PRIVACY_POLICY_RU.md": {
+      "sha256": "c689944cce6548f97d1ab3bd299a1b647984971cafe3301bbba17fa324cfee58",
+      "bytes": 16899
+    },
+    "reviewed-final/PROCESSORS_AND_TRANSFERS.md": {
+      "sha256": "df3121c743d53b91f0167c686b2b3c33bc92956f5c5656c5da22a86b33697da9",
+      "bytes": 5381
+    },
+    "reviewed-final/PROPOSAL.json": {
+      "sha256": "a93602b72da3bbf1e9d2b878598780a59034313a66879889c46c53942fb89174",
+      "bytes": 2513
+    },
+    "reviewed-final/README.md": {
+      "sha256": "fe4a21f33b8d792f2efec7173890e6b268c73936a3f3645344ac706f2c685ed7",
+      "bytes": 4234
+    },
+    "reviewed-final/RELEASE_READINESS.md": {
+      "sha256": "aa76ad4db864ee95dda23cc9ce1cf0784a7bc4d9bb3bac0dc0c59b9370a38ce4",
+      "bytes": 3929
+    },
+    "reviewed-final/SECURITY.md": {
+      "sha256": "15d79555b2028a66147f4b33b22c52791cf2c68c732b2b0316243c32e3ae9a74",
+      "bytes": 13740
+    },
+    "reviewed-final/TERMS_RU.md": {
+      "sha256": "9664a3a5ad6e061a2f7ee9884f68474bb8defc52fceb17dc84e23778cbf9393a",
+      "bytes": 8552
+    },
+    "reviewed-final/operator-facts.json": {
+      "sha256": "c25e56dc795fc3aa85583d8fbdb4ff31d3db5e65397f1d6ac7d07c29f3c20526",
+      "bytes": 1075
+    },
+    "reviewed-source-before/LegalScreen.test.tsx": {
+      "sha256": "74ae8fb2d8b3e821a9146c33ad6d20be0a62e2135f36e92eb086b599e13c47f8",
+      "bytes": 4021
+    },
+    "reviewed-source-before/LegalScreen.tsx": {
+      "sha256": "71780319c717b4644af9eac837857418333d2913f39a99c45dab816647a891fd",
+      "bytes": 11138
+    },
+    "guard-final-v3-68655-exit.json": {
+      "sha256": "8263e92e13ad8d5faec3bfccb56bdfff2da760b864b356447cc1616b6831188f",
+      "bytes": 102
+    },
+    "guard-final-v3-68660-test-file.json": {
+      "sha256": "feca3f7da80abf20ab87fe0f49d1195d4f689f99d8064dd6fda096fdb5e58ea3",
+      "bytes": 107
+    },
+    "guard-final-v3-68661-test-file.json": {
+      "sha256": "fc1fdedb6b87d915bc14733824b7f984b9cd9c8bf5ce4e0e32ee4f0e6e712c7d",
+      "bytes": 107
+    },
+    "guard-old-off-67820.json": {
+      "sha256": "5149f1c21041d4072820a08f890ca061e4a278ac838259d3c10542c220a7d403",
+      "bytes": 85
+    },
+    "guard-old-off-semantic-67872.json": {
+      "sha256": "97f045e0f6643191cc768de279a885a113736028299067710a4c453353ab8808",
+      "bytes": 94
+    },
+    "guard-proposed-v1-67963.json": {
+      "sha256": "6aee4cd93df45e7fc2b241bca6ae03d3a77b71d1b63f779667fdf61beff06a06",
+      "bytes": 89
+    }
+  },
+  "excluded": [
+    "dependency/cache tree",
+    "private runtime/DB/env",
+    "unsealed reviewed-v1/v2 history copies"
+  ]
+}

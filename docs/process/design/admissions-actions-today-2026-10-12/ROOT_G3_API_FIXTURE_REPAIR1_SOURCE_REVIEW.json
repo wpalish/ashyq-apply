@@ -1,0 +1,12 @@
+{
+  "at_utc": "2026-10-12T17:23:38.353993+00:00",
+  "status": "FINITE_TEST_FIXTURE_SOURCE_REPAIR_ACCEPTED_NOT_APPLIED_NOT_RUN",
+  "supersedes": "ROOT_G3_API_CORE_SOURCE_REVIEW.json no-blocker for Today fixture only; retained original immutable",
+  "finding": "Native StudyScheduleRow PK is generated TimestampedBase.id; own profile is its unique profile_id. Four old session.get reads target None. Native save_schedule does not override PK.",
+  "repair_seal": "98bd035089f5afc81b69a5e952a7b4c7611bd553257aafac170f16d91c8c4990",
+  "preimage": "cf5f797832b342f8cf375a5520872f6993390eea5e5d1032b7f3aedab4a81c2b",
+  "postimage": "c01bb4683ba1deb4dfb6479b989ad8017adecb805ff61a727137414a7e39660e",
+  "exact_four_inverse_bytes_equal": true,
+  "assertions_and_native_source_unchanged": true,
+  "application_gate": "Independent final source review still pending; apply only exact6 allowed with repaired Today postimage"
+}

@@ -1,0 +1,53 @@
+{
+  "status": "CONDITIONAL_NAME_ONLY_JOIN_RISK; B19_ACTUAL_CANARY_REACHABILITY_NOT_PROVEN",
+  "files": {
+    "PLAN.json": {
+      "sha256": "8ff3d46cc7dcbca36f15fdeaf30bba55699900350e9617ac7a69f25656241e67",
+      "bytes": 1332
+    },
+    "REPORT.md": {
+      "sha256": "5580439e172d6a5fb2c15a7d29dcddcc480651f89829b37dd7fbe0fe392aaebd",
+      "bytes": 3823
+    },
+    "additional-source-excerpt.json": {
+      "sha256": "29bd7774cd9398e6b64cb5281d0b37372715caa658444bff343e34b22b35afe6",
+      "bytes": 1097
+    },
+    "audit.attempt1.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "audit.attempt1.stdout.log": {
+      "sha256": "a1099e50782e0f49eb2bf08896a2f2419a30bf7a0a2fc3ae2b8db9f1b51551a3",
+      "bytes": 205
+    },
+    "audit.original.json": {
+      "sha256": "cc8cc2241fe7c28cf888bbb1fcb997615e492212a94690a66e9949efc06ce449",
+      "bytes": 3005
+    },
+    "audit.py": {
+      "sha256": "493fd271ec4de449f86fe17aa91546cc8b52ac14f56bf716c7c90d6c65f49c7a",
+      "bytes": 7213
+    },
+    "execution.json": {
+      "sha256": "01b81afed98b79f131c8ed2b669083d03c35d2c4b9fd24fb022cb717c3447630",
+      "bytes": 1365
+    },
+    "receipt.json": {
+      "sha256": "1ddd28119c4f580f37ec1a6c51b99dc70b08349db4ffa4f1587a88f1b6ebc1b4",
+      "bytes": 1240
+    },
+    "saved-routing.original.json": {
+      "sha256": "dda1002729c81bc7c637dfe01f5849d6be7d1488914226b9c49b417d63b42723",
+      "bytes": 896
+    },
+    "source-excerpts.original.json": {
+      "sha256": "62219b6385bef187c5885ee324902c74af1328edb3b9e9acac2294a903b14709",
+      "bytes": 23250
+    }
+  },
+  "selected_files": 11,
+  "selected_bytes": 43426,
+  "receipt_sha256": "1ddd28119c4f580f37ec1a6c51b99dc70b08349db4ffa4f1587a88f1b6ebc1b4",
+  "scope": "Finite static preparation only; no proposed repair or scored loss"
+}

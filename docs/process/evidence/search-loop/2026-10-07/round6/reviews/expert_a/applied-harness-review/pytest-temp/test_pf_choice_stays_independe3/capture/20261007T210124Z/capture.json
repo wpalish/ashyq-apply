@@ -1,0 +1,113 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "ffffffffffffffffffffffffffffffffffffffff",
+  "captured_at": "20261007T210124Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa_mcp",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "site_branding_identity": true,
+    "subject_phrase_match": true,
+    "programme_identity_before_funding": true,
+    "shared_query_budget": true,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "offline-review-a",
+      "offline-review-b"
+    ],
+    "selection": "catalogue_id",
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "3d14e350cea72312c35cbb52ff0236f9c6e82ccf7380e1a98aed2fa2961755df",
+    "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 0,
+    "source_work_deadline_ms": 120000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "offline-review-a": {
+        "stop_reason": "completed",
+        "parent_process_elapsed_seconds": 0.0009617500472813845,
+        "process_error": null,
+        "active_checkpoint_available": true
+      },
+      "offline-review-b": {
+        "stop_reason": "completed",
+        "parent_process_elapsed_seconds": 0.0009728330187499523,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_attempted_case_ids": [
+      "offline-review-a",
+      "offline-review-b"
+    ],
+    "batch_completed_case_ids": [
+      "offline-review-a",
+      "offline-review-b"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "offline-review-a",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [],
+      "error": null
+    },
+    {
+      "case_id": "offline-review-b",
+      "programme_urls": [],
+      "ranked_urls": null,
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": null,
+        "browser_fetches": null,
+        "pdf_fetches": null,
+        "search_calls": null,
+        "model_input_tokens": null,
+        "jev_input_tokens": null,
+        "latency_seconds": null,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [],
+      "error": null
+    }
+  ]
+}

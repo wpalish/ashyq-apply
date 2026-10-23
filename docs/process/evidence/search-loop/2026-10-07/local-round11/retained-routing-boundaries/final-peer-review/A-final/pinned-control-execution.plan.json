@@ -1,0 +1,29 @@
+{
+  "created_utc": "2026-10-08T02:30:32.653898+00:00",
+  "source_sha256_before": {
+    "app/adapters/discovery/catalog_walker.py": "c5c351411bdfc2f487b6992e0db17917b7cd607dcc9555c563d0a3f4141a46ef",
+    "app/adapters/discovery/confirmed_routing.py": "72b36d00c44e2fe947bf5b85045c868300802c9a7f7f20e961033a458b475f72",
+    "app/adapters/discovery/live_discovery.py": "06f0e3da4aea93d9d0f9af51d40b5260e6cf5a7cffa97de06d27b234e639fbda",
+    "app/catalogue/discovery.py": "3541ea2640649d9d28ab35e427c8bded738f4756efd0eeac7c598b93bf1a03ae"
+  },
+  "commands": [
+    [
+      "run_controls.py",
+      "controls.pinned.json"
+    ],
+    [
+      "run_scope_ownership.py",
+      "scope-ownership.pinned.json"
+    ],
+    [
+      "run_boundary_controls.py",
+      "boundary-controls.executed-pinned.json"
+    ],
+    [
+      "run_worker_controls.py",
+      "worker.executed-pinned"
+    ]
+  ],
+  "protocol": "Denied transports and mock provider/source transports; genuine own SQLite Worker only in last invocation",
+  "controls_exit0_is_not_acceptance": "Raw PASS/RED assertions determine status; original unmet assertions preserved."
+}

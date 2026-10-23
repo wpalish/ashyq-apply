@@ -1,0 +1,242 @@
+{
+  "at": "2026-10-07T17:18:34.506990+00:00",
+  "scope": "Offline current hash-pinned helper/code review and inspection of parent-recorded full adapter before/after replay; reviewer did not rerun parent replay",
+  "source_files": {
+    "helper": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/requirements/section_scope.py",
+    "helper_sha256": "8b2c8da32b7595f95aab817d97b90f7900aca93bab21060499a39ecfc83a2f79",
+    "helper_snapshot": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-experts/expert_a/reviewed-section-scope-snapshot.py.txt",
+    "adapter": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/requirements/web_requirements.py",
+    "adapter_sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2"
+  },
+  "cached_original": {
+    "url": "https://en.nagoya-u.ac.jp/admissions/japan/language/",
+    "body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-dvmv__z3/cache/ac/ac2be79f83001f4735e0388266a8bd93.body",
+    "body_byte_sha256": "8b2f118cb5dcba242cdf0852918bb68dc4ee2b681378b4c87967a579054b6327",
+    "meta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-dvmv__z3/cache/ac/ac2be79f83001f4735e0388266a8bd93.meta.json",
+    "meta_file_sha256": "6ab7b26930872762fed81a96eac82efff9e12f482faad218404361a560c30a39",
+    "recorded_content_hash": "8013d43ae24d9bc70de6880a30a272e2d9fbd58ab7c7fc9c8c271ab7f64eed35",
+    "production_content_hash": "8013d43ae24d9bc70de6880a30a272e2d9fbd58ab7c7fc9c8c271ab7f64eed35",
+    "independent_normalized_text_content_hash": "8013d43ae24d9bc70de6880a30a272e2d9fbd58ab7c7fc9c8c271ab7f64eed35",
+    "normalized_content_hash_matches_meta": true,
+    "body_byte_hash_compares_a_different_quantity": true,
+    "originals_unchanged_after_review": true
+  },
+  "nagoya_actual_helper": {
+    "excluded_sections": 1,
+    "prose_region_count": 2,
+    "prose_IELTS_regex_matches": [
+      [],
+      []
+    ],
+    "IR_5_5_blocks": [],
+    "G30_retained": true,
+    "regular_Japanese_retained": true,
+    "filtered_prose": [
+      "Language requirements\n\nNagoya University offers flexible language options for international students, with programs available in both English and Japanese depending on your academic goals.\n\nEnglish language requirements\n\nG30 International Programs (taught entirely in English)\n\nFor undergraduate and graduate degree programs taught entirely in English:\n\nEnglish proficiency test is required\n for most applicants\n\nExemption is available\n for students who completed four or more consecutive years of secondary education where English was the primary language of instruction\n\nAccepted tests include:\n\nTOEFL\n\nIELTS\n\nDuolingo English Test\n\nNo Japanese proficiency is required\n for admission to these programs\n\nLearn more about G30 International Programs",
+      "Japanese language requirements\n\nRegular Japanese-taught programs\n\nFor students who want to take regular university courses taught in Japanese:\n\nJLPT N1 level required\n (Japanese Language Proficiency Test level 1)\n\nAlternative equivalent qualifications may be accepted\n\nSpecialized programs\n\nIntensive Programme in Advanced Japanese:\n\nJLPT N2 level minimum\n required for enrollment\n\nNUPACE exchange students:\n\nStudents with \nJLPT N1\n may register for regular Japanese-taught courses\n\nCore NUPACE curriculum taught primarily in English\n\nProgram flexibility\n\nNagoya University provides multiple pathways for international students:\n\nFull degree programs\n available entirely in English through G30 International Programs\n\nExchange opportunities\n with minimal language barriers through NUPACE\n\nJapanese language support\n through comprehensive language programs\n\nMixed approach\n allowing qualified students to combine English and Japanese-taught courses\n\nAdditional resources\n\nNagoya University International Programs\n\nNagoya University main admissions page\n\nJapanese Language Proficiency Test (JLPT) information\n\nFor the most current requirements and specific program details, please check the \nadmissions program pages\n or contact the university directly."
+    ]
+  },
+  "generic_fixtures": [
+    {
+      "name": "joint_undergraduate_exchange",
+      "html": "<main><h2>Undergraduate and exchange students</h2><p>IELTS overall 6.5 is required.</p><h2>Other</h2><p>Degree information.</p></main>",
+      "actual": {
+        "excluded_sections": 0,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "expected": {
+        "excluded_sections": 0,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "pass": true,
+      "output_html": "<main><h2>Undergraduate and exchange students</h2><p>IELTS overall 6.5 is required.</p><h2>Other</h2><p>Degree information.</p></main>",
+      "output_prose": [
+        "Undergraduate and exchange students\nIELTS overall 6.5 is required.\nOther\nDegree information."
+      ]
+    },
+    {
+      "name": "joint_all_non_degree",
+      "html": "<main><h2>Non-degree programmes and visiting students</h2><p>IELTS overall 5.5 is required.</p><h2>Bachelor programmes</h2><p>IELTS overall 6.5 is required.</p></main>",
+      "actual": {
+        "excluded_sections": 1,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "expected": {
+        "excluded_sections": 1,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "pass": true,
+      "output_html": "<html><body><main><p></p><h2>Bachelor programmes</h2><p>IELTS overall 6.5 is required.</p></main></body></html>",
+      "output_prose": [
+        "Bachelor programmes\nIELTS overall 6.5 is required."
+      ]
+    },
+    {
+      "name": "proper_joint_bachelor",
+      "html": "<main><h2>Bachelor and exchange students</h2><p>IELTS overall 6.5 is required.</p></main>",
+      "actual": {
+        "excluded_sections": 0,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "expected": {
+        "excluded_sections": 0,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "pass": true,
+      "output_html": "<main><h2>Bachelor and exchange students</h2><p>IELTS overall 6.5 is required.</p></main>",
+      "output_prose": [
+        "Bachelor and exchange students\nIELTS overall 6.5 is required."
+      ]
+    },
+    {
+      "name": "nested_sibling",
+      "html": "<main><h2>Admissions</h2><h3>Exchange programmes</h3><h4>English</h4><p>IELTS overall 5.5 is required.</p><h3>Bachelor programmes</h3><p>IELTS overall 6.5 is required.</p></main>",
+      "actual": {
+        "excluded_sections": 1,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "expected": {
+        "excluded_sections": 1,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "pass": true,
+      "output_html": "<html><body><main><h2>Admissions</h2><p></p><h3>Bachelor programmes</h3><p>IELTS overall 6.5 is required.</p></main></body></html>",
+      "output_prose": [
+        "Admissions",
+        "Bachelor programmes\nIELTS overall 6.5 is required."
+      ]
+    },
+    {
+      "name": "higher_heading_reset",
+      "html": "<main><h2>Admissions</h2><h3>Visiting students</h3><p>IELTS overall 5.5 is required.</p><h2>Bachelor programmes</h2><p>IELTS overall 6.5 is required.</p></main>",
+      "actual": {
+        "excluded_sections": 1,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "expected": {
+        "excluded_sections": 1,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "pass": true,
+      "output_html": "<html><body><main><h2>Admissions</h2><p></p><h2>Bachelor programmes</h2><p>IELTS overall 6.5 is required.</p></main></body></html>",
+      "output_prose": [
+        "Admissions",
+        "Bachelor programmes\nIELTS overall 6.5 is required."
+      ]
+    },
+    {
+      "name": "sidebar_does_not_bleed",
+      "html": "<main><h2>Bachelor programmes</h2><aside><h2>Exchange programmes</h2><p>IELTS overall 5.5 is required.</p></aside><p>IELTS overall 6.5 is required.</p></main>",
+      "actual": {
+        "excluded_sections": 1,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "expected": {
+        "excluded_sections": 1,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "pass": true,
+      "output_html": "<html><body><main><h2>Bachelor programmes</h2><aside><p></p></aside><p>IELTS overall 6.5 is required.</p></main></body></html>",
+      "output_prose": [
+        "Bachelor programmes",
+        "IELTS overall 6.5 is required."
+      ]
+    },
+    {
+      "name": "exchange_rate_heading_retained",
+      "html": "<main><h2>Exchange rates</h2><p>IELTS overall 6.5 is required.</p></main>",
+      "actual": {
+        "excluded_sections": 0,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "expected": {
+        "excluded_sections": 0,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "pass": true,
+      "output_html": "<main><h2>Exchange rates</h2><p>IELTS overall 6.5 is required.</p></main>",
+      "output_prose": [
+        "Exchange rates\nIELTS overall 6.5 is required."
+      ]
+    },
+    {
+      "name": "negated_exchange_audience",
+      "html": "<main><h2>Requirements not for exchange students</h2><p>IELTS overall 6.5 is required.</p></main>",
+      "actual": {
+        "excluded_sections": 0,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "expected": {
+        "excluded_sections": 0,
+        "keeps6_5": true,
+        "keeps5_5": false
+      },
+      "pass": true,
+      "output_html": "<main><h2>Requirements not for exchange students</h2><p>IELTS overall 6.5 is required.</p></main>",
+      "output_prose": [
+        "Requirements not for exchange students\nIELTS overall 6.5 is required."
+      ]
+    }
+  ],
+  "failed_fixture_names": [],
+  "source_inspection": {
+    "IR_both_branches": "web_requirements.py lines407-408 and469-470 use requirement_html",
+    "prose_requirements": "lines475-481 loop separate requirement_prose",
+    "English_test_types_and_waiver": "lines483-485 use requirement_prose",
+    "original_verifier_context": "page_text=text remains original atline363",
+    "boundaries": "section_scope.py lines65-68 reset exclusion atsame/higherheading, localcontext line59scope",
+    "limitations": "HTML-only guard; PDFs unchanged. No source modifications or full pipeline quality claim."
+  },
+  "review_completed_at": "2026-10-07T17:21:10.444024+00:00",
+  "open_findings_current_snapshot": [],
+  "resolved_review_findings": [
+    {
+      "case": "joint_undergraduate_exchange",
+      "current": "Fixed and own fixture passes"
+    },
+    {
+      "case": "joint_all_non_degree",
+      "current": "Fixed and own fixture passes"
+    }
+  ],
+  "parent_recorded_adapter_replay": {
+    "artifacts": {
+      "json": {
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/nagoya-scope-replay.offline.json",
+        "byte_sha256": "9555583a820f326ce4c50bad9c54bd5ab74b12423ac74405e86ac45c28cdd55f"
+      },
+      "script": {
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/nagoya-scope-replay.py",
+        "byte_sha256": "3c0be9475250d3e044d5bee44d192c419192594e57e11f822a4b6301bfb1ae3e"
+      },
+      "log": {
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/scope-fix-gates/nagoya-replay.log",
+        "byte_sha256": "a59c5dd9cdfd4a6914e0d68954015f54ec13d9d49a794e1796c388deebb825d5"
+      }
+    },
+    "baseline_adapter_revision": "89fc891228d9b8987fce19b2ddc0254d69837c2e",
+    "before_ielts_min_overall": 5.5,
+    "before_claim_status": "NEEDS_OFFICIAL_CLARIFICATION",
+    "after_claims": [],
+    "excluded_sections": 1,
+    "network_calls_recorded": 0,
+    "offline_control_review": "OnlyRetainedSources reads ResponseCache or returns offline HTTP_ERROR; no Fetcher fallback. Candidate search_queries_used=6 exhausts the existing search budget.",
+    "methodological_limits": "Baseline web_requirements.py is frozen from the named revision; shared dependencies are current when the parent replay runs. Replay JSON does not record the helper dependency hash. Synthetic CS Bachelor candidate points to the language page. Targeted full adapter replay, not a full historical search pipeline or exact programme/intake validation.",
+    "result": "Exchange-only IELTS5.5 claim removed; no replacement full-degree minimum inferred."
+  }
+}

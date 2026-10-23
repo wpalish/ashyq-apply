@@ -5,7 +5,7 @@ Each institution runs in its own process with a hard wall-clock budget.
 
 ``--strict-expert-budget`` adds evaluation wrappers around the unchanged app:
 60 cumulative cold Fetcher.get calls and six configured Exa queries across
-all stages, with no further provider call after HTTP 429. Active time starts
+all stages, with no further network action after a provider failure. Active time starts
 at capture_one entry and lasts the requested 120 seconds by default, including
 canary setup, discovery, verification, and funding. The parent adds a separate
 15-second process reserve for startup and cancellation/output cleanup; this
@@ -27,6 +27,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Callable
+from contextlib import nullcontext
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -93,6 +94,9 @@ class _ExpertBudget:
     network_http_requests: int = 0
     stop_reason: str | None = None
     provider_failure: dict[str, Any] | None = None
+    stop_file: Path | None = None
+    case_id: str | None = None
+    protocol_persistence_error: dict[str, Any] | None = None
 
     @property
     def source_work_deadline_ms(self) -> int:
@@ -123,6 +127,7 @@ class _ExpertBudget:
 
     def before_fetch(self) -> None:
         self.remaining()
+        self._check_provider_stop()
         if self.fetcher_calls >= self.max_fetcher_calls:
             self.stop_reason = self.stop_reason or "page_budget_exhausted"
             raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
@@ -134,16 +139,24 @@ class _ExpertBudget:
         self.remaining()
         if provider_name != self.provider_name or provider_name not in STRICT_PROVIDERS:
             raise SearchUnavailable("Strict capture refused a different provider identity")
-        if self.provider_failure and self.provider_failure.get("http_status") == 429:
-            self.blocked_search_queries += 1
-            raise SearchUnavailable(
-                "Strict capture stopped provider calls after HTTP 429", http_status=429
-            )
+        self._check_provider_stop(search=True)
         if self.search_queries >= self.max_search_queries:
             self.blocked_search_queries += 1
             self.stop_reason = self.stop_reason or "search_budget_exhausted"
             raise SearchUnavailable("Strict capture search query budget exhausted")
         self.search_queries += 1
+
+    def _check_provider_stop(self, *, search: bool = False) -> None:
+        from app.adapters.search.base import SearchUnavailable
+
+        if self.provider_failure or (self.stop_file is not None and self.stop_file.exists()):
+            self.stop_reason = self.stop_reason or "external_provider_failure"
+            if search:
+                self.blocked_search_queries += 1
+            raise SearchUnavailable(
+                "Strict capture stopped after provider failure",
+                http_status=(self.provider_failure or {}).get("http_status"),
+            )
 
     def failed_search(self, exc: Exception) -> Exception:
         """Keep a fixed diagnostic/status, never vendor exception text or keys."""
@@ -163,13 +176,28 @@ class _ExpertBudget:
         sanitized = SearchUnavailable(
             "Configured search provider unavailable", http_status=status, reason=reason
         )
-        self.provider_failure = {
+        self.provider_failure = self.provider_failure or {
             "http_status": status,
             "reason": reason.value if reason else None,
             "error": search_failure_diagnostic(self.provider_name, sanitized),
         }
-        if status == 429:
-            self.stop_reason = "http_429"
+        self.stop_reason = self.stop_reason or ("http_429" if status == 429 else "provider_failure")
+        if self.stop_file is not None:
+            self.stop_file.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                with self.stop_file.open("x", encoding="utf-8") as out:
+                    json.dump(
+                        {
+                            "case_id": self.case_id,
+                            "provider": self.provider_name,
+                            "http_status": self.provider_failure["http_status"],
+                            "failure_reason": self.provider_failure["reason"],
+                            "time": datetime.now(UTC).isoformat(),
+                        },
+                        out,
+                    )
+            except FileExistsError:
+                pass
         return sanitized
 
     def snapshot(self) -> dict[str, Any]:
@@ -189,6 +217,11 @@ class _ExpertBudget:
             "stop_reason": self.stop_reason,
             "provider_failure": self.provider_failure,
             "active_time_basis": self.active_time_basis,
+            **(
+                {"protocol_persistence_error": self.protocol_persistence_error}
+                if self.protocol_persistence_error is not None
+                else {}
+            ),
         }
 
 
@@ -250,12 +283,31 @@ async def capture_one(
     *,
     strict_expert_budget: bool = False,
     finalization_reserve_ms: int = 0,
+    catalogue_id: str | None = None,
+    stop_file: Path | None = None,
+    university_read_budget: bool | None = None,
+    fenced_research_job: bool = False,
 ) -> None:
     entered = time.monotonic()
+    from app.pipeline import read_budget
+
+    native = (
+        read_budget.UNIVERSITY_READ_BUDGET
+        if university_read_budget is None
+        else university_read_budget
+    )
+    if native and not fenced_research_job:
+        raise ValueError("University read budget requires a genuine fenced research Job")
+    if fenced_research_job and (DOCUMENT_SECONDS or not case_id):
+        raise ValueError("Fenced protocol requires one identity and excludes documents")
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
         raise ValueError("Finalization reserve must be a nonnegative integer in milliseconds")
     if finalization_reserve_ms and not strict_expert_budget:
         raise ValueError("Finalization reserve requires strict expert budget mode")
+    if stop_file is not None and not strict_expert_budget:
+        raise ValueError("Shared stop file requires strict expert budget mode")
+    if catalogue_id is not None and catalogue_id != case_id:
+        raise ValueError("Capture and catalogue identity must match")
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
@@ -291,6 +343,8 @@ async def capture_one(
             entered,
             clock=time.monotonic,
             finalization_reserve_ms=finalization_reserve_ms,
+            stop_file=stop_file,
+            case_id=case_id,
         )
 
     predictions: list[Prediction] = []
@@ -313,6 +367,7 @@ async def capture_one(
     fetchers: list[Any] = []
     #: D7: the runner, kept for the documents stage that follows the decision.
     runners: list[Any] = []
+    fenced_reports: list[dict[str, Any]] = []
     recorded_claims: set[str] = set()
     documents_phase = False
 
@@ -343,10 +398,110 @@ async def capture_one(
             # clock. This final metering envelope never opens a new work budget.
             budget_checkpoint()
 
+    def protocol_control(original_control=None):
+        if original_control is None and runners:
+            return getattr(runners[-1], "_canary_original_control", None)
+        return original_control
+
+    def protocol_persistence_failed(stage, persistence_error, report, original_control=None):
+        original_control = protocol_control(original_control)
+        protocol = (report or {}).get("job_protocol") or {}
+        audit = {
+            "stage": stage,
+            "error_type": type(persistence_error).__name__,
+            "original_error": observation.error,
+            "original_control_type": type(original_control).__name__ if original_control else None,
+            "job_protocol": {
+                key: protocol.get(key)
+                for key in (
+                    "started",
+                    "run_id",
+                    "job_id",
+                    "claim_token",
+                    "lease_token",
+                    "job_status",
+                    "worker_id",
+                    "native_enabled",
+                    "native_ledger",
+                    "observation_available",
+                    "heartbeat_done",
+                )
+            },
+        }
+        if budget:
+            budget.protocol_persistence_error = audit
+        observation.error = observation.error or "BENCHMARK_PROTOCOL_PERSISTENCE_FAILED"
+        print(
+            "PROTOCOL_PERSISTENCE_FAILED "
+            + type(persistence_error).__name__
+            + " original="
+            + (observation.error or "none"),
+            flush=True,
+        )
+        if stage != "checkpoint":
+            try:
+                final_checkpoint()
+            except Exception as checkpoint_error:
+                # No durable output promise under filesystem failure. Preserve
+                # the original control, without a retry of the failed raw write.
+                print("PROTOCOL_CHECKPOINT_FAILED " + type(checkpoint_error).__name__, flush=True)
+        if original_control is not None:
+            raise original_control from None
+        raise RuntimeError("BENCHMARK_PROTOCOL_PERSISTENCE_FAILED") from None
+
+    def write_fenced_raw(report, original_control=None):
+        try:
+            output.with_suffix(".raw.json").write_text(
+                json.dumps(
+                    {
+                        "canary": report,
+                        "claims": raw_claims,
+                        "protocol_observation_available": report is not None,
+                    }
+                ),
+                encoding="utf-8",
+            )
+        except Exception as persistence_error:
+            protocol_persistence_failed("raw", persistence_error, report, original_control)
+
+    def final_fenced_checkpoint(report, original_control=None):
+        def mark_clock_expiry():
+            if (
+                budget
+                and budget.clock() - budget.started >= budget.seconds
+                and observation.error is None
+            ):
+                observation.error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+                budget.stop_reason = budget.stop_reason or "wall_clock_budget_exhausted"
+                return True
+            return False
+
+        try:
+            # Persistence spends the original full case clock. A completed
+            # production Job can still yield a late/partial measured capture.
+            mark_clock_expiry()
+            final_checkpoint()
+            if mark_clock_expiry():
+                # The first output checkpoint itself may cross the deadline.
+                # Persist that diagnostic without opening another work budget.
+                final_checkpoint()
+        except Exception as persistence_error:
+            protocol_persistence_failed("checkpoint", persistence_error, report, original_control)
+
     checkpoint()
+    if fenced_research_job and budget and stop_file is not None and stop_file.exists():
+        budget.stop_reason = "external_provider_failure"
+        observation.error = "BENCHMARK_PROVIDER_FAILURE"
+        stopped_report = {
+            "job_protocol": {"started": False, "native_enabled": native, "native_ledger": None}
+        }
+        write_fenced_raw(stopped_report)
+        final_fenced_checkpoint(stopped_report)
+        return
     original_request = fetching._pinned_request
     # Every provider's search is counted, not only Exa's: runs 80-93 used
     # Serper and recorded search_calls=0 while six queries ran per case.
+    from app.adapters.search import exa_mcp as exa_mcp_module
     from app.adapters.search.brave import BraveSearchProvider
     from app.adapters.search.exa_mcp import ExaMcpSearchProvider
     from app.adapters.search.serper import SerperSearchProvider
@@ -404,6 +559,7 @@ async def capture_one(
 
     def counted_request(*args, **kwargs):
         if budget:
+            budget._check_provider_stop()
             budget.network_http_requests += 1
         else:
             observation.telemetry.http_fetches = (observation.telemetry.http_fetches or 0) + 1
@@ -431,6 +587,8 @@ async def capture_one(
 
             async def bounded(url, **kwargs):
                 nonlocal requests, network_reads
+                if budget:
+                    budget._check_provider_stop()
                 # The budget bounds reads that reach a server. A page two
                 # stages both need is served from the cache the second time,
                 # and until 2026-09-23 that repeat still spent the budget: run
@@ -483,25 +641,62 @@ async def capture_one(
             try:
                 return await super().run_to_decision()
             finally:
-                # Why a page produced nothing, in the runner's own vocabulary.
-                # Read here rather than after the run, so a case killed by its
-                # budget still records what it managed to read — which is
-                # exactly the case whose zero needs explaining.
-                observation.page_outcomes = [
-                    PageOutcome(
-                        category=record["category"],
-                        url=record["url"],
-                        page_type=record.get("page_type") or "",
-                        detail=record.get("detail") or "",
-                        characters=int(record["characters"]) if record.get("characters") else None,
-                    )
-                    for record in canary.page_outcomes(self.run)
-                ]
-                runners.append(self)
-                self.record_claims()
+                if not fenced_research_job:
+                    # Why a page produced nothing, in the runner's own vocabulary.
+                    # Read here rather than after the run, so a case killed by its
+                    # budget still records what it managed to read — which is
+                    # exactly the case whose zero needs explaining.
+                    observation.page_outcomes = [
+                        PageOutcome(
+                            category=record["category"],
+                            url=record["url"],
+                            page_type=record.get("page_type") or "",
+                            detail=record.get("detail") or "",
+                            characters=int(record["characters"])
+                            if record.get("characters")
+                            else None,
+                        )
+                        for record in canary.page_outcomes(self.run)
+                    ]
+                    runners.append(self)
+                    self.record_claims()
+                else:
+                    runners.append(self)
 
-        def record_claims(self) -> None:
-            for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
+        def _record_fenced_report(self, report) -> None:
+            fenced_reports.append(report)
+            from types import SimpleNamespace
+
+            protocol = report.get("job_protocol") or {}
+            observation.page_outcomes = [
+                PageOutcome(
+                    **{
+                        **record,
+                        "characters": int(record["characters"])
+                        if record.get("characters")
+                        else None,
+                    }
+                )
+                for record in protocol.get("page_outcomes", [])
+            ]
+            self.record_claims(
+                [
+                    SimpleNamespace(
+                        **{
+                            **record,
+                            "accessed_at": datetime.fromisoformat(record["accessed_at"])
+                            if record.get("accessed_at")
+                            else None,
+                        }
+                    )
+                    for record in protocol.get("claim_records", [])
+                ]
+            )
+
+        def record_claims(self, rows=None) -> None:
+            if rows is None:
+                rows = self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id)
+            for row in rows:
                 if row.id in recorded_claims:
                     continue
                 recorded_claims.add(row.id)
@@ -565,6 +760,11 @@ async def capture_one(
         )
 
     with (
+        # Strict evaluation must observe the first refusal. The public MCP
+        # client can retry internally before counted_search sees its error.
+        # Scope these overrides to this capture and restore both on every exit.
+        patch.object(exa_mcp_module, "RATE_LIMIT_RETRY", False) if budget else nullcontext(),
+        patch.object(exa_mcp_module, "RETRY_429_ONCE", False) if budget else nullcontext(),
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
         patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),
@@ -576,10 +776,33 @@ async def capture_one(
     ):
         try:
             active_seconds = budget.remaining() if budget else seconds
+            # Preserve the legacy call shape unless a Job option changes it.
+            # Explicit False still overrides a hostile True module default.
+            job_options: dict[str, Any] = {}
+            if fenced_research_job:
+                job_options.update(
+                    university_read_budget=native,
+                    fenced_research_job=True,
+                    stop_file=stop_file,
+                )
+            elif native != read_budget.UNIVERSITY_READ_BUDGET:
+                job_options["university_read_budget"] = native
             report = await asyncio.wait_for(
-                canary.run_canary({**COHORT, **HELDOUT}[case_id], False), active_seconds
+                canary.run_canary(
+                    None,
+                    False,
+                    catalogue_ids=[catalogue_id],
+                    **job_options,
+                )
+                if catalogue_id is not None
+                else canary.run_canary(
+                    {**COHORT, **HELDOUT}[case_id],
+                    False,
+                    **job_options,
+                ),
+                active_seconds,
             )
-        except TimeoutError:
+        except TimeoutError as timeout_control:
             # The child stops itself just short of the parent's kill, so the
             # claims already filed are kept: run_to_decision's finally reads
             # them on cancellation, which a killed process never reaches.
@@ -592,7 +815,12 @@ async def capture_one(
                     if budget.finalization_reserve_ms
                     else "wall_clock_budget_exhausted"
                 )
-            final_checkpoint()
+            if fenced_research_job:
+                partial_report = fenced_reports[-1] if fenced_reports else None
+                write_fenced_raw(partial_report, timeout_control)
+                final_fenced_checkpoint(partial_report, timeout_control)
+            else:
+                final_checkpoint()
             # D7: a decision stage that ran out of clock still filed rows; the
             # documents stage has its own clock and reads them. Run 37351314325:
             # Groningen's documents were measured in one repetition of two.
@@ -604,35 +832,49 @@ async def capture_one(
     observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
     observation.predictions = predictions
     observation.error = report["run_error"] or None
-    if budget is None or not budget.finalization_reserve_ms:
+    if budget and (budget.provider_failure or budget.stop_reason == "external_provider_failure"):
+        observation.error = "BENCHMARK_PROVIDER_FAILURE"
+    if not fenced_research_job and (budget is None or not budget.finalization_reserve_ms):
         checkpoint()
     await documents_stage()
-    # Preserve raw output for mapping/adjudication; do not invent unsupported counters.
-    output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
-    output.with_suffix(".raw.json").write_text(
-        json.dumps({"canary": report, "claims": raw_claims}, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-    if budget and budget.finalization_reserve_ms:
-        final_checkpoint()
+    # Preserve raw output for mapping/adjudication; no unsupported counters.
+    if fenced_research_job:
+        write_fenced_raw(report)
+        final_fenced_checkpoint(report)
+    else:
+        output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
+        output.with_suffix(".raw.json").write_text(
+            json.dumps({"canary": report, "claims": raw_claims}, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        if budget and budget.finalization_reserve_ms:
+            final_checkpoint()
 
 
 def main() -> None:
+    from app.adapters import page_classifier
     from app.adapters.discovery import live_discovery
     from app.adapters.scholarship import web_scholarships
     from app.adapters.search import KNOWN_SEARCH_PROVIDERS
+    from app.adapters.search import intent as search_intent
     from app.config import Settings, get_settings
+    from app.pipeline import read_budget
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--case", choices=[*COHORT, *HELDOUT])
+    selection.add_argument(
+        "--catalogue-id", action="append", help="opt-in imported identity id; repeat for a batch"
+    )
+    parser.add_argument("--stop-file", type=Path, help="strict batch shared refusal stop sentinel")
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=None)
     parser.add_argument(
         "--strict-expert-budget",
         action="store_true",
-        help="evaluation only: cold 60 get / 6 provider query / 120 active second caps; stop batch on 429",
+        help="evaluation only: cold 60 get / 6 query / 120 active second caps; stop batch on provider failure",
     )
     parser.add_argument(
         "--finalization-reserve-ms",
@@ -649,6 +891,23 @@ def main() -> None:
         "--search-first",
         action="store_true",
         help="experiment: search before the navigation fallback (default off)",
+    )
+    parser.add_argument(
+        "--site-branding-identity",
+        action="store_true",
+        help="experiment SI-1: verify a hinted homepage using its exact site name or copyright owner",
+    )
+    parser.add_argument(
+        "--programme-identity-before-funding",
+        action=argparse.BooleanOptionalAction,
+        default=page_classifier.PROGRAMME_IDENTITY_BEFORE_FUNDING,
+        help="experiment: confirm academic programme identity while preserving subsidiary funding discovery",
+    )
+    parser.add_argument(
+        "--subject-phrase-match",
+        action=argparse.BooleanOptionalAction,
+        default=live_discovery.SUBJECT_PHRASE_MATCH,
+        help="experiment SPH-1: require an ordered subject phrase in the page identity",
     )
     parser.add_argument(
         "--skip-refused-hosts",
@@ -789,8 +1048,38 @@ def main() -> None:
         default=web_scholarships.TARGET_AWARD_SEARCH,
         help="experiment: target award policies instead of generic scholarship indices",
     )
+    parser.add_argument(
+        "--university-read-budget",
+        action=argparse.BooleanOptionalAction,
+        default=read_budget.UNIVERSITY_READ_BUDGET,
+    )
+    parser.add_argument(
+        "--fenced-research-job", action=argparse.BooleanOptionalAction, default=False
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.university_read_budget and not args.fenced_research_job:
+        parser.error("University read budget requires a genuine fenced research Job")
+    if args.fenced_research_job and (
+        args.with_documents
+        or not (args.case or args.catalogue_id)
+        or (args.catalogue_id and len(args.catalogue_id) != 1)
+    ):
+        parser.error(
+            "Fenced protocol requires one explicit case/catalogue identity and excludes documents"
+        )
+    if args.stop_file is not None and not args.strict_expert_budget:
+        parser.error("--stop-file requires --strict-expert-budget")
+    if args.child and args.catalogue_id is not None and len(args.catalogue_id) != 1:
+        parser.error("A child capture requires exactly one catalogue id")
+    if args.catalogue_id is not None:
+        from .expert.catalogue import load_catalogue
+
+        identities = {identity.id: identity for identity in load_catalogue().identities}
+        if len(set(args.catalogue_id)) != len(args.catalogue_id):
+            parser.error("Duplicate catalogue ids are not allowed")
+        if any(case not in identities or not identities[case].domain for case in args.catalogue_id):
+            parser.error("Catalogue id is unknown or has no public domain hint")
     if args.max_pages is None:
         args.max_pages = STRICT_MAX_FETCHER_CALLS if args.strict_expert_budget else 40
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
@@ -820,6 +1109,12 @@ def main() -> None:
         parser.error("Strict expert budget requires configured exa or exa_mcp")
     print(f"search provider: {search_provider}", flush=True)
     if args.child:
+        live_discovery.SUBJECT_PHRASE_MATCH = args.subject_phrase_match
+        page_classifier.PROGRAMME_IDENTITY_BEFORE_FUNDING = args.programme_identity_before_funding
+        if args.site_branding_identity:
+            from app.catalogue import discovery as catalogue_discovery
+
+            catalogue_discovery.SITE_BRANDING_IDENTITY = True
         web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
         web_scholarships.TARGET_AWARD_SEARCH = args.target_award_search
         live_discovery.RECOVER_SEARCH_CANDIDATES = args.recover_search_candidates
@@ -931,10 +1226,27 @@ def main() -> None:
                 strict_arguments: dict[str, Any] = (
                     {"strict_expert_budget": True} if args.strict_expert_budget else {}
                 )
+                if args.fenced_research_job:
+                    strict_arguments.update(
+                        university_read_budget=args.university_read_budget,
+                        fenced_research_job=True,
+                    )
+                elif args.university_read_budget != read_budget.UNIVERSITY_READ_BUDGET:
+                    strict_arguments["university_read_budget"] = args.university_read_budget
                 if args.finalization_reserve_ms is not None:
                     strict_arguments["finalization_reserve_ms"] = finalization_reserve_ms
+                if args.catalogue_id is not None:
+                    strict_arguments["catalogue_id"] = args.catalogue_id[0]
+                if args.stop_file is not None:
+                    strict_arguments["stop_file"] = args.stop_file
                 asyncio.run(
-                    capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
+                    capture_one(
+                        args.catalogue_id[0] if args.catalogue_id else args.case,
+                        args.out,
+                        args.max_pages,
+                        soft,
+                        **strict_arguments,
+                    )
                 )
             finally:
                 get_settings.cache_clear()
@@ -943,11 +1255,48 @@ def main() -> None:
     directory = args.out / stamp
     directory.mkdir(parents=True)
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-    observations = []
-    planned_cases = [args.case] if args.case else list(COHORT)
+    observations: list[Observation] = []
+    planned_cases = args.catalogue_id or ([args.case] if args.case else list(COHORT))
     case_budgets: dict[str, Any] = {}
     batch_stop_reason = None
     for case_index, case_id in enumerate(planned_cases):
+        if args.stop_file is not None and args.stop_file.exists():
+            batch_stop_reason = "external_provider_failure"
+            stopped_capture = Capture(
+                pipeline_sha=sha,
+                captured_at=stamp,
+                mode="live",
+                config={
+                    "strict_expert_budget": True,
+                    "search_provider": search_provider,
+                    "university_read_budget": args.university_read_budget,
+                    "fenced_research_job": args.fenced_research_job,
+                    "research_job_protocol": "genuine-research-job"
+                    if args.fenced_research_job
+                    else "legacy-direct-unfenced",
+                    "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit"
+                    if args.fenced_research_job
+                    else None,
+                    "site_branding_identity": args.site_branding_identity,
+                    "subject_phrase_match": args.subject_phrase_match,
+                    "programme_identity_before_funding": args.programme_identity_before_funding,
+                    "shared_query_budget": args.shared_query_budget
+                    or search_intent.SHARED_QUERY_BUDGET,
+                    "seconds_per_case": args.seconds_per_case,
+                    "max_fetcher_calls_per_case": args.max_pages,
+                    "max_search_queries_per_case": STRICT_MAX_SEARCH_QUERIES,
+                    "browser_enabled": False,
+                    "cohort": planned_cases,
+                    "selection": "catalogue_id" if args.catalogue_id else "curated",
+                    "batch_stop_reason": batch_stop_reason,
+                    "batch_attempted_case_ids": planned_cases[:case_index],
+                    "batch_remaining_case_ids": planned_cases[case_index:],
+                },
+                observations=observations,
+            )
+            (directory / "capture.json").write_text(stopped_capture.model_dump_json(indent=2))
+            print("Capture stopped by shared provider refusal; remaining cases not attempted.")
+            break
         output = directory / f"{case_id}.json"
         started = time.monotonic()
         environment = dict(
@@ -969,7 +1318,7 @@ def main() -> None:
                         "evaluation.research.live",
                         "--live",
                         "--child",
-                        "--case",
+                        "--catalogue-id" if args.catalogue_id else "--case",
                         case_id,
                         "--out",
                         str(output),
@@ -979,12 +1328,24 @@ def main() -> None:
                         str(args.seconds_per_case),
                         *(["--strict-expert-budget"] if args.strict_expert_budget else []),
                         *(
+                            ["--stop-file", str(args.stop_file)]
+                            if args.stop_file is not None
+                            else []
+                        ),
+                        *(
                             ["--finalization-reserve-ms", str(finalization_reserve_ms)]
                             if args.finalization_reserve_ms is not None
                             else []
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
+                        "--university-read-budget"
+                        if args.university_read_budget
+                        else "--no-university-read-budget",
+                        "--fenced-research-job"
+                        if args.fenced_research_job
+                        else "--no-fenced-research-job",
                         *(["--search-first"] if args.search_first else []),
+                        *(["--site-branding-identity"] if args.site_branding_identity else []),
                         *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
                         *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
                         *(["--admission-lexicon"] if args.admission_lexicon else []),
@@ -1009,6 +1370,12 @@ def main() -> None:
                             else []
                         ),
                         *(["--shared-query-budget"] if args.shared_query_budget else []),
+                        "--subject-phrase-match"
+                        if args.subject_phrase_match
+                        else "--no-subject-phrase-match",
+                        "--programme-identity-before-funding"
+                        if args.programme_identity_before_funding
+                        else "--no-programme-identity-before-funding",
                         *(["--applicant-academic-year"] if args.applicant_academic_year else []),
                         "--search-funding-fallback"
                         if args.search_funding_fallback
@@ -1058,6 +1425,12 @@ def main() -> None:
                 case_budgets[case_id] = json.loads(budget_output.read_text(encoding="utf-8"))
                 if case_budgets[case_id].get("stop_reason") == "http_429":
                     batch_stop_reason = "http_429"
+                elif case_budgets[case_id].get("provider_failure"):
+                    batch_stop_reason = "provider_failure"
+                elif case_budgets[case_id].get("stop_reason") == "external_provider_failure":
+                    batch_stop_reason = "external_provider_failure"
+            else:
+                batch_stop_reason = "capture_unavailable"
             case_budgets.setdefault(case_id, {}).update(
                 parent_process_elapsed_seconds=process_elapsed_seconds,
                 process_error=error,
@@ -1084,6 +1457,7 @@ def main() -> None:
                 + STRICT_PROCESS_RESERVE_SECONDS,
                 "case_budgets": case_budgets,
                 "batch_stop_reason": batch_stop_reason,
+                "batch_attempted_case_ids": planned_cases[: case_index + 1],
                 "batch_completed_case_ids": planned_cases[: case_index + 1],
                 "batch_remaining_case_ids": planned_cases[case_index + 1 :],
             }
@@ -1100,6 +1474,19 @@ def main() -> None:
                 "max_fetcher_calls_per_case": args.max_pages,
                 "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
                 "search_before_navigation": args.search_first,
+                "university_read_budget": args.university_read_budget,
+                "fenced_research_job": args.fenced_research_job,
+                "research_job_protocol": "genuine-research-job"
+                if args.fenced_research_job
+                else "legacy-direct-unfenced",
+                "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit"
+                if args.fenced_research_job
+                else None,
+                "site_branding_identity": args.site_branding_identity,
+                "subject_phrase_match": args.subject_phrase_match,
+                "programme_identity_before_funding": args.programme_identity_before_funding,
+                "shared_query_budget": args.shared_query_budget
+                or search_intent.SHARED_QUERY_BUDGET,
                 "recover_search_candidates": args.recover_search_candidates,
                 "search_funding_fallback": args.search_funding_fallback,
                 "target_award_search": args.target_award_search,
@@ -1108,7 +1495,8 @@ def main() -> None:
                 "admission_lexicon": args.admission_lexicon,
                 "navigation_slot": args.navigation_slot,
                 "browser_enabled": False,
-                "cohort": list(COHORT),
+                "cohort": planned_cases,
+                "selection": "catalogue_id" if args.catalogue_id else "curated",
                 "scope": "current production pipeline; HTTP-only bounded cold run",
                 "rank_stage": "programme confirmation queue before catalogue walking",
                 "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -1123,7 +1511,7 @@ def main() -> None:
         print(f"{case_id}: {observation.error or 'complete'}", flush=True)
         if batch_stop_reason:
             print(
-                "Capture stopped after provider HTTP 429; remaining cases were not attempted.",
+                f"Capture stopped ({batch_stop_reason}); remaining cases were not attempted.",
                 flush=True,
             )
             break

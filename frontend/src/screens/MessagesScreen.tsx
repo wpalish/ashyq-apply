@@ -18,22 +18,34 @@ import { Avatar, Composer, MESSAGE_MAX_CHARS, when } from '@/components/social';
 import { useTranslation } from '@/lib/useTranslation';
 import type { ConversationView, MessageView, PersonCard } from '@/types';
 
+function mergeMessages(previous: MessageView[], incoming: MessageView[]): MessageView[] {
+  const merged = Array.from(new Map(
+    [...previous, ...incoming].map((message) => [message.id, message]),
+  ).values());
+  return merged.sort((one, other) =>
+    Date.parse(one.created_at) - Date.parse(other.created_at)
+      || (one.id < other.id ? -1 : one.id > other.id ? 1 : 0),
+  );
+}
+
 function Conversation({
   userId, onBack,
 }: { userId: string; onBack: () => void }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
   const [person, setPerson] = useState<PersonCard | null>(null);
   const [messages, setMessages] = useState<MessageView[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (from?: string | null) => {
     setLoading(true);
     try {
-      const page = await api.conversation(userId);
+      const page = await api.conversation(userId, from);
       setPerson(page.person);
-      setMessages(page.items);
+      setMessages((previous) => mergeMessages(from ? previous : [], page.items));
+      setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
       setError(problem instanceof ApiError ? problem.message : 'Could not open this conversation.');
@@ -52,16 +64,16 @@ function Conversation({
         </button>
         {person && (
           <span className="row row--tight">
-            <Avatar name={person.display_name} status={person.status} />
-            <strong>{person.display_name}</strong>
+            <Avatar name={person.display_name} status={person.status} userId={person.user_id} />
+            {ru?<h1 className="book-conversation-title">{person.display_name}</h1>:<strong>{person.display_name}</strong>}
           </span>
         )}
       </div>
 
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
       {loading && <Loading label={t('messages.opening')} />}
 
-      {!loading && messages.length === 0 && (
+      {!loading && !error && messages.length === 0 && (
         <Empty title={t('messages.emptyThread')}>
           <p className="small">{t('messages.emptyThreadHint')}</p>
         </Empty>
@@ -85,19 +97,27 @@ function Conversation({
         })}
       </div>
 
+      {cursor && !loading && (
+        <button className="btn btn--sm" type="button" onClick={() => { void load(cursor); }}>
+          {ru ? 'Более ранние сообщения' : 'Load more messages'}
+        </button>
+      )}
+
       <Composer
         placeholder={t('messages.placeholder')}
         submitLabel={t('messages.send')}
         max={MESSAGE_MAX_CHARS}
         busy={sending}
+        disabled={loading || (!person && Boolean(error))}
         onSubmit={async (body) => {
           setSending(true);
           try {
             const sent = await api.sendMessage(userId, body);
-            setMessages((prev) => [...prev, sent]);
+            setMessages((prev) => mergeMessages(prev, [sent]));
             setError('');
           } catch (problem) {
             setError(problem instanceof ApiError ? problem.message : 'Could not send that.');
+            return false;
           } finally {
             setSending(false);
           }
@@ -116,15 +136,21 @@ export function MessagesScreen({
   /** Reading a conversation clears its unread, so the badge has to be told. */
   onReadSomething: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
+  const [query,setQuery]=useState('');
   const [items, setItems] = useState<ConversationView[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (from?: string | null) => {
     setLoading(true);
     try {
-      setItems((await api.conversations()).items);
+      const page = await api.conversations(from);
+      setItems((previous) => from
+        ? Array.from(new Map([...previous, ...page.items].map((item) => [item.person.user_id, item])).values())
+        : page.items);
+      setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
       setError(problem instanceof ApiError ? problem.message : 'Could not load your messages.');
@@ -134,27 +160,30 @@ export function MessagesScreen({
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+  const filteredItems = items.filter(conversation => `${conversation.person.display_name} ${conversation.last_message ?? ''}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
 
   return (
-    <div className={`messages-page${openWith ? ' messages-page--open' : ''}`}>
+    <div className={`messages-page${openWith ? ' messages-page--open' : ''} ${ru?'book-messages-page':''}`}>
       <div className="messages-page__list">
       <div className="screen__head">
-        <p className="screen__eyebrow">COMMUNITY</p>
-        <h1 className="screen__title">Messages</h1>
-        <p className="screen__lede">Real conversations with other students.</p>
+        {!ru&&<p className="screen__eyebrow">COMMUNITY</p>}
+        <h1 className="screen__title">{ru?'Сообщения':'Messages'}</h1>
+        <p className="screen__lede">{ru?'Обменивайся сообщениями с другими абитуриентами и задавай вопросы.':'Real conversations with other students.'}</p>
       </div>
 
-      {error && <Notice kind="risk">{error}</Notice>}
+      {ru&&<label className="book-message-search"><span className="visually-hidden">Поиск по загруженным диалогам</span><input type="search" placeholder="Поиск сообщений…" value={query} onChange={event=>setQuery(event.target.value)}/></label>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
       {loading && <Loading label={t('messages.loading')} />}
 
-      {!loading && items.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty title={t('messages.empty')}>
-          <p className="small">{t('messages.emptyHint')}</p>
+          <p className="small">{t('messages.emptyHint')}</p><a className="btn btn--sm" href="#/discover">{ru ? 'Найти собеседника' : 'Find people'}</a>
         </Empty>
       )}
 
+      {!loading && !error && items.length > 0 && filteredItems.length === 0 && <Empty title={ru ? 'Диалоги не найдены' : 'No conversations match'}><p>{ru ? 'Попробуй другое имя или сбрось поиск. Поиск работает по загруженным диалогам.' : 'Try another name or clear the search. Only loaded conversations are searched.'}</p><button className="btn btn--sm" type="button" onClick={() => setQuery('')}>{ru ? 'Сбросить поиск' : 'Clear search'}</button></Empty>}
       <div className="feed">
-        {items.map((conversation) => {
+        {filteredItems.map((conversation) => {
           const moment = when(conversation.last_message_at);
           return (
             <button
@@ -166,6 +195,7 @@ export function MessagesScreen({
             >
               <Avatar
                 name={conversation.person.display_name}
+                userId={conversation.person.user_id}
                 status={conversation.person.status}
                 large
               />
@@ -185,10 +215,15 @@ export function MessagesScreen({
           );
         })}
       </div>
+      {cursor && !loading && (
+        <button className="btn btn--sm" type="button" onClick={() => { void load(cursor); }}>
+          {ru ? 'Загрузить ещё диалоги' : 'Load more conversations'}
+        </button>
+      )}
       </div>
       <div className="messages-page__thread">
-        {openWith ? <Conversation userId={openWith} onBack={() => { onOpenChange(null); onReadSomething(); void load(); }} /> : (
-          <div className="messages-page__welcome"><img src="/brand/unimatch-mark.png" alt="" /><h2>Select a conversation</h2><p>Ask clearly. Plan confidently. Your messages stay between you and the other student unless one of you reports them.</p></div>
+        {openWith ? <Conversation key={openWith} userId={openWith} onBack={() => { onOpenChange(null); onReadSomething(); void load(); }} /> : (
+          <div className="messages-page__welcome"><img src="/brand/unimatch-orbit.svg" alt="" /><h2>{ru?'Выбери диалог':'Select a conversation'}</h2><p>{ru?'Сообщения не обновляются в реальном времени. Открой диалог заново, чтобы получить новые ответы.':'Ask clearly. Plan confidently. Your messages stay between you and the other student unless one of you reports them.'}</p></div>
         )}
       </div>
     </div>

@@ -1,0 +1,41 @@
+{
+  "created_utc": "2026-10-08T01:11:23.384743+00:00",
+  "status": "WRITEAHEAD_FINAL_NORMAL_IMPORT_VALIDATE_CAPTURE_KIND_ONLY",
+  "inputs": {
+    "driver": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/genuine-baseline/execute_baseline.py",
+      "sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b"
+    },
+    "A134": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/a-baseline-envelope-review/original.controls.json",
+      "sha256": "d61acb194d7d38c3aa7a27bc7fb1c7f3eb6a0a32ef620477bbc37f7b64e11f71"
+    },
+    "A46": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/a-baseline-partial-lane-review/partial.controls.prepared.json",
+      "sha256": "24cfdc10274348d2081f51d0e445893e90daa4d6dec7a596b959e52216ddb069"
+    },
+    "B140": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-baseline-repaired-validator-review/controls.original.json",
+      "sha256": "8a48e2d25fd41dd2ceaca0496bd02346b055a5610c858fd367931b3c88437a7c"
+    },
+    "B18": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-baseline-repaired-validator-review/accepted-reds.original.json",
+      "sha256": "351d390507a1a77da9d6c052e181ab4b45231b49c5d76f442784694ea6aa5243"
+    },
+    "B5": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-baseline-repaired-validator-review-v2/positive-fixtures.prepared.json",
+      "sha256": "e5267a860c1a2a0e7c4d924e1603feb8928df42acba6ae92ed20c26a34730c77"
+    },
+    "B3URL": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-baseline-repaired-validator-review-v2/url-seam.original.json",
+      "sha256": "4d413d24ec39043069cb32314e63114b84dba2188b6aaeafbd866cd9f09d819a"
+    }
+  },
+  "previous_review_manifest": "d74d1363fcf9246bdd4bdedfc5a3267835d5008e378c460c625dd6458fcb8314",
+  "scope": [
+    "Repeat all325distinct original A134/A46/B140/B5 expectations untouched; qualify only two known empty-list noops separately. B18duplicate subset remains separate.",
+    "ExactB3URL peer source representation controls (2normalization false-rejects/1unchangedpositive) plus narrow own wrongURL/order/malformed proof with actualHttpUrl/Observation.",
+    "Only driver validate/capture_kind, no main/preflight/live/process/network/provider/model/source/Git/STOP. Normal actual schemas/mapper source-snapshot imports; approvedidentityonly no gold.",
+    "Early decisive result then immutable receipt; accepted protocol-driver for requestedcontrolcontract, not runtime/preflight/source-transfer/live/scoring readiness."
+  ]
+}

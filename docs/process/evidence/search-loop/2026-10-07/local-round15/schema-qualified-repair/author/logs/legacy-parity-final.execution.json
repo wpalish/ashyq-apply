@@ -1,0 +1,81 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/parity.py",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/parity-final"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/runtime/backend",
+  "environment": {
+    "HOME": "/Users/wpalish",
+    "PATH": "/usr/bin:/bin",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/runtime/backend",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false"
+  },
+  "exit_code": 0,
+  "source_before": {
+    "backend/evaluation/research/expert/controller.py": {
+      "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+      "bytes": 46899
+    },
+    "backend/evaluation/research/expert/models.py": {
+      "sha256": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+      "bytes": 47643
+    },
+    "backend/evaluation/research/expert/selector.py": {
+      "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+      "bytes": 5236
+    },
+    "backend/evaluation/research/local_pilot.py": {
+      "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+      "bytes": 65752
+    },
+    "backend/evaluation/research/pilot_admission.py": {
+      "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+      "bytes": 23615
+    },
+    "backend/tests/test_local_pilot.py": {
+      "sha256": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda",
+      "bytes": 44993
+    }
+  },
+  "source_after": {
+    "backend/evaluation/research/expert/controller.py": {
+      "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+      "bytes": 46899
+    },
+    "backend/evaluation/research/expert/models.py": {
+      "sha256": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+      "bytes": 47643
+    },
+    "backend/evaluation/research/expert/selector.py": {
+      "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+      "bytes": 5236
+    },
+    "backend/evaluation/research/local_pilot.py": {
+      "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+      "bytes": 65752
+    },
+    "backend/evaluation/research/pilot_admission.py": {
+      "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+      "bytes": 23615
+    },
+    "backend/tests/test_local_pilot.py": {
+      "sha256": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda",
+      "bytes": 44993
+    }
+  },
+  "legacy_original": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/parity-outputs/original/parity.original.json",
+    "sha256": "ed1dba39ae7d7ff2ac086ae25ed8d85ba77d68ab7fe2eec8f337f494c3528c53",
+    "bytes": 3905
+  },
+  "final_proposal": {
+    "sha256": "ed1dba39ae7d7ff2ac086ae25ed8d85ba77d68ab7fe2eec8f337f494c3528c53",
+    "bytes": 3905
+  },
+  "whole_legacy_bytes_equal": true,
+  "bytes": 3905
+}

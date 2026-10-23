@@ -1,0 +1,113 @@
+{
+  "time": "2026-10-08T07:48:19.829290+00:00",
+  "status": "STATIC_R0_REJECTED_PRIMARY_NOT_APPLIED",
+  "files": {
+    "port-contract/PLAN.json": {
+      "sha256": "51ec55300ac4cc5499400a060d3d9dfb4610531b01a2fe2d7933d44aa2e29ab3",
+      "bytes": 1566
+    },
+    "port-contract/profile-source-pin.json": {
+      "sha256": "7d9238cba5a2d855ab8d8c8fd693e051d488c19e3b12c90e6de2ae4c6d0f8c23",
+      "bytes": 326
+    },
+    "port-contract/source-post.json": {
+      "sha256": "9e99188a3de877865a3824d3f7a14b625dbdf868ad0428ab2877e57c3b4ccc49",
+      "bytes": 1304
+    },
+    "port-contract/port-constraints.json": {
+      "sha256": "70092a4af599fb64f90f64a820c71a3a5de91a44ae739903256bc9ec7624fb72",
+      "bytes": 5243
+    },
+    "port-contract/REPORT.ru.md": {
+      "sha256": "7bd17d61d97ec308c2519bfc0c90a304e18ba22a82b78f6f934aa4787e28ef50",
+      "bytes": 10369
+    },
+    "port-contract/receipt.json": {
+      "sha256": "387ca22040b6235e0714714dc8e5e6349193db42e764d068e0fe1fad7e246994",
+      "bytes": 1108
+    },
+    "port-contract/ready-manifest.json": {
+      "sha256": "fe9ed9e9f2f6592edc003f20fbfecdd608806d891f192db0ae3d8c395f31bd6b",
+      "bytes": 1001
+    },
+    "independent-peer/PLAN.json": {
+      "sha256": "864f87543f75ec99c120dcf3f03726c1e17e6fcebe6afe20bdf89299e78567a3",
+      "bytes": 1383
+    },
+    "independent-peer/source-post.json": {
+      "sha256": "640bab0bc35f7d85f67338ffe1056512f5bbe34d3a2a9cc916e9314d3cc39f72",
+      "bytes": 3055
+    },
+    "independent-peer/controller.py.review.diff": {
+      "sha256": "a3b8740c0bba20c39423f328c36162e6afa4c4fd603d2bdd007d5f6a604092c9",
+      "bytes": 9815
+    },
+    "independent-peer/models.py.review.diff": {
+      "sha256": "2488a62d032a3c57b87e50d5fdc70ce1afbdc4b2aa0776a84742998ff9267f75",
+      "bytes": 5505
+    },
+    "independent-peer/selector.py.review.diff": {
+      "sha256": "97b5563718f20e487094ea6fd8ff04b56d1b6cf3a4343c7eb0e2647623456fde",
+      "bytes": 2621
+    },
+    "independent-peer/findings.json": {
+      "sha256": "320c8eea3f25eba7adaae1cb974d3839cf7d51b5eb95861a9081916b55eb0e3b",
+      "bytes": 3526
+    },
+    "independent-peer/REPORT.ru.md": {
+      "sha256": "48aefa2eef7fc4edab1795566d3622017c4aec5a956ffceca60cce764b9e77b5",
+      "bytes": 10119
+    },
+    "independent-peer/receipt.json": {
+      "sha256": "cff074a23f730242c2450395f5e7735de1b82f877412de5d3168feb46d955124",
+      "bytes": 1445
+    },
+    "independent-peer/ready-manifest.json": {
+      "sha256": "8d5c7036862e7e502af322a6de76fe010855d76f035f39f29839a0d56ad03567",
+      "bytes": 1269
+    },
+    "untested-prototype/backend/evaluation/research/local_pilot.py": {
+      "sha256": "3b64e74ca544b3d919c4b911653fd3e21f19f90e1564638c32341884834e8317",
+      "bytes": 39446
+    },
+    "untested-prototype/backend/evaluation/research/pilot_admission.py": {
+      "sha256": "6d3ef1414eaa52f50d5240a86fb2f375e0c647353ba12bb0a93036167a599c0d",
+      "bytes": 20229
+    },
+    "untested-prototype/backend/evaluation/research/expert/controller.py": {
+      "sha256": "65ac7dcc1c1f0dae5409b201786ee6dc683755c28a566d14ad35bbb9c0b892dd",
+      "bytes": 44971
+    },
+    "untested-prototype/backend/evaluation/research/expert/models.py": {
+      "sha256": "258e65ecc82761319fe6d42cee32a125787bb04ca328bef688d3c398f3b08676",
+      "bytes": 44290
+    },
+    "untested-prototype/backend/evaluation/research/expert/selector.py": {
+      "sha256": "7e73d07c95f69b0dcf0ae102f29ab8177aab5db1d07fd62396de7558e54115df",
+      "bytes": 3658
+    },
+    "untested-prototype/ready-manifest.json": {
+      "sha256": "5c252dfd3e167a8470ca58d73d135b998a8a5322a051fd96b89edd2662b66796",
+      "bytes": 925
+    },
+    "root/r0-static-review.json": {
+      "sha256": "e55e28fdabae468a9ea9c1271bb1f9da043f7a9ae68f416a26a1fa42096b352f",
+      "bytes": 2891
+    },
+    "root/source-profile-contract.json": {
+      "sha256": "5eb800169e6ba9962424936d4570f8c24c1797cf4bcca6a0dff7829a524615b8",
+      "bytes": 1519
+    },
+    "root/b-port-design-verification.json": {
+      "sha256": "ab5f9af96c6d8fe046cd285f9835d48832c19b9474ea35b9d9dc8755e1e0287b",
+      "bytes": 370
+    }
+  },
+  "selected_files_count": 25,
+  "selected_files_bytes": 217954,
+  "copies_not_experiments": true,
+  "latest_working_proposal_native_claim": "20 controls passed before formatter tooling failure; final restored/formatted proof and independent qualified seal not received",
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "owner_grant": "PENDING",
+  "primary_source_unchanged": true
+}

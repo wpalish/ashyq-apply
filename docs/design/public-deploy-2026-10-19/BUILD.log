@@ -1,0 +1,1152 @@
+==> Verifying app config
+Validating /Users/wpalish/Documents/Codex/2026-10-07/x20/work/unimatch-fly-deploy-2026-10-19/source/fly.toml
+[32m✓[0m Configuration is valid
+--> Verified app config
+[33mWARN[0m UNIMATCH_PASSWORD_RESET_ENABLED may be a potentially sensitive environment variable. Consider setting it as a secret, and removing it from the [env] section: https://fly.io/docs/apps/secrets/
+
+==> Building image
+Waiting for depot builder...
+
+==> Building image with Depot
+--> build:  (​)
+#1 [internal] load build definition from Dockerfile.fly
+#1 transferring dockerfile:
+#1 transferring dockerfile: 1.68kB 0.5s done
+#1 DONE 0.6s
+
+#2 [internal] load metadata for docker.io/library/python:3.12-slim-bookworm
+#2 DONE 0.7s
+
+#3 [internal] load metadata for docker.io/library/node:22-bookworm-slim
+#3 DONE 0.8s
+
+#4 [internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 183B 0.5s done
+#4 DONE 0.6s
+
+#5 [frontend-builder 1/6] FROM docker.io/library/node:22-bookworm-slim@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392
+#5 resolve docker.io/library/node:22-bookworm-slim@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392 0.0s done
+#5 DONE 0.2s
+
+#6 [python-builder 1/4] FROM docker.io/library/python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258
+#6 resolve docker.io/library/python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 0.0s done
+#6 DONE 0.2s
+
+#7 [internal] load build context
+#7 transferring context: 17.41MB 4.1s done
+#7 ...
+
+#6 [python-builder 1/4] FROM docker.io/library/python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258
+#6 sha256:6e0ba8ba048777f5354b5a7cb497ae5261116fac8246160c06fc045c8300c582 3.34MB / 3.34MB 0.3s done
+#6 sha256:86a9e13e035d8e44ae37bfebc52c7fc68898fde19b4b26dd0585f2231fcfaf2c 15.97MB / 15.97MB 0.6s done
+#6 sha256:f9d2fb07d6f062d06ddc7aa58191cc5359c728f54af6cebe69a37d2c89e72a0d 249B / 249B 0.1s done
+#6 sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 28.25MB / 28.25MB 0.9s done
+#6 extracting sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 1.4s done
+#6 extracting sha256:6e0ba8ba048777f5354b5a7cb497ae5261116fac8246160c06fc045c8300c582 0.2s done
+#6 extracting sha256:86a9e13e035d8e44ae37bfebc52c7fc68898fde19b4b26dd0585f2231fcfaf2c 2.1s done
+#6 DONE 4.8s
+
+#5 [frontend-builder 1/6] FROM docker.io/library/node:22-bookworm-slim@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392
+#5 sha256:a8de9fa052209313d8e45435a8486e29b20eebaa820e2e7f63a7c3c94b4fa567 448B / 448B 0.1s done
+#5 sha256:2cfab517365cfc6b4bd1f8c4cb01754884ef75bc38758b3c41e291c696f019f5 1.71MB / 1.71MB 0.2s done
+#5 sha256:d22c69a95cf463f4cb74462bd2899597ce505d82bd4c01ceddf7845e12f13856 49.84MB / 49.84MB 1.4s done
+#5 sha256:f0400f4b55b0ad346bf6167a1b64a258e4d73db608c457798ce35e4ffeebfaaf 3.31kB / 3.31kB 0.1s done
+#5 extracting sha256:f0400f4b55b0ad346bf6167a1b64a258e4d73db608c457798ce35e4ffeebfaaf 0.0s done
+#5 extracting sha256:d22c69a95cf463f4cb74462bd2899597ce505d82bd4c01ceddf7845e12f13856
+#5 extracting sha256:d22c69a95cf463f4cb74462bd2899597ce505d82bd4c01ceddf7845e12f13856 2.5s done
+#5 extracting sha256:2cfab517365cfc6b4bd1f8c4cb01754884ef75bc38758b3c41e291c696f019f5
+#5 ...
+
+#6 [python-builder 1/4] FROM docker.io/library/python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258
+#6 extracting sha256:f9d2fb07d6f062d06ddc7aa58191cc5359c728f54af6cebe69a37d2c89e72a0d 1.1s done
+#6 DONE 5.9s
+
+#8 [python-builder 2/4] WORKDIR /build
+#8 ...
+
+#5 [frontend-builder 1/6] FROM docker.io/library/node:22-bookworm-slim@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392
+#5 extracting sha256:2cfab517365cfc6b4bd1f8c4cb01754884ef75bc38758b3c41e291c696f019f5 1.4s done
+#5 DONE 5.6s
+
+#5 [frontend-builder 1/6] FROM docker.io/library/node:22-bookworm-slim@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392
+#5 extracting sha256:a8de9fa052209313d8e45435a8486e29b20eebaa820e2e7f63a7c3c94b4fa567
+#5 extracting sha256:a8de9fa052209313d8e45435a8486e29b20eebaa820e2e7f63a7c3c94b4fa567 0.7s done
+#5 DONE 6.3s
+
+#7 [internal] load build context
+#7 ...
+
+#8 [python-builder 2/4] WORKDIR /build
+#8 DONE 5.1s
+
+#9 [frontend-builder 2/6] WORKDIR /build/frontend
+#9 DONE 3.7s
+
+#10 [python-builder 3/4] COPY backend/requirements.txt ./
+#10 DONE 0.1s
+
+#11 [frontend-builder 3/6] COPY frontend/package.json frontend/package-lock.json ./
+#11 DONE 0.2s
+
+#12 [frontend-builder 4/6] RUN npm ci
+#12 1.480 npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+#12 1.600 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+#12 1.632 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+#12 1.866 npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+#12 1.987 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+#12 2.018 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+#12 3.904 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+#12 ...
+
+#13 [python-builder 4/4] RUN python -m venv /opt/venv  && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+#13 3.220 Collecting fastapi>=0.121.0 (from -r requirements.txt (line 3))
+#13 3.392   Downloading fastapi-0.146.0-py3-none-any.whl.metadata (26 kB)
+#13 3.426 Collecting uvicorn==0.34.0 (from uvicorn[standard]==0.34.0->-r requirements.txt (line 4))
+#13 3.428   Downloading uvicorn-0.34.0-py3-none-any.whl.metadata (6.5 kB)
+#13 3.448 Collecting starlette>=1.3.1 (from -r requirements.txt (line 5))
+#13 3.451   Downloading starlette-1.9.0-py3-none-any.whl.metadata (6.6 kB)
+#13 3.560 Collecting pydantic==2.13.4 (from -r requirements.txt (line 6))
+#13 3.571   Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+#13 3.588 Collecting pydantic-settings==2.7.0 (from -r requirements.txt (line 7))
+#13 3.590   Downloading pydantic_settings-2.7.0-py3-none-any.whl.metadata (3.5 kB)
+#13 3.800 Collecting SQLAlchemy==2.0.36 (from -r requirements.txt (line 8))
+#13 3.804   Downloading SQLAlchemy-2.0.36-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.7 kB)
+#13 3.822 Collecting alembic==1.14.0 (from -r requirements.txt (line 9))
+#13 3.825   Downloading alembic-1.14.0-py3-none-any.whl.metadata (7.4 kB)
+#13 3.834 Collecting psycopg==3.3.4 (from psycopg[binary]==3.3.4->-r requirements.txt (line 10))
+#13 3.837   Downloading psycopg-3.3.4-py3-none-any.whl.metadata (4.3 kB)
+#13 3.851 Collecting httpx==0.28.1 (from -r requirements.txt (line 11))
+#13 3.853   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+#13 3.863 Collecting tldextract==5.3.2 (from -r requirements.txt (line 12))
+#13 3.866   Downloading tldextract-5.3.2-py3-none-any.whl.metadata (7.9 kB)
+#13 3.876 Collecting beautifulsoup4==4.12.3 (from -r requirements.txt (line 13))
+#13 3.878   Downloading beautifulsoup4-4.12.3-py3-none-any.whl.metadata (3.8 kB)
+#13 4.064 Collecting lxml==6.1.0 (from -r requirements.txt (line 14))
+#13 4.066   Downloading lxml-6.1.0-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (4.0 kB)
+#13 4.081 Collecting pypdf>=6.15.0 (from -r requirements.txt (line 15))
+#13 4.083   Downloading pypdf-6.21.1-py3-none-any.whl.metadata (7.6 kB)
+#13 4.092 Collecting python-multipart>=0.0.20 (from -r requirements.txt (line 16))
+#13 4.106   Downloading python_multipart-0.0.32-py3-none-any.whl.metadata (2.1 kB)
+#13 4.115 Collecting openpyxl==3.1.5 (from -r requirements.txt (line 17))
+#13 4.118   Downloading openpyxl-3.1.5-py2.py3-none-any.whl.metadata (2.5 kB)
+#13 4.137 Collecting playwright==1.60.0 (from -r requirements.txt (line 18))
+#13 4.139   Downloading playwright-1.60.0-py3-none-manylinux1_x86_64.whl.metadata (3.5 kB)
+#13 4.154 Collecting click>=7.0 (from uvicorn==0.34.0->uvicorn[standard]==0.34.0->-r requirements.txt (line 4))
+#13 4.157   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+#13 4.161 Collecting h11>=0.8 (from uvicorn==0.34.0->uvicorn[standard]==0.34.0->-r requirements.txt (line 4))
+#13 4.164   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#13 4.188 Collecting annotated-types>=0.6.0 (from pydantic==2.13.4->-r requirements.txt (line 6))
+#13 4.190   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#13 4.653 Collecting pydantic-core==2.46.4 (from pydantic==2.13.4->-r requirements.txt (line 6))
+#13 4.655   Downloading pydantic_core-2.46.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+#13 4.664 Collecting typing-extensions>=4.14.1 (from pydantic==2.13.4->-r requirements.txt (line 6))
+#13 4.666   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#13 4.671 Collecting typing-inspection>=0.4.2 (from pydantic==2.13.4->-r requirements.txt (line 6))
+#13 4.672   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+#13 4.688 Collecting python-dotenv>=0.21.0 (from pydantic-settings==2.7.0->-r requirements.txt (line 7))
+#13 4.689   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+#13 4.778 Collecting greenlet!=0.4.17 (from SQLAlchemy==2.0.36->-r requirements.txt (line 8))
+#13 4.781   Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+#13 4.797 Collecting Mako (from alembic==1.14.0->-r requirements.txt (line 9))
+#13 4.799   Downloading mako-1.4.3-py3-none-any.whl.metadata (2.9 kB)
+#13 4.812 Collecting anyio (from httpx==0.28.1->-r requirements.txt (line 11))
+#13 4.816   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+#13 4.825 Collecting certifi (from httpx==0.28.1->-r requirements.txt (line 11))
+#13 4.827   Downloading certifi-2026.10.18-py3-none-any.whl.metadata (2.5 kB)
+#13 4.837 Collecting httpcore==1.* (from httpx==0.28.1->-r requirements.txt (line 11))
+#13 4.840   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+#13 4.848 Collecting idna (from httpx==0.28.1->-r requirements.txt (line 11))
+#13 4.852   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+#13 4.866 Collecting requests>=2.1.0 (from tldextract==5.3.2->-r requirements.txt (line 12))
+#13 4.869   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+#13 4.874 Collecting requests-file>=1.4 (from tldextract==5.3.2->-r requirements.txt (line 12))
+#13 4.876   Downloading requests_file-3.0.1-py2.py3-none-any.whl.metadata (1.7 kB)
+#13 4.892 Collecting filelock>=3.0.8 (from tldextract==5.3.2->-r requirements.txt (line 12))
+#13 4.894   Downloading filelock-4.2.4-py3-none-any.whl.metadata (2.0 kB)
+#13 4.904 Collecting soupsieve>1.2 (from beautifulsoup4==4.12.3->-r requirements.txt (line 13))
+#13 4.906   Downloading soupsieve-3.0.3-py3-none-any.whl.metadata (4.4 kB)
+#13 4.911 Collecting et-xmlfile (from openpyxl==3.1.5->-r requirements.txt (line 17))
+#13 4.913   Downloading et_xmlfile-2.0.0-py3-none-any.whl.metadata (2.7 kB)
+#13 4.922 Collecting pyee<14,>=13 (from playwright==1.60.0->-r requirements.txt (line 18))
+#13 4.925   Downloading pyee-13.0.1-py3-none-any.whl.metadata (3.0 kB)
+#13 5.015 Collecting psycopg-binary==3.3.4 (from psycopg[binary]==3.3.4->-r requirements.txt (line 10))
+#13 5.018   Downloading psycopg_binary-3.3.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+#13 5.038 Collecting httptools>=0.6.3 (from uvicorn[standard]==0.34.0->-r requirements.txt (line 4))
+#13 5.040   Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+#13 5.062 Collecting pyyaml>=5.1 (from uvicorn[standard]==0.34.0->-r requirements.txt (line 4))
+#13 5.064   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+#13 5.087 Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.34.0->-r requirements.txt (line 4))
+#13 5.090   Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+#13 5.160 Collecting watchfiles>=0.13 (from uvicorn[standard]==0.34.0->-r requirements.txt (line 4))
+#13 5.164   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#13 5.235 Collecting websockets>=10.4 (from uvicorn[standard]==0.34.0->-r requirements.txt (line 4))
+#13 5.237   Downloading websockets-17.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+#13 5.260 Collecting annotated-doc>=0.0.2 (from fastapi>=0.121.0->-r requirements.txt (line 3))
+#13 5.263   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+#13 5.274 Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.121.0->-r requirements.txt (line 3))
+#13 5.277   Downloading opentelemetry_api-1.45.1-py3-none-any.whl.metadata (1.4 kB)
+#13 5.380 Collecting charset_normalizer<4,>=2 (from requests>=2.1.0->tldextract==5.3.2->-r requirements.txt (line 12))
+#13 5.388   Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+#13 5.404 Collecting urllib3<3,>=1.26 (from requests>=2.1.0->tldextract==5.3.2->-r requirements.txt (line 12))
+#13 5.411   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+#13 5.467 Collecting MarkupSafe>=2.0 (from Mako->alembic==1.14.0->-r requirements.txt (line 9))
+#13 5.470   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#13 5.480 Downloading uvicorn-0.34.0-py3-none-any.whl (62 kB)
+#13 5.483 Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+#13 5.488 Downloading pydantic_settings-2.7.0-py3-none-any.whl (29 kB)
+#13 5.493 Downloading SQLAlchemy-2.0.36-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)
+#13 5.504    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 389.4 MB/s eta 0:00:00
+#13 5.506 Downloading alembic-1.14.0-py3-none-any.whl (233 kB)
+#13 5.510 Downloading psycopg-3.3.4-py3-none-any.whl (213 kB)
+#13 5.512 Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+#13 5.514 Downloading tldextract-5.3.2-py3-none-any.whl (106 kB)
+#13 5.517 Downloading beautifulsoup4-4.12.3-py3-none-any.whl (147 kB)
+#13 5.519 Downloading lxml-6.1.0-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.2 MB)
+#13 5.535    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 423.8 MB/s eta 0:00:00
+#13 5.537 Downloading openpyxl-3.1.5-py2.py3-none-any.whl (250 kB)
+#13 5.540 Downloading playwright-1.60.0-py3-none-manylinux1_x86_64.whl (47.5 MB)
+#13 5.709    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.5/47.5 MB 285.0 MB/s eta 0:00:00
+#13 5.712 Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+#13 5.717 Downloading psycopg_binary-3.3.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.2 MB)
+#13 5.730    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 454.1 MB/s eta 0:00:00
+#13 5.736 Downloading pydantic_core-2.46.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+#13 5.742    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 486.8 MB/s eta 0:00:00
+#13 5.754 Downloading fastapi-0.146.0-py3-none-any.whl (144 kB)
+#13 5.757 Downloading starlette-1.9.0-py3-none-any.whl (80 kB)
+#13 5.759 Downloading pypdf-6.21.1-py3-none-any.whl (405 kB)
+#13 5.763 Downloading python_multipart-0.0.32-py3-none-any.whl (30 kB)
+#13 5.765 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+#13 5.767 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#13 5.769 Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+#13 5.771 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+#13 5.774 Downloading filelock-4.2.4-py3-none-any.whl (162 kB)
+#13 5.776 Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (621 kB)
+#13 5.780    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 621.4/621.4 kB 468.1 MB/s eta 0:00:00
+#13 5.783 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#13 5.784 Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (552 kB)
+#13 5.787    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 552.8/552.8 kB 453.5 MB/s eta 0:00:00
+#13 5.789 Downloading idna-3.20-py3-none-any.whl (69 kB)
+#13 5.791 Downloading opentelemetry_api-1.45.1-py3-none-any.whl (60 kB)
+#13 5.793 Downloading pyee-13.0.1-py3-none-any.whl (15 kB)
+#13 5.795 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+#13 5.797 Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+#13 5.801    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 463.4 MB/s eta 0:00:00
+#13 5.803 Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+#13 5.805 Downloading certifi-2026.10.18-py3-none-any.whl (134 kB)
+#13 5.807 Downloading requests_file-3.0.1-py2.py3-none-any.whl (4.5 kB)
+#13 5.809 Downloading soupsieve-3.0.3-py3-none-any.whl (41 kB)
+#13 5.811 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#13 5.814 Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+#13 5.818 Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+#13 5.833    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 327.2 MB/s eta 0:00:00
+#13 5.836 Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+#13 5.840 Downloading websockets-17.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (225 kB)
+#13 5.843 Downloading et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
+#13 5.847 Downloading mako-1.4.3-py3-none-any.whl (80 kB)
+#13 5.849 Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+#13 5.852 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#13 5.856 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+#13 5.992 Installing collected packages: websockets, uvloop, urllib3, typing-extensions, soupsieve, pyyaml, python-multipart, python-dotenv, pypdf, psycopg-binary, MarkupSafe, lxml, idna, httptools, h11, greenlet, filelock, et-xmlfile, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, SQLAlchemy, requests, pyee, pydantic-core, psycopg, opentelemetry-api, openpyxl, Mako, httpcore, beautifulsoup4, anyio, watchfiles, starlette, requests-file, pydantic, playwright, httpx, alembic, tldextract, pydantic-settings, fastapi
+#13 ...
+
+#12 [frontend-builder 4/6] RUN npm ci
+#12 6.685 
+#12 6.685 added 290 packages, and audited 291 packages in 7s
+#12 6.685 
+#12 6.685 64 packages are looking for funding
+#12 6.685   run `npm fund` for details
+#12 6.686 
+#12 6.686 found 0 vulnerabilities
+#12 6.689 npm notice
+#12 6.689 npm notice New major version of npm available! 10.9.9 -> 12.2.0
+#12 6.689 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#12 6.689 npm notice To update run: npm install -g npm@12.2.0
+#12 6.689 npm notice
+#12 DONE 14.4s
+
+#7 [internal] load build context
+#7 ...
+
+#14 [frontend-builder 5/6] COPY frontend/ ./
+#14 DONE 1.3s
+
+#13 [python-builder 4/4] RUN python -m venv /opt/venv  && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+#13 ...
+
+#15 [frontend-builder 6/6] RUN npm run build
+#15 0.242 
+#15 0.242 > unimatch-frontend@0.1.0 build
+#15 0.242 > tsc -b && vite build
+#15 0.242 
+#15 ...
+
+#13 [python-builder 4/4] RUN python -m venv /opt/venv  && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+#13 18.18 Successfully installed Mako-1.4.3 MarkupSafe-3.0.4 SQLAlchemy-2.0.36 alembic-1.14.0 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 beautifulsoup4-4.12.3 certifi-2026.10.18 charset_normalizer-3.5.2 click-8.5.0 et-xmlfile-2.0.0 fastapi-0.146.0 filelock-4.2.4 greenlet-3.5.6 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 lxml-6.1.0 openpyxl-3.1.5 opentelemetry-api-1.45.1 playwright-1.60.0 psycopg-3.3.4 psycopg-binary-3.3.4 pydantic-2.13.4 pydantic-core-2.46.4 pydantic-settings-2.7.0 pyee-13.0.1 pypdf-6.21.1 python-dotenv-1.2.4 python-multipart-0.0.32 pyyaml-6.0.3 requests-2.34.2 requests-file-3.0.1 soupsieve-3.0.3 starlette-1.9.0 tldextract-5.3.2 typing-extensions-4.16.0 typing-inspection-0.4.4 urllib3-2.8.0 uvicorn-0.34.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.2
+#13 DONE 21.4s
+
+#7 [internal] load build context
+#7 ...
+
+#16 [stage-2 2/7] COPY --from=python-builder /opt/venv /opt/venv
+#16 DONE 5.8s
+
+#7 [internal] load build context
+#7 ...
+
+#17 [stage-2 3/7] RUN playwright install --with-deps chromium  && groupadd --system --gid 10001 ashyq  && useradd --system --uid 10001 --gid ashyq --home /app --shell /usr/sbin/nologin ashyq  && chmod -R a+rX /ms-playwright
+#17 0.738 Installing dependencies...
+#17 0.902 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#17 0.927 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#17 0.936 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+#17 0.997 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
+#17 1.070 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+#17 1.090 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [354 kB]
+#17 1.743 Fetched 9393 kB in 1s (9793 kB/s)
+#17 1.743 Reading package lists...
+#17 2.167 Reading package lists...
+#17 2.553 Building dependency tree...
+#17 2.661 Reading state information...
+#17 2.767 The following additional packages will be installed:
+#17 2.767   at-spi2-common fontconfig fontconfig-config libasound2-data libavahi-client3
+#17 2.767   libavahi-common-data libavahi-common3 libbrotli1 libbsd0 libdatrie1
+#17 2.767   libdrm-amdgpu1 libdrm-common libdrm-intel1 libdrm-nouveau2 libdrm-radeon1
+#17 2.767   libedit2 libelf1 libexpat1 libfontenc1 libfribidi0 libgl1 libgl1-mesa-dri
+#17 2.767   libglapi-mesa libglvnd0 libglx-mesa0 libglx0 libgraphite2-3 libharfbuzz0b
+#17 2.767   libice6 libicu72 libllvm15 libpciaccess0 libpixman-1-0 libpng16-16
+#17 2.767   libsensors-config libsensors5 libsm6 libthai-data libthai0 libunwind8
+#17 2.767   libwayland-server0 libx11-data libx11-xcb1 libxau6 libxaw7 libxcb-dri2-0
+#17 2.767   libxcb-dri3-0 libxcb-glx0 libxcb-present0 libxcb-randr0 libxcb-render0
+#17 2.767   libxcb-shm0 libxcb-sync1 libxcb-xfixes0 libxdmcp6 libxfont2 libxi6
+#17 2.767   libxkbfile1 libxml2 libxmu6 libxpm4 libxrender1 libxshmfence1 libxt6
+#17 2.767   libxxf86vm1 libz3-4 x11-common x11-xkb-utils xfonts-encodings xfonts-utils
+#17 2.767   xkb-data xserver-common
+#17 2.768 Suggested packages:
+#17 2.768   libasound2-plugins alsa-utils cups-common low-memory-monitor pciutils
+#17 2.768   lm-sensors
+#17 2.768 Recommended packages:
+#17 2.768   fonts-ipafont-mincho fonts-tlwg-loma alsa-ucm-conf alsa-topology-conf
+#17 2.768   at-spi2-core dbus libglib2.0-data shared-mime-info xdg-user-dirs xfonts-base
+#17 2.768   xauth
+#17 3.089 The following NEW packages will be installed:
+#17 3.089   at-spi2-common fontconfig fontconfig-config fonts-freefont-ttf
+#17 3.089   fonts-ipafont-gothic fonts-liberation fonts-noto-color-emoji
+#17 3.089   fonts-tlwg-loma-otf fonts-unifont fonts-wqy-zenhei libasound2
+#17 3.089   libasound2-data libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0
+#17 3.089   libavahi-client3 libavahi-common-data libavahi-common3 libbrotli1 libbsd0
+#17 3.089   libcairo2 libcups2 libdatrie1 libdbus-1-3 libdrm-amdgpu1 libdrm-common
+#17 3.089   libdrm-intel1 libdrm-nouveau2 libdrm-radeon1 libdrm2 libedit2 libelf1
+#17 3.089   libexpat1 libfontconfig1 libfontenc1 libfreetype6 libfribidi0 libgbm1 libgl1
+#17 3.089   libgl1-mesa-dri libglapi-mesa libglib2.0-0 libglvnd0 libglx-mesa0 libglx0
+#17 3.089   libgraphite2-3 libharfbuzz0b libice6 libicu72 libllvm15 libnspr4 libnss3
+#17 3.089   libpango-1.0-0 libpciaccess0 libpixman-1-0 libpng16-16 libsensors-config
+#17 3.090   libsensors5 libsm6 libthai-data libthai0 libunwind8 libwayland-server0
+#17 3.090   libx11-6 libx11-data libx11-xcb1 libxau6 libxaw7 libxcb-dri2-0 libxcb-dri3-0
+#17 3.090   libxcb-glx0 libxcb-present0 libxcb-randr0 libxcb-render0 libxcb-shm0
+#17 3.090   libxcb-sync1 libxcb-xfixes0 libxcb1 libxcomposite1 libxdamage1 libxdmcp6
+#17 3.090   libxext6 libxfixes3 libxfont2 libxi6 libxkbcommon0 libxkbfile1 libxml2
+#17 3.090   libxmu6 libxpm4 libxrandr2 libxrender1 libxshmfence1 libxt6 libxxf86vm1
+#17 3.090   libz3-4 x11-common x11-xkb-utils xfonts-encodings xfonts-scalable
+#17 3.090   xfonts-utils xkb-data xserver-common xvfb
+#17 3.123 0 upgraded, 104 newly installed, 0 to remove and 0 not upgraded.
+#17 3.123 Need to get 96.7 MB of archives.
+#17 3.123 After this operation, 325 MB of additional disk space will be used.
+#17 3.123 Get:1 http://deb.debian.org/debian bookworm/main amd64 fonts-ipafont-gothic all 00303-23 [3515 kB]
+#17 3.176 Get:2 http://deb.debian.org/debian bookworm/main amd64 at-spi2-common all 2.46.0-5 [162 kB]
+#17 3.176 Get:3 http://deb.debian.org/debian-security bookworm-security/main amd64 libexpat1 amd64 2.5.0-1+deb12u4 [106 kB]
+#17 3.176 Get:4 http://deb.debian.org/debian bookworm/main amd64 libbrotli1 amd64 1.0.9-2+b6 [275 kB]
+#17 3.176 Get:5 http://deb.debian.org/debian-security bookworm-security/main amd64 libpng16-16 amd64 1.6.39-2+deb12u6 [277 kB]
+#17 3.176 Get:6 http://deb.debian.org/debian bookworm/main amd64 libfreetype6 amd64 2.12.1+dfsg-5+deb12u4 [398 kB]
+#17 3.179 Get:7 http://deb.debian.org/debian bookworm/main amd64 fonts-liberation all 1:1.07.4-11 [828 kB]
+#17 3.179 Get:8 http://deb.debian.org/debian bookworm/main amd64 fonts-freefont-ttf all 20120503-10 [2552 kB]
+#17 3.190 Get:9 http://deb.debian.org/debian bookworm/main amd64 fontconfig-config amd64 2.14.1-4 [315 kB]
+#17 3.192 Get:10 http://deb.debian.org/debian bookworm/main amd64 libfontconfig1 amd64 2.14.1-4 [386 kB]
+#17 3.193 Get:11 http://deb.debian.org/debian bookworm/main amd64 fontconfig amd64 2.14.1-4 [449 kB]
+#17 3.196 Get:12 http://deb.debian.org/debian bookworm/main amd64 fonts-noto-color-emoji all 2.042-0+deb12u1 [9894 kB]
+#17 3.230 Get:13 http://deb.debian.org/debian bookworm/main amd64 fonts-tlwg-loma-otf all 1:0.7.3-1 [147 kB]
+#17 3.231 Get:14 http://deb.debian.org/debian bookworm/main amd64 fonts-unifont all 1:15.0.01-2 [2019 kB]
+#17 3.239 Get:15 http://deb.debian.org/debian bookworm/main amd64 fonts-wqy-zenhei all 0.9.45-8 [7479 kB]
+#17 3.267 Get:16 http://deb.debian.org/debian bookworm/main amd64 libasound2-data all 1.2.8-1 [20.5 kB]
+#17 3.267 Get:17 http://deb.debian.org/debian bookworm/main amd64 libasound2 amd64 1.2.8-1+b1 [362 kB]
+#17 3.268 Get:18 http://deb.debian.org/debian bookworm/main amd64 libglib2.0-0 amd64 2.74.6-2+deb12u9 [1403 kB]
+#17 3.273 Get:19 http://deb.debian.org/debian bookworm/main amd64 libatk1.0-0 amd64 2.46.0-5 [49.6 kB]
+#17 3.274 Get:20 http://deb.debian.org/debian bookworm/main amd64 libdbus-1-3 amd64 1.14.10-1~deb12u1 [201 kB]
+#17 3.275 Get:21 http://deb.debian.org/debian bookworm/main amd64 libxau6 amd64 1:1.0.9-1 [19.7 kB]
+#17 3.275 Get:22 http://deb.debian.org/debian bookworm/main amd64 libbsd0 amd64 0.11.7-2 [117 kB]
+#17 3.275 Get:23 http://deb.debian.org/debian bookworm/main amd64 libxdmcp6 amd64 1:1.1.2-3 [26.3 kB]
+#17 3.276 Get:24 http://deb.debian.org/debian bookworm/main amd64 libxcb1 amd64 1.15-1 [144 kB]
+#17 3.276 Get:25 http://deb.debian.org/debian bookworm/main amd64 libx11-data all 2:1.8.4-2+deb12u2 [292 kB]
+#17 3.278 Get:26 http://deb.debian.org/debian bookworm/main amd64 libx11-6 amd64 2:1.8.4-2+deb12u2 [760 kB]
+#17 3.281 Get:27 http://deb.debian.org/debian bookworm/main amd64 libxext6 amd64 2:1.3.4-1+b1 [52.9 kB]
+#17 3.284 Get:28 http://deb.debian.org/debian bookworm/main amd64 libxi6 amd64 2:1.8-1+b1 [84.2 kB]
+#17 3.284 Get:29 http://deb.debian.org/debian bookworm/main amd64 libatspi2.0-0 amd64 2.46.0-5 [75.4 kB]
+#17 3.285 Get:30 http://deb.debian.org/debian bookworm/main amd64 libatk-bridge2.0-0 amd64 2.46.0-5 [64.6 kB]
+#17 3.286 Get:31 http://deb.debian.org/debian bookworm/main amd64 libavahi-common-data amd64 0.8-10+deb12u1 [107 kB]
+#17 3.286 Get:32 http://deb.debian.org/debian bookworm/main amd64 libavahi-common3 amd64 0.8-10+deb12u1 [42.1 kB]
+#17 3.290 Get:33 http://deb.debian.org/debian bookworm/main amd64 libavahi-client3 amd64 0.8-10+deb12u1 [45.8 kB]
+#17 3.290 Get:34 http://deb.debian.org/debian bookworm/main amd64 libpixman-1-0 amd64 0.42.2-1 [546 kB]
+#17 3.291 Get:35 http://deb.debian.org/debian bookworm/main amd64 libxcb-render0 amd64 1.15-1 [115 kB]
+#17 3.291 Get:36 http://deb.debian.org/debian bookworm/main amd64 libxcb-shm0 amd64 1.15-1 [105 kB]
+#17 3.291 Get:37 http://deb.debian.org/debian bookworm/main amd64 libxrender1 amd64 1:0.9.10-1.1 [33.2 kB]
+#17 3.294 Get:38 http://deb.debian.org/debian bookworm/main amd64 libcairo2 amd64 1.16.0-7 [575 kB]
+#17 3.296 Get:39 http://deb.debian.org/debian bookworm/main amd64 libcups2 amd64 2.4.2-3+deb12u9 [245 kB]
+#17 3.298 Get:40 http://deb.debian.org/debian bookworm/main amd64 libdatrie1 amd64 0.2.13-2+b1 [43.3 kB]
+#17 3.298 Get:41 http://deb.debian.org/debian bookworm/main amd64 libdrm-common all 2.4.114-1 [7112 B]
+#17 3.298 Get:42 http://deb.debian.org/debian bookworm/main amd64 libdrm2 amd64 2.4.114-1+b1 [37.5 kB]
+#17 3.300 Get:43 http://deb.debian.org/debian bookworm/main amd64 libdrm-amdgpu1 amd64 2.4.114-1+b1 [20.9 kB]
+#17 3.300 Get:44 http://deb.debian.org/debian bookworm/main amd64 libpciaccess0 amd64 0.17-2 [51.4 kB]
+#17 3.301 Get:45 http://deb.debian.org/debian bookworm/main amd64 libdrm-intel1 amd64 2.4.114-1+b1 [64.0 kB]
+#17 3.302 Get:46 http://deb.debian.org/debian bookworm/main amd64 libdrm-nouveau2 amd64 2.4.114-1+b1 [19.1 kB]
+#17 3.302 Get:47 http://deb.debian.org/debian bookworm/main amd64 libdrm-radeon1 amd64 2.4.114-1+b1 [21.8 kB]
+#17 3.305 Get:48 http://deb.debian.org/debian bookworm/main amd64 libedit2 amd64 3.1-20221030-2 [93.0 kB]
+#17 3.306 Get:49 http://deb.debian.org/debian bookworm/main amd64 libelf1 amd64 0.188-2.1 [174 kB]
+#17 3.307 Get:50 http://deb.debian.org/debian bookworm/main amd64 libfontenc1 amd64 1:1.1.4-1 [24.3 kB]
+#17 3.307 Get:51 http://deb.debian.org/debian bookworm/main amd64 libfribidi0 amd64 1.0.8-2.1 [65.0 kB]
+#17 3.308 Get:52 http://deb.debian.org/debian bookworm/main amd64 libwayland-server0 amd64 1.21.0-1 [35.9 kB]
+#17 3.310 Get:53 http://deb.debian.org/debian bookworm/main amd64 libgbm1 amd64 22.3.6-1+deb12u2 [38.1 kB]
+#17 3.311 Get:54 http://deb.debian.org/debian bookworm/main amd64 libglvnd0 amd64 1.6.0-1 [51.8 kB]
+#17 3.312 Get:55 http://deb.debian.org/debian bookworm/main amd64 libglapi-mesa amd64 22.3.6-1+deb12u2 [35.9 kB]
+#17 3.312 Get:56 http://deb.debian.org/debian bookworm/main amd64 libx11-xcb1 amd64 2:1.8.4-2+deb12u2 [192 kB]
+#17 3.312 Get:57 http://deb.debian.org/debian bookworm/main amd64 libxcb-dri2-0 amd64 1.15-1 [107 kB]
+#17 3.315 Get:58 http://deb.debian.org/debian bookworm/main amd64 libxcb-dri3-0 amd64 1.15-1 [107 kB]
+#17 3.316 Get:59 http://deb.debian.org/debian bookworm/main amd64 libxcb-glx0 amd64 1.15-1 [122 kB]
+#17 3.317 Get:60 http://deb.debian.org/debian bookworm/main amd64 libxcb-present0 amd64 1.15-1 [105 kB]
+#17 3.318 Get:61 http://deb.debian.org/debian bookworm/main amd64 libxcb-randr0 amd64 1.15-1 [117 kB]
+#17 3.318 Get:62 http://deb.debian.org/debian bookworm/main amd64 libxcb-sync1 amd64 1.15-1 [109 kB]
+#17 3.321 Get:63 http://deb.debian.org/debian bookworm/main amd64 libxcb-xfixes0 amd64 1.15-1 [109 kB]
+#17 3.321 Get:64 http://deb.debian.org/debian bookworm/main amd64 libxfixes3 amd64 1:6.0.0-2 [22.7 kB]
+#17 3.324 Get:65 http://deb.debian.org/debian bookworm/main amd64 libxshmfence1 amd64 1.3-1 [8820 B]
+#17 3.324 Get:66 http://deb.debian.org/debian bookworm/main amd64 libxxf86vm1 amd64 1:1.1.4-1+b2 [20.8 kB]
+#17 3.324 Get:67 http://deb.debian.org/debian bookworm/main amd64 libicu72 amd64 72.1-3+deb12u1 [9376 kB]
+#17 3.357 Get:68 http://deb.debian.org/debian bookworm/main amd64 libxml2 amd64 2.9.14+dfsg-1.3~deb12u6 [689 kB]
+#17 3.359 Get:69 http://deb.debian.org/debian bookworm/main amd64 libz3-4 amd64 4.8.12-3.1 [7216 kB]
+#17 3.385 Get:70 http://deb.debian.org/debian bookworm/main amd64 libllvm15 amd64 1:15.0.6-4+b1 [23.1 MB]
+#17 3.470 Get:71 http://deb.debian.org/debian bookworm/main amd64 libsensors-config all 1:3.6.0-7.1 [14.3 kB]
+#17 3.471 Get:72 http://deb.debian.org/debian bookworm/main amd64 libsensors5 amd64 1:3.6.0-7.1 [34.2 kB]
+#17 3.472 Get:73 http://deb.debian.org/debian bookworm/main amd64 libgl1-mesa-dri amd64 22.3.6-1+deb12u2 [7240 kB]
+#17 3.499 Get:74 http://deb.debian.org/debian bookworm/main amd64 libglx-mesa0 amd64 22.3.6-1+deb12u2 [148 kB]
+#17 3.500 Get:75 http://deb.debian.org/debian bookworm/main amd64 libglx0 amd64 1.6.0-1 [34.4 kB]
+#17 3.501 Get:76 http://deb.debian.org/debian bookworm/main amd64 libgl1 amd64 1.6.0-1 [88.4 kB]
+#17 3.501 Get:77 http://deb.debian.org/debian bookworm/main amd64 libgraphite2-3 amd64 1.3.14-1+deb12u1 [74.6 kB]
+#17 3.502 Get:78 http://deb.debian.org/debian bookworm/main amd64 libharfbuzz0b amd64 6.0.0+dfsg-3 [1945 kB]
+#17 3.508 Get:79 http://deb.debian.org/debian bookworm/main amd64 x11-common all 1:7.7+23 [252 kB]
+#17 3.510 Get:80 http://deb.debian.org/debian bookworm/main amd64 libice6 amd64 2:1.0.10-1 [58.5 kB]
+#17 3.510 Get:81 http://deb.debian.org/debian bookworm/main amd64 libnspr4 amd64 2:4.35-1 [113 kB]
+#17 3.511 Get:82 http://deb.debian.org/debian-security bookworm-security/main amd64 libnss3 amd64 2:3.87.1-1+deb12u4 [1331 kB]
+#17 3.515 Get:83 http://deb.debian.org/debian bookworm/main amd64 libthai-data all 0.1.29-1 [176 kB]
+#17 3.516 Get:84 http://deb.debian.org/debian bookworm/main amd64 libthai0 amd64 0.1.29-1 [57.5 kB]
+#17 3.520 Get:85 http://deb.debian.org/debian bookworm/main amd64 libpango-1.0-0 amd64 1.50.12+ds-1 [212 kB]
+#17 3.520 Get:86 http://deb.debian.org/debian bookworm/main amd64 libsm6 amd64 2:1.2.3-1 [35.1 kB]
+#17 3.520 Get:87 http://deb.debian.org/debian bookworm/main amd64 libunwind8 amd64 1.6.2-3 [51.2 kB]
+#17 3.520 Get:88 http://deb.debian.org/debian bookworm/main amd64 libxt6 amd64 1:1.2.1-1.1 [186 kB]
+#17 3.521 Get:89 http://deb.debian.org/debian bookworm/main amd64 libxmu6 amd64 2:1.1.3-3 [60.1 kB]
+#17 3.521 Get:90 http://deb.debian.org/debian bookworm/main amd64 libxpm4 amd64 1:3.5.12-1.1+deb12u1 [48.6 kB]
+#17 3.522 Get:91 http://deb.debian.org/debian bookworm/main amd64 libxaw7 amd64 2:1.0.14-1 [201 kB]
+#17 3.523 Get:92 http://deb.debian.org/debian bookworm/main amd64 libxcomposite1 amd64 1:0.4.5-1 [16.6 kB]
+#17 3.528 Get:93 http://deb.debian.org/debian bookworm/main amd64 libxdamage1 amd64 1:1.1.6-1 [15.1 kB]
+#17 3.529 Get:94 http://deb.debian.org/debian-security bookworm-security/main amd64 libxfont2 amd64 1:2.0.6-1+deb12u1 [132 kB]
+#17 3.529 Get:95 http://deb.debian.org/debian bookworm/main amd64 xkb-data all 2.35.1-1 [764 kB]
+#17 3.532 Get:96 http://deb.debian.org/debian bookworm/main amd64 libxkbcommon0 amd64 1.5.0-1 [106 kB]
+#17 3.533 Get:97 http://deb.debian.org/debian bookworm/main amd64 libxkbfile1 amd64 1:1.1.0-1 [75.2 kB]
+#17 3.533 Get:98 http://deb.debian.org/debian bookworm/main amd64 libxrandr2 amd64 2:1.5.2-2+b1 [39.2 kB]
+#17 3.534 Get:99 http://deb.debian.org/debian bookworm/main amd64 x11-xkb-utils amd64 7.7+7 [165 kB]
+#17 3.534 Get:100 http://deb.debian.org/debian bookworm/main amd64 xfonts-encodings all 1:1.0.4-2.2 [577 kB]
+#17 3.536 Get:101 http://deb.debian.org/debian bookworm/main amd64 xfonts-utils amd64 1:7.7+6 [93.0 kB]
+#17 3.537 Get:102 http://deb.debian.org/debian bookworm/main amd64 xfonts-scalable all 1:1.0.3-1.3 [306 kB]
+#17 3.541 Get:103 http://deb.debian.org/debian-security bookworm-security/main amd64 xserver-common all 2:21.1.7-3+deb12u13 [2384 kB]
+#17 3.547 Get:104 http://deb.debian.org/debian-security bookworm-security/main amd64 xvfb amd64 2:21.1.7-3+deb12u13 [3154 kB]
+#17 3.657 debconf: delaying package configuration, since apt-utils is not installed
+#17 3.683 Fetched 96.7 MB in 0s (212 MB/s)
+#17 3.699 Selecting previously unselected package fonts-ipafont-gothic.
+#17 3.699 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6704 files and directories currently installed.)
+#17 3.705 Preparing to unpack .../000-fonts-ipafont-gothic_00303-23_all.deb ...
+#17 3.712 Unpacking fonts-ipafont-gothic (00303-23) ...
+#17 3.927 Selecting previously unselected package at-spi2-common.
+#17 3.928 Preparing to unpack .../001-at-spi2-common_2.46.0-5_all.deb ...
+#17 3.930 Unpacking at-spi2-common (2.46.0-5) ...
+#17 3.958 Selecting previously unselected package libexpat1:amd64.
+#17 3.959 Preparing to unpack .../002-libexpat1_2.5.0-1+deb12u4_amd64.deb ...
+#17 3.961 Unpacking libexpat1:amd64 (2.5.0-1+deb12u4) ...
+#17 3.985 Selecting previously unselected package libbrotli1:amd64.
+#17 3.986 Preparing to unpack .../003-libbrotli1_1.0.9-2+b6_amd64.deb ...
+#17 3.986 Unpacking libbrotli1:amd64 (1.0.9-2+b6) ...
+#17 4.024 Selecting previously unselected package libpng16-16:amd64.
+#17 4.024 Preparing to unpack .../004-libpng16-16_1.6.39-2+deb12u6_amd64.deb ...
+#17 4.026 Unpacking libpng16-16:amd64 (1.6.39-2+deb12u6) ...
+#17 4.053 Selecting previously unselected package libfreetype6:amd64.
+#17 4.054 Preparing to unpack .../005-libfreetype6_2.12.1+dfsg-5+deb12u4_amd64.deb ...
+#17 4.054 Unpacking libfreetype6:amd64 (2.12.1+dfsg-5+deb12u4) ...
+#17 4.087 Selecting previously unselected package fonts-liberation.
+#17 4.089 Preparing to unpack .../006-fonts-liberation_1%3a1.07.4-11_all.deb ...
+#17 4.090 Unpacking fonts-liberation (1:1.07.4-11) ...
+#17 4.144 Selecting previously unselected package fonts-freefont-ttf.
+#17 4.145 Preparing to unpack .../007-fonts-freefont-ttf_20120503-10_all.deb ...
+#17 4.145 Unpacking fonts-freefont-ttf (20120503-10) ...
+#17 4.294 Selecting previously unselected package fontconfig-config.
+#17 4.295 Preparing to unpack .../008-fontconfig-config_2.14.1-4_amd64.deb ...
+#17 4.417 Unpacking fontconfig-config (2.14.1-4) ...
+#17 4.454 Selecting previously unselected package libfontconfig1:amd64.
+#17 4.457 Preparing to unpack .../009-libfontconfig1_2.14.1-4_amd64.deb ...
+#17 4.460 Unpacking libfontconfig1:amd64 (2.14.1-4) ...
+#17 4.493 Selecting previously unselected package fontconfig.
+#17 4.493 Preparing to unpack .../010-fontconfig_2.14.1-4_amd64.deb ...
+#17 4.494 Unpacking fontconfig (2.14.1-4) ...
+#17 4.530 Selecting previously unselected package fonts-noto-color-emoji.
+#17 4.531 Preparing to unpack .../011-fonts-noto-color-emoji_2.042-0+deb12u1_all.deb ...
+#17 4.532 Unpacking fonts-noto-color-emoji (2.042-0+deb12u1) ...
+#17 5.023 Selecting previously unselected package fonts-tlwg-loma-otf.
+#17 5.023 Preparing to unpack .../012-fonts-tlwg-loma-otf_1%3a0.7.3-1_all.deb ...
+#17 5.025 Unpacking fonts-tlwg-loma-otf (1:0.7.3-1) ...
+#17 5.046 Selecting previously unselected package fonts-unifont.
+#17 5.048 Preparing to unpack .../013-fonts-unifont_1%3a15.0.01-2_all.deb ...
+#17 5.048 Unpacking fonts-unifont (1:15.0.01-2) ...
+#17 5.170 Selecting previously unselected package fonts-wqy-zenhei.
+#17 5.170 Preparing to unpack .../014-fonts-wqy-zenhei_0.9.45-8_all.deb ...
+#17 5.179 Unpacking fonts-wqy-zenhei (0.9.45-8) ...
+#17 5.578 Selecting previously unselected package libasound2-data.
+#17 5.579 Preparing to unpack .../015-libasound2-data_1.2.8-1_all.deb ...
+#17 5.582 Unpacking libasound2-data (1.2.8-1) ...
+#17 5.616 Selecting previously unselected package libasound2:amd64.
+#17 5.617 Preparing to unpack .../016-libasound2_1.2.8-1+b1_amd64.deb ...
+#17 5.618 Unpacking libasound2:amd64 (1.2.8-1+b1) ...
+#17 5.663 Selecting previously unselected package libglib2.0-0:amd64.
+#17 5.664 Preparing to unpack .../017-libglib2.0-0_2.74.6-2+deb12u9_amd64.deb ...
+#17 5.666 Unpacking libglib2.0-0:amd64 (2.74.6-2+deb12u9) ...
+#17 5.755 Selecting previously unselected package libatk1.0-0:amd64.
+#17 5.756 Preparing to unpack .../018-libatk1.0-0_2.46.0-5_amd64.deb ...
+#17 5.757 Unpacking libatk1.0-0:amd64 (2.46.0-5) ...
+#17 5.774 Selecting previously unselected package libdbus-1-3:amd64.
+#17 5.775 Preparing to unpack .../019-libdbus-1-3_1.14.10-1~deb12u1_amd64.deb ...
+#17 5.776 Unpacking libdbus-1-3:amd64 (1.14.10-1~deb12u1) ...
+#17 5.799 Selecting previously unselected package libxau6:amd64.
+#17 5.800 Preparing to unpack .../020-libxau6_1%3a1.0.9-1_amd64.deb ...
+#17 5.801 Unpacking libxau6:amd64 (1:1.0.9-1) ...
+#17 5.816 Selecting previously unselected package libbsd0:amd64.
+#17 5.818 Preparing to unpack .../021-libbsd0_0.11.7-2_amd64.deb ...
+#17 5.819 Unpacking libbsd0:amd64 (0.11.7-2) ...
+#17 5.837 Selecting previously unselected package libxdmcp6:amd64.
+#17 5.838 Preparing to unpack .../022-libxdmcp6_1%3a1.1.2-3_amd64.deb ...
+#17 5.839 Unpacking libxdmcp6:amd64 (1:1.1.2-3) ...
+#17 5.854 Selecting previously unselected package libxcb1:amd64.
+#17 5.855 Preparing to unpack .../023-libxcb1_1.15-1_amd64.deb ...
+#17 5.859 Unpacking libxcb1:amd64 (1.15-1) ...
+#17 5.871 Selecting previously unselected package libx11-data.
+#17 5.872 Preparing to unpack .../024-libx11-data_2%3a1.8.4-2+deb12u2_all.deb ...
+#17 5.873 Unpacking libx11-data (2:1.8.4-2+deb12u2) ...
+#17 5.927 Selecting previously unselected package libx11-6:amd64.
+#17 5.928 Preparing to unpack .../025-libx11-6_2%3a1.8.4-2+deb12u2_amd64.deb ...
+#17 5.928 Unpacking libx11-6:amd64 (2:1.8.4-2+deb12u2) ...
+#17 5.973 Selecting previously unselected package libxext6:amd64.
+#17 5.974 Preparing to unpack .../026-libxext6_2%3a1.3.4-1+b1_amd64.deb ...
+#17 5.975 Unpacking libxext6:amd64 (2:1.3.4-1+b1) ...
+#17 5.991 Selecting previously unselected package libxi6:amd64.
+#17 5.992 Preparing to unpack .../027-libxi6_2%3a1.8-1+b1_amd64.deb ...
+#17 5.992 Unpacking libxi6:amd64 (2:1.8-1+b1) ...
+#17 6.011 Selecting previously unselected package libatspi2.0-0:amd64.
+#17 6.012 Preparing to unpack .../028-libatspi2.0-0_2.46.0-5_amd64.deb ...
+#17 6.013 Unpacking libatspi2.0-0:amd64 (2.46.0-5) ...
+#17 6.039 Selecting previously unselected package libatk-bridge2.0-0:amd64.
+#17 6.040 Preparing to unpack .../029-libatk-bridge2.0-0_2.46.0-5_amd64.deb ...
+#17 6.044 Unpacking libatk-bridge2.0-0:amd64 (2.46.0-5) ...
+#17 6.068 Selecting previously unselected package libavahi-common-data:amd64.
+#17 6.068 Preparing to unpack .../030-libavahi-common-data_0.8-10+deb12u1_amd64.deb ...
+#17 6.069 Unpacking libavahi-common-data:amd64 (0.8-10+deb12u1) ...
+#17 6.092 Selecting previously unselected package libavahi-common3:amd64.
+#17 6.094 Preparing to unpack .../031-libavahi-common3_0.8-10+deb12u1_amd64.deb ...
+#17 6.094 Unpacking libavahi-common3:amd64 (0.8-10+deb12u1) ...
+#17 6.114 Selecting previously unselected package libavahi-client3:amd64.
+#17 6.114 Preparing to unpack .../032-libavahi-client3_0.8-10+deb12u1_amd64.deb ...
+#17 6.118 Unpacking libavahi-client3:amd64 (0.8-10+deb12u1) ...
+#17 6.133 Selecting previously unselected package libpixman-1-0:amd64.
+#17 6.134 Preparing to unpack .../033-libpixman-1-0_0.42.2-1_amd64.deb ...
+#17 6.136 Unpacking libpixman-1-0:amd64 (0.42.2-1) ...
+#17 6.168 Selecting previously unselected package libxcb-render0:amd64.
+#17 6.169 Preparing to unpack .../034-libxcb-render0_1.15-1_amd64.deb ...
+#17 6.170 Unpacking libxcb-render0:amd64 (1.15-1) ...
+#17 6.189 Selecting previously unselected package libxcb-shm0:amd64.
+#17 6.191 Preparing to unpack .../035-libxcb-shm0_1.15-1_amd64.deb ...
+#17 6.191 Unpacking libxcb-shm0:amd64 (1.15-1) ...
+#17 6.211 Selecting previously unselected package libxrender1:amd64.
+#17 6.211 Preparing to unpack .../036-libxrender1_1%3a0.9.10-1.1_amd64.deb ...
+#17 6.211 Unpacking libxrender1:amd64 (1:0.9.10-1.1) ...
+#17 6.227 Selecting previously unselected package libcairo2:amd64.
+#17 6.228 Preparing to unpack .../037-libcairo2_1.16.0-7_amd64.deb ...
+#17 6.228 Unpacking libcairo2:amd64 (1.16.0-7) ...
+#17 6.269 Selecting previously unselected package libcups2:amd64.
+#17 6.270 Preparing to unpack .../038-libcups2_2.4.2-3+deb12u9_amd64.deb ...
+#17 6.271 Unpacking libcups2:amd64 (2.4.2-3+deb12u9) ...
+#17 6.295 Selecting previously unselected package libdatrie1:amd64.
+#17 6.296 Preparing to unpack .../039-libdatrie1_0.2.13-2+b1_amd64.deb ...
+#17 6.297 Unpacking libdatrie1:amd64 (0.2.13-2+b1) ...
+#17 6.315 Selecting previously unselected package libdrm-common.
+#17 6.316 Preparing to unpack .../040-libdrm-common_2.4.114-1_all.deb ...
+#17 6.317 Unpacking libdrm-common (2.4.114-1) ...
+#17 6.330 Selecting previously unselected package libdrm2:amd64.
+#17 6.332 Preparing to unpack .../041-libdrm2_2.4.114-1+b1_amd64.deb ...
+#17 6.333 Unpacking libdrm2:amd64 (2.4.114-1+b1) ...
+#17 6.351 Selecting previously unselected package libdrm-amdgpu1:amd64.
+#17 6.352 Preparing to unpack .../042-libdrm-amdgpu1_2.4.114-1+b1_amd64.deb ...
+#17 6.353 Unpacking libdrm-amdgpu1:amd64 (2.4.114-1+b1) ...
+#17 6.371 Selecting previously unselected package libpciaccess0:amd64.
+#17 6.372 Preparing to unpack .../043-libpciaccess0_0.17-2_amd64.deb ...
+#17 6.376 Unpacking libpciaccess0:amd64 (0.17-2) ...
+#17 6.392 Selecting previously unselected package libdrm-intel1:amd64.
+#17 6.393 Preparing to unpack .../044-libdrm-intel1_2.4.114-1+b1_amd64.deb ...
+#17 6.394 Unpacking libdrm-intel1:amd64 (2.4.114-1+b1) ...
+#17 6.410 Selecting previously unselected package libdrm-nouveau2:amd64.
+#17 6.411 Preparing to unpack .../045-libdrm-nouveau2_2.4.114-1+b1_amd64.deb ...
+#17 6.412 Unpacking libdrm-nouveau2:amd64 (2.4.114-1+b1) ...
+#17 6.432 Selecting previously unselected package libdrm-radeon1:amd64.
+#17 6.432 Preparing to unpack .../046-libdrm-radeon1_2.4.114-1+b1_amd64.deb ...
+#17 6.433 Unpacking libdrm-radeon1:amd64 (2.4.114-1+b1) ...
+#17 6.455 Selecting previously unselected package libedit2:amd64.
+#17 6.456 Preparing to unpack .../047-libedit2_3.1-20221030-2_amd64.deb ...
+#17 6.459 Unpacking libedit2:amd64 (3.1-20221030-2) ...
+#17 6.478 Selecting previously unselected package libelf1:amd64.
+#17 6.480 Preparing to unpack .../048-libelf1_0.188-2.1_amd64.deb ...
+#17 6.480 Unpacking libelf1:amd64 (0.188-2.1) ...
+#17 6.512 Selecting previously unselected package libfontenc1:amd64.
+#17 6.512 Preparing to unpack .../049-libfontenc1_1%3a1.1.4-1_amd64.deb ...
+#17 6.516 Unpacking libfontenc1:amd64 (1:1.1.4-1) ...
+#17 6.545 Selecting previously unselected package libfribidi0:amd64.
+#17 6.549 Preparing to unpack .../050-libfribidi0_1.0.8-2.1_amd64.deb ...
+#17 6.551 Unpacking libfribidi0:amd64 (1.0.8-2.1) ...
+#17 6.577 Selecting previously unselected package libwayland-server0:amd64.
+#17 6.577 Preparing to unpack .../051-libwayland-server0_1.21.0-1_amd64.deb ...
+#17 6.577 Unpacking libwayland-server0:amd64 (1.21.0-1) ...
+#17 6.601 Selecting previously unselected package libgbm1:amd64.
+#17 6.602 Preparing to unpack .../052-libgbm1_22.3.6-1+deb12u2_amd64.deb ...
+#17 6.603 Unpacking libgbm1:amd64 (22.3.6-1+deb12u2) ...
+#17 6.631 Selecting previously unselected package libglvnd0:amd64.
+#17 6.631 Preparing to unpack .../053-libglvnd0_1.6.0-1_amd64.deb ...
+#17 6.632 Unpacking libglvnd0:amd64 (1.6.0-1) ...
+#17 6.660 Selecting previously unselected package libglapi-mesa:amd64.
+#17 6.662 Preparing to unpack .../054-libglapi-mesa_22.3.6-1+deb12u2_amd64.deb ...
+#17 6.664 Unpacking libglapi-mesa:amd64 (22.3.6-1+deb12u2) ...
+#17 6.688 Selecting previously unselected package libx11-xcb1:amd64.
+#17 6.688 Preparing to unpack .../055-libx11-xcb1_2%3a1.8.4-2+deb12u2_amd64.deb ...
+#17 6.689 Unpacking libx11-xcb1:amd64 (2:1.8.4-2+deb12u2) ...
+#17 6.709 Selecting previously unselected package libxcb-dri2-0:amd64.
+#17 6.709 Preparing to unpack .../056-libxcb-dri2-0_1.15-1_amd64.deb ...
+#17 6.711 Unpacking libxcb-dri2-0:amd64 (1.15-1) ...
+#17 6.738 Selecting previously unselected package libxcb-dri3-0:amd64.
+#17 6.744 Preparing to unpack .../057-libxcb-dri3-0_1.15-1_amd64.deb ...
+#17 6.749 Unpacking libxcb-dri3-0:amd64 (1.15-1) ...
+#17 6.781 Selecting previously unselected package libxcb-glx0:amd64.
+#17 6.783 Preparing to unpack .../058-libxcb-glx0_1.15-1_amd64.deb ...
+#17 6.784 Unpacking libxcb-glx0:amd64 (1.15-1) ...
+#17 6.815 Selecting previously unselected package libxcb-present0:amd64.
+#17 6.815 Preparing to unpack .../059-libxcb-present0_1.15-1_amd64.deb ...
+#17 6.818 Unpacking libxcb-present0:amd64 (1.15-1) ...
+#17 6.848 Selecting previously unselected package libxcb-randr0:amd64.
+#17 6.851 Preparing to unpack .../060-libxcb-randr0_1.15-1_amd64.deb ...
+#17 6.851 Unpacking libxcb-randr0:amd64 (1.15-1) ...
+#17 6.878 Selecting previously unselected package libxcb-sync1:amd64.
+#17 6.880 Preparing to unpack .../061-libxcb-sync1_1.15-1_amd64.deb ...
+#17 6.881 Unpacking libxcb-sync1:amd64 (1.15-1) ...
+#17 6.907 Selecting previously unselected package libxcb-xfixes0:amd64.
+#17 6.909 Preparing to unpack .../062-libxcb-xfixes0_1.15-1_amd64.deb ...
+#17 6.909 Unpacking libxcb-xfixes0:amd64 (1.15-1) ...
+#17 6.933 Selecting previously unselected package libxfixes3:amd64.
+#17 6.942 Preparing to unpack .../063-libxfixes3_1%3a6.0.0-2_amd64.deb ...
+#17 6.943 Unpacking libxfixes3:amd64 (1:6.0.0-2) ...
+#17 6.960 Selecting previously unselected package libxshmfence1:amd64.
+#17 6.961 Preparing to unpack .../064-libxshmfence1_1.3-1_amd64.deb ...
+#17 6.963 Unpacking libxshmfence1:amd64 (1.3-1) ...
+#17 6.979 Selecting previously unselected package libxxf86vm1:amd64.
+#17 6.980 Preparing to unpack .../065-libxxf86vm1_1%3a1.1.4-1+b2_amd64.deb ...
+#17 6.981 Unpacking libxxf86vm1:amd64 (1:1.1.4-1+b2) ...
+#17 6.998 Selecting previously unselected package libicu72:amd64.
+#17 6.999 Preparing to unpack .../066-libicu72_72.1-3+deb12u1_amd64.deb ...
+#17 7.000 Unpacking libicu72:amd64 (72.1-3+deb12u1) ...
+#17 7.430 Selecting previously unselected package libxml2:amd64.
+#17 7.431 Preparing to unpack .../067-libxml2_2.9.14+dfsg-1.3~deb12u6_amd64.deb ...
+#17 7.432 Unpacking libxml2:amd64 (2.9.14+dfsg-1.3~deb12u6) ...
+#17 7.488 Selecting previously unselected package libz3-4:amd64.
+#17 7.488 Preparing to unpack .../068-libz3-4_4.8.12-3.1_amd64.deb ...
+#17 7.488 Unpacking libz3-4:amd64 (4.8.12-3.1) ...
+#17 7.858 Selecting previously unselected package libllvm15:amd64.
+#17 7.859 Preparing to unpack .../069-libllvm15_1%3a15.0.6-4+b1_amd64.deb ...
+#17 7.860 Unpacking libllvm15:amd64 (1:15.0.6-4+b1) ...
+#17 9.100 Selecting previously unselected package libsensors-config.
+#17 9.103 Preparing to unpack .../070-libsensors-config_1%3a3.6.0-7.1_all.deb ...
+#17 9.104 Unpacking libsensors-config (1:3.6.0-7.1) ...
+#17 9.129 Selecting previously unselected package libsensors5:amd64.
+#17 9.130 Preparing to unpack .../071-libsensors5_1%3a3.6.0-7.1_amd64.deb ...
+#17 9.135 Unpacking libsensors5:amd64 (1:3.6.0-7.1) ...
+#17 9.151 Selecting previously unselected package libgl1-mesa-dri:amd64.
+#17 9.154 Preparing to unpack .../072-libgl1-mesa-dri_22.3.6-1+deb12u2_amd64.deb ...
+#17 9.160 Unpacking libgl1-mesa-dri:amd64 (22.3.6-1+deb12u2) ...
+#17 9.540 Selecting previously unselected package libglx-mesa0:amd64.
+#17 9.541 Preparing to unpack .../073-libglx-mesa0_22.3.6-1+deb12u2_amd64.deb ...
+#17 9.543 Unpacking libglx-mesa0:amd64 (22.3.6-1+deb12u2) ...
+#17 9.568 Selecting previously unselected package libglx0:amd64.
+#17 9.569 Preparing to unpack .../074-libglx0_1.6.0-1_amd64.deb ...
+#17 9.570 Unpacking libglx0:amd64 (1.6.0-1) ...
+#17 9.592 Selecting previously unselected package libgl1:amd64.
+#17 9.593 Preparing to unpack .../075-libgl1_1.6.0-1_amd64.deb ...
+#17 9.601 Unpacking libgl1:amd64 (1.6.0-1) ...
+#17 9.624 Selecting previously unselected package libgraphite2-3:amd64.
+#17 9.626 Preparing to unpack .../076-libgraphite2-3_1.3.14-1+deb12u1_amd64.deb ...
+#17 9.632 Unpacking libgraphite2-3:amd64 (1.3.14-1+deb12u1) ...
+#17 9.664 Selecting previously unselected package libharfbuzz0b:amd64.
+#17 9.667 Preparing to unpack .../077-libharfbuzz0b_6.0.0+dfsg-3_amd64.deb ...
+#17 9.669 Unpacking libharfbuzz0b:amd64 (6.0.0+dfsg-3) ...
+#17 9.715 Selecting previously unselected package x11-common.
+#17 9.717 Preparing to unpack .../078-x11-common_1%3a7.7+23_all.deb ...
+#17 9.718 Unpacking x11-common (1:7.7+23) ...
+#17 9.743 Selecting previously unselected package libice6:amd64.
+#17 9.744 Preparing to unpack .../079-libice6_2%3a1.0.10-1_amd64.deb ...
+#17 9.745 Unpacking libice6:amd64 (2:1.0.10-1) ...
+#17 9.762 Selecting previously unselected package libnspr4:amd64.
+#17 9.763 Preparing to unpack .../080-libnspr4_2%3a4.35-1_amd64.deb ...
+#17 9.764 Unpacking libnspr4:amd64 (2:4.35-1) ...
+#17 9.783 Selecting previously unselected package libnss3:amd64.
+#17 9.785 Preparing to unpack .../081-libnss3_2%3a3.87.1-1+deb12u4_amd64.deb ...
+#17 9.786 Unpacking libnss3:amd64 (2:3.87.1-1+deb12u4) ...
+#17 9.864 Selecting previously unselected package libthai-data.
+#17 9.866 Preparing to unpack .../082-libthai-data_0.1.29-1_all.deb ...
+#17 9.866 Unpacking libthai-data (0.1.29-1) ...
+#17 9.889 Selecting previously unselected package libthai0:amd64.
+#17 9.890 Preparing to unpack .../083-libthai0_0.1.29-1_amd64.deb ...
+#17 9.912 Unpacking libthai0:amd64 (0.1.29-1) ...
+#17 12.01 Selecting previously unselected package libpango-1.0-0:amd64.
+#17 ...
+
+#15 [frontend-builder 6/6] RUN npm run build
+#15 14.13 vite v6.4.3 building for production...
+#15 14.19 transforming...
+#15 19.79 ✓ 5110 modules transformed.
+#15 20.46 rendering chunks...
+#15 21.67 computing gzip size...
+#15 21.72 dist/index.html                                                     0.57 kB │ gzip:   0.36 kB
+#15 21.72 dist/assets/jetbrains-mono-greek-400-normal-C190GLew.woff2          4.23 kB
+#15 21.72 dist/assets/jetbrains-mono-greek-500-normal-JpySY46c.woff2          4.28 kB
+#15 21.72 dist/assets/inter-vietnamese-400-normal-DMkecbls.woff2              4.97 kB
+#15 21.72 dist/assets/inter-vietnamese-600-normal-Cc8MFFhd.woff2              5.10 kB
+#15 21.72 dist/assets/inter-vietnamese-700-normal-DlLaEgI2.woff2              5.10 kB
+#15 21.72 dist/assets/inter-vietnamese-500-normal-DOriooB6.woff2              5.11 kB
+#15 21.72 dist/assets/inter-vietnamese-800-normal-Cm7tD1pz.woff2              5.18 kB
+#15 21.72 dist/assets/inter-greek-ext-400-normal-DGGRlc-M.woff2               5.26 kB
+#15 21.72 dist/assets/jetbrains-mono-cyrillic-400-normal-BEIGL1Tu.woff2       5.33 kB
+#15 21.72 dist/assets/jetbrains-mono-cyrillic-500-normal-DmUKJPL_.woff2       5.36 kB
+#15 21.72 dist/assets/jetbrains-mono-vietnamese-400-normal-CqNFfHCs.woff      5.37 kB
+#15 21.72 dist/assets/inter-greek-ext-500-normal-C4iEst2y.woff2               5.43 kB
+#15 21.72 dist/assets/inter-greek-ext-600-normal-DRtmH8MT.woff2               5.43 kB
+#15 21.72 dist/assets/inter-greek-ext-700-normal-qfdV9bQt.woff2               5.44 kB
+#15 21.72 dist/assets/jetbrains-mono-vietnamese-500-normal-DNRqzVM1.woff      5.48 kB
+#15 21.72 dist/assets/inter-greek-ext-800-normal-B--PVpEC.woff2               5.55 kB
+#15 21.72 dist/assets/jetbrains-mono-greek-400-normal-B9oWc5Lo.woff           5.66 kB
+#15 21.72 dist/assets/jetbrains-mono-greek-500-normal-D7SFKleX.woff           5.72 kB
+#15 21.72 dist/assets/inter-vietnamese-400-normal-Bbgyi5SW.woff               6.50 kB
+#15 21.72 dist/assets/inter-vietnamese-500-normal-mJboJaSs.woff               6.60 kB
+#15 21.72 dist/assets/inter-vietnamese-700-normal-BZaoP0fm.woff               6.63 kB
+#15 21.72 dist/assets/inter-vietnamese-600-normal-BuLX-rYi.woff               6.64 kB
+#15 21.72 dist/assets/inter-vietnamese-800-normal-DDlpr_Ee.woff               6.64 kB
+#15 21.72 dist/assets/jetbrains-mono-cyrillic-400-normal-ugxPyKxw.woff        6.98 kB
+#15 21.72 dist/assets/jetbrains-mono-cyrillic-500-normal-DJqRU3vO.woff        7.02 kB
+#15 21.72 dist/assets/inter-greek-ext-400-normal-KugGGMne.woff                7.06 kB
+#15 21.72 dist/assets/inter-greek-ext-500-normal-2j5mBUwD.woff                7.19 kB
+#15 21.72 dist/assets/inter-greek-ext-800-normal-DUe57HfS.woff                7.20 kB
+#15 21.72 dist/assets/inter-greek-ext-600-normal-B8X0CLgF.woff                7.21 kB
+#15 21.72 dist/assets/inter-greek-ext-700-normal-BoQ6DsYi.woff                7.22 kB
+#15 21.72 dist/assets/jetbrains-mono-latin-ext-400-normal-Bc8Ftmh3.woff2      7.34 kB
+#15 21.72 dist/assets/jetbrains-mono-latin-ext-500-normal-Cut-4mMH.woff2      7.53 kB
+#15 21.72 dist/assets/inter-cyrillic-400-normal-obahsSVq.woff2                7.71 kB
+#15 21.72 dist/assets/inter-greek-400-normal-B4URO6DV.woff2                   7.78 kB
+#15 21.72 dist/assets/inter-greek-800-normal-CLIouy3y.woff2                   7.89 kB
+#15 21.72 dist/assets/inter-cyrillic-500-normal-BasfLYem.woff2                7.90 kB
+#15 21.72 dist/assets/inter-cyrillic-700-normal-CjBOestx.woff2                7.90 kB
+#15 21.72 dist/assets/inter-greek-500-normal-BIZE56-Y.woff2                   7.92 kB
+#15 21.72 dist/assets/inter-greek-700-normal-C3JjAnD8.woff2                   7.92 kB
+#15 21.72 dist/assets/inter-greek-600-normal-plRanbMR.woff2                   7.94 kB
+#15 21.72 dist/assets/inter-cyrillic-600-normal-CWCymEST.woff2                7.97 kB
+#15 21.72 dist/assets/inter-cyrillic-800-normal-C7MGvYyJ.woff2                7.99 kB
+#15 21.72 dist/assets/inter-cyrillic-400-normal-HOLc17fK.woff                 9.78 kB
+#15 21.72 dist/assets/inter-cyrillic-700-normal-DrXBdSj3.woff                 9.91 kB
+#15 21.72 dist/assets/inter-greek-400-normal-q2sYcFCs.woff                    9.92 kB
+#15 21.72 dist/assets/inter-cyrillic-600-normal-4D_pXhcN.woff                 9.94 kB
+#15 21.72 dist/assets/inter-cyrillic-500-normal-CxZf_p3X.woff                 9.94 kB
+#15 21.72 dist/assets/inter-cyrillic-800-normal-CCHyn08d.woff                 9.94 kB
+#15 21.72 dist/assets/inter-greek-800-normal-BU00tryP.woff                    9.96 kB
+#15 21.72 dist/assets/inter-greek-500-normal-Xzm54t5V.woff                    9.98 kB
+#15 21.72 dist/assets/inter-greek-700-normal-BUv2fZ6O.woff                    9.98 kB
+#15 21.72 dist/assets/inter-greek-600-normal-BZpKdvQh.woff                   10.03 kB
+#15 21.72 dist/assets/jetbrains-mono-latin-ext-400-normal-fXTG6kC5.woff      10.13 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-400-normal-BQZuk6qB.woff2           10.23 kB
+#15 21.72 dist/assets/jetbrains-mono-latin-ext-500-normal-ckzbgY84.woff      10.34 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-500-normal-B0yAr1jD.woff2           10.43 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-800-normal-BZOjs1Xv.woff2           10.44 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-600-normal-Dfes3d0z.woff2           10.48 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-700-normal-BjwYoWNd.woff2           10.50 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-400-normal-DQukG94-.woff            13.34 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-700-normal-LO58E6JB.woff            13.41 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-500-normal-BmqWE9Dz.woff            13.45 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-600-normal-Bcila6Z-.woff            13.46 kB
+#15 21.72 dist/assets/inter-cyrillic-ext-800-normal-Ca-gJeZY.woff            13.48 kB
+#15 21.72 dist/assets/caveat-latin-ext-400-normal-D7hBUiug.woff2             18.60 kB
+#15 21.72 dist/assets/jetbrains-mono-latin-400-normal-V6pRDFza.woff2         21.17 kB
+#15 21.72 dist/assets/jetbrains-mono-latin-500-normal-BWZEU5yA.woff2         21.83 kB
+#15 21.72 dist/assets/inter-latin-400-normal-C38fXH4l.woff2                  23.66 kB
+#15 21.72 dist/assets/caveat-latin-ext-400-normal-DtiRFvw0.woff              24.09 kB
+#15 21.72 dist/assets/caveat-cyrillic-ext-400-normal-3iEGd-c5.woff2          24.23 kB
+#15 21.72 dist/assets/inter-latin-500-normal-Cerq10X2.woff2                  24.27 kB
+#15 21.72 dist/assets/inter-latin-700-normal-Yt3aPRUw.woff2                  24.36 kB
+#15 21.72 dist/assets/inter-latin-800-normal-BYj_oED-.woff2                  24.40 kB
+#15 21.72 dist/assets/inter-latin-600-normal-LgqL8muc.woff2                  24.45 kB
+#15 21.72 dist/assets/jetbrains-mono-latin-400-normal-6-qcROiO.woff          27.50 kB
+#15 21.72 dist/assets/jetbrains-mono-latin-500-normal-CJOVTJB7.woff          28.21 kB
+#15 21.72 dist/assets/caveat-cyrillic-ext-400-normal-Cg0RnRQ5.woff           29.73 kB
+#15 21.72 dist/assets/inter-latin-400-normal-CyCys3Eg.woff                   30.70 kB
+#15 21.72 dist/assets/inter-latin-600-normal-CiBQ2DWP.woff                   31.26 kB
+#15 21.72 dist/assets/inter-latin-500-normal-BL9OpVg8.woff                   31.28 kB
+#15 21.72 dist/assets/inter-latin-800-normal-D1mf63XC.woff                   31.30 kB
+#15 21.72 dist/assets/inter-latin-700-normal-BLAVimhd.woff                   31.32 kB
+#15 21.72 dist/assets/inter-latin-ext-400-normal-C1nco2VV.woff2              35.00 kB
+#15 21.72 dist/assets/inter-latin-ext-500-normal-CV4jyFjo.woff2              36.02 kB
+#15 21.72 dist/assets/inter-latin-ext-800-normal-DZJjya6U.woff2              36.13 kB
+#15 21.72 dist/assets/inter-latin-ext-700-normal-Ca8adRJv.woff2              36.24 kB
+#15 21.72 dist/assets/inter-latin-ext-600-normal-D2bJ5OIk.woff2              36.26 kB
+#15 21.72 dist/assets/caveat-cyrillic-400-normal-9cDH9rLW.woff2              45.12 kB
+#15 21.72 dist/assets/inter-latin-ext-400-normal-77YHD8bZ.woff               47.56 kB
+#15 21.72 dist/assets/inter-latin-ext-500-normal-BxGbmqWO.woff               48.49 kB
+#15 21.72 dist/assets/inter-latin-ext-800-normal-BOMpwxm3.woff               48.59 kB
+#15 21.72 dist/assets/inter-latin-ext-700-normal-TidjK2hL.woff               48.63 kB
+#15 21.72 dist/assets/inter-latin-ext-600-normal-CIVaiw4L.woff               48.67 kB
+#15 21.72 dist/assets/caveat-latin-400-normal-D6LQsQ_v.woff2                 48.84 kB
+#15 21.72 dist/assets/caveat-cyrillic-400-normal-CebvvJET.woff               53.10 kB
+#15 21.72 dist/assets/caveat-latin-400-normal-BzhAQZkN.woff                  60.11 kB
+#15 21.72 dist/assets/pdf.worker.min-CjEcRF4W.mjs                         1,264.34 kB
+#15 21.72 dist/assets/ApplicationsPanel-CBVruT3o.css                          0.48 kB │ gzip:   0.19 kB
+#15 21.72 dist/assets/index-CqhIJ4lk.css                                    297.58 kB │ gzip:  59.50 kB
+#15 21.72 dist/assets/Minus.es-CXvb2eAv.js                                    1.28 kB │ gzip:   0.50 kB │ map:     3.06 kB
+#15 21.72 dist/assets/Plus.es-BCPKhDTA.js                                     1.57 kB │ gzip:   0.59 kB │ map:     3.35 kB
+#15 21.72 dist/assets/bookPresentation-DuxOagXk.js                            1.74 kB │ gzip:   0.84 kB │ map:     3.18 kB
+#15 21.72 dist/assets/DownloadSimple.es-BPxyoPfB.js                           2.06 kB │ gzip:   0.71 kB │ map:     3.89 kB
+#15 21.72 dist/assets/CheckCircle.es-C6au0YHp.js                              2.13 kB │ gzip:   0.74 kB │ map:     3.88 kB
+#15 21.72 dist/assets/Lock.es-DpBzk7xC.js                                     2.20 kB │ gzip:   0.77 kB │ map:     3.98 kB
+#15 21.72 dist/assets/Trash.es-DDQVkoe5.js                                    2.58 kB │ gzip:   0.81 kB │ map:     4.32 kB
+#15 21.72 dist/assets/BookOpen.es-CiC7c_EZ.js                                 2.61 kB │ gzip:   0.89 kB │ map:     4.41 kB
+#15 21.72 dist/assets/Question.es-CBO2t0_C.js                                 2.78 kB │ gzip:   1.05 kB │ map:     4.53 kB
+#15 21.72 dist/assets/is-svg-component-Di23HGx0.js                            3.70 kB │ gzip:   1.84 kB │ map:    24.62 kB
+#15 21.72 dist/assets/DiscoverScreen-DIxyoiqn.js                              3.82 kB │ gzip:   1.78 kB │ map:    10.25 kB
+#15 21.72 dist/assets/AdmissionsRecoveryPanel-C-6dFtWs.js                     4.42 kB │ gzip:   1.43 kB │ map:    11.02 kB
+#15 21.72 dist/assets/Globe.es-BbQe2CZS.js                                    5.19 kB │ gzip:   1.51 kB │ map:     6.94 kB
+#15 21.72 dist/assets/MessagesScreen-qZ52YvcS.js                              5.40 kB │ gzip:   2.16 kB │ map:    16.15 kB
+#15 21.72 dist/assets/ModerationScreen-BRhzVPSH.js                            6.97 kB │ gzip:   2.54 kB │ map:    17.96 kB
+#15 21.72 dist/assets/FeedScreen-DCVjsSI8.js                                  7.58 kB │ gzip:   3.05 kB │ map:    22.01 kB
+#15 21.72 dist/assets/social-DMkvTxqk.js                                      7.95 kB │ gzip:   2.82 kB │ map:    26.81 kB
+#15 21.72 dist/assets/FundingScreen-BXi4TuzE.js                              10.87 kB │ gzip:   3.88 kB │ map:    23.45 kB
+#15 21.72 dist/assets/BookCommunityNav-A4DXoW7H.js                           11.40 kB │ gzip:   3.14 kB │ map:    17.52 kB
+#15 21.72 dist/assets/Gear.es-CUV6f3Eo.js                                    11.69 kB │ gzip:   3.07 kB │ map:    13.49 kB
+#15 21.72 dist/assets/OfficialProgrammeLibrary-CehEPJx0.js                   12.22 kB │ gzip:   4.41 kB │ map:    23.69 kB
+#15 21.72 dist/assets/PersonScreen-FBYKsbhp.js                               13.42 kB │ gzip:   4.17 kB │ map:    34.68 kB
+#15 21.72 dist/assets/SettingsScreen-RZwgdCkO.js                             14.78 kB │ gzip:   4.73 kB │ map:    31.34 kB
+#15 21.72 dist/assets/ProgressScreen-BtnsSyc-.js                             15.83 kB │ gzip:   5.52 kB │ map:    33.42 kB
+#15 21.72 dist/assets/SourcesScreen-CLODdAh5.js                              16.03 kB │ gzip:   5.47 kB │ map:    36.77 kB
+#15 21.72 dist/assets/ExportScreen-C5GmjoPK.js                               18.10 kB │ gzip:   6.30 kB │ map:    41.44 kB
+#15 21.72 dist/assets/ResultDetail-rc3RnM3D.js                               18.16 kB │ gzip:   4.91 kB │ map:    42.53 kB
+#15 21.72 dist/assets/immutable-B6fCerVq.js                                  18.75 kB │ gzip:   6.12 kB │ map:    36.93 kB
+#15 21.72 dist/assets/BillingScreen-FQLj-qgo.js                              19.12 kB │ gzip:   6.47 kB │ map:    36.47 kB
+#15 21.72 dist/assets/ApprovedScreen-dDQ7kB24.js                             19.27 kB │ gzip:   6.42 kB │ map:    41.62 kB
+#15 21.72 dist/assets/PreferencesScreen-CX7te1Er.js                          23.62 kB │ gzip:   7.37 kB │ map:    55.37 kB
+#15 21.72 dist/assets/BookComparison-DKIxTSSo.js                             24.68 kB │ gzip:   8.65 kB │ map:    85.05 kB
+#15 21.72 dist/assets/JourneyPages-RhZYnoNe.js                               39.03 kB │ gzip:  12.15 kB │ map:    81.38 kB
+#15 21.72 dist/assets/ShortlistScreen-BVkBN3Ed.js                            39.06 kB │ gzip:  11.84 kB │ map:    88.08 kB
+#15 21.72 dist/assets/ApplicationsPanel-Cz1lo1YJ.js                          41.46 kB │ gzip:  11.12 kB │ map:    91.75 kB
+#15 21.72 dist/assets/bookMotionFeatures-BgqR2SfI.js                         48.00 kB │ gzip:  18.46 kB │ map:   290.23 kB
+#15 21.72 dist/assets/ProfileScreen-Bx4cPowO.js                              49.20 kB │ gzip:  13.15 kB │ map:   117.02 kB
+#15 21.72 dist/assets/DocumentsScreen-UlGqn4bH.js                            65.51 kB │ gzip:  18.92 kB │ map:   143.96 kB
+#15 21.72 dist/assets/ProgrammeJourney-BB6vPpZL.js                           95.33 kB │ gzip:  18.74 kB │ map:    17.34 kB
+#15 21.72 dist/assets/PreparationScreen-atLaS_sJ.js                         125.40 kB │ gzip:  34.94 kB │ map:   318.04 kB
+#15 21.72 dist/assets/AuthenticatedWorkspace-Brz3Ji-v.js                    199.50 kB │ gzip:  56.29 kB │ map:   622.93 kB
+#15 21.72 dist/assets/LocalPdfPreview-NOLgTHjl.js                           486.27 kB │ gzip: 146.10 kB │ map: 1,572.50 kB
+#15 21.72 dist/assets/index-Ci5SLy7X.js                                     519.68 kB │ gzip: 150.85 kB │ map:   975.66 kB
+#15 21.72 dist/assets/UniversityCatalogue-raLRjGjD.js                       601.19 kB │ gzip:  96.27 kB │ map:    27.05 kB
+#15 21.72 
+#15 21.72 (!) Some chunks are larger than 500 kB after minification. Consider:
+#15 21.72 - Using dynamic import() to code-split the application
+#15 21.72 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+#15 21.72 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#15 21.73 ✓ built in 7.57s
+#15 DONE 24.0s
+
+#17 [stage-2 3/7] RUN playwright install --with-deps chromium  && groupadd --system --gid 10001 ashyq  && useradd --system --uid 10001 --gid ashyq --home /app --shell /usr/sbin/nologin ashyq  && chmod -R a+rX /ms-playwright
+#17 12.01 Preparing to unpack .../084-libpango-1.0-0_1.50.12+ds-1_amd64.deb ...
+#17 12.02 Unpacking libpango-1.0-0:amd64 (1.50.12+ds-1) ...
+#17 12.04 Selecting previously unselected package libsm6:amd64.
+#17 12.04 Preparing to unpack .../085-libsm6_2%3a1.2.3-1_amd64.deb ...
+#17 12.04 Unpacking libsm6:amd64 (2:1.2.3-1) ...
+#17 12.06 Selecting previously unselected package libunwind8:amd64.
+#17 12.06 Preparing to unpack .../086-libunwind8_1.6.2-3_amd64.deb ...
+#17 12.06 Unpacking libunwind8:amd64 (1.6.2-3) ...
+#17 12.08 Selecting previously unselected package libxt6:amd64.
+#17 12.08 Preparing to unpack .../087-libxt6_1%3a1.2.1-1.1_amd64.deb ...
+#17 12.08 Unpacking libxt6:amd64 (1:1.2.1-1.1) ...
+#17 12.11 Selecting previously unselected package libxmu6:amd64.
+#17 12.12 Preparing to unpack .../088-libxmu6_2%3a1.1.3-3_amd64.deb ...
+#17 12.12 Unpacking libxmu6:amd64 (2:1.1.3-3) ...
+#17 12.14 Selecting previously unselected package libxpm4:amd64.
+#17 12.14 Preparing to unpack .../089-libxpm4_1%3a3.5.12-1.1+deb12u1_amd64.deb ...
+#17 12.14 Unpacking libxpm4:amd64 (1:3.5.12-1.1+deb12u1) ...
+#17 12.16 Selecting previously unselected package libxaw7:amd64.
+#17 12.16 Preparing to unpack .../090-libxaw7_2%3a1.0.14-1_amd64.deb ...
+#17 12.16 Unpacking libxaw7:amd64 (2:1.0.14-1) ...
+#17 12.19 Selecting previously unselected package libxcomposite1:amd64.
+#17 12.19 Preparing to unpack .../091-libxcomposite1_1%3a0.4.5-1_amd64.deb ...
+#17 12.19 Unpacking libxcomposite1:amd64 (1:0.4.5-1) ...
+#17 12.22 Selecting previously unselected package libxdamage1:amd64.
+#17 12.22 Preparing to unpack .../092-libxdamage1_1%3a1.1.6-1_amd64.deb ...
+#17 12.22 Unpacking libxdamage1:amd64 (1:1.1.6-1) ...
+#17 12.24 Selecting previously unselected package libxfont2:amd64.
+#17 12.24 Preparing to unpack .../093-libxfont2_1%3a2.0.6-1+deb12u1_amd64.deb ...
+#17 12.24 Unpacking libxfont2:amd64 (1:2.0.6-1+deb12u1) ...
+#17 12.26 Selecting previously unselected package xkb-data.
+#17 12.26 Preparing to unpack .../094-xkb-data_2.35.1-1_all.deb ...
+#17 12.26 Unpacking xkb-data (2.35.1-1) ...
+#17 12.35 Selecting previously unselected package libxkbcommon0:amd64.
+#17 12.35 Preparing to unpack .../095-libxkbcommon0_1.5.0-1_amd64.deb ...
+#17 12.35 Unpacking libxkbcommon0:amd64 (1.5.0-1) ...
+#17 12.37 Selecting previously unselected package libxkbfile1:amd64.
+#17 12.37 Preparing to unpack .../096-libxkbfile1_1%3a1.1.0-1_amd64.deb ...
+#17 12.37 Unpacking libxkbfile1:amd64 (1:1.1.0-1) ...
+#17 12.39 Selecting previously unselected package libxrandr2:amd64.
+#17 12.39 Preparing to unpack .../097-libxrandr2_2%3a1.5.2-2+b1_amd64.deb ...
+#17 12.39 Unpacking libxrandr2:amd64 (2:1.5.2-2+b1) ...
+#17 12.40 Selecting previously unselected package x11-xkb-utils.
+#17 12.40 Preparing to unpack .../098-x11-xkb-utils_7.7+7_amd64.deb ...
+#17 12.40 Unpacking x11-xkb-utils (7.7+7) ...
+#17 12.43 Selecting previously unselected package xfonts-encodings.
+#17 12.43 Preparing to unpack .../099-xfonts-encodings_1%3a1.0.4-2.2_all.deb ...
+#17 12.43 Unpacking xfonts-encodings (1:1.0.4-2.2) ...
+#17 12.47 Selecting previously unselected package xfonts-utils.
+#17 12.47 Preparing to unpack .../100-xfonts-utils_1%3a7.7+6_amd64.deb ...
+#17 12.47 Unpacking xfonts-utils (1:7.7+6) ...
+#17 12.50 Selecting previously unselected package xfonts-scalable.
+#17 12.50 Preparing to unpack .../101-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...
+#17 12.50 Unpacking xfonts-scalable (1:1.0.3-1.3) ...
+#17 12.53 Selecting previously unselected package xserver-common.
+#17 12.53 Preparing to unpack .../102-xserver-common_2%3a21.1.7-3+deb12u13_all.deb ...
+#17 12.53 Unpacking xserver-common (2:21.1.7-3+deb12u13) ...
+#17 12.55 Selecting previously unselected package xvfb.
+#17 12.55 Preparing to unpack .../103-xvfb_2%3a21.1.7-3+deb12u13_amd64.deb ...
+#17 12.55 Unpacking xvfb (2:21.1.7-3+deb12u13) ...
+#17 12.62 Setting up libexpat1:amd64 (2.5.0-1+deb12u4) ...
+#17 12.62 Setting up libgraphite2-3:amd64 (1.3.14-1+deb12u1) ...
+#17 12.62 Setting up libpixman-1-0:amd64 (0.42.2-1) ...
+#17 12.62 Setting up libwayland-server0:amd64 (1.21.0-1) ...
+#17 12.62 Setting up libpciaccess0:amd64 (0.17-2) ...
+#17 12.63 Setting up libxau6:amd64 (1:1.0.9-1) ...
+#17 12.63 Setting up libicu72:amd64 (72.1-3+deb12u1) ...
+#17 12.63 Setting up libdatrie1:amd64 (0.2.13-2+b1) ...
+#17 12.63 Setting up fonts-noto-color-emoji (2.042-0+deb12u1) ...
+#17 12.63 Setting up libglib2.0-0:amd64 (2.74.6-2+deb12u9) ...
+#17 12.64 No schema files found: doing nothing.
+#17 12.64 Setting up libglvnd0:amd64 (1.6.0-1) ...
+#17 12.64 Setting up libbrotli1:amd64 (1.0.9-2+b6) ...
+#17 12.65 Setting up x11-common (1:7.7+23) ...
+#17 12.71 debconf: unable to initialize frontend: Dialog
+#17 12.71 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#17 12.71 debconf: falling back to frontend: Readline
+#17 12.71 debconf: unable to initialize frontend: Readline
+#17 12.71 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.36.0 /usr/local/share/perl/5.36.0 /usr/lib/x86_64-linux-gnu/perl5/5.36 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.36 /usr/share/perl/5.36 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+#17 12.71 debconf: falling back to frontend: Teletype
+#17 12.72 invoke-rc.d: could not determine current runlevel
+#17 12.73 invoke-rc.d: policy-rc.d denied execution of restart.
+#17 12.73 Setting up libsensors-config (1:3.6.0-7.1) ...
+#17 12.74 Setting up fonts-freefont-ttf (20120503-10) ...
+#17 12.74 Setting up xkb-data (2.35.1-1) ...
+#17 12.74 Setting up libunwind8:amd64 (1.6.2-3) ...
+#17 12.74 Setting up libasound2-data (1.2.8-1) ...
+#17 12.74 Setting up libfontenc1:amd64 (1:1.1.4-1) ...
+#17 12.75 Setting up libz3-4:amd64 (4.8.12-3.1) ...
+#17 12.75 Setting up fonts-tlwg-loma-otf (1:0.7.3-1) ...
+#17 12.75 Setting up libx11-data (2:1.8.4-2+deb12u2) ...
+#17 12.75 Setting up libnspr4:amd64 (2:4.35-1) ...
+#17 12.75 Setting up libavahi-common-data:amd64 (0.8-10+deb12u1) ...
+#17 12.76 Setting up libdbus-1-3:amd64 (1.14.10-1~deb12u1) ...
+#17 12.76 Setting up xfonts-encodings (1:1.0.4-2.2) ...
+#17 12.76 Setting up libfribidi0:amd64 (1.0.8-2.1) ...
+#17 12.76 Setting up libpng16-16:amd64 (1.6.39-2+deb12u6) ...
+#17 12.76 Setting up libsensors5:amd64 (1:3.6.0-7.1) ...
+#17 12.77 Setting up libglapi-mesa:amd64 (22.3.6-1+deb12u2) ...
+#17 12.77 Setting up fonts-ipafont-gothic (00303-23) ...
+#17 12.77 update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+#17 12.77 Setting up libxshmfence1:amd64 (1.3-1) ...
+#17 12.78 Setting up at-spi2-common (2.46.0-5) ...
+#17 12.78 Setting up libasound2:amd64 (1.2.8-1+b1) ...
+#17 12.78 Setting up fonts-liberation (1:1.07.4-11) ...
+#17 12.78 Setting up libthai-data (0.1.29-1) ...
+#17 12.78 Setting up libatk1.0-0:amd64 (2.46.0-5) ...
+#17 12.78 Setting up libbsd0:amd64 (0.11.7-2) ...
+#17 12.79 Setting up libdrm-common (2.4.114-1) ...
+#17 12.79 Setting up libelf1:amd64 (0.188-2.1) ...
+#17 12.79 Setting up libxml2:amd64 (2.9.14+dfsg-1.3~deb12u6) ...
+#17 12.79 Setting up fonts-unifont (1:15.0.01-2) ...
+#17 12.79 Setting up libxkbcommon0:amd64 (1.5.0-1) ...
+#17 12.80 Setting up libice6:amd64 (2:1.0.10-1) ...
+#17 12.80 Setting up libxdmcp6:amd64 (1:1.1.2-3) ...
+#17 12.80 Setting up libxcb1:amd64 (1.15-1) ...
+#17 12.80 Setting up libxcb-xfixes0:amd64 (1.15-1) ...
+#17 12.80 Setting up libxcb-render0:amd64 (1.15-1) ...
+#17 12.81 Setting up fontconfig-config (2.14.1-4) ...
+#17 12.87 debconf: unable to initialize frontend: Dialog
+#17 12.87 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#17 12.87 debconf: falling back to frontend: Readline
+#17 12.87 debconf: unable to initialize frontend: Readline
+#17 12.87 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.36.0 /usr/local/share/perl/5.36.0 /usr/lib/x86_64-linux-gnu/perl5/5.36 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.36 /usr/share/perl/5.36 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+#17 12.87 debconf: falling back to frontend: Teletype
+#17 13.01 Setting up libxcb-glx0:amd64 (1.15-1) ...
+#17 13.01 Setting up libedit2:amd64 (3.1-20221030-2) ...
+#17 13.01 Setting up libavahi-common3:amd64 (0.8-10+deb12u1) ...
+#17 13.01 Setting up libnss3:amd64 (2:3.87.1-1+deb12u4) ...
+#17 13.02 Setting up libxcb-shm0:amd64 (1.15-1) ...
+#17 13.02 Setting up libxcb-present0:amd64 (1.15-1) ...
+#17 13.02 Setting up libthai0:amd64 (0.1.29-1) ...
+#17 13.02 Setting up libfreetype6:amd64 (2.12.1+dfsg-5+deb12u4) ...
+#17 13.03 Setting up libxcb-sync1:amd64 (1.15-1) ...
+#17 13.03 Setting up libxcb-dri2-0:amd64 (1.15-1) ...
+#17 13.03 Setting up libdrm2:amd64 (2.4.114-1+b1) ...
+#17 13.03 Setting up libxcb-randr0:amd64 (1.15-1) ...
+#17 13.03 Setting up libllvm15:amd64 (1:15.0.6-4+b1) ...
+#17 13.04 Setting up libx11-6:amd64 (2:1.8.4-2+deb12u2) ...
+#17 13.04 Setting up libharfbuzz0b:amd64 (6.0.0+dfsg-3) ...
+#17 13.04 Setting up libfontconfig1:amd64 (2.14.1-4) ...
+#17 13.04 Setting up libxkbfile1:amd64 (1:1.1.0-1) ...
+#17 13.04 Setting up libxcomposite1:amd64 (1:0.4.5-1) ...
+#17 13.05 Setting up libsm6:amd64 (2:1.2.3-1) ...
+#17 13.05 Setting up libxfont2:amd64 (1:2.0.6-1+deb12u1) ...
+#17 13.05 Setting up libavahi-client3:amd64 (0.8-10+deb12u1) ...
+#17 13.05 Setting up libdrm-amdgpu1:amd64 (2.4.114-1+b1) ...
+#17 13.06 Setting up libxcb-dri3-0:amd64 (1.15-1) ...
+#17 13.06 Setting up libx11-xcb1:amd64 (2:1.8.4-2+deb12u2) ...
+#17 13.06 Setting up fontconfig (2.14.1-4) ...
+#17 13.06 Regenerating fonts cache... done.
+#17 15.14 Setting up libdrm-nouveau2:amd64 (2.4.114-1+b1) ...
+#17 15.14 Setting up libxdamage1:amd64 (1:1.1.6-1) ...
+#17 15.14 Setting up libxpm4:amd64 (1:3.5.12-1.1+deb12u1) ...
+#17 15.15 Setting up libxrender1:amd64 (1:0.9.10-1.1) ...
+#17 15.16 Setting up libgbm1:amd64 (22.3.6-1+deb12u2) ...
+#17 15.16 Setting up libdrm-radeon1:amd64 (2.4.114-1+b1) ...
+#17 15.17 Setting up libpango-1.0-0:amd64 (1.50.12+ds-1) ...
+#17 15.17 Setting up libdrm-intel1:amd64 (2.4.114-1+b1) ...
+#17 15.17 Setting up libgl1-mesa-dri:amd64 (22.3.6-1+deb12u2) ...
+#17 15.19 Setting up fonts-wqy-zenhei (0.9.45-8) ...
+#17 15.20 Setting up libxext6:amd64 (2:1.3.4-1+b1) ...
+#17 15.21 Setting up xfonts-utils (1:7.7+6) ...
+#17 15.21 Setting up libcairo2:amd64 (1.16.0-7) ...
+#17 15.22 Setting up libxxf86vm1:amd64 (1:1.1.4-1+b2) ...
+#17 15.22 Setting up libxfixes3:amd64 (1:6.0.0-2) ...
+#17 15.23 Setting up libxrandr2:amd64 (2:1.5.2-2+b1) ...
+#17 15.23 Setting up libxt6:amd64 (1:1.2.1-1.1) ...
+#17 15.24 Setting up libcups2:amd64 (2.4.2-3+deb12u9) ...
+#17 15.24 Setting up xfonts-scalable (1:1.0.3-1.3) ...
+#17 15.27 Setting up libxmu6:amd64 (2:1.1.3-3) ...
+#17 15.27 Setting up libglx-mesa0:amd64 (22.3.6-1+deb12u2) ...
+#17 15.27 Setting up libxi6:amd64 (2:1.8-1+b1) ...
+#17 15.28 Setting up libglx0:amd64 (1.6.0-1) ...
+#17 15.28 Setting up libxaw7:amd64 (2:1.0.14-1) ...
+#17 15.28 Setting up libatspi2.0-0:amd64 (2.46.0-5) ...
+#17 15.28 Setting up libatk-bridge2.0-0:amd64 (2.46.0-5) ...
+#17 15.29 Setting up libgl1:amd64 (1.6.0-1) ...
+#17 15.29 Setting up x11-xkb-utils (7.7+7) ...
+#17 15.29 Setting up xserver-common (2:21.1.7-3+deb12u13) ...
+#17 15.30 Setting up xvfb (2:21.1.7-3+deb12u13) ...
+#17 15.30 Processing triggers for libc-bin (2.36-9+deb12u14) ...
+#17 15.38 Downloading Chrome for Testing 148.0.7778.96 (playwright chromium v1223) from https://cdn.playwright.dev/builds/cft/148.0.7778.96/linux64/chrome-linux64.zip
+#17 15.88 |                                                                                |   0% of 175.4 MiB
+#17 16.02 |■■■■■■■■                                                                        |  10% of 175.4 MiB
+#17 16.13 |■■■■■■■■■■■■■■■■                                                                |  20% of 175.4 MiB
+#17 16.17 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 175.4 MiB
+#17 16.24 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 175.4 MiB
+#17 16.28 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 175.4 MiB
+#17 16.35 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 175.4 MiB
+#17 16.42 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 175.4 MiB
+#17 16.49 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 175.4 MiB
+#17 16.59 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 175.4 MiB
+#17 16.65 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 175.4 MiB
+#17 19.73 Chrome for Testing 148.0.7778.96 (playwright chromium v1223) downloaded to /ms-playwright/chromium-1223
+#17 19.73 Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+#17 20.19 |                                                                                |   0% of 2.3 MiB
+#17 20.25 |■■■■■■■■                                                                        |  10% of 2.3 MiB
+#17 20.27 |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+#17 20.29 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+#17 20.30 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+#17 20.30 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+#17 20.31 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+#17 20.32 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+#17 20.32 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+#17 20.32 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+#17 20.33 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+#17 20.38 FFmpeg (playwright ffmpeg v1011) downloaded to /ms-playwright/ffmpeg-1011
+#17 20.38 Downloading Chrome Headless Shell 148.0.7778.96 (playwright chromium-headless-shell v1223) from https://cdn.playwright.dev/builds/cft/148.0.7778.96/linux64/chrome-headless-shell-linux64.zip
+#17 20.69 |                                                                                |   0% of 113.2 MiB
+#17 20.78 |■■■■■■■■                                                                        |  10% of 113.2 MiB
+#17 20.83 |■■■■■■■■■■■■■■■■                                                                |  20% of 113.2 MiB
+#17 20.88 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 113.2 MiB
+#17 20.91 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 113.2 MiB
+#17 20.94 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 113.2 MiB
+#17 20.99 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 113.2 MiB
+#17 21.01 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 113.2 MiB
+#17 21.04 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 113.2 MiB
+#17 21.09 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 113.2 MiB
+#17 21.11 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 113.2 MiB
+#17 23.69 Chrome Headless Shell 148.0.7778.96 (playwright chromium-headless-shell v1223) downloaded to /ms-playwright/chromium_headless_shell-1223
+#17 23.89 useradd warning: ashyq's uid 10001 is greater than SYS_UID_MAX 999
+#17 DONE 28.9s
+
+#7 [internal] load build context
+#7 ...
+
+#18 [stage-2 4/7] WORKDIR /app/backend
+#18 DONE 0.0s
+
+#19 [stage-2 5/7] COPY --chown=ashyq:ashyq backend/ ./
+#19 DONE 0.1s
+
+#20 [stage-2 6/7] COPY --from=frontend-builder --chown=ashyq:ashyq /build/frontend/dist /app/frontend
+#20 DONE 0.4s
+
+#7 [internal] load build context
+#7 ...
+
+#21 [stage-2 7/7] RUN mkdir -p /app/backend/data && chown -R ashyq:ashyq /app/backend/data
+#21 DONE 0.1s
+
+#22 exporting to image
+#22 exporting layers
+#22 exporting layers 16.4s done
+#22 exporting manifest sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec done
+#22 exporting config sha256:339b6a32cdd76bdd012128f94f364e12ccaa9fe41bdd17e8f1c3872b225dd173 done
+#22 pushing layers for registry.fly.io/ashyq-apply-alisher:unimatch-66935473-20261019@sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec
+#22 pushing layer sha256:339b6a32cdd76bdd012128f94f364e12ccaa9fe41bdd17e8f1c3872b225dd173
+#22 pushing layer sha256:2946e62ec97bd7932b5bc7a84834452a79a77b5d378ab43678670872b224fbcc
+#22 pushing layer sha256:dd8697f23cbc2193856c5bacf7071e5e36e844307fb363bcaaa320db6b83cd7f
+#22 pushing layer sha256:f68954c89fac6154d742d23f8684799909b7a6c46849156edb84c5ab7516b720
+#22 pushing layer sha256:ff1bab15e02dc5a91bf0ad7a1424349ee048925a259c1f045b076e976fe5efc3
+#22 pushing layer sha256:57a63e82f5c56167911b4966f14c2bb9ea71d79acd0de406c1f0dd48204584f9
+#22 pushing layer sha256:614096d5c1a8037aa2c30765cb4b1806364b25903cb19843495e782b38c42232
+#22 pushing layer sha256:573b3833d0c11513c7f30b20cb307113b324042c6db5aeaf1dd137d1f5fe6aa2
+#22 pushing layer sha256:1e967ca39ec655229a33558cfeab97d4b52f223655525a1897c34a73d32ca70c
+#22 pushing layer sha256:e809fff3ea4c3f3ae10d68218fcaf01b9e173a19f3f5dc1546fde2e79d4d2beb
+#22 pushing layer sha256:2741beaffecae62821fd9f09f835e4601ade8ef07306cc5d7a9efc4816ca7792
+#22 pushing layer sha256:f68954c89fac6154d742d23f8684799909b7a6c46849156edb84c5ab7516b720 0.6s done
+#22 pushing layer sha256:ff1bab15e02dc5a91bf0ad7a1424349ee048925a259c1f045b076e976fe5efc3 0.8s done
+#22 pushing layer sha256:2946e62ec97bd7932b5bc7a84834452a79a77b5d378ab43678670872b224fbcc 1.5s done
+#22 pushing layer sha256:2741beaffecae62821fd9f09f835e4601ade8ef07306cc5d7a9efc4816ca7792 2.0s done
+#22 pushing layer sha256:339b6a32cdd76bdd012128f94f364e12ccaa9fe41bdd17e8f1c3872b225dd173 2.1s done
+#22 pushing layer sha256:dd8697f23cbc2193856c5bacf7071e5e36e844307fb363bcaaa320db6b83cd7f 2.0s done
+#22 pushing layer sha256:57a63e82f5c56167911b4966f14c2bb9ea71d79acd0de406c1f0dd48204584f9 2.2s done
+#22 pushing layer sha256:614096d5c1a8037aa2c30765cb4b1806364b25903cb19843495e782b38c42232 2.2s done
+#22 pushing layer sha256:573b3833d0c11513c7f30b20cb307113b324042c6db5aeaf1dd137d1f5fe6aa2 2.3s done
+#22 pushing layer sha256:e809fff3ea4c3f3ae10d68218fcaf01b9e173a19f3f5dc1546fde2e79d4d2beb 3.3s done
+#22 pushing layer sha256:1e967ca39ec655229a33558cfeab97d4b52f223655525a1897c34a73d32ca70c 6.1s done
+#22 pushing layers for registry.fly.io/ashyq-apply-alisher:unimatch-66935473-20261019@sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec 6.1s done
+#22 pushing manifest for registry.fly.io/ashyq-apply-alisher:unimatch-66935473-20261019@sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec 0.1s done
+#22 DONE 22.6s
+
+#7 [internal] load build context
+--> Build Summary:  (​)
+[38;5;252m--> Building image done[0m
+image: registry.fly.io/ashyq-apply-alisher:unimatch-66935473-20261019
+image size: 518 MB

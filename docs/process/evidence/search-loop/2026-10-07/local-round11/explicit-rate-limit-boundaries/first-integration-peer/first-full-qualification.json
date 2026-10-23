@@ -1,0 +1,15 @@
+{
+  "status": "FIRST_SNAPSHOT_EXACT_SOURCE_ALIGNMENT_BUT_FULL_INTERRUPTED_AFTER_STATIC_IMPORT_FAILURE",
+  "runner_summary_status": "interrupted",
+  "ruff_I001_count": 6,
+  "source_alignment_sha256": "3970d2d315c72302fe8ed2a07fc12c6cf793fa21ef4f1f25b48ac89cdba4b1bc",
+  "backend_sqlite_junit_exists": false,
+  "backend_postgresql_junit_exists": false,
+  "app_source_exact_three_accepted": true,
+  "first_test_source_exact_three_accepted": true,
+  "remaining993metadataunchanged": true,
+  "functional_result": "UNKNOWN_INTERRUPTED_NOT_COMPLETED",
+  "external_Ruff_PASS_qualification": "Earlier external proposal cwd differs from repository import discovery. Its PASS does not establish repository-cwd Ruff PASS.",
+  "root_interruption_evidence": "Parent reported verified own runner PID39062 interrupt before SQLite completion; B did not invoke/kill process.",
+  "scope": "Own source/alignment verification plus saved static logs only; no app imports/tests/process/network/labels actions."
+}

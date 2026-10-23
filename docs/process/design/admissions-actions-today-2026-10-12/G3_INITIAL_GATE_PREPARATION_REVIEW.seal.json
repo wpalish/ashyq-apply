@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "sealed_at_utc": "2026-10-12T05:59:14Z",
+  "reviewer": "local_release_readiness",
+  "scope": "G3_INITIAL_GATE_PREPARATION_REVIEW_ONLY",
+  "status": "PREPARATION_QUALIFIED_ONLY_NOT_EXECUTED_SOURCE_NOT_APPLIED",
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_GATE_PREPARATION_REVIEW.md",
+    "sha256": "cf63bcdb665104b543163d66e14a1a57a266d586b03ae50e605952db56bbdd53"
+  },
+  "authorized_inputs": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/docs/process/design/admissions-actions-today-2026-10-12/G3_INITIAL_SOURCE_GRANT.json",
+      "sha256": "2d69074ecf90d164b8535484004667feca1529c9eea92a8352acd503c190ceb2"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/docs/process/design/admissions-actions-today-2026-10-12/G3_INITIAL_GATE_PREPARATION.json",
+      "sha256": "08f1af1a8dc089d6cb4d6a24f3fc7fa4f27dabbb7225fb0ad99b515ffc8e77a0"
+    }
+  ],
+  "reviewed_at_utc": "2026-10-12T05:57:23Z",
+  "observations": {
+    "baseline_entries": 772,
+    "manifest_unique_paths": 772,
+    "manifest_mapping_equals_grant": true,
+    "checked_primary_files": 772,
+    "checked_lab_files": 772,
+    "missing": 0,
+    "primary_hash_mismatches": 0,
+    "lab_hash_mismatches": 0,
+    "byte_mismatches": 0,
+    "new3_absent_primary_and_lab": true,
+    "interpreter_link_matches_declared_existing_g2_owned_directory": true,
+    "backend_full_member_count": 12,
+    "helper_hash_mismatches": 0,
+    "byte_identical_g2_g3_members": 11,
+    "run_full_backend_delta": "DIAGNOSTIC_TARGETS only: tests/test_admissions_actions.py",
+    "run_full_backend_g2_sha256": "f17818c4a3a158ee8bdbb71f85a3387b168f438572dc77ff9492173d542da0bc",
+    "run_full_backend_g3_sha256": "6058410c2c668def03ffab69a028e008e24e2851fcab6fc5dcdf74ebc7ef8551",
+    "static_helper_delta": "source prefix g2→g3 and evidence output initial2→initial1 only",
+    "static_g2_initial2_sha256": "69842b6432032e9b02e5b9a0a226d710e1990575aed9fef530ec57d2944b0909",
+    "static_g3_initial1_sha256": "4c2d4a4c6ac66f6c75000862a60b52e2be81562c31adbdce9a967eba73d8fa44",
+    "exact_mismatches": []
+  },
+  "boundaries": {
+    "helper_or_interpreter_executed": false,
+    "app_imported": false,
+    "tests_executed": false,
+    "source_packet_read": false,
+    "application_or_helper_changed": false,
+    "git_or_handoff_activity": false,
+    "runtime_db_provider_auth_network_activity": false,
+    "g3_source_status": "NOT_APPLIED",
+    "g3_new_test_migration_native_full_status": "NOT_RUN",
+    "inherited_g3_pass": false,
+    "all_prior_stops_unchanged": true
+  }
+}
+

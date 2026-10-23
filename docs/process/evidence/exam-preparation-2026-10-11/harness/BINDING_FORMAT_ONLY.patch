@@ -1,0 +1,16 @@
+--- before
++++ native-formatted
+@@ -336,7 +336,12 @@
+ 
+ @pytest.mark.parametrize(
+     "mode,expected",
+-    [("scope", "unknown"), ("stale", "stale"), ("unverified", "unknown"), ("conflict", "conflicted")],
++    [
++        ("scope", "unknown"),
++        ("stale", "stale"),
++        ("unverified", "unknown"),
++        ("conflict", "conflicted"),
++    ],
+ )
+ def test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls(mode, expected):
+     updates = {

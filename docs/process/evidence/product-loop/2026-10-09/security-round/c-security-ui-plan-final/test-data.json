@@ -1,0 +1,21 @@
+{
+  "status": "DICTIONARY_ONLY_NOT_CREATED",
+  "scope": "Fresh owned development/auth-enabled SQLite; native UI only after explicit bound localhost go.",
+  "nonce": "ROOT_SUPPLIES_ONE_UNIQUE_NONSECRET_RUN_ID",
+  "owners": {
+    "A": {"email": "security-ui-a-<nonce>@ashyq.invalid", "password": "Synthetic-security-ui-password-43!", "display_name": "Security UI owner A (synthetic)", "organization_name": "Security UI workspace A (synthetic)"},
+    "B": {"email": "security-ui-b-<nonce>@ashyq.invalid", "password": "Synthetic-security-ui-password-43!", "display_name": "Security UI owner B (synthetic)", "organization_name": "Security UI workspace B (synthetic)"}
+  },
+  "case_input": {
+    "base": "Native Load demo profile reads pinned frontend/src/lib/defaultProfile.ts; synthetic throughout. Do not edit display_name through hidden state/DOM APIs.",
+    "A_saved_field": "Mathematics (SYNTHETIC A SAVED)",
+    "A_unsaved_new_case_field": "Physics (SYNTHETIC A DRAFT)",
+    "B_saved_field": "Computer Science (SYNTHETIC B SAVED)",
+    "B_unsaved_new_case_field": "Chemistry (SYNTHETIC B DRAFT)",
+    "why_new_local_case": "Saved profiles autosave. New unsaved local case has no savedProfile, so native draft restoration can be observed without accidentally persisting the draft.",
+    "no_runs": "Never click Start research/retry/collect. Export observed run list must be empty.",
+    "delete": "Only disposable saved A case; type exact DELETE and click native confirmation. No account/workspace/other-data deletion."
+  },
+  "captures": {"count": 7, "desktop": {"width": 1440, "height": 900}, "phone": {"width": 390, "height": 844}},
+  "exclude": ["real users", "old DB or seed", "env files", "provider/model calls", "worker", "research/collect/retry", "mail/reset", "payment", "agreements/terms acceptance", "external links", "community/messages", "private browser sessions", "storage/cookie/profile injection"]
+}

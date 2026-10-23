@@ -1,0 +1,98 @@
+{
+  "queries": [
+    {
+      "at_ns": 810540428376708,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'aeaa6e7e3110448ea25844dd41a380a6'}"
+    },
+    {
+      "elapsed_ns": 482167,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810540429116958,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.id \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE",
+      "params": "{'id_1': 'aeaa6e7e3110448ea25844dd41a380a6'}"
+    },
+    {
+      "elapsed_ns": 66083,
+      "sql_prefix": "SELECT research_runs.id \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE"
+    },
+    {
+      "at_ns": 810540429345458,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'aeaa6e7e3110448ea25844dd41a380a6'}"
+    },
+    {
+      "elapsed_ns": 70625,
+      "sql_prefix": "SELECT research_runs.cancelled \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810540429546750,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': '6547cc00ca6c41db95d7cb994a621f65'}"
+    },
+    {
+      "elapsed_ns": 35875,
+      "sql_prefix": "SELECT jobs.cancel_requested \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR"
+    },
+    {
+      "at_ns": 810540429803875,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT",
+      "params": "{'id_1': '6547cc00ca6c41db95d7cb994a621f65', 'run_id_1': 'aeaa6e7e3110448ea25844dd41a380a6', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}"
+    },
+    {
+      "elapsed_ns": 75125,
+      "sql_prefix": "SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810540429985166,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': 'aeaa6e7e3110448ea25844dd41a380a6'}"
+    },
+    {
+      "at_ns": 810540430273041,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'aeaa6e7e3110448ea25844dd41a380a6'}"
+    },
+    {
+      "elapsed_ns": 47709,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    },
+    {
+      "at_ns": 810540430494583,
+      "thread": 8419598720,
+      "sql": "SELECT jobs.id \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT",
+      "params": "{'id_1': '6547cc00ca6c41db95d7cb994a621f65'}"
+    },
+    {
+      "elapsed_ns": 48500,
+      "sql_prefix": "SELECT jobs.id \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT"
+    },
+    {
+      "at_ns": 810540430698375,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR",
+      "params": "{'id_1': 'aeaa6e7e3110448ea25844dd41a380a6'}"
+    },
+    {
+      "elapsed_ns": 43125,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCH"
+    }
+  ],
+  "sql_errors": [
+    {
+      "sqlstate": "55P03",
+      "sqlite_errorcode": null,
+      "type": "LockNotAvailable",
+      "statement": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = %(id_1)s::VARCHAR FOR UPDATE NOWAIT"
+    }
+  ]
+}

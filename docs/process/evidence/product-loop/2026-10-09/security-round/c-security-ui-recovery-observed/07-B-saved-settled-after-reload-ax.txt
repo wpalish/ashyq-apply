@@ -1,0 +1,102 @@
+Browser tab: 1010110755, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:5173/#/profile".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:5173/#/profile
+	2 container root
+		3 container Main navigation
+			4 button Home
+			5 button Find
+			6 button Plan
+			7 button Documents
+			8 button Community
+		9 container
+			10 text Unimatch Demo data
+			11 button (collapsed) Explore⌄, Secondary Actions: Expand
+				12 text Explore
+				98 text ⌄
+			14 text Applicant
+			15 pop up button (collapsed, settable) Applicant, Value: Demo Applicant (synthetic) · 0 runs, ID: case-switcher, Secondary Actions: Expand
+				16 menu
+					17 Новый абитуриент
+					99 (selected) Demo Applicant (synthetic) · 0 runs
+			18 button New case
+			19 button Settings
+		20 container
+			21 text CREATE YOUR PROFILE ·  01  / 05
+			22 heading Tell us about yourself., Value: 1
+				23 text Tell us about  yourself.
+			24 text A few simple details help us find the right matches for you. Your information stays editable.
+			25 container Profile steps
+				26 button 1 Personal details
+					27 text 1
+					28 text Personal details
+				29 button 2 Academic background
+					30 text 2
+					31 text Academic background
+				32 button 3 Tests & scores
+					33 text 3
+					34 text Tests & scores
+				35 button 4 Activities & achievements
+					36 text 4
+					37 text Activities & achievements
+				38 button 5 Review
+					39 text 5
+					40 text Review
+			41 heading Start from, Value: 2
+				42 text Start from
+			43 text Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears.
+			44 button Blank profile
+			45 button Load synthetic demo
+			100 text synthetic demo data
+			46 heading Application context, Value: 2
+				47 text Application context
+			48 text What you are applying for, and from where.
+			49 text Level
+			50 pop up button (collapsed, settable) Level, Value: Bachelor, ID: level, Secondary Actions: Expand
+				51 menu
+					52 Foundation
+					53 (selected) Bachelor
+					54 Master
+					55 PhD
+			56 text Field of study
+			57 text field (settable) Field of study, Value: Computer Science (SYNTHETIC B SAVED), ID: field
+			58 text Drives which programmes are searched.
+			59 text Intake term
+			60 pop up button (collapsed, settable) Intake term, Value: Fall, ID: term, Secondary Actions: Expand
+				61 menu
+					62 (selected) Fall
+					63 Spring
+					64 Summer
+					65 Winter
+			66 text Intake year
+			67 stepper (settable, integer) Intake year, Value: 2027, ID: year
+			68 text Citizenship
+			69 text field (settable) Citizenship, Value: Kazakhstan, ID: citizenship
+			70 text Decides which scholarships you are eligible for at all.
+			71 text Country of residence
+			72 text field (settable) Country of residence, Value: Kazakhstan, ID: residence
+			73 text Country of education
+			74 text field (settable) Country of education, Value: Kazakhstan, ID: education-country
+			75 text Additional nationality (if any)
+			76 text field (settable) Additional nationality (if any), ID: second-citizenship
+			77 text Leave blank if none.
+			78 text Education system
+			79 text field (settable) Education system, Value: Kazakhstan national secondary (attestat), ID: edsys
+			80 text Curriculum type
+			81 pop up button (collapsed, settable) Curriculum type, Value: national, ID: curriculum-type, Secondary Actions: Expand
+				82 menu
+					83 (selected) national
+					84 ib
+					85 a level
+					86 ap
+					87 us high_school
+					88 other
+			89 text Finishing school on
+			90 date field (settable) Finishing school on, Value: 2027-05-25, ID: grad
+				91 container
+					101 stepper
+					102 stepper
+					103 stepper
+				95 pop up button Показать окно выбора даты Показать окно выбора даты
+			96 button Save profile
+			97 button Continue →
+
+The focused UI element is 18 button New case

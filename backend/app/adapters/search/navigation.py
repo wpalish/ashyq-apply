@@ -196,7 +196,10 @@ def links_from(html: str, base_url: str) -> tuple[NavigationLink, ...]:
         href = (anchor.get("href") or "").split("#", 1)[0].strip()
         if not href:
             continue
-        url = canonical_url(urljoin(base_url, href))
+        try:
+            url = canonical_url(urljoin(base_url, href))
+        except ValueError:
+            continue
         if not url:
             continue
         if not same_institution(url, base_url) or is_excluded_path(url):

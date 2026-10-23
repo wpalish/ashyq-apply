@@ -1,0 +1,57 @@
+--- a/frontend/src/api/client.privacy.test.ts
++++ b/frontend/src/api/client.privacy.test.ts
+@@ -5,6 +5,9 @@
+ const OWNER = 'ashyq.applicantOwner';
+ const personA = 'auth:["user-a","org-a"]';
+ const personB = 'auth:["user-b","org-b"]';
++const routeJournalKey = (owner: string, caseId: string) => `ashyq.owner.${encodeURIComponent(owner)}.ashyq.sharedRouteRecovery.v1.${encodeURIComponent(caseId)}`;
++const journalA = routeJournalKey(personA, 'synthetic-a');
++const recoveryBytes = '{"version":1,"pending":"private synthetic original UUID and references"}';
+ const principalB: AuthPrincipal = {
+   user_id: 'user-b', organization_id: 'org-b', email: 'b@example.test',
+   display_name: 'Synthetic B', organization_name: 'B workspace', role: 'owner', local_development: false,
+@@ -21,6 +24,7 @@
+   localStorage.setItem('ashyq.docsDone', '{"synthetic-a::Passport":true}');
+   sessionStorage.setItem('ashyq.activeProfile', 'local:synthetic-a');
+   localStorage.setItem('ashyq.theme', 'dark');
++  sessionStorage.setItem(journalA, recoveryBytes);
+ }
+ beforeEach(() => { localStorage.clear(); sessionStorage.clear(); owner(); });
+ afterEach(() => { vi.unstubAllGlobals(); });
+@@ -67,6 +71,7 @@
+     expect(localStorage.getItem(OWNER)).toBe(personB);
+     expect(sessionStorage.getItem(OWNER)).toBe(personB);
+     expect(localStorage.getItem('ashyq.draft.local:synthetic-a')).toBeNull();
++    expect(sessionStorage.getItem(journalA)).toBeNull();
+   });
+   it('does not let a late auth acknowledgment erase or replace a newer owner', async () => {
+     let resolve!: (value: Response) => void;
+@@ -75,10 +80,13 @@
+     const logout = api.logout();
+     localStorage.setItem(OWNER, personB);
+     localStorage.setItem('ashyq.draft.local:synthetic-b', 'new owner draft');
++    const journalB = routeJournalKey(personB, 'synthetic-b');
++    sessionStorage.setItem(journalB, 'new owner exact recovery bytes');
+     resolve(new Response(null, { status: 204 }));
+     await expect(logout).rejects.toThrow(/workspace changed/);
+     expect(localStorage.getItem(OWNER)).toBe(personB);
+     expect(localStorage.getItem('ashyq.draft.local:synthetic-b')).toBe('new owner draft');
++    expect(sessionStorage.getItem(journalB)).toBe('new owner exact recovery bytes');
+   });
+   it.each(['logout', 'deleteAccount'] as const)('clears applicant browser data only after %s succeeds', async (operation) => {
+     applicantData();
+@@ -90,6 +98,7 @@
+     expect(localStorage.getItem('ashyq.draft.local:synthetic-a')).toBeNull();
+     expect(localStorage.getItem('ashyq.docsDone')).toBeNull();
+     expect(sessionStorage.getItem('ashyq.activeProfile')).toBeNull();
++    expect(sessionStorage.getItem(journalA)).toBeNull();
+     expect(localStorage.getItem('ashyq.theme')).toBe('dark');
+   });
+   it.each(['logout', 'deleteAccount'] as const)('retains applicant data and restores binding when %s fails', async (operation) => {
+@@ -101,5 +110,6 @@
+     expect(sessionStorage.getItem(OWNER)).toBe(personA);
+     expect(localStorage.getItem('ashyq.draft.local:synthetic-a')).toBe('private synthetic draft');
+     expect(sessionStorage.getItem('ashyq.activeProfile')).toBe('local:synthetic-a');
++    expect(sessionStorage.getItem(journalA)).toBe(recoveryBytes);
+   });
+ });

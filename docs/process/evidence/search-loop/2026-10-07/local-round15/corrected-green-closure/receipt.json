@@ -1,0 +1,358 @@
+{
+  "time": "2026-10-08T09:16:32.559445+00:00",
+  "status": "CORRECTED_FULL_13_OF_13_AND_OWNED_SEED_PASS_INDEPENDENTLY_ACCEPTED_NO_RUNTIME_QUALITY",
+  "origins": [
+    {
+      "folder": "local-round15/root-orchestrator/corrected-full-raw",
+      "manifest_sha256": "82e4dd6f325424f054ca3d521bb9d14e133ec71269224552a15c4965abea9e33",
+      "physical_selected_files": 18
+    },
+    {
+      "folder": "local-round15/a-corrected-owned-seed",
+      "manifest_sha256": "50c7043d7f941547b90ee8ca141274e3ec2d0cd22fa3b2ec878779a9e2ac9a9b",
+      "physical_selected_files": 29
+    },
+    {
+      "folder": "local-round15/b-corrected-full-closure",
+      "manifest_sha256": "b7f7ce1a0469fb746f7bf2b88bee3983dbf67042c1131bb8ad6496ec449dcefa",
+      "physical_selected_files": 11
+    }
+  ],
+  "selected_files": 66,
+  "selected_bytes": 6087517,
+  "file_sha256": {
+    "full-raw/summary.json": {
+      "sha256": "60511dab22d05743c4b03c96ace29d04e82eef6495e778718a828654e79c5a17",
+      "bytes": 2082686,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/summary.json"
+    },
+    "full-raw/source-manifest.json": {
+      "sha256": "5fff8aad2d20490318b4430a742f38c322c61a725ac5a824c4c3d97bbb64938f",
+      "bytes": 2054778,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/source-manifest.json"
+    },
+    "full-raw/backend-sqlite.xml": {
+      "sha256": "24edca769409c67c3ed73ecaca4f64e3b945359f9181625cddf80e5eaa2b65e0",
+      "bytes": 654152,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/backend-sqlite.xml"
+    },
+    "full-raw/backend-postgresql.xml": {
+      "sha256": "13d1510f02f578833487cd0cd9314c095106bd34b22a56ae70f2be462e3daab5",
+      "bytes": 654151,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/backend-postgresql.xml"
+    },
+    "full-raw/ruff.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/ruff.log"
+    },
+    "full-raw/ruff-format.log": {
+      "sha256": "574ff9c1362897edf945e620412510c854d06388f432254602e30c169eba0453",
+      "bytes": 28,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/ruff-format.log"
+    },
+    "full-raw/mypy.log": {
+      "sha256": "b596ab6fb163b385b5bb77b6b0a8a779ddce7aeb337e369983811e933e6a74c7",
+      "bytes": 10327,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/mypy.log"
+    },
+    "full-raw/backend-sqlite.log": {
+      "sha256": "b8aa23fed1ff5ace1a40da266c097360d2aef264c8651d649cd391132fc8a37e",
+      "bytes": 17878,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/backend-sqlite.log"
+    },
+    "full-raw/frontend-typecheck.log": {
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/frontend-typecheck.log"
+    },
+    "full-raw/frontend-lint.log": {
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/frontend-lint.log"
+    },
+    "full-raw/frontend-tests.log": {
+      "sha256": "0c150b25b16e7e2c672a417d859e7272d8febef88b85fc653b5b2e4d1d10d063",
+      "bytes": 20135,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/frontend-tests.log"
+    },
+    "full-raw/frontend-build.log": {
+      "sha256": "84f395ef8750d3f76b99b00572701a0450bc34c126bbaf1c34ec43704a7f1fd2",
+      "bytes": 7315,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/frontend-build.log"
+    },
+    "full-raw/backend-postgresql.log": {
+      "sha256": "bce05f335e78a59f1a42d073373caa36952f1d9e3234c5d93ee26a6bf77b7e8d",
+      "bytes": 6667,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/backend-postgresql.log"
+    },
+    "full-raw/e2e.log": {
+      "sha256": "f3720e6a018adb4d5148015eef689974e305c83463aef468152d539e1e83e5ef",
+      "bytes": 172224,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/e2e.log"
+    },
+    "full-raw/e2e-auth.log": {
+      "sha256": "0b4846c99ec9306116ff6169382453b968f886a7c4145d2fa8cda91a1296f74c",
+      "bytes": 16684,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/e2e-auth.log"
+    },
+    "full-raw/pip-audit.log": {
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "bytes": 31,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/pip-audit.log"
+    },
+    "full-raw/npm-audit.log": {
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "bytes": 24,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/npm-audit.log"
+    },
+    "full-raw/ready-manifest.json": {
+      "sha256": "82e4dd6f325424f054ca3d521bb9d14e133ec71269224552a15c4965abea9e33",
+      "bytes": 3195,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-raw/ready-manifest.json"
+    },
+    "corrected-seed/PLAN.json": {
+      "sha256": "761d47f0a33da78e412f47599cbe9982bc2a21c8364bf45e81e09acd2b327214",
+      "bytes": 2553,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/PLAN.json"
+    },
+    "corrected-seed/REPORT.md": {
+      "sha256": "4e669167a1af2bbc97f0a837f9ed7f73b25d3fb73b8304f0d280dfc10ffb4674",
+      "bytes": 483,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/REPORT.md"
+    },
+    "corrected-seed/candidate-source-pins.json": {
+      "sha256": "4a3ea6c35d324c2a8db04a37f571b123500cdc1e744625f56a0d7fa41cf2f9a9",
+      "bytes": 30417,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/candidate-source-pins.json"
+    },
+    "corrected-seed/commands.original.json": {
+      "sha256": "2b5d4bb2ebf430c6c1e3b2a110c28141866a1a43e623b2a3cd2c119b1e7446a1",
+      "bytes": 4111,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/commands.original.json"
+    },
+    "corrected-seed/execute_seed.py": {
+      "sha256": "0835593c6b2dd3f81122b98da06a4d8b4feb09fabea09a81edf06ad63b5ed841",
+      "bytes": 6026,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/execute_seed.py"
+    },
+    "corrected-seed/guarded_child.py": {
+      "sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "bytes": 4561,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/guarded_child.py"
+    },
+    "corrected-seed/heads.command.original.json": {
+      "sha256": "9589830bf7903b2c4626e0498cc4762e2e102d5a842405aa77cc736ac4bc43d7",
+      "bytes": 977,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/heads.command.original.json"
+    },
+    "corrected-seed/heads.execution.json": {
+      "sha256": "710b1ebcd532a5d8cb41fc7a85ad994ffdc14a99cbb119cc2506bce3a74181f8",
+      "bytes": 619,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/heads.execution.json"
+    },
+    "corrected-seed/heads.stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/heads.stderr.original.log"
+    },
+    "corrected-seed/heads.stdout.original.log": {
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/heads.stdout.original.log"
+    },
+    "corrected-seed/inspect.command.original.json": {
+      "sha256": "94c53c1070f7ba47c4d1fd6daef7e4e359b396e066688e18c097c416e1d870ad",
+      "bytes": 981,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/inspect.command.original.json"
+    },
+    "corrected-seed/inspect.execution.json": {
+      "sha256": "f1fdfee9038e9dc811cb8b5df12bb25087b45dedd9390750bb78cf06b40e8c10",
+      "bytes": 621,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/inspect.execution.json"
+    },
+    "corrected-seed/inspect.stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/inspect.stderr.original.log"
+    },
+    "corrected-seed/inspect.stdout.original.log": {
+      "sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709",
+      "bytes": 550,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/inspect.stdout.original.log"
+    },
+    "corrected-seed/inspection.original.json": {
+      "sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709",
+      "bytes": 550,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/inspection.original.json"
+    },
+    "corrected-seed/migrate.command.original.json": {
+      "sha256": "440a6928d04bb76b8b5ce9037e1f8422b584d52eb75096d1d7d7cb7d6ad84cc8",
+      "bytes": 980,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/migrate.command.original.json"
+    },
+    "corrected-seed/migrate.execution.json": {
+      "sha256": "7dbbcc9c5ceb12a4d428e4ce122e100e233c5d060c6bbe2ee230154b5c127f10",
+      "bytes": 621,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/migrate.execution.json"
+    },
+    "corrected-seed/migrate.stderr.original.log": {
+      "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+      "bytes": 2642,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/migrate.stderr.original.log"
+    },
+    "corrected-seed/migrate.stdout.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/migrate.stdout.original.log"
+    },
+    "corrected-seed/prepare-copy-receipt.json": {
+      "sha256": "2cb017efda97cb5c8ce9ad68208f9848be8f2ab6c8ea06f42c31ea46f8d7712c",
+      "bytes": 489,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/prepare-copy-receipt.json"
+    },
+    "corrected-seed/prepared-manifest.json": {
+      "sha256": "8b58ded3fe331870e2abaa6e22de2ae769335031df87872478643174a9588877",
+      "bytes": 1012,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/prepared-manifest.json"
+    },
+    "corrected-seed/primary-after-pins.json": {
+      "sha256": "90fe23e39a605f436a7b6c7f540208d016bef04de74a696c5d8bf5f8ac1a9e7c",
+      "bytes": 30418,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/primary-after-pins.json"
+    },
+    "corrected-seed/primary-before-pins.json": {
+      "sha256": "4a3ea6c35d324c2a8db04a37f571b123500cdc1e744625f56a0d7fa41cf2f9a9",
+      "bytes": 30417,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/primary-before-pins.json"
+    },
+    "corrected-seed/receipt.json": {
+      "sha256": "e1e6e28649a0148b74b22517c56b34cba2f065e99e92af0fcdab27dda6bd5c43",
+      "bytes": 6739,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/receipt.json"
+    },
+    "corrected-seed/seed.command.original.json": {
+      "sha256": "1bee0e4893ad904f986c7d562652890ecc46863c177330304c56e8508255e0c1",
+      "bytes": 974,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/seed.command.original.json"
+    },
+    "corrected-seed/seed.execution.json": {
+      "sha256": "c9ae5bde6913206c1d753566891ab5377418f504b456876c469d06b97c79438d",
+      "bytes": 618,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/seed.execution.json"
+    },
+    "corrected-seed/seed.stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/seed.stderr.original.log"
+    },
+    "corrected-seed/seed.stdout.original.log": {
+      "sha256": "779ec4ad9d31cc9fb2e7404d30ef1a2e388cc4992c6fd30cbb4ea105eec88212",
+      "bytes": 2569,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/seed.stdout.original.log"
+    },
+    "corrected-seed/ready-manifest.json": {
+      "sha256": "50c7043d7f941547b90ee8ca141274e3ec2d0cd22fa3b2ec878779a9e2ac9a9b",
+      "bytes": 4227,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/ready-manifest.json"
+    },
+    "independent-closure/PLAN.json": {
+      "sha256": "c808eada72c02f5ae488210b7cbe0fcf19b249a2e0fbf1de493db2c3f7c0ecae",
+      "bytes": 2450,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/PLAN.json"
+    },
+    "independent-closure/REPORT.ru.md": {
+      "sha256": "4608456b0c9fee34ca3bc7772e724bff34ae601f41a81afd9b6890902ca8a57c",
+      "bytes": 3952,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/REPORT.ru.md"
+    },
+    "independent-closure/checker-error.original.json": {
+      "sha256": "6930ddb198de9f995dc072f85f5e730effdf9688cf2df62c8e00f508952545af",
+      "bytes": 782,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/checker-error.original.json"
+    },
+    "independent-closure/corrected-full-originals-manifest.json": {
+      "sha256": "ce17d3f409730ce6aba052e2149018b92f1eebf3ce50f64226cb75cfda415a2a",
+      "bytes": 2811,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/corrected-full-originals-manifest.json"
+    },
+    "independent-closure/corrected-full-verification.json": {
+      "sha256": "d807adcb9995c36fc2653d4b72e2c3524f912b99d94b0e51f69122f1159492cd",
+      "bytes": 15603,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/corrected-full-verification.json"
+    },
+    "independent-closure/execution.json": {
+      "sha256": "6d3b61ccc3bae136b0744cfaf20bd175e8f39cd1265ab400ad76dd288cb008bc",
+      "bytes": 1165,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/execution.json"
+    },
+    "independent-closure/start-seed-binding.json": {
+      "sha256": "96029c23aaa6db37cc0c769b350fe2e003c1efad6917df7b83c7237861276666",
+      "bytes": 2536,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/start-seed-binding.json"
+    },
+    "independent-closure/verify_corrected_full.compat.py": {
+      "sha256": "5cf064e95b9d25435efa2f5a35a5d92a946c5a8edb49646a9c42366b8b3f69a1",
+      "bytes": 16204,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/verify_corrected_full.compat.py"
+    },
+    "independent-closure/verify_corrected_full.py": {
+      "sha256": "cb5fd0ab429383724bf7f9bb0cbc8579601eb313cb07b0ef192803388c6eae3f",
+      "bytes": 16186,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/verify_corrected_full.py"
+    },
+    "independent-closure/verify_start_seed.py": {
+      "sha256": "69550eaa2885b4e47b624bb8915cf8ab2629e6a06737c4562cb9ecbc8359d1b5",
+      "bytes": 4692,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/verify_start_seed.py"
+    },
+    "independent-closure/ready-manifest.json": {
+      "sha256": "b7f7ce1a0469fb746f7bf2b88bee3983dbf67042c1131bb8ad6496ec449dcefa",
+      "bytes": 2097,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/ready-manifest.json"
+    },
+    "parent/source-after-schema-1002.json": {
+      "sha256": "dfd9d425190a196cfef05af9efcbf4258b46320d4c8e751b84248f17e611b8bf",
+      "bytes": 132119,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/source-after-schema-1002.json"
+    },
+    "parent/corrected-full-start-binding.json": {
+      "sha256": "6a9ae88d6ee9ca469668c8d6a0af6a7b34519e22add227154af841774a81884a",
+      "bytes": 874,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-full-start-binding.json"
+    },
+    "parent/corrected-application-ready.json": {
+      "sha256": "ef73d979b4bd62db6b1d997793d1ada83c439f69e64ba39ab939d67b5b73d09d",
+      "bytes": 32647,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-application-ready.json"
+    },
+    "parent/corrected-green-root-qualification.json": {
+      "sha256": "d74adfbc7d2fb1ab73379dd1d5d15f219d9157ee2f24f367679ab0f25ce6ffbb",
+      "bytes": 957,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-green-root-qualification.json"
+    },
+    "parent/collect_corrected_full.py": {
+      "sha256": "e95172737388d40aad023ed085315d331ec3a7f7ea56aefd36795477bf650216",
+      "bytes": 3760,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/collect_corrected_full.py"
+    },
+    "parent/SEARCH_PROGRESS_2026-10-08_0908.md": {
+      "sha256": "3498e9a95d8611210beea9429d80388c4ff95acf8622c10334f339f05b46b239",
+      "bytes": 6924,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/outputs/SEARCH_PROGRESS_2026-10-08_0908.md"
+    },
+    "parent/archive_packets.py": {
+      "sha256": "8b9ebc23b2b0d1a63cb1c240a616c657942badbc2d757129de2827ecbcb7a4e5",
+      "bytes": 4368,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/archive_packets.py"
+    },
+    "parent/archive-config.json": {
+      "sha256": "7b89a403f8537031842bab0ef3daeb6793ddc812d26c553c500029c0e466eeab",
+      "bytes": 2803,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/corrected-green-archive-config.json"
+    }
+  },
+  "source_prefix_selected_paths_matched": 1002,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "qualification": "Physical originals include copied peer evidence; file counts are not unique experiments. No live calls or quality scoring."
+}

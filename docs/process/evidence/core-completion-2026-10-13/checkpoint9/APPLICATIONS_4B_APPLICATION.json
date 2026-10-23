@@ -1,0 +1,86 @@
+{
+  "status": "APPLIED_NOT_EXECUTED",
+  "paths": {
+    "frontend/src/types/admissionsActions.ts": {
+      "preimage": "3dfcc85117708d2b80d1f6753b2a7fb586e113d737cfd9d4d32d19262f62c48b",
+      "postimage": "79f899d7f46bf5e134ac4369faa12d34de27de97e62b258f1c77af2000a27dcb"
+    },
+    "frontend/src/lib/admissionsActionsRecovery.ts": {
+      "preimage": "8ae293a3d4fef36e8af65f4a93887666426d9c5b1d66d6b9e722976faf58ec7f",
+      "postimage": "f91797ba0716cf522c11f0bc0842bd62bae381e51baf8e79636017f443ead67a"
+    },
+    "frontend/src/lib/useAdmissionsActions.ts": {
+      "preimage": "88df12acecf34cde72d8c3cb4f2297d0c29ff46920583ec7cc5b48ffa3b860af",
+      "postimage": "d14b125e0f6df799a97fc1d8e307c189c139f04a56af50c8450614b236901ae6"
+    },
+    "frontend/src/api/client.ts": {
+      "preimage": "c385422b02ffc3816bfb251834a002abe9f6719714653342bc31c45bde6c71a8",
+      "postimage": "3506a602131cd49dc5eb8fa62e3821509e3a5d06b4de42b0dcb0f9e3d4699c2f"
+    },
+    "frontend/src/components/AdmissionsRecoveryPanel.tsx": {
+      "preimage": "cd1b49dbac938891c5a82e79c42f44a7a30688ae70adc7771b8dc32825e6c8dc",
+      "postimage": "cd1b49dbac938891c5a82e79c42f44a7a30688ae70adc7771b8dc32825e6c8dc"
+    },
+    "frontend/src/screens/ApplicationsPanel.tsx": {
+      "preimage": null,
+      "postimage": "08cd27a84c0eed9b801586046ccc74fe2d632a26491f2823e169cb3fb55903e5"
+    },
+    "frontend/src/screens/ApplicationsPanel.test.tsx": {
+      "preimage": null,
+      "postimage": "c00c3d6715810ebb0de0ac5c29adcfa066d7f1ff0dacf508c242e2463c186734"
+    },
+    "frontend/src/screens/ApprovedScreen.tsx": {
+      "preimage": "5ea75749450a369de4bb32e6e03838ae6f02021951080e3c36873332876060fb",
+      "postimage": "55d22c3728d21f7747075e304f54b58cd0474bc463cfc4304c33a5f4eb647a11"
+    },
+    "frontend/src/types/admissionsActions.manual.test.ts": {
+      "preimage": null,
+      "postimage": "7c87878ccb8f8398e5248c891a0260bdf1260668c0971e243d02f9980ce8c07e"
+    },
+    "frontend/src/lib/admissionsActionsRecovery.manual.test.ts": {
+      "preimage": null,
+      "postimage": "48de134e230384fd13d20732fda5a6d044f8a0dd61c3b59d1faafeffd65b4cf9"
+    },
+    "frontend/src/test/manualAdmissionsFixtures.ts": {
+      "preimage": null,
+      "postimage": "f7fd136f005e159de1d01f9a9ab3770f4b12dd48b9895c8cfa27ad347d756c80"
+    },
+    "frontend/src/lib/i18n.ts": {
+      "preimage": "3905c858b3444c955ee44876b2c152b06bb0272bc839ed52d0219af3c059912f",
+      "postimage": "c99a7853d2a584074372a0424721bf34a9cfe00eb26b6432e92fff443403134a"
+    },
+    "frontend/src/screens/ApplicationsPanel.css": {
+      "preimage": null,
+      "postimage": "9208f93e4a4cd853d05ee038c47676cfc87b67603e6db7056d9a72aa2d55c3d7"
+    },
+    "frontend/src/lib/useAdmissionsActions.test.tsx": {
+      "preimage": "2018094a5539bfda0e132103eb305d6284eaa6e34ec0f28c4588244100ef1668",
+      "postimage": "92a66e034a871b2f695446ca2d6564cf06435221800b60cc033678bc5cbe4bd9"
+    },
+    "frontend/src/screens/PersonalDocumentsPanel.tsx": {
+      "preimage": "48a35c13a3279b72c518569f371ce20c5d52bca03ade82741ee5e49bb583f0b9",
+      "postimage": "0d7bbe426f36b999662e91cb087156e588747779b8d58e45a29c5003108061fe"
+    },
+    "frontend/src/screens/PersonalDocumentsPanel.test.tsx": {
+      "preimage": "0f2b5fca1679b9fe7fd8d6c2f799dc1ec2c55e7ce86ee368309032575e0e906f",
+      "postimage": "d2a04fc9c5c6ef8ab0da238d501ab3d6b8e44a9376042c6151ea67c29ffdf408"
+    },
+    "frontend/src/screens/DocumentSourceBindings.tsx": {
+      "preimage": "bcc0f22cc5c1cd889be6ad38e4e681c131264e35228d8bbca34622475a34a2ef",
+      "postimage": "e29c0ee1e5d32cb762f3011d3100531e63b187189b40a1c88776f954e01919a7"
+    },
+    "frontend/src/screens/DocumentSourceBindings.test.tsx": {
+      "preimage": "0434292bc031a88293f415346d46b5bf27aa856f9a37110388f8c92c2922a606",
+      "postimage": "a7d5c6b25181ab5d504a6f73ed76c7ad94a027b8fdbd337fcc930408dadae178"
+    },
+    "frontend/src/screens/LegacyDocumentImport.tsx": {
+      "preimage": "e57b330465a8847db1c531eeffe1c56c540bb25429f3d986901332e88b2a9e2f",
+      "postimage": "ab4a6e74eba1e8abeb95b06f6fbca8e1fb91a4c2fc0853ac53d74902835b951a"
+    },
+    "frontend/src/screens/LegacyDocumentImport.test.tsx": {
+      "preimage": "6f65b4f03a6a7e35e2ac9cd24944bb80eaeda6df5b910b428c72a5412c85e307",
+      "postimage": "e7b5a7026e211f17927787dde1cf2018fe9abe89d93457183d8e5532d567ddce"
+    }
+  },
+  "baseline": "fe85927f"
+}

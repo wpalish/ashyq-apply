@@ -1,34 +1,34 @@
 /*
  * Design tokens.
  *
- * Unimatch: clear navy typography, warm cream surfaces and a restrained
- * yellow orbit accent. Semantic evidence colours retain their own meaning.
+ * Unimatch: clear navy typography, cool blue surfaces and a precise
+ * royal blue orbit accent. Semantic evidence colours retain their own meaning.
  */
 
 :root {
   color-scheme: light;
 
   /* --- surfaces: warm paper, layered rather than shadowed --- */
-  --paper:            #FAF8F3;
+  --paper:            #F6F8FC;
   --surface:          oklch(100% 0 0);
-  --surface-sunken:   #F5F3EE;
+  --surface-sunken:   #EDF3FC;
   --surface-raised:   #FFFFFF;
-  --surface-inverted: #0B132C;
+  --surface-inverted: #0A153D;
 
-  --ink:              #0B132C;
-  --ink-muted:        #566789;
-  --ink-faint:        #4F5B6C;
+  --ink:              #0A153D;
+  --ink-muted:        #536D99;
+  --ink-faint:        #526078;
   --ink-inverted:     #FFFFFF;
 
-  --rule:             #E7EAF0;
-  --rule-strong:      #D3DCE9;
+  --rule:             #E2EAF5;
+  --rule-strong:      #C6D4E7;
 
-  /* Yellow marks a primary action; evidence statuses use separate tokens. */
-  --accent:           #F7C948;
-  --accent-text:      #895400;
-  --accent-hover:     #EAB934;
-  --accent-soft:      #FFF4D5;
-  --accent-border:    #F7D97F;
+  /* Blue marks a primary action; evidence statuses use separate tokens. */
+  --accent:           #0951FF;
+  --accent-text:      #1349D3;
+  --accent-hover:     #0C42D4;
+  --accent-soft:      #EAF0FF;
+  --accent-border:    #B7CCFF;
 
   /* --- semantic status: each maps to one product meaning --- */
   --ok:               oklch(40% 0.115 152);   /* MET, FULL_RIDE_CONFIRMED */
@@ -83,16 +83,17 @@
   --space-8: clamp(3rem, 2rem + 4vw, 5.5rem);
 
   --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 20px;
+  --radius: 14px;
+  --radius-lg: 14px;
 
   --shadow-sm: 0 1px 2px oklch(23% 0.018 265 / 0.06);
   --shadow: 0 2px 6px oklch(23% 0.018 265 / 0.08), 0 1px 2px oklch(23% 0.018 265 / 0.05);
   --shadow-lg: 0 12px 32px oklch(23% 0.018 265 / 0.13), 0 2px 8px oklch(23% 0.018 265 / 0.07);
 
-  --duration-fast: 120ms;
-  --duration-normal: 220ms;
+  --duration-fast: 150ms;
+  --duration-normal: 180ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-interaction: cubic-bezier(0.23, 1, 0.32, 1);
 
   --sidebar-width: 13rem;
   --measure: 68ch;
@@ -121,11 +122,11 @@
     --rule:             oklch(30% 0.018 265);
     --rule-strong:      oklch(40% 0.020 265);
 
-    --accent:           #F7C948;
-    --accent-text:      #F7C948;
-    --accent-hover:     #EAB934;
-    --accent-soft:      #4A3B1C;
-    --accent-border:    #806824;
+    --accent:           #0951FF;
+    --accent-text:      #0951FF;
+    --accent-hover:     #0C42D4;
+    --accent-soft:      #152E5E;
+    --accent-border:    #456BAE;
 
     --ok:               oklch(78% 0.120 152);
     --ok-soft:          oklch(27% 0.050 152);
@@ -174,11 +175,11 @@
   --rule:             oklch(30% 0.018 265);
   --rule-strong:      oklch(40% 0.020 265);
 
-  --accent:           #F7C948;
-  --accent-text:      #F7C948;
-  --accent-hover:     #EAB934;
-  --accent-soft:      #4A3B1C;
-  --accent-border:    #806824;
+  --accent:           #0951FF;
+  --accent-text:      #0951FF;
+  --accent-hover:     #0C42D4;
+  --accent-soft:      #152E5E;
+  --accent-border:    #456BAE;
 
   --ok:               oklch(78% 0.120 152);
   --ok-soft:          oklch(27% 0.050 152);

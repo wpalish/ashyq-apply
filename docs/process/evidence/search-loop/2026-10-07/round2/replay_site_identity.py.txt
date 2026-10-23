@@ -1,0 +1,78 @@
+"""Replay retained homepage bytes only; no Fetcher/provider network path."""
+import asyncio
+import hashlib
+import json
+import subprocess
+import sys
+import types
+from datetime import datetime
+from pathlib import Path
+from types import SimpleNamespace
+
+WORK = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO = WORK / 'ashyq-apply'
+sys.path.insert(0, str(REPO / 'backend'))
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import Session
+from bs4 import BeautifulSoup
+from app.adapters.fetching import FetchOutcome, FetchResult
+from app.catalogue import discovery as current
+from app.catalogue.importer import import_catalogue
+from app.db import create_all_for_tests
+from app.models import University, UniversityObservation
+
+BASE = 'b0b1a9ccacd59d8cf1fe34b0a5b6d65cd7b8e594'
+old = types.ModuleType('retained_catalogue_discovery')
+exec(subprocess.check_output(['git', 'show', BASE + ':backend/app/catalogue/discovery.py'], cwd=REPO, text=True), old.__dict__)
+
+async def main():
+    engine = create_engine('sqlite://')
+    create_all_for_tests(engine)
+    rows = []
+    paths = [
+        ('0386940c5cef525b3c8e7966868f5ed6', 'canary-lsaouqcu/cache/7e/7eb8f66e5e3799173a4614921bdb7f21'),
+        ('05e4d59f87261553f15d14b0cdb470d2', 'canary-bostmz9k/cache/b9/b9296da9bc0cac1dbac6b68130e5f383'),
+    ]
+    with Session(engine) as session:
+        import_catalogue(session)
+        for uid, relative in paths:
+            stem = WORK / 'development-baseline-temp' / relative
+            body = stem.with_suffix('.body').read_bytes()
+            metadata = json.loads(stem.with_suffix('.meta.json').read_text())
+            university = session.get(University, uid)
+            assert university is not None
+            calls = []
+            async def get(url):
+                assert url == metadata['url'], 'Any other source is unavailable in this replay'
+                calls.append(url)
+                return FetchResult(url=url, final_url=metadata['final_url'], outcome=FetchOutcome.OK,
+                    content=body, text=body.decode('utf-8'), status_code=200,
+                    fetched_at=datetime.fromisoformat(metadata['fetched_at']))
+            fetcher = SimpleNamespace(get=get)
+            outcomes = {}
+            for name, module, flag in [('old', old, False), ('current_off', current, False), ('current_on', current, True)]:
+                if module is current:
+                    current.SITE_BRANDING_IDENTITY = flag
+                adapter = module.CatalogueDiscoveryAdapter(fetcher, session=session, university_ids=[uid], live_limit=1)
+                outcomes[name] = await adapter._probe_site(university, metadata['url'])
+            assert outcomes['old'] is None and outcomes['current_off'] is None
+            assert outcomes['current_on'] is not None
+            proof = session.scalars(select(UniversityObservation).where(
+                UniversityObservation.university_id == uid,
+                UniversityObservation.seed_version == 'live-site-identity')).one().payload
+            soup = BeautifulSoup(body, 'html.parser')
+            rendered = soup.get_text(' ', strip=True)
+            meta_values = [str(meta.get('content') or '') for meta in soup.select('meta[property="og:site_name"]')]
+            assert proof['excerpt'] in rendered or proof['excerpt'] in meta_values, 'Exact DOM text or metadata value required'
+            rows.append(dict(case_id=uid, source_url=metadata['url'], retained_body_path=str(stem.with_suffix('.body')),
+                raw_sha256=hashlib.sha256(body).hexdigest(), normalized_content_hash=metadata['content_hash'],
+                outcomes=outcomes, proof=proof, excerpt_check='exact DOM text or exact metadata value; HTML entities decoded', offline_get_calls=calls))
+    current.SITE_BRANDING_IDENTITY = False
+    result = dict(baseline_source=BASE, source_file_sha256={p: hashlib.sha256((REPO/p).read_bytes()).hexdigest()
+        for p in ['backend/app/catalogue/discovery.py','backend/evaluation/research/live.py']},
+        network_actions=0, provider_actions=0, rows=rows)
+    target = WORK / 'search-loop-round2/site-identity-replay.offline.json'
+    target.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n')
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+
+asyncio.run(main())

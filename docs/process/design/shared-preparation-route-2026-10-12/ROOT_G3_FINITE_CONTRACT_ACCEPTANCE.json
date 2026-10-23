@@ -1,0 +1,24 @@
+{
+  "at_utc": "2026-10-12T04:12:19.248873+00:00",
+  "status": "ROOT_DESIGN_FREEZE_ACCEPTED_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "source_head": "e891bbdf",
+  "reviewed_design_pins": {
+    "proposals/g3-design/G3_FINITE_CONTRACT_FREEZE_PROPOSAL.md": "f5acdae226110346798aca2ab8e51a40894e902adc5e2d4eb71b5c85740d839a",
+    "proposals/g3-design/SEALED_G3_FINITE_CONTRACT_FREEZE_PROPOSAL_RECEIPT.json": "501ff63c1f54cfd94149738c562e84e1aba17239088e46b02112a45ca264cf9c",
+    "proposals/g3-design/G3_FINITE_CONTRACT_INDEPENDENT_REVIEW.md": "8f498fc30d8eeea447e8bcf5fe849f01bf46095c125feab24b5b9ba2000b3df7",
+    "proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md": "9292ca3db7edb0a7423a97a8760da579bebf1cc68534d4f7282b2a1a50e51e8e",
+    "proposals/g3-design/SEALED_G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM_RECEIPT.json": "af55ba1e62ee4fca81e36998799dad3fc2913150f5a2b5797a090fbf7a2ad705",
+    "proposals/g3-design/G3_EVENTREF_ADDENDUM_INDEPENDENT_REVIEW.md": "ec711401538ff8d7c8fd3794faede2d8e5eddfc77867beb55d510c00fc2b3b13"
+  },
+  "verified_preserved_inputs": 25,
+  "decisions": [
+    "ActorRef server-derived pseudonymous native principal, original receipt actor immutable; no raw identity/extra audit row",
+    "Separate G3 raw lexical informational link policy; original source_url proof identity and locked branch privacy unchanged; no fetch/DNS/portal certification",
+    "Route-local fixed typed errors/validation privacy; own personal history/free access preserved; no global exception weakening",
+    "Every hashed-state EventRef exactly event_id/revision/kind; no receipt digest; current loads/validates exact full head separately; older metadata does not claim old body selfhash verification",
+    "Server-derived affected_refs header contains application_ids<=20,document_task_ids<=400,active_selector_changed; mutation association including allowed explicit selector clear, not mention; copied full receipt/header validated against actual applied delta",
+    "Bounded 1662 refs, chunks<=200/max9 metadata batches; exact current-head state digest/time and own role/ref association; no GET DML/repair/replay",
+    "G3 source remains closed until G2 release/new branch/baton/exact write-ahead; no runtime/production/search/pedagogy acceptance"
+  ],
+  "application_writer": "root_only"
+}

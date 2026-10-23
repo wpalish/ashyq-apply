@@ -1,0 +1,43 @@
+{
+  "status": "SEALED_QUALIFIED_ACCEPT_APPLIED_DRAFT_DOCS_AND_LOCAL_REPORT",
+  "source_head": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "root_acceptance_sha256": "2555f40b7767991dfbe2f21082c7d8677c541e42168c974ae15bfe3536c1235b",
+  "files": {
+    "PREPARED.md": {
+      "sha256": "4c7c4ffe6011e1d3532ec4e1d7abd81e43b93edbd53f7e1a76b847de39287e54",
+      "bytes": 7515
+    },
+    "REPORT.md": {
+      "sha256": "4989d929bd7c2db6de08179615b5ae8b6b8832b2e6c5518fb16dcd398ac19fcc",
+      "bytes": 4258
+    },
+    "findings.json": {
+      "sha256": "68d7675b71ffac1dc059f92d84d2ccd689e4422b8470d71547bd69093c24c011",
+      "bytes": 4240
+    },
+    "pins.json": {
+      "sha256": "0bd711ba90cda3161a93b9b019d047358246a370fb55b8e11717fd59ac1e0e32",
+      "bytes": 40482
+    },
+    "verification-execution.json": {
+      "sha256": "2ea94e0a15b3f4dd1648ac6c0ab77874fca81ce831317aee713e94526d766f86",
+      "bytes": 623
+    },
+    "verification-original.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "verification-original.stdout.txt": {
+      "sha256": "2e14fe975e7e70a61a8b13d2bb10ba018ad58fad419103ace8aee2d2c47e53f9",
+      "bytes": 346
+    },
+    "verify_saved.py": {
+      "sha256": "fbe78052af61f1ca13b3905f4cafabc8001bb2fb01d350a7a9c3f759ad180696",
+      "bytes": 16624
+    }
+  },
+  "selected_file_count": 8,
+  "selected_bytes": 74088,
+  "material_findings": [],
+  "qualification": "Saved original/source/document/finite synthetic UI verification only; no legal-ready, production, search quality, universal erasure or security superiority acceptance."
+}

@@ -1,0 +1,83 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Мой план" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - heading "Мой план" [level=1]
+  - paragraph: Сначала ближайшие дела. Затем программы, требования и сроки.
+  - navigation "Разделы плана":
+    - link "Задачи":
+      - /url: "#plan-tasks"
+    - link "Программы (1)":
+      - /url: "#plan-programmes"
+    - link "Заявки":
+      - /url: "#/applications"
+    - link "Календарь":
+      - /url: "#/calendar"
+    - link "Профиль":
+      - /url: "#/profile"
+  - heading "Задачи и личные сроки" [level=2]
+  - link "Смотреть все →":
+    - /url: "#/today"
+  - status: Читаем сохранённый план…
+  - link "Добавить задачу по документам":
+    - /url: "#/documents"
+  - heading "Ключевые дедлайны" [level=2]
+  - link "Все сроки →":
+    - /url: "#/calendar"
+  - list:
+    - strong: 01 мар. 2027 г.
+    - link "KU Leuven":
+      - /url: "#/approved?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1"
+    - generic: Дата из исследования · CET
+  - link "Открыть календарь":
+    - /url: "#/calendar"
+    - text: Открыть календарь
+  - heading "Сохранённые программы (1)" [level=2]
+  - paragraph: Отслеживай требования и прогресс по каждой программе.
+  - button "Добавить программу":
+    - text: Добавить программу
+  - button "BSc Informatics Бакалавриат KU Leuven Belgium 01 мар. 2027 г. CET В плане":
+    - strong: BSc Informatics
+    - generic: Бакалавриат
+    - strong: KU Leuven
+    - generic: Belgium
+    - text: 01 мар. 2027 г.
+    - generic: CET
+    - generic: В плане
+  - heading "Обязательные требования" [level=3]
+  - paragraph: Проверь собранные чеклисты и открытые вопросы выбранных программ.
+  - button "Собрать требования к документам"
+  - button "Открыть собранные чеклисты"
+  - heading "Дополнительная подготовка" [level=3]
+  - paragraph: То, что может усилить заявку, но не всегда обязательно. Покупка курса не является требованием вуза.
+  - button "Открыть подготовку →"
+  - generic "Мои заявки и личные статусы"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

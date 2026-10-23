@@ -1,0 +1,10 @@
+{
+  "status": "WRITE_AHEAD_BEFORE_APPLY",
+  "paths": {
+    "frontend/src/screens/ApplicationsPanel.tsx": "40b9a43e9c8f868767067d5354d79664ed6c5caccd00ae170af813976642ad7c",
+    "frontend/src/types/admissionsActions.ts": "d96b68bb2932b786e377cb1ede76dafa6153384fa00fc24ba06f75a9b5347869"
+  },
+  "at_utc": "2026-10-13T22:08:47.345483+00:00",
+  "failure": "4d1 typecheck3: closure loses event-kind and unknown-object narrowing. No unit/lint/build ran.",
+  "repair": "Exact2 type narrowing only, explicit declaration-kind guard inside callback and capture validated removed snapshots before array callbacks; no guards/assertions relaxed."
+}

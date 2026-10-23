@@ -1,0 +1,2294 @@
+--- a/backend/app/api/routes_billing.py
++++ b/backend/app/api/routes_billing.py
+@@ -3,10 +3,6 @@
+ from __future__ import annotations
+ 
+ from datetime import datetime
+-
+-from fastapi import APIRouter, Depends, HTTPException, Query
+-from pydantic import BaseModel
+-from sqlalchemy.orm import Session
+ 
+ from app.api.tenancy import owned_profile
+ from app.config import get_settings
+@@ -15,8 +11,13 @@
+ from app.models.billing import Order
+ from app.payments.entitlements import has_full_access
+ from app.payments.errors import PaymentError
++from app.payments.preparation import preparation_access
+ from app.payments.service import AlreadyEntitled, InvalidPaymentRequest, cancel_order, create_order
++from app.schemas.preparation import PreparationAccess
+ from app.security import Principal, get_principal
++from fastapi import APIRouter, Depends, HTTPException, Query
++from pydantic import BaseModel
++from sqlalchemy.orm import Session
+ 
+ router = APIRouter(prefix="/api/billing", tags=["billing"])
+ 
+@@ -35,6 +36,7 @@
+     subscription_cases_left: int | None = None
+     #: How many bought-but-not-started subscriptions are waiting behind it.
+     subscription_queued: int = 0
++    preparation_access: PreparationAccess | None = None
+ 
+ 
+ class UnlockFromSubscriptionIn(BaseModel):
+@@ -113,6 +115,7 @@
+             None if subscription is None else quota_remaining(session, subscription)
+         ),
+         subscription_queued=len(queued_subscriptions(session, principal.organization_id)),
++        preparation_access=preparation_access(session, principal.organization_id),
+     )
+ 
+ 
+--- /dev/null
++++ b/backend/app/api/routes_preparation.py
+@@ -0,0 +1,330 @@
++"""Original preparation: owned-case practice with a separate, read-only term entitlement."""
++
++from __future__ import annotations
++
++from app.api.tenancy import owned_profile
++from app.db import get_session
++from app.domain.claim_scope import RequestedScope
++from app.domain.enums import ClaimStatus
++from app.domain.freshness import age_days, is_stale
++from app.domain.preparation import NOTICE, combine_states, project_checks
++from app.models import ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, StudyAttempt
++from app.models.base import ensure_utc, utcnow
++from app.payments.entitlements import has_full_access
++from app.payments.preparation import preparation_access
++from app.preparation.catalogue import (
++    CONTENT_VERSION,
++    LESSONS,
++    catalogue,
++    get_lesson,
++    grade,
++    public_lesson,
++    request_digest,
++)
++from app.schemas.claim import ClaimOut, Conflict
++from app.schemas.preparation import (
++    PreparationAccess,
++    PreparationCatalogue,
++    PreparationLesson,
++    PreparationPlan,
++    PreparationProgress,
++    StudyAttemptIn,
++    StudyAttemptOut,
++)
++from app.schemas.profile import ApplicantProfileIn
++from app.schemas.result import RequirementCheck
++from app.security import Principal, get_principal
++from fastapi import APIRouter, Depends, HTTPException, Query
++from pydantic import ValidationError
++from sqlalchemy import func, or_
++from sqlalchemy.exc import IntegrityError
++from sqlalchemy.orm import Session
++
++router = APIRouter(tags=["preparation"])
++
++
++def attempt_view(row: StudyAttempt) -> StudyAttemptOut:
++    created_at = ensure_utc(row.created_at)
++    assert created_at is not None
++    return StudyAttemptOut(
++        id=row.id,
++        attempt_id=row.client_attempt_id,
++        profile_id=row.profile_id,
++        lesson_id=row.lesson_id,
++        version=row.content_version,
++        answers=row.answers,
++        correct=row.correct,
++        total=row.total,
++        feedback=row.feedback,
++        created_at=created_at,
++    )
++
++
++def _require_access(session: Session, principal: Principal) -> None:
++    if not preparation_access(session, principal.organization_id).allowed:
++        raise HTTPException(
++            402,
++            {
++                "code": "preparation_subscription_required",
++                "message": "An eligible started subscription term is required for preparation.",
++            },
++        )
++
++
++@router.get("/api/preparation/catalogue", response_model=PreparationCatalogue)
++def preparation_catalogue() -> PreparationCatalogue:
++    return catalogue()
++
++
++@router.get("/api/profiles/{profile_id}/preparation/access", response_model=PreparationAccess)
++def access(
++    profile_id: str,
++    principal: Principal = Depends(get_principal),
++    session: Session = Depends(get_session),
++) -> PreparationAccess:
++    owned_profile(session, profile_id, principal)
++    return preparation_access(session, principal.organization_id)
++
++
++@router.get(
++    "/api/profiles/{profile_id}/preparation/lessons/{lesson_id}", response_model=PreparationLesson
++)
++def lesson(
++    profile_id: str,
++    lesson_id: str,
++    version: str = Query(..., min_length=1, max_length=40),
++    principal: Principal = Depends(get_principal),
++    session: Session = Depends(get_session),
++) -> PreparationLesson:
++    owned_profile(session, profile_id, principal)
++    _require_access(session, principal)
++    try:
++        return public_lesson(get_lesson(lesson_id, version))
++    except ValueError as exc:
++        raise HTTPException(422, str(exc)) from exc
++
++
++def _replay(row: StudyAttempt, digest: str) -> StudyAttemptOut:
++    if row.request_digest != digest:
++        raise HTTPException(409, "Attempt UUID already belongs to a different payload")
++    return attempt_view(row)
++
++
++@router.post("/api/profiles/{profile_id}/preparation/attempts", response_model=StudyAttemptOut)
++def submit_attempt(
++    profile_id: str,
++    payload: StudyAttemptIn,
++    principal: Principal = Depends(get_principal),
++    session: Session = Depends(get_session),
++) -> StudyAttemptOut:
++    owned_profile(session, profile_id, principal)
++    client_id = str(payload.attempt_id)
++    digest = request_digest(payload)
++    query = session.query(StudyAttempt).filter(
++        StudyAttempt.profile_id == profile_id,
++        StudyAttempt.client_attempt_id == client_id,
++    )
++    existing = query.first()
++    if existing is not None:
++        # An already-submitted receipt remains the applicant's data after the term ends.
++        return _replay(existing, digest)
++    _require_access(session, principal)
++    try:
++        answers, feedback, correct = grade(payload)
++    except ValueError as exc:
++        # No answer keys or explanations are included in validation errors.
++        raise HTTPException(422, str(exc)) from exc
++    row = StudyAttempt(
++        profile_id=profile_id,
++        client_attempt_id=client_id,
++        lesson_id=payload.lesson_id,
++        content_version=payload.version,
++        request_digest=digest,
++        answers=answers,
++        feedback=feedback,
++        correct=correct,
++        total=len(answers),
++    )
++    session.add(row)
++    try:
++        session.commit()
++    except IntegrityError:
++        session.rollback()
++        # Database uniqueness closes concurrent retries; every original argument stays bound.
++        existing = query.first()
++        if existing is None:
++            raise
++        return _replay(existing, digest)
++    session.refresh(row)
++    return attempt_view(row)
++
++
++@router.get("/api/profiles/{profile_id}/preparation/progress", response_model=PreparationProgress)
++def progress(
++    profile_id: str,
++    limit: int = Query(20, ge=1, le=100),
++    principal: Principal = Depends(get_principal),
++    session: Session = Depends(get_session),
++) -> PreparationProgress:
++    owned_profile(session, profile_id, principal)
++    query = session.query(StudyAttempt).filter(StudyAttempt.profile_id == profile_id)
++    count, correct, total = query.with_entities(
++        func.count(StudyAttempt.id),
++        func.coalesce(func.sum(StudyAttempt.correct), 0),
++        func.coalesce(func.sum(StudyAttempt.total), 0),
++    ).one()
++    known = {item.id for item in LESSONS}
++    completed = sorted(
++        {
++            row[0]
++            for row in query.with_entities(StudyAttempt.lesson_id)
++            .filter(StudyAttempt.content_version == CONTENT_VERSION)
++            .distinct()
++            .all()
++            if row[0] in known
++        }
++    )
++    return PreparationProgress(
++        profile_id=profile_id,
++        attempt_count=count,
++        correct=correct,
++        answered=total,
++        completed_lesson_ids=completed,
++        attempts=[
++            attempt_view(row)
++            for row in query.order_by(StudyAttempt.created_at.desc(), StudyAttempt.id.desc())
++            .limit(limit)
++            .all()
++        ],
++    )
++
++
++@router.get("/api/profiles/{profile_id}/preparation/plan", response_model=PreparationPlan)
++def plan(
++    profile_id: str,
++    result_id: str | None = Query(None, min_length=1, max_length=32),
++    principal: Principal = Depends(get_principal),
++    session: Session = Depends(get_session),
++) -> PreparationPlan:
++    profile = owned_profile(session, profile_id, principal)
++    research_access = has_full_access(session, principal.organization_id, profile_id)
++    result = None
++    if result_id is not None:
++        result = (
++            session.query(ProgramResultRow)
++            .join(ResearchRun)
++            .filter(
++                ProgramResultRow.id == result_id,
++                ResearchRun.profile_id == profile_id,
++            )
++            .first()
++        )
++        if result is None:
++            raise HTTPException(404, "Result not found")
++    if not research_access:
++        return PreparationPlan(
++            profile_id=profile_id,
++            result_id=result_id,
++            research_access=False,
++            evidence_state="locked",
++            checks=[],
++            notice=NOTICE,
++        )
++    if result is None:
++        return PreparationPlan(
++            profile_id=profile_id,
++            research_access=True,
++            evidence_state="unknown",
++            checks=[],
++            notice=NOTICE,
++        )
++    now = utcnow()
++    rows = (
++        session.query(ClaimRow)
++        .filter(
++            ClaimRow.run_id == result.run_id,
++            or_(ClaimRow.result_id == result.id, ClaimRow.result_id.is_(None)),
++        )
++        .all()
++    )
++    claims = []
++    for row in rows:
++        try:
++            claim = ClaimOut.model_validate(
++                {
++                    **row.payload,
++                    "id": row.id,
++                    "status": row.status,
++                    "source_url": row.source_url,
++                    "accessed_at": row.accessed_at,
++                }
++            )
++        except ValidationError:
++            continue  # A malformed historical record cannot become evidence by guessing its fields.
++        claim.is_stale = is_stale(claim.claim_type, claim.accessed_at, now) or claim.status in {
++            ClaimStatus.POSSIBLY_STALE,
++            ClaimStatus.SUPERSEDED,
++        }
++        claim.age_days = age_days(claim.accessed_at, now)
++        claims.append(claim)
++    conflict_rows = (
++        session.query(ConflictRow)
++        .filter(
++            ConflictRow.run_id == result.run_id,
++            or_(ConflictRow.result_id == result.id, ConflictRow.result_id.is_(None)),
++            ConflictRow.unresolved.is_(True),
++        )
++        .all()
++    )
++    conflicts = []
++    for conflict_row in conflict_rows:
++        try:
++            conflicts.append(Conflict.model_validate({**conflict_row.payload, "unresolved": True}))
++        except ValidationError:
++            # Unreadable conflict evidence cannot be silently treated as resolved.
++            return PreparationPlan(
++                profile_id=profile_id,
++                result_id=result.id,
++                research_access=True,
++                evidence_state="conflicted",
++                checks=[],
++                notice=NOTICE,
++            )
++    try:
++        checks = [
++            RequirementCheck.model_validate(check)
++            for check in result.payload.get("requirement_checks", [])
++        ]
++        applicant = ApplicantProfileIn.model_validate(profile.payload)
++    except ValidationError:
++        return PreparationPlan(
++            profile_id=profile_id,
++            result_id=result.id,
++            research_access=True,
++            evidence_state="unknown",
++            checks=[],
++            notice=NOTICE,
++        )
++    requested = RequestedScope(
++        university=result.university,
++        programme=result.program,
++        degree=applicant.context.level.value,
++        intake=f"{applicant.context.intake_term} {applicant.context.intake_year}",
++        nationality=applicant.context.citizenship,
++        residency=applicant.context.country_of_residence,
++        qualification=applicant.context.education_system,
++    )
++    updated = ensure_utc(profile.updated_at)
++    recorded = ensure_utc(result.created_at)
++    stale_result = updated is not None and recorded is not None and updated > recorded
++    projected = project_checks(
++        checks, claims, requested, stale_result=stale_result, conflicts=conflicts
++    )
++    return PreparationPlan(
++        profile_id=profile_id,
++        result_id=result.id,
++        research_access=True,
++        evidence_state=combine_states([check.evidence_state for check in projected]),
++        checks=projected,
++        notice=NOTICE,
++    )
+--- a/backend/app/api/routes_profile.py
++++ b/backend/app/api/routes_profile.py
+@@ -1,10 +1,6 @@
+ """Profile CRUD, validation, grade-conversion offers, export and deletion."""
+ 
+ from __future__ import annotations
+-
+-from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
+-from sqlalchemy.orm import Session
+-from starlette.concurrency import run_in_threadpool
+ 
+ from app.adapters.extraction import pdf_to_text
+ from app.api.tenancy import owned_profile
+@@ -19,6 +15,7 @@
+     ConflictRow,
+     ProgramResultRow,
+     ResearchRun,
++    StudyAttempt,
+ )
+ from app.schemas.profile import (
+     ApplicantProfile,
+@@ -27,6 +24,9 @@
+     ProfileValidationReport,
+ )
+ from app.security import Principal, get_principal
++from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
++from sqlalchemy.orm import Session
++from starlette.concurrency import run_in_threadpool
+ 
+ router = APIRouter(prefix="/api/profiles", tags=["profile"])
+ 
+@@ -276,7 +276,15 @@
+     line. A person exercising a data right was handed a summary and told it was
+     everything.
+     """
++    from app.api.routes_preparation import attempt_view
++
+     row = owned_profile(session, profile_id, principal)
++    study_attempts = (
++        session.query(StudyAttempt)
++        .filter(StudyAttempt.profile_id == profile_id)
++        .order_by(StudyAttempt.created_at, StudyAttempt.id)
++        .all()
++    )
+     runs = session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id).all()
+     run_ids = [r.id for r in runs]
+ 
+@@ -305,6 +313,9 @@
+         "profile": row.payload,
+         "created_at": row.created_at.isoformat(),
+         "updated_at": row.updated_at.isoformat(),
++        "study_attempts": [
++            attempt_view(attempt).model_dump(mode="json") for attempt in study_attempts
++        ],
+         "runs": [
+             {
+                 "id": r.id,
+@@ -364,6 +375,7 @@
+             "claims": len(claims),
+             "conflicts": len(conflicts),
+             "audit_events": len(audit),
++            "study_attempts": len(study_attempts),
+         },
+         "note": (
+             "This is the complete record held for this applicant: the profile, every run, "
+--- /dev/null
++++ b/backend/app/domain/preparation.py
+@@ -0,0 +1,213 @@
++"""Read-only evidence projection. Never re-evaluates admission or fabricates a score goal."""
++
++from __future__ import annotations
++
++from app.domain.claim_scope import RequestedScope, Verdict
++from app.domain.enums import (
++    DISCOVERY_ONLY_SPECIFICITY,
++    ClaimStatus,
++    ClaimType,
++    EligibilityStatus,
++)
++from app.schemas.claim import ClaimOut, Conflict
++from app.schemas.preparation import EvidenceState, Policy, PreparationCheck
++from app.schemas.result import RequirementCheck
++
++EXAM_CLAIM_TYPES = frozenset(
++    {
++        ClaimType.SAT_POLICY,
++        ClaimType.SAT_MIN_TOTAL,
++        ClaimType.SUPERSCORE_POLICY,
++        ClaimType.IELTS_MIN_OVERALL,
++        ClaimType.IELTS_MIN_SUBSCORE,
++        ClaimType.IELTS_ACCEPTED_TYPES,
++        ClaimType.TOEFL_MIN_TOTAL,
++        ClaimType.DUOLINGO_MIN,
++        ClaimType.TEST_VALIDITY_MONTHS,
++        ClaimType.ENTRANCE_EXAM_REQUIRED,
++        ClaimType.ENGLISH_TEST_WAIVER,
++        ClaimType.OTHER_LANGUAGE_MINIMUM,
++        ClaimType.ENGLISH_EVIDENCE_MINIMUM,
++        ClaimType.SCHOLARSHIP_MIN_TEST_SCORE,
++    }
++)
++_ENGLISH_TYPES = frozenset(
++    {
++        ClaimType.IELTS_MIN_OVERALL,
++        ClaimType.IELTS_MIN_SUBSCORE,
++        ClaimType.IELTS_ACCEPTED_TYPES,
++        ClaimType.TOEFL_MIN_TOTAL,
++        ClaimType.DUOLINGO_MIN,
++        ClaimType.ENGLISH_TEST_WAIVER,
++        ClaimType.ENGLISH_EVIDENCE_MINIMUM,
++    }
++)
++_MINIMUM_TYPES = frozenset(
++    {
++        ClaimType.IELTS_MIN_OVERALL,
++        ClaimType.IELTS_MIN_SUBSCORE,
++        ClaimType.SAT_MIN_TOTAL,
++        ClaimType.TOEFL_MIN_TOTAL,
++        ClaimType.DUOLINGO_MIN,
++        ClaimType.OTHER_LANGUAGE_MINIMUM,
++        ClaimType.SCHOLARSHIP_MIN_TEST_SCORE,
++    }
++)
++NOTICE = (
++    "Stored requirement checks are quoted snapshots, not new admission decisions. Unknown "
++    "scope, alternatives, waivers, test editions and missing components require confirmation. "
++    "Starter links practise only their named skills; completing them does not satisfy a "
++    "published score minimum or predict admission. IELTS overall is not each component. "
++    "Programme and scholarship test policies are separate. No official pages are fetched here."
++)
++
++
++def combine_states(states: list[EvidenceState]) -> EvidenceState:
++    if not states:
++        return "unknown"
++    for state in ("conflicted", "stale", "unknown", "locked"):
++        if state in states:
++            return state
++    return "current"
++
++
++def _claim_state(claim: ClaimOut, requested: RequestedScope) -> EvidenceState:
++    if claim.status == ClaimStatus.CONFLICTING:
++        return "conflicted"
++    if claim.is_stale or claim.status in {ClaimStatus.POSSIBLY_STALE, ClaimStatus.SUPERSEDED}:
++        return "stale"
++    if (
++        claim.status != ClaimStatus.VERIFIED_CURRENT
++        or not claim.official_domain
++        or claim.source_specificity in DISCOVERY_ONLY_SPECIFICITY
++        or not claim.source_url.startswith("https://")
++        or claim.scope is None
++        or claim.scope.covers(requested) is not Verdict.YES
++    ):
++        return "unknown"
++    return "current"
++
++
++def _policy(check: RequirementCheck, claims: list[ClaimOut], all_claims: list[ClaimOut]) -> Policy:
++    types = {claim.claim_type for claim in claims}
++    all_types = {claim.claim_type for claim in all_claims}
++    if types & _ENGLISH_TYPES:
++        if ClaimType.ENGLISH_TEST_WAIVER in all_types:
++            return "waiver_check"
++        families = sum(
++            bool(all_types & family)
++            for family in (
++                {ClaimType.IELTS_MIN_OVERALL, ClaimType.IELTS_MIN_SUBSCORE},
++                {ClaimType.TOEFL_MIN_TOTAL},
++                {ClaimType.DUOLINGO_MIN},
++            )
++        )
++        if families > 1 or ClaimType.ENGLISH_EVIDENCE_MINIMUM in all_types:
++            # Co-published minima do not establish AND/OR or which route applies.
++            return "alternatives_unresolved"
++    if (
++        check.status == EligibilityStatus.NOT_APPLICABLE
++        and ClaimType.SAT_POLICY in types
++        and any(
++            check.published_value == claim.normalized_value
++            and isinstance(claim.normalized_value, str)
++            and claim.normalized_value.strip().casefold()
++            in {"optional", "test-optional", "test optional", "not required"}
++            for claim in claims
++            if claim.claim_type == ClaimType.SAT_POLICY
++        )
++    ):
++        return "optional"
++    if types & _MINIMUM_TYPES and check.status != EligibilityStatus.NOT_APPLICABLE:
++        return "required"
++    return "unknown"
++
++
++def _lessons(check: RequirementCheck, claims: list[ClaimOut]) -> list[str]:
++    types = {claim.claim_type for claim in claims}
++    label = check.requirement.casefold()
++    if ClaimType.SAT_MIN_TOTAL in types:
++        if label in {"sat math", "sat mathematics"}:
++            return ["sat-math-1"]
++        if label in {"sat reading and writing", "sat reading/writing", "sat reading_writing"}:
++            return ["sat-rw-1"]
++        return ["sat-math-1", "sat-rw-1"]
++    if ClaimType.IELTS_MIN_OVERALL in types or (
++        ClaimType.IELTS_MIN_SUBSCORE in types and label == "ielts reading"
++    ):
++        return ["ielts-reading-1"]
++    return []
++
++
++def project_checks(
++    checks: list[RequirementCheck],
++    claims: list[ClaimOut],
++    requested: RequestedScope,
++    *,
++    stale_result: bool = False,
++    conflicts: list[Conflict] | None = None,
++) -> list[PreparationCheck]:
++    rows = []
++    for check in checks:
++        referenced = [
++            claim
++            for claim in claims
++            if (claim.id in check.claim_ids or claim.source_url in check.claim_ids)
++            and claim.claim_type in EXAM_CLAIM_TYPES
++        ]
++        label = check.requirement.casefold()
++        if not referenced and not any(
++            word in label
++            for word in (
++                "ielts",
++                "sat ",
++                "sat policy",
++                "toefl",
++                "duolingo",
++                "english",
++                "language",
++                "exam",
++            )
++        ):
++            continue
++        matched = {
++            reference
++            for reference in check.claim_ids
++            if any(reference in {claim.id, claim.source_url} for claim in referenced)
++        }
++        states = [_claim_state(claim, requested) for claim in referenced]
++        if not check.claim_ids or matched != set(check.claim_ids):
++            states.append("unknown")
++        if stale_result:
++            states.append("stale")
++        types = {claim.claim_type for claim in referenced}
++        references = {
++            *check.claim_ids,
++            *[claim.id for claim in referenced],
++            *[claim.source_url for claim in referenced],
++        }
++        if any(
++            conflict.unresolved
++            and (references.intersection(conflict.claim_ids) or conflict.claim_type in types)
++            for conflict in conflicts or []
++        ):
++            states.append("conflicted")
++        state = combine_states(states)
++        policy = _policy(check, referenced, claims) if state == "current" else "unknown"
++        # A waiver is a condition to check, never a verified waived state here.
++        if state == "current" and policy in {"waiver_check", "alternatives_unresolved"}:
++            lesson_ids = []
++        else:
++            lesson_ids = _lessons(check, referenced) if state == "current" else []
++        rows.append(
++            PreparationCheck(
++                requirement_check=check,
++                evidence_state=state,
++                policy=policy,
++                claims=referenced,
++                claim_ids=list(check.claim_ids),
++                source_urls=sorted({claim.source_url for claim in referenced}),
++                lesson_ids=lesson_ids,
++            )
++        )
++    return rows
+--- a/backend/app/main.py
++++ b/backend/app/main.py
+@@ -6,11 +6,6 @@
+ import time
+ from collections import defaultdict, deque
+ from contextlib import asynccontextmanager
+-
+-from fastapi import FastAPI, Request, Response
+-from fastapi.middleware.cors import CORSMiddleware
+-from fastapi.responses import JSONResponse
+-from fastapi.staticfiles import StaticFiles
+ 
+ from app import metrics
+ from app.adapters.fetching import PIILeakError
+@@ -22,6 +17,7 @@
+     routes_cases,
+     routes_meta,
+     routes_metrics,
++    routes_preparation,
+     routes_profile,
+     routes_research,
+     routes_results,
+@@ -34,6 +30,10 @@
+ from app.jobs.worker import reconcile_startup
+ from app.logging_setup import configure_logging, new_correlation_id, set_correlation_id
+ from app.payments.http import PaymentRequired, payment_required_handler
++from fastapi import FastAPI, Request, Response
++from fastapi.middleware.cors import CORSMiddleware
++from fastapi.responses import JSONResponse
++from fastapi.staticfiles import StaticFiles
+ 
+ settings = get_settings()
+ configure_logging(settings.log_level, settings.log_format)
+@@ -92,6 +92,7 @@
+     routes_cases,
+     routes_meta,
+     routes_metrics,
++    routes_preparation,
+     routes_profile,
+     routes_research,
+     routes_results,
+--- a/backend/app/models/__init__.py
++++ b/backend/app/models/__init__.py
+@@ -40,6 +40,7 @@
+     SocialProfileUniversity,
+ )
+ from app.models.source_page import SourcePage, SourceSnapshot
++from app.models.study import StudyAttempt
+ from app.models.subscription import (
+     TERMINAL_SUBSCRIPTION_STATUSES,
+     Subscription,
+@@ -86,6 +87,7 @@
+     "SocialProfileUniversity",
+     "SourcePage",
+     "SourceSnapshot",
++    "StudyAttempt",
+     "Subscription",
+     "SubscriptionStatus",
+     "TimestampedBase",
+--- a/backend/app/models/applicant.py
++++ b/backend/app/models/applicant.py
+@@ -10,13 +10,13 @@
+ 
+ from typing import TYPE_CHECKING
+ 
++from app.models.base import TimestampedBase
+ from sqlalchemy import JSON, ForeignKey, String
+ from sqlalchemy.orm import Mapped, mapped_column, relationship
+ 
+-from app.models.base import TimestampedBase
+-
+ if TYPE_CHECKING:
+     from app.models.research import ResearchRun
++    from app.models.study import StudyAttempt
+ 
+ 
+ class ApplicantProfileRow(TimestampedBase):
+@@ -40,3 +40,7 @@
+     runs: Mapped[list[ResearchRun]] = relationship(
+         back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+     )
++
++    study_attempts: Mapped[list[StudyAttempt]] = relationship(
++        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
++    )
+--- /dev/null
++++ b/backend/app/models/study.py
+@@ -0,0 +1,35 @@
++"""Case-owned submitted practice. No draft essays, audio, or official score fields."""
++
++from __future__ import annotations
++
++from typing import TYPE_CHECKING
++
++from app.models.base import TimestampedBase
++from sqlalchemy import JSON, CheckConstraint, ForeignKey, Index, Integer, String
++from sqlalchemy.orm import Mapped, mapped_column, relationship
++
++if TYPE_CHECKING:
++    from app.models.applicant import ApplicantProfileRow
++
++
++class StudyAttempt(TimestampedBase):
++    __tablename__ = "study_attempts"
++    __table_args__ = (
++        Index("uq_study_attempts_profile_client", "profile_id", "client_attempt_id", unique=True),
++        Index("ix_study_attempts_profile_created", "profile_id", "created_at"),
++        CheckConstraint("total > 0 AND total <= 20", name="ck_study_attempts_total"),
++        CheckConstraint("correct >= 0 AND correct <= total", name="ck_study_attempts_correct"),
++    )
++
++    profile_id: Mapped[str] = mapped_column(
++        String(32), ForeignKey("applicant_profiles.id", ondelete="CASCADE"), nullable=False
++    )
++    client_attempt_id: Mapped[str] = mapped_column(String(36), nullable=False)
++    lesson_id: Mapped[str] = mapped_column(String(80), nullable=False)
++    content_version: Mapped[str] = mapped_column(String(40), nullable=False)
++    request_digest: Mapped[str] = mapped_column(String(64), nullable=False)
++    answers: Mapped[list] = mapped_column(JSON, nullable=False)
++    feedback: Mapped[list] = mapped_column(JSON, nullable=False)
++    correct: Mapped[int] = mapped_column(Integer, nullable=False)
++    total: Mapped[int] = mapped_column(Integer, nullable=False)
++    profile: Mapped[ApplicantProfileRow] = relationship(back_populates="study_attempts")
+--- /dev/null
++++ b/backend/app/payments/preparation.py
+@@ -0,0 +1,43 @@
++"""Learning access reads a started term, never consumes research case quota."""
++
++from __future__ import annotations
++
++from datetime import datetime
++
++from app.config import get_settings
++from app.models.base import ensure_utc, utcnow
++from app.models.subscription import Subscription, SubscriptionStatus
++from app.schemas.preparation import PreparationAccess
++from sqlalchemy.orm import Session
++
++
++def preparation_access(
++    session: Session, organization_id: str, *, now: datetime | None = None
++) -> PreparationAccess:
++    if not get_settings().payments_enabled:
++        return PreparationAccess(allowed=True, reason="development_mode", development_only=True)
++    moment = ensure_utc(now or utcnow())
++    assert moment is not None
++    subscriptions = (
++        session.query(Subscription)
++        .filter(
++            Subscription.organization_id == organization_id,
++            Subscription.status.in_(
++                [SubscriptionStatus.ACTIVE.value, SubscriptionStatus.EXHAUSTED.value]
++            ),
++        )
++        .order_by(Subscription.starts_at.desc(), Subscription.id)
++        .all()
++    )
++    for subscription in subscriptions:
++        starts = ensure_utc(subscription.starts_at)
++        ends = ensure_utc(subscription.ends_at)
++        if starts is not None and ends is not None and starts <= moment < ends:
++            return PreparationAccess(
++                allowed=True,
++                reason="subscription_term",
++                subscription_id=subscription.id,
++                starts_at=starts,
++                ends_at=ends,
++            )
++    return PreparationAccess(allowed=False, reason="no_eligible_subscription")
+--- /dev/null
++++ b/backend/app/preparation/__init__.py
+@@ -0,0 +1 @@
++"""Original, bounded starter preparation content. No provider or research execution."""
+--- /dev/null
++++ b/backend/app/preparation/catalogue.py
+@@ -0,0 +1,375 @@
++"""Unimatch-authored original starter items; official resources remain external links.
++
++These tiny formative lessons are not official exam samples, calibrated exams or
++score predictors. Content is versioned; changing an item requires a new version.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from dataclasses import dataclass
++
++from app.schemas.preparation import (
++    AnswerFeedback,
++    Choice,
++    ExamSummary,
++    LessonSummary,
++    PreparationCatalogue,
++    PreparationLesson,
++    Question,
++    StudyAttemptIn,
++    TrackId,
++    TrackSummary,
++)
++
++CONTENT_VERSION = "starter-2026-10-11-v1"
++NOTICE = (
++    "Original starter practice, not official exam items or a full course. Raw correct/total is "
++    "not an IELTS band, SAT score, certificate or admission prediction. Official resources are "
++    "external links; test booking and fees are separate. Planned courses have no starter lessons."
++)
++
++
++@dataclass(frozen=True)
++class Item:
++    id: str
++    prompt: str
++    choices: tuple[tuple[str, str], ...]
++    correct_choice_id: str
++    explanation: str
++
++
++@dataclass(frozen=True)
++class Lesson:
++    id: str
++    track_id: TrackId
++    title: str
++    introduction: str
++    items: tuple[Item, ...]
++
++
++LESSONS = (
++    Lesson(
++        "ielts-reading-1",
++        "ielts_reading",
++        "Reading: stated evidence and inference",
++        "Read the original short passage in each question. Select what the text supports. "
++        "This practises reading only, without proving test-type acceptance or other skill readiness.",
++        (
++            Item(
++                "ir-1",
++                "A town library opened its study room on Sundays for a six-week trial. Visits rose, "
++                "but staff have not yet compared running costs. Which statement is supported?",
++                (
++                    ("a", "Sunday opening is already a permanent policy."),
++                    ("b", "Visits increased during the trial."),
++                    ("c", "The trial reduced running costs."),
++                ),
++                "b",
++                "The passage explicitly states visits rose. Permanence and cost savings "
++                "are not stated; missing evidence is not a positive finding.",
++            ),
++            Item(
++                "ir-2",
++                "Two gardens used the same seed mix. Garden A was watered daily, while Garden B "
++                "was watered twice a week. The report gives no harvest figures. Can the text "
++                "establish that Garden A produced more vegetables?",
++                (
++                    ("a", "Yes, daily watering proves a larger harvest."),
++                    ("b", "No, the text says Garden B produced more."),
++                    ("c", "The harvest comparison is not given."),
++                ),
++                "c",
++                "Different watering schedules are reported, but no harvest comparison is "
++                "given. Neither a larger nor a smaller harvest is established.",
++            ),
++            Item(
++                "ir-3",
++                "The museum expected the roof repair to finish in May. Heavy rain delayed work "
++                "and the roof reopened in June. What caused the delay?",
++                (
++                    ("a", "Heavy rain."),
++                    ("b", "A change of museum director."),
++                    ("c", "A shortage of visitors."),
++                ),
++                "a",
++                "Heavy rain is the stated cause. The other options add details absent "
++                "from the passage.",
++            ),
++        ),
++    ),
++    Lesson(
++        "sat-math-1",
++        "sat_math",
++        "Math: linear relations and proportional reasoning",
++        "Use a linear equation, a percentage and a rate. These original questions are "
++        "formative practice, not an adaptive Digital SAT module.",
++        (
++            Item(
++                "sm-1",
++                "A bicycle rental costs 6 units plus 4 units per hour. The total is "
++                "22 units. How many hours were rented?",
++                (("a", "3"), ("b", "4"), ("c", "7")),
++                "b",
++                "Solve 6 + 4h = 22: subtract 6 to get 4h = 16, then divide by 4 to get h = 4.",
++            ),
++            Item(
++                "sm-2",
++                "A club has 80 members. Exactly 25% volunteer at an event. "
++                "How many members volunteer?",
++                (("a", "20"), ("b", "25"), ("c", "60")),
++                "a",
++                "25% is one quarter. One quarter of 80 is 20; 25 is a percentage, not a count.",
++            ),
++            Item(
++                "sm-3",
++                "A machine packs 18 boxes in 3 minutes at a constant rate. "
++                "At that rate, how many boxes does it pack in 5 minutes?",
++                (("a", "20"), ("b", "27"), ("c", "30")),
++                "c",
++                "The rate is 18 / 3 = 6 boxes per minute. In 5 minutes it packs 6 × 5 = 30.",
++            ),
++        ),
++    ),
++    Lesson(
++        "sat-rw-1",
++        "sat_reading_writing",
++        "Reading and Writing: evidence and sentence clarity",
++        "Choose a supported inference, a complete sentence and a logical transition. "
++        "These original questions are not College Board items or an official section score.",
++        (
++            Item(
++                "sr-1",
++                "A survey found that commuters who used a new bus route reported "
++                "shorter journeys. It did not measure journeys of people using other routes. "
++                "Which conclusion is supported?",
++                (
++                    ("a", "Every commuter in the city now has a shorter journey."),
++                    ("b", "Users of the new route reported shorter journeys."),
++                    ("c", "The new route caused all traffic delays to disappear."),
++                ),
++                "b",
++                "The survey reports the experiences of new-route users only. It does not "
++                "establish a city-wide effect or that traffic delays disappeared.",
++            ),
++            Item(
++                "sr-2",
++                "Choose the complete, grammatically clear sentence.",
++                (
++                    ("a", "Because the telescope was repaired."),
++                    ("b", "The telescope, which the technicians repaired."),
++                    ("c", "The technicians repaired the telescope."),
++                ),
++                "c",
++                "Option c has a subject and a finite main verb. Options a and b leave a "
++                "dependent construction without a complete main clause.",
++            ),
++            Item(
++                "sr-3",
++                "The first design used fewer materials. ___, it was less durable. "
++                "Which transition best expresses the contrast?",
++                (("a", "However"), ("b", "Therefore"), ("c", "For example")),
++                "a",
++                "However signals a contrast between a material-saving benefit and a "
++                "durability drawback. Therefore claims a causal result not established here.",
++            ),
++        ),
++    ),
++)
++
++EXAMS = (
++    ExamSummary(
++        id="ielts_academic",
++        title="IELTS Academic",
++        role="language",
++        course_status="starter",
++        track_ids=["ielts_reading"],
++        official_info_urls=["https://ielts.org/take-a-test/test-types/ielts-academic-test"],
++        official_practice_urls=[
++            "https://ielts.org/take-a-test/preparation-resources/sample-test-questions/academic-test"
++        ],
++        notice="Starter covers Reading only. Verify overall AND component minima and the "
++        "recipient's accepted delivery type/retake/waiver policy. Recognition is not acceptance "
++        "of General Training, Online, UKVI or One Skill Retake. Validity is recipient-specific.",
++        checked_date="2026-10-11",
++    ),
++    ExamSummary(
++        id="digital_sat",
++        title="Digital SAT",
++        role="academic",
++        course_status="starter",
++        track_ids=["sat_math", "sat_reading_writing"],
++        official_info_urls=["https://satsuite.collegeboard.org/sat/whats-on-the-test/structure"],
++        official_practice_urls=[
++            "https://satsuite.collegeboard.org/practice/practice-tests/bluebook",
++            "https://satsuite.collegeboard.org/practice/student-question-bank",
++        ],
++        notice="Original non-adaptive starters, not Bluebook or an official SAT score. Verify "
++        "the programme's required/optional/not-considered, score-age and superscore policies; "
++        "admission and scholarship requirements can differ. No universal two-year expiry.",
++        checked_date="2026-10-11",
++    ),
++    ExamSummary(
++        id="toefl_ibt",
++        title="TOEFL iBT",
++        role="language",
++        course_status="planned",
++        track_ids=[],
++        official_info_urls=[
++            "https://www.ets.org/toefl/test-takers/ibt/scores/understand-scores.html"
++        ],
++        official_practice_urls=["https://www.ets.org/toefl/test-takers/ibt/prepare.html"],
++        notice="No starter course yet. Tests from 21 January 2026 use 1–6 bands with a "
++        "transitional comparable overall estimate. Preserve report scale/edition/date/components; "
++        "do not invent old section conversions. Recipient acceptance of edition/MyBest/Home "
++        "Edition must be checked. Existing profile fields support the legacy scale only.",
++        checked_date="2026-10-11",
++    ),
++    ExamSummary(
++        id="det",
++        title="Duolingo English Test",
++        role="language",
++        course_status="planned",
++        track_ids=[],
++        official_info_urls=[
++            "https://blog.englishtest.duolingo.com/how-is-the-duolingo-english-test-scored/"
++        ],
++        official_practice_urls=[
++            "https://blog.englishtest.duolingo.com/duolingo-english-test-readiness/"
++        ],
++        notice="No starter course yet. Preserve the certificate's component schema and date. "
++        "An owner recognition directory does not settle programme/intake or visa acceptance; "
++        "a practice estimated range is not a certified result.",
++        checked_date="2026-10-11",
++    ),
++    ExamSummary(
++        id="hsk_hskk",
++        title="HSK / HSK Speaking (HSKK)",
++        role="language",
++        course_status="planned",
++        track_ids=[],
++        official_info_urls=[
++            "https://www.chinesetest.cn/HSK",
++            "https://www.chinesetest.cn/hskk/",
++            "https://old.chinesetest.cn/gonewcontent.do?flag=kdnew&id=51336883",
++        ],
++        official_practice_urls=["https://www.chinesetest.cn/"],
++        notice="No starter course yet. Level, speaking report and booked edition matter. "
++        "The announced worldwide HSK3.0 rollout on 13 December 2026 is still future at this "
++        "catalogue's check date; a published syllabus does not prove a booked test switched. "
++        "Check recipient/version-specific validity; HSK is not a universal China requirement.",
++        checked_date="2026-10-11",
++    ),
++    ExamSummary(
++        id="csca",
++        title="CSCA",
++        role="academic",
++        course_status="planned",
++        track_ids=[],
++        official_info_urls=["https://csca.cn/about/examintro"],
++        official_practice_urls=["https://csca.cn/testprep/"],
++        notice="No starter course yet. Mathematics, Physics, Chemistry and Professional Chinese "
++        "depend on the selected university/programme/route. Distinct from HSK. No universal "
++        "China mandate, entry score or score-validity duration is established. 2026 adoption "
++        "examples are not 2027 requirements.",
++        checked_date="2026-10-11",
++    ),
++)
++
++
++def catalogue() -> PreparationCatalogue:
++    titles: dict[TrackId, str] = {
++        "ielts_reading": "IELTS Reading",
++        "sat_math": "SAT Math",
++        "sat_reading_writing": "SAT Reading and Writing",
++    }
++    return PreparationCatalogue(
++        version=CONTENT_VERSION,
++        tracks=[
++            TrackSummary(
++                id=track,
++                title=title,
++                lesson_ids=[lesson.id for lesson in LESSONS if lesson.track_id == track],
++            )
++            for track, title in titles.items()
++        ],
++        lessons=[
++            LessonSummary(
++                id=lesson.id,
++                track_id=lesson.track_id,
++                title=lesson.title,
++                question_count=len(lesson.items),
++            )
++            for lesson in LESSONS
++        ],
++        exams=list(EXAMS),
++        notice=NOTICE,
++    )
++
++
++def get_lesson(lesson_id: str, version: str) -> Lesson:
++    if version != CONTENT_VERSION:
++        raise ValueError("Unknown content version")
++    for lesson in LESSONS:
++        if lesson.id == lesson_id:
++            return lesson
++    raise ValueError("Unknown lesson")
++
++
++def public_lesson(lesson: Lesson) -> PreparationLesson:
++    return PreparationLesson(
++        id=lesson.id,
++        track_id=lesson.track_id,
++        title=lesson.title,
++        version=CONTENT_VERSION,
++        introduction=lesson.introduction,
++        questions=[
++            Question(
++                id=item.id,
++                prompt=item.prompt,
++                choices=[Choice(id=key, text=text) for key, text in item.choices],
++            )
++            for item in lesson.items
++        ],
++    )
++
++
++def request_digest(payload: StudyAttemptIn) -> str:
++    """Order-independent payload binding, also works for historical UUID replays."""
++    canonical = {
++        "lesson_id": payload.lesson_id,
++        "version": payload.version,
++        "answers": sorted(
++            (answer.model_dump() for answer in payload.answers),
++            key=lambda answer: (answer["question_id"], answer["choice_id"]),
++        ),
++    }
++    return hashlib.sha256(
++        json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()
++    ).hexdigest()
++
++
++def grade(payload: StudyAttemptIn) -> tuple[list[dict], list[dict], int]:
++    lesson = get_lesson(payload.lesson_id, payload.version)
++    answers = {answer.question_id: answer.choice_id for answer in payload.answers}
++    if len(answers) != len(payload.answers) or set(answers) != {item.id for item in lesson.items}:
++        raise ValueError("Answer every question exactly once")
++    feedback = []
++    for item in lesson.items:
++        selected = answers[item.id]
++        if selected not in {key for key, _ in item.choices}:
++            raise ValueError("Unknown choice for question")
++        feedback.append(
++            AnswerFeedback(
++                question_id=item.id,
++                selected_choice_id=selected,
++                correct_choice_id=item.correct_choice_id,
++                correct=selected == item.correct_choice_id,
++                explanation=item.explanation,
++            ).model_dump(mode="json")
++        )
++    canonical_answers = [
++        {"question_id": item.id, "choice_id": answers[item.id]} for item in lesson.items
++    ]
++    return canonical_answers, feedback, sum(item["correct"] for item in feedback)
+--- /dev/null
++++ b/backend/app/schemas/preparation.py
+@@ -0,0 +1,143 @@
++"""Versioned starter practice; raw practice totals are never official test scores."""
++
++from __future__ import annotations
++
++from datetime import datetime
++from typing import Literal
++from uuid import UUID
++
++from app.schemas.claim import ClaimOut
++from app.schemas.result import RequirementCheck
++from pydantic import BaseModel, ConfigDict, Field
++
++TrackId = Literal["ielts_reading", "sat_math", "sat_reading_writing"]
++EvidenceState = Literal["unknown", "locked", "current", "stale", "conflicted"]
++Policy = Literal["required", "optional", "waiver_check", "alternatives_unresolved", "unknown"]
++
++
++class Base(BaseModel):
++    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
++
++
++class PreparationAccess(Base):
++    allowed: bool
++    reason: Literal["development_mode", "subscription_term", "no_eligible_subscription"]
++    subscription_id: str | None = None
++    starts_at: datetime | None = None
++    ends_at: datetime | None = None
++    development_only: bool = False
++
++
++class TrackSummary(Base):
++    id: TrackId
++    title: str
++    lesson_ids: list[str]
++
++
++class LessonSummary(Base):
++    id: str
++    track_id: TrackId
++    title: str
++    question_count: int
++
++
++class ExamSummary(Base):
++    id: Literal["ielts_academic", "digital_sat", "toefl_ibt", "det", "hsk_hskk", "csca"]
++    title: str
++    role: Literal["language", "academic"]
++    course_status: Literal["starter", "planned"]
++    track_ids: list[TrackId]
++    official_info_urls: list[str]
++    official_practice_urls: list[str]
++    notice: str
++    checked_date: str
++
++
++class PreparationCatalogue(Base):
++    version: str
++    tracks: list[TrackSummary]
++    lessons: list[LessonSummary]
++    exams: list[ExamSummary]
++    notice: str
++
++
++class Choice(Base):
++    id: str
++    text: str
++
++
++class Question(Base):
++    id: str
++    prompt: str
++    choices: list[Choice]
++
++
++class PreparationLesson(Base):
++    id: str
++    track_id: TrackId
++    title: str
++    version: str
++    introduction: str
++    questions: list[Question]
++    unofficial: Literal[True] = True
++
++
++class Answer(Base):
++    question_id: str = Field(min_length=1, max_length=80)
++    choice_id: str = Field(min_length=1, max_length=80)
++
++
++class StudyAttemptIn(Base):
++    attempt_id: UUID
++    lesson_id: str = Field(min_length=1, max_length=80)
++    version: str = Field(min_length=1, max_length=40)
++    answers: list[Answer] = Field(min_length=1, max_length=20)
++
++
++class AnswerFeedback(Base):
++    question_id: str
++    selected_choice_id: str
++    correct_choice_id: str
++    correct: bool
++    explanation: str
++
++
++class StudyAttemptOut(Base):
++    id: str
++    attempt_id: UUID
++    profile_id: str
++    lesson_id: str
++    version: str
++    answers: list[Answer]
++    correct: int
++    total: int
++    feedback: list[AnswerFeedback]
++    created_at: datetime
++
++
++class PreparationProgress(Base):
++    profile_id: str
++    attempt_count: int
++    correct: int
++    answered: int
++    completed_lesson_ids: list[str]
++    attempts: list[StudyAttemptOut]
++
++
++class PreparationCheck(Base):
++    requirement_check: RequirementCheck
++    evidence_state: EvidenceState
++    policy: Policy
++    claims: list[ClaimOut]
++    claim_ids: list[str]
++    source_urls: list[str]
++    lesson_ids: list[str]
++
++
++class PreparationPlan(Base):
++    profile_id: str
++    result_id: str | None = None
++    research_access: bool
++    evidence_state: EvidenceState
++    checks: list[PreparationCheck]
++    notice: str
+--- /dev/null
++++ b/backend/migrations/versions/f1a2b3c4d511_study_attempts.py
+@@ -0,0 +1,51 @@
++"""Case-owned starter practice submissions.
++
++Revision ID: f1a2b3c4d511
++Revises: d8e412c6a901
++"""
++
++import sqlalchemy as sa
++from alembic import op
++
++revision = "f1a2b3c4d511"
++down_revision = "d8e412c6a901"
++branch_labels = None
++depends_on = None
++
++
++def upgrade() -> None:
++    op.create_table(
++        "study_attempts",
++        sa.Column("id", sa.String(32), primary_key=True),
++        sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
++        sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
++        sa.Column(
++            "profile_id",
++            sa.String(32),
++            sa.ForeignKey("applicant_profiles.id", ondelete="CASCADE"),
++            nullable=False,
++        ),
++        sa.Column("client_attempt_id", sa.String(36), nullable=False),
++        sa.Column("lesson_id", sa.String(80), nullable=False),
++        sa.Column("content_version", sa.String(40), nullable=False),
++        sa.Column("request_digest", sa.String(64), nullable=False),
++        sa.Column("answers", sa.JSON(), nullable=False),
++        sa.Column("feedback", sa.JSON(), nullable=False),
++        sa.Column("correct", sa.Integer(), nullable=False),
++        sa.Column("total", sa.Integer(), nullable=False),
++        sa.CheckConstraint("total > 0 AND total <= 20", name="ck_study_attempts_total"),
++        sa.CheckConstraint("correct >= 0 AND correct <= total", name="ck_study_attempts_correct"),
++    )
++    op.create_index(
++        "uq_study_attempts_profile_client",
++        "study_attempts",
++        ["profile_id", "client_attempt_id"],
++        unique=True,
++    )
++    op.create_index(
++        "ix_study_attempts_profile_created", "study_attempts", ["profile_id", "created_at"]
++    )
++
++
++def downgrade() -> None:
++    op.drop_table("study_attempts")
+--- /dev/null
++++ b/backend/tests/test_preparation_api.py
+@@ -0,0 +1,677 @@
++"""Preparation uses owned synthetic cases and migration-backed SQLite/PostgreSQL.
++
++No provider/worker/search calls. TestClient skips lifespan intentionally: these
++controls exercise the actual registered HTTP routes without startup job reconciliation.
++"""
++
++from __future__ import annotations
++
++import socket
++from datetime import UTC, datetime, timedelta
++from uuid import uuid4
++
++import pytest
++from app.models import (
++    ApplicantProfileRow,
++    AuditEvent,
++    ClaimRow,
++    Entitlement,
++    Job,
++    Order,
++    Organization,
++    ProgramResultRow,
++    ResearchRun,
++    StudyAttempt,
++    Subscription,
++)
++from app.models.base import utcnow
++from app.preparation.catalogue import CONTENT_VERSION
++from app.schemas.claim import Claim
++from app.security import DEV_ORGANIZATION_ID
++from fastapi.testclient import TestClient
++from sqlalchemy import create_engine, inspect
++from sqlalchemy.orm import sessionmaker
++from tests.conftest import configure_from_env
++
++
++@pytest.fixture(params=["sqlite", "postgres"])
++def prep_lab(request, tmp_path, monkeypatch, corpus_dir):
++    """Native migrated database; no process-global Settings replacement or startup jobs."""
++    from app.config import get_settings
++    from app.corpus.demo_profile import DEMO_PROFILE
++    from app.db import migrate_to_head
++
++    configure_from_env(
++        monkeypatch,
++        tmp_path,
++        corpus_dir,
++        UNIMATCH_PAYMENTS_ENABLED="true",
++        UNIMATCH_AUTH_ENABLED="false",
++    )
++    if request.param == "postgres":
++        engine = request.getfixturevalue("pg_engine")
++    else:
++        url = f"sqlite:///{tmp_path / 'preparation.db'}"
++        migrate_to_head(url)
++        engine = create_engine(url, connect_args={"check_same_thread": False})
++    import app.db as db_module
++    from app.main import app
++
++    monkeypatch.setattr(db_module, "engine", engine)
++    factory = sessionmaker(bind=engine, future=True)
++    monkeypatch.setattr(db_module, "SessionLocal", factory)
++    attempts = []
++    native_connect = socket.socket.connect
++    native_connect_ex = socket.socket.connect_ex
++    native_sendto = socket.socket.sendto
++
++    def connect(sock, address):
++        if sock.family in {socket.AF_INET, socket.AF_INET6}:
++            attempts.append("connect")
++            raise AssertionError("Preparation tests must not open IP connections")
++        return native_connect(sock, address)
++
++    def connect_ex(sock, address):
++        if sock.family in {socket.AF_INET, socket.AF_INET6}:
++            attempts.append("connect_ex")
++            raise AssertionError("Preparation tests must not open IP connections")
++        return native_connect_ex(sock, address)
++
++    def sendto(sock, *args):
++        if sock.family in {socket.AF_INET, socket.AF_INET6}:
++            attempts.append("sendto")
++            raise AssertionError("Preparation tests must not send IP packets")
++        return native_sendto(sock, *args)
++
++    def dns(*_args, **_kwargs):
++        attempts.append("getaddrinfo")
++        raise AssertionError("Preparation tests have no DNS dependency")
++
++    monkeypatch.setattr(socket.socket, "connect", connect)
++    monkeypatch.setattr(socket.socket, "connect_ex", connect_ex)
++    monkeypatch.setattr(socket.socket, "sendto", sendto)
++    monkeypatch.setattr(socket, "getaddrinfo", dns)
++    client = TestClient(app)
++    response = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json"))
++    assert response.status_code == 201
++    lab = {
++        "client": client,
++        "case": response.json()["id"],
++        "factory": factory,
++        "engine": engine,
++        "monkeypatch": monkeypatch,
++    }
++    try:
++        yield lab
++    finally:
++        client.close()
++        get_settings.cache_clear()
++        if request.param == "sqlite":
++            engine.dispose()
++        assert attempts == []
++
++
++def url(lab, suffix):
++    return f"/api/profiles/{lab['case']}/preparation/{suffix}"
++
++
++def grant(lab, *, status="active", start=None, end=None, quota=0):
++    now = utcnow()
++    with lab["factory"]() as session:
++        row = Subscription(
++            organization_id=DEV_ORGANIZATION_ID,
++            case_quota=quota,
++            duration_days=30,
++            status=status,
++            starts_at=start if start is not None else now - timedelta(days=1),
++            ends_at=end if end is not None else now + timedelta(days=29),
++        )
++        session.add(row)
++        session.commit()
++        return row.id
++
++
++def body(*, lesson="sat-math-1", attempt_id=None):
++    questions = {
++        "sat-math-1": [("sm-1", "b"), ("sm-2", "a"), ("sm-3", "c")],
++        "ielts-reading-1": [("ir-1", "b"), ("ir-2", "c"), ("ir-3", "a")],
++        "sat-rw-1": [("sr-1", "b"), ("sr-2", "c"), ("sr-3", "a")],
++    }
++    return {
++        "attempt_id": str(attempt_id or uuid4()),
++        "lesson_id": lesson,
++        "version": CONTENT_VERSION,
++        "answers": [
++            {"question_id": question, "choice_id": choice} for question, choice in questions[lesson]
++        ],
++    }
++
++
++def full_case(lab):
++    with lab["factory"]() as session:
++        session.add(
++            Entitlement(
++                organization_id=DEV_ORGANIZATION_ID, profile_id=lab["case"], kind="case_full"
++            )
++        )
++        session.commit()
++
++
++def result_with_claim(
++    lab,
++    *,
++    kind="ielts_min_overall",
++    value=6.5,
++    label="IELTS overall",
++    status="GAP",
++    claim_status="VERIFIED_CURRENT",
++    scope=True,
++    stale=False,
++    reference="url",
++):
++    from app.domain.claim_scope import ClaimScope
++    from app.schemas.result import RequirementCheck
++
++    with lab["factory"]() as session:
++        profile = session.get(ApplicantProfileRow, lab["case"])
++        context = profile.payload["context"]
++        run = ResearchRun(profile_id=lab["case"], stage="complete", demo_mode=True)
++        session.add(run)
++        session.flush()
++        row = ProgramResultRow(
++            run_id=run.id,
++            dedupe_key=uuid4().hex,
++            university="Synthetic Uni",
++            university_key="synthetic-uni",
++            country="Synthetic",
++            program="BSc",
++            eligibility="GAP",
++            admissions_fit="INSUFFICIENT_DATA",
++            funding_fit="UNKNOWN",
++            funding_classification="UNKNOWN",
++            payload={},
++        )
++        session.add(row)
++        session.flush()
++        claim = Claim(
++            claim_type=kind,
++            normalized_value=value,
++            source_url="https://example.edu/requirements",
++            official_domain=True,
++            accessed_at=utcnow() - timedelta(days=365 if stale else 0),
++            status=claim_status,
++            source_specificity="program_intake",
++            original_text_excerpt="Synthetic policy: use only in tests.",
++            scope=ClaimScope(
++                university=row.university,
++                programme=row.program,
++                degree=context["level"],
++                intake=f"{context['intake_term']} {context['intake_year']}",
++                nationality=context["citizenship"],
++                residency=context["country_of_residence"],
++                qualification=context["education_system"],
++            )
++            if scope
++            else None,
++        )
++        stored = ClaimRow(
++            run_id=run.id,
++            result_id=row.id,
++            claim_type=kind,
++            status=claim_status,
++            source_url=claim.source_url,
++            accessed_at=claim.accessed_at,
++            source_specificity="program_intake",
++            payload=claim.model_dump(mode="json"),
++        )
++        session.add(stored)
++        session.flush()
++        check = RequirementCheck(
++            requirement=label,
++            published_value=value,
++            applicant_value=6,
++            status=status,
++            explanation="Synthetic preserved gap explanation",
++            published_scope="Synthetic international fall intake",
++            claim_ids=[stored.id if reference == "id" else claim.source_url],
++        )
++        row.payload = {"requirement_checks": [check.model_dump(mode="json")]}
++        session.commit()
++        return row.id, stored.id, check.model_dump(mode="json")
++
++
++def test_public_catalogue_is_answer_free_and_planned_courses_have_no_lessons(prep_lab):
++    response = prep_lab["client"].get("/api/preparation/catalogue")
++    assert response.status_code == 200
++    catalogue = response.json()
++    assert catalogue["version"] == CONTENT_VERSION
++    assert len(catalogue["lessons"]) == 3 and len(catalogue["exams"]) == 6
++    assert all(
++        not exam["track_ids"] for exam in catalogue["exams"] if exam["course_status"] == "planned"
++    )
++    assert "correct_choice_id" not in response.text and "explanation" not in response.text
++    assert "question" not in catalogue["lessons"][0]  # only public metadata
++
++
++@pytest.mark.parametrize("status", ["active", "exhausted"])
++def test_zero_research_quota_does_not_remove_started_term_learning(prep_lab, status):
++    sub_id = grant(prep_lab, status=status, quota=0)
++    response = prep_lab["client"].get(url(prep_lab, "access"))
++    assert response.status_code == 200
++    assert response.json()["allowed"] is True
++    assert response.json()["subscription_id"] == sub_id
++    billing = prep_lab["client"].get(
++        "/api/billing/entitlements", params={"profile_id": prep_lab["case"]}
++    )
++    assert billing.status_code == 200
++    assert billing.json()["full_access"] is False
++    assert billing.json()["preparation_access"] == response.json()
++    lesson = prep_lab["client"].get(
++        url(prep_lab, "lessons/sat-math-1"), params={"version": CONTENT_VERSION}
++    )
++    assert lesson.status_code == 200
++    assert "correct_choice_id" not in lesson.text and "explanation" not in lesson.text
++
++
++@pytest.mark.parametrize(
++    "mode",
++    [
++        "none",
++        "pending",
++        "cancelled",
++        "expired",
++        "missing_start",
++        "missing_end",
++        "future_start",
++        "past_end",
++        "reversed",
++    ],
++)
++def test_invalid_or_unstarted_term_fails_closed_without_mutation(prep_lab, mode):
++    if mode != "none":
++        sub_id = grant(
++            prep_lab, status=mode if mode in {"pending", "cancelled", "expired"} else "active"
++        )
++        with prep_lab["factory"]() as session:
++            subscription = session.get(Subscription, sub_id)
++            if mode == "missing_start":
++                subscription.starts_at = None
++            elif mode == "missing_end":
++                subscription.ends_at = None
++            elif mode == "future_start":
++                subscription.starts_at = utcnow() + timedelta(days=1)
++            elif mode == "past_end":
++                subscription.ends_at = utcnow() - timedelta(seconds=1)
++            elif mode == "reversed":
++                subscription.ends_at = subscription.starts_at - timedelta(days=1)
++            session.commit()
++            before = (
++                subscription.status,
++                subscription.starts_at,
++                subscription.ends_at,
++                subscription.case_quota,
++            )
++    assert prep_lab["client"].get(url(prep_lab, "access")).json()["allowed"] is False
++    denial = prep_lab["client"].post(url(prep_lab, "attempts"), json=body())
++    assert denial.status_code == 402
++    assert denial.json()["detail"]["code"] == "preparation_subscription_required"
++    assert prep_lab["client"].get(url(prep_lab, "progress")).json()["attempt_count"] == 0
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == 0
++        if mode != "none":
++            subscription = session.get(Subscription, sub_id)
++            assert (
++                subscription.status,
++                subscription.starts_at,
++                subscription.ends_at,
++                subscription.case_quota,
++            ) == before
++
++
++def test_development_access_is_explicit_not_a_paid_entitlement(prep_lab):
++    from app.config import get_settings
++
++    prep_lab["monkeypatch"].setenv("UNIMATCH_PAYMENTS_ENABLED", "false")
++    get_settings.cache_clear()
++    access = prep_lab["client"].get(url(prep_lab, "access")).json()
++    assert access["allowed"] and access["development_only"]
++    assert access["reason"] == "development_mode" and access["subscription_id"] is None
++
++
++@pytest.mark.parametrize("suffix", ["access", "progress", "plan", "lessons/sat-math-1"])
++def test_foreign_and_missing_case_are_indistinguishable_404(prep_lab, suffix):
++    with prep_lab["factory"]() as session:
++        org = Organization(name="Other", slug=uuid4().hex)
++        session.add(org)
++        session.flush()
++        profile = session.get(ApplicantProfileRow, prep_lab["case"])
++        foreign = ApplicantProfileRow(organization_id=org.id, payload=profile.payload)
++        session.add(foreign)
++        session.commit()
++        foreign_id = foreign.id
++    for case in (foreign_id, uuid4().hex):
++        endpoint = f"/api/profiles/{case}/preparation/{suffix}"
++        assert (
++            prep_lab["client"].get(endpoint, params={"version": CONTENT_VERSION}).status_code == 404
++        )
++        assert (
++            prep_lab["client"]
++            .post(f"/api/profiles/{case}/preparation/attempts", json=body())
++            .status_code
++            == 404
++        )
++
++
++@pytest.mark.parametrize(
++    "invalid",
++    [
++        "incomplete",
++        "duplicate",
++        "unknown_question",
++        "unknown_choice",
++        "old_version",
++        "unknown_lesson",
++        "bad_uuid",
++        "extra_text",
++    ],
++)
++def test_invalid_attempts_reveal_no_answers_and_persist_nothing(prep_lab, invalid):
++    grant(prep_lab)
++    payload = body()
++    if invalid == "incomplete":
++        payload["answers"].pop()
++    elif invalid == "duplicate":
++        payload["answers"][1] = payload["answers"][0]
++    elif invalid == "unknown_question":
++        payload["answers"][0]["question_id"] = "unknown"
++    elif invalid == "unknown_choice":
++        payload["answers"][0]["choice_id"] = "unknown"
++    elif invalid == "old_version":
++        payload["version"] = "unknown-version"
++    elif invalid == "unknown_lesson":
++        payload["lesson_id"] = "hsk-unpublished"
++    elif invalid == "bad_uuid":
++        payload["attempt_id"] = "not-a-uuid"
++    else:
++        payload["essay"] = "Not part of the bounded input contract"
++    response = prep_lab["client"].post(url(prep_lab, "attempts"), json=payload)
++    assert response.status_code == 422
++    assert "correct_choice_id" not in response.text
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == 0
++
++
++@pytest.mark.parametrize("lesson", ["ielts-reading-1", "sat-math-1", "sat-rw-1"])
++def test_grading_replay_conflict_and_progress_are_case_scoped(prep_lab, lesson):
++    grant(prep_lab)
++    payload = body(lesson=lesson)
++    response = prep_lab["client"].post(url(prep_lab, "attempts"), json=payload)
++    assert response.status_code == 200
++    receipt = response.json()
++    assert receipt["correct"] == receipt["total"] == 3
++    assert all(item["correct"] and item["explanation"] for item in receipt["feedback"])
++    assert receipt["profile_id"] == prep_lab["case"]
++    assert "band" not in receipt and "official_score" not in receipt
++    payload["answers"].reverse()
++    assert prep_lab["client"].post(url(prep_lab, "attempts"), json=payload).json() == receipt
++    payload["answers"][0]["choice_id"] = "a" if payload["answers"][0]["choice_id"] != "a" else "b"
++    assert prep_lab["client"].post(url(prep_lab, "attempts"), json=payload).status_code == 409
++    progress = prep_lab["client"].get(url(prep_lab, "progress")).json()
++    assert progress["attempt_count"] == 1 and progress["correct"] == progress["answered"] == 3
++    assert progress["completed_lesson_ids"] == [lesson] and progress["attempts"] == [receipt]
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == 1
++        assert session.query(Order).count() == session.query(Entitlement).count() == 0
++        assert session.query(ResearchRun).count() == session.query(Job).count() == 0
++        assert session.query(Subscription).one().case_quota == 0
++        profile = session.get(ApplicantProfileRow, prep_lab["case"])
++        original = profile.payload
++        assert not any("study" in event.action for event in session.query(AuditEvent).all())
++    exported = prep_lab["client"].get(f"/api/profiles/{prep_lab['case']}/export").json()
++    assert exported["study_attempts"] == [receipt] and exported["profile"] == original
++    assert exported["counts"]["study_attempts"] == 1
++
++
++def test_wrong_answers_and_history_after_term_end_do_not_become_scores(prep_lab):
++    sub_id = grant(prep_lab)
++    payload = body()
++    payload["answers"][0]["choice_id"] = "a"
++    receipt = prep_lab["client"].post(url(prep_lab, "attempts"), json=payload).json()
++    assert receipt["correct"] == 2 and receipt["total"] == 3
++    assert receipt["feedback"][0]["correct_choice_id"] == "b"
++    with prep_lab["factory"]() as session:
++        session.get(Subscription, sub_id).ends_at = utcnow() - timedelta(seconds=1)
++        session.commit()
++    assert prep_lab["client"].post(url(prep_lab, "attempts"), json=payload).json() == receipt
++    assert prep_lab["client"].get(url(prep_lab, "progress")).json()["attempts"] == [receipt]
++    payload["attempt_id"] = str(uuid4())
++    assert prep_lab["client"].post(url(prep_lab, "attempts"), json=payload).status_code == 402
++
++
++def test_uuid_may_be_reused_in_a_different_owned_case(prep_lab):
++    grant(prep_lab)
++    with prep_lab["factory"]() as session:
++        own = session.get(ApplicantProfileRow, prep_lab["case"])
++        other = ApplicantProfileRow(organization_id=DEV_ORGANIZATION_ID, payload=own.payload)
++        session.add(other)
++        session.commit()
++        other_id = other.id
++    payload = body()
++    first = prep_lab["client"].post(url(prep_lab, "attempts"), json=payload).json()
++    second = (
++        prep_lab["client"]
++        .post(f"/api/profiles/{other_id}/preparation/attempts", json=payload)
++        .json()
++    )
++    assert first["id"] != second["id"] and first["attempt_id"] == second["attempt_id"]
++    assert second["profile_id"] == other_id
++    assert prep_lab["client"].get(url(prep_lab, "progress")).json()["attempt_count"] == 1
++
++
++@pytest.mark.parametrize("reference", ["url", "id"])
++def test_plan_preserves_requirement_claim_scope_quote_and_both_reference_forms(prep_lab, reference):
++    full_case(prep_lab)
++    result_id, claim_id, check = result_with_claim(prep_lab, reference=reference)
++    response = prep_lab["client"].get(url(prep_lab, "plan"), params={"result_id": result_id})
++    assert response.status_code == 200
++    plan = response.json()
++    assert plan["evidence_state"] == "current" and plan["research_access"] is True
++    row = plan["checks"][0]
++    assert row["requirement_check"] == check and row["claim_ids"] == check["claim_ids"]
++    assert row["policy"] == "required" and row["lesson_ids"] == ["ielts-reading-1"]
++    assert row["claims"][0]["id"] == claim_id and row["claims"][0]["scope"]["programme"] == "BSc"
++    assert row["claims"][0]["original_text_excerpt"] == "Synthetic policy: use only in tests."
++    assert row["source_urls"] == ["https://example.edu/requirements"]
++
++
++@pytest.mark.parametrize(
++    "mode,expected",
++    [
++        ("no_scope", "unknown"),
++        ("wrong_scope", "unknown"),
++        ("old", "stale"),
++        ("conflict", "conflicted"),
++        ("profile_changed", "stale"),
++        ("unknown_ref", "unknown"),
++    ],
++)
++def test_plan_never_upgrades_unknown_conflicting_or_old_evidence(prep_lab, mode, expected):
++    full_case(prep_lab)
++    result_id, claim_id, _ = result_with_claim(
++        prep_lab,
++        scope=mode != "no_scope",
++        stale=mode == "old",
++        claim_status="CONFLICTING" if mode == "conflict" else "VERIFIED_CURRENT",
++    )
++    with prep_lab["factory"]() as session:
++        if mode == "wrong_scope":
++            claim = session.get(ClaimRow, claim_id)
++            payload = dict(claim.payload)
++            payload["scope"] = {**payload["scope"], "intake": "fall 2026"}
++            claim.payload = payload
++        elif mode == "profile_changed":
++            session.get(ApplicantProfileRow, prep_lab["case"]).updated_at = utcnow() + timedelta(
++                seconds=1
++            )
++        elif mode == "unknown_ref":
++            result = session.get(ProgramResultRow, result_id)
++            payload = dict(result.payload)
++            payload["requirement_checks"] = [
++                {**payload["requirement_checks"][0], "claim_ids": ["unresolved-id"]}
++            ]
++            result.payload = payload
++        session.commit()
++    plan = prep_lab["client"].get(url(prep_lab, "plan"), params={"result_id": result_id}).json()
++    assert plan["evidence_state"] == expected
++    assert plan["checks"][0]["policy"] == "unknown" and plan["checks"][0]["lesson_ids"] == []
++
++
++def test_locked_result_and_other_case_result_do_not_disclose_evidence(prep_lab):
++    result_id, _, _ = result_with_claim(prep_lab)
++    response = prep_lab["client"].get(url(prep_lab, "plan"), params={"result_id": result_id}).json()
++    assert response["evidence_state"] == "locked" and response["checks"] == []
++    full_case(prep_lab)
++    assert prep_lab["client"].get(url(prep_lab, "plan")).json()["evidence_state"] == "unknown"
++    with prep_lab["factory"]() as session:
++        org = Organization(name="Foreign", slug=uuid4().hex)
++        session.add(org)
++        session.flush()
++        own = session.get(ApplicantProfileRow, prep_lab["case"])
++        foreign = ApplicantProfileRow(organization_id=org.id, payload=own.payload)
++        session.add(foreign)
++        session.flush()
++        run = ResearchRun(profile_id=foreign.id)
++        session.add(run)
++        session.flush()
++        result = session.get(ProgramResultRow, result_id)
++        result.run_id = run.id
++        session.commit()
++    assert (
++        prep_lab["client"].get(url(prep_lab, "plan"), params={"result_id": result_id}).status_code
++        == 404
++    )
++
++
++def test_orm_deleting_profile_erases_attempts_even_with_sqlite_foreign_keys_off(prep_lab):
++    grant(prep_lab)
++    assert prep_lab["client"].post(url(prep_lab, "attempts"), json=body()).status_code == 200
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == 1
++        profile = session.get(ApplicantProfileRow, prep_lab["case"])
++        # SQLite engine in this fixture has FK enforcement off (no db.py listener).
++        if prep_lab["engine"].dialect.name == "sqlite":
++            from sqlalchemy import text
++
++            assert session.scalar(text("PRAGMA foreign_keys")) == 0
++        session.delete(profile)
++        session.commit()
++        assert session.query(StudyAttempt).count() == 0
++    assert prep_lab["client"].get(url(prep_lab, "progress")).status_code == 404
++
++
++def test_migration_schema_and_unique_payload_binding(prep_lab):
++    from sqlalchemy.exc import IntegrityError
++
++    grant(prep_lab)
++    receipt = prep_lab["client"].post(url(prep_lab, "attempts"), json=body()).json()
++    schema = inspect(prep_lab["engine"])
++    assert "study_attempts" in schema.get_table_names()
++    assert any(
++        index["unique"] and index["column_names"] == ["profile_id", "client_attempt_id"]
++        for index in schema.get_indexes("study_attempts")
++    )
++    assert any(
++        fk["referred_table"] == "applicant_profiles" and fk["options"].get("ondelete") == "CASCADE"
++        for fk in schema.get_foreign_keys("study_attempts")
++    )
++    with prep_lab["factory"]() as session:
++        original = session.get(StudyAttempt, receipt["id"])
++        duplicate = StudyAttempt(
++            profile_id=original.profile_id,
++            client_attempt_id=original.client_attempt_id,
++            lesson_id=original.lesson_id,
++            content_version=original.content_version,
++            request_digest=original.request_digest,
++            answers=original.answers,
++            feedback=original.feedback,
++            correct=original.correct,
++            total=original.total,
++        )
++        session.add(duplicate)
++        with pytest.raises(IntegrityError):
++            session.commit()
++        session.rollback()
++        assert session.query(StudyAttempt).count() == 1
++
++
++def test_progress_limit_does_not_change_aggregate_or_create_an_official_score(prep_lab):
++    grant(prep_lab)
++    for _ in range(2):
++        assert prep_lab["client"].post(url(prep_lab, "attempts"), json=body()).status_code == 200
++    result = prep_lab["client"].get(url(prep_lab, "progress"), params={"limit": 1}).json()
++    assert result["attempt_count"] == 2 and result["correct"] == result["answered"] == 6
++    assert len(result["attempts"]) == 1 and result["completed_lesson_ids"] == ["sat-math-1"]
++    assert prep_lab["client"].get(url(prep_lab, "progress"), params={"limit": 0}).status_code == 422
++
++
++def test_access_term_has_exact_start_and_end_boundaries_without_retiring_rows(prep_lab):
++    from app.payments.preparation import preparation_access
++
++    moment = datetime(2026, 10, 11, tzinfo=UTC)
++    sub_id = grant(prep_lab, start=moment, end=moment + timedelta(days=1))
++    with prep_lab["factory"]() as session:
++        assert preparation_access(session, DEV_ORGANIZATION_ID, now=moment).allowed
++        assert not preparation_access(
++            session, DEV_ORGANIZATION_ID, now=moment - timedelta(microseconds=1)
++        ).allowed
++        assert not preparation_access(
++            session, DEV_ORGANIZATION_ID, now=moment + timedelta(days=1)
++        ).allowed
++        subscription = session.get(Subscription, sub_id)
++        assert subscription.status == "active" and subscription.case_quota == 0
++
++
++def test_migration_down_and_up_preserve_existing_owned_profile(prep_lab):
++    from alembic import command
++    from app.db import _alembic_config, migrate_to_head
++
++    target = prep_lab["engine"].url.render_as_string(hide_password=False)
++    config = _alembic_config(target)
++    command.downgrade(config, "d8e412c6a901")
++    assert "study_attempts" not in inspect(prep_lab["engine"]).get_table_names()
++    with prep_lab["factory"]() as session:
++        assert session.get(ApplicantProfileRow, prep_lab["case"]) is not None
++    migrate_to_head(target)
++    assert "study_attempts" in inspect(prep_lab["engine"]).get_table_names()
++    with prep_lab["factory"]() as session:
++        assert session.query(StudyAttempt).count() == 0
++        assert session.get(ApplicantProfileRow, prep_lab["case"]) is not None
++
++
++def test_catalogue_is_public_but_case_learning_requires_auth_when_enabled(prep_lab):
++    from app.config import get_settings
++
++    prep_lab["monkeypatch"].setenv("UNIMATCH_AUTH_ENABLED", "true")
++    get_settings.cache_clear()
++    assert prep_lab["client"].get("/api/preparation/catalogue").status_code == 200
++    assert prep_lab["client"].get(url(prep_lab, "access")).status_code == 401
++    assert prep_lab["client"].get(url(prep_lab, "progress")).status_code == 401
++
++
++def test_foreign_organization_subscription_does_not_grant_learning(prep_lab):
++    with prep_lab["factory"]() as session:
++        organization = Organization(name="Other subscription", slug=uuid4().hex)
++        session.add(organization)
++        session.flush()
++        session.add(
++            Subscription(
++                organization_id=organization.id,
++                case_quota=None,
++                duration_days=30,
++                status="active",
++                starts_at=utcnow() - timedelta(days=1),
++                ends_at=utcnow() + timedelta(days=29),
++            )
++        )
++        session.commit()
++    assert prep_lab["client"].get(url(prep_lab, "access")).json()["allowed"] is False
+--- /dev/null
++++ b/backend/tests/test_preparation_domain.py
+@@ -0,0 +1,203 @@
++"""Synthetic policy projection and original-content controls; no official test items."""
++
++from __future__ import annotations
++
++from datetime import UTC, datetime
++
++import pytest
++from app.domain.claim_scope import ClaimScope, RequestedScope
++from app.domain.preparation import project_checks
++from app.schemas.claim import ClaimOut, Conflict
++from app.schemas.result import RequirementCheck
++
++REQUESTED = RequestedScope(
++    university="Synthetic", programme="BSc", degree="bachelor", intake="fall 2027"
++)
++
++
++def claim(kind, value, key="claim1", **updates):
++    data = {
++        "id": key,
++        "claim_type": kind,
++        "normalized_value": value,
++        "source_url": f"https://example.edu/{key}",
++        "official_domain": True,
++        "accessed_at": datetime.now(UTC),
++        "status": "VERIFIED_CURRENT",
++        "source_specificity": "program_intake",
++        "scope": ClaimScope(
++            university="Synthetic", programme="BSc", degree="bachelor", intake="fall 2027"
++        ),
++    }
++    data.update(updates)
++    return ClaimOut.model_validate(data)
++
++
++def check(label, evidence, **updates):
++    data = {
++        "requirement": label,
++        "published_value": evidence.normalized_value,
++        "applicant_value": None,
++        "status": "PENDING",
++        "claim_ids": [evidence.id],
++        "explanation": "Keep the original qualification.",
++        "published_scope": "Exact source wording",
++    }
++    data.update(updates)
++    return RequirementCheck.model_validate(data)
++
++
++@pytest.mark.parametrize(
++    "component,lessons",
++    [("reading", ["ielts-reading-1"]), ("writing", []), ("speaking", []), ("listening", [])],
++)
++def test_component_gap_is_not_replaced_by_overall_or_unrelated_skill(component, lessons):
++    evidence = claim("ielts_min_subscore", {component: 6.5})
++    original = check(f"IELTS {component}", evidence, status="GAP", applicant_value=6.0)
++    projected = project_checks([original], [evidence], REQUESTED)[0]
++    assert projected.requirement_check == original
++    assert projected.requirement_check.published_value == {component: 6.5}
++    assert projected.lesson_ids == lessons
++    assert projected.policy == "required" and projected.evidence_state == "current"
++
++
++@pytest.mark.parametrize(
++    "policy,expected",
++    [
++        ("optional", "optional"),
++        ("test-optional", "optional"),
++        ("test-blind", "unknown"),
++        ("not considered", "unknown"),
++        ("not optional", "unknown"),
++    ],
++)
++def test_optional_is_not_blind_or_not_considered(policy, expected):
++    evidence = claim("sat_policy", policy)
++    original = check("SAT policy", evidence, status="NOT_APPLICABLE")
++    row = project_checks([original], [evidence], REQUESTED)[0]
++    assert row.policy == expected and row.requirement_check == original
++    assert row.lesson_ids == []
++
++
++@pytest.mark.parametrize(
++    "other_kind,value,expected",
++    [
++        ("toefl_min_total", 90, "alternatives_unresolved"),
++        ("duolingo_min", 120, "alternatives_unresolved"),
++        ("english_test_waiver", "English-medium schooling must be confirmed", "waiver_check"),
++    ],
++)
++def test_coexisting_thresholds_or_waiver_do_not_create_maximum_or_prove_a_waiver(
++    other_kind, value, expected
++):
++    ielts = claim("ielts_min_overall", 6.5)
++    other = claim(other_kind, value, "claim2")
++    original = check("IELTS overall", ielts, status="GAP", applicant_value=6.0)
++    row = project_checks([original], [ielts, other], REQUESTED)[0]
++    assert row.policy == expected and row.lesson_ids == []
++    assert row.requirement_check.published_value == 6.5 and row.requirement_check.status == "GAP"
++
++
++@pytest.mark.parametrize(
++    "test_type", ["academic", "general_training", "ukvi_academic", "one_skill_retake", "online"]
++)
++def test_overall_claim_does_not_manufacture_test_type_acceptance(test_type):
++    overall = claim("ielts_min_overall", 6.5)
++    original = RequirementCheck(
++        requirement="Accepted IELTS test type",
++        published_value=None,
++        applicant_value=test_type,
++        status="NEEDS_OFFICIAL_CLARIFICATION",
++    )
++    row = project_checks([original], [overall], REQUESTED)[0]
++    assert row.evidence_state == "unknown" and row.policy == "unknown" and row.lesson_ids == []
++    assert row.claims == [] and row.requirement_check == original
++
++
++@pytest.mark.parametrize(
++    "mutation",
++    [
++        "unrecorded",
++        "empty",
++        "old_cohort",
++        "wrong_programme",
++        "aggregator",
++        "unofficial",
++        "unverified",
++    ],
++)
++def test_bare_current_status_cannot_prove_programme_and_intake(mutation):
++    evidence = claim("sat_min_total", 1300)
++    if mutation == "unrecorded":
++        evidence.scope = None
++    elif mutation == "empty":
++        evidence.scope = ClaimScope()
++    elif mutation == "old_cohort":
++        evidence.scope = ClaimScope(
++            university="Synthetic", programme="BSc", degree="bachelor", intake="fall 2026"
++        )
++    elif mutation == "wrong_programme":
++        evidence.scope = ClaimScope(
++            university="Synthetic", programme="BA", degree="bachelor", intake="fall 2027"
++        )
++    elif mutation == "aggregator":
++        evidence.source_specificity = "aggregator"
++    elif mutation == "unofficial":
++        evidence.official_domain = False
++    else:
++        evidence.status = "UNVERIFIED"
++    row = project_checks([check("SAT total", evidence)], [evidence], REQUESTED)[0]
++    assert row.evidence_state == "unknown" and row.lesson_ids == []
++
++
++def test_unresolved_conflict_is_not_erased_by_preferred_current_claim():
++    evidence = claim("sat_min_total", 1300)
++    conflict = Conflict(
++        claim_type="sat_min_total",
++        subject="Synthetic SAT",
++        claim_ids=[evidence.id],
++        values=[1300, 1400],
++        source_urls=[evidence.source_url],
++        preferred_claim_id=evidence.id,
++        question_for_admissions="Which applies?",
++    )
++    row = project_checks(
++        [check("SAT total", evidence)], [evidence], REQUESTED, conflicts=[conflict]
++    )[0]
++    assert row.evidence_state == "conflicted" and row.policy == "unknown" and row.lesson_ids == []
++
++
++def test_unknown_reference_on_an_otherwise_current_page_stays_unknown():
++    evidence = claim("sat_min_total", 1300)
++    original = check("SAT total", evidence, claim_ids=[evidence.id, "unknown-id"])
++    row = project_checks([original], [evidence], REQUESTED)[0]
++    assert row.evidence_state == "unknown" and row.claim_ids == [evidence.id, "unknown-id"]
++
++
++def test_content_answer_integrity_and_public_projection():
++    from app.preparation.catalogue import LESSONS, public_lesson
++
++    for lesson in LESSONS:
++        assert 1 <= len(lesson.items) <= 20
++        assert len({item.id for item in lesson.items}) == len(lesson.items)
++        for item in lesson.items:
++            choices = {key for key, _ in item.choices}
++            assert len(choices) == len(item.choices) and item.correct_choice_id in choices
++            assert item.explanation
++        public = public_lesson(lesson).model_dump(mode="json")
++        assert "correct_choice_id" not in str(public) and "explanation" not in str(public)
++
++
++@pytest.mark.parametrize(
++    "label,lessons",
++    [
++        ("SAT total", ["sat-math-1", "sat-rw-1"]),
++        ("SAT Math", ["sat-math-1"]),
++        ("SAT Reading and Writing", ["sat-rw-1"]),
++    ],
++)
++def test_named_sat_skill_links_only_the_corresponding_original_starter(label, lessons):
++    evidence = claim("sat_min_total", 1300)
++    original = check(label, evidence)
++    row = project_checks([original], [evidence], REQUESTED)[0]
++    assert row.requirement_check == original and row.lesson_ids == lessons

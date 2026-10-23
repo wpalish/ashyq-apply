@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "env",
+    "-i",
+    "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "audit.py"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/a-stopped-trace-compatibility",
+  "stdout": "attempt1.stdout.log",
+  "stderr": "attempt1.stderr.log",
+  "exit_code": 1,
+  "tool_chunk_id": "73d028",
+  "script_original": "history/audit.attempt1.original.py",
+  "original_script_sha256": "ebc8430a536759bfc6560af3a10b0979bb051f3feebd8f8d5c801016feca3176",
+  "qualification": "Author expected seven monkeypatch functions; actual native grep had six patches plus one direct call. Original diagnostic retained; no native code execution."
+}

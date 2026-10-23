@@ -1,0 +1,79 @@
+{
+  "verdict": "QUALIFIED_ACCEPT_EXACT_BOUNDED_PROCESS_LOCAL_POST_ESCAPE_PROPOSAL",
+  "A_manifest_sha256": "133b86aae460d6f475f482809419a56733330adf74bb08a90d489e61ca1be9ae",
+  "A_receipt_sha256": "8291a96e98697aa841bdfd4b5ea378128145dd56904cdb87cd1b1e604c709c9a",
+  "patch_sha256": "44d2c1f737ef4849a2cc469246133b9963684d97c4eb516e92b654946fdb5fa0",
+  "proposed_source_sha256": {
+    "app/adapters/search/__init__.py": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+    "app/adapters/search/retrieval.py": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+    "app/adapters/discovery/live_discovery.py": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+  },
+  "original_source_before_after_equal": true,
+  "STOP_before_after_equal": true,
+  "A_selected_files_verified": 583,
+  "A_selected_bytes": 3732576,
+  "own_replay": {
+    "on": {
+      "PASS": 109,
+      "RED": 0,
+      "exceptions": 0,
+      "scenarios": 22,
+      "assertions": 109
+    },
+    "off": {
+      "PASS": 34,
+      "RED": 9,
+      "exceptions": 0,
+      "scenarios": 8,
+      "assertions": 43
+    },
+    "independent": {
+      "PASS": 41,
+      "RED": 0,
+      "exceptions": 0,
+      "scenarios": 5,
+      "assertions": 41
+    }
+  },
+  "normal_equality": {
+    "PASS": 4,
+    "RED": 0,
+    "fields": [
+      "outputs",
+      "query_seam_attempts",
+      "mock_HTTP_events",
+      "mock_HTTP_counts",
+      "fake_clock_sleeps"
+    ]
+  },
+  "author_results_qualified_inspected_not_full_rerun": {
+    "ON": {
+      "PASS": 171,
+      "RED": 0
+    },
+    "OFF": {
+      "PASS": 147,
+      "RED": 24
+    },
+    "pytest": 52
+  },
+  "material_findings": [],
+  "real_network_calls": 0,
+  "primary_reset_calls": 0,
+  "app_source_edits": 0,
+  "STOP_edits": 0,
+  "Git_actions": 0,
+  "labels_scoring_reads": 0,
+  "source_post_verification_sha256": "a66f5166f12c8df68c33af04ba2acf1b83e1d6994775026715421027d26098ca",
+  "own_raw_sha256": "7ee499f7945663c5cae3b03eaa51abb6135322295af512f615b2bdd1a16f221d",
+  "report_sha256": "011bfb9f9c8d0e91a89e552141f26545955b3e69a5e2f90ea422686fe743272e",
+  "limits": [
+    "No first vendorresponse globalstop; inner retry remains",
+    "Process-local sequential cooldown only, not durable/cross-process/concurrent rollback",
+    "Legacy float-only state intentionally uses429 fallback; matched current typedNone preserved",
+    "Query attempt != vendor dispatch",
+    "Synthetic500/type state test separately qualified",
+    "No quality/current recall/default promotion/launch acceptance",
+    "Existing broad catches and cancel/lease/busy semantics unchanged"
+  ]
+}

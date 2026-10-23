@@ -1,0 +1,34 @@
+{
+  "before": {
+    "university_research_budget_v1": {
+      "version": 1,
+      "read_limit": 60,
+      "active_episode": "decision:e5817d9396874ca6b764a34836713d1d",
+      "episodes": {
+        "decision:e5817d9396874ca6b764a34836713d1d": {
+          "read_counts": {
+            "catalogue:u-one": 1
+          }
+        }
+      }
+    }
+  },
+  "after": {
+    "university_research_budget_v1": {
+      "version": 1,
+      "read_limit": 60,
+      "active_episode": "decision:e5817d9396874ca6b764a34836713d1d",
+      "episodes": {
+        "decision:e5817d9396874ca6b764a34836713d1d": {
+          "read_counts": {
+            "catalogue:u-one": 1
+          }
+        }
+      }
+    }
+  },
+  "original_get_count": 1,
+  "stale_mode": "same_worker_attempt",
+  "control": "LeaseLost",
+  "network_calls": 0
+}

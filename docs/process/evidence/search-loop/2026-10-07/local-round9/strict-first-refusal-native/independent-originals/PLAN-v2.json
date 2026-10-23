@@ -1,0 +1,26 @@
+{
+  "status": "WRITE_AHEAD_REVISED_PARENT_SCOPED_PATCH_ALREADY_APPLIED_BEFORE_TESTS",
+  "created_utc": "2026-10-08T00:29:38.341664+00:00",
+  "inputs": {
+    "actual_live": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/evaluation/research/live.py",
+      "sha256": "c240d17c66da1b463ca8851c21fb8499973dbf7134df616c5c0427f57ca7b921"
+    },
+    "old_f0c8_live": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T000741Z-check-0aa9ad4d/source/backend/evaluation/research/live.py",
+      "sha256": "b847ac30fcd1fbb37df1b5fc5c5a147d701b6e34cef975721c1cbeab1ca86c55"
+    },
+    "actual_test_protocol": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_readguard_capture_protocol.py",
+      "sha256": "dd41ddf33c7485296e1c0f5834e371cc3a60ef29896ebea48f237b932b5f3c20"
+    }
+  },
+  "scope": "Normal current evaluation.research.live.capture_one; original full f0c8 module copied external as package-relative module only for red behavior. Real provider methods remain unchanged except source normal counted wrapper. Test proposal appended externally for tests/test_readguard_capture_protocol.py. Actual capture uses synthetic no-university run_canary and empty identity bindings; not genuine Job evidence.",
+  "output_only": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round9/b-strict-provider-retry-controls",
+  "prohibited": [
+    "source/Git/STOP changes",
+    "university/network/model calls",
+    "gold/bindings/labels reads"
+  ],
+  "source_edits_by_child": 0
+}

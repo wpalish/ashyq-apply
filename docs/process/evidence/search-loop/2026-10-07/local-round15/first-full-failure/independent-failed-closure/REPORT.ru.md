@@ -1,0 +1,7 @@
+# Первый full — FAILED, источник связан
+
+**NOT_GREEN.** Actual summary13steps:11exit0; SQLite и PostgreSQL exit1 из-за одного и того же существующего schema equality test. В каждом JUnit4369unique identities:4368PASS/1FAIL/0error/0skip. Старые4349 identities сохранены (один из них FAIL),20 новых native controls всеPASS; два DB sets одинаковы. Fixture trace.schema.json и old test body неизменны. Причина — generated JSON Schema нового ExpertTrace, не setup и не fixture error.
+
+Source c8c9/clean frozen tree7b1bf63c, source-manifestbf18c9a6:1002 selected primary/frozen hashes совпадают; current metadata8120435 отделена от code. Все17 raw originals (summary/manifest/logs/JUnit) хешированы до/после. Coverage95.28%; SQLite463.51s иPG330.12s;32warnings perDB (Starlette +plain/XML parsing), не скрыты. Ruff/format/mypy включаяevaluation exit0; frontend232; E2E79+один viewport-specific desktop phone-case skip; auth6; оба audit exit0. Остальные успешные шаги не делают общий full зелёным.
+
+Canonical proposal archive180 originals и saved seed30/265 binding подтверждены ранее:20synthetic rows/Groningen#1/UBC portfolioOUT_OF_BUDGET отдельно от FULL_TUITION funding, singleheadd8e412c6a901. Это synthetic compatibility, не live search/runtime admission/quality. STOP65b5 неизменен. Собственных tests/full/seed/appimports/SQL/CLI/network/scoring0. Ожидаем отдельный sealed repair; failed originals сохраняются, schema fixture/old assertions не меняем.

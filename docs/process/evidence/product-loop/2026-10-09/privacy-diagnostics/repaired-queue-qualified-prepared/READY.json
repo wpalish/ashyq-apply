@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-09T04:33:30.750458+00:00",
+  "status": "QUALIFIED_SAVED_ONLY_EXACT_SUBSTITUTION_NOT_EXECUTED",
+  "files": [
+    {
+      "path": "PLAN.md",
+      "sha256": "759cb4886a8af8ebcac800ff04f1d7f7f15083aa179e7712f8e62f69089f2709",
+      "bytes": 636
+    },
+    {
+      "path": "REPORT.md",
+      "sha256": "03c74f9c71592a85d537688aefdce2e614a1e97b079328432b30e111ad480384",
+      "bytes": 3168
+    },
+    {
+      "path": "receipt.json",
+      "sha256": "3f8a793c6dc5a5bec1b0191a7ff8150dacfbf652d637fbe0ff88f1b8f4343a5f",
+      "bytes": 1091
+    },
+    {
+      "path": "exact-diff.patch",
+      "sha256": "c0550f2bd4f303b2c01dac4145fedfe2f15dfaf789697ba4ea3d5fcdf751161a",
+      "bytes": 2486
+    },
+    {
+      "path": "reviewed/check_queue.py",
+      "sha256": "e5d7c351b882fed0c6096a88058972e867f937e945c0c125aeb6a5666cf741f2",
+      "bytes": 5039
+    },
+    {
+      "path": "reviewed/check_repaired_queue.py",
+      "sha256": "02a3177263538f02595b4d1bd4a1094df3711126d0d8cee8b1f548ae22c62cb7",
+      "bytes": 5070
+    }
+  ],
+  "files_count": 6,
+  "selected_bytes": 17490,
+  "source_queue_sha256": "02a3177263538f02595b4d1bd4a1094df3711126d0d8cee8b1f548ae22c62cb7",
+  "no_execution": true
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "action": "heads",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/guarded_child.py",
+      "heads"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/candidate/backend",
+    "exit_code": 0,
+    "seconds": 0.2252783749718219,
+    "child_guard_sha256": "9090b0bb156cca399a25f73e91241b8f96f84e32b25c3d45fb69e1c08bfbbfd5",
+    "log_sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b"
+  },
+  {
+    "action": "migrate",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/guarded_child.py",
+      "migrate"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/candidate/backend",
+    "exit_code": 0,
+    "seconds": 0.36691229196731,
+    "child_guard_sha256": "9090b0bb156cca399a25f73e91241b8f96f84e32b25c3d45fb69e1c08bfbbfd5",
+    "log_sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a"
+  },
+  {
+    "action": "seed",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/guarded_child.py",
+      "seed"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/candidate/backend",
+    "exit_code": 0,
+    "seconds": 1.837854125071317,
+    "child_guard_sha256": "9090b0bb156cca399a25f73e91241b8f96f84e32b25c3d45fb69e1c08bfbbfd5",
+    "log_sha256": "c666b76bb566673629626c3f31d54ffc0478200044708948e78923b4a22ebe88"
+  },
+  {
+    "action": "inspect",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/guarded_child.py",
+      "inspect"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/candidate/backend",
+    "exit_code": 0,
+    "seconds": 0.14335562498308718,
+    "child_guard_sha256": "9090b0bb156cca399a25f73e91241b8f96f84e32b25c3d45fb69e1c08bfbbfd5",
+    "log_sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709"
+  }
+]

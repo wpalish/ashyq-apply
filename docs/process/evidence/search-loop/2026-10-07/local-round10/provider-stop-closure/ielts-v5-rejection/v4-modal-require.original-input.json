@@ -1,0 +1,7 @@
+[
+ {"case":"modal_not_required_band","inner":"<h2>IELTS Academic</h2><p>Overall score 6.5 will not be required.</p>","expected":{}},
+ {"case":"modal_cannot_required_band","inner":"<h2>IELTS Academic</h2><p>Overall minimum 6.5 cannot be mandatory.</p>","expected":{}},
+ {"case":"active_contraction_refusal","inner":"<h2>IELTS Academic</h2><p>We don't accept IELTS Academic. Overall minimum 6.5.</p>","expected":{}},
+ {"case":"active_contraction_nonrequire","inner":"<h2>IELTS Academic</h2><p>We don't require overall 6.5.</p>","expected":{}},
+ {"case":"explicit_positive_modal_requirement","inner":"<h2>IELTS Academic</h2><p>Overall score 6.5 will be required.</p>","expected":{"ielts_min_overall":6.5,"ielts_accepted_types":["academic"]}}
+]

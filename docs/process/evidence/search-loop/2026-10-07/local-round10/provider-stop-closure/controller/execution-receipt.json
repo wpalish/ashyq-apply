@@ -1,0 +1,36 @@
+{
+  "status": "GLOBAL_PROVIDER_STOP_UNSCORED",
+  "source_head": "7c74a12d71bd00228014c11d194928d223e110be",
+  "source_tree_sha256": "19f349a0a242478e13f95e1905e8f41662a769b579833b004cafb03b73825c9a",
+  "source_paths_verified": 999,
+  "plan_sha256": "031ba703f3fa41079bb59650322af8505d32eb6bd4094ebdb538f42fb8b7e078",
+  "controller_sha256": "4fa670fb54d6f62c296b68e682c2f46417cf02ba0daf75deb69f329be32f269b",
+  "package_sha256": "4d5a09536e04c28ee5d93fa83b6281b0215b6b154c6f8516865578245ea90484",
+  "attempted": [
+    "groningen",
+    "delft",
+    "aalto",
+    "vienna",
+    "warsaw",
+    "ubc",
+    "toronto",
+    "hku",
+    "ntu",
+    "kaist"
+  ],
+  "remaining": [],
+  "validation_errors": {},
+  "capture_kinds": {
+    "groningen": "BOUNDED_TERMINAL_PARTIAL_JOB_running",
+    "delft": "COMPLETED_JOB_CAPTURE",
+    "aalto": "COMPLETED_JOB_CAPTURE",
+    "vienna": "COMPLETED_JOB_CAPTURE",
+    "warsaw": "COMPLETED_JOB_CAPTURE",
+    "ubc": "BOUNDED_TERMINAL_PARTIAL_JOB_running",
+    "toronto": "BOUNDED_TERMINAL_PARTIAL_JOB_queued",
+    "hku": "COMPLETED_JOB_CAPTURE",
+    "ntu": "COMPLETED_JOB_CAPTURE"
+  },
+  "network_location": "local Mac",
+  "expert_pilot": false
+}

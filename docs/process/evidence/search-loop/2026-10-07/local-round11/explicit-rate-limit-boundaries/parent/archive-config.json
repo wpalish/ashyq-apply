@@ -1,0 +1,164 @@
+{
+  "repo": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "destination": "docs/process/evidence/search-loop/2026-10-07/local-round11/explicit-rate-limit-boundaries",
+  "source_manifest": "source-after-isort-999.json",
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "status": "APPLIED_OPERATIONAL_REPAIR_EXACT_PEER_ACCEPT_FRESH_FULL_PENDING",
+  "packets": [
+    {
+      "folder": "local-round11/a-explicit-rate-limit-proposal",
+      "manifest": "ready-manifest.json",
+      "sha256": "133b86aae460d6f475f482809419a56733330adf74bb08a90d489e61ca1be9ae",
+      "label": "source-author",
+      "files_key": "files"
+    },
+    {
+      "folder": "local-round11/b-explicit-rate-limit-proposal-review",
+      "manifest": "ready-manifest.json",
+      "sha256": "3df6d9a003dfc3c1a36cfef29958c254c6b90f5db714646e8c77727db2218c08",
+      "label": "source-peer",
+      "files_key": "files"
+    },
+    {
+      "folder": "local-round11/b-keyless-rate-latch-review",
+      "manifest": "ready-manifest.json",
+      "sha256": "bd0f4467c64a8f3189e7e29ec3890e84e4e09ec103ec503eeeddd46886bc9e7a",
+      "label": "off-peer",
+      "files_key": "files"
+    },
+    {
+      "folder": "local-round11/b-explicit-rate-limit-coverage-plan",
+      "manifest": "ready-manifest.json",
+      "sha256": "2ad90a60f4acca1cd85179690ef4fed7209399521464e86a0100046414d1bfcd",
+      "label": "coverage-plan",
+      "files_key": "selected_files_sha256"
+    },
+    {
+      "folder": "local-round11/a-explicit-rate-limit-native-tests",
+      "manifest": "ready-manifest.json",
+      "sha256": "a1bb4ea0e3cc80f9429f08db59b14953e6b58252858b416dc2c02709bec5b8e5",
+      "label": "native-author",
+      "files_key": "files"
+    },
+    {
+      "folder": "local-round11/b-explicit-rate-limit-native-test-review",
+      "manifest": "ready-manifest.json",
+      "sha256": "5f7ae7fe72ad262cb305c402d6af8794d0a53045611ad1e3589b571c0f24a54d",
+      "label": "native-peer",
+      "files_key": "files"
+    },
+    {
+      "folder": "local-round11/b-explicit-rate-limit-integration-review",
+      "manifest": "ready-manifest.json",
+      "sha256": "612a905cfb3c551001df63bed38feb662e202822f1d450ff2aa0a061b677affc",
+      "label": "first-integration-peer",
+      "files_key": "files"
+    },
+    {
+      "folder": "local-round11/b-explicit-rate-limit-import-repair-review",
+      "manifest": "ready-manifest.json",
+      "sha256": "0047680141dcc068fa85c7a7925c181767c552bf19ea26d9783d333e19c8c282",
+      "label": "import-repair-peer",
+      "files_key": "files"
+    },
+    {
+      "folder": "local-round11/a-explicit-rate-limit-seed-verification",
+      "manifest": "ready-manifest.json",
+      "sha256": "7bda26f69100354abcfd55ae96ecd371a35482577ccbd002208b897b11d58c69",
+      "label": "synthetic-seed",
+      "files_key": "files"
+    }
+  ],
+  "parent_files": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/source-proposal-preflight.json",
+      "name": "source-proposal-preflight.json",
+      "sha256": "7516df7ad5e2a42ed647f68eeaee1e3bc6906f733cd83c929c19c3da59dfd5e7"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/source-before.json",
+      "name": "source-before.json",
+      "sha256": "bb0873f8809906fec5886d0ce57e907d4f51733b66e93bba918ff8f812927485"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/source-before-999.json",
+      "name": "source-before-999.json",
+      "sha256": "f0ef8c5d87d398a1e13f4f6a79ffde612e853d8788d94f3a28b6137fb931a463"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/integration-plan.json",
+      "name": "integration-plan.json",
+      "sha256": "3ddb247c993f1c563072414787488634afc8ab712f403c7577cbbc1d3740e79b"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/final-integration-approval.json",
+      "name": "final-integration-approval.json",
+      "sha256": "67bfed3954b6f257b4cab70651c7f62f520f6bee2d66d01e8f05695738ce7b97"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/source-after-999.json",
+      "name": "source-after-999.json",
+      "sha256": "3152eff17a40f7ebda6e8390e5eea5a38244432c067b4dddc2aeed60061a5aea"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/source-after-isort-999.json",
+      "name": "source-after-isort-999.json",
+      "sha256": "1c55186a6626b9f393601439c44b8e1e8e3f12f8fb9d498e0fb40613faa803d7"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/pre-integration-handoff-check.log",
+      "name": "pre-integration-handoff-check.log",
+      "sha256": "fffa448fb102a21a76254be8a017f99ee5b078be55a9a6a88b2b367a484a5860"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/first-full-interrupt.json",
+      "name": "first-full-interrupt.json",
+      "sha256": "5df77146c9bf36e00b0a5bf7552013e29a443a5c7a8ec15fb7e5908db0a295ad"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/native-import-fix/import-only.patch",
+      "name": "native-import-fix/import-only.patch",
+      "sha256": "3aea150b1132da90120275e67fc677a1ea460f987d3ce35a9a92e4c4cad9a095"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/native-import-fix/receipt.json",
+      "name": "native-import-fix/receipt.json",
+      "sha256": "e40f85a332c8aa44c223c1f9355b5eb172b230b426c85fa8b38dd6bb1219a416"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-explicit-rate-limit-integration/native-import-fix/ruff-fix.log",
+      "name": "native-import-fix/ruff-fix.log",
+      "sha256": "20c69faf01790c30f3b22a2d3b8a36933a5ba2768533f92eeac66ddec80aba5c"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032127Z-check-dded4751/summary.json",
+      "name": "interrupted-first-full/summary.json",
+      "sha256": "ac6dba00034ed973781fa1d7a62d19d1c38b03dda19973a87ec4ec05b1901a21"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032127Z-check-dded4751/source-manifest.json",
+      "name": "interrupted-first-full/source-manifest.json",
+      "sha256": "cbbf9287d2f7122885f64018f75b9e7a2d6fdffc00a13f7c74bb72fe67edcb52"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032127Z-check-dded4751/ruff.log",
+      "name": "interrupted-first-full/ruff.log",
+      "sha256": "c4e17a5c44f17fc1358d1b27483219b21d01230cfa38671af42a1bd3fc5f3918"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032127Z-check-dded4751/ruff-format.log",
+      "name": "interrupted-first-full/ruff-format.log",
+      "sha256": "c08cb44deef3bd5e6aceb013d76f19020ed4f70d4eea0e35334c33d2a0dc94ff"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032127Z-check-dded4751/mypy.log",
+      "name": "interrupted-first-full/mypy.log",
+      "sha256": "ca99489a9bcf35a2bca3b5ead4a6e2aed5a67135339d251c263904707466eb80"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032127Z-check-dded4751/backend-sqlite.log",
+      "name": "interrupted-first-full/backend-sqlite.log",
+      "sha256": "82a994e60c84ea1ded5b431efaf02c7f8ce3c45e9292865618b49856b8200dfe"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "exception": [
+    {
+      "type": "UniversityReadStopped",
+      "reason": "checkpoint_busy",
+      "sqlstate": null,
+      "sqlite_errorcode": null,
+      "message": "University read allowance refused: checkpoint_busy"
+    },
+    {
+      "type": "OperationalError",
+      "reason": null,
+      "sqlstate": "55P03",
+      "sqlite_errorcode": null,
+      "message": "(psycopg.errors.LockNotAvailable) could not obtain lock on row in relation \"jobs\"\n[SQL: SELECT jobs.kind \nFROM jobs \nWHERE jobs.id = %(id_1)s::VARCHAR AND jobs.run_id = %(run_id_1)s::VARCHAR AND jobs.status = %(status_1)s::VARCHAR AND jobs.worker_id = %(worker_id_1)s::VARCHAR AND jobs.attempts = %(attempts_1)s::INTEGER FOR UPDATE NOWAIT]\n[parameters: {'id_1': 'e895cefc5f7d4f809c178833c0cbfaf4', 'run_id_1': 'd48db13da81247f685f7abce568075e9', 'status_1': 'running', 'worker_id_1': 'worker-one', 'attempts_1': 1}]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"
+    },
+    {
+      "type": "LockNotAvailable",
+      "reason": null,
+      "sqlstate": "55P03",
+      "sqlite_errorcode": null,
+      "message": "could not obtain lock on row in relation \"jobs\""
+    }
+  ],
+  "original_get": 0,
+  "durable_ledger": {
+    "university_research_budget_v1": {
+      "version": 1,
+      "episodes": {
+        "decision:e895cefc5f7d4f809c178833c0cbfaf4": {
+          "read_counts": {
+            "catalogue:u-one": 0
+          }
+        }
+      },
+      "read_limit": 60,
+      "active_episode": "decision:e895cefc5f7d4f809c178833c0cbfaf4"
+    }
+  },
+  "pages_checked_after_rollback": 0,
+  "prior_run_lock_released": true,
+  "deadlock_freedom_claim": false
+}

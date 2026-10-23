@@ -1,0 +1,8 @@
+const fs=require('node:fs');
+const ts=require(process.argv[2]);
+const pairs=JSON.parse(fs.readFileSync(process.argv[3],'utf8'));
+function parse(path){const text=fs.readFileSync(path,'utf8');return {text,src:ts.createSourceFile(path,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX)};}
+function bodies(x){const out=[];function walk(n){if(ts.isCallExpression(n)){const e=n.expression.getText(x.src);if(/^(it|test)(\.|$)/.test(e)){const fn=[...n.arguments].reverse().find(a=>ts.isArrowFunction(a)||ts.isFunctionExpression(a));if(fn)out.push(fn.body.getText(x.src));}}ts.forEachChild(n,walk);}walk(x.src);return out;}
+function vars(x){const out={};function walk(n){if(ts.isVariableDeclaration(n)&&n.initializer&&ts.isIdentifier(n.name))out[n.name.text]=n.initializer.getText(x.src);ts.forEachChild(n,walk);}walk(x.src);return out;}
+const out={};for(const [name,p] of Object.entries(pairs)){const old=parse(p[0]),next=parse(p[1]);if(name.endsWith('test.tsx')){const a=bodies(old),b=bodies(next);out[name]={old_templates:a.length,new_templates:b.length,old_bodies_exact:a.every(x=>b.includes(x)),missing:a.filter(x=>!b.includes(x)).length};}else if(name.includes('Shortlist')){const a=vars(old),b=vars(next);out[name]={same_expressions:Object.fromEntries(['rows','clearFilters','activeFilters','decideRow','renderTable'].map(k=>[k,a[k]===b[k]])),same_prop_signature:/export function ShortlistScreen([^\n]*)/.exec(old.text)[1]===/export function ShortlistScreen([^\n]*)/.exec(next.text)[1]};}else{out[name]={source_diff_checked_separately:true};}}
+fs.writeFileSync(process.argv[4],JSON.stringify(out,null,2)+'\n');

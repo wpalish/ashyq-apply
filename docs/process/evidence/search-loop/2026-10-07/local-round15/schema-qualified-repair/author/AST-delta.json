@@ -1,0 +1,13 @@
+{
+  "two_changed_files": [
+    "backend/evaluation/research/expert/models.py",
+    "backend/tests/test_local_pilot.py"
+  ],
+  "model_delta": "Only two new schema classmethods. All other model AST unchanged.",
+  "test_delta": [
+    "test_legacy_default_raw_output_shape"
+  ],
+  "test_names_preserved": 20,
+  "other_test_bodies_AST_equal": 19,
+  "existing_failed_node_and_saved_fixture_byte_unchanged": true
+}

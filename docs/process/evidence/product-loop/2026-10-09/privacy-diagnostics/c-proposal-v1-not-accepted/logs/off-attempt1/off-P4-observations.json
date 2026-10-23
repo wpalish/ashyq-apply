@@ -1,0 +1,203 @@
+{
+  "cost": {
+    "items": {},
+    "total": null,
+    "academic_year": "2027/28",
+    "source_urls": [],
+    "is_range": false
+  },
+  "adapters": [
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN"
+      ],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/page?token=SYNTH_P4_TOKEN",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    },
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/page?token=SYNTH_P4_TOKEN",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    },
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN"
+      ],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/page?token=SYNTH_P4_TOKEN",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "",
+          "readable_chars": 0
+        }
+      ]
+    },
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN: refused_privacy \u2014 post-study work rules unverified for Synthetic."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/page?token=SYNTH_P4_TOKEN",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    },
+    {
+      "claims": [],
+      "errors": [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+      ],
+      "pages_checked": 1,
+      "pages_failed": 1,
+      "retry_urls": [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN"
+      ],
+      "page_types": [],
+      "page_outcomes": [
+        {
+          "url": "https://public.invalid/page?token=SYNTH_P4_TOKEN",
+          "category": "fetch-failed",
+          "page_type": "",
+          "detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+          "readable_chars": 0
+        }
+      ]
+    }
+  ],
+  "run": {
+    "errors": [
+      "https://public.invalid/page?token=SYNTH_P4_TOKEN: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+      "page fetch-failed: https://public.invalid/page?token=SYNTH_P4_TOKEN (page_type unclassified): refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+    ],
+    "unknowns": [],
+    "retry_urls": [
+      "https://public.invalid/page?token=SYNTH_P4_TOKEN"
+    ]
+  },
+  "walk_outcomes": [
+    [
+      "https://public.invalid/page?token=SYNTH_P4_TOKEN",
+      "refused_privacy"
+    ]
+  ],
+  "trace": {
+    "institution": "Public University",
+    "domain": "public.invalid",
+    "sitemaps_declared": [],
+    "sitemaps_read": [],
+    "sitemap_urls_seen": 0,
+    "sitemap_urls_kept": 0,
+    "manual_seeds": {},
+    "selected": {},
+    "rejected_sample": [
+      [
+        "https://public.invalid/page?token=SYNTH_P4_TOKEN",
+        "could not be read (refused_privacy)"
+      ]
+    ],
+    "rejected_total": 1,
+    "errors": [],
+    "search_failures": [],
+    "search_limitations": [],
+    "field_sources": {},
+    "search_coverage": {},
+    "search_queries_attempted": 0,
+    "used_navigation_fallback": false,
+    "kept_by_link_text": [],
+    "walker": {
+      "catalogs_walked": 0,
+      "candidates": [],
+      "programs_confirmed": 0,
+      "outcomes": []
+    }
+  },
+  "logs": [
+    {
+      "message": "refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter",
+      "args": "('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 975, 'funcName': '_get', 'created': 1791516063.3246028, 'msecs': 324.0, 'relativeCreated': 583.5928916931152, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 8795, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:21:03+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter",
+      "args": "('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 975, 'funcName': '_get', 'created': 1791516063.324859, 'msecs': 324.0, 'relativeCreated': 583.8489532470703, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 8795, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:21:03+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter",
+      "args": "('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 975, 'funcName': '_get', 'created': 1791516063.3248892, 'msecs': 324.0, 'relativeCreated': 583.8792324066162, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 8795, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:21:03+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter",
+      "args": "('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 975, 'funcName': '_get', 'created': 1791516063.3249102, 'msecs': 324.0, 'relativeCreated': 583.9002132415771, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 8795, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:21:03+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter",
+      "args": "('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 975, 'funcName': '_get', 'created': 1791516063.3249369, 'msecs': 324.0, 'relativeCreated': 583.9269161224365, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 8795, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:21:03+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter",
+      "args": "('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 975, 'funcName': '_get', 'created': 1791516063.324959, 'msecs': 324.0, 'relativeCreated': 583.949089050293, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 8795, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:21:03+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter",
+      "args": "('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 975, 'funcName': '_get', 'created': 1791516063.324987, 'msecs': 324.0, 'relativeCreated': 583.9769840240479, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 8795, 'taskName': 'Task-7', 'message': 'refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:21:03+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    }
+  ]
+}

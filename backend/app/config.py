@@ -133,16 +133,18 @@ class Settings(BaseSettings):
     #: would let any client invent an address and walk around the limiter.
     trust_proxy_headers: bool = False
 
-    #: Who may read the moderation queue and act on it, as a comma-separated
-    #: list of account emails.
+    #: Operator-provisioned immutable account IDs allowed to moderate the
+    #: deployment. Registering an email must never grant global privileges.
     #:
     #: Deliberately not a role in the database. A workspace owner is the admin
     #: of their own tenant, and the community is not theirs — it spans every
     #: workspace — so tenant roles cannot grant this. A setting the deployment
     #: operator edits is crude, but it puts the decision where it belongs and
-    #: needs no table, no grant flow and no way for one applicant to make
-    #: themselves a moderator. A real deployment with more than a handful of
-    #: moderators should replace it.
+    #: needs no table or in-product grant flow. Provision IDs only after
+    #: independently identifying the intended account.
+    moderator_user_ids: str = ""
+    #: Legacy setting retained for configuration compatibility only. A claimed
+    #: email does not prove mailbox ownership and grants no moderation access.
     moderator_emails: str = ""
 
     #: `/metrics` for a Prometheus scraper. It carries no applicant data, only
@@ -204,6 +206,10 @@ class Settings(BaseSettings):
     @property
     def moderator_email_list(self) -> list[str]:
         return [e.strip().casefold() for e in self.moderator_emails.split(",") if e.strip()]
+
+    @property
+    def moderator_user_id_list(self) -> list[str]:
+        return [value.strip() for value in self.moderator_user_ids.split(",") if value.strip()]
 
     def ensure_dirs(self) -> None:
         directories = [self.cache_dir, self.export_dir]

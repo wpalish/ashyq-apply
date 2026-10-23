@@ -1,0 +1,120 @@
+[
+  {
+    "id": "01-public-legal-desktop",
+    "recorded_at": "2026-10-09T02:02:11.237Z",
+    "tab_id": "1010110752",
+    "url": "http://127.0.0.1:5173/#/legal",
+    "actions": [
+      "Opened fresh owned Chrome task tab at bound localhost legal",
+      "Applied planned desktop viewport"
+    ],
+    "result": "PASS_VISIBLE",
+    "qualification": "Draft/legal scope and unresolved operator/consent facts visible signed out; runtime privacy/compliance not established.",
+    "screenshot": "01-public-legal-desktop.jpg",
+    "AX": "01-public-legal-desktop-ax.txt",
+    "geometry": "01-public-legal-desktop-geometry.json"
+  },
+  {
+    "id": "02-public-legal-phone",
+    "recorded_at": "2026-10-09T02:02:16.240Z",
+    "tab_id": "1010110752",
+    "url": "http://127.0.0.1:5173/#/legal",
+    "actions": [
+      "Applied planned phone viewport",
+      "Native vertical scroll of public legal page"
+    ],
+    "result": "PASS_VISIBLE",
+    "qualification": "Long legal page uses normal vertical scroll; body/document width equals390. No terms acceptance.",
+    "screenshot": "02-public-legal-phone.jpg",
+    "AX": "02-public-legal-phone-ax.txt",
+    "geometry": "02-public-legal-phone-geometry.json"
+  },
+  {
+    "id": "03-saved-A-no-run-export",
+    "recorded_at": "2026-10-09T02:03:17.424Z",
+    "tab_id": "1010110752",
+    "url": "http://127.0.0.1:5173/#/export",
+    "actions": [
+      "Native registration of fresh disposable A workspace",
+      "Explicit Load synthetic demo",
+      "Changed Field of study to A saved marker",
+      "Native Save profile",
+      "Opened Export through menu",
+      "Clicked Show my stored data"
+    ],
+    "result": "PASS_VISIBLE",
+    "qualification": "Visible stored-data AX contains A saved marker and runs/results/claims/conflicts empty with0 counts. No research or download performed; case export not account-wide proof.",
+    "screenshot": "03-saved-A-no-run-export.jpg",
+    "AX": "03-saved-A-no-run-export-ax.txt",
+    "geometry": "03-saved-A-no-run-export-geometry.json"
+  },
+  {
+    "id": "04-saved-A-no-run-delete",
+    "recorded_at": "2026-10-09T02:03:45.714Z",
+    "tab_id": "1010110752",
+    "url": "http://127.0.0.1:5173/#/export",
+    "actions": [
+      "DELET keeps Delete permanently disabled (AX saved)",
+      "Typed exact DELETE and native Delete permanently",
+      "Acknowledged Deleted active-service notice",
+      "Native phone scroll toward deletion state"
+    ],
+    "result": "PASS_VISIBLE_QUALIFIED",
+    "qualification": "Acknowledged deletion and case option removed; opened stored-data view may persist in mounted export screen, checked separately in action evidence. No audit/backup wipe claim. Native reload case-list check follows.",
+    "screenshot": "04-saved-A-no-run-delete.jpg",
+    "AX": "04-saved-A-no-run-delete-ax.txt",
+    "geometry": "04-saved-A-no-run-delete-geometry.json"
+  },
+  {
+    "id": "05-B-tab2-before-marker",
+    "recorded_at": "2026-10-09T02:05:04.468Z",
+    "tab_id": "1010110755",
+    "url": "http://127.0.0.1:5173/#/profile",
+    "actions": [
+      "Tab2 native sign-out A",
+      "Native register fresh synthetic B workspace",
+      "Settled profile before entering any B field marker"
+    ],
+    "result": "PASS_VISIBLE",
+    "qualification": "Profile is blank and lacks A draft marker/restored notice before B input. This is cooperative visible behavior, not independent tenant authorization proof.",
+    "screenshot": "05-B-tab2-before-marker.jpg",
+    "AX": "05-B-tab2-before-marker-ax.txt",
+    "geometry": "05-B-tab2-before-marker-geometry.json"
+  },
+  {
+    "id": "06-B-cooperative-tab1-before-reload",
+    "recorded_at": "2026-10-09T02:05:54.197Z",
+    "tab_id": "1010110752",
+    "url": "http://127.0.0.1:5173/#/profile",
+    "actions": [
+      "Observed tab1 after cooperative owner storage events without reloading",
+      "A unsaved draft and restored notice absent",
+      "Opened Settings/Account read-only identity control; no principal/workspace values surfaced in AX/DOM",
+      "Returned to Applicant profile without reload",
+      "Applied planned desktop viewport"
+    ],
+    "result": "PARTIAL_VISIBLE",
+    "qualification": "A private draft tree cleared before reload; B registration is known from native tab2 action, but principal/workspace identity was not exposed by this inspected UI. No claim of visible identity or all-race/tenant proof.",
+    "screenshot": "06-B-cooperative-tab1-before-reload.jpg",
+    "AX": "06-B-cooperative-tab1-before-reload-ax.txt",
+    "geometry": "06-B-cooperative-tab1-before-reload-geometry.json"
+  },
+  {
+    "id": "07-B-same-owner-reload-phone",
+    "recorded_at": "2026-10-09T02:06:57.110Z",
+    "tab_id": "1010110755",
+    "url": "http://127.0.0.1:5173/#/profile",
+    "actions": [
+      "Native B saved-case reload first returned connecting state (retained AX)",
+      "After hydration saved B option present; native selection shows B saved marker",
+      "Native New case and B local draft marker, no Save",
+      "Native same-owner reload; waited for observed restored-notice UI",
+      "Applied planned phone viewport"
+    ],
+    "result": "PASS_VISIBLE",
+    "qualification": "Saved B case is available after settled reload, selected marker confirms it. New local B draft restored with notice and no A marker. Finite UI persistence only; first connecting AX is not treated as failure.",
+    "screenshot": "07-B-same-owner-reload-phone.jpg",
+    "AX": "07-B-same-owner-reload-phone-ax.txt",
+    "geometry": "07-B-same-owner-reload-phone-geometry.json"
+  }
+]

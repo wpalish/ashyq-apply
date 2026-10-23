@@ -1,0 +1,38 @@
+{
+  "schema_version": "g3-focused-fixture-repair1-seal-v1",
+  "status": "SEALED_EXTERNAL_SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_FORMATTED_NOT_RUN_NOT_ACCEPTED",
+  "producer": "/root/g3_frontend_foundation",
+  "application_postimages": 1,
+  "member_count": 5,
+  "members": [
+    {
+      "path": "MANIFEST.json",
+      "sha256": "c8e6d9cafa5217c627537b1432e0f51a333a6e55531c79e643220e1936a4d848",
+      "bytes": 1978
+    },
+    {
+      "path": "README.md",
+      "sha256": "4d006956369d00ff61e0a8d07cc3d94dc99a5289b7fb73d4f91deb22d85b6675",
+      "bytes": 3301
+    },
+    {
+      "path": "diffs/backend/tests/test_today.py.diff",
+      "sha256": "abb1629dc1be88cac9bc5889491038995004bfd5822432a78ff11e061038ac5a",
+      "bytes": 3237
+    },
+    {
+      "path": "files/backend/tests/test_today.py",
+      "sha256": "0acb3fcdbb9929fb921920fbcdb57f5d50bd63ef025e38d4871aa432b0c8a86d",
+      "bytes": 23268
+    },
+    {
+      "path": "originals/backend/tests/test_today.py",
+      "sha256": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16",
+      "bytes": 22088
+    }
+  ],
+  "preimage": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16",
+  "postimage": "0acb3fcdbb9929fb921920fbcdb57f5d50bd63ef025e38d4871aa432b0c8a86d",
+  "preservation": "Exact four literal inverse yields full original bytes; non-target function spans byte unchanged. No application/runtime execution.",
+  "root_next": "Independent immutable source review, finite application and authorized native gates; not performed here."
+}

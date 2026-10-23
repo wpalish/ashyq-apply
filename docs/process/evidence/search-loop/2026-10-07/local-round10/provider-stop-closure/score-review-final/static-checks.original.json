@@ -1,0 +1,45 @@
+{
+  "source_sha256": "7d183e1781b458d3ec5c4cd130963ff59547116c5440d43aa636c7098d4814a9",
+  "checks": {
+    "exact_source_sha256": true,
+    "exact_validator_file_plan_hash_and_literal4fa": true,
+    "all4physical_paths_declared": true,
+    "native_validate_explicit_partial_false": true,
+    "validate_before_Dataset_and_score": true,
+    "kind_matches_receipt": true,
+    "hash_fourfiles_before_load": true,
+    "hash_fourfiles_after_score": true,
+    "STOP_before_eligibility_and_before_write": true,
+    "separate_two_corpora": true,
+    "strict_allow_drafts_false": true,
+    "raw_core_separate_atomic_known_hits": true,
+    "native_cost_view": true,
+    "no_partial_case_filter": true,
+    "no_output_overwrite": true
+  },
+  "check_count": 15,
+  "pass": 15,
+  "fail": 0,
+  "static_call_sites": {
+    "validate": [
+      31
+    ],
+    "Dataset_load": [
+      40
+    ],
+    "score": [
+      42
+    ],
+    "label_outcomes": [
+      42
+    ],
+    "capture_kind": [
+      33
+    ]
+  },
+  "actual_score_calls": 0,
+  "actual_driver_import_calls": 0,
+  "current_live_output_reads": 0,
+  "corpus_body_reads": 0,
+  "not_runtime_collection_proof": true
+}

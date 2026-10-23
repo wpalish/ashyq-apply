@@ -1,0 +1,31 @@
+{
+  "reviewer": "expert_wits_aut_caltech",
+  "initial_tool_read": {
+    "status": "REQUEST_CHANGES",
+    "LegalScreen_sha256": "729e79b3ff13e0599cf17d1c7cac8d10a223cbf2d55d75bb9ae466f773d0fc89",
+    "new_test_sha256": "b797dbdba148cc6559690bebf79610876f2ba1d9ba9755de85561db6938b3f16",
+    "findings": [
+      {"id": "L1", "claim": "audit holds identifiers/actions only, not profile contents", "evidence": "AuditEvent.detail accepts JSON; runner run_failed stores error=str(exc)[:400]; billing stores method/amount_kzt", "resolution": "operation/error details and data-free non-guarantee explicit in final"},
+      {"id": "L2", "claim": "no applicant profile fields/data in outbound research context", "evidence": "DiscoveryIntent.from_profile reads intended field, degree, optional intake year", "resolution": "bounded preference-derived programme context, excluded full profile/identity/contacts/grades/budget; no anonymity guarantee"},
+      {"id": "L3", "claim": "LLM/AI recipient inventory implied no existing adapter capability", "evidence": "TypeSafe factory/HTTP adapter/link-ranker exist; no active product caller established", "resolution": "separate optional bounded TypeSafe capability; active use unknown, no profile-aware AI inference"}
+    ],
+    "preservation": "Initial source was read in tool transcript; reviewed-v1 snapshot was taken after these corrections were already present, so its13PASS is not claimed for the earlier729e79b3 source."
+  },
+  "security12_initial": {
+    "proposal_manifest_sha256": "51e01db86be39f197f8b8883311e4cdbe41ebba0265d723c6bd2f1fb2add01e3",
+    "SECURITY_sha256": "244bf6cd1df39b167d16613ad066188971c12031730b9180338be623ff9dcafb",
+    "status": "REQUEST_CHANGES",
+    "findings": [
+      {"id": "S1", "claim": "Every database read and mutation starts from authenticated organization", "correction": "Limit to tenant-private routes; public account-entry and cross-workspace community are separate boundaries"},
+      {"id": "S2", "claim": "audit written before deletion means act survives data", "evidence": "AuditEvent.organization_id FK CASCADE plus account deletion removes sole-owner organizations", "correction": "Audit first is not guaranteed surviving deletion receipt"},
+      {"id": "S3", "claim": "payment webhook is only unauthenticated write endpoint", "evidence": "Public register/login/reset requests also write account/session/reset state", "correction": "Signature-authenticated payment callback distinct from public account-entry controls"}
+    ],
+    "preservation": "Exact first SECURITY text and manifest pins are in the tool transcript; findings preserved here without claiming a full archived byte copy."
+  },
+  "final": {
+    "proposal_manifest_sha256": "a93602b72da3bbf1e9d2b878598780a59034313a66879889c46c53942fb89174",
+    "status": "QUALIFIED_ACCEPT_DRAFT_SOURCE_NOTICE_ONLY",
+    "all_six_findings": "CLOSED_IN_EXACT_FINAL12",
+    "runtime_consent_or_production_approval": false
+  }
+}

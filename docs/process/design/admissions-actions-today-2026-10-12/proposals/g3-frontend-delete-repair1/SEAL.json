@@ -1,0 +1,55 @@
+{
+  "schema_version": "immutable-g3-source-seal-v1",
+  "at_utc": "2026-10-13T05:21:38.874583+00:00",
+  "status": "SEALED_SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "package_members": {
+    "MANIFEST.json": {
+      "sha256": "c071883cb26eb853117c019a04ead972605fac996c5da898cca7287f861811d9",
+      "bytes": 1607
+    },
+    "README.md": {
+      "sha256": "210a1606d2869a70321f79249e077aff4a49d9ad041f2646cd064f57b0c09809",
+      "bytes": 6986
+    },
+    "diffs/frontend/src/lib/admissionsActionsRecovery.test.ts.diff": {
+      "sha256": "173d126a7121d1348a504b5369e571bd985b8ddde4a231e0b7ffbc5baab235b5",
+      "bytes": 10872
+    },
+    "diffs/frontend/src/lib/admissionsActionsRecovery.ts.diff": {
+      "sha256": "a464602387edab8994cc7cf72788914bf9b0413052362574d17645ca9694ce5b",
+      "bytes": 11338
+    },
+    "inputs/AUTHORITY_HANDOFF_EXCERPT.md": {
+      "sha256": "9f8e8d54757867b97dfee74a6a274bd42b188134bfd2160642f53cb679f6c53e",
+      "bytes": 1576
+    },
+    "inputs/G3_FRONTEND_FOUNDATION_SOURCE_GRANT.json": {
+      "sha256": "c124334f58ace1eb942b1d36cb542aa682f126197f12869d112d7a935a069e68",
+      "bytes": 6813
+    },
+    "inputs/ORIGINAL_FOUNDATION_SEAL.json": {
+      "sha256": "e48a39997f0295d91710525fa3d4a0c873cf00e1397433ffc23b2b52de4c7b01",
+      "bytes": 3325
+    },
+    "inputs/ROOT_G3_FRONTEND_SOURCE_REVIEW1.json": {
+      "sha256": "e228797d698c8981c1d471490b3d6eba12a0d9e41d5335a09793d5dc60e63e94",
+      "bytes": 1071
+    },
+    "postimages/frontend/src/lib/admissionsActionsRecovery.test.ts": {
+      "sha256": "d32d94425a55d374c065a574b72b8427b6acc2ac411f2127b3ad16c12f457c83",
+      "bytes": 43275
+    },
+    "postimages/frontend/src/lib/admissionsActionsRecovery.ts": {
+      "sha256": "e6ef9c02b45006c23d4a9cc8046c231455f362f159dfebe11b29e668cb55c86f",
+      "bytes": 46992
+    },
+    "preimages/frontend/src/lib/admissionsActionsRecovery.test.ts": {
+      "sha256": "fa441aaa3b641bb413e10662a84ea98cb59c3a434d7924832148cb4f7e84b6ef",
+      "bytes": 33214
+    },
+    "preimages/frontend/src/lib/admissionsActionsRecovery.ts": {
+      "sha256": "b95410e93644b93506e2891565b80ebf341ebb78d3c65cf18022f7c85a2e4f6c",
+      "bytes": 39985
+    }
+  }
+}

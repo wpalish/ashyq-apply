@@ -1,0 +1,27 @@
+...................                                                      [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_profile_write_concurrency.py::test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[sqlite-funding]
+tests/test_profile_write_concurrency.py::test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[sqlite-gpa]
+tests/test_profile_write_concurrency.py::test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[postgres-funding]
+tests/test_profile_write_concurrency.py::test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[postgres-gpa]
+  tests/test_profile_write_concurrency.py:21: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("first_field", ["funding", "gpa"])
+
+tests/test_profile_commands.py::test_two_actual_concurrent_profile_writers[sqlite-put_put]
+tests/test_profile_commands.py::test_two_actual_concurrent_profile_writers[sqlite-put_persisted_rerank]
+tests/test_profile_commands.py::test_two_actual_concurrent_profile_writers[postgres-put_put]
+tests/test_profile_commands.py::test_two_actual_concurrent_profile_writers[postgres-put_persisted_rerank]
+  tests/test_profile_commands.py:161: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("kind", ["put_put", "put_persisted_rerank"])
+
+tests/test_profile_commands.py::test_concurrent_create_exact_original_is_one_atomic_acceptance[sqlite]
+tests/test_profile_commands.py::test_concurrent_create_exact_original_is_one_atomic_acceptance[postgres]
+  tests/test_profile_commands.py:208: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    def test_concurrent_create_exact_original_is_one_atomic_acceptance(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+19 passed, 11 warnings in 5.89s

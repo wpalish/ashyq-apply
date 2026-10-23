@@ -1,0 +1,15 @@
+/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-authorized-case-recovery/support/old-body-audit.cjs:8
+if(a.some((s,i)=>s!==b[i]))throw Error('OLD_MODULE_STATEMENT_CHANGED');
+                           ^
+
+Error: OLD_MODULE_STATEMENT_CHANGED
+    at Object.<anonymous> (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-authorized-case-recovery/support/old-body-audit.cjs:8:34)
+    at Module._compile (node:internal/modules/cjs/loader:1781:14)
+    at Object..js (node:internal/modules/cjs/loader:1913:10)
+    at Module.load (node:internal/modules/cjs/loader:1505:32)
+    at Function._load (node:internal/modules/cjs/loader:1309:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.23.3

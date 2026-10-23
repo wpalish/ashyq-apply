@@ -1,0 +1,11 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const ts = require('../runtime/on/frontend/node_modules/typescript');
+const root = path.resolve(__dirname, '..');
+const prior = fs.readFileSync(path.join(root, 'history/test-url-mock-static-type/ExportScreen.privacy.initial.test.tsx'), 'utf8');
+const current = fs.readFileSync(path.join(root, 'proposed/frontend/src/screens/ExportScreen.privacy.test.tsx'), 'utf8');
+const compile = text => ts.transpileModule(text, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+const a = compile(prior), b = compile(current);
+if (a !== b) throw new Error('TYPE_ONLY_FIX_CHANGED_EMITTED_TEST_BODY');
+fs.writeFileSync(path.join(root, 'test-type-only-audit.json'), JSON.stringify({ status: 'PASS', initial_and_final_emitted_test_javascript_identical: true, sha256: crypto.createHash('sha256').update(a).digest('hex') }, null, 2) + '\n');

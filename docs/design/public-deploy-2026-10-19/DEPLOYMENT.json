@@ -1,0 +1,46 @@
+{
+  "sourceCommit": "6693547306a47e27e74a797099323ae34c848921",
+  "sourceMetadataOnlySuccessor": "aee0ddec",
+  "deploymentAuthorization": "Explicit human: разверни",
+  "app": "ashyq-apply-alisher",
+  "url": "https://ashyq-apply-alisher.fly.dev",
+  "previousRelease": 6,
+  "previousImage": "registry.fly.io/ashyq-apply-alisher@sha256:f4233b926427a51915439efb10ede943e3cf364a469b56a0a1a6f55ed1532e5b",
+  "newImage": "registry.fly.io/ashyq-apply-alisher@sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec",
+  "priorDatabaseRevision": "d8e412c6a901",
+  "targetDatabaseRevision": "a1b26e902028",
+  "preMigrationBackup": {
+    "id": "20261019-081721F",
+    "status": "completed",
+    "type": "full",
+    "start": "2026-10-19T08:17:21Z",
+    "stop": "2026-10-19T08:17:29Z"
+  },
+  "strategy": "rolling; update-only; no new public IPs",
+  "secretsChanged": false,
+  "localSyntheticDbUploaded": false,
+  "providerResearchOrEvaluationStarted": false,
+  "status": "DEPLOYED_AND_PUBLICLY_VERIFIED",
+  "recordedAt": "2026-10-19T08:19:44.485669+00:00",
+  "release": 7,
+  "publicHealth": "ok",
+  "databaseHealth": "ok",
+  "databaseRevisionAfter": "a1b26e902028",
+  "catalogue": {
+    "seedRecords": 500,
+    "universities": 501,
+    "newObservations": 0,
+    "programmeRecords": 14,
+    "publishedInstitutions": 9,
+    "complete500ProgrammeData": false
+  },
+  "native": [
+    "public Russian homepage rendered",
+    "sign-in page rendered; no credentials entered",
+    "public page retained in browser"
+  ],
+  "productionLoggedInJourney": "NOT_RUN",
+  "providerOrModelOrSearchProbe": "NOT_RUN",
+  "fullQualityOrLegalOrSecurityAcceptance": "NOT_CLAIMED",
+  "completedAt": "2026-10-19T08:24:13.464566+00:00"
+}

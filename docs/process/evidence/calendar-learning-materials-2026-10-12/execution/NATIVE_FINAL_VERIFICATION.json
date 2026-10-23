@@ -1,0 +1,63 @@
+{
+  "status": "LOCAL_STAGE1_NATIVE_PASS",
+  "current_head": "6a66da456f14d964ec16091f321fb7f23a74077f",
+  "runs": {
+    "20261011T223151Z-demo": {
+      "tests": 100,
+      "failures": 0,
+      "errors": 0,
+      "skips": 1,
+      "source_paths": 412,
+      "run_sha256": "a5eec5e359367719bbf719cdd26ec7fe9b359424ffe36fe7f6bca23f89decce3"
+    },
+    "20261011T223732Z-auth": {
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "source_paths": 412,
+      "run_sha256": "7448034adcf1badb78540b09158bdf979e2e6ab2a05253131d59f99ad682fa65"
+    }
+  },
+  "visual_review": {
+    "320": {
+      "path": "evidence/e2e/20261011T223732Z-auth/docs/screenshots/auth-learning-calendar-second-session-320.png",
+      "width": 320,
+      "height": 900,
+      "sha256": "6f0054ce60e5d4f4f26bd2a15b1fa2641e224df8db0e93686a60c1203189d0da",
+      "root_visual_inspection": "dates/task titles/actions readable in actual viewport; layout-specific fixed navigation retained"
+    },
+    "768": {
+      "path": "evidence/e2e/20261011T223732Z-auth/docs/screenshots/auth-learning-calendar-second-session-768.png",
+      "width": 768,
+      "height": 900,
+      "sha256": "c26ac0c322f37073ab5486cfdf104550f7c0aa727c201899d7f49460cd75f25b",
+      "root_visual_inspection": "dates/task titles/actions readable in actual viewport; layout-specific fixed navigation retained"
+    },
+    "1024": {
+      "path": "evidence/e2e/20261011T223732Z-auth/docs/screenshots/auth-learning-calendar-second-session-1024.png",
+      "width": 1024,
+      "height": 900,
+      "sha256": "df213d718c63bbc0f900cece9142f4b2ef7dd132a3ad8da68c412ff5879f98d2",
+      "root_visual_inspection": "dates/task titles/actions readable in actual viewport; layout-specific fixed navigation retained"
+    },
+    "1440": {
+      "path": "evidence/e2e/20261011T223732Z-auth/docs/screenshots/auth-learning-calendar-second-session-1440.png",
+      "width": 1440,
+      "height": 900,
+      "sha256": "035f322ce67137c8482b12332c28034ed0737167b537ffd0fa29c7d551552716",
+      "root_visual_inspection": "dates/task titles/actions readable in actual viewport; layout-specific fixed navigation retained"
+    }
+  },
+  "providers": "none",
+  "api_mocks": false,
+  "main_and_production": "NOT_CHANGED",
+  "containers": "NOT_RUN",
+  "live_search_quality": "NOT_MEASURED",
+  "auth_first_failure": "evidence/e2e/20261011T223420Z-auth",
+  "demo_first_failures": [
+    "evidence/e2e/20261011T221550Z-demo",
+    "evidence/e2e/20261011T222342Z-demo"
+  ],
+  "carried_gate_binding": "FINAL_CARRY_QUALIFICATION.json"
+}

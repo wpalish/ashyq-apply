@@ -1,0 +1,67 @@
+{
+  "backend/app/adapters/cost/web_costs.py": {
+    "before_sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+    "proposed_sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+    "bytes": 9177
+  },
+  "backend/app/adapters/discovery/catalog_walker.py": {
+    "before_sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+    "proposed_sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+    "bytes": 33397
+  },
+  "backend/app/adapters/discovery/live_discovery.py": {
+    "before_sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+    "proposed_sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+    "bytes": 97093
+  },
+  "backend/app/adapters/documents/web_documents.py": {
+    "before_sha256": "2249d096c3623661d7f2620a3dd34e5e4404e23b0db49dff760e7605f07fdd3b",
+    "proposed_sha256": "4f9f57bf882e0dfac2e22618f4d1f8f078b7b7408c5e06fec4a170010a4db807",
+    "bytes": 36225
+  },
+  "backend/app/adapters/fetching.py": {
+    "before_sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+    "proposed_sha256": "3646a30600306c07496dd739faf07d8b6b060ab43ba0e82503f4609c8f7e8015",
+    "bytes": 49208
+  },
+  "backend/app/adapters/government/web_government.py": {
+    "before_sha256": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82",
+    "proposed_sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+    "bytes": 3331
+  },
+  "backend/app/adapters/requirements/web_requirements.py": {
+    "before_sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+    "proposed_sha256": "9918cd709e99f2b37b8495b16a68fd2d034399cfd3c762ac8850ad6077be9a69",
+    "bytes": 43972
+  },
+  "backend/app/adapters/scholarship/web_scholarships.py": {
+    "before_sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+    "proposed_sha256": "9eaeb268e1d7ed80f4d06d7b30bcf69fde83441047cd371ad21325da462600d5",
+    "bytes": 62106
+  },
+  "backend/app/adapters/search/intent.py": {
+    "before_sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "proposed_sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+    "bytes": 13298
+  },
+  "backend/app/jobs/worker.py": {
+    "before_sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+    "proposed_sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+    "bytes": 21770
+  },
+  "backend/app/pipeline/runner.py": {
+    "before_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "proposed_sha256": "67b3cd35d938d95af4772205d5d8e1c9e96da463fb0916379fe6d929c8a99d06",
+    "bytes": 98011
+  },
+  "backend/tests/test_fetch_pii_hops.py": {
+    "before_sha256": "8696d69d94db618d9f84322e5af747daf81a784d25aed5a8c354e10a97f661fc",
+    "proposed_sha256": "37af0fa8f415cdc7065bf0c6a08c489c3a0fbd84f0dbda43dd82ba601c61098f",
+    "bytes": 28879
+  },
+  "backend/tests/test_rejected_diagnostics.py": {
+    "before_sha256": null,
+    "proposed_sha256": "0131a2c3ec83791e71463868e735b21f8fac2a144a13668c24bbdfc6ee1177fd",
+    "bytes": 18783
+  }
+}

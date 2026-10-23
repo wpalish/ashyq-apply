@@ -1,0 +1,58 @@
+{
+  "status": "SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "preimages_match_current_application_at_metadata_check": true,
+  "preimages": {
+    "backend/app/api/routes_shared_route.py": "f6dc485b26b9af6d04ba6e4a83d1da28ff1146b47ac3cab51c16d825d7bfb3d5",
+    "backend/tests/test_shared_route_api.py": "13e04e275e8b3ffd263f513f7e382a53bd736eec4fc687ab8c5f179c209b3636"
+  },
+  "proposed_source_pins": {
+    "backend/app/api/routes_shared_route.py": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+    "backend/tests/test_shared_route_api.py": "84c166681851a448e24aaeb14bcdab4587777c47e3e137027760130c9fcfeee8"
+  },
+  "changed_ast_nodes": {
+    "backend/app/api/routes_shared_route.py": {
+      "changed_old_function_class_nodes": [
+        "_require_preparation",
+        "save_shared_route"
+      ],
+      "new_nodes": []
+    },
+    "backend/tests/test_shared_route_api.py": {
+      "changed_old_function_class_nodes": [
+        "test_canonical_uuid_replay_survives_expiry_research_lock_and_legacy_tick_exactly",
+        "test_cross_local_midnight_refuses_old_preview_without_any_shared_or_legacy_write"
+      ],
+      "new_nodes": [
+        "test_terminal_subscription_select_cannot_accept_an_old_day_or_elapsed_term"
+      ]
+    }
+  },
+  "old_function_class_nodes_removed": [],
+  "api_byte_identical_to_sealed_predecessor": true,
+  "two_new_clock_cases_byte_identical_to_sealed_predecessor": true,
+  "only_additional_final2_semantic_change": "mandatory version query in existing combined-expiry exact-lesson GET; expected 402 unchanged",
+  "root_reported_focused_first": {
+    "total": 285,
+    "passed": 283,
+    "failed": 2,
+    "skipped": 0,
+    "independently_executed_by_this_agent": false
+  },
+  "root_preimage_head_reported": "92199be5",
+  "git_independently_verified": false,
+  "application_imported": false,
+  "tests_collected": false,
+  "tests_executed": false,
+  "migration_or_runtime_executed": false,
+  "network_or_provider_calls": false,
+  "old_seals_edited": false,
+  "unrelated_retirement_controls_added": false,
+  "metadata_operations_only": [
+    "read_bytes",
+    "write_external_proposal_bytes",
+    "sha256",
+    "json",
+    "ast_parse",
+    "unified_diff"
+  ]
+}

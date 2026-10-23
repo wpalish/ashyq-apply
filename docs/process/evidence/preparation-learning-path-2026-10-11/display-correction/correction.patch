@@ -1,0 +1,67 @@
+--- frontend/src/screens/PreparationScreen.tsx
++++ frontend/src/screens/PreparationScreen.tsx
+@@ -14,6 +14,10 @@
+ 
+ const LEARNING_CATALOGUE_VERSION = 'learning-pack-2026-10-11-v1';
+ const lessonVersionKey = (id: string, version: string) => JSON.stringify([id, version]);
++const ACCESS_REASONS: Record<PreparationAccess['reason'], string> = {
++  development_mode: 'Local preview access', subscription_term: 'Included in your current subscription',
++  no_eligible_subscription: 'No active preparation subscription',
++};
+ type Mode = 'goals' | 'schedule' | 'practice' | 'progress';
+ const MODES: { id: Mode; title: string }[] = [
+   { id: 'goals', title: 'Goals & evidence' }, { id: 'schedule', title: 'Study plan' },
+@@ -57,7 +61,7 @@
+       <p className="small">{access.allowed
+         ? 'Original IELTS Reading, SAT Math and SAT Reading & Writing practice units. This is not a full exam course or an official mock test.'
+         : 'An eligible started subscription term is required for new practice. A research case unlock does not grant preparation. Your saved history remains available.'}</p>
+-      <p className="xs muted">Access reason: {access.reason.replace(/_/g, ' ')}{access.ends_at ? ` · term ends ${dateTime(access.ends_at)}` : ''}</p>
++      <p className="xs muted">{ACCESS_REASONS[access.reason]}{access.ends_at ? ` · term ends ${dateTime(access.ends_at)}` : ''}</p>
+       {onBilling && !access.allowed && <button type="button" className="btn btn--sm" onClick={onBilling}>View access details</button>}
+     </div>
+   </Notice>;
+@@ -284,10 +288,10 @@
+           <p className="small">Ordered original practice units. A saved submission is not mastery or an exam diagnosis. These units are not full IELTS or SAT courses.</p>
+           <div className="stack">{data.catalogue.tracks.map(track => <section key={track.id} aria-label={`${track.title} learning path`}>
+             <h3>{track.title}</h3>
+-            <ol className="preparation-learning-path">{track.lesson_ids.map(id => data.catalogue.lessons.find(item => item.id === id && item.track_id === track.id)).map(item => item ? <li key={item.id}>
++            <ol className="preparation-learning-path">{track.lesson_ids.map(id => data.catalogue.lessons.find(item => item.id === id && item.track_id === track.id)).map(item => item ? <li key={item.id} data-version={item.version}>
+               <div className="row">
+                 <span>{item.title} · {item.question_count} questions</span>
+-                {item.version && submittedVersions.has(lessonVersionKey(item.id, item.version)) && <Chip>Saved submission · version {item.version}</Chip>}
++                {item.version && submittedVersions.has(lessonVersionKey(item.id, item.version)) && <Chip>Saved submission</Chip>}
+                 <button type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || lessonLoading || !item.version}
+                   data-lesson-id={item.id} data-version={item.version} onClick={() => void startLesson(item.id)}>Start {item.title}</button>
+               </div>
+@@ -310,8 +314,8 @@
+         <p data-testid="progress-summary">{data.progress.attempt_count} saved attempts · {data.progress.completed_lessons?.filter(item => data.catalogue.lessons.some(summary => summary.id === item.lesson_id && summary.version === item.version)).length ?? 0} practice lessons submitted.</p>
+         <p>{data.progress.correct} correct answers out of {data.progress.answered} answered across saved attempts.</p>
+         {data.progress.attempts.length === 0 ? <Empty title="No submitted practice yet">Start an original lesson to build your history.</Empty>
+-          : <ol>{data.progress.attempts.map((attempt, index) => <li key={attempt.id}>
+-            {data.catalogue.lessons.find(item => item.id === attempt.lesson_id && item.version === attempt.version)?.title ?? attempt.lesson_id}: {attempt.correct} / {attempt.total} correct · {dateTime(attempt.created_at)} · version {attempt.version}
++          : <ol>{data.progress.attempts.map((attempt, index) => <li key={attempt.id} data-version={attempt.version}>
++            {data.catalogue.lessons.find(item => item.id === attempt.lesson_id && item.version === attempt.version)?.title ?? 'Archived lesson'}: {attempt.correct} / {attempt.total} correct · {dateTime(attempt.created_at)}
+             <button type="button" className="btn btn--sm" data-testid="review-attempt" data-attempt-id={attempt.attempt_id}
+               aria-pressed={reviewId === attempt.id} onClick={() => void openReview(attempt)}>Review saved attempt {index + 1}</button>
+           </li>)}</ol>}
+@@ -320,7 +324,10 @@
+           {reviewError && <div role="alert">{reviewError}<button type="button" className="btn btn--sm" onClick={() => void openReview(reviewed)}>Retry saved review</button></div>}
+           {review && <>
+             <h3 data-testid="saved-attempt-review" data-attempt-id={review.attempt.attempt_id}>{review.attempt.correct} / {review.attempt.total} correct — practice only</h3>
+-            <p className="small">Saved lesson {review.attempt.lesson_id} · version {review.attempt.version}. This is the accepted feedback snapshot.</p>
++            <p className="small">{review.lesson?.title ?? 'Archived lesson'} · your saved answers and feedback.</p>
++            <details className="preparation-evidence"><summary>Material details</summary>
++              <p className="xs muted">Recorded lesson: {review.attempt.lesson_id} · content version: {review.attempt.version}</p>
++            </details>
+             <p className="small">{review.notice}</p>
+             {!review.lesson && <p className="small">Original question text is unavailable for this saved version. Stored IDs and feedback remain below.</p>}
+             {review.lesson && <details className="preparation-evidence"><summary>Original teaching material</summary>
+@@ -385,7 +392,7 @@
+   };
+   const frozen = sending || Boolean(error && pending.current) || Boolean(attempt);
+   return <Panel title={lesson.title} hint="Original practice. No official IELTS band or SAT scaled score is produced.">
+-    <p className="small">{unitLabel} · version {lesson.version}</p>
++    <p className="small" data-version={lesson.version}>{unitLabel}</p>
+     <TeachingText text={lesson.introduction} />
+     <form onSubmit={event => { event.preventDefault(); void submit(); }}>
+       <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} className="preparation-question" disabled={frozen}>

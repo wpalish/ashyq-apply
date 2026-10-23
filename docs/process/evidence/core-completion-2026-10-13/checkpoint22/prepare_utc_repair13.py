@@ -1,0 +1,11 @@
+from pathlib import Path
+import hashlib,json
+s=Path(__file__).resolve().parent;r=s.parents[1]/'work/unimatch-calendar-materials';paths=['backend/app/api/routes_results.py','backend/tests/test_result_read_freshness.py'];m={}
+for p in paths:
+ raw=(r/p).read_bytes();m[p]=hashlib.sha256(raw).hexdigest()
+ for folder in ['utc13-preimages','utc13-proposal']:
+  q=s/folder/p;q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes(raw)
+p=s/'utc13-proposal'/paths[0];t=p.read_text();a='from app.payments.entitlements import free_view, truncate_shortlist';assert t.count(a)==1;t=t.replace(a,'from app.models.base import ensure_utc\n'+a);a='"accessed_at": c.accessed_at,';assert t.count(a)==1;t=t.replace(a,'"accessed_at": ensure_utc(c.accessed_at),');p.write_text(t)
+p=s/'utc13-proposal'/paths[1];t=p.read_text();a='    originals = {}';assert t.count(a)==1;t=t.replace(a,a+'\n    expected_instants = {}');a='            originals[row.id] = deepcopy(row.payload)';assert t.count(a)==1;t=t.replace(a,a+'\n            expected_instants[row.id] = at');a='        assert all(item["status"] == status for item in page)';assert t.count(a)==1;t=t.replace(a,a+'\n        assert all(datetime.fromisoformat(item["accessed_at"]).tzinfo is not None for item in page)\n        assert all(datetime.fromisoformat(item["accessed_at"]) == expected_instants[item["id"]] for item in page)');p.write_text(t)
+(s/'UTC_13_PREPARATION.json').write_text(json.dumps({'status':'EXTERNAL_ONLY_NOT_GRANTED_NOT_APPLIED','paths':m,'finding':'Full native12 SQLite5840:5836PASS/4FAIL old unchanged test_api documentproof timestamp assertions. Authoritative ClaimRow accessed_at override returns naive SQLite datetime without UTC attachment; originalJSON payload was aware. Age correct but public instant loses zone. PG not run. Existing ensure_utc DB helper is the exact native conversion seam. Original four regression assertions and fixture remain unchanged.','scope':'APIensureUTC column before typed ClaimOut; new2DB current status-filter controls require aware exact original row instant including inclusive microsecond boundary. No DML/timebox/skip/sourcefixture/claimstatus/evaluation/receipt change.'},indent=2)+'\n')
+print('Exact2 external UTC read repair prepared; first full failed proof preserved.')

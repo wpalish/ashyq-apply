@@ -1,0 +1,31 @@
+{
+  "status": "QUALIFIED_ACCEPT",
+  "recorded_at": "2026-10-09T02:20:24.649384+00:00",
+  "review_kind": "INDEPENDENT_SAVED_SOURCE_STATIC_BINDING_AND_LIFECYCLE_REVIEW",
+  "launcher_sha256": "1d2dd6b967913ba7a8de3e687b43b5346522dc013dea6f6aff4197de5a07842c",
+  "helper_sha256": "14e1ddc67af1e372be9b1eade84848ad5e766ee5bf70310cd10e38289bf1444b",
+  "launcher_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview_auth_export_view.py",
+  "helper_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-export-view-final-ui-plan/verify_bound_ui_inputs.py",
+  "C_ready_sha256": "85f2249c3da4811720a8d8b5136b08643fe63734d701d2589b66ee8b31fde24c",
+  "all_C5_verified": true,
+  "prior_accepted_launcher_sha256": "1bb71a0c25a64c96ba1790618dd56fc3fa7eab1cdc121f7356a4a811567ba258",
+  "prior_accepted_helper_sha256": "02c5c7bdd5488e3bf11a12b24addd6207674fc170ad0adb17044534f6c3599be",
+  "current_evidence_tooling": {
+    "check_queue_final.py": "bf62535b2cea2da71a48378e835809560a99abe58de223b3414903a4d3d99a07",
+    "collect_final_native.py": "8be65bd6d93945771429c92e69a6553b44f77233c6b6241ef25e65a70a4fbb02",
+    "archive_final_full.py": "44e1683ffed8f89b7154b6f9d9fe41cdded33a8d8dfc5d0dd0ac473bfbcadc16",
+    "bind_export_view_ui.py": "200feb95c8588d9d0fe52e42f858ce7c692f951ca1ec9e01cf3e04c7aa916f25"
+  },
+  "collector_first_unrun_preserved_sha256": "57bad917549648ef2239a54739c3e660ec9469c0b73b92d199a13c9a3744e847",
+  "collector_boundary_repair_verified": true,
+  "material_blockers": [],
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "runner_sha256": "46e9866db102966fd42e07aa5b291411cbac1cca0a76f9b49551ca8a4fb919f5",
+  "qualifications": {
+    "scope": "Exact helper/launcher and corrected evidence-tooling source only; future final20 application, terminal full, root GO, runtime/browser/cleanup acceptance separate.",
+    "target_import_compile_execution_native_tests_processes_ports_DB_CUA_Git_live": "NOT_RUN",
+    "future_source20_head_full_delta_GO": "PENDING_NOT_BOUND_BY_THIS_REVIEW",
+    "C7_saved_cleanup": "Separate bounded historical scope; seven observations with residual and partial qualifiers, never new source PASS.",
+    "first_collector_derivation": "Historical unrun first source; current8be65 identified separately by repair receipt, not falsely described as exact original substitutions alone."
+  }
+}

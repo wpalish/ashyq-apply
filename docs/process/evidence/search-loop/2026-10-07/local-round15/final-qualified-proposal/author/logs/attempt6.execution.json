@@ -1,0 +1,47 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_local_pilot.py",
+    "-q",
+    "--junitxml=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/logs/attempt6.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend",
+  "environment": {
+    "HOME": "/Users/wpalish",
+    "PATH": "/usr/bin:/bin",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+  },
+  "source_before": {
+    "tests/test_local_pilot.py": {
+      "sha256": "7534ff741c0ef74d4da4aef2c6d8c98f75341be785e7f79842399773b14f2b08",
+      "bytes": 40706
+    },
+    "evaluation/research/local_pilot.py": {
+      "sha256": "cbef1776c1f3b963596e93410fd63312df1ea1995f501d32383951842e0beff0",
+      "bytes": 62020
+    },
+    "evaluation/research/pilot_admission.py": {
+      "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+      "bytes": 23615
+    },
+    "evaluation/research/expert/controller.py": {
+      "sha256": "1fb66ac9567d54026efa53fe4df5bcd5eb7efe01366bbeeaed266c9ee0d9162e",
+      "bytes": 46794
+    },
+    "evaluation/research/expert/models.py": {
+      "sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+      "bytes": 45201
+    },
+    "evaluation/research/expert/selector.py": {
+      "sha256": "ed470a4a978d178026b3c69c8ed9d34fa4f33069e1390a1ae88e4196ea5e357e",
+      "bytes": 4085
+    }
+  },
+  "qualification": "denied network with mock source/processes; not actual OS/runtime admission"
+}

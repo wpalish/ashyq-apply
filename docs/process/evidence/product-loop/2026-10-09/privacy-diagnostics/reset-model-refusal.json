@@ -1,0 +1,57 @@
+{
+  "status": "MODEL_SAFETY_STOP_EXTERNAL_UNSEALED_NOT_APPLIED",
+  "agent": "/root/expert_security_lifecycle",
+  "first_refusal_original": "Agent errored: This content was flagged for possible cybersecurity risk. If this seems wrong, try rephrasing your request. If you\u2019re doing authorized security work that requires more cyber permissive safeguards, apply for Daybreak access via https://platform.openai.com/settings/organization/status-and-access before retrying.\n\nThis agent\u2019s turn failed. If you still need this agent, use the available collaboration tools to give it another task.",
+  "action": "External isolated reset-token concurrency native proof/proposal",
+  "author_completed_READY": false,
+  "accepted_native_or_fix_claim": false,
+  "matched_running_owned_scripts": [],
+  "available_originals_hash_references": {
+    "PLAN.json": {
+      "sha256": "e68911a5c599ceb3f552083ba53f74bf6406fbba869dd6e895a4700825fd2354",
+      "bytes": 1435
+    },
+    "source-pins-before.json": {
+      "sha256": "74af7c423042f1433eb38067c9f1344829a3d539b4058801ad195909e1fc1905",
+      "bytes": 1430
+    },
+    "proposal-source.json": {
+      "sha256": "e5732f5e0ec508702b8436f4a4a8961af7a18b3ecd5c25262356f57cd9e1db64",
+      "bytes": 376
+    },
+    "proposal.patch": {
+      "sha256": "a66c6ac8fcbd1ad6240f66013615131b5141bf61e05975506211fd4cf7cba281",
+      "bytes": 1995
+    },
+    "source/routes_account.original.py": {
+      "sha256": "e7ec09868bbe8c61b6ea97c05b65ca15f96843427bf09002af6bed36f4f4f1d9",
+      "bytes": 15697
+    },
+    "source/routes_account.proposed.py": {
+      "sha256": "2bbc9b5cc8c4166efdd30adb60842d6b71da5d837b9af3ac8fd722a1b2dad282",
+      "bytes": 16450
+    },
+    "execute_native.py": {
+      "sha256": "0441b14ec486fff66debe721a0f54173182b5075034f15b421e6fa156a3693a9",
+      "bytes": 1465
+    },
+    "native_atomic_reset.py": {
+      "sha256": "d612fb45a9c27ec67276071cc079e430fa68a4564ff93243502f2fd77aac11a3",
+      "bytes": 17984
+    },
+    "execution-off.json": {
+      "sha256": "31993506fe0dd11738528a549a2fe519f6a8124637c33a18097849c223e8f6b3",
+      "bytes": 868
+    },
+    "observed-off.json": {
+      "sha256": "55f102e9c96109060c9b477a855039026eb2a4910015b3e3e60d496fe20fdaa5",
+      "bytes": 12705
+    },
+    "native-off.log": {
+      "sha256": "5d5304b31c39e56ffa3c7bb0a302df7bf6355b6177eb8b551584ab051c9cc606",
+      "bytes": 8991
+    }
+  },
+  "history_first_retained": true,
+  "scope": "No retry, substitution, lower safeguards, new reset execution or primary source application. Only metadata/hash preservation; DB/private logs/payload not copied. Current accepted security Draft78 is separate."
+}

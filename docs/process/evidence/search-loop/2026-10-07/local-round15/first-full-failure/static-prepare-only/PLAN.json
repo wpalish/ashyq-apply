@@ -1,0 +1,8 @@
+{
+  "status": "STATIC_PREPARATION_ONLY_WAIT_FULL_TERMINAL_AND_ROOT_GO_AHEAD",
+  "source_head": "c8c9dfcd9fb810a13a80e983f8d16754a1e3fde2",
+  "authorized_scope": ["static source/public registry/allowed model metadata", "executable path discovery without launching", "denied-network prepare-only bootstrap", "owned fresh empty DB/cache and explicit sealed roots"],
+  "forbidden": ["prepare invocation before explicit root go-ahead", "live execute", "grant creation", "auth/config keys", "CLI/help/version launch", "gold/label/bindings semantic reads", "primary/full/STOP mutation", "model/effort substitution"],
+  "runtime_admission": false,
+  "owner_live_grant": "PENDING"
+}

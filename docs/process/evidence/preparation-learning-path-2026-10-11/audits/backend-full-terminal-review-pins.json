@@ -1,0 +1,1430 @@
+{
+  "status": "QUALIFIED_LOCAL_ENGINEERING_ACCEPT",
+  "backend_full_terminal_status": "PASS",
+  "scope": "saved-only local full native backend receipts; no reviewer execution/source/Git/network",
+  "root_reported_source_commit": "4151afb5",
+  "root_commit_independently_queried": false,
+  "root_full_result": {
+    "sha256": "1ceab98d46bb50e3ac6127725576239368139382d874dba2667cd53ed6c74762",
+    "bytes": 12354
+  },
+  "preflight": {
+    "sha256": "78b870695d6aaf85a06115f803440c346f1338df978ab0b37c2069f67af93c76",
+    "bytes": 5201
+  },
+  "preflight_issues": [],
+  "helper_pins_receipt": {
+    "sha256": "87055a8506e619a7e552848cff38b394e28c6874d98c93f53c9dd20cd11d1db3",
+    "bytes": 1839
+  },
+  "helper_pin_count": 19,
+  "core_helpers_byte_equal_predecessor": {
+    "run_full_backend.py": true,
+    "pytest_full.py": true,
+    "guard_runtime.py": true,
+    "guard_optional.py": true,
+    "mock_endpoint_plugin.py": true,
+    "os_network_probe.py": true,
+    "sitecustomize.py": true
+  },
+  "phase_id_sets_exact_equal": true,
+  "phase_source_maps_exact_equal": true,
+  "distinct_test_ids": 4883,
+  "total_successful_phase_executions": 9766,
+  "phases": {
+    "sqlite": {
+      "status": "PASS",
+      "actual_unique_ids": 4883,
+      "retained_predecessor_ids": 4773,
+      "removed_ids": [],
+      "new_ids": [
+        [
+          "tests.test_learning_pack_api",
+          "test_foreign_case_pack_get_post_and_progress_return_404[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_foreign_case_pack_get_post_and_progress_return_404[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-both_fields]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-duplicate]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-missing]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-short_for_starter]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-too_long]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-unknown_choice]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-unknown_question]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-wrong_format]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-wrong_version]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-both_fields]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-duplicate]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-missing]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-short_for_starter]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-too_long]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-unknown_choice]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-unknown_question]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-wrong_format]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-wrong_version]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[postgres-ielts-reading-completion-1-starter-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[postgres-ielts-reading-completion-1-unknown]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[postgres-sat-math-1-learning-pack-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[sqlite-ielts-reading-completion-1-starter-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[sqlite-ielts-reading-completion-1-unknown]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[sqlite-sat-math-1-learning-pack-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_mixed_history_is_raw_and_legacy_top_level_progress_unchanged[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_mixed_history_is_raw_and_legacy_top_level_progress_unchanged[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_new_short_receipts_export_then_orm_delete_with_sqlite_fk_off[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_new_short_receipts_export_then_orm_delete_with_sqlite_fk_off[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_opt_in_catalogue_leaves_default_serialization_exact[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_opt_in_catalogue_leaves_default_serialization_exact[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-features-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-headings-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-data-interpretation-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-grammar-transitions-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-features-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-headings-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-data-interpretation-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-grammar-transitions-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_review_requires_owned_case_and_that_cases_submitted_uuid[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_review_requires_owned_case_and_that_cases_submitted_uuid[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_short_normalization_replay_after_expiry_and_conflict_preserves_original_receipt[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_short_normalization_replay_after_expiry_and_conflict_preserves_original_receipt[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-sat-math-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-sat-math-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_unknown_historical_version_returns_only_unchanged_stored_receipt[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_unknown_historical_version_returns_only_unchanged_stored_receipt[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[0-DIVIDERS.]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[1-36]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[2-  CONDITION\\tSHEET . ]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[2-sheet]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[3-Briefing  session.]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[3-briefing]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[3-session]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[4-code]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[4-download code]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_question_ids_are_distinct_keys_known_and_explanations_present"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-features-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-headings-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-data-interpretation-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-grammar-transitions-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_completions_require_the_exact_registered_pair_and_do_not_imply_mastery"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_default_selector_and_original_catalogue_are_preserved"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_exact_lesson_version_pairs_required[ielts-reading-completion-1-old]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_exact_lesson_version_pairs_required[ielts-reading-completion-1-starter-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_exact_lesson_version_pairs_required[sat-math-1-learning-pack-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_exact_lesson_version_pairs_required[unknown-learning-pack-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_first_pack_receipt_preserves_raw_text_and_input_order_without_normalizing_storage"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-features-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-headings-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-data-interpretation-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-grammar-transitions-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[duplicate]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[missing]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[unknown_choice]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[unknown_question]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[wrong_format]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_legacy_frozen_digest_matches_independent_literal_not_a_pack_projection"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_original_public_projection_digest_grade_are_exact[ielts-reading-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_original_public_projection_digest_grade_are_exact[sat-math-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_original_public_projection_digest_grade_are_exact[sat-rw-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_pack_orders_all_nine_lessons_and_versions_without_answer_keys"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_digest_reorder_replay_and_raw_payload_conflicts"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-divider]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-dividers extra]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-dividers..]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-foam dividers]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[1-thirty six]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[2-inventory]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[2-the condition sheet]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[3-written test]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-code!]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-codeword]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-memory stick]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_input_bounds_and_exclusive_answer_shape[answer0]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_input_bounds_and_exclusive_answer_shape[answer1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_input_bounds_and_exclusive_answer_shape[answer2]"
+        ]
+      ],
+      "new_domain": 54,
+      "new_api": 56,
+      "api_native_fixture_variants": {
+        "sqlite": 28,
+        "postgres": 28
+      },
+      "xml_failures": 0,
+      "xml_errors": 0,
+      "xml_skips": 0,
+      "warnings": 42,
+      "summary_line": "4883 passed, 42 warnings in 560.89s (0:09:20)",
+      "coverage_totals": {
+        "covered_lines": 15475,
+        "num_statements": 16196,
+        "percent_covered": 95.54828352679674,
+        "percent_covered_display": "96",
+        "missing_lines": 721,
+        "excluded_lines": 139,
+        "percent_statements_covered": 95.54828352679674,
+        "percent_statements_covered_display": "96"
+      },
+      "command_wall_seconds": 564.861,
+      "source_captured_count": 604,
+      "expected_binding_count": 566,
+      "source_before_after_equal": true,
+      "expected_pin_match": true,
+      "guards": [
+        {
+          "file": "guard-59399.json",
+          "allowed_pg_connections": 903,
+          "driver_guard_installed": true,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59599.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59604.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59608.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59612.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59616.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59620.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59622.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59624.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59626.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59628.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59630.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-59635.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        }
+      ],
+      "guard_receipt_pins": {
+        "guard-59399.json": {
+          "sha256": "a74cfb5bdb850939528c0d8cb1631e72a2acd463d7dae7865e04e9ccaa5a6425",
+          "bytes": 161384
+        },
+        "guard-59599.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59604.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59608.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59612.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59616.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59620.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59622.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59624.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59626.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59628.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59630.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-59635.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        }
+      },
+      "outside_attempts": [],
+      "guard_startup_failures": [],
+      "private_pg_endpoint_checks": 903,
+      "all_hosts_owned_unix_paths": true,
+      "probes": {
+        "os-network-probe.json": {
+          "passed": true,
+          "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+          "bytes": 1704
+        },
+        "os-network-child-probe.json": {
+          "passed": true,
+          "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+          "bytes": 776
+        },
+        "private-pg-probe.json": {
+          "passed": true,
+          "sha256": "bb0900cdbc345229ded88f68c4d4dd29658cd2d3fe8480603e151f05d40dda35",
+          "bytes": 153
+        }
+      },
+      "runtime_removed_receipt": true,
+      "shutdown_confirmed_receipt": true,
+      "active_cluster_markers": [],
+      "evidence_hashes_checked": 25,
+      "evidence_hash_issues": [],
+      "migration_source_pins_unchanged_from_accepted_predecessor": {
+        "backend/alembic.ini": "cebcf7b1206c7ddf6ce85d5c89aead12b73343c828a77310e19299bba942a562",
+        "backend/migrations/env.py": "4c18ead0737f65c637fd0c515830c1ec870472835613ad71efc7de35b2083995",
+        "backend/migrations/versions/a1f3c8d75e29_source_snapshots.py": "b5169b154ca11f6a82a3bca27bc822f5eee6dab2418cb3eb8cc90b1b8f664552",
+        "backend/migrations/versions/a4d1c7e58b92_result_bucket.py": "f282e7e4817ded53b71884c07e84d4d28dafe8393574c7b33a87d965c7255171",
+        "backend/migrations/versions/a4d61c8e73b2_moderation.py": "e1bba93d0aa6cee7ed3fdd2c5bc4dd692254fbb995bdb31bf4fc181503338231",
+        "backend/migrations/versions/a7c4e1f80b52_auth_flows.py": "03885d611552459717b61b3ec2a351f9f0eaef05f1c5ad033a4b0cc5ef7612ec",
+        "backend/migrations/versions/a9e5c14d2021_study_schedule.py": "0502ab5e4660372dcb20cd79a2a14779cbc59086b7a363545cd2628ccb733c3d",
+        "backend/migrations/versions/b4e8a1c2f6d9_source_pages.py": "77f4a102c635069b50d8d781fb6fa291bbc4356ce21e96908b01e8b6a5eee1a4",
+        "backend/migrations/versions/b8d2f6c103ae_run_unknowns.py": "87af7fbf7f22eb66c027e7fdde093b62b3c1a888236a8a62c9b9ac08327c5c88",
+        "backend/migrations/versions/bb9a7d0ed5c3_initial_schema.py": "0d719d0d621099320d93fa68680d8d02cda4a9574c88c805c92399b862cbdae6",
+        "backend/migrations/versions/c3a1f4e9b2d7_auth_tenancy.py": "e773aa3f79ccd7a0a911b872b9d8ea63b61a8cba3acb82e9f91030ba39f5c36f",
+        "backend/migrations/versions/c5d01b7e4f83_claim_supersession_lineage.py": "1a7d150278ee0002f0e85106146261cb90b8977a97c7e3ade9eb6af4e2f6be0b",
+        "backend/migrations/versions/c8f3b0d47a19_avatars.py": "0a8a0dcb30c2587a416d99d702641300c3c5419cf3126884399b4a88ed703e33",
+        "backend/migrations/versions/c9e05a71f4d8_jsonb_on_postgres.py": "6008543717b2fdad36208d7fb7b2557903f028a4754b0be2ab7247f2a6ab5456",
+        "backend/migrations/versions/d4b2c8f17a90_billing.py": "27eea4f32888ce2dc51828aeabf71110d998fb3e98f66f6d9e359a8181d3cb9e",
+        "backend/migrations/versions/d8e412c6a901_university_catalogue.py": "7dd9e92fbb42fbdb3320490fe6747be011bb6e31ec72dadd1100af04815e262f",
+        "backend/migrations/versions/d9c4e7a21b83_claims_source_page_and_recheck_generation.py": "dcc1ccffa717df85dbade001de5b3db3c276d40607c9f4f658a6b5ba7cb8b432",
+        "backend/migrations/versions/e2f7a41c9b83_run_client_request_key.py": "6c64e1a9a21454fe9446cbf1dd12e063b7dc020bd906463bc4e8965d126fa943",
+        "backend/migrations/versions/e7c1a4d90b52_subscriptions.py": "0189abfc119ae3e9783c1e1197d55ebb1718427ebf0f6b1f4ec4c0997672a017",
+        "backend/migrations/versions/e7c4a91b6f20_social_module.py": "8d678cfe28105060e36aaa3d7f40edb2e5c9516dd097506a69a651addc39c415",
+        "backend/migrations/versions/f13b9c5d2a44_run_next_recheck.py": "19f326685bd389c141f2e677483190ea755d2019c1758dde16607f60037d368f",
+        "backend/migrations/versions/f1a2b3c4d511_study_attempts.py": "04a6bfd6062e35f9dea5c3841a09e821e946f727ea66e01a78fc6f5ad0153ba6",
+        "backend/migrations/versions/f2a8c17d9e04_direct_messages.py": "f03e1ca2c76c9f929e2e136d88cd20092a11d36feaaa14b01967068abc571086"
+      },
+      "migration_version_path_count": 21,
+      "existing_migration_named_control_count": 13,
+      "pins": {
+        "result.json": {
+          "sha256": "3c3b37d8754c447a2e9743056d9e8f87e85f21cd03c3dbb93abb05b137d3e630",
+          "bytes": 5673
+        },
+        "junit.xml": {
+          "sha256": "e5ea416c1ec687ef8777714c04d2c6f073557e5ab8425665be2dce08437e1e8a",
+          "bytes": 739346
+        },
+        "coverage.json": {
+          "sha256": "d56ac2d387b6858e0b924edd3201949c7e43f97253c5132daf72f02e0aa0d2f8",
+          "bytes": 902918
+        },
+        "source-before.json": {
+          "sha256": "3d46e683f0cdef1769ecafdf9d8bd2bb8cfedf5fdd2f6ba9ff3c544f819b46c1",
+          "bytes": 69982
+        },
+        "source-after.json": {
+          "sha256": "3d46e683f0cdef1769ecafdf9d8bd2bb8cfedf5fdd2f6ba9ff3c544f819b46c1",
+          "bytes": 69982
+        },
+        "pytest.log": {
+          "sha256": "86de47bc25279a5ce08c202637eee97657c834bd720aeb768cbe839ee075fe3e",
+          "bytes": 22395
+        }
+      },
+      "predecessor_junit": {
+        "sha256": "3b59ae24177b2e54b7a03601fca94c57a1517192255a47816c6397ab788754dd",
+        "bytes": 721639
+      }
+    },
+    "postgres": {
+      "status": "PASS",
+      "actual_unique_ids": 4883,
+      "retained_predecessor_ids": 4773,
+      "removed_ids": [],
+      "new_ids": [
+        [
+          "tests.test_learning_pack_api",
+          "test_foreign_case_pack_get_post_and_progress_return_404[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_foreign_case_pack_get_post_and_progress_return_404[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-both_fields]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-duplicate]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-missing]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-short_for_starter]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-too_long]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-unknown_choice]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-unknown_question]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-wrong_format]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-wrong_version]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-both_fields]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-duplicate]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-missing]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-short_for_starter]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-too_long]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-unknown_choice]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-unknown_question]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-wrong_format]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-wrong_version]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[postgres-ielts-reading-completion-1-starter-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[postgres-ielts-reading-completion-1-unknown]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[postgres-sat-math-1-learning-pack-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[sqlite-ielts-reading-completion-1-starter-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[sqlite-ielts-reading-completion-1-unknown]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_lesson_version_is_bound_independently_of_catalogue[sqlite-sat-math-1-learning-pack-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_mixed_history_is_raw_and_legacy_top_level_progress_unchanged[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_mixed_history_is_raw_and_legacy_top_level_progress_unchanged[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_new_short_receipts_export_then_orm_delete_with_sqlite_fk_off[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_new_short_receipts_export_then_orm_delete_with_sqlite_fk_off[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_opt_in_catalogue_leaves_default_serialization_exact[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_opt_in_catalogue_leaves_default_serialization_exact[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-features-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-headings-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-data-interpretation-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-grammar-transitions-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-features-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-headings-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-data-interpretation-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-grammar-transitions-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_review_requires_owned_case_and_that_cases_submitted_uuid[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_review_requires_owned_case_and_that_cases_submitted_uuid[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_short_normalization_replay_after_expiry_and_conflict_preserves_original_receipt[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_short_normalization_replay_after_expiry_and_conflict_preserves_original_receipt[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-sat-math-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-sat-math-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_unknown_historical_version_returns_only_unchanged_stored_receipt[postgres]"
+        ],
+        [
+          "tests.test_learning_pack_api",
+          "test_unknown_historical_version_returns_only_unchanged_stored_receipt[sqlite]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[0-DIVIDERS.]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[1-36]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[2-  CONDITION\\tSHEET . ]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[2-sheet]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[3-Briefing  session.]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[3-briefing]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[3-session]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[4-code]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_approved_short_forms_case_whitespace_one_period[4-download code]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_question_ids_are_distinct_keys_known_and_explanations_present"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-features-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-headings-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-data-interpretation-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-grammar-transitions-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_completions_require_the_exact_registered_pair_and_do_not_imply_mastery"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_default_selector_and_original_catalogue_are_preserved"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_exact_lesson_version_pairs_required[ielts-reading-completion-1-old]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_exact_lesson_version_pairs_required[ielts-reading-completion-1-starter-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_exact_lesson_version_pairs_required[sat-math-1-learning-pack-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_exact_lesson_version_pairs_required[unknown-learning-pack-2026-10-11-v1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_first_pack_receipt_preserves_raw_text_and_input_order_without_normalizing_storage"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-completion-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-features-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-headings-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-data-interpretation-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-grammar-transitions-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-quadratic-structure-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[duplicate]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[missing]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[unknown_choice]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[unknown_question]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_invalid_question_sets_and_formats_fail_without_keys[wrong_format]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_legacy_frozen_digest_matches_independent_literal_not_a_pack_projection"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_original_public_projection_digest_grade_are_exact[ielts-reading-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_original_public_projection_digest_grade_are_exact[sat-math-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_original_public_projection_digest_grade_are_exact[sat-rw-1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_pack_orders_all_nine_lessons_and_versions_without_answer_keys"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_digest_reorder_replay_and_raw_payload_conflicts"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-divider]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-dividers extra]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-dividers..]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-foam dividers]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[1-thirty six]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[2-inventory]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[2-the condition sheet]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[3-written test]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-code!]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-codeword]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-memory stick]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_input_bounds_and_exclusive_answer_shape[answer0]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_input_bounds_and_exclusive_answer_shape[answer1]"
+        ],
+        [
+          "tests.test_learning_pack_domain",
+          "test_short_input_bounds_and_exclusive_answer_shape[answer2]"
+        ]
+      ],
+      "new_domain": 54,
+      "new_api": 56,
+      "api_native_fixture_variants": {
+        "sqlite": 28,
+        "postgres": 28
+      },
+      "xml_failures": 0,
+      "xml_errors": 0,
+      "xml_skips": 0,
+      "warnings": 42,
+      "summary_line": "4883 passed, 42 warnings in 580.24s (0:09:40)",
+      "coverage_totals": {
+        "covered_lines": 15474,
+        "num_statements": 16196,
+        "percent_covered": 95.54210916275623,
+        "percent_covered_display": "96",
+        "missing_lines": 722,
+        "excluded_lines": 139,
+        "percent_statements_covered": 95.54210916275623,
+        "percent_statements_covered_display": "96"
+      },
+      "command_wall_seconds": 584.145,
+      "source_captured_count": 604,
+      "expected_binding_count": 566,
+      "source_before_after_equal": true,
+      "expected_pin_match": true,
+      "guards": [
+        {
+          "file": "guard-61881.json",
+          "allowed_pg_connections": 904,
+          "driver_guard_installed": true,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62102.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62107.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62111.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62116.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62119.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62123.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62125.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62127.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62129.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62131.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62133.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "file": "guard-62138.json",
+          "allowed_pg_connections": 0,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        }
+      ],
+      "guard_receipt_pins": {
+        "guard-61881.json": {
+          "sha256": "c48dc3c77d9dd55a041a30e2f45cc1b329f467d1337b5f22a043a6cd38280324",
+          "bytes": 161530
+        },
+        "guard-62102.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62107.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62111.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62116.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62119.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62123.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62125.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62127.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62129.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62131.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62133.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        },
+        "guard-62138.json": {
+          "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+          "bytes": 310
+        }
+      },
+      "outside_attempts": [],
+      "guard_startup_failures": [],
+      "private_pg_endpoint_checks": 904,
+      "all_hosts_owned_unix_paths": true,
+      "probes": {
+        "os-network-probe.json": {
+          "passed": true,
+          "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+          "bytes": 1704
+        },
+        "os-network-child-probe.json": {
+          "passed": true,
+          "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+          "bytes": 776
+        },
+        "private-pg-probe.json": {
+          "passed": true,
+          "sha256": "61a1608fa1fc89272bbf617f22c1a63440de22911ad5922f2645a414eacea5fe",
+          "bytes": 153
+        }
+      },
+      "runtime_removed_receipt": true,
+      "shutdown_confirmed_receipt": true,
+      "active_cluster_markers": [],
+      "evidence_hashes_checked": 25,
+      "evidence_hash_issues": [],
+      "migration_source_pins_unchanged_from_accepted_predecessor": {
+        "backend/alembic.ini": "cebcf7b1206c7ddf6ce85d5c89aead12b73343c828a77310e19299bba942a562",
+        "backend/migrations/env.py": "4c18ead0737f65c637fd0c515830c1ec870472835613ad71efc7de35b2083995",
+        "backend/migrations/versions/a1f3c8d75e29_source_snapshots.py": "b5169b154ca11f6a82a3bca27bc822f5eee6dab2418cb3eb8cc90b1b8f664552",
+        "backend/migrations/versions/a4d1c7e58b92_result_bucket.py": "f282e7e4817ded53b71884c07e84d4d28dafe8393574c7b33a87d965c7255171",
+        "backend/migrations/versions/a4d61c8e73b2_moderation.py": "e1bba93d0aa6cee7ed3fdd2c5bc4dd692254fbb995bdb31bf4fc181503338231",
+        "backend/migrations/versions/a7c4e1f80b52_auth_flows.py": "03885d611552459717b61b3ec2a351f9f0eaef05f1c5ad033a4b0cc5ef7612ec",
+        "backend/migrations/versions/a9e5c14d2021_study_schedule.py": "0502ab5e4660372dcb20cd79a2a14779cbc59086b7a363545cd2628ccb733c3d",
+        "backend/migrations/versions/b4e8a1c2f6d9_source_pages.py": "77f4a102c635069b50d8d781fb6fa291bbc4356ce21e96908b01e8b6a5eee1a4",
+        "backend/migrations/versions/b8d2f6c103ae_run_unknowns.py": "87af7fbf7f22eb66c027e7fdde093b62b3c1a888236a8a62c9b9ac08327c5c88",
+        "backend/migrations/versions/bb9a7d0ed5c3_initial_schema.py": "0d719d0d621099320d93fa68680d8d02cda4a9574c88c805c92399b862cbdae6",
+        "backend/migrations/versions/c3a1f4e9b2d7_auth_tenancy.py": "e773aa3f79ccd7a0a911b872b9d8ea63b61a8cba3acb82e9f91030ba39f5c36f",
+        "backend/migrations/versions/c5d01b7e4f83_claim_supersession_lineage.py": "1a7d150278ee0002f0e85106146261cb90b8977a97c7e3ade9eb6af4e2f6be0b",
+        "backend/migrations/versions/c8f3b0d47a19_avatars.py": "0a8a0dcb30c2587a416d99d702641300c3c5419cf3126884399b4a88ed703e33",
+        "backend/migrations/versions/c9e05a71f4d8_jsonb_on_postgres.py": "6008543717b2fdad36208d7fb7b2557903f028a4754b0be2ab7247f2a6ab5456",
+        "backend/migrations/versions/d4b2c8f17a90_billing.py": "27eea4f32888ce2dc51828aeabf71110d998fb3e98f66f6d9e359a8181d3cb9e",
+        "backend/migrations/versions/d8e412c6a901_university_catalogue.py": "7dd9e92fbb42fbdb3320490fe6747be011bb6e31ec72dadd1100af04815e262f",
+        "backend/migrations/versions/d9c4e7a21b83_claims_source_page_and_recheck_generation.py": "dcc1ccffa717df85dbade001de5b3db3c276d40607c9f4f658a6b5ba7cb8b432",
+        "backend/migrations/versions/e2f7a41c9b83_run_client_request_key.py": "6c64e1a9a21454fe9446cbf1dd12e063b7dc020bd906463bc4e8965d126fa943",
+        "backend/migrations/versions/e7c1a4d90b52_subscriptions.py": "0189abfc119ae3e9783c1e1197d55ebb1718427ebf0f6b1f4ec4c0997672a017",
+        "backend/migrations/versions/e7c4a91b6f20_social_module.py": "8d678cfe28105060e36aaa3d7f40edb2e5c9516dd097506a69a651addc39c415",
+        "backend/migrations/versions/f13b9c5d2a44_run_next_recheck.py": "19f326685bd389c141f2e677483190ea755d2019c1758dde16607f60037d368f",
+        "backend/migrations/versions/f1a2b3c4d511_study_attempts.py": "04a6bfd6062e35f9dea5c3841a09e821e946f727ea66e01a78fc6f5ad0153ba6",
+        "backend/migrations/versions/f2a8c17d9e04_direct_messages.py": "f03e1ca2c76c9f929e2e136d88cd20092a11d36feaaa14b01967068abc571086"
+      },
+      "migration_version_path_count": 21,
+      "existing_migration_named_control_count": 13,
+      "pins": {
+        "result.json": {
+          "sha256": "261be04d3e3aa8d708facc0a9bbc6680ab04ae7848d6760bcef9647c3c77aa97",
+          "bytes": 5686
+        },
+        "junit.xml": {
+          "sha256": "beed2374f2483a90e485c0fa36a19eb05927dc1e0e1c6cbb312c813647a0047d",
+          "bytes": 739347
+        },
+        "coverage.json": {
+          "sha256": "0bd1cf89bec9360510e3a6fa39959c47933ab41ab0ae25e2268ea1ff29991965",
+          "bytes": 902938
+        },
+        "source-before.json": {
+          "sha256": "3d46e683f0cdef1769ecafdf9d8bd2bb8cfedf5fdd2f6ba9ff3c544f819b46c1",
+          "bytes": 69982
+        },
+        "source-after.json": {
+          "sha256": "3d46e683f0cdef1769ecafdf9d8bd2bb8cfedf5fdd2f6ba9ff3c544f819b46c1",
+          "bytes": 69982
+        },
+        "pytest.log": {
+          "sha256": "751822b99fa0ea7c25401ea8f8a8fe0d20c9d2fa817b431f7d18425459d5d837",
+          "bytes": 22403
+        }
+      },
+      "predecessor_junit": {
+        "sha256": "7d4346b04a9e2e85398fa400d56feb6c3bed3f009215e0057051d671b05ac8d4",
+        "bytes": 721639
+      }
+    }
+  },
+  "final_recheck_issues": [],
+  "review_pin": {
+    "sha256": "5a4a497a8474643906701f168498c000c1688098f6b88ddc8150e682958c86f4",
+    "bytes": 7119
+  },
+  "qualifications": [
+    "Native Demo/Auth acceptance separate, pending saved terminal receipts.",
+    "No concurrent HTTP insertion race or new account-deletion browser proof.",
+    "No production deployment/DB migration/teacher or learner outcome/calibrated-score acceptance.",
+    "GLOBAL_PROVIDER_STOP/UNSCORED remains closed; search quality NOT_MEASURED.",
+    "Reviewer authored backend packet; independent static implementation/content review retained."
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "status": "CONFIRMED_INNER_CONTROL_LOSS_OFF_BOUNDARIES_ONLY_A_NATIVE_FENCE_REVIEW_PENDING",
+  "created_at": "2026-10-08T04:07:15.490084+00:00",
+  "plan_sha256": "163f8935e08b64a649048a16f38de60fea135dc8d1318011876a434a157b2d08",
+  "raw_sha256": "e9cc4a80bb8f9493b22c779f78ccafd78fac1d7145790c0e3bf38a7d3bf484ff",
+  "counts": {
+    "total": 21,
+    "pass": 9,
+    "red": 12,
+    "network_attempts": 0
+  },
+  "normal_imports": [
+    {
+      "name": "app.adapters.search.retrieval",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/retrieval.py",
+      "sha256": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04"
+    },
+    {
+      "name": "app.adapters.discovery.live_discovery",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py",
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004"
+    },
+    {
+      "name": "app.pipeline.control",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd"
+    },
+    {
+      "name": "app.pipeline.read_budget",
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf"
+    }
+  ],
+  "material_loss": "four typed RuntimeError subclass signals swallowed at inner entry-root fetch broad catch; extra guarded reads and multifield query attempts before later stop",
+  "required_minimal_seam": "precedence rethrow exact UniversityReadStopped/RunCancelled/LeaseLost before Exception; no reason/string matching or catch expansion",
+  "no_patch": true,
+  "qualification": "Actual BudgetedFetcher.get/before_get boundary, controlled reservation callback; no SQL fencing or Worker state proof; successful HTML root has nonmatching link, not matching navigation gain; shared STOP immutable."
+}

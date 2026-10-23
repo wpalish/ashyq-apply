@@ -1,0 +1,15 @@
+{
+  "scope": "Only two empty directories created in the isolated clone at smoke startup; rmdir refuses nonempty paths. No database/cache file/user data read or deleted. First full preflight refusal stays unchanged.",
+  "removed_empty_directories": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/data/exports",
+      "empty": true,
+      "mtime_ns": 1791704160609746896
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/data/httpcache",
+      "empty": true,
+      "mtime_ns": 1791704160609688188
+    }
+  ]
+}

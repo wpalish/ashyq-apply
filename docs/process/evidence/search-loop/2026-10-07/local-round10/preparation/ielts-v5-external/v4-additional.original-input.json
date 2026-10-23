@@ -1,0 +1,97 @@
+[
+  {
+    "case": "modal_should_not_passive",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic should not be accepted. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "modal_must_not_passive",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic must not be accepted. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "contraction_passive",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic isn\u2019t accepted. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "comma_refusal",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS Academic, including UKVI Academic, is not accepted. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "named_role_denied",
+    "inner": "<h2>IELTS Academic</h2><p>Writing score of 6.0 is not mandatory. Overall minimum 6.5.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "percentage_atom",
+    "inner": "<h2>IELTS Academic</h2><p>Overall score 6.5 percent.</p>",
+    "expected": {}
+  },
+  {
+    "case": "html_split_fraction_suffix",
+    "inner": "<h2>IELTS Academic</h2><p>Overall score 6.<b>5</b>.</p>",
+    "expected": {}
+  },
+  {
+    "case": "html_split_fraction_prefix",
+    "inner": "<h2>IELTS Academic</h2><p>Overall score 6<span>.5</span>.</p>",
+    "expected": {}
+  },
+  {
+    "case": "html_split_large_integer",
+    "inner": "<h2>IELTS Academic</h2><p>Overall score <span>6</span><span>0</span>.</p>",
+    "expected": {}
+  },
+  {
+    "case": "inline_owned_numeric_atom",
+    "inner": "<h2>IELTS Academic</h2><p>Overall <span>score</span> <b>6.5</b>.</p>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "nested_other_role_heading",
+    "inner": "<h2>IELTS Academic</h2><div><span role=\"heading\" aria-level=\"2\">Fees</span><span>Overall score 6.5.</span></div>",
+    "expected": {}
+  },
+  {
+    "case": "nested_other_semantic_region",
+    "inner": "<h2>IELTS Academic</h2><div><span role=\"region\">Overall score 6.5.</span></div>",
+    "expected": {}
+  },
+  {
+    "case": "repeated_owned_main_region",
+    "inner": "<section><h2>IELTS Academic</h2><p>Overall score 6.5.</p></section><section><h2>Fees</h2><p>Overall 7.0.</p></section>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  },
+  {
+    "case": "parenthetical_decline_other_variant",
+    "inner": "<h2>IELTS Academic</h2><p>IELTS (General Training including online) is not accepted. Overall minimum 6.5.</p>",
+    "expected": {}
+  },
+  {
+    "case": "no_scope_reinterpretation",
+    "inner": "<section><h2>IELTS Academic 2024/25</h2><p>Overall minimum 6.5.</p></section><section><h2>Fees 2027/28</h2><p>Overall 7.0.</p></section>",
+    "expected": {
+      "ielts_min_overall": 6.5,
+      "ielts_accepted_types": [
+        "academic"
+      ]
+    }
+  }
+]

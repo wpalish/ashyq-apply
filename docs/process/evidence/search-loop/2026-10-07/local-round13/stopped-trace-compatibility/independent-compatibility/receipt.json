@@ -1,0 +1,62 @@
+{
+  "time": "2026-10-08T05:10:07.197210+00:00",
+  "status": "COMPATIBILITY_PREFLIGHT_SEALED; EXACT_PROPOSAL_REVIEW_PENDING",
+  "plan_sha256": "9581e9493729e8093ea6ac295411cd17f0fc93edefb2a0acc11bc427c8e2e9d3",
+  "native_signature_findings": {
+    "native_definition_count": 1,
+    "native_and_test_call_count": 3,
+    "existing_monkeypatch_count": 6,
+    "all_existing_mocks_accept_kwargs": true,
+    "no_existing_subclass_override": true
+  },
+  "source999_before_after_final_equal": true,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "native_executed_cases": 0,
+  "application_imports": 0,
+  "ordinary_outputs": "native source contract and qualified prior packet only; no fresh native replay",
+  "attempts": [
+    {
+      "number": 1,
+      "exit_code": 1,
+      "qualification": "Author expected7 mocks instead of6; full original script/stdout/stderr retained"
+    },
+    {
+      "number": 2,
+      "exit_code": 0,
+      "qualification": "Corrected finite stdlib AST/hash audit"
+    }
+  ],
+  "actions_not_taken": [
+    "Repository/Git/HANDOFF/app/test edits",
+    "DB/network/provider/model/scorer/gold operations",
+    "Repeated22 OFF cases",
+    "Claim/default/semantic promotion",
+    "SQL/fence proof"
+  ],
+  "origins": [
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/PLAN.json",
+      "copy": "inputs/1-root-stopped-trace-accounting-PLAN.json",
+      "sha256": "d94aece9e219cec706a99952d9624d7b401a266554c371591d2c24a9344e433b",
+      "bytes": 845
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-before-999.json",
+      "copy": "inputs/2-root-stopped-trace-accounting-source-before-999.json",
+      "sha256": "3e66216452290baa7a415f24ab31f6650ffa8c9f0f7592ae0b53922b0024d9dd",
+      "bytes": 130332
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/ready-manifest.json",
+      "copy": "inputs/3-b-outer-trace-preparation-ready-manifest.json",
+      "sha256": "8e4a13b345aea6e00b05ec944124f8a349a7f144f18a4c5137a41399d53ac51f",
+      "bytes": 4118
+    },
+    {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/ready-manifest.json",
+      "copy": "inputs/4-a-outer-off-review-ready-manifest.json",
+      "sha256": "ca33f2c00cf886505ba709d1144043610cab1719354a7c088eb75f628ea90a67",
+      "bytes": 1673
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run src/lib/profileMerge.test.ts src/lib/profileCommands.test.ts src/lib/store.profileWrites.test.tsx src/api/client.profile.test.ts --reporter=default --reporter=junit --outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/static2/junit.xml
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend
+
+ ✓ src/lib/profileMerge.test.ts (5 tests) 3ms
+ ✓ src/lib/profileCommands.test.ts (7 tests) 5ms
+ ❯ src/api/client.profile.test.ts (2 tests | 1 failed) 7ms
+   ✓ sends creation identity and UUID only as headers 4ms
+   × sends the captured revision for PUT and persisted rerank 3ms
+ ✓ src/lib/store.profileWrites.test.tsx (5 tests) 495ms
+   ✓ strips all server metadata from editable data and validation 432ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/api/client.profile.test.ts > sends the captured revision for PUT and persisted rerank
+TypeError: Body is unusable: Body has already been read
+ ❯ requestWithHeaders src/api/client.ts:200:32
+    198|
+    199|   if (response.status === 204) return { body: undefined as T, headers:…
+    200|   const body = (await response.json()) as T;
+       |                                ^
+    201|   if (!authRoute) {
+    202|     try { checkApplicantOwner(owner); }
+ ❯ request src/api/client.ts:209:11
+ ❯ src/api/client.profile.test.ts:12:68
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 18 passed (19)
+   Start at  19:58:11
+   Duration  985ms (environment 51%, tests 26%, transform 10%, setup 8%, import 3%, worker 1%)
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/static2/junit.xml

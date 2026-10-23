@@ -1,0 +1,196 @@
+{
+  "schema_version": "external-combined-finite-source-review-seal-v1",
+  "created_at_utc": "2026-10-12 14:16:34 UTC",
+  "status": [
+    "SOURCE_ONLY",
+    "SIX_FINDINGS_CLOSED_SOURCE",
+    "READY_FOR_ROOT_APPLICATION_AND_GATES",
+    "NOT_APPLIED",
+    "NOT_IMPORTED",
+    "NOT_COLLECTED",
+    "NOT_RUN"
+  ],
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_PURE_COMBINED_REPAIR_REVIEW.md",
+    "sha256": "418eea487f41b076cb8ff93143314982567772e92d69d484b2be3f29b5a531d0"
+  },
+  "authority": {
+    "repair1_grant": "3d61dedea4c2aa31204eade4fc928b74854dc1bfca06a6f8d2e3481dc9a22624",
+    "f5_f6_addendum": "91dc795db00722a0b0fedb88ce2832731feac82b154f5f26102bea9ddb450a9b",
+    "original_peer_report": "32c16500421ea9e551ab687bcc89d3509d8f9dfcebf98765cabe578cd90d4b10",
+    "original_peer_seal": "526de37b1b1eb3612269ff67749de6b5b49aefc1aa160c2640129c10b108c00f",
+    "original_independent_oracle": "dc6fdfcb211d0a8837b1214e1a8675fbc29bc7a8e67b81df171288f25e222f05",
+    "original_independent_oracle_seal": "08d608488dea4afa4b9355a23447b1d99dd3cf9e49cc669bf4134bf520c12370"
+  },
+  "packet_seals": {
+    "source1": "41a34f0226609b0710a83135b815f0b35ef873096296b2bfd50478731544b1e1",
+    "repair1": "f19f2c775ed89ad4f8d9beee5d50c6717f9ead2c912d8f702dbfe41422fe187f",
+    "repair2": "f77aa5e618144160a3e36f743030258987300075b1a7186b1f91c78d75024d10"
+  },
+  "repair1_member_hashes": {
+    "PREIMAGES.json": "d7a9179ee2b83397bc4163632fb35655999feef1eed6289b7ec3ab546ec99ea3",
+    "README.md": "15384a47c8d40fd36880ee954b2ad3f5ac4eabf4c02f70033745919f903e1a14",
+    "diffs/backend/app/domain/admissions_actions.py.diff": "bcaabab27c5f48a5311bf063158194e8380c16049ee62cc7c16edfd234525303",
+    "diffs/backend/app/schemas/admissions_actions.py.diff": "a068e9df98c7b3a49086a4226b37f130991cb2bebb348c7dd86aea88acf60232",
+    "diffs/backend/tests/test_admissions_actions.py.diff": "7749d122358784f8f414e544543fb6fad55615632bb81981acff453c012ca033",
+    "files/backend/app/domain/admissions_actions.py": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585",
+    "files/backend/app/schemas/admissions_actions.py": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629",
+    "files/backend/tests/test_admissions_actions.py": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa",
+    "original/backend/app/domain/admissions_actions.py": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86",
+    "original/backend/app/schemas/admissions_actions.py": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d",
+    "original/backend/tests/test_admissions_actions.py": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896"
+  },
+  "repair2_member_hashes": {
+    "SEAL.json": "f77aa5e618144160a3e36f743030258987300075b1a7186b1f91c78d75024d10",
+    "PREIMAGES.json": "21e49c4b2745463dedc0f20b84f09d46e2462429d421a33612a956d19f776980",
+    "README.md": "f786539ca33334903176261a46eb96d552cf2e2b318a93c8fa6c821aae89d0d1",
+    "diffs/backend/app/domain/admissions_actions.py.diff": "7863fe3365af31421062fe197d51954f97c80bec28191bbe6074d0968c910e94",
+    "diffs/backend/app/schemas/admissions_actions.py.diff": "427b9e64533f9cb46acd335de91243e9468c8b1098a35fac6d56cec58199bde2",
+    "diffs/backend/tests/test_admissions_actions.py.diff": "9fae44495e451ef2cb242d763b9f1441cf4ee7342fd7aea8944a790ea547942b",
+    "files/backend/app/domain/admissions_actions.py": "e15f92ea37b28bd222ed239aaa21edf3294f289797e9479c7db25031e182b8ad",
+    "files/backend/app/schemas/admissions_actions.py": "870738ed180f7164e8b15f4bd8baf47c855a622748cef2728f91774e26a9b6b7",
+    "files/backend/tests/test_admissions_actions.py": "ee268deb6228e8c3253add12442572b9faa1c91ca5d31f9b6eaef1466feac2d5",
+    "original/backend/app/domain/admissions_actions.py": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585",
+    "original/backend/app/schemas/admissions_actions.py": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629",
+    "original/backend/tests/test_admissions_actions.py": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa"
+  },
+  "member_hash_verification": {
+    "repair1": {
+      "count": 11,
+      "before_source_read": true
+    },
+    "repair2": {
+      "count": 11,
+      "before_source_read": true
+    }
+  },
+  "diff_payload_equivalence": {
+    "source1_to_repair1": {
+      "original_copies_cmp": [
+        0,
+        0,
+        0
+      ],
+      "schema_domain_diff_text_cmp": [
+        0,
+        0
+      ],
+      "tests_text_reconstruction": {
+        "file": "backend/tests/test_admissions_actions.py",
+        "hunks": [
+          {
+            "old_start": 122,
+            "old_count": 14,
+            "new_start": 122,
+            "new_count": 32
+          },
+          {
+            "old_start": 237,
+            "old_count": 6,
+            "new_start": 255,
+            "new_count": 69
+          },
+          {
+            "old_start": 499,
+            "old_count": 6,
+            "new_start": 580,
+            "new_count": 9
+          },
+          {
+            "old_start": 506,
+            "old_count": 6,
+            "new_start": 590,
+            "new_count": 24
+          }
+        ],
+        "errors": [],
+        "reconstructed_equals_postimage": true,
+        "source_line_counts": {
+          "original": 646,
+          "post": 748
+        },
+        "method": "pure text reconstruction in functions JavaScript; no disk patch/app import/runtime"
+      }
+    },
+    "repair1_to_repair2": {
+      "original_copies_cmp": [
+        0,
+        0,
+        0
+      ],
+      "all_diff_text_cmp": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "final_application_postimages": {
+    "backend/app/schemas/admissions_actions.py": {
+      "preimage_sha256": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629",
+      "postimage_sha256": "870738ed180f7164e8b15f4bd8baf47c855a622748cef2728f91774e26a9b6b7",
+      "size_bytes": 53942,
+      "application_preimage": "ABSENT"
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "preimage_sha256": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585",
+      "postimage_sha256": "e15f92ea37b28bd222ed239aaa21edf3294f289797e9479c7db25031e182b8ad",
+      "size_bytes": 49294,
+      "application_preimage": "ABSENT"
+    },
+    "backend/tests/test_admissions_actions.py": {
+      "preimage_sha256": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa",
+      "postimage_sha256": "ee268deb6228e8c3253add12442572b9faa1c91ca5d31f9b6eaef1466feac2d5",
+      "size_bytes": 60209,
+      "application_preimage": "ABSENT"
+    }
+  },
+  "findings": {
+    "F1": "CLOSED_SOURCE_NATIVE_UUID",
+    "F2": "CLOSED_SOURCE_PLANNING_RECORRECTION",
+    "F3": "CLOSED_SOURCE_OWN_RELATION_422",
+    "F4": "CLOSED_SOURCE_EMBEDDED_TOKEN",
+    "F5": "CLOSED_SOURCE_PERSONAL_RECEIPT_BINDING",
+    "F6": "CLOSED_SOURCE_GLOBAL_PERSONAL_ORDER"
+  },
+  "controls": {
+    "original42_test_definition_names_retained": true,
+    "repair1_test_definitions": 47,
+    "repair2_test_definitions": 50,
+    "repair2_predecessor_top_level_functions": 69,
+    "repair2_predecessor_tests": 47,
+    "repair2_predecessor_helpers": 22,
+    "repair2_added_test_definitions": 3,
+    "inverse_entity_date_partition_literal_cases": 8,
+    "metadata_clarification": "Producer repair2 unchanged_predecessor_test_functions=69 means total top-level functions, not tests; sealed originals retained",
+    "counts_are_not_collection_or_pass": true,
+    "study_order_and_one_workload_retained_source": true
+  },
+  "limits": {
+    "accepted_six_finding_scope_only": true,
+    "deferred_original_gates": [
+      "D01",
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06"
+    ],
+    "no_coherent_trusted_db_rewrite_claim": true,
+    "no_official_admission_or_submission_readiness": true,
+    "no_deployment_or_product_completion": true
+  },
+  "execution": {
+    "app_imports": false,
+    "ast_imports": false,
+    "test_collection": false,
+    "test_execution": false,
+    "format_lint_typecheck": false,
+    "app_edits": false,
+    "git_commands": false,
+    "handoff_helper_edits": false,
+    "db_network_browser_provider": false,
+    "stopped_live_heldout_work": false
+  },
+  "original_sealed_packets_and_reviews_preserved": true
+}

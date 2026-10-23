@@ -1,0 +1,57 @@
+- complementary:
+  - generic: Unimatch
+  - navigation "Main navigation":
+    - button "Home":
+      - generic: Home
+    - button "Find":
+      - generic: Find
+    - button "Plan":
+      - generic: Plan
+    - button "Documents":
+      - generic: Documents
+    - button "Community":
+      - generic: Community
+  - paragraph:
+    - text: Same students.
+    - strong: Bigger horizons.
+  - generic "Preferences"
+  - option "Как в системе"
+  - option "Светлое" [selected]
+  - option "Тёмное"
+  - option "English"
+  - option "Русский" [selected]
+  - option "Қазақша"
+- banner:
+  - generic: Demo data
+  - generic "Explore⌄"
+  - text: Applicant
+  - combobox "Applicant":
+    - option "Новый абитуриент" [selected]
+  - button "New case"
+  - button "Settings"
+  - button "Выйти"
+- main:
+  - paragraph: Step 09
+  - heading "Take it with you, or erase it" [level=1]
+  - paragraph: Shortlist exports carry the source link and verification date for each row. You can also export or delete a saved case before research.
+  - heading "Export your own data" [level=2]
+  - paragraph: "This saved case: the profile as entered and a list of its runs. This is not an account-wide export."
+  - button "Show my stored data" [disabled]
+  - button "Download my data (.json)" [disabled]
+  - heading "What this build does and does not do" [level=2]
+  - heading "Guarantees" [level=3]
+  - list:
+    - listitem: robots.txt is honoured before every fetch, including the browser tier
+    - listitem: applicant data is never placed in an outbound URL
+    - listitem: no page behind a login is fetched, and no CAPTCHA is bypassed
+    - listitem: no application is submitted, signed or paid for
+    - listitem: unknown values are reported as unknown, never inferred
+  - heading "Limits" [level=3]
+  - list:
+    - listitem: The product reports published criteria only. It cannot predict an admission or an award.
+    - listitem: Grade conversions are approximations and are never applied without the user accepting one.
+    - listitem: Currency rates are a dated static snapshot, not a live feed.
+  - paragraph: Currency figures converted using a static snapshot dated 2026-08-01. Static snapshot bundled with ASHYQ Apply (see app/domain/currency.py)
+  - heading "Delete this case" [level=2]
+  - note:
+    - generic: Deleted. The profile and its linked research records were removed from the active service.

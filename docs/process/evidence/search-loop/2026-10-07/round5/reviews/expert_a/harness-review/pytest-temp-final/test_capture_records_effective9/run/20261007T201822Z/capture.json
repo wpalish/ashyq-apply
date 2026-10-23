@@ -1,0 +1,27 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "captured_at": "20261007T201822Z",
+  "mode": "live",
+  "config": {
+    "strict_expert_budget": true,
+    "search_provider": "exa_mcp",
+    "site_branding_identity": false,
+    "subject_phrase_match": true,
+    "shared_query_budget": true,
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "max_search_queries_per_case": 6,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen"
+    ],
+    "selection": "curated",
+    "batch_stop_reason": "external_provider_failure",
+    "batch_attempted_case_ids": [],
+    "batch_remaining_case_ids": [
+      "groningen"
+    ]
+  },
+  "observations": []
+}

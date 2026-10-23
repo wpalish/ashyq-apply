@@ -1,0 +1,101 @@
+{
+  "status": "CORE8_PASS_FULL_PENDING",
+  "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50",
+  "source_head": "c7b41fcf42c2fb84e877a8cb8b1349eedb79941f",
+  "initial_source_tree_sha256": "a75d44565a50be896244ca95e68281f87e7327dd3ec565ab2b897ec9674229e3",
+  "steps": [
+    {
+      "name": "ruff",
+      "exit_code": 0,
+      "seconds": 0.1,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50/ruff.log"
+    },
+    {
+      "name": "ruff-format",
+      "exit_code": 0,
+      "seconds": 0.04,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50/ruff-format.log"
+    },
+    {
+      "name": "mypy",
+      "exit_code": 0,
+      "seconds": 12.46,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50/mypy.log"
+    },
+    {
+      "name": "backend-sqlite",
+      "exit_code": 0,
+      "seconds": 490.27,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50/backend-sqlite.log"
+    },
+    {
+      "name": "frontend-typecheck",
+      "exit_code": 0,
+      "seconds": 3.3,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50/frontend-typecheck.log"
+    },
+    {
+      "name": "frontend-lint",
+      "exit_code": 0,
+      "seconds": 1.47,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50/frontend-lint.log"
+    },
+    {
+      "name": "frontend-tests",
+      "exit_code": 0,
+      "seconds": 7.98,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50/frontend-tests.log"
+    },
+    {
+      "name": "frontend-build",
+      "exit_code": 0,
+      "seconds": 4.6,
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T012643Z-check-145b6a50/frontend-build.log"
+    }
+  ],
+  "backend_sqlite": {
+    "total": 4384,
+    "unique_ids": 4384,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "warnings": 32,
+    "test_seconds": 487.97,
+    "coverage_percent": 95.26,
+    "old4369_preserved": true,
+    "added15": [
+      "tests.test_security.TestPrivateApiStorage::test_auth_and_not_found_api_responses_are_not_stored",
+      "tests.test_security.TestPrivateApiStorage::test_avatar_api_route_caching_is_overridden_without_changing_the_image",
+      "tests.test_security.TestPrivateApiStorage::test_case_and_result_exports_are_not_stored",
+      "tests.test_security.TestPrivateApiStorage::test_csrf_refusals_are_not_stored[headers0]",
+      "tests.test_security.TestPrivateApiStorage::test_csrf_refusals_are_not_stored[headers1]",
+      "tests.test_security.TestPrivateApiStorage::test_limiter_refusal_is_not_stored",
+      "tests.test_security.TestPrivateApiStorage::test_static_asset_headers_remain_cacheable_and_api_prefix_is_exact",
+      "tests.test_security.TestPrivateApiStorage::test_successful_private_api_responses_are_not_stored[/api/auth/me]",
+      "tests.test_security.TestPrivateApiStorage::test_successful_private_api_responses_are_not_stored[/api/cases]",
+      "tests.test_security.TestPrivateApiStorage::test_successful_private_api_responses_are_not_stored[/api/profiles]",
+      "tests.test_security.TestPrivateApiStorage::test_successful_private_api_responses_are_not_stored[/api/social/me]",
+      "tests.test_social_moderation.TestModeratorAccountProvisioning::test_claimed_email_cannot_remove_another_tenants_reported_content",
+      "tests.test_social_moderation.TestModeratorAccountProvisioning::test_only_explicitly_provisioned_id_can_moderate_across_workspaces",
+      "tests.test_social_moderation.TestModeratorAccountProvisioning::test_recreating_the_same_email_does_not_inherit_a_provisioned_id",
+      "tests.test_social_moderation.TestModeratorAccountProvisioning::test_registering_the_configured_email_does_not_grant_moderation"
+    ],
+    "same_initial_security4384_ids": true,
+    "identity_set_sha256": "a621f5b10fab5337398c10a1db6792c8f54c3045ce6c5f6c7cc9f283dde40829"
+  },
+  "frontend": {
+    "passed": 342,
+    "files": 33,
+    "intentional_ErrorBoundary_diagnostic_present": true
+  },
+  "mypy_source_files": 386,
+  "full": "PENDING",
+  "doctor_environment_only": {
+    "run": "20261009T012630Z-doctor-87227274",
+    "status": "passed"
+  },
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  }
+}

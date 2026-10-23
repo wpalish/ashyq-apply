@@ -1,0 +1,44 @@
+"""Retain complete source gates without reading or changing original secrets."""
+import hashlib
+import json
+import os
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
+
+WORK = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work')
+REPO = WORK / 'ashyq-apply'
+OUT = WORK / 'search-loop-round5/gates'
+OUT.mkdir(parents=True, exist_ok=True)
+ENV_LINK = REPO / 'backend/.env'
+ORIGINAL = Path('/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.env')
+assert ENV_LINK.is_symlink() and ENV_LINK.resolve() == ORIGINAL
+paths = ['backend/app/adapters/discovery/live_discovery.py', 'backend/evaluation/research/live.py', 'backend/tests/test_subject_phrase_guard.py', 'backend/tests/test_subject_phrase_capture.py']
+hashes = {p: hashlib.sha256((REPO/p).read_bytes()).hexdigest() for p in paths}
+record = dict(started_at=datetime.now(timezone.utc).isoformat(), source_sha256=hashes, commands=[])
+env = dict(os.environ, UNIMATCH_SEARCH_PROVIDER='none', UNIMATCH_DECISION_PROVIDER='none',
+    UNIMATCH_ENABLE_BROWSER_TIER='false', UNIMATCH_DEMO_MODE='true')
+commands = [
+    ('ruff', ['.venv/bin/python','-m','ruff','check','app','tests','evaluation']),
+    ('format', ['.venv/bin/python','-m','ruff','format','--check','app','tests','evaluation']),
+    ('mypy', ['.venv/bin/python','-m','mypy','app','tests','evaluation']),
+    ('backend-pytest', ['.venv/bin/python','-m','pytest','--cov=app','--cov-fail-under=92']),
+    ('alembic-heads', ['.venv/bin/alembic','heads']),
+]
+ENV_LINK.unlink()
+try:
+    for name, command in commands:
+        with (OUT/(name+'.log')).open('w') as log:
+            result = subprocess.run(command, cwd=REPO/'backend', env=env, stdout=log, stderr=subprocess.STDOUT)
+        record['commands'].append(dict(name=name, arguments=command, exit_code=result.returncode))
+        (OUT/'backend-gates.json').write_text(json.dumps(record,indent=2)+'\n')
+        print(name, result.returncode, flush=True)
+        if result.returncode:
+            break
+finally:
+    ENV_LINK.symlink_to(ORIGINAL)
+    record.update(finished_at=datetime.now(timezone.utc).isoformat(), dotenv_restored=ENV_LINK.is_symlink(),
+        source_unchanged=all(hashlib.sha256((REPO/p).read_bytes()).hexdigest()==h for p,h in hashes.items()))
+    (OUT/'backend-gates.json').write_text(json.dumps(record,indent=2)+'\n')
+assert record['source_unchanged'] and len(record['commands']) == len(commands)
+assert all(c['exit_code']==0 for c in record['commands'])

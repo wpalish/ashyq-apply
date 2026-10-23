@@ -1,0 +1,50 @@
+{
+  "status": "BOUND_PLAN_ONLY_NO_SERVER_OR_DB",
+  "source": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/source",
+  "fresh_preview_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery",
+  "actual_full_head": "c7b41fcf42c2fb84e877a8cb8b1349eedb79941f",
+  "initial_source_tree_sha256": "a75d44565a50be896244ca95e68281f87e7327dd3ec565ab2b897ec9674229e3",
+  "declared_PNG_delta_count": 38,
+  "qualification": "Initial pre-check identity; final physical whole-tree equality is not asserted. Exact declared PNG delta separately verified; unlisted generated runtime artifacts are outside this declared source map.",
+  "required_launch": {
+    "lock": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/.run.lock",
+    "lock_duration": "preflight through all owned process-group cleanup",
+    "ports": [
+      5173,
+      8099
+    ],
+    "reuseExistingServer": false,
+    "api_command": [
+      "bash",
+      "run.sh"
+    ],
+    "frontend_command": [
+      "npm",
+      "run",
+      "dev"
+    ],
+    "with_worker": false,
+    "must_recheck_free_ports_before_launch": true,
+    "database": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/runtime/checks.db",
+    "fresh_SQLite_only": true,
+    "settings": {
+      "UNIMATCH_ENVIRONMENT": "development",
+      "UNIMATCH_DEMO_MODE": "true",
+      "UNIMATCH_AUTH_ENABLED": "true",
+      "UNIMATCH_DATABASE_URL": "sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/runtime/checks.db",
+      "UNIMATCH_CACHE_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/runtime/httpcache",
+      "UNIMATCH_EXPORT_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/runtime/exports",
+      "UNIMATCH_CORS_ORIGINS": "http://127.0.0.1:5173,http://localhost:5173",
+      "UNIMATCH_COOKIE_SECURE": "false",
+      "UNIMATCH_SEARCH_PROVIDER": "none",
+      "UNIMATCH_DECISION_PROVIDER": "none",
+      "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+      "UNIMATCH_PAYMENTS_ENABLED": "false",
+      "UNIMATCH_PASSWORD_RESET_ENABLED": "false",
+      "UNIMATCH_PASSWORD_SCRYPT_LOG2": "14",
+      "UNIMATCH_AUTH_RATE_LIMIT_PER_MINUTE": "60"
+    },
+    "fixture": "Empty DB migrated once by owned API startup; accounts/cases created later through local native UI only. No reused DB/seed.",
+    "cleanup": "Only saved owned PID groups; wait including surviving members; retain errors/logs/receipt; verify both ports free before releasing lock."
+  }
+}

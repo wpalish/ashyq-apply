@@ -198,9 +198,21 @@ def _grant_and_schedule(session: Session, order: Order) -> None:
         order_id=order.id,
     )
 
+    previous = session.scalar(
+        select(ResearchRun)
+        .where(ResearchRun.profile_id == order.profile_id)
+        .order_by(ResearchRun.created_at.desc(), ResearchRun.id.desc())
+        .limit(1)
+    )
     run = ResearchRun(
         profile_id=order.profile_id,
         stage="queued",
+        demo_mode=previous.demo_mode if previous is not None else get_settings().demo_mode,
+        university_ids=(
+            list(previous.university_ids)
+            if previous is not None and previous.university_ids is not None
+            else None
+        ),
         access_tier="full",
         stage_state=RunState.load(None).dump(),
     )

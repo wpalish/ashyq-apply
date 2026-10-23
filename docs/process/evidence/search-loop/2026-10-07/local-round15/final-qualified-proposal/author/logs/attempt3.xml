@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="20" time="0.710" timestamp="2026-10-08T12:30:51.851156+05:00" hostname="iMac-Aliser.local"><testcase classname="tests.test_local_pilot" name="test_legacy_default_raw_output_shape" time="0.003" /><testcase classname="tests.test_local_pilot" name="test_null_unknown_crossmode_and_types_fail_closed" time="0.001" /><testcase classname="tests.test_local_pilot" name="test_tool_over120_and_resume_original_wall" time="0.003" /><testcase classname="tests.test_local_pilot" name="test_read60_query6_no_extra_dispatch" time="0.010" /><testcase classname="tests.test_local_pilot" name="test_resume_legacy_to_wall_rejected" time="0.001"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'timing policy'&#10;  Actual message: 'Resume summary wall policy incomplete or contradictory'">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-22/test_resume_legacy_to_wall_rej0')
+
+    def test_resume_legacy_to_wall_rejected(tmp_path):
+        first=run_tool(legacy_plan(),tmp_path)
+&gt;       with pytest.raises(ValueError,match='timing policy'):run_tool(plan(resume_summary=first),tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'timing policy'
+E         Actual message: 'Resume summary wall policy incomplete or contradictory'
+
+tests/test_local_pilot.py:113: AssertionError</failure></testcase><testcase classname="tests.test_local_pilot" name="test_selector_wall_remaining_and_legacy55" time="0.001" /><testcase classname="tests.test_local_pilot" name="test_owned_process_timeout_kills_own_group" time="0.000" /><testcase classname="tests.test_local_pilot" name="test_prepare_only_and_exact_owner_grant" time="0.002" /><testcase classname="tests.test_local_pilot" name="test_public_profile_scope_canonical_closed" time="0.000" /><testcase classname="tests.test_local_pilot" name="test_neutral_completed_and_honest_partial" time="0.007" /><testcase classname="tests.test_local_pilot" name="test_algorithm_exit0_refusal_global_stop" time="0.008" /><testcase classname="tests.test_local_pilot" name="test_algorithm_wrong_identity_stops_before_expert" time="0.009" /><testcase classname="tests.test_local_pilot" name="test_isolation_failure_partial_receipt_zero_dispatch" time="0.003" /><testcase classname="tests.test_local_pilot" name="test_complete_adaptive10_plus20_not_runtime_admitted" time="0.088"><failure message="AssertionError: assert ('STOPPED_PARTIAL_UNSCORED' == 'COLLECTION_SEALED_UNREVIEWED'&#10;  &#10;  - COLLECTION_SEALED_UNREVIEWED&#10;  + STOPPED_PARTIAL_UNSCORED)">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-22/test_complete_adaptive10_plus20')
+
+    def test_complete_adaptive10_plus20_not_runtime_admitted(tmp_path):
+        gate,public,pp,gp=setup(tmp_path);result=p.execute(pp,gp,p.sha(gp),gate.plan['retained_stop']['sha256'],process_run=fake_process(gate,public),isolate=FakeIsolation,select=adaptive_select,run_tool=native_tool)
+&gt;       assert result['status']=='COLLECTION_SEALED_UNREVIEWED' and len(result['algorithms'])==10 and len(result['experts'])==20 and result['runtime_mode']=='offline_injected' and result['all_expert_complete_eligible'] is False
+E       AssertionError: assert ('STOPPED_PARTIAL_UNSCORED' == 'COLLECTION_SEALED_UNREVIEWED'
+E         
+E         - COLLECTION_SEALED_UNREVIEWED
+E         + STOPPED_PARTIAL_UNSCORED)
+
+tests/test_local_pilot.py:169: AssertionError</failure></testcase><testcase classname="tests.test_local_pilot" name="test_zero_source_submit_partial_not_unrun" time="0.005" /><testcase classname="tests.test_local_pilot" name="test_failed_later_model_preserves_journal_and_raw" time="0.008" /><testcase classname="tests.test_local_pilot" name="test_protective_wall_includes_thinking_no_reset" time="0.005" /><testcase classname="tests.test_local_pilot" name="test_stale_delta_cannot_replace_latest_journal" time="0.009" /><testcase classname="tests.test_local_pilot" name="test_prepare_real_shaped_homepage_and_opaque_bindings" time="0.225" /><testcase classname="tests.test_local_pilot" name="test_complete_citation_chain_and_mutation_closure" time="0.010"><failure message="ValueError: Raw protective wall counter invalid">tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-22/test_complete_citation_chain_a0')
+
+    def test_complete_citation_chain_and_mutation_closure(tmp_path):
+        from evaluation.research.expert.models import ExpertTrace
+        gate,public,_pp,_gp=setup(tmp_path)
+        def evidence(isolation,schema,output,prompt,**kwargs):
+            turn=adaptive_select(isolation,schema,output,prompt,**kwargs)
+            if prompt.get('source_views'):
+                value=copy.deepcopy(turn.answer)
+                scope={key:None for key in p.REQUEST_FIELDS};scope['university']=public['cases'][0]['university']
+                value['facts']=[dict(id='fact1',question='OTHER',claim_key='unmapped.admissions_info',value_json='"Synthetic admissions source information"',source_step=1,quotation='Synthetic admissions source information',location=dict(kind='text',block_id=None,section_path=[],page=None),scope=scope)]
+                output.write_text(json.dumps(value));return s.SelectorTurn(value,1,streams(value),'',0,None)
+            return turn
+&gt;       receipt=asyncio.run(p.collect_expert(gate,public,public['cases'][0],'A',isolate=FakeIsolation,select=evidence,run_tool=native_tool))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_local_pilot.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+evaluation/research/local_pilot.py:518: in collect_expert
+    return await _collect_expert(gate, public, case, expert, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+evaluation/research/local_pilot.py:453: in _collect_expert
+    candidate, trace, proof = neutral_checkpoint(journal, decision, actions, packet, root / "raw", started, datetime.now(UTC))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+evaluation/research/local_pilot.py:394: in neutral_checkpoint
+    validate_trace(trace, packet, logs_dir=raw_dir)
+evaluation/research/expert/models.py:868: in validate_trace
+    _controller_budget(parsed, action, record, packet.get("comparison_mode"))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+parsed = ExpertTrace(schema_version='1', case_id='groningen', packet_sha256='8a7d084847ce7722c7c41c3c97e309d75f09e58e3320265b4e...ces=[], evidence=[], scope={}, observation='No finding was submitted for this question.')], review_status='unreviewed')
+action = Action(step=1, at=datetime.datetime(2026, 10, 8, 7, 30, 52, 516179, tzinfo=TzInfo(0)), observed_before='Start independ...402e89', elapsed_ms=1, fetcher_calls_cumulative=1, search_queries_cumulative=0, elapsed_ms_cumulative=2, cost_usd=None)
+record = {'at': '2026-10-08T07:30:52.516179+00:00', 'budget_origin': 'independent_full_budget', 'budgets': {'max_calls': 60, 'max_ms': None, 'max_search_queries': 6}, 'case_id': 'groningen', ...}
+comparison_mode = 'independent_full_budget'
+
+    def _controller_budget(
+        parsed: ExpertTrace, action: Action, record: dict[str, Any], comparison_mode: str | None
+    ) -&gt; None:
+        from .controller import BLOCKED_HOSTS, STRICT_PROVIDERS, _allowed_url
+    
+        policy = record.get("tool_policy") or {}
+        if not isinstance(policy, dict):
+            raise ValueError("Controller tool policy must be structured")
+        if policy.get("timing_policy", "legacy_active") != parsed.timing_policy:
+            raise ValueError("Raw timing policy differs from trace")
+        if parsed.timing_policy == "expert_wall_only" and (policy.get("protective_wall_ms") != 900_000 or policy.get("thinking_in_tool_ms") is not False or record.get("budget_origin") != "independent_full_budget"):
+            raise ValueError("Raw independent wall policy incomplete")
+        if parsed.timing_policy == "expert_wall_only":
+            wb = record.get("wall_elapsed_ms_before")
+            wa = record.get("wall_elapsed_ms_cumulative")
+            if type(wb) is not int or type(wa) is not int or not 0 &lt;= wb &lt;= wa &lt;= 900_000 or wa-wb &lt; record.get("elapsed_ms",0):
+&gt;               raise ValueError("Raw protective wall counter invalid")
+E               ValueError: Raw protective wall counter invalid
+
+evaluation/research/expert/models.py:720: ValueError</failure></testcase></testsuite></testsuites>

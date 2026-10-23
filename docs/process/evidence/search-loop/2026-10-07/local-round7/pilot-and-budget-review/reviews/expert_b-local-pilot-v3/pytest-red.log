@@ -1,0 +1,68 @@
+....................................................FF.......            [100%]
+=================================== FAILURES ===================================
+__________ test_pagecap_reason_cannot_claim_error_free_completion[59] __________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/pytest-tmp/test_pagecap_reason_cannot_cla0')
+count = 59
+
+    @pytest.mark.parametrize('count', [59, 60])
+    def test_pagecap_reason_cannot_claim_error_free_completion(tmp_path, count):
+        # The production guard throws on this fatal reason; a completed observation
+        # cannot be accepted by bypassing the narrowly permitted error branch.
+        c = fixture(tmp_path)
+        c['config']['case_budgets']['toronto']['fetcher_calls'] = count
+        c['observations'][0]['telemetry']['http_fetches'] = count
+        c['observations'][0]['error'] = None
+        raw = json.loads((tmp_path / 'toronto.raw.json').read_text())
+        raw['canary']['run_error'] = ''
+        flush(tmp_path, c, raw)
+>       check_rejected(c, tmp_path)
+
+work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v3_pagecap.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = {'schema_version': '1', 'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'captured_at': '20261007T223010Z', 'mode': 'live', ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/pytest-tmp/test_pagecap_reason_cannot_cla0')
+
+    def check_rejected(c, tmp_path):
+        result = pilot.validate(c, 'toronto', tmp_path)
+>       assert result['errors'], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'bounded_page_cap_with_full_raw': False, 'fetcher_calls': 59, ...}
+E       assert []
+
+work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v3_pagecap.py:44: AssertionError
+__________ test_pagecap_reason_cannot_claim_error_free_completion[60] __________
+
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/pytest-tmp/test_pagecap_reason_cannot_cla1')
+count = 60
+
+    @pytest.mark.parametrize('count', [59, 60])
+    def test_pagecap_reason_cannot_claim_error_free_completion(tmp_path, count):
+        # The production guard throws on this fatal reason; a completed observation
+        # cannot be accepted by bypassing the narrowly permitted error branch.
+        c = fixture(tmp_path)
+        c['config']['case_budgets']['toronto']['fetcher_calls'] = count
+        c['observations'][0]['telemetry']['http_fetches'] = count
+        c['observations'][0]['error'] = None
+        raw = json.loads((tmp_path / 'toronto.raw.json').read_text())
+        raw['canary']['run_error'] = ''
+        flush(tmp_path, c, raw)
+>       check_rejected(c, tmp_path)
+
+work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v3_pagecap.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = {'schema_version': '1', 'pipeline_sha': '7277c154bda838688268b7a07d4286ed8f4688ce', 'captured_at': '20261007T223010Z', 'mode': 'live', ...}
+tmp_path = PosixPath('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/reviews/expert_b-local-pilot-v3/pytest-tmp/test_pagecap_reason_cannot_cla1')
+
+    def check_rejected(c, tmp_path):
+        result = pilot.validate(c, 'toronto', tmp_path)
+>       assert result['errors'], result
+E       AssertionError: {'errors': [], 'bounded_timeout_without_full_raw': False, 'bounded_page_cap_with_full_raw': False, 'fetcher_calls': 60, ...}
+E       assert []
+
+work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v3_pagecap.py:44: AssertionError
+=========================== short test summary info ============================
+FAILED work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v3_pagecap.py::test_pagecap_reason_cannot_claim_error_free_completion[59]
+FAILED work/local-round7/reviews/expert_b-local-pilot-v3/test_validate_v3_pagecap.py::test_pagecap_reason_cannot_claim_error_free_completion[60]
+2 failed, 59 passed in 0.18s

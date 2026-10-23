@@ -11,12 +11,17 @@ import json
 import logging
 import os
 import socket
+from contextlib import contextmanager, nullcontext
+from copy import deepcopy
 from datetime import UTC, date, datetime, timedelta
+from functools import partial
 
-from sqlalchemy import select
+from sqlalchemy import inspect as sa_inspect
+from sqlalchemy import select, update
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
-from app.adapters.base import Candidate, CandidateProgram, PageOutcome
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
@@ -34,6 +39,7 @@ from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+from app.adapters.search.intent import QueryPrivacyError
 from app.catalogue.discovery import CatalogueDiscoveryAdapter
 from app.config import Settings
 from app.domain import dedupe, diagnostics
@@ -63,6 +69,7 @@ from app.domain.funding import (
     roll_up_availability,
     unmet_coverage_requirements,
 )
+from app.domain.profile_input_provenance import INPUT_OBSERVATION_KEY, observe_actual_inputs
 from app.domain.ranking_v2 import rank_result
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
@@ -70,15 +77,19 @@ from app.models import (
     AuditEvent,
     ClaimRow,
     ConflictRow,
+    Job,
     ProgramResultRow,
     ResearchRun,
     SourcePage,
     new_id,
 )
 from app.models.base import ensure_utc
+from app.pipeline import read_budget
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import ProgrammeObservation, ProgrammeObservationSet
 from app.schemas.result import CostBreakdown, ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
@@ -99,19 +110,6 @@ def _page_outcome_line(outcome: PageOutcome) -> str:
     size = f", {outcome.readable_chars} chars" if outcome.readable_chars else ""
     page_type = outcome.page_type or "unclassified"
     return f"page {outcome.category}: {outcome.url} (page_type {page_type}{size}): {outcome.detail}"
-
-
-class RunCancelled(RuntimeError):
-    pass
-
-
-class LeaseLost(RuntimeError):
-    """This worker no longer owns the job it is executing.
-
-    Raised at a checkpoint rather than mid-write, so the abandoned attempt
-    stops between units of work and leaves the database to the worker that
-    took the job over.
-    """
 
 
 class ResearchRunner:
@@ -152,11 +150,22 @@ class ResearchRunner:
         self.verify_limit = min(run.verify_limit or settings.verify_limit, self.candidate_limit)
         self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
         self._candidates: list[Candidate] = []
+        self._read_guard_enabled = False
+        self._read_guard_out_of_scope = False
+        self._read_guard_writing = False
+        self._read_job_kind: str | None = None
+        self._pending_settings_snapshot: dict | None = None
+        self._checkpoint_started_at: datetime | None = None
 
     # --- infrastructure -------------------------------------------------
 
     def _make_fetcher(self) -> Fetcher:
-        return Fetcher(
+        factory = (
+            partial(read_budget.BudgetedFetcher, before_get=self._reserve_university_read)
+            if self._read_guard_enabled
+            else Fetcher
+        )
+        return factory(
             self.settings.cache_dir,
             delay_seconds=self.settings.fetch_delay_seconds,
             respect_robots=self.settings.respect_robots,
@@ -186,7 +195,25 @@ class ResearchRunner:
             university_ids=self.run.university_ids,
             live_limit=self.verify_limit,
             page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
+            research_scope=self._university_read_scope if self._read_guard_enabled else None,
+            observation_recorder=self._record_programme_observation,
         )
+
+    def _record_programme_observation(self, observed: ProgrammeObservation) -> None:
+        """Commit accepted public page metadata through the existing job fence."""
+        self._check_cancelled()
+        raw = self.run.programme_observations
+        saved = (
+            ProgrammeObservationSet()
+            if raw is None
+            else ProgrammeObservationSet.model_validate(raw)
+        )
+        next_set = saved.add(observed)
+        if next_set == saved:
+            return
+        self.run.programme_observations = next_set.model_dump(mode="json")
+        # Heartbeat CAS and progress write share a transaction; lost lease rolls back.
+        self._save()
 
     def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:
         self.session.add(
@@ -212,6 +239,32 @@ class ResearchRunner:
         means another attempt owns the job, so this one rolls its checkpoint
         back and stops without having written anything.
         """
+        if not self._read_guard_writing:
+            pending = self._pending_settings_snapshot
+            changed = sa_inspect(self.run).attrs.settings_snapshot.history.has_changes()
+            if not self.demo and (self._read_guard_enabled or pending is not None or changed):
+                durable = self._read_snapshot(lock=True)
+                if (
+                    self._read_guard_enabled
+                    and self.job_id
+                    and type(self.lease_token) is int
+                    and self.lease_token > 0
+                ):
+                    durable[read_budget.LEDGER_KEY] = self._read_ledger_for_checkpoint(durable)
+                replacement = pending if pending is not None else (self.run.settings_snapshot or {})
+                self.run.settings_snapshot = read_budget.copy_snapshot_with_ledger(
+                    replacement, durable
+                )
+            elif pending is not None:
+                self.run.settings_snapshot = deepcopy(pending)
+            # A clean loaded JSON needs no assignment: ordinary ORM UPDATEs
+            # then cannot erase a namespace another checkpoint just created.
+        # Actual runner inputs join the existing own heartbeat transaction.
+        # Legacy/corrupt snapshots are never backfilled from today's profile.
+        snapshot = self.run.settings_snapshot or {}
+        observed_inputs = observe_actual_inputs(snapshot.get(INPUT_OBSERVATION_KEY), self.profile)
+        if observed_inputs is not None:
+            self.run.settings_snapshot = {**snapshot, INPUT_OBSERVATION_KEY: observed_inputs}
         self.run.stage_state = self.state.dump()
         self.run.heartbeat_at = datetime.now(UTC)
         # The lease follows the stage, not the order of assignments in the
@@ -235,6 +288,7 @@ class ResearchRunner:
                 self.session.rollback()
                 raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
         self.session.commit()
+        self._pending_settings_snapshot = None
 
     def _check_cancelled(self) -> None:
         """Observed between units of work so cancellation lands cleanly.
@@ -245,22 +299,33 @@ class ResearchRunner:
         cancellation - the promise that this attempt may still write is kept
         by the fence in _save.
         """
-        cancelled = self.session.execute(
-            select(ResearchRun.cancelled).where(ResearchRun.id == self.run.id)
-        ).scalar()
-        if cancelled:
-            raise RunCancelled("Run was cancelled by the user.")
-        if self.job_id is not None:
-            from app.jobs.store import JobStore
+        try:
+            guarded = not self.demo
+            # Dirty progress must not autoflush a Run row before the Job fence.
+            with self.session.no_autoflush if guarded else nullcontext():
+                cancelled = self.session.execute(
+                    select(ResearchRun.cancelled).where(ResearchRun.id == self.run.id)
+                ).scalar()
+                if cancelled:
+                    raise RunCancelled("Run was cancelled by the user.")
+                if self.job_id is not None:
+                    from app.jobs.store import JobStore
 
-            store = JobStore(self.session, worker_id=self.worker_id)
-            if store.is_cancel_requested(self.job_id):
-                raise RunCancelled("Job was cancelled by the user.")
-            # A reaped lease means another worker is already redoing this job.
-            # Continuing would double every read-modify-write counter on the
-            # run and let this attempt report an outcome it no longer owns.
-            if not store.owns(self.job_id):
-                raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
+                    store = JobStore(self.session, worker_id=self.worker_id)
+                    if store.is_cancel_requested(self.job_id):
+                        raise RunCancelled("Job was cancelled by the user.")
+                    # A reaped lease means another worker is already redoing this job.
+                    # Continuing would double every read-modify-write counter on the
+                    # run and let this attempt report an outcome it no longer owns.
+                    if not store.owns(self.job_id):
+                        raise LeaseLost(
+                            f"job {self.job_id[:8]} is no longer held by {self.worker_id}"
+                        )
+        except OperationalError as error:
+            if not self.demo and self._checkpoint_is_busy(error):
+                self.session.rollback()
+                raise UniversityReadStopped("checkpoint_busy") from error
+            raise
 
     def _live_claim_moments(self) -> list[datetime]:
         """The expiry moment of every live claim in this run.
@@ -353,15 +418,24 @@ class ResearchRunner:
             self.state[stage].error = ""
         self._audit("run_recheck_started", "run", self.run.id, stale_claims=len(stale_claims))
         self._save()
-        await self.run_to_decision()
+        prior = self._read_guard_out_of_scope
+        self._read_guard_out_of_scope = True
+        try:
+            await self.run_to_decision()
+        finally:
+            self._read_guard_out_of_scope = prior
         return len(stale_claims)
 
     # --- entry point ------------------------------------------------------
 
     async def run_to_decision(self) -> None:
         """Stages 1-5, ending at AWAITING_USER_DECISION."""
+        self._read_guard_enabled = (
+            not self.demo and not self._read_guard_out_of_scope and self._effective_read_guard()
+        )
+        previous_snapshot = deepcopy(self.run.settings_snapshot or {})
         self.run.started_at = self.run.started_at or datetime.now(UTC)
-        self.run.settings_snapshot = {
+        self._pending_settings_snapshot = {
             "demo_mode": self.demo,
             "candidate_limit": self.candidate_limit,
             "verify_limit": self.verify_limit,
@@ -371,6 +445,16 @@ class ResearchRunner:
             "respect_robots": self.settings.respect_robots,
             "university_ids": self.run.university_ids or [],
         }
+        if INPUT_OBSERVATION_KEY in previous_snapshot:
+            self._pending_settings_snapshot[INPUT_OBSERVATION_KEY] = previous_snapshot[
+                INPUT_OBSERVATION_KEY
+            ]
+        if read_budget.LEDGER_KEY in previous_snapshot:
+            self._pending_settings_snapshot[read_budget.LEDGER_KEY] = previous_snapshot[
+                read_budget.LEDGER_KEY
+            ]
+        if self._read_guard_enabled:
+            self._pending_settings_snapshot["university_read_budget_scope"] = "decision-job-episode"
         fetcher = self._make_fetcher()
         browser = self._make_browser(fetcher)
         if browser.enabled:
@@ -395,6 +479,12 @@ class ResearchRunner:
             self.run.finished_at = datetime.now(UTC)
             self._arm_recheck(self.earliest_recheck())
             self._save()
+        except UniversityReadStopped:
+            # Busy/invalid checkpoint metadata is a typed unknown, not a Run
+            # FAILED write under the same lock. Existing Worker.fail/backoff
+            # handles the retry; no durable unknown is promised here.
+            self.session.rollback()
+            raise
         except LeaseLost:
             # Losing the lease is control flow, not a failure of the run. The
             # attempt that lost it has already rolled itself back in _save and
@@ -409,7 +499,12 @@ class ResearchRunner:
             # Re-raise: swallowing this let the worker mark the job succeeded.
             raise
         except Exception as exc:  # keep the run inspectable rather than losing it
-            log.exception("run %s failed", self.run.id)
+            if isinstance(exc, QueryPrivacyError):
+                # Exception context can carry the rejected value even when
+                # str(exc) is safe. Keep the typed reason without a traceback.
+                log.error("run %s failed: %s: %s", self.run.id, type(exc).__name__, exc)
+            else:
+                log.exception("run %s failed", self.run.id)
             self.run.stage = PipelineStage.FAILED.value
             self.run.finished_at = datetime.now(UTC)
             self.run.errors = [*(self.run.errors or []), f"{type(exc).__name__}: {exc}"]
@@ -441,6 +536,224 @@ class ResearchRunner:
     def _transition(self, stage: PipelineStage) -> None:
         self.run.stage = stage.value
         self.session.add(self.run)
+
+    def _effective_read_guard(self) -> bool:
+        if read_budget.UNIVERSITY_READ_BUDGET:
+            return True
+        if not self.job_id:
+            return False
+        snapshot = self._read_snapshot(lock=False)
+        if isinstance(snapshot, dict) and read_budget.LEDGER_KEY in snapshot:
+            ledger = read_budget.validate_ledger(snapshot[read_budget.LEDGER_KEY])
+            # A recorded ON episode is intent, even after a source default
+            # changes. Previous episodes do not establish current job intent.
+            return "decision:" + self.job_id in ledger["episodes"]
+        return False
+
+    def _read_ledger_for_checkpoint(self, durable: dict) -> dict:
+        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+            raise UniversityReadStopped("unfenced_episode")
+        if self._read_job_kind != "research":
+            raise UniversityReadStopped("unsupported_job_episode")
+        ledger = (
+            read_budget.validate_ledger(durable[read_budget.LEDGER_KEY])
+            if read_budget.LEDGER_KEY in durable
+            else read_budget.new_ledger()
+        )
+        episode_id = "decision:" + self.job_id
+        active = ledger["active_episode"]
+        if active is not None and active != episode_id:
+            with self.session.no_autoflush:
+                previous_job = self.session.execute(
+                    select(Job.id).where(
+                        Job.id == active.removeprefix("decision:"),
+                        Job.run_id == self.run.id,
+                        Job.kind == "research",
+                    )
+                ).scalar_one_or_none()
+            if previous_job is None:
+                raise UniversityReadStopped("unknown_saved_episode")
+        if episode_id not in ledger["episodes"]:
+            if self.lease_token != 1:
+                raise UniversityReadStopped("missing_retry_episode")
+            # Only durable never-started run state proves that initialization
+            # precedes source work. Do not turn legacy reads into a fake zero.
+            if self._checkpoint_started_at is not None:
+                raise UniversityReadStopped("legacy_episode_untracked")
+            ledger["episodes"][episode_id] = {"read_counts": {}}
+        ledger["active_episode"] = episode_id
+        return ledger
+
+    @staticmethod
+    def _checkpoint_is_busy(error: OperationalError) -> bool:
+        sqlite_code = getattr(error.orig, "sqlite_errorcode", 0)
+        return getattr(error.orig, "sqlstate", None) == "55P03" or (
+            isinstance(sqlite_code, int) and sqlite_code & 0xFF in {5, 6}
+        )
+
+    def _lock_read_checkpoint_job(self) -> None:
+        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+            return  # Reads still fail closed in _change_read_budget; no fake fence.
+        owned_job = (
+            Job.id == self.job_id,
+            Job.run_id == self.run.id,
+            Job.status == "running",
+            Job.worker_id == self.worker_id,
+            Job.attempts == self.lease_token,
+        )
+        statement = select(Job.kind).where(*owned_job).with_for_update(nowait=True)
+        with self.session.no_autoflush:
+            kind = self.session.execute(statement).scalar_one_or_none()
+            if kind is not None and self.session.get_bind().dialect.name == "sqlite":
+                # SQLite ignores FOR UPDATE. Acquire its write transaction
+                # before reading the counter, with the same attempt fence.
+                # This no-op UPDATE changes no lease/state values; _save still
+                # performs the actual heartbeat and commit before get.
+                fence = self.session.execute(
+                    update(Job).where(*owned_job).values(heartbeat_at=Job.heartbeat_at),
+                    execution_options={"synchronize_session": False},
+                )
+                if fence.rowcount != 1:
+                    kind = None
+        if kind is None:
+            self.session.rollback()
+            raise LeaseLost("Read checkpoint no longer holds its job attempt.")
+        self._read_job_kind = kind
+
+    def _read_snapshot(self, *, lock: bool) -> dict:
+        # Always acquire Job then Run, both NOWAIT: the existing cancel/recovery
+        # writers can use the opposite order. Never wait across that lock pair.
+        statement = select(ResearchRun.settings_snapshot).where(ResearchRun.id == self.run.id)
+        try:
+            if lock:
+                self._lock_read_checkpoint_job()
+                if self.session.get_bind().dialect.name == "sqlite" and (
+                    not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0
+                ):
+                    # A direct legacy writer has no Job fence. Serialize its
+                    # JSON replacement on the real Run write transaction.
+                    with self.session.no_autoflush:
+                        self.session.execute(
+                            update(ResearchRun)
+                            .where(ResearchRun.id == self.run.id)
+                            .values(heartbeat_at=ResearchRun.heartbeat_at),
+                            execution_options={"synchronize_session": False},
+                        )
+                statement = statement.with_for_update(nowait=True)
+            with self.session.no_autoflush:
+                value = self.session.execute(statement).scalar_one()
+                if lock and self._read_guard_enabled:
+                    self._checkpoint_started_at = self.session.execute(
+                        select(ResearchRun.started_at).where(ResearchRun.id == self.run.id)
+                    ).scalar_one()
+        except OperationalError as error:
+            self.session.rollback()
+            if self._checkpoint_is_busy(error):
+                raise UniversityReadStopped("checkpoint_busy") from error
+            raise
+        if not isinstance(value, dict):
+            raise UniversityReadStopped("invalid_snapshot")
+        return deepcopy(value)
+
+    @contextmanager
+    def _university_read_scope(self, candidate: Candidate):
+        if not self._read_guard_enabled:
+            yield
+            return
+        self._check_cancelled()
+        key = read_budget.university_key(candidate)
+        token = read_budget.ACTIVE_UNIVERSITY.set(key)
+        try:
+            self._change_read_budget(key, reserve=False)
+            yield
+        finally:
+            read_budget.ACTIVE_UNIVERSITY.reset(token)
+
+    def _reserve_university_read(self) -> None:
+        self._check_cancelled()
+        key = read_budget.ACTIVE_UNIVERSITY.get()
+        if key is None:
+            raise UniversityReadStopped("missing_university_scope")
+        self._change_read_budget(key, reserve=True)
+
+    def _change_read_budget(self, key: str, *, reserve: bool) -> None:
+        # No genuine fenced job means no admission. Canary/direct runner must
+        # acquire a real worker protocol before an owner can enable this flag.
+        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+            raise UniversityReadStopped("unfenced_episode")
+        durable = self._read_snapshot(lock=True)
+        ledger = self._read_ledger_for_checkpoint(durable)
+        episode_id = "decision:" + self.job_id
+        episode = ledger["episodes"][episode_id]
+        count = episode["read_counts"].get(key, 0)
+        if count >= read_budget.READ_LIMIT:
+            # A refused get has no FetchResult/status/pages-failed. Do not
+            # rewrite the counter or refund previously admitted invocations.
+            self._save()
+            raise UniversityReadStopped("read_cap")
+        episode["read_counts"][key] = count + (1 if reserve else 0)
+        replacement = read_budget.copy_snapshot_with_ledger(
+            self.run.settings_snapshot or {}, durable
+        )
+        replacement[read_budget.LEDGER_KEY] = ledger
+        self.run.settings_snapshot = replacement
+        self._read_guard_writing = True
+        try:
+            self._save()  # heartbeat fence and counter commit BEFORE original get
+        finally:
+            self._read_guard_writing = False
+
+    def _read_budget_unknown(
+        self, candidate: Candidate, stopped: UniversityReadStopped, result=None
+    ) -> None:
+        message = (
+            f"Remaining research for {candidate.name} is unknown: "
+            f"university read allowance refused ({stopped.reason})."
+        )
+        if message not in (self.run.unknowns or []):
+            self.run.unknowns = [*(self.run.unknowns or []), message]
+        if result is not None and not any(
+            q.topic == "research read allowance" for q in result.unresolved
+        ):
+            result.unresolved.append(
+                UnresolvedQuestion(
+                    topic="research read allowance",
+                    question=f"Which remaining official facts can be established for {result.program}?",
+                    why_it_matters=message,
+                    university=candidate.name,
+                    program=result.program,
+                    blocking=False,
+                )
+            )
+
+    def _persist_read_partial_result(self, result: ProgramResult, claims, conflicts) -> int:
+        key = dedupe.program_key(
+            result.university, result.program, result.degree, result.intake, result.country
+        )
+        existing = (
+            self.session.query(ProgramResultRow)
+            .filter(ProgramResultRow.run_id == self.run.id, ProgramResultRow.dedupe_key == key)
+            .one_or_none()
+        )
+        if existing is None:
+            self._persist_result(result, claims, conflicts)
+            return len(claims)
+        # A incomplete reread must never replace previous established evidence.
+        # Completed new outputs are durably retained for reconciliation in the
+        # audit record, not silently mixed into the previous complete result.
+        previous = ProgramResult.model_validate(existing.payload)
+        for question in result.unresolved:
+            if not any(q.model_dump() == question.model_dump() for q in previous.unresolved):
+                previous.unresolved.append(question)
+        self._update_result(existing, previous)
+        if claims:
+            self._audit(
+                "partial_read_evidence_retained",
+                "result",
+                existing.id,
+                claims=[c.model_dump(mode="json") for c in claims],
+            )
+        return 0
 
     # --- stage 1: profile -------------------------------------------------
 
@@ -573,7 +886,16 @@ class ResearchRunner:
                     career_notes="",
                 )
 
-                ar = await req.verify(cand, prog, self.intake)
+                budget_stopped = False
+                ar = AdapterResult()
+                try:
+                    with self._university_read_scope(cand):
+                        ar = await req.verify(cand, prog, self.intake)
+                except UniversityReadStopped as stopped:
+                    if stopped.reason == "checkpoint_busy":
+                        raise
+                    budget_stopped = True
+                    self._read_budget_unknown(cand, stopped, result)
                 errors.extend(ar.errors)
                 retry.extend(ar.retry_urls)
                 # Filed as they arrive, not only at the end of the stage. A
@@ -586,7 +908,15 @@ class ResearchRunner:
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
 
-                cb, cr = await cost.fetch(cand)
+                cb, cr = CostBreakdown(), AdapterResult()
+                try:
+                    with self._university_read_scope(cand):
+                        cb, cr = await cost.fetch(cand)
+                except UniversityReadStopped as stopped:
+                    if stopped.reason == "checkpoint_busy":
+                        raise
+                    budget_stopped = True
+                    self._read_budget_unknown(cand, stopped, result)
                 errors.extend(cr.errors)
                 retry.extend(cr.retry_urls)
                 self._record_page_outcomes(cr.page_outcomes)
@@ -595,16 +925,27 @@ class ResearchRunner:
                 result.costs = cb
 
                 if cand.country not in gov_cache:
-                    gr = await gov.post_study_work(cand.country)
+                    gr = AdapterResult()
+                    government_stopped = False
+                    try:
+                        with self._university_read_scope(cand):
+                            gr = await gov.post_study_work(cand.country)
+                    except UniversityReadStopped as stopped:
+                        if stopped.reason == "checkpoint_busy":
+                            raise
+                        budget_stopped = True
+                        government_stopped = True
+                        self._read_budget_unknown(cand, stopped, result)
                     errors.extend(gr.errors)
                     self._record_page_outcomes(gr.page_outcomes)
                     self.run.pages_checked += gr.pages_checked
                     self.run.pages_failed += gr.pages_failed
-                    gov_cache[cand.country] = (
-                        str(gr.claims[0].normalized_value) if gr.claims else "",
-                        list(gr.claims),
-                    )
-                government_value, government_claims = gov_cache[cand.country]
+                    if not government_stopped:
+                        gov_cache[cand.country] = (
+                            str(gr.claims[0].normalized_value) if gr.claims else "",
+                            list(gr.claims),
+                        )
+                government_value, government_claims = gov_cache.get(cand.country, ("", []))
                 # Every row of that country gets the government page as its own
                 # evidence, not just the first one to trigger the fetch.
                 ar.claims.extend(government_claims)
@@ -667,9 +1008,13 @@ class ResearchRunner:
                 result.claims = [_to_out(c, f"{result.id}-c{j}") for j, c in enumerate(all_claims)]
                 result.source_urls = sorted({c.source_url for c in all_claims})
                 result.last_verified = max((c.accessed_at for c in all_claims), default=None)
-                self._persist_result(result, all_claims, conflicts)
+                if budget_stopped:
+                    recorded = self._persist_read_partial_result(result, all_claims, conflicts)
+                else:
+                    self._persist_result(result, all_claims, conflicts)
+                    recorded = len(all_claims)
                 self.run.programs_verified = len(seen_keys)
-                self.run.claims_recorded += len(all_claims)
+                self.run.claims_recorded += recorded
                 # Programmes done and programmes expected, so the ratio on
                 # screen counts the same thing on both sides. The total grows
                 # as candidates reveal how many programmes they carry.
@@ -736,12 +1081,23 @@ class ResearchRunner:
             prog = CandidateProgram(
                 name=result.program, field="", degree=result.degree, url=result.program_url
             )
-            scholarships, ar = await adapter.find(
-                cand,
-                prog,
-                self.profile,
-                allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
-            )
+            try:
+                with self._university_read_scope(cand):
+                    scholarships, ar = await adapter.find(
+                        cand,
+                        prog,
+                        self.profile,
+                        allow_search=any(
+                            c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims
+                        ),
+                    )
+            except UniversityReadStopped as stopped:
+                if stopped.reason == "checkpoint_busy":
+                    raise
+                self._read_budget_unknown(cand, stopped, result)
+                self._update_result(row, result)
+                st.items_done = i + 1
+                continue
             errors.extend(ar.errors)
             self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked
@@ -1086,6 +1442,7 @@ class ResearchRunner:
 
     async def collect_documents(self) -> int:
         """Deep document collection for approved (and maybe) rows only."""
+        self._read_guard_enabled = False  # Post-approval documents have no budget contract here.
         st = self.state[PipelineStage.DOCUMENT_COLLECTION]
         rows = [
             r

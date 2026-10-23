@@ -1,0 +1,297 @@
+Browser tab: 1010110764, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:5173/#/export".
+0 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:5173/#/export
+	1 container root
+		2 container
+			3 text Unimatch
+			4 container Main navigation
+				5 button Home
+				6 button Find
+				7 button Plan
+				8 button Documents
+				9 button Community
+			10 text Same students.
+			11 text Bigger horizons.
+			12 button (collapsed) Preferences, Secondary Actions: Expand
+				13 text Preferences
+		14 container
+			15 text Demo data
+			16 button (collapsed) Explore⌄, Secondary Actions: Expand
+				17 text Explore
+				171 text ⌄
+			19 text Applicant
+			20 pop up button (collapsed, settable) Applicant, Value: Demo Applicant (synthetic) · 0 runs, ID: case-switcher, Secondary Actions: Expand
+				21 menu
+					22 Новый абитуриент
+					108 (selected) Demo Applicant (synthetic) · 0 runs
+			23 button New case
+			24 button Settings
+			25 button Выйти
+		26 container
+			122 text STEP 09
+			123 heading Take it with you, or erase it, Value: 1
+				124 text Take it with you, or erase it
+			125 text Shortlist exports carry the source link and verification date for each row. You can also export or delete a saved case before research.
+			126 heading Export your own data, Value: 2
+				127 text Export your own data
+			128 text This saved case: the profile as entered and a list of its runs. This is not an account-wide export.
+			129 button Show my stored data
+			130 button Download my data (.json)
+			131 text profile  0b6a3699
+			172 container Stored profile data
+				173 text {
+  "profile": {
+    "display_name": "Demo Applicant (synthetic)",
+    "context": {
+      "level": "bachelor",
+      "intended_fields": [
+        "Finance (SYNTHETIC EXPORT FINAL 0305)"
+      ],
+      "intake_term": "fall",
+      "intake_year": 2027,
+      "citizenship": "Kazakhstan",
+      "country_of_residence": "Kazakhstan",
+      "education_country": "Kazakhstan",
+      "education_system": "Kazakhstan national secondary (attestat)",
+      "curriculum_type": "national",
+      "graduation_date": "2027-05-25",
+      "second_citizenship": null
+    },
+    "academics": {
+      "gpa": {
+        "raw_value": 4.8,
+        "raw_scale_max": 5,
+        "raw_scale_label": "KZ 5-point",
+        "converted_value": null,
+        "converted_scale_label": null,
+        "method": null,
+        "method_source": null,
+        "status": "applicant_confirmed"
+      },
+      "subject_grades": [],
+      "class_rank": 3,
+      "class_size": 112,
+      "sat": {
+        "total": 1400,
+        "math": 760,
+        "reading_writing": 640,
+        "dates": {
+          "taken_on": "2026-05-02",
+          "planned_retake_on": "2026-10-03"
+        },
+        "status": "applicant_confirmed"
+      },
+      "act": {
+        "composite": null,
+        "english": null,
+        "math": null,
+        "reading": null,
+        "science": null,
+        "dates": {
+          "taken_on": null,
+          "planned_retake_on": null
+        },
+        "status": "applicant_confirmed"
+      },
+      "ielts": {
+        "overall": 7,
+        "listening": 7.5,
+        "reading": 7.5,
+        "writing": 6,
+        "speaking": 7,
+        "test_type": "academic",
+        "dates": {
+          "taken_on": "2026-04-18",
+          "planned_retake_on": null
+        },
+        "status": "applicant_confirmed"
+      },
+      "toefl": {
+        "total": null,
+        "reading": null,
+        "listening": null,
+        "speaking": null,
+        "writing": null,
+        "dates": {
+          "taken_on": null,
+          "planned_retake_on": null
+        },
+        "status": "applicant_confirmed"
+      },
+      "duolingo": null,
+      "other_tests": [],
+      "curriculum_results": [],
+      "planned_retakes": [
+        "SAT on 2026-10-03 targeting 1500"
+      ]
+    },
+    "activities": [
+      {
+        "name": "Regional Informatics Olympiad team",
+        "category": "academic",
+        "role": "team captain",
+        "duration_months": 24,
+        "hours_per_week": 8,
+        "weeks_per_year": 36,
+        "responsibility_level": "leader",
+        "measurable_outcome": "Led a four-person team to 2nd place at the national round in 2026.",
+        "impact_on_others": "Ran weekly training for 15 younger students.",
+        "evidence_links": []
+      },
+      {
+        "name": "Volunteer coding club",
+        "category": "community",
+        "role": "founder and instructor",
+        "duration_months": 18,
+        "hours_per_week": 4,
+        "weeks_per_year": 40,
+        "responsibility_level": "founder",
+        "measurable_outcome": "Taught Python to 60 students across three cohorts.",
+        "impact_on_others": "Six participants entered regional competitions.",
+        "evidence_links": []
+      }
+    ],
+    "achievements": [
+      {
+        "name": "National Informatics Olympiad",
+        "level": "national",
+        "year": 2026,
+        "placement": "2nd place (team)",
+        "selection_criterion": "Top 40 of 900 regional qualifiers.",
+        "evidence_links": []
+      },
+      {
+        "name": "City science fair",
+        "level": "city",
+        "year": 2024,
+        "placement": "1st place",
+        "selection_criterion": null,
+        "evidence_links": []
+      }
+    ],
+    "preferences": {
+      "preferred_countries": [
+        "Netherlands",
+        "Germany",
+        "Canada",
+        "Finland",
+        "Belgium"
+      ],
+      "excluded_countries": [],
+      "city_size": "medium",
+      "climate": "temperate",
+      "university_size": "large",
+      "campus_type": "campus",
+      "acceptable_workload": "demanding",
+      "target_ranking_band": "top_300",
+      "research_interests": [
+        "machine learning"
+      ],
+      "values_internships": true,
+      "values_coop": false,
+      "needs_work_during_study": true,
+      "needs_post_study_work": true,
+      "safety_priority": "high",
+      "diversity_priority": "medium",
+      "housing_guarantee_priority": "high",
+      "priorities": [],
+      "research_privacy": "preferences_only"
+    },
+    "funding": {
+      "requires_full_ride": false,
+      "accepts_full_tuition": true,
+      "accepts_partial": true,
+      "max_annual_budget": 6000,
+      "max_family_contribution": 5000,
+      "max_acceptable_gap": 6000,
+      "budget_currency": "USD",
+      "willing_to_submit_need_documents": true,
+      "must_cover_housing": true,
+      "must_cover_meals": true,
+      "must_cover_health_insurance": false,
+      "must_cover_books": false,
+      "must_cover_travel": false,
+      "funding_criticality": "decisive"
+    },
+    "weights": {
+      "academic_fit": 1,
+      "funding_fit": 1.5,
+      "extracurricular_alignment": 0.6,
+      "program_quality": 0.8,
+      "country_preference": 1,
+      "city_fit": 0.4,
+      "climate_fit": 0.3,
+      "workload_fit": 0.3,
+      "university_size_fit": 0.3,
+      "campus_fit": 0.3,
+      "career_outcomes": 0.7,
+      "post_study_work": 0.5
+    },
+    "weights_override": false
+  },
+  "created_at": "2026-10-09T03:06:50.547458",
+  "updated_at": "2026-10-09T03:06:50.547460",
+  "runs": [],
+  "results": [],
+  "claims": [],
+  "conflicts": [],
+  "audit": [
+    {
+      "id": "b6a2ed0ca437487f9eabbfa1215709c8",
+      "created_at": "2026-10-09T03:06:50.548020",
+      "actor": "user:29654706",
+      "action": "profile_created",
+      "entity_type": "profile",
+      "entity_id": "0b6a3699fe5e47a985601c8f5d9f88ea",
+      "detail": {}
+    }
+  ],
+  "counts": {
+    "runs": 0,
+    "results": 0,
+    "claims": 0,
+    "conflicts": 0,
+    "audit_events": 1
+  },
+  "note": "This is the complete record held for this applicant: the profile, every run, every result with the decisions and notes on it, every claim and conflict behind those results, and the audit trail. Deleting the applicant removes all of it."
+}
+			132 heading What this build does and does not do, Value: 2
+				133 text What this build does and does not do
+			134 heading Guarantees, Value: 3
+				135 text Guarantees
+			136 content list
+				137 container
+					138 AXListMarker • 
+					139 text robots.txt is honoured before every fetch, including the browser tier
+				140 container
+					141 AXListMarker • 
+					142 text applicant data is never placed in an outbound URL
+				143 container
+					144 AXListMarker • 
+					145 text no page behind a login is fetched, and no CAPTCHA is bypassed
+				146 container
+					147 AXListMarker • 
+					148 text no application is submitted, signed or paid for
+				149 container
+					150 AXListMarker • 
+					151 text unknown values are reported as unknown, never inferred
+			152 heading Limits, Value: 3
+				153 text Limits
+			154 content list
+				155 container
+					156 AXListMarker • 
+					157 text The product reports published criteria only. It cannot predict an admission or an award.
+				158 container
+					159 AXListMarker • 
+					160 text Grade conversions are approximations and are never applied without the user accepting one.
+				161 container
+					162 AXListMarker • 
+					163 text Currency rates are a dated static snapshot, not a live feed.
+			164 container
+				165 text Currency figures converted using a static snapshot dated 2026-08-01 .  Static snapshot bundled with ASHYQ Apply (see app/domain/currency.py)
+			166 heading Delete this case, Value: 2
+				167 text Delete this case
+			168 text This erases the applicant profile and every research run, result, claim, conflict and checklist attached to it. It cannot be undone here. Account data, audit records and backups are outside this case control.
+			169 text field (settable) Type DELETE to confirm
+			170 button (disabled) Delete permanently
+
+The focused UI element is 16 button (collapsed) Explore⌄, Secondary Actions: Expand

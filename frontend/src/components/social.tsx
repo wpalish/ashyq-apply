@@ -67,20 +67,21 @@ export function Avatar({
   userId?: string;
   large?: boolean;
 }) {
-  const [failed, setFailed] = useState(false);
+  const [failedUser, setFailedUser] = useState<string | null>(null);
   const tone = status ? `avatar--${status}` : 'avatar--unstated';
   const size = large ? 'avatar--lg' : '';
 
   // Most people have no picture, so the 404 is the common case rather than an
   // error: it is handled by falling back to the initials that were already
   // there, with no request wasted asking first.
-  if (userId && !failed) {
+  if (userId && failedUser !== userId) {
     return (
       <img
+        key={userId}
         className={`avatar avatar--photo ${tone} ${size}`}
         src={`/api/social/avatars/${userId}`}
         alt=""
-        onError={() => setFailed(true)}
+        onError={() => setFailedUser(userId)}
       />
     );
   }
@@ -157,6 +158,7 @@ export function Retract({
 }: { question: string; onConfirm: () => Promise<void> }) {
   const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
 
   if (!asking) {
     return (
@@ -168,6 +170,7 @@ export function Retract({
   return (
     <span className="row row--tight">
       <span className="xs muted">{question}</span>
+      {error && <span role="alert" className="small">{error}</span>}
       <button
         type="button"
         className="btn btn--sm btn--danger"
@@ -176,15 +179,17 @@ export function Retract({
           setBusy(true);
           try {
             await onConfirm();
+            setError(''); setAsking(false);
+          } catch {
+            setError(getLocale() === 'en' ? 'Could not delete this. Check the connection and try again.' : 'Не удалось удалить. Проверь соединение и попробуй ещё раз.');
           } finally {
             setBusy(false);
-            setAsking(false);
           }
         }}
       >
         {busy ? t('community.deleting') : t('community.deleteConfirm')}
       </button>
-      <button type="button" className="btn btn--sm" onClick={() => setAsking(false)}>
+      <button type="button" className="btn btn--sm" onClick={() => { setAsking(false); setError(''); }}>
         {t('community.keepIt')}
       </button>
     </span>
@@ -252,6 +257,7 @@ export function PersonTile({
           ))}
         </span>
       </span>
+      {getLocale()!=='en'&&<span className="person__open">Открыть профиль</span>}
     </button>
   );
 }
@@ -263,13 +269,14 @@ export function PersonTile({
  * a surprise — the parse happens in front of you rather than on the server.
  */
 export function Composer({
-  placeholder, submitLabel, max = POST_MAX_CHARS, busy, onSubmit,
+  placeholder, submitLabel, max = POST_MAX_CHARS, busy, disabled = false, onSubmit,
 }: {
   placeholder: string;
   submitLabel: string;
   max?: number;
   busy?: boolean;
-  onSubmit: (body: string) => Promise<void>;
+  disabled?: boolean;
+  onSubmit: (body: string) => Promise<void | boolean>;
 }) {
   const [text, setText] = useState('');
   const tags = Array.from(
@@ -282,7 +289,7 @@ export function Composer({
   ).slice(0, 5);
 
   const left = max - text.trim().length;
-  const canSend = text.trim().length > 0 && left >= 0 && !busy;
+  const canSend = text.trim().length > 0 && left >= 0 && !busy && !disabled;
 
   return (
     <form
@@ -290,8 +297,8 @@ export function Composer({
       onSubmit={async (event) => {
         event.preventDefault();
         if (!canSend) return;
-        await onSubmit(text.trim());
-        setText('');
+        const succeeded = await onSubmit(text.trim());
+        if (succeeded !== false) setText('');
       }}
     >
       <label className="visually-hidden" htmlFor="composer-body">{placeholder}</label>

@@ -1,0 +1,50 @@
+{
+  "status": "QUALIFIED_ACCEPT_FOR_ROOT_INTEGRATION_ONLY",
+  "reviewed_B_ready": {
+    "sha256": "e3ae718b3d705a084414a2027a13d3bbad6baea2e8107641425632f1dcf7be7c",
+    "bytes": 7341
+  },
+  "proposed": {
+    "frontend/src/screens/ExportScreen.tsx": {
+      "sha256": "718fcc2e76beb3c0d311096115296c9497ca371ba14fa8588060d3546403e105",
+      "bytes": 10748
+    },
+    "frontend/src/screens/ExportScreen.privacy.test.tsx": {
+      "sha256": "f08e20842520c1e6c84bae9970b7b321255753705e04263cb00743f352154617",
+      "bytes": 12133
+    }
+  },
+  "peer_ON": {
+    "cases": 39,
+    "passed": 39,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "author_new": 15,
+    "old_Journey": 22,
+    "own_actual_Store_controls": 2
+  },
+  "peer_OFF_own": {
+    "cases": 2,
+    "passed": 0,
+    "assertion_red": 2,
+    "errors": 0
+  },
+  "author_saved_OFF": {
+    "actual_cases": 37,
+    "passed": 26,
+    "assertion_red": 11,
+    "separate_error_diagnostic": 1,
+    "physical_JUnit_rows": 38
+  },
+  "old33_byte_exact": true,
+  "Store_API_backend_unchanged": true,
+  "primary_source_unchanged": true,
+  "transport_attempts": 0,
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "native_current_patch_full_UI": "PENDING",
+  "historical_c7b_full13": "EARLIER_SOURCE_ONLY"
+}

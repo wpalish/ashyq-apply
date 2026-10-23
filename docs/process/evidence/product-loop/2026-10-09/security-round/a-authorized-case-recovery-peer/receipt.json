@@ -1,0 +1,43 @@
+{
+  "status": "REJECT_UNTIL_LOADING_REPAIR",
+  "reviewed_ready": {
+    "sha256": "cb2b5dce556de0da149160095cd169b87fb534e2d7732720cf4695d9290f2ec2",
+    "bytes": 16445
+  },
+  "reviewed_proposed": {
+    "frontend/src/lib/store.tsx": {
+      "sha256": "868e9c7f73ed60581d11ee55b1a0973b9eb9057cd28f19685adc299316baf46d",
+      "bytes": 34809
+    },
+    "frontend/src/lib/store.test.tsx": {
+      "sha256": "acbddba49246d415aac4ccc2f8a265158f99d593d4c15926294acc9ba7ce250c",
+      "bytes": 39281
+    }
+  },
+  "B": {
+    "ON_pass": 44,
+    "OFF_pass": 40,
+    "OFF_fail": 4,
+    "old_cases": 35,
+    "appended_cases": 9,
+    "new_OFF_already_pass": 5
+  },
+  "peer": {
+    "initial_total": 47,
+    "initial_pass": 45,
+    "initial_fail": 2,
+    "qualified_initial_fixture_fail": 1,
+    "corrected_partial_run_total": 3,
+    "corrected_pass": 2,
+    "corrected_material_fail": 1,
+    "corrected_47_run": false
+  },
+  "material": "newCase retains loading=true after stale fallback detail resolves",
+  "primary_unchanged": true,
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "network_or_listen_attempts": 0,
+  "failed_native_full_status": "FAILED12/13"
+}

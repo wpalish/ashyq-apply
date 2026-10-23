@@ -1,0 +1,1 @@
+Terminal saved-only core closure. Read original summary/log/JUnit/hash metadata; verify current/frozen19 and archive exact11 core/6 doctor originals. Preserve old4369+15 identities; never sum core/PG/replays. No own tests/runner/imports/process/DB/ports/Git/network. Full active and remainsPENDING; first FAILED12/13 unchanged.

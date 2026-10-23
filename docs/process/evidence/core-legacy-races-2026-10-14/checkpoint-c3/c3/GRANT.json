@@ -1,0 +1,66 @@
+{
+  "baseline": "3c65e7d6311833c02c43bb4df52cba1c53d0fe84",
+  "paths": [
+    {
+      "path": "backend/app/models/auth.py",
+      "exists": true,
+      "sha256": "ab24284d515dbff52159818f32aa4d3b80863ab023b12cdc51bc2a9da9aa2004",
+      "size": 5294
+    },
+    {
+      "path": "backend/app/api/routes_profile.py",
+      "exists": true,
+      "sha256": "140e73cf2fd747c712eae77773b8ba762f6ff1fc4ac2dd3a27721855fdbec7be",
+      "size": 20776
+    },
+    {
+      "path": "backend/tests/test_profile_commands_authority.py",
+      "exists": false
+    },
+    {
+      "path": "frontend/e2e/profile-writes.spec.ts",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/lib/profileCommands.test.ts",
+      "exists": true,
+      "sha256": "56f6f1dd4fd448e32e69e253bc018e68c77d15af2ef5e4d483acdde920fe65e0",
+      "size": 2864
+    },
+    {
+      "path": "frontend/src/lib/store.profileWrites.test.tsx",
+      "exists": true,
+      "sha256": "52c663cf295ba1b906a7699db07dd220bee1d2db07addaf9ba692acc8178ce1b",
+      "size": 6735
+    },
+    {
+      "path": "frontend/src/components/ProfileRecoveryPanel.test.tsx",
+      "exists": false
+    },
+    {
+      "path": "frontend/src/lib/store.tsx",
+      "exists": true,
+      "sha256": "ea1f246c5b2b7926a2c45cfd7ab51afdc55f1c2af10b2c085f9d0052d7a3ed1a",
+      "size": 58488
+    },
+    {
+      "path": "frontend/src/screens/ProfileScreen.tsx",
+      "exists": true,
+      "sha256": "846e473da104bd4df8d2ab59721d82d6b5557e411bfb0e3c7c1b355186e1dc01",
+      "size": 42578
+    },
+    {
+      "path": "frontend/src/api/client.profile.test.ts",
+      "exists": true,
+      "sha256": "f1e28f231a150aad98628f1a7e218bbfdb269076caf275d76cf5e4650bda9313",
+      "size": 1182
+    },
+    {
+      "path": "frontend/src/screens/ProfileScreen.feedback.test.tsx",
+      "exists": true,
+      "sha256": "dbfb326b2cff94c841db7548867a658941b33a56c929aafa466f11369d823b01",
+      "size": 7396
+    }
+  ],
+  "scope": "test-first authority/migration/erase; only Organization audit relationship and profile target ordering after negative controls; current native browser C3 checks; no stopped source"
+}

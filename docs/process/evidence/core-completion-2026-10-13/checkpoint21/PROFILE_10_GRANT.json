@@ -1,0 +1,30 @@
+{
+  "status": "ROOT_REVIEW_WRITE_AHEAD",
+  "at_utc": "2026-10-14T00:28:06.039599+00:00",
+  "paths": {
+    "frontend/src/lib/store.tsx": {
+      "preimage": "d1225296dc56e775c07485fbc9c53ffe1f7ac8d3d28fd2728ea41800de2f3409",
+      "postimage": "8a97579595865cf3f0732732dd8c02a069d4b492783fa51c46ae39e2ed2234d8"
+    },
+    "frontend/src/lib/store.startRunProfile.test.tsx": {
+      "preimage": null,
+      "postimage": "d84f1e5973f5274446f67b4b0fa3a82658fc90ddd27dbc69a74f8723a64a541d"
+    },
+    "frontend/e2e/core-research-inputs.spec.ts": {
+      "preimage": null,
+      "postimage": "1ed0b86d90530a9787a6fb5d5047ff304b7bb60395bdd0ec0347ed142982ab59"
+    },
+    "frontend/src/App.tsx": {
+      "preimage": "0c9ca0b340bc0d8f983e31cd27f9d66db9a379db351a82d49fa08a93dd698a52",
+      "postimage": "492d543e17434ba83661931017469956929a1a312536b4022c68ce64e6577ce5"
+    },
+    "frontend/src/lib/i18n.ts": {
+      "preimage": "420af969b46e048905f1f6b40c11d68b75a07ab2308715bbb56da042a7280697",
+      "postimage": "74e318f402ed8c1313f9603c3d5c413b13c3f5004f49c37f677c0ac4e779f3e5"
+    }
+  },
+  "scope": "Existing-profile startRun accepts durable normalized profile after generation+owner fence before later POST; samecase identity unchanged/newer typing preserved/old run andresults survive failed POST. Store controls+actual native profile-funding edit/PUT followed by one labelled aborted run POST, own old results unchanged and read-context warning. No rerank/newnetworkprovider/reset or old STOP change. Confirmed save published before optional cases GET for ordinary/new-profile saves; optional metadata failure retains ACK/pointer/normalized snapshot/newer typing and known display-name fallback without invented counts. API primary write failure still propagates.",
+  "review": "Shared publishProfileSave called only after op-generation and owner fence, accepts actual primary response before optional case-list GET. Canonical baseline/current-draft equality preserves newer typing, same-case generation unchanged, pointer local case retired. Metadata failure cannot undo confirmed save; subsequent POST failure retains old run/results. Exact known saved-name fallback shows no guessed counter. Native true201/aborted metadata GET and PUT/aborted run POST, unchanged original evaluation, actual named funding warning;3 Store controls for normalized save/newer typing/stale case.",
+  "native": "NOT_RUN",
+  "live": "NOT_MEASURED_STOPS_RETAINED"
+}

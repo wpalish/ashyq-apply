@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.388" timestamp="2026-10-12T21:10:03.873136+05:00" hostname="iMac-Aliser.local"><testcase classname="tests.test_admissions_actions_concurrency" name="test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile[postgres]" time="0.932"><failure message="AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}&#10;  &#10;  Differing items:&#10;  {'current': {'profile_id': 'b04976bfe3b74af192abf56c4ccc8ad0', 'revision': 1, 'schema_version': 'admissions-actions-v1...b04976bfe3b74af192abf56c4ccc8ad0', 'applications': [], 'head_event_id': '02b9f712229042b4ad7f3697dbb4d3eb', ...}, ...}} != {'current': {'profile_id': 'b04976bfe3b74af192abf56c4ccc8ad0', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'b04976bfe3b74af192abf56c4ccc8ad0', 'revision': 1, 'head_event_id': '02b9f712229042b4ad7f3697dbb4d3eb', ...}, ...}}&#10;  {'events': [{'id': '02b9f712229042b4ad7f3697dbb4d3eb', 'profile_id': 'b04976...&#10;  &#10;  ...Full output truncated (268 lines hidden), use '-vv' to show">tests/test_admissions_actions_concurrency.py:604: in test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': 'b04976bfe3b74af192abf56c4ccc8ad0', 'revision': 1, 'schema_version': 'admissions-actions-v1...b04976bfe3b74af192abf56c4ccc8ad0', 'applications': [], 'head_event_id': '02b9f712229042b4ad7f3697dbb4d3eb', ...}, ...}} != {'current': {'profile_id': 'b04976bfe3b74af192abf56c4ccc8ad0', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'b04976bfe3b74af192abf56c4ccc8ad0', 'revision': 1, 'head_event_id': '02b9f712229042b4ad7f3697dbb4d3eb', ...}, ...}}
+E     {'events': [{'id': '02b9f712229042b4ad7f3697dbb4d3eb', 'profile_id': 'b04976...
+E     
+E     ...Full output truncated (268 lines hidden), use '-vv' to show</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,24 @@
+{
+  "status": "EXTERNAL_LINT_ONLY / NOT_APPLIED / NOT_IMPORTED / APPLICATION_TESTS_NOT_RUN",
+  "root_sole_application_writer": true,
+  "primary_pinned_preimages": {
+    "backend/app/schemas/admissions_actions.py": "225e8b1b2862c92daeb52f239c4e0dd98dd804f9ba3c93713aec61adbc2efd4b",
+    "backend/app/domain/admissions_actions.py": "d800f46a159c29c09147467b8f1e7d401e05bd17211106e8e20456c4c6b46223",
+    "backend/tests/test_admissions_actions.py": "1b978ffa9aad5482f440550670f4690173bcaf71e661c30a961f3709a7d03e3d"
+  },
+  "original_static_failure_log": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-static-initial1/ruff.log",
+    "sha256": "6564ea595057d4d984accffd2dae6ae102edba6684b41e3cd99d6045cdab2c7c"
+  },
+  "ruff_config": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/ruff.toml",
+    "sha256": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc"
+  },
+  "allowed_rules_only": {
+    "I001": 3,
+    "RUF021": 9,
+    "RUF007": 1,
+    "UP040": 6,
+    "SIM102": 2
+  }
+}

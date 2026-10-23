@@ -1,0 +1,601 @@
+--- a/backend/app/domain/admissions_actions.py
++++ b/backend/app/domain/admissions_actions.py
+@@ -22,14 +22,26 @@
+     "record_not_found": (404, "Action record not found."),
+     "input_invalid": (422, "Check the action request fields."),
+     "target_not_selected": (422, "The target is not a currently selected result."),
+-    "invalid_transition": (422, "This action requires a reviewed declaration or correction."),
++    "invalid_transition": (
++        422,
++        "This action requires a reviewed declaration or correction.",
++    ),
+     "limit_exceeded": (422, "The case action limit would be exceeded."),
+     "invalid_link": (422, "This link form is not allowed for an action link."),
+     "plan_unavailable": (422, "Select an existing saved preparation plan."),
+     "source_locked": (403, "Current source details are unavailable for a new binding."),
+-    "revision_conflict": (409, "The case actions changed. Reload and review before saving."),
+-    "uuid_conflict": (409, "This request identifier already represents a different action."),
+-    "source_preview_stale": (409, "The source binding changed. Review a fresh source preview."),
++    "revision_conflict": (
++        409,
++        "The case actions changed. Reload and review before saving.",
++    ),
++    "uuid_conflict": (
++        409,
++        "This request identifier already represents a different action.",
++    ),
++    "source_preview_stale": (
++        409,
++        "The source binding changed. Review a fresh source preview.",
++    ),
+     "plan_head_changed": (
+         409,
+         "The saved preparation plan changed. Review its current accepted head.",
+@@ -88,7 +100,9 @@
+         raise ActionError("input_invalid") from None
+ 
+ 
+-def actor_reference(user_id: str, organization_id: str, *, local_development: bool) -> s.ActorRefV1:
++def actor_reference(
++    user_id: str, organization_id: str, *, local_development: bool
++) -> s.ActorRefV1:
+     """Exact full IDs, no names/email/FK and no truncated-prefix identity."""
+     try:
+         user = TypeAdapter(s.ExactId).validate_python(user_id)
+@@ -105,7 +119,9 @@
+             )
+         ).hexdigest()
+         return s.ActorRefV1(
+-            actor_kind="local_development" if local_development else "authenticated_principal",
++            actor_kind="local_development"
++            if local_development
++            else "authenticated_principal",
+             actor_ref_digest=digest,
+         )
+     except (ValueError, TypeError):
+@@ -164,7 +180,9 @@
+ 
+ 
+ def _replace(cls: type[M], value: M, **changes: object) -> M:
+-    return validate_model(cls, {**value.model_dump(mode="python"), **changes}, "saved_unreadable")
++    return validate_model(
++        cls, {**value.model_dump(mode="python"), **changes}, "saved_unreadable"
++    )
+ 
+ 
+ def _selected(
+@@ -202,7 +220,10 @@
+         or request.source_preview_digest != observation.preview_digest
+     ):
+         raise ActionError("source_preview_stale")
+-    if request.source.award_id is not None and request.source.award_id not in target.award_ids:
++    if (
++        request.source.award_id is not None
++        and request.source.award_id not in target.award_ids
++    ):
+         raise ActionError("record_not_found")
+     wire = {
+         **request.source.model_dump(mode="python"),
+@@ -240,7 +261,9 @@
+         accepted_at=context.accepted_at,
+         actor=context.actor,
+         event_ref=event,
+-        binding_digest_at_report=task.binding.binding_digest if task.binding is not None else None,
++        binding_digest_at_report=task.binding.binding_digest
++        if task.binding is not None
++        else None,
+         origin="explicit_browser_mark_import" if imported else "applicant_report",
+     )
+ 
+@@ -260,7 +283,9 @@
+         elif isinstance(trusted_context, dict):
+             prior_raw = trusted_context.get("prior_declaration_receipt")
+         if prior_raw is not None:
+-            prior_receipt = validate_model(s.ActionWriteReceiptV1, prior_raw, "saved_unreadable")
++            prior_receipt = validate_model(
++                s.ActionWriteReceiptV1, prior_raw, "saved_unreadable"
++            )
+     context = validate_model(ActionContextV1, trusted_context)
+     old = (
+         validate_model(s.CaseActionsStateV1, previous, "saved_unreadable")
+@@ -281,7 +306,9 @@
+     selector = old.active_preparation if old is not None else None
+     app_by_id = {item.id: item for item in applications}
+     task_by_id = {item.id: item for item in tasks}
+-    event = s.EventRefV1(event_id=context.event_id, revision=revision + 1, kind=request.kind)
++    event = s.EventRefV1(
++        event_id=context.event_id, revision=revision + 1, kind=request.kind
++    )
+     changed_apps: list[s.ApplicationRecordV1] = []
+     changed_tasks: list[s.DocumentTaskV1] = []
+     changed_selector: s.ActivePreparationSelectionV1 | None = None
+@@ -312,7 +339,10 @@
+                 raise ActionError("record_not_found")
+         if len(applications) >= 20:
+             raise ActionError("limit_exceeded")
+-        if context.new_application_id is None or context.new_application_id in app_by_id:
++        if (
++            context.new_application_id is None
++            or context.new_application_id in app_by_id
++        ):
+             raise ActionError("input_invalid")
+         changed_apps = [
+             s.ApplicationRecordV1(
+@@ -334,15 +364,24 @@
+             application(request.application_id)
+         if context.new_task_id is None or context.new_task_id in task_by_id:
+             raise ActionError("input_invalid")
+-        if any(record_id not in task_by_id for record_id in request.personal.depends_on_task_ids):
++        if any(
++            record_id not in task_by_id
++            for record_id in request.personal.depends_on_task_ids
++        ):
+             raise ActionError("record_not_found")
+-        binding = _source(context, request) if isinstance(request, s.BindSourceTaskV1) else None
++        binding = (
++            _source(context, request)
++            if isinstance(request, s.BindSourceTaskV1)
++            else None
++        )
+         changed_tasks = [
+             s.DocumentTaskV1(
+                 id=context.new_task_id,
+                 profile_id=context.profile_id,
+                 application_id=request.application_id,
+-                origin="source_reference" if binding is not None else "applicant_entered",
++                origin="source_reference"
++                if binding is not None
++                else "applicant_entered",
+                 personal=request.personal,
+                 binding=binding,
+                 report=_unreported(),
+@@ -354,7 +393,9 @@
+     elif isinstance(request, s.RebindSourceTaskV1):
+         current_task = task(request.task_id)
+         old_binding = (
+-            current_task.binding.binding_digest if current_task.binding is not None else None
++            current_task.binding.binding_digest
++            if current_task.binding is not None
++            else None
+         )
+         if old_binding != request.expected_binding_digest:
+             raise ActionError("source_preview_stale")
+@@ -377,7 +418,11 @@
+                 s.DocumentTaskV1,
+                 current_task,
+                 report=_report(
+-                    current_task, event, context, request.report.state, request.report.entered_at
++                    current_task,
++                    event,
++                    context,
++                    request.report.state,
++                    request.report.entered_at,
+                 ),
+                 latest_ref=event,
+             )
+@@ -398,7 +443,9 @@
+                 s.PersonalTaskInputV1, current_task.personal, details=request.details
+             )
+             changed_tasks = [
+-                _replace(s.DocumentTaskV1, current_task, personal=personal, latest_ref=event)
++                _replace(
++                    s.DocumentTaskV1, current_task, personal=personal, latest_ref=event
++                )
+             ]
+     elif isinstance(request, s.SetPlanningStatusV1):
+         current_app = application(request.application_id)
+@@ -496,7 +543,9 @@
+         for mapping in request.mappings:
+             current_task = task(mapping.task_id)
+             current_binding = (
+-                current_task.binding.binding_digest if current_task.binding is not None else None
++                current_task.binding.binding_digest
++                if current_task.binding is not None
++                else None
+             )
+             if current_binding != mapping.expected_binding_digest or (
+                 current_binding is not None and mapping.source_preview_digest is None
+@@ -605,7 +654,9 @@
+     return ActionTransitionV1(state=state, receipt=receipt)
+ 
+ 
+-def replay_receipt(profile_id: str, intent: object, original: object) -> s.ActionWriteReceiptV1:
++def replay_receipt(
++    profile_id: str, intent: object, original: object
++) -> s.ActionWriteReceiptV1:
+     request = validate_request(intent)
+     receipt = validate_model(s.ActionWriteReceiptV1, original, "saved_unreadable")
+     if receipt.profile_id != profile_id:
+@@ -622,7 +673,10 @@
+     current = validate_model(s.CaseActionsStateV1, state, "saved_unreadable")
+     ids = list(
+         dict.fromkeys(
+-            [current.head_event_id, *(ref.event_id for ref, _, _ in s.state_references(current))]
++            [
++                current.head_event_id,
++                *(ref.event_id for ref, _, _ in s.state_references(current)),
++            ]
+         )
+     )
+     if len(ids) > 1662:
+@@ -642,7 +696,9 @@
+ ) -> s.CaseActionsStateV1:
+     current = validate_model(s.CaseActionsStateV1, state, "saved_unreadable")
+     head = validate_model(s.ActionWriteReceiptV1, head_receipt, "saved_unreadable")
+-    observed = [validate_model(s.EventMetadataV1, item, "saved_unreadable") for item in metadata]
++    observed = [
++        validate_model(s.EventMetadataV1, item, "saved_unreadable") for item in metadata
++    ]
+     if (
+         current.profile_id != profile_id
+         or head.profile_id != profile_id
+@@ -686,15 +742,24 @@
+         affected = row.affected_refs
+         if (
+             (association == "application" and record_id not in affected.application_ids)
+-            or (association == "document_task" and record_id not in affected.document_task_ids)
++            or (
++                association == "document_task"
++                and record_id not in affected.document_task_ids
++            )
+             or (association == "selector" and not affected.active_selector_changed)
+         ):
+             raise ActionError("saved_unreadable")
+     current_apps = {item.id: item for item in current.applications}
+     current_tasks = {item.id: item for item in current.document_tasks}
+     if (
+-        any(current_apps.get(item.id) != item for item in head.applied_delta.applications)
+-        or any(current_tasks.get(item.id) != item for item in head.applied_delta.document_tasks)
++        any(
++            current_apps.get(item.id) != item
++            for item in head.applied_delta.applications
++        )
++        or any(
++            current_tasks.get(item.id) != item
++            for item in head.applied_delta.document_tasks
++        )
+         or (
+             head.applied_delta.active_preparation is not None
+             and current.active_preparation != head.applied_delta.active_preparation
+@@ -708,7 +773,8 @@
+     state: object | None, receipts: list[object], *, profile_id: str
+ ) -> list[s.ActionWriteReceiptV1]:
+     history = [
+-        validate_model(s.ActionWriteReceiptV1, item, "saved_unreadable") for item in receipts
++        validate_model(s.ActionWriteReceiptV1, item, "saved_unreadable")
++        for item in receipts
+     ]
+     if state is None:
+         if history:
+@@ -747,7 +813,8 @@
+             affected_refs=item.affected_refs,
+         )
+         for item in history
+-        if item.event_id in {event_id for batch in metadata_batches(current) for event_id in batch}
++        if item.event_id
++        in {event_id for batch in metadata_batches(current) for event_id in batch}
+     ]
+     validate_current_snapshot(
+         current,
+@@ -765,9 +832,14 @@
+     task: object,
+ ) -> list[Literal["report_refers_to_previous_binding", "not_needed_is_not_a_waiver"]]:
+     value = validate_model(s.DocumentTaskV1, task, "saved_unreadable")
+-    reasons: list[Literal["report_refers_to_previous_binding", "not_needed_is_not_a_waiver"]] = []
++    reasons: list[
++        Literal["report_refers_to_previous_binding", "not_needed_is_not_a_waiver"]
++    ] = []
+     binding = value.binding.binding_digest if value.binding is not None else None
+-    if value.report.origin != "unreported" and value.report.binding_digest_at_report != binding:
++    if (
++        value.report.origin != "unreported"
++        and value.report.binding_digest_at_report != binding
++    ):
+         reasons.append("report_refers_to_previous_binding")
+     if value.report.state == "not_needed_reported":
+         reasons.append("not_needed_is_not_a_waiver")
+@@ -777,19 +849,25 @@
+ def _raw_checklist(value: object) -> s.RawDocumentChecklist:
+     try:
+         raw = s.finite_wire(value)
+-        checklist = s.RawDocumentChecklist.model_validate_json(s.canonical_bytes(raw), strict=True)
++        checklist = s.RawDocumentChecklist.model_validate_json(
++            s.canonical_bytes(raw), strict=True
++        )
+         s.finite_wire(checklist.model_dump(mode="python"))
+         return checklist
+     except (ValueError, TypeError, OverflowError, RecursionError):
+         raise ActionError("source_unreadable") from None
+ 
+ 
+-def _graph(value: object | None, profile_id: str, result_id: str) -> PreparationGraph | None:
++def _graph(
++    value: object | None, profile_id: str, result_id: str
++) -> PreparationGraph | None:
+     if value is None:
+         return None
+     try:
+         raw = s.finite_wire(value)
+-        graph = PreparationGraph.model_validate_json(s.canonical_bytes(raw), strict=True)
++        graph = PreparationGraph.model_validate_json(
++            s.canonical_bytes(raw), strict=True
++        )
+         s.finite_wire(graph.model_dump(mode="python"))
+         if (
+             s.finite_wire(graph) != raw
+@@ -865,12 +943,14 @@
+                 indices = [
+                     index
+                     for where, index, item in all_occurrences
+-                    if where == location and s.canonical_bytes(item) == s.canonical_bytes(original)
++                    if where == location
++                    and s.canonical_bytes(item) == s.canonical_bytes(original)
+                 ]
+                 if len(indices) != 1:
+                     unique_match = False
+                     if len(indices) > 1 and any(
+-                        where == location and index in indices for where, index, _ in selected
++                        where == location and index in indices
++                        for where, index, _ in selected
+                     ):
+                         ambiguous = True
+                     break
+@@ -902,13 +982,17 @@
+             resolved_claim_ids=manifest.resolved_claim_ids,
+         )
+     claim_ids = list(
+-        dict.fromkeys(claim_id for _, _, item in selected for claim_id in item.claim_ids)
++        dict.fromkeys(
++            claim_id for _, _, item in selected for claim_id in item.claim_ids
++        )
+     )
+     refs: list[s.RawOccurrenceRefV1] = []
+     for location, index, item in selected:
+         full = item.model_dump(mode="python")
+         semantics = {
+-            key: value for key, value in full.items() if key not in {"claim_ids", "source_url"}
++            key: value
++            for key, value in full.items()
++            if key not in {"claim_ids", "source_url"}
+         }
+         proof = {
+             "original_claim_ids": item.claim_ids,
+@@ -918,14 +1002,17 @@
+             "manifest": manifest,
+             "native_proofs": native.proofs if native is not None else [],
+             "native_scope": native.scope if native is not None else None,
+-            "evidence_state": native.evidence_state if native is not None else "unknown",
++            "evidence_state": native.evidence_state
++            if native is not None
++            else "unknown",
+             "unresolved_reasons": native.unresolved_reasons
+             if native is not None
+             else ["document_predicate_not_projected"],
+             "missing_claim_ids": [
+                 key
+                 for key in item.claim_ids
+-                if native is None or key not in {proof.claim.id for proof in native.proofs}
++                if native is None
++                or key not in {proof.claim.id for proof in native.proofs}
+             ],
+         }
+         refs.append(
+@@ -934,8 +1021,12 @@
+                 location=location,
+                 index=index,
+                 item_digest=s.reference_digest("g3-item-reference-v1", full),
+-                item_semantics_digest=s.reference_digest("g3-item-semantics-v1", semantics),
+-                proof_reference_digest=s.reference_digest("g3-item-proof-reference-v1", proof),
++                item_semantics_digest=s.reference_digest(
++                    "g3-item-semantics-v1", semantics
++                ),
++                proof_reference_digest=s.reference_digest(
++                    "g3-item-proof-reference-v1", proof
++                ),
+             )
+         )
+     checklist_digest, procedure_digest = checklist_identity(parsed)
+@@ -966,10 +1057,16 @@
+ ) -> list[s.SourceReason]:
+     old = validate_model(s.ChecklistBindingReceiptV1, saved, "saved_unreadable")
+     new = validate_model(s.BindingSelectionV1, current, "source_unreadable")
+-    if new.result_id != old.result_id or new.purpose != old.purpose or new.award_id != old.award_id:
++    if (
++        new.result_id != old.result_id
++        or new.purpose != old.purpose
++        or new.award_id != old.award_id
++    ):
+         raise ActionError("source_unreadable")
+     try:
+-        reasons = TypeAdapter(list[s.SourceReason]).validate_python(evidence_reasons, strict=True)
++        reasons = TypeAdapter(list[s.SourceReason]).validate_python(
++            evidence_reasons, strict=True
++        )
+     except (ValueError, TypeError):
+         raise ActionError("source_unreadable") from None
+     same_occurrences = [(item.location, item.index) for item in old.occurrences] == [
+@@ -1009,7 +1106,9 @@
+     raw: object,
+     *,
+     role: Literal[
+-        "programme_information", "requirements_information", "applicant_entered_external"
++        "programme_information",
++        "requirements_information",
++        "applicant_entered_external",
+     ],
+     provenance: Literal["current_source", "applicant_entered", "demo", "unknown"],
+     authorized_current_source: bool = False,
+@@ -1019,9 +1118,9 @@
+         or raw is None
+         or provenance == "unknown"
+     ):
+-        state: Literal["actionable_unverified", "blocked", "demo_text", "not_available"] = (
+-            "not_available"
+-        )
++        state: Literal[
++            "actionable_unverified", "blocked", "demo_text", "not_available"
++        ] = "not_available"
+     elif provenance == "demo" or (type(raw) is str and raw.startswith("fixture://")):
+         state = "demo_text"
+     elif safe_link_literal(raw):
+@@ -1031,7 +1130,10 @@
+     reasons: dict[
+         str,
+         Literal[
+-            "informational_unverified", "link_form_unavailable", "demo_reference", "not_available"
++            "informational_unverified",
++            "link_form_unavailable",
++            "demo_reference",
++            "not_available",
+         ],
+     ] = {
+         "not_available": "not_available",
+@@ -1065,7 +1167,9 @@
+     if not observed.g3_readable:
+         return "unknown"
+     if selection is not None:
+-        return validate_model(s.ActivePreparationSelectionV1, selection, "saved_unreadable").origin
++        return validate_model(
++            s.ActivePreparationSelectionV1, selection, "saved_unreadable"
++        ).origin
+     if observed.g2_current_present is True or observed.g2_history_present is True:
+         return "g2"
+     if observed.g2_current_present is None or observed.g2_history_present is None:
+@@ -1096,7 +1200,9 @@
+     @model_validator(mode="after")
+     def action_presence(self) -> TodayComponentsV1:
+         if (self.action_state == "readable") != (self.actions is not None):
+-            raise ValueError("Only an actually readable aggregate supplies personal state")
++            raise ValueError(
++                "Only an actually readable aggregate supplies personal state"
++            )
+         if self.action_state == "unavailable" and (
+             self.active_plan.origin != "unknown"
+             or self.active_plan.state != "unavailable"
+@@ -1125,10 +1231,13 @@
+         raise ActionError("saved_unreadable")
+     if state is not None and state.active_preparation != plan.selection:
+         raise ActionError("saved_unreadable")
+-    union = set(s.source_target_ids(state) if state is not None else []) | set(plan.goal_result_ids)
++    union = set(s.source_target_ids(state) if state is not None else []) | set(
++        plan.goal_result_ids
++    )
+     if (
+         len(union) > 40
+-        or len({item.result_id for item in value.source_statuses}) != len(value.source_statuses)
++        or len({item.result_id for item in value.source_statuses})
++        != len(value.source_statuses)
+         or any(item.result_id not in union for item in value.source_statuses)
+     ):
+         raise ActionError("saved_unreadable")
+@@ -1162,7 +1271,9 @@
+         notices.append(s.TodayNoticeV1(code="preparation_locked"))
+     personal_cards: list[s.TodayCardV1] = []
+     study_cards: list[s.TodayCardV1] = []
+-    tasks = {task.id: task for task in state.document_tasks} if state is not None else {}
++    tasks = (
++        {task.id: task for task in state.document_tasks} if state is not None else {}
++    )
+ 
+     def dependency_reasons(
+         task: s.DocumentTaskV1,
+@@ -1184,7 +1295,7 @@
+                 "not_needed_is_not_a_waiver",
+             ]
+         ] = list(report_review_reasons(task))
+-        stack = [(task.id, (task.id,))]
++        stack: list[tuple[str, tuple[str, ...]]] = [(task.id, (task.id,))]
+         visited: set[str] = set()
+         while stack:
+             record_id, trail = stack.pop()
+@@ -1207,10 +1318,12 @@
+                     stack.append((dependency_id, (*trail, dependency_id)))
+         return list(dict.fromkeys(reasons))
+ 
+-    def personal_card(record: s.DocumentTaskV1 | s.ApplicationRecordV1) -> s.TodayCardV1:
++    def personal_card(
++        record: s.DocumentTaskV1 | s.ApplicationRecordV1,
++    ) -> s.TodayCardV1:
+         if isinstance(record, s.DocumentTaskV1):
+             details = record.personal.details
+-            result_id = (
++            result_id: str | None = (
+                 record.binding.result_id
+                 if record.binding is not None
+                 else next(
+@@ -1226,9 +1339,9 @@
+             )
+             reasons = dependency_reasons(record)
+             target: s.PersonalActionRef = s.DocumentTaskRefV1(id=record.id)
+-            record_kind: Literal["personal_document_action", "personal_application_action"] = (
+-                "personal_document_action"
+-            )
++            record_kind: Literal[
++                "personal_document_action", "personal_application_action"
++            ] = "personal_document_action"
+             entered = record.binding is None
+             card_id = f"document:{record.id}"
+         else:
+@@ -1255,7 +1368,9 @@
+         )
+         source = by_source.get(result_id) if result_id is not None else None
+         if reasons:
+-            notices.append(s.TodayNoticeV1(code="dependency_review", record_id=record.id))
++            notices.append(
++                s.TodayNoticeV1(code="dependency_review", record_id=record.id)
++            )
+         if source is not None and source.reasons:
+             notices.append(s.TodayNoticeV1(code="source_review", record_id=record.id))
+         return s.TodayCardV1(
+@@ -1288,7 +1403,14 @@
+             if application.status in {"planning", "preparing"}:
+                 personal_cards.append(personal_card(application))
+     if not mixed and plan.state in {"available", "needs_review"}:
+-        if plan.origin not in {"g2", "legacy_v2", "legacy_v1"}:
++        workload_origin: Literal["g2", "legacy_v2", "legacy_v1"]
++        if plan.origin == "g2":
++            workload_origin = "g2"
++        elif plan.origin == "legacy_v2":
++            workload_origin = "legacy_v2"
++        elif plan.origin == "legacy_v1":
++            workload_origin = "legacy_v1"
++        else:
+             raise ActionError("saved_unreadable")
+         for action in plan.study_actions:  # Preserve exact native accepted slot order.
+             if action.completion == "self_reported_complete":
+@@ -1316,7 +1438,7 @@
+                         fallback_display_only=False,
+                     ),
+                     dependency_reasons=[],
+-                    workload_origin=plan.origin,
++                    workload_origin=workload_origin,
+                     planned_minutes=action.planned_minutes,
+                     source_state="not_evaluated",
+                     actionable=actionable,
+@@ -1341,8 +1463,12 @@
+         if card.date.local_date is not None and card.date.local_date < card_day(card)
+     ]
+     overdue.sort(key=lambda card: (card.date.local_date, *personal_order(card)))
+-    current_personal = [card for card in personal_cards if card.date.local_date == card_day(card)]
+-    current_study = [card for card in study_cards if card.date.local_date == card_day(card)]
++    current_personal = [
++        card for card in personal_cards if card.date.local_date == card_day(card)
++    ]
++    current_study = [
++        card for card in study_cards if card.date.local_date == card_day(card)
++    ]
+     future_study = [
+         card
+         for card in study_cards
+@@ -1356,7 +1482,10 @@
+     # Stable sort retains native study order; study precedes personal on one date.
+     future = sorted(
+         [*future_study, *future_personal],
+-        key=lambda card: (card.date.local_date, 0 if card.reason == "accepted_study_action" else 1),
++        key=lambda card: (
++            card.date.local_date,
++            0 if card.reason == "accepted_study_action" else 1,
++        ),
+     )
+     undated = [card for card in personal_cards if card.date.local_date is None]
+     if not mixed and any(

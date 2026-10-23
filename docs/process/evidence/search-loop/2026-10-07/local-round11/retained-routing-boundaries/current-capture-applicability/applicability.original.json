@@ -1,0 +1,57 @@
+{
+  "cases": [
+    {
+      "case": "toronto",
+      "source_sha": "7c74a12d71bd00228014c11d194928d223e110be",
+      "native_read_budget_enabled": false,
+      "job_native_enabled": false,
+      "control_type": "RuntimeError",
+      "control_message": "BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+      "control_reason": null,
+      "job_status": "queued",
+      "run_error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+      "fetcher_calls": 60,
+      "search_queries": 6,
+      "elapsed_ms": 99115,
+      "stop_reason": "page_budget_exhausted",
+      "provider_failure": null,
+      "programme_url_records": 3,
+      "prediction_records": 0,
+      "trace_present": true,
+      "page_outcomes_count": 9,
+      "claim_records_count": 0,
+      "discovered_programme_urls": [
+        "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+        "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science",
+        "https://utm.calendar.utoronto.ca/Bachelor-of-Computer-Science"
+      ],
+      "conclusion": "Discovery already returned three programme URLs; failure is external RuntimeError during subsequent reading. A rule catching only native UniversityReadStopped(read_cap) cannot handle this exact capture."
+    },
+    {
+      "case": "groningen",
+      "source_sha": "7c74a12d71bd00228014c11d194928d223e110be",
+      "native_read_budget_enabled": false,
+      "job_native_enabled": false,
+      "control_type": "CancelledError",
+      "control_message": null,
+      "control_reason": null,
+      "job_status": "running",
+      "run_error": "CancelledError",
+      "fetcher_calls": 32,
+      "search_queries": 5,
+      "elapsed_ms": 119020,
+      "stop_reason": "source_work_deadline_exhausted",
+      "provider_failure": null,
+      "programme_url_records": 0,
+      "prediction_records": 0,
+      "trace_present": false,
+      "page_outcomes_count": 0,
+      "claim_records_count": 0,
+      "discovered_programme_urls": [],
+      "conclusion": "No candidate/trace was returned before asyncio cancellation. A rule catching only native UniversityReadStopped(read_cap) does not catch CancelledError or recover this exact capture."
+    }
+  ],
+  "count_checks": 6,
+  "passed": 6,
+  "meaning": "physical native failure-type/applicability checks only; not retrieval precision, scoring or ON gain"
+}

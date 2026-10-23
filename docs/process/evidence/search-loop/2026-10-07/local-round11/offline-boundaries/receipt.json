@@ -1,0 +1,754 @@
+{
+  "status": "OFFLINE_BOUNDARIES_ARCHIVED_NO_SOURCE_APPLY",
+  "created_utc": "2026-10-08T02:08:47.333242+00:00",
+  "source_head": "7c74a12d71bd00228014c11d194928d223e110be",
+  "snapshot_sha256": "19f349a0a242478e13f95e1905e8f41662a769b579833b004cafb03b73825c9a",
+  "selected_paths_unchanged": 999,
+  "global_STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "selected_files": 138,
+  "selected_bytes": 3610671,
+  "files": {
+    "closure-peer/PLAN.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/PLAN.json",
+      "sha256": "a68b2e5a8166795efaa86616e6233518ba18107844f43138ca6ec408f8274723",
+      "bytes": 1024
+    },
+    "closure-peer/closure-receipt.original.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/closure-receipt.original.json",
+      "sha256": "cb6bf01534090ad499e33fb8905cbf61e6531249791ae9e1fb02e17a16d41e20",
+      "bytes": 113265
+    },
+    "closure-peer/file-checks.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/file-checks.json",
+      "sha256": "4cbae354a601507f6fcb6c01ab9c3c0263c44a3c943f2b814b93860ac2dc0ecf",
+      "bytes": 85197
+    },
+    "closure-peer/first-assumption.original.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/first-assumption.original.json",
+      "sha256": "d15226a48be1bd03e03f3030f54abb8c51e5a1c0f1fd7c06bc7da3f2fddc724e",
+      "bytes": 1594
+    },
+    "closure-peer/physical-counters-and-statuses.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/physical-counters-and-statuses.json",
+      "sha256": "a95c4a2032d50a96b1d0f96b70cfedf34b96f164bccb1e885a9ccf2595b72f0a",
+      "bytes": 4999
+    },
+    "closure-peer/pr-body.original.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/pr-body.original.md",
+      "sha256": "434fbceb40fa438bb9069e2863fcd0b87234e35451a341da58169fb962f5235d",
+      "bytes": 3688
+    },
+    "closure-peer/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/receipt.json",
+      "sha256": "2d4ef39850b3d518adeb5f58e38d6f8709038837eade5da246db604311a35b17",
+      "bytes": 2694
+    },
+    "closure-peer/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/review.ru.md",
+      "sha256": "51b52bcf93eb942e5387990ea505c8c7fd5831678f7eece27c2d11d873d7556c",
+      "bytes": 3654
+    },
+    "closure-peer/saved-source-pins.checked.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/saved-source-pins.checked.json",
+      "sha256": "20f4a15cec28ce270fbb5bce1aaa73a70d6072cca5cfa222d6d77554d89e67bf",
+      "bytes": 131045
+    },
+    "closure-peer/verify_closure.first-assumption.original.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/verify_closure.first-assumption.original.py",
+      "sha256": "36742b85927ddd98790fe83a6791c576ba5a67e7db9b58021a7b93857f32569f",
+      "bytes": 10267
+    },
+    "closure-peer/verify_closure.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/verify_closure.py",
+      "sha256": "1607d4c67c44684e4f38fc7dc6edb2fe23fb03181c7b6b97fe764544f959d8c3",
+      "bytes": 10253
+    },
+    "closure-peer/MANIFEST.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provider-stop-closure-review/MANIFEST.json",
+      "sha256": "d03561b739a056a0fd5b2c58ad10bc21ec2bb495a05a521f1dbe019ee4ae9433",
+      "bytes": 1641
+    },
+    "rejected-strict-stop/PLAN.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/PLAN.json",
+      "sha256": "abe39e9b634cf0201f477822174491881b98b2abe197dd0e55fb59640cd06864",
+      "bytes": 2255
+    },
+    "rejected-strict-stop/build_proposal.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/build_proposal.py",
+      "sha256": "98a8e8219e697cd85f0086f3c0beaec955e5141ffe5774053380ddaf75dab1c5",
+      "bytes": 7265
+    },
+    "rejected-strict-stop/catalog_walker.original.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/catalog_walker.original.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "bytes": 32381
+    },
+    "rejected-strict-stop/catalog_walker.proposed.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/catalog_walker.proposed.py",
+      "sha256": "d6dcb1fc1b9ebf045e6c3d0e709746c13c1f564579524f9847609d7d36555098",
+      "bytes": 37949
+    },
+    "rejected-strict-stop/controls.original.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/controls.original.json",
+      "sha256": "c961879db22c4dc047b2785a159793a3e9bfc849bed4161262b107b6e493cd26",
+      "bytes": 220613
+    },
+    "rejected-strict-stop/controls.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/controls.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "rejected-strict-stop/controls.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/controls.stdout",
+      "sha256": "c92a8034cdd947b918475de970f96f0cc229f698a828f3ab0365ddaa1be693e9",
+      "bytes": 309
+    },
+    "rejected-strict-stop/probe.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/probe.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "rejected-strict-stop/probe.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/probe.stdout",
+      "sha256": "87ef21332b49020b062b2bd3cc6f0894e316a0db694d326172f815eda29fb0a4",
+      "bytes": 21931
+    },
+    "rejected-strict-stop/probe_saved.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/probe_saved.py",
+      "sha256": "fd923764606bfc723ca917d82dc53a586af55a847ee27ef306478a20b58e1dcc",
+      "bytes": 2397
+    },
+    "rejected-strict-stop/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/receipt.json",
+      "sha256": "d8eab719a4592605dae7ee06604b11b9f4d1211f5a8977e60119665a94d773e1",
+      "bytes": 862
+    },
+    "rejected-strict-stop/retained-input-origins.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/retained-input-origins.json",
+      "sha256": "988ed9995dc9254def36651ca8dbc757dae6cfc180e075cc529d86c37cd70e61",
+      "bytes": 12193
+    },
+    "rejected-strict-stop/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/review.ru.md",
+      "sha256": "f0c7e9f45d50a6d66cd09a57bba1d293cb5f9f8fce4fdbb15e19773c3d926f89",
+      "bytes": 2850
+    },
+    "rejected-strict-stop/run_controls.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/run_controls.py",
+      "sha256": "298f66394f9b96dafa489eca906ea8e05cede24e9c7e6563e47a5f8b185bf607",
+      "bytes": 11641
+    },
+    "rejected-strict-stop/saved-probe.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/saved-probe.offline.json",
+      "sha256": "5f2d0c0da45513efc0011335e968959b625168b905792a74fbd9161af30707ff",
+      "bytes": 48936
+    },
+    "rejected-strict-stop/scoped-contract.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/scoped-contract.md",
+      "sha256": "bae82f68c730a15be72d08a2a7e347740ff42eeff2ff53dd5988acbd157b726a",
+      "bytes": 5322
+    },
+    "rejected-strict-stop/sources/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/sources/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "bytes": 32381
+    },
+    "rejected-strict-stop/sources/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/sources/app/adapters/discovery/live_discovery.py",
+      "sha256": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+      "bytes": 96403
+    },
+    "rejected-strict-stop/sources/app/adapters/fetching.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/sources/app/adapters/fetching.py",
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727
+    },
+    "rejected-strict-stop/sources/app/adapters/html_parse.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/sources/app/adapters/html_parse.py",
+      "sha256": "62f9c0c30c4b88ad1b7d23907f9019204e424891d361608d92aaac9551ac5d81",
+      "bytes": 916
+    },
+    "rejected-strict-stop/sources/app/adapters/page_classifier.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/sources/app/adapters/page_classifier.py",
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+      "bytes": 43654
+    },
+    "rejected-strict-stop/sources/app/adapters/search/ontology.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/sources/app/adapters/search/ontology.json",
+      "sha256": "2cb1026c2c3fdcccfd66c828102a0bfdde58533e9961125677ed85ef83f3d373",
+      "bytes": 3254
+    },
+    "rejected-strict-stop/sources/app/adapters/search/ontology.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/sources/app/adapters/search/ontology.py",
+      "sha256": "d63e4c6320c5154d60b5c6009615ae63ef5c95b4ed337eb7e9d0ec70ea895f35",
+      "bytes": 8480
+    },
+    "rejected-strict-stop/strict-own-route.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/strict-own-route.patch",
+      "sha256": "07433d404dfc275bbb14bf7b0e836bf010f5af6241af07ad29a847097ebd285f",
+      "bytes": 7455
+    },
+    "rejected-strict-stop/ready-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-strict-walker-preparation/ready-manifest.json",
+      "sha256": "232f6edd02cf33ed61a472d51012cd1598ecc13d84cfbfe0980b2a3cea2dc5e9",
+      "bytes": 4024
+    },
+    "deferred-stable-ordering/CONTRACT.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/CONTRACT.md",
+      "sha256": "7949c59047df5be813bc086d4eba8c0c38a001fbcfcf183664e8f312c515ebad",
+      "bytes": 3676
+    },
+    "deferred-stable-ordering/PLAN.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/PLAN.json",
+      "sha256": "df73ff6d60aa6e1fc7fd8eba5cffd10b5f2035c18c54984d13a498bd154a40fc",
+      "bytes": 2515
+    },
+    "deferred-stable-ordering/build_proposal.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/build_proposal.py",
+      "sha256": "35ac142be2b3d5b6c71ba2330860e39fae4d077d444e2bdf494c08c40e186dac",
+      "bytes": 3828
+    },
+    "deferred-stable-ordering/catalog_walker.original.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/catalog_walker.original.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "bytes": 32381
+    },
+    "deferred-stable-ordering/catalog_walker.proposed.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/catalog_walker.proposed.py",
+      "sha256": "cb9d9e12461ab6fd727f7bf2c26738a77c06a95b1a8280d95a6da885fd2f5a52",
+      "bytes": 35186
+    },
+    "deferred-stable-ordering/controls.final.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/controls.final.json",
+      "sha256": "feeeebd88d606b5c8908d4e3d342e9326f92343424daa27800a51014da7d7ca0",
+      "bytes": 267945
+    },
+    "deferred-stable-ordering/controls.final.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/controls.final.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "deferred-stable-ordering/controls.final.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/controls.final.stdout",
+      "sha256": "0592865c45d05292ca7fb84a18fe632b785d2aca8edb334c20ff595f92a3c964",
+      "bytes": 37
+    },
+    "deferred-stable-ordering/controls.original.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/controls.original.json",
+      "sha256": "5e6561b8adce2b7fd7a94700254c69cd582ce7ffb138bc6ebfa4b6004b9b2226",
+      "bytes": 267945
+    },
+    "deferred-stable-ordering/controls.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/controls.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "deferred-stable-ordering/controls.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/controls.stdout",
+      "sha256": "0592865c45d05292ca7fb84a18fe632b785d2aca8edb334c20ff595f92a3c964",
+      "bytes": 37
+    },
+    "deferred-stable-ordering/format-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/format-final.log",
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50",
+      "bytes": 25
+    },
+    "deferred-stable-ordering/historical-pre-format/catalog_walker.proposed.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/historical-pre-format/catalog_walker.proposed.py",
+      "sha256": "8b44e03d18d25a2339c0d2ea4bee0291b59eb1c72bff9341cd9f096aa365fe3f",
+      "bytes": 34932
+    },
+    "deferred-stable-ordering/historical-pre-format/controls.original.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/historical-pre-format/controls.original.json",
+      "sha256": "5e6561b8adce2b7fd7a94700254c69cd582ce7ffb138bc6ebfa4b6004b9b2226",
+      "bytes": 267945
+    },
+    "deferred-stable-ordering/historical-pre-format/controls.stderr": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/historical-pre-format/controls.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "deferred-stable-ordering/historical-pre-format/controls.stdout": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/historical-pre-format/controls.stdout",
+      "sha256": "0592865c45d05292ca7fb84a18fe632b785d2aca8edb334c20ff595f92a3c964",
+      "bytes": 37
+    },
+    "deferred-stable-ordering/historical-pre-format/run_controls.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/historical-pre-format/run_controls.py",
+      "sha256": "aa66a90407d4f5eaf7924d733aac6872829e467d4a81b853e910c7efec04aebb",
+      "bytes": 13144
+    },
+    "deferred-stable-ordering/mypy-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/mypy-final.log",
+      "sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e",
+      "bytes": 42
+    },
+    "deferred-stable-ordering/mypy.original.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/mypy.original.log",
+      "sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e",
+      "bytes": 42
+    },
+    "deferred-stable-ordering/parent-commands.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/parent-commands.json",
+      "sha256": "124076dc8c2e718edfb93e4b913d2458bf9b336d4564f5e0fd663190832e9ddb",
+      "bytes": 1372
+    },
+    "deferred-stable-ordering/post-format-ast.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/post-format-ast.json",
+      "sha256": "947f0c616978d1df9c0d88b35bd6909e8751e22d6ff6ca9a8bba44062922ae5b",
+      "bytes": 212
+    },
+    "deferred-stable-ordering/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/receipt.json",
+      "sha256": "c24504cbf9293e352674987f73a7abb2ee3122338ec21ef6a6e664e33b892a17",
+      "bytes": 1670
+    },
+    "deferred-stable-ordering/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/review.ru.md",
+      "sha256": "e13fc00c5921b8eb3a0cd1de12b7bc52fab70cb9e520543e20790bf27a9c7815",
+      "bytes": 3427
+    },
+    "deferred-stable-ordering/reviewed-rejected-stop/controls.original.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/reviewed-rejected-stop/controls.original.json",
+      "sha256": "c961879db22c4dc047b2785a159793a3e9bfc849bed4161262b107b6e493cd26",
+      "bytes": 220613
+    },
+    "deferred-stable-ordering/reviewed-rejected-stop/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/reviewed-rejected-stop/receipt.json",
+      "sha256": "d8eab719a4592605dae7ee06604b11b9f4d1211f5a8977e60119665a94d773e1",
+      "bytes": 862
+    },
+    "deferred-stable-ordering/reviewed-rejected-stop/retained-input-origins.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/reviewed-rejected-stop/retained-input-origins.json",
+      "sha256": "988ed9995dc9254def36651ca8dbc757dae6cfc180e075cc529d86c37cd70e61",
+      "bytes": 12193
+    },
+    "deferred-stable-ordering/reviewed-rejected-stop/saved-probe.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/reviewed-rejected-stop/saved-probe.offline.json",
+      "sha256": "5f2d0c0da45513efc0011335e968959b625168b905792a74fbd9161af30707ff",
+      "bytes": 48936
+    },
+    "deferred-stable-ordering/ruff-final.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/ruff-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "deferred-stable-ordering/ruff-fix.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/ruff-fix.log",
+      "sha256": "aac3a0503d8b95052cc85fb9f1717dc82b74aa55853a5aa9749b41e30275d472",
+      "bytes": 38
+    },
+    "deferred-stable-ordering/ruff-format.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/ruff-format.log",
+      "sha256": "413a709001976657cb743636fd34e48fc41d8d302d665460d3f874b3313da127",
+      "bytes": 19
+    },
+    "deferred-stable-ordering/ruff.original.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/ruff.original.log",
+      "sha256": "32fa67242ec8201f88f9937dc9fe207c707b801a5f23df22bcd9c6afda15510c",
+      "bytes": 1658
+    },
+    "deferred-stable-ordering/run_controls.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/run_controls.py",
+      "sha256": "526d2b8ecc1b6e788e451aceeda695ffd4d4e169085b6ed00340a8f714282e6a",
+      "bytes": 13141
+    },
+    "deferred-stable-ordering/sources/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/sources/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "bytes": 32381
+    },
+    "deferred-stable-ordering/sources/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/sources/app/adapters/discovery/live_discovery.py",
+      "sha256": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+      "bytes": 96403
+    },
+    "deferred-stable-ordering/sources/app/adapters/fetching.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/sources/app/adapters/fetching.py",
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727
+    },
+    "deferred-stable-ordering/sources/app/adapters/html_parse.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/sources/app/adapters/html_parse.py",
+      "sha256": "62f9c0c30c4b88ad1b7d23907f9019204e424891d361608d92aaac9551ac5d81",
+      "bytes": 916
+    },
+    "deferred-stable-ordering/sources/app/adapters/page_classifier.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/sources/app/adapters/page_classifier.py",
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+      "bytes": 43654
+    },
+    "deferred-stable-ordering/sources/app/adapters/search/ontology.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/sources/app/adapters/search/ontology.json",
+      "sha256": "2cb1026c2c3fdcccfd66c828102a0bfdde58533e9961125677ed85ef83f3d373",
+      "bytes": 3254
+    },
+    "deferred-stable-ordering/sources/app/adapters/search/ontology.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/sources/app/adapters/search/ontology.py",
+      "sha256": "d63e4c6320c5154d60b5c6009615ae63ef5c95b4ed337eb7e9d0ec70ea895f35",
+      "bytes": 8480
+    },
+    "deferred-stable-ordering/stable-read-order.patch": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/stable-read-order.patch",
+      "sha256": "3673faa89995fa6df7dd6e81d5cd69a8f065625c60d4166d381772e8f293f7d5",
+      "bytes": 3795
+    },
+    "deferred-stable-ordering/ready-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/a-stable-walker-ordering/ready-manifest.json",
+      "sha256": "ea7a79383e18a77de92d6385b28d491fd17480d0672ff6c37d6be9a35ec770cb",
+      "bytes": 6680
+    },
+    "tuition-contract-gap/PLAN.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/PLAN.json",
+      "sha256": "8198f718fb37033ce846e06a33eaaff543d45e7186233b21e286f9572607d572",
+      "bytes": 3606
+    },
+    "tuition-contract-gap/contract-controls.offline.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/contract-controls.offline.json",
+      "sha256": "052fb4465a710ef596438a73574712a0af25212c4d6a5bb0c068cf92f069ed44",
+      "bytes": 10870
+    },
+    "tuition-contract-gap/evidence/bebf43d56e3b363476eed0f7cddede69.body": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/evidence/bebf43d56e3b363476eed0f7cddede69.body",
+      "sha256": "803e15a08ada381f88ee3e933f89bef63594e39d1192f65a8b10367e5af5dcfc",
+      "bytes": 147437
+    },
+    "tuition-contract-gap/evidence/bebf43d56e3b363476eed0f7cddede69.meta.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/evidence/bebf43d56e3b363476eed0f7cddede69.meta.json",
+      "sha256": "946e2772e6ee749d82ef196d6539be1f093511f16716d07caaf199cc3a1d56d2",
+      "bytes": 501
+    },
+    "tuition-contract-gap/native-contract-gap.red-original.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/native-contract-gap.red-original.json",
+      "sha256": "16b746f92bf9d0d9b2e19e30b35d6434d6572f38c46039b072889a85ca75a18c",
+      "bytes": 2904
+    },
+    "tuition-contract-gap/negative-controls.prepared-not-run.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/negative-controls.prepared-not-run.json",
+      "sha256": "6c3a0efa2e187bdadcb110837f43f91053c519e617af09e7cc41e4513d41514a",
+      "bytes": 8804
+    },
+    "tuition-contract-gap/original-source/backend/app/adapters/base.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/adapters/base.py",
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "bytes": 4121
+    },
+    "tuition-contract-gap/original-source/backend/app/adapters/cost/web_costs.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/adapters/cost/web_costs.py",
+      "sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+      "bytes": 8986
+    },
+    "tuition-contract-gap/original-source/backend/app/adapters/document_ir.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/adapters/document_ir.py",
+      "sha256": "c8c3f15da74f8f891f4f79fd8bfd52e937b57898edfdc3ac1a59e7d44bce9f0f",
+      "bytes": 10960
+    },
+    "tuition-contract-gap/original-source/backend/app/adapters/extraction.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/adapters/extraction.py",
+      "sha256": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf",
+      "bytes": 55162
+    },
+    "tuition-contract-gap/original-source/backend/app/adapters/fetching.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/adapters/fetching.py",
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727
+    },
+    "tuition-contract-gap/original-source/backend/app/adapters/structured_costs.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/adapters/structured_costs.py",
+      "sha256": "149f716bcf015066b41f9edf6d8678f670e2352962561b69068013f2640a0f53",
+      "bytes": 9125
+    },
+    "tuition-contract-gap/original-source/backend/app/domain/claim_scope.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/domain/claim_scope.py",
+      "sha256": "e29c2f751734396d2208a8c968588f8f561813017785cd1a58067a56d1f5753c",
+      "bytes": 8009
+    },
+    "tuition-contract-gap/original-source/backend/app/domain/claim_verifier.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/domain/claim_verifier.py",
+      "sha256": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249",
+      "bytes": 19603
+    },
+    "tuition-contract-gap/original-source/backend/app/domain/costs.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/domain/costs.py",
+      "sha256": "a1c8f2ec954616a55ff75d01cc1d4d55ed04b321f3fc55008dcf7cda1c8413f6",
+      "bytes": 12998
+    },
+    "tuition-contract-gap/original-source/backend/app/domain/programme_identity.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/domain/programme_identity.py",
+      "sha256": "1bf66f59ccf19dd2b859ebcae5783e01c292591b4e84faa59e624a368b92bc99",
+      "bytes": 5947
+    },
+    "tuition-contract-gap/original-source/backend/app/schemas/claim.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/schemas/claim.py",
+      "sha256": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794",
+      "bytes": 5548
+    },
+    "tuition-contract-gap/original-source/backend/app/schemas/money.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/schemas/money.py",
+      "sha256": "54a91d7827cd5ef786b9fcb9e1d6a3867d2edbc195484d631f3aad4e42a4bed8",
+      "bytes": 1311
+    },
+    "tuition-contract-gap/original-source/backend/app/schemas/result.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/original-source/backend/app/schemas/result.py",
+      "sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+      "bytes": 16222
+    },
+    "tuition-contract-gap/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/receipt.json",
+      "sha256": "285afea90b3e85f75503b19a47aadac29b5d45bf389d506d4af3adc9e1d368ff",
+      "bytes": 1934
+    },
+    "tuition-contract-gap/replay_contract.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/replay_contract.py",
+      "sha256": "646f8a6a39335bf5350f48c6b039441685f4887fe378c049e854db157cba29fd",
+      "bytes": 7965
+    },
+    "tuition-contract-gap/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/review.ru.md",
+      "sha256": "b001466103c3b15046f251d9cccfd5c1358fee5b7aac38e2895d77f5cf54d682",
+      "bytes": 4295
+    },
+    "tuition-contract-gap/source-pins.extended.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/source-pins.extended.json",
+      "sha256": "95dd74866a9bd7e548d962e754781f0f908eab962c0c3387d92c29dca470a4a9",
+      "bytes": 3108
+    },
+    "tuition-contract-gap/ready-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-aalto-tuition-row-proposal/ready-manifest.json",
+      "sha256": "b0c20345cd53054952ab672d7968507bd59b8c99fe73c5e48e3ffa2256816da3",
+      "bytes": 3804
+    },
+    "primary-purpose-diagnostic/controls.original.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/controls.original.json",
+      "sha256": "2478c131f64bcbe904b8798337db43598d1ad6565809481fcb6f81e84845d121",
+      "bytes": 44471
+    },
+    "primary-purpose-diagnostic/PLAN.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/PLAN.json",
+      "sha256": "641f684a507a91be60c83abbd847866f6f0bf152dcd5a0e2c20f26e868f1418f",
+      "bytes": 702
+    },
+    "primary-purpose-diagnostic/review.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/review.ru.md",
+      "sha256": "62690030ba71a5cfd8bd667a0e8633cf5e13b1ef68f832d0eb5176f0e75bc7e2",
+      "bytes": 2684
+    },
+    "primary-purpose-diagnostic/page_classifier.ablation.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/page_classifier.ablation.py",
+      "sha256": "cf8f66acd26555597d80a2ba9ff73bbf1ae21b1186063a2fddeb427eccc5d511",
+      "bytes": 43681
+    },
+    "primary-purpose-diagnostic/replay.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/replay.py",
+      "sha256": "ca07aaf472162e97a1223a55ab54b7ac3048367aedc03e29b6667b8f5a4d8325",
+      "bytes": 5078
+    },
+    "primary-purpose-diagnostic/page_classifier.original.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/page_classifier.original.py",
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+      "bytes": 43654
+    },
+    "primary-purpose-diagnostic/replay.original.log": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/replay.original.log",
+      "sha256": "b680a7aa260cd90094b2ef85a6da33cc3ebf7104851fa828ff9782d0718c7a06",
+      "bytes": 246
+    },
+    "primary-purpose-diagnostic/receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/receipt.json",
+      "sha256": "33cae84aad7dee867c31cb69c85572ca623e73fbb231b03f3c6c488683d77e5f",
+      "bytes": 1027
+    },
+    "primary-purpose-diagnostic/ready-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/root-primary-purpose-diagnostic/ready-manifest.json",
+      "sha256": "33a861bf1c34c0072700885bb7a1b3eab498e9604241999aba27f20ac4bd7a56",
+      "bytes": 903
+    },
+    "routing-peer-preparation/PLAN.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/PLAN.json",
+      "sha256": "1b6edda6d6422612c3ca07c4346f7ddc5861d6b0d7ac8f80006aa239ba26c99b",
+      "bytes": 5588
+    },
+    "routing-peer-preparation/source-copy-pins.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/source-copy-pins.json",
+      "sha256": "4581dbd3e1317e236c23ec54073f6eb03f50a0aa5b6d0c6017fa93c260be6c3d",
+      "bytes": 5566
+    },
+    "routing-peer-preparation/expected-boundaries.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/expected-boundaries.json",
+      "sha256": "732b7a1358a8b79430a43403ea4b6b9f5904be42303d0800d18152ac25a8e4d5",
+      "bytes": 3850
+    },
+    "routing-peer-preparation/PREPARATION.ru.md": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/PREPARATION.ru.md",
+      "sha256": "d47760dd62bcd086d03aa54e6801fd1c9c3661ae3009bfa5e273c46ecd0a2f7f",
+      "bytes": 5778
+    },
+    "routing-peer-preparation/preparation-receipt.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/preparation-receipt.json",
+      "sha256": "a9c14e71974f3f34e80c933991dfa59775458372e1242875f240d886cc95e0fd",
+      "bytes": 816
+    },
+    "routing-peer-preparation/original-source/backend/app/adapters/base.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/adapters/base.py",
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "bytes": 4121
+    },
+    "routing-peer-preparation/original-source/backend/app/adapters/discovery/catalog_walker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/adapters/discovery/catalog_walker.py",
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "bytes": 32381
+    },
+    "routing-peer-preparation/original-source/backend/app/adapters/discovery/live_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/adapters/discovery/live_discovery.py",
+      "sha256": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+      "bytes": 96403
+    },
+    "routing-peer-preparation/original-source/backend/app/adapters/page_classifier.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/adapters/page_classifier.py",
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+      "bytes": 43654
+    },
+    "routing-peer-preparation/original-source/backend/app/adapters/requirements/web_requirements.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/adapters/requirements/web_requirements.py",
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "bytes": 43883
+    },
+    "routing-peer-preparation/original-source/backend/app/catalogue/discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/catalogue/discovery.py",
+      "sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+      "bytes": 12449
+    },
+    "routing-peer-preparation/original-source/backend/app/domain/claim_scope.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/domain/claim_scope.py",
+      "sha256": "e29c2f751734396d2208a8c968588f8f561813017785cd1a58067a56d1f5753c",
+      "bytes": 8009
+    },
+    "routing-peer-preparation/original-source/backend/app/domain/programme_identity.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/domain/programme_identity.py",
+      "sha256": "1bf66f59ccf19dd2b859ebcae5783e01c292591b4e84faa59e624a368b92bc99",
+      "bytes": 5947
+    },
+    "routing-peer-preparation/original-source/backend/app/jobs/store.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/jobs/store.py",
+      "sha256": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+      "bytes": 18143
+    },
+    "routing-peer-preparation/original-source/backend/app/jobs/worker.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/jobs/worker.py",
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "bytes": 21474
+    },
+    "routing-peer-preparation/original-source/backend/app/models/jobs.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/models/jobs.py",
+      "sha256": "438fff6a82ddadd99ab956e43054f3e606f039bfc1bddf0f654ccd9edf151789",
+      "bytes": 3559
+    },
+    "routing-peer-preparation/original-source/backend/app/models/research.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/models/research.py",
+      "sha256": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+      "bytes": 11415
+    },
+    "routing-peer-preparation/original-source/backend/app/pipeline/control.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/pipeline/control.py",
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "bytes": 520
+    },
+    "routing-peer-preparation/original-source/backend/app/pipeline/read_budget.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/pipeline/read_budget.py",
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+      "bytes": 4349
+    },
+    "routing-peer-preparation/original-source/backend/app/pipeline/runner.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/pipeline/runner.py",
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "bytes": 97639
+    },
+    "routing-peer-preparation/original-source/backend/app/schemas/result.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/app/schemas/result.py",
+      "sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+      "bytes": 16222
+    },
+    "routing-peer-preparation/original-source/backend/evaluation/research/live.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/evaluation/research/live.py",
+      "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+      "bytes": 69319
+    },
+    "routing-peer-preparation/original-source/backend/scripts/canary_discovery.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/original-source/backend/scripts/canary_discovery.py",
+      "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+      "bytes": 44506
+    },
+    "routing-peer-preparation/PREPARATION-manifest.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round10/b-provisional-routing-review/PREPARATION-manifest.json",
+      "sha256": "6d38bb1226f66d99567e69f0eefabb8e1e0a7cc912bcc62d243b73fa25029e98",
+      "bytes": 3873
+    },
+    "parent/archive-first.original.py": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/archive-boundaries-incomplete/archive-first.original.py",
+      "sha256": "5f3721c7bd219dfabac77aabf4d3cc5d04af7a224de5f12bb4b530ca568a8b2d",
+      "bytes": 4814
+    },
+    "parent/archive-first-failure.json": {
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round11/archive-boundaries-incomplete/failure.json",
+      "sha256": "456dca50bd7baf444a9724ebc207332a5da1ba8895af9468dd644bb5a5b6b9b3",
+      "bytes": 295
+    },
+    "parent/archive-boundaries.py": {
+      "original": "/tmp/x20-archive-retention-boundaries.py",
+      "sha256": "84cdf2ca6c9bc8d36fb7cbea04d26615c4c53ebb19e15764a9152b0fef1c9419",
+      "bytes": 5019
+    }
+  },
+  "packets": [
+    {
+      "packet": "local-round10/b-provider-stop-closure-review",
+      "manifest_sha256": "d03561b739a056a0fd5b2c58ad10bc21ec2bb495a05a521f1dbe019ee4ae9433",
+      "verdict": "IMMUTABLE_READY"
+    },
+    {
+      "packet": "local-round10/a-strict-walker-preparation",
+      "manifest_sha256": "232f6edd02cf33ed61a472d51012cd1598ecc13d84cfbfe0980b2a3cea2dc5e9",
+      "verdict": "REJECTED_NOT_SOURCE_READY_IMMUTABLE"
+    },
+    {
+      "packet": "local-round10/a-stable-walker-ordering",
+      "manifest_sha256": "ea7a79383e18a77de92d6385b28d491fd17480d0672ff6c37d6be9a35ec770cb",
+      "verdict": "EXTERNAL_REVIEW_ONLY_NO_CUT_NO_MEASURED_GAIN"
+    },
+    {
+      "packet": "local-round10/b-aalto-tuition-row-proposal",
+      "manifest_sha256": "b0c20345cd53054952ab672d7968507bd59b8c99fe73c5e48e3ffa2256816da3",
+      "verdict": "IMMUTABLE_EVIDENCE_READY_CONTRACT_GAP_SOURCE_PROPOSAL_NOTREADY"
+    },
+    {
+      "packet": "local-round11/root-primary-purpose-diagnostic",
+      "manifest_sha256": "33a861bf1c34c0072700885bb7a1b3eab498e9604241999aba27f20ac4bd7a56",
+      "verdict": "DIAGNOSTIC_NOT_RULE_READY_NO_APPLY"
+    },
+    {
+      "packet": "local-round10/b-provisional-routing-review",
+      "manifest_sha256": "6d38bb1226f66d99567e69f0eefabb8e1e0a7cc912bcc62d243b73fa25029e98",
+      "verdict": "IMMUTABLE_PREPARATION_ONLY_A_PENDING"
+    }
+  ],
+  "outcomes": {
+    "closed_collection_peer": "10PASS,332files37160511bytes matched;UNSCORED only",
+    "strict_stop": "46PASS/3RED rejected: late2027/population/nondegree route lost",
+    "stable_ordering": "37PASS, deferred: Groningen0reads saved/current endtoend gain absent",
+    "tuition": "10nativechecksPASS; typedcohort/field/period gap; no patch;16ONnegatives NOT_RUN",
+    "primary_purpose": "30native original outputs equal;2changed cases;Aalto remains scholarship_index;2newsynthetic falseprogramme permissions;ablation not a rule",
+    "provisional_routing_peer": "18pinned native source copies/11 expected boundaries; A exactproposal review NOT_RUN"
+  },
+  "application_flags_added": false,
+  "source_patch_applied": false,
+  "live_model_provider_calls": 0,
+  "scoring_executed": false,
+  "semantic_label_reads": false,
+  "limitations": [
+    "saved-source diagnostics and synthetic controls are not quality scores or accepted blind expert pilot",
+    "999 prefix-selected paths include research data JSON, not all executable code",
+    "native read_cap recovery is distinct from harness asyncio cancellation; current Groningen cancellation uncorrected",
+    "source observations/provisional routing/real Claims/Job completion/source completeness are distinct",
+    "no rule/default/provider/quota/STOP/purchase/production change"
+  ]
+}

@@ -12,7 +12,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, fetch_diagnostic_url, fetch_retry_url
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import classify_page, main_content
 from app.adapters.scope_reader import read_scope
@@ -55,15 +55,18 @@ class WebCostAdapter:
         out.pages_checked += 1
         if not res.ok:
             out.pages_failed += 1
-            out.errors.append(f"{candidate.costs_url}: {res.outcome.value} — {res.error}")
+            failed_url = fetch_diagnostic_url(candidate.costs_url, res)
+            out.errors.append(f"{failed_url}: {res.outcome.value} — {res.error}")
             out.page_outcomes.append(
                 PageOutcome(
-                    url=candidate.costs_url,
+                    url=failed_url,
                     category="fetch-failed",
                     detail=f"{res.outcome.value} — {res.error}",
                 )
             )
-            out.retry_urls.append(candidate.costs_url)
+            retry_url = fetch_retry_url(candidate.costs_url, res)
+            if retry_url is not None:
+                out.retry_urls.append(retry_url)
             return breakdown, out
 
         text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)

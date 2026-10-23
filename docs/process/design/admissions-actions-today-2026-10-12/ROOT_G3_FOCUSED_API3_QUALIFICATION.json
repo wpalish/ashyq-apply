@@ -1,0 +1,96 @@
+{
+  "status": "ACTUAL_190_PASS_TWO_FAILURES_FOCUSED_NOT_FULL",
+  "at_utc": "2026-10-13T06:32:16.025549+00:00",
+  "actual_test_nodes": 192,
+  "passed": 190,
+  "failed": 2,
+  "errors": 0,
+  "skips": 0,
+  "failures": [
+    {
+      "node": {
+        "classname": "tests.test_today",
+        "name": "test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[sqlite-decision]",
+        "time": "0.238"
+      },
+      "failure": "tests/test_today.py:571: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    assert len(premium_queries) == 2  # Native G1 body then its exact raw checklist observation.\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: assert 3 == 2\nE    +  where 3 = len(['SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, p...ed_at, program_results.updated_at AS program_results_updated_at \\nFROM program_results \\nWHERE program_results.id = ?'])"
+    },
+    {
+      "node": {
+        "classname": "tests.test_today",
+        "name": "test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[postgres-decision]",
+        "time": "0.510"
+      },
+      "failure": "tests/test_today.py:571: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    assert len(premium_queries) == 2  # Native G1 body then its exact raw checklist observation.\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: assert 3 == 2\nE    +  where 3 = len(['SELECT program_results.run_id AS program_results_run_id, program_results.dedupe_key AS program_results_dedupe_key, p...esults.updated_at AS program_results_updated_at \\nFROM program_results \\nWHERE program_results.id = %(pk_1)s::VARCHAR'])"
+    }
+  ],
+  "source633_unchanged": true,
+  "wider786_primary_lab_exact_before_next_application": true,
+  "outside_startup_attempts": 0,
+  "private_pg_events": 326,
+  "shutdown_runtime_cleanup_confirmed": true,
+  "prior_focus2": {
+    "tests": 192,
+    "passed": 144,
+    "failed": 48
+  },
+  "raw": {
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/helper-pins.json": {
+      "sha256": "6c664e20f2f5710293ebbc56477de5ec5f342fb6c4aa0be90f26a65e9c50cabb",
+      "bytes": 1418
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/result.json": {
+      "sha256": "9b3f8f39c825f4fc29df9cf3a4fc183109e7a9544eb89726daf26d17874685a1",
+      "bytes": 4596
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/preflight.json": {
+      "sha256": "9b1f8c9cefb7e4b53bee03bcaa6c2aadb80c40569000c4017765b7f46daa5c48",
+      "bytes": 5219
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/pytest.log": {
+      "sha256": "be83bbd20e4af9dfbcfaea18e603b674d2a5e3212d66f14ec9c5ad4a60d5bcc1",
+      "bytes": 15962
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/result.json": {
+      "sha256": "f9d1aaa51e9b132ba8a227acc226d5432b6e6c2f07c1b14e634f28b7be1287bb",
+      "bytes": 4038
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/source-before.json": {
+      "sha256": "751b632719b7e84acb01f51f07ae79a5c00f170c593672aedd57a7e3b9921df3",
+      "bytes": 73374
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/private-pg-probe.json": {
+      "sha256": "62bfb7f77057785835195f67e134a70383aa4ae15ce82c51be83b4e8cfc4ab4e",
+      "bytes": 153
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/source-after.json": {
+      "sha256": "751b632719b7e84acb01f51f07ae79a5c00f170c593672aedd57a7e3b9921df3",
+      "bytes": 73374
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/os-network-probe.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/os-network-child-probe.json": {
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+      "bytes": 776
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/os-network-probe.json": {
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+      "bytes": 1704
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/network.sb": {
+      "sha256": "d4c1c60709a799cdeb3fcf86ae5f613e16134541e70ffd9c185f096858240c9a",
+      "bytes": 316
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/junit.xml": {
+      "sha256": "d2d9e6dac74dcb83d72d4dde68f5265eb8198f4b8924a674c99689dc532a699b",
+      "bytes": 46044
+    },
+    "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/guard-7830.json": {
+      "sha256": "7de72746717566ab10f7b7a5589195e1e31a558310197c4bf685a0012f15ea3f",
+      "bytes": 53562
+    }
+  },
+  "qualification": "not full/native coverage, frontend/UI/product/search acceptance"
+}

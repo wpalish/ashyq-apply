@@ -1,0 +1,32 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run src/components/BookPlan.navigation.test.tsx src/lib/universityDirectory.test.ts
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/frontend
+
+ ❯ src/lib/universityDirectory.test.ts (2 tests | 1 failed) 5ms
+   × loads exactly 500 unique institution identities without invented history placeholders 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/universityDirectory.test.ts > loads exactly 500 unique institution identities without invented history placeholders
+AssertionError: expected 'http://web.mit.edu/' to match /^https:\/\//\
+
+- Expected:
+/^https:\/\//
+
++ Received:
+"http://web.mit.edu/"
+
+ ❯ src/lib/universityDirectory.test.ts:5:358
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 8 passed (9)
+   Start at  11:25:16
+   Duration  1.95s (import 51%, environment 29%, transform 9%, tests 6%, setup 5%)
+

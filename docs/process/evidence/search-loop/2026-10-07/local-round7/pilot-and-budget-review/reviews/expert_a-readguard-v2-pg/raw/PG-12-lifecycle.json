@@ -1,0 +1,31 @@
+{
+  "started_at": "2026-10-07T22:07:55.179250+00:00",
+  "helper_sha256": "4f8f61aafc6e388ddd67eb045a01843814083ec397e7c83cc343529db76d21ab",
+  "pgdata": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/runtime/isolated-cluster-01/pgdata",
+  "ready_manifest_sha256": "236e9a53667c86c0b14a04807492804402604d05a5a32ba670fb97915f84c2a4",
+  "patch_sha256": "344c8200fce357ca4bc17cc3510031202390d10637780fb9f095b0d9d9759e38",
+  "stop_before": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "tests_run": true,
+  "own_server_pid": 11504,
+  "own_socket_path": "/Users/wpalish/Library/Caches/TemporaryItems/python_PostgresServer/9bc4a55688/.s.PGSQL.5432",
+  "tcp_hostname": null,
+  "cleanup_mode": "stop",
+  "pytest_exit_code": 1,
+  "pytest_wall_seconds": 8.035946415970102,
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/runtime/pytest",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/search-loop-round4/reviews/expert_a-readguard-v2-pg-plan/execution-v2/test_independent_pg.py"
+  ],
+  "own_pid_gone": true,
+  "own_socket_absent": true,
+  "stop_after": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "finished_at": "2026-10-07T22:08:03.974914+00:00",
+  "PG_12_status": "PASS"
+}

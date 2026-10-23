@@ -11,6 +11,9 @@
  * its own author.
  */
 
+import { Lock } from '@phosphor-icons/react';
+import { BookPageHeading } from '@/components/BookUI';
+import { BookModerationBoard } from '@/components/BookModerationBoard';
 import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
@@ -113,7 +116,8 @@ function Report({ report, onResolved }: { report: ReportView; onResolved: () => 
 }
 
 export function ModerationScreen() {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
+  const [selectedId,setSelectedId]=useState<string|null>(null);
   const [tab, setTab] = useState<ReportStatus>('open');
   const [items, setItems] = useState<ReportView[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'forbidden' | 'error'>('loading');
@@ -138,9 +142,11 @@ export function ModerationScreen() {
   useEffect(() => { void load(tab); }, [load, tab]);
 
   if (state === 'forbidden') {
-    return <Notice kind="info">{message}</Notice>;
+    return ru?<section className="stack book-moderation"><span className="book-moderation__badge"><Lock size={17}/>Только модераторам</span><BookPageHeading title="Модерация">Доступ к очереди доступен только назначенным модераторам этой сборки.</BookPageHeading><Notice kind="info">Сервер не подтвердил доступ. Права аккаунта не изменены.</Notice><details><summary>Ответ сервера</summary><p>{message}</p></details><a className="btn" href="#/feed">К сообществу</a></section>:<section className="stack"><h1 className="screen__title">{t('moderation.title')}</h1><Notice kind="info">{message}</Notice><a className="btn" href="#/feed">Back to community</a></section>;
   }
 
+  const selected=items.find(item=>item.id===selectedId)??items[0];
+  if(ru) return <BookModerationBoard items={items} tab={tab} onTab={setTab} selectedId={selectedId} onSelect={setSelectedId} loading={state==='loading'} error={state==='error'?message:''} detail={selected?<Report key={selected.id} report={selected} onResolved={()=>void load(tab)}/>:null}/>;
   return (
     <div className="stack community-column">
       <div className="screen__head">

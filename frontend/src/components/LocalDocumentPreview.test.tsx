@@ -1,0 +1,48 @@
+import { File as NodeFile } from 'node:buffer';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { LocalDocumentPreview } from './LocalDocumentPreview';
+import { setLocale } from '@/lib/i18n';
+vi.mock('./LocalPdfPreview',()=>({default:({data}:{data:Uint8Array})=><span>Local PDF bytes: {data.byteLength}</span>}));
+const create=vi.fn(); const revoke=vi.fn(); const network=vi.fn();
+beforeEach(()=>{setLocale('en');create.mockReset().mockReturnValue('blob:synthetic-local');revoke.mockReset();network.mockReset();vi.stubGlobal('URL',{createObjectURL:create,revokeObjectURL:revoke});vi.stubGlobal('fetch',network);});
+afterEach(()=>{vi.unstubAllGlobals();setLocale('en');});
+it('reads a selected PDF locally, exposes the real bytes and releases its URL without uploading',async()=>{
+  render(<LocalDocumentPreview label="Synthetic transcript"/>);
+  const file=new NodeFile(['%PDF-1.7\nSynthetic local file'],'synthetic.pdf',{type:'application/pdf'});
+  fireEvent.change(screen.getByLabelText(/Choose a file to inspect/),{target:{files:[file]}});
+  expect(await screen.findByText(`Local PDF bytes: ${file.size}`)).toBeVisible();
+  expect(screen.getByRole('link',{name:'Open file preview in a new tab'})).toHaveAttribute('href','blob:synthetic-local');
+  expect(network).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button',{name:'Clear preview'}));
+  await waitFor(()=>expect(revoke).toHaveBeenCalledWith('blob:synthetic-local'));
+  expect(screen.queryByRole('link')).toBeNull();
+});
+it('rejects a misleading MIME type and does not finish a preview after leaving its case',async()=>{
+  const view=render(<LocalDocumentPreview label="Synthetic document"/>);
+  fireEvent.change(screen.getByLabelText(/Choose a file to inspect/),{target:{files:[new NodeFile(['not a PDF'],'fake.pdf',{type:'application/pdf'})]}});
+  expect(await screen.findByRole('alert')).toHaveTextContent('not a supported');
+  expect(create).not.toHaveBeenCalled();
+  let finish!:(value:ArrayBuffer)=>void;
+  const pending=new Promise<ArrayBuffer>(resolve=>{finish=resolve;});
+  const slow={name:'slow.png',size:8,slice:()=>({arrayBuffer:()=>pending})};
+  fireEvent.change(screen.getByLabelText(/Choose a file to inspect/),{target:{files:[slow]}});
+  view.unmount();
+  await act(async()=>{finish(new Uint8Array([137,80,78,71,13,10,26,10]).buffer);});
+  expect(create).not.toHaveBeenCalled();expect(network).not.toHaveBeenCalled();
+});
+it('explains a decode failure, releases its URL and accepts a new local image without uploading',async()=>{
+  render(<LocalDocumentPreview label="Synthetic image"/>);
+  const picker=screen.getByLabelText(/Choose a file to inspect/);
+  const file=new NodeFile([new Uint8Array([137,80,78,71,13,10,26,10])],'truncated.png',{type:'image/png'});
+  fireEvent.change(picker,{target:{files:[file]}});
+  const image=await screen.findByRole('img');
+  fireEvent.error(image);
+  expect(await screen.findByRole('alert')).toHaveTextContent('damaged or cannot be decoded');
+  await waitFor(()=>expect(revoke).toHaveBeenCalledWith('blob:synthetic-local'));
+  expect(screen.queryByRole('img')).toBeNull();
+  fireEvent.change(picker,{target:{files:[file]}});
+  expect(await screen.findByRole('img')).toBeVisible();
+  expect(screen.queryByRole('alert')).toBeNull();
+  expect(network).not.toHaveBeenCalled();
+});

@@ -1,0 +1,12 @@
+{
+  "stopped": true,
+  "observed_at": "2026-10-07T19:40:19.481227+00:00",
+  "source": "GitHub Actions hosted CI",
+  "reason": "CI_BILLING_OR_SPENDING_LIMIT_REFUSAL",
+  "exact_diagnostic": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings",
+  "head_sha": "933092912b27d3af0d7bab64dd1d355a175a7cb0",
+  "search_provider_refusal_observed": false,
+  "model_refusal_observed": false,
+  "live_queue_state_when_observed": "four SI-1 arms completed before observation; original manifests preserved",
+  "policy": "Sticky global live stop; no hosted CI retries, provider substitutions, purchases, limit changes or sentinel reset. Offline engineering continues. Preserve locally tested source in origin using explicit CI skip; final cloud gates remain blocked."
+}

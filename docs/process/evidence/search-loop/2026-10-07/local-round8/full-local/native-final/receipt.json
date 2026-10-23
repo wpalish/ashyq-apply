@@ -1,0 +1,165 @@
+{
+  "status": "PASS_ACTUAL_MODULE_FOCUSED_PORT",
+  "scope": "new native60 durable decision-job-episode guard defaultFalse plus typed Worker checkpoint_busy; synthetic transport, real SQL + application modules",
+  "owner_paths": {
+    "tests/readguard_support.py": "489e7e54032f3569455fb0d4f0761100c1cc067afa854d324cc1dc56c9c63491",
+    "tests/test_production_readguard.py": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015",
+    "tests/test_readguard_revision_controls.py": "560cd18354395aacb6fa3b29ecebbd24217943fdbc401181fea92709c9c7307c",
+    "tests/test_readguard_sqlite_concurrency.py": "00a9eb5010f736b88ec7e53d9cb1a13932eadaa8981d5a6932cd62e043be45be",
+    "tests/test_worker_checkpoint_busy.py": "bf2ee2c698b0d46c8dfedf5027d5777a129be1799c18822354918958fc3f8480",
+    "tests/test_readguard_postgres.py": "d72c8386744b1a9074671234267aee290b83103a557c36d8d8717a63c86a9a89"
+  },
+  "application_paths": {
+    "app/adapters/base.py": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+    "app/adapters/discovery/catalog_walker.py": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+    "app/adapters/discovery/live_discovery.py": "ccb9595ad4b1f0315a4922de7cf3ca43db8541f2521ce863d468ee85f33cb026",
+    "app/catalogue/discovery.py": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+    "app/pipeline/control.py": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+    "app/pipeline/read_budget.py": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+    "app/pipeline/runner.py": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "app/jobs/worker.py": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+    "app/adapters/fetching.py": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895"
+  },
+  "actual_imports_sha256": "35b73fdd8571917b9dc7f0c615ff130b8ed66cff2762b5d90e26361ea5ff6dd7",
+  "manifest_sha256": "b81a2644b456cdc5416ff088dc7d2c6ce979649f80046494f5a24c1044253696",
+  "final_tests": {
+    "total": 134,
+    "failure": 0,
+    "error": 0,
+    "skipped": 0,
+    "by_module": {
+      "tests.test_production_readguard": 69,
+      "tests.test_readguard_revision_controls": 22,
+      "tests.test_readguard_sqlite_concurrency": 3,
+      "tests.test_worker_checkpoint_busy": 14,
+      "tests.test_readguard_postgres": 26
+    },
+    "duration_xml": "20.272",
+    "pg_named_tests": [
+      "test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-first]",
+      "test_busy_bounded_return_no_failure_sql_then_real_reaper_same_episode_cap[postgresql-second]",
+      "test_other_errors_still_real_ordinary_fenced_backoff[postgresql-message_only]",
+      "test_other_errors_still_real_ordinary_fenced_backoff[postgresql-typed_other_reason]",
+      "test_real_user_cancel_keeps_cancelled_path[postgresql]",
+      "test_real_attempt_takeover_preserves_worker_lease_lost_path[postgresql]",
+      "test_actual_worker_dispatch_full_decision_shared_61_completes_with_partial_evidence[postgresql]",
+      "test_pg_00_real_isolated_runtime_and_independent_sessions",
+      "test_pg_01_02_actual_nowait_lock_order_and_rollback[job]",
+      "test_pg_01_02_actual_nowait_lock_order_and_rollback[run]",
+      "test_pg_03_exact_80_attempts_60_committed_admissions_two_pg_sessions",
+      "test_pg_04_simultaneous_nowait_and_cap_saturation_no_hidden_retry",
+      "test_pg_05_real_reap_claim_fresh_attempt_fence[worker-two]",
+      "test_pg_05_real_reap_claim_fresh_attempt_fence[worker-one]",
+      "test_pg_06_committed_user_cancel_and_post_charge_async_cancel[user]",
+      "test_pg_06_committed_user_cancel_and_post_charge_async_cancel[coroutine]",
+      "test_pg_07_first_namespace_dirty_off_save_serializes_and_preserves_60",
+      "test_pg_08_busy_actual_caller_preserves_completed_facts[stage_verify-job]",
+      "test_pg_08_busy_actual_caller_preserves_completed_facts[stage_verify-run]",
+      "test_pg_08_busy_actual_caller_preserves_completed_facts[run_to_decision-job]",
+      "test_pg_08_busy_actual_caller_preserves_completed_facts[run_to_decision-run]",
+      "test_pg_10_prior_dirty_run_flush_then_job_nowait_releases_opposite_order",
+      "test_pg_11_corrupt_envelope_and_commit_refusal_fail_closed",
+      "test_pg_06_actual_walker_plain_and_renderer_broad_catch_propagates_db_busy[False]",
+      "test_pg_06_actual_walker_plain_and_renderer_broad_catch_propagates_db_busy[True]",
+      "test_pg_06_actual_walker_cancellation_and_lease_control_not_swallowed[cancel]",
+      "test_pg_06_actual_walker_cancellation_and_lease_control_not_swallowed[fence]",
+      "test_pg_08_actual_funding_busy_retains_prior_claims[job]",
+      "test_pg_08_actual_funding_busy_retains_prior_claims[run]",
+      "test_pg_09_real_discovery_broad_catch_preserves_typed_busy[catalogue]",
+      "test_pg_09_real_discovery_broad_catch_preserves_typed_busy[curated]",
+      "test_pg_10_actual_source_recorder_flush_can_hold_run_before_job_nowait",
+      "test_pg_07_explicit_new_untracked_default_false_is_legacy_not_universal_cap"
+    ],
+    "actual_module_manifest": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_application_module0/actual-imports.json"
+    ],
+    "full_worker": {
+      "postgresql": {
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_worker_dispatch_fu0/readguard-evidence/full-worker-postgresql.json",
+        "sha256": "150430f817115236896b3d4d5813508bd95dc4ff42f7450adc7a34fa24d4aba9",
+        "job_status": "succeeded",
+        "counts": {
+          "catalogue:u-one": 60
+        },
+        "attempts": 61,
+        "original_io": 60,
+        "execution": {
+          "elapsed_ns": 113150250,
+          "semaphore_released": true,
+          "heartbeat_tasks": 1,
+          "heartbeat_cancelled": [
+            true
+          ],
+          "heartbeat_done": [
+            true
+          ],
+          "escaped": []
+        }
+      },
+      "sqlite": {
+        "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round8/a-test-port/pytest-attempt2/test_actual_worker_dispatch_fu1/readguard-evidence/full-worker-sqlite.json",
+        "sha256": "754df7a8f5d37b3b01f201e5f8620bd941a1714947bb7d4cbd1c776444e8aafe",
+        "job_status": "succeeded",
+        "counts": {
+          "catalogue:u-one": 60
+        },
+        "attempts": 61,
+        "original_io": 60,
+        "execution": {
+          "elapsed_ns": 106256292,
+          "semaphore_released": true,
+          "heartbeat_tasks": 1,
+          "heartbeat_cancelled": [
+            true
+          ],
+          "heartbeat_done": [
+            true
+          ],
+          "escaped": []
+        }
+      }
+    },
+    "real_sqlstates": {
+      "55P03": 65
+    },
+    "57014_evidence": []
+  },
+  "first_attempt": {
+    "passed": 133,
+    "failed": 1,
+    "skipped": 0,
+    "cause": "test port stale transitive DiscoveryTrace helper reference; corrected direct actual app import; originals retained"
+  },
+  "static": [
+    {
+      "name": "ruff",
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "name": "format",
+      "exit_code": 0,
+      "stdout": "6 files already formatted\n",
+      "stderr": ""
+    }
+  ],
+  "cleanup": {
+    "fixture": "existing tests.conftest.postgres_url finally server.cleanup() + shutil.rmtree",
+    "matching_live_postgres_server_processes": [],
+    "observation": "No matching local unittest PGDATA server process observed after pytest return; no processes were killed by reviewer."
+  },
+  "network_calls": 0,
+  "provider_calls": 0,
+  "model_calls": 0,
+  "stop_sha256": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad",
+  "limitations": [
+    "Not time120 enforcement, render/query/docs/recheck/global deployment proof",
+    "Source remains defaultFalse; untracked legacyOFF61 is deliberate and tested, no universal priorOFF/on intent guarantee",
+    "Private guard activation is used only for low-level reservation tests; actual Worker happy decision uses real entry with real enqueue/claimtoken1",
+    "Busy actual caller and targeted dispatch controls are separate from full unmodified Worker dispatch integration",
+    "No spawned PG installs/externalDB; existing pg_engine/postgres_url fixture installed local runtime only",
+    "Original old external 27pass/1Worker red and 4baselineWorker reds remain immutable, not retested or relabeled here",
+    "Local elapsed busy assertions are observed robustness controls, not a global DB hard deadline or deadlock-free claim"
+  ]
+}

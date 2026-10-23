@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-09T04:29:05.864799+00:00",
+  "status": "PROPOSED_TEST_ONLY_STRONGER_CAPTURE",
+  "source_head": "08450f71e6bbeadd9a2212fbd6c9f96f5c428755",
+  "original": {
+    "backend/tests/test_rejected_diagnostics.py": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+    "backend/tests/test_rejected_diagnostics_persistence.py": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9"
+  },
+  "proposed": {
+    "backend/tests/test_rejected_diagnostics.py": "756bdd3fabf2db2578a075a4cec4876a62ea8c97943d069d1e3b312e4e674766",
+    "backend/tests/test_rejected_diagnostics_persistence.py": "00679ceb5c7c1300b5d6451ba993b4976d9c9fb36feba85a3603df6f0c57a54e"
+  },
+  "qualification": "No appcode/config/migration changes. Explicit restoreable logging capture state and nonempty exact named log controls added; no privacy/controlflow/persistence/API assertions deleted. Native core firstfailure retained. Off/on synthetic logger-disabled-state replay planned; native full pending."
+}

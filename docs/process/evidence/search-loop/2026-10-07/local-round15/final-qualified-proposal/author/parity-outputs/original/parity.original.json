@@ -1,0 +1,127 @@
+{
+  "journal": {
+    "facts": [],
+    "journal_sha256": "947cdbcb8f1acc7d84fc085036c6c29d34424069a7fd244d10ecfbd256007cdc",
+    "question_findings": [],
+    "schema_version": "1"
+  },
+  "packet_digest": "7ad989a8c75a822c809d50eca9683e0b82f79479da08d325260977735ea29184",
+  "selector_legacy_error": "Selector timeout must be in (0,55] seconds",
+  "summary": {
+    "actions": [
+      {
+        "at": "2026-01-01T00:00:00+00:00",
+        "elapsed_ms": 0,
+        "elapsed_ms_cumulative": 0,
+        "executed": true,
+        "fetcher_calls_cumulative": 1,
+        "final_url": "https://example.edu/admissions",
+        "outcome": "ok",
+        "outcome_status": "success",
+        "policy_mode": "same_policy",
+        "raw_log_path": "synthetic-001.json",
+        "raw_log_sha256": "5611c9eb1846406d284a219fb2840777517ffa1c9de3809b1f16569a6c529b92",
+        "request": {
+          "tool": "fetcher",
+          "url": "https://example.edu/admissions"
+        },
+        "search_queries_cumulative": 0,
+        "tool": "fetcher"
+      }
+    ],
+    "budget_origin": "independent_full_budget",
+    "case_id": "synthetic",
+    "final": {
+      "elapsed_ms": 0,
+      "fetcher_calls": 1,
+      "next_log_number": 2,
+      "search_queries": 0,
+      "stop_reason": null
+    },
+    "initial": {
+      "start_calls": 0,
+      "start_ms": 0,
+      "start_search_queries": 0
+    },
+    "log_prefix": "synthetic",
+    "provider": "exa_mcp",
+    "raw_logs": {
+      "synthetic-001.json": "5611c9eb1846406d284a219fb2840777517ffa1c9de3809b1f16569a6c529b92"
+    },
+    "replay": [],
+    "tool_policy": {
+      "allowed": [
+        "fetcher (production Fetcher, robots respected, browser tier off)",
+        "search_provider"
+      ],
+      "allowed_search_providers": [
+        "exa",
+        "exa_mcp"
+      ],
+      "blocked_hosts": [
+        "github.com",
+        "githubusercontent.com",
+        "github.io",
+        "gitlab.com",
+        "bitbucket.org",
+        "sourcegraph.com",
+        "huggingface.co",
+        "kaggle.com"
+      ],
+      "budget_origin": "independent_full_budget",
+      "expert_tools": "none: the expert names actions; the controller executes and logs them",
+      "max_elapsed_ms": 120000,
+      "max_fetcher_calls": 60,
+      "max_search_queries": 6,
+      "official_domains": [
+        "example.edu"
+      ],
+      "strict_budget": true
+    }
+  },
+  "trace": {
+    "actions": [
+      {
+        "action": "Read source.",
+        "at": "2026-01-01T00:00:00Z",
+        "cost_usd": null,
+        "elapsed_ms": 0,
+        "elapsed_ms_cumulative": 0,
+        "fetcher_calls_cumulative": 1,
+        "final_url": "https://example.edu/admissions",
+        "observed_before": "Read source.",
+        "observed_from_step": null,
+        "outcome": "ok",
+        "outcome_status": "success",
+        "policy_mode": "same_policy",
+        "raw_log_path": "synthetic-001.json",
+        "raw_log_sha256": "5611c9eb1846406d284a219fb2840777517ffa1c9de3809b1f16569a6c529b92",
+        "request": {
+          "tool": "fetcher",
+          "url": "https://example.edu/admissions"
+        },
+        "search_queries_cumulative": 0,
+        "stage": "page_understanding",
+        "step": 1,
+        "tool": "fetcher",
+        "url": "https://example.edu/admissions"
+      }
+    ],
+    "baseline_pipeline_sha": "synthetic-source",
+    "case_id": "synthetic",
+    "ended_at": "2026-01-01T00:00:00Z",
+    "initial_elapsed_ms": 0,
+    "initial_fetcher_calls": 0,
+    "initial_search_queries": 0,
+    "max_elapsed_ms": 120000,
+    "max_fetcher_calls": 60,
+    "max_search_queries": 6,
+    "packet_sha256": "7ad989a8c75a822c809d50eca9683e0b82f79479da08d325260977735ea29184",
+    "proposals": [],
+    "question_findings": null,
+    "review_status": "unreviewed",
+    "schema_version": "1",
+    "started_at": "2026-01-01T00:00:00Z"
+  },
+  "trace_digest": "0140e242a4de5ccc0316f0b93ceb2d6b1852fd5574a7625309d23b33c6e9873f"
+}

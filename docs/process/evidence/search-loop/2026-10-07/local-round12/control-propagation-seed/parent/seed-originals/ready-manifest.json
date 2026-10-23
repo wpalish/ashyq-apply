@@ -1,0 +1,1157 @@
+{
+  "status": "PASS_ISOLATED_SYNTHETIC_CANDIDATE_SEED_SINGLE_HEAD_PENDING_FINAL_PRIMARY_BINDING",
+  "files": {
+    "PLAN.json": {
+      "sha256": "42f6c0e8737fd536b556abd24233daa9c86ceffeda922bfbbf44e34a4cbf1dcb",
+      "bytes": 1770
+    },
+    "REPORT.ru.md": {
+      "sha256": "74916f3d79c2187940cf0752249a257c15379d84f1bfa956327309eb3eae8b07",
+      "bytes": 2026
+    },
+    "accepted-proposal-binding.json": {
+      "sha256": "339f54a1866fd99f85feb642d723093e454a1c649873e660470a39693226cdf2",
+      "bytes": 727
+    },
+    "candidate/backend/alembic.ini": {
+      "sha256": "cebcf7b1206c7ddf6ce85d5c89aead12b73343c828a77310e19299bba942a562",
+      "bytes": 3718
+    },
+    "candidate/backend/app/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/applicability.py": {
+      "sha256": "35ff5b19b0f09b7104e2a42a14a7833015add18cd468f754d18fe5c20e4fd576",
+      "bytes": 10753
+    },
+    "candidate/backend/app/adapters/base.py": {
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "bytes": 4121
+    },
+    "candidate/backend/app/adapters/browser.py": {
+      "sha256": "330cfbcdff7119dcbb8c6ffd745dcd2ce24e8688facec0af15fa9de31525f1fb",
+      "bytes": 11693
+    },
+    "candidate/backend/app/adapters/cost/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/cost/web_costs.py": {
+      "sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+      "bytes": 8986
+    },
+    "candidate/backend/app/adapters/decisions/__init__.py": {
+      "sha256": "f74637829175e05921c58d03f795c301fba3679d0946e6a42b551afca09393f5",
+      "bytes": 1110
+    },
+    "candidate/backend/app/adapters/decisions/base.py": {
+      "sha256": "a7141269574a4dce839d7acbc62ae2dd92ad63856e1c2dd6fe3ee74b2f7e207e",
+      "bytes": 2086
+    },
+    "candidate/backend/app/adapters/decisions/fake.py": {
+      "sha256": "0f24f259f9775f53d875ab6d57cf444d961ede5e4025b9d1e68fb13e64f5d828",
+      "bytes": 1409
+    },
+    "candidate/backend/app/adapters/decisions/link_ranker.py": {
+      "sha256": "6af723a1e2e6848cce3363217cf4424fc3a32fb68794ca69afe8e679b981725f",
+      "bytes": 2481
+    },
+    "candidate/backend/app/adapters/decisions/typesafe.py": {
+      "sha256": "79bf433eb73032bc8897645fb8923035b17eb0282768b6159c283197dfc874a1",
+      "bytes": 4902
+    },
+    "candidate/backend/app/adapters/discovery/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/discovery/catalog_walker.py": {
+      "sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "bytes": 32381
+    },
+    "candidate/backend/app/adapters/discovery/fixture_discovery.py": {
+      "sha256": "5c29daadee908cf2e51b63aa27cee218d6efa9f9401fe3ebc35a5758edca0023",
+      "bytes": 3321
+    },
+    "candidate/backend/app/adapters/discovery/institution_registry.json": {
+      "sha256": "07e84d95461d2579aa67cd1d004c886af189b13d44cac86b27aadb8383fa4951",
+      "bytes": 12057
+    },
+    "candidate/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "bytes": 96441
+    },
+    "candidate/backend/app/adapters/discovery/registry_identities.py": {
+      "sha256": "87025a5439e1a35216ec3b6f7cfd347412dbb16115714c4618c2b9100082fba0",
+      "bytes": 2715
+    },
+    "candidate/backend/app/adapters/document_ir.py": {
+      "sha256": "c8c3f15da74f8f891f4f79fd8bfd52e937b57898edfdc3ac1a59e7d44bce9f0f",
+      "bytes": 10960
+    },
+    "candidate/backend/app/adapters/documents/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/documents/structured_documents.py": {
+      "sha256": "19918b090e8f4e5732768b74bd7a178b33ee4e63cd18c1a44b8b297f768a91ff",
+      "bytes": 5137
+    },
+    "candidate/backend/app/adapters/documents/web_documents.py": {
+      "sha256": "2249d096c3623661d7f2620a3dd34e5e4404e23b0db49dff760e7605f07fdd3b",
+      "bytes": 35941
+    },
+    "candidate/backend/app/adapters/extraction.py": {
+      "sha256": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf",
+      "bytes": 55162
+    },
+    "candidate/backend/app/adapters/fetching.py": {
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727
+    },
+    "candidate/backend/app/adapters/government/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/government/web_government.py": {
+      "sha256": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82",
+      "bytes": 3198
+    },
+    "candidate/backend/app/adapters/html_parse.py": {
+      "sha256": "62f9c0c30c4b88ad1b7d23907f9019204e424891d361608d92aaac9551ac5d81",
+      "bytes": 916
+    },
+    "candidate/backend/app/adapters/matching.py": {
+      "sha256": "de83ec677b112554bdb5b38d98d2b3c0d9be48c1843c92b9a92d0425c40999e1",
+      "bytes": 3383
+    },
+    "candidate/backend/app/adapters/network_policy.py": {
+      "sha256": "221d53b18aac4c11388a589204817a29eb6e0c705f50724bda3b3e10e8c80f8f",
+      "bytes": 6338
+    },
+    "candidate/backend/app/adapters/page_classifier.py": {
+      "sha256": "7c74866f7fe562077be36bb33379434d7e378985ccfe75f170fa94fb38746c9c",
+      "bytes": 43654
+    },
+    "candidate/backend/app/adapters/ranking/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/ranking/fixture_rankings.py": {
+      "sha256": "ebc5ee9a62fd74d43477e457e234982c3aa250639cb11e29f9723475a6af9ba3",
+      "bytes": 2550
+    },
+    "candidate/backend/app/adapters/requirements/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/requirements/section_scope.py": {
+      "sha256": "8b2c8da32b7595f95aab817d97b90f7900aca93bab21060499a39ecfc83a2f79",
+      "bytes": 4882
+    },
+    "candidate/backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "bytes": 43883
+    },
+    "candidate/backend/app/adapters/scholarship/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/adapters/scholarship/conditional_benefits.py": {
+      "sha256": "023e4ebc751096f01ec5e63d7714d17dd21df9e4c0b974436e440c26f3c2d1c2",
+      "bytes": 10583
+    },
+    "candidate/backend/app/adapters/scholarship/web_scholarships.py": {
+      "sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "bytes": 61886
+    },
+    "candidate/backend/app/adapters/scope_reader.py": {
+      "sha256": "169136aadc489f886f362a4bd703b4968933939257af1dd2e7867a26c2ff0304",
+      "bytes": 16246
+    },
+    "candidate/backend/app/adapters/search/__init__.py": {
+      "sha256": "5efdc98bb1a18edc0e04c660614b4cdc0ab2c49c60c2a7d98b5c53ce18e7f914",
+      "bytes": 6341
+    },
+    "candidate/backend/app/adapters/search/base.py": {
+      "sha256": "7846c074d334d87fc0e89eefdae4bb7edb9e9454fdb4ed3542bb2aede83297b8",
+      "bytes": 6736
+    },
+    "candidate/backend/app/adapters/search/brave.py": {
+      "sha256": "91c0fc57ab876fabf8c4f0c420efea25b7df9004df3bf06d2d22770fc92dd697",
+      "bytes": 5465
+    },
+    "candidate/backend/app/adapters/search/exa.py": {
+      "sha256": "70149ed992c6a34938585045461d77e55102815766dd85b51c0df72a5b6a4a45",
+      "bytes": 6527
+    },
+    "candidate/backend/app/adapters/search/exa_mcp.py": {
+      "sha256": "33b2ba41289d2610d90d081ef8402affdae5f8053c855fbebb4d79a663e7029c",
+      "bytes": 14199
+    },
+    "candidate/backend/app/adapters/search/fake.py": {
+      "sha256": "45546397ab73cfcafd4e418ad78159acced0570f593deaa83fbe17a4146982dc",
+      "bytes": 3328
+    },
+    "candidate/backend/app/adapters/search/fusion.py": {
+      "sha256": "dcaf419194cc2b3f3a05dfd534f13e9f33799ba62a2eb85e1e83b4136e416ef6",
+      "bytes": 7649
+    },
+    "candidate/backend/app/adapters/search/identity.py": {
+      "sha256": "e5313122ac37f8ab46b7e2b9bbdc154d0f537e2c1f67d714afb53b5be7582054",
+      "bytes": 6730
+    },
+    "candidate/backend/app/adapters/search/intent.py": {
+      "sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+      "bytes": 12990
+    },
+    "candidate/backend/app/adapters/search/navigation.py": {
+      "sha256": "f135eb59866f2c236b38c410841d95cba5cf90ce03d4d1f990db4caeaa4b0d13",
+      "bytes": 10739
+    },
+    "candidate/backend/app/adapters/search/ontology.json": {
+      "sha256": "2cb1026c2c3fdcccfd66c828102a0bfdde58533e9961125677ed85ef83f3d373",
+      "bytes": 3254
+    },
+    "candidate/backend/app/adapters/search/ontology.py": {
+      "sha256": "d63e4c6320c5154d60b5c6009615ae63ef5c95b4ed337eb7e9d0ec70ea895f35",
+      "bytes": 8480
+    },
+    "candidate/backend/app/adapters/search/prefilter.py": {
+      "sha256": "9679fa0fc9bd136cd89f347c003ff63e5b66c20a347a924d7d64cfe90d05f62f",
+      "bytes": 7035
+    },
+    "candidate/backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976
+    },
+    "candidate/backend/app/adapters/search/serper.py": {
+      "sha256": "59fcbc0348b546efeca75add1f4accc7228a5a4a3ed580be8997d0f61ef7eaf9",
+      "bytes": 5428
+    },
+    "candidate/backend/app/adapters/search/site_search.py": {
+      "sha256": "2fd300acceffe97b3ce0fe12d794a308bfcf0b39607ebf6fd3a077b4d4cd3558",
+      "bytes": 10472
+    },
+    "candidate/backend/app/adapters/search/tavily.py": {
+      "sha256": "04c68010e6e62cbc752835ba9b4c17447bd98e338f47ec0eee501d25bf2ab67b",
+      "bytes": 5209
+    },
+    "candidate/backend/app/adapters/structured_costs.py": {
+      "sha256": "149f716bcf015066b41f9edf6d8678f670e2352962561b69068013f2640a0f53",
+      "bytes": 9125
+    },
+    "candidate/backend/app/adapters/structured_extraction.py": {
+      "sha256": "d8a85ae1c2307c428d8e9220fb56d0ab9d69adfdf84a38e56958b30f6b862f47",
+      "bytes": 6760
+    },
+    "candidate/backend/app/api/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/api/paywall.py": {
+      "sha256": "5b3724bbba526423b5aa502cd48144b0eb579b81481610c2c12ff54e7e1e808b",
+      "bytes": 1640
+    },
+    "candidate/backend/app/api/routes_account.py": {
+      "sha256": "e7ec09868bbe8c61b6ea97c05b65ca15f96843427bf09002af6bed36f4f4f1d9",
+      "bytes": 15697
+    },
+    "candidate/backend/app/api/routes_admin.py": {
+      "sha256": "7eb945a9a612648f98ca7e1227ef8898f46362da9377f6543486a318047a83b3",
+      "bytes": 3089
+    },
+    "candidate/backend/app/api/routes_auth.py": {
+      "sha256": "8c914a8993e11b144ffd44c74faa9e251609879bc32632088f15292831b4ae3c",
+      "bytes": 7575
+    },
+    "candidate/backend/app/api/routes_billing.py": {
+      "sha256": "955d33a5ddb1ad1fa53fa17197c1e5505aadebfede33ef560999b3d39b85c4fc",
+      "bytes": 7129
+    },
+    "candidate/backend/app/api/routes_cases.py": {
+      "sha256": "29ad6875321621f6cd36a6a810b8e73b5007a4c5643cbdb6158a6b8354730f2c",
+      "bytes": 1981
+    },
+    "candidate/backend/app/api/routes_meta.py": {
+      "sha256": "26940f0aa21e08b78fae788ec1b0c9dc0030177ee3baefa46c99a94930e6351d",
+      "bytes": 8044
+    },
+    "candidate/backend/app/api/routes_metrics.py": {
+      "sha256": "753816a754d0632e25de1711a97446120116f4890b8d5808eb053bacc685286f",
+      "bytes": 1790
+    },
+    "candidate/backend/app/api/routes_profile.py": {
+      "sha256": "ac08fbf6c628782a98c9243cc2daafcb1913eaf16a4951a7cb7d340c872de466",
+      "bytes": 14230
+    },
+    "candidate/backend/app/api/routes_research.py": {
+      "sha256": "f4f069abde5a3be929cc9154953e2f76f46a38b3a1d6fb7a811a7b9448c227b6",
+      "bytes": 20623
+    },
+    "candidate/backend/app/api/routes_results.py": {
+      "sha256": "c777a99ba8f82da2a46882a457310c67f9a6db90dccd9c29f01f84192b2f229d",
+      "bytes": 23425
+    },
+    "candidate/backend/app/api/routes_social.py": {
+      "sha256": "a1d47d9479bfff2f6db831f94b87a3abd965815bddac5b21c2b7f77d47ed29ea",
+      "bytes": 45282
+    },
+    "candidate/backend/app/api/routes_universities.py": {
+      "sha256": "fba14d7ddb617d3014c81567b98db8d4e2dcad6d7ed269156221b257be0542a5",
+      "bytes": 2539
+    },
+    "candidate/backend/app/api/routes_webhooks.py": {
+      "sha256": "6ac821c011044be93b0d0452f833f9e9ebeacf8267ae47afe977c18033f939c3",
+      "bytes": 4022
+    },
+    "candidate/backend/app/api/tenancy.py": {
+      "sha256": "34557c1bae4f9cc36413cfd952a001342df9a35a1c5ecf5ad19bd83cf121363f",
+      "bytes": 1539
+    },
+    "candidate/backend/app/catalogue/__init__.py": {
+      "sha256": "6b2a4dd66935e84204302020d8fef2aaf1759cdf5f2daea730e5afaf53560351",
+      "bytes": 80
+    },
+    "candidate/backend/app/catalogue/discovery.py": {
+      "sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+      "bytes": 12449
+    },
+    "candidate/backend/app/catalogue/importer.py": {
+      "sha256": "dffd239d62f22157c6bf6cd4698b151703737e1738fadeedc88d24deb54d8202",
+      "bytes": 9463
+    },
+    "candidate/backend/app/catalogue/retrieval.py": {
+      "sha256": "134f1b22f857c26603ff6e83bb5b975a661d57d96fa2a0c62297d3ef35c6ed8b",
+      "bytes": 3515
+    },
+    "candidate/backend/app/catalogue/unimatch_top500_seed.json": {
+      "sha256": "5ab134e331add59884ff5bca548dc17d5a428a7a5d69fdec09c7863babe08a58",
+      "bytes": 946878
+    },
+    "candidate/backend/app/config.py": {
+      "sha256": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539",
+      "bytes": 19393
+    },
+    "candidate/backend/app/corpus/build.py": {
+      "sha256": "2a4719befe8db5c6c188fa67ff8e5cdc757a140c7873b5e61e4ad0b8b2df6c4a",
+      "bytes": 19313
+    },
+    "candidate/backend/app/corpus/data.py": {
+      "sha256": "5d7b7eb9b6f7a33131935ea4f8110da9441f78a629905139a8b66226c05bf958",
+      "bytes": 38678
+    },
+    "candidate/backend/app/corpus/demo_profile.py": {
+      "sha256": "bf948236051511e4f03d7d2f2a1cea2ccb94f78cb3de07b7ec94fd348da789f2",
+      "bytes": 5820
+    },
+    "candidate/backend/app/corpus/pages/aalto/admissions.html": {
+      "sha256": "2ecfc3470bb8291164491a66416018ecf82fd91077d2939e72913798e4bd423c",
+      "bytes": 1450
+    },
+    "candidate/backend/app/corpus/pages/aalto/costs.html": {
+      "sha256": "94e62f80aaa1e608b4d520b595e05f3c348d95972dfa57ce7ed1c9292f3f73e1",
+      "bytes": 1745
+    },
+    "candidate/backend/app/corpus/pages/aalto/program-0.html": {
+      "sha256": "376630393c3210f645b1366938247a8ae0022aa4f05b7b6d5aafc88b38f511bf",
+      "bytes": 2238
+    },
+    "candidate/backend/app/corpus/pages/aalto/scholarship-0.html": {
+      "sha256": "2e8d2bb92fc40338f249b447456d6e619ce89da4ffbeb90c28656a364efe0c70",
+      "bytes": 1676
+    },
+    "candidate/backend/app/corpus/pages/aalto/scholarships.html": {
+      "sha256": "d2c949d8b72b35cb60d2195d3b9de9d65c6c5450b8659d8f05b48260e9249911",
+      "bytes": 1216
+    },
+    "candidate/backend/app/corpus/pages/arizona-state/admissions.html": {
+      "sha256": "42cc389b53bbac777896ee6d577af9c0e73cd0378793138be40674d7336f94cd",
+      "bytes": 1475
+    },
+    "candidate/backend/app/corpus/pages/arizona-state/costs.html": {
+      "sha256": "2934e2a6ad24e4d62ed5f6090d819353d199878f5388d02a1f53049659231077",
+      "bytes": 1968
+    },
+    "candidate/backend/app/corpus/pages/arizona-state/program-0.html": {
+      "sha256": "853ead5f3c5f07229a6bd63617018987ae232252b1f6215ffecbff71df1fcff7",
+      "bytes": 2533
+    },
+    "candidate/backend/app/corpus/pages/arizona-state/scholarship-0.html": {
+      "sha256": "ddda8f5c2ee718af7616e24018f07c3a2a63f0fc5f88abf5e24915441495eedf",
+      "bytes": 2042
+    },
+    "candidate/backend/app/corpus/pages/arizona-state/scholarships.html": {
+      "sha256": "a4eea2c8fe7fbc031e1f85989dd6c426a138c2a648aa668fd926088da01faebc",
+      "bytes": 1312
+    },
+    "candidate/backend/app/corpus/pages/catalog.json": {
+      "sha256": "74d274e3422bb0d99b8c36ebd0b510dbf2dcccf80885cd3dfa4f525e70952146",
+      "bytes": 21689
+    },
+    "candidate/backend/app/corpus/pages/epfl/admissions.html": {
+      "sha256": "5f7310ae2a6fd67ee3ac1a69fca78cd2f38c81bac84528d52f88761921cc9b06",
+      "bytes": 1415
+    },
+    "candidate/backend/app/corpus/pages/epfl/costs.html": {
+      "sha256": "e0ae60fec81e52629cd42c038916907ce124f145a9171c755318bc78c0296afe",
+      "bytes": 1817
+    },
+    "candidate/backend/app/corpus/pages/epfl/program-0.html": {
+      "sha256": "25a6687752740740dd88b0c8739973808ca4171309131fff386304a56219003d",
+      "bytes": 2317
+    },
+    "candidate/backend/app/corpus/pages/epfl/scholarship-0.html": {
+      "sha256": "cdc1514e36b3656938e98c5efa5d56a37a301fdbcfde042d87ae92672f54cb24",
+      "bytes": 1800
+    },
+    "candidate/backend/app/corpus/pages/epfl/scholarships.html": {
+      "sha256": "d72827b1f4da86d73c25e63cac21aa442f6a96e6aca3f8dcbde863a931a698f9",
+      "bytes": 1204
+    },
+    "candidate/backend/app/corpus/pages/government/australia.html": {
+      "sha256": "537c54263e350c8f9eb2dea4773d348b19292331ca37a9b7df59f388ce09c0b8",
+      "bytes": 1084
+    },
+    "candidate/backend/app/corpus/pages/government/canada.html": {
+      "sha256": "7a1a8e2947ad202cf2d8ec5e529f24ef89d62ff0258ca972096f5e47fbcf0cfe",
+      "bytes": 1102
+    },
+    "candidate/backend/app/corpus/pages/government/germany.html": {
+      "sha256": "b2c3fa5287a3c9783b6d3f83a8e42e123ea586c2d38a4543eb2e52ff925ded0e",
+      "bytes": 1101
+    },
+    "candidate/backend/app/corpus/pages/government/netherlands.html": {
+      "sha256": "bfd610a5e4be417ea310161061dbeff22ea8f6b8abe410bce17f2b02ee6f0b35",
+      "bytes": 1202
+    },
+    "candidate/backend/app/corpus/pages/government/singapore.html": {
+      "sha256": "7e4f4b5b1a917ff7fe9bccaad9aa04b153b6fdc5145180557f34847d12197fbc",
+      "bytes": 1035
+    },
+    "candidate/backend/app/corpus/pages/government/united-states.html": {
+      "sha256": "3d9efcd5bb8152b2df5856c4583317e7115bc0747975ca74b45d33ec4a6bdee6",
+      "bytes": 1132
+    },
+    "candidate/backend/app/corpus/pages/ku-leuven/admissions.html": {
+      "sha256": "9b5f11a679555194cb3764589cf8a18a7289b54ed78994a474ef70fe29e9b491",
+      "bytes": 1427
+    },
+    "candidate/backend/app/corpus/pages/ku-leuven/costs.html": {
+      "sha256": "daa25b6d119b1fe3412c3814fb49f20d2af358dedbd965022b8a3df6b549c46c",
+      "bytes": 1722
+    },
+    "candidate/backend/app/corpus/pages/ku-leuven/program-0.html": {
+      "sha256": "9f9c47b7bc9c60f527f53df788a16d16f74bac18032dba13cfdc1a86567118f0",
+      "bytes": 2134
+    },
+    "candidate/backend/app/corpus/pages/ku-leuven/scholarship-0.html": {
+      "sha256": "dcba77217d50fc87b906c64a0ed9666547dc68d017383ed8e1145bf4ade99ebe",
+      "bytes": 1739
+    },
+    "candidate/backend/app/corpus/pages/ku-leuven/scholarship-1.html": {
+      "sha256": "2c022671f6b1696de247c57696cd5ccbca772033e9b048b7f663433d2b217ead",
+      "bytes": 2012
+    },
+    "candidate/backend/app/corpus/pages/ku-leuven/scholarships.html": {
+      "sha256": "b9d718faaa3eef549d57c5786ac4abfc54605c8c2a5349693d97cdff9fe9d831",
+      "bytes": 1426
+    },
+    "candidate/backend/app/corpus/pages/nus/admissions.html": {
+      "sha256": "bfde219764b689336fff19559501aafbf58b15ba2cdef441b4f3ff6d8254337f",
+      "bytes": 1500
+    },
+    "candidate/backend/app/corpus/pages/nus/costs.html": {
+      "sha256": "fffabbaf180606482d4156f72d1215e99beea4549a02609ceb125d41d7693142",
+      "bytes": 1793
+    },
+    "candidate/backend/app/corpus/pages/nus/program-0.html": {
+      "sha256": "9f5b55ace215f8bfcf457c742f95200778fc11cea1bd771de284baac3f472f12",
+      "bytes": 2396
+    },
+    "candidate/backend/app/corpus/pages/nus/scholarship-0.html": {
+      "sha256": "4ff73d2c445feaee19d1ea2a9459a27e40a3a933c217be9f8f5da7ef012c5939",
+      "bytes": 1774
+    },
+    "candidate/backend/app/corpus/pages/nus/scholarship-1.html": {
+      "sha256": "0c85fa9b6179c71a8c2676189a938565ce46243c7f913e472aba4cfed4826b18",
+      "bytes": 1830
+    },
+    "candidate/backend/app/corpus/pages/nus/scholarships.html": {
+      "sha256": "1475c72ca6243d2fbc1f8276107a633df82b8718c317a866b1b359f237cd1c20",
+      "bytes": 1439
+    },
+    "candidate/backend/app/corpus/pages/rankings.json": {
+      "sha256": "2739898525d7c77b0e2194d4ff0580bf535e286dda5843b59e612305a5f165ac",
+      "bytes": 6658
+    },
+    "candidate/backend/app/corpus/pages/trinity-dublin/admissions.html": {
+      "sha256": "f77e7b6eed9f9c8b58413c7a9fa9096b61f2574aa8fffdf1688362a9969ad3d2",
+      "bytes": 1469
+    },
+    "candidate/backend/app/corpus/pages/trinity-dublin/costs.html": {
+      "sha256": "f056e51fd06b4dff0c779dc4bd09b10ae7a3a0a22482e61327ad14c04aad44d2",
+      "bytes": 1765
+    },
+    "candidate/backend/app/corpus/pages/trinity-dublin/program-0.html": {
+      "sha256": "c9275ff73198197c7e50c16ab1039f1d2c85d834afa69c4a3e84801f1a171dd8",
+      "bytes": 2185
+    },
+    "candidate/backend/app/corpus/pages/trinity-dublin/scholarship-0.html": {
+      "sha256": "016a2353869fd5870aa5d9d05893bdf504c0ee3806eac8bcecb51320e559bffe",
+      "bytes": 1704
+    },
+    "candidate/backend/app/corpus/pages/trinity-dublin/scholarships.html": {
+      "sha256": "684d59e53c706ab18140936d6420e1e1bda7b72c7b389327383d59b82afd2216",
+      "bytes": 1265
+    },
+    "candidate/backend/app/corpus/pages/tu-delft/admissions.html": {
+      "sha256": "ffa8daa4c9111ec8ac3006fc9970c458672242e8bbc01225836d59c4f085ff36",
+      "bytes": 1591
+    },
+    "candidate/backend/app/corpus/pages/tu-delft/costs.html": {
+      "sha256": "6245ddaf54a4ea37e2b872f660d3ecf95e3d63586df6ad70cdbe814e4804a5dd",
+      "bytes": 1787
+    },
+    "candidate/backend/app/corpus/pages/tu-delft/program-0.html": {
+      "sha256": "7a4990e7d59e7de08aa5caaa350497ab977c8d18e2d3fa93ccaa4b6e105238b1",
+      "bytes": 2460
+    },
+    "candidate/backend/app/corpus/pages/tu-delft/scholarship-0.html": {
+      "sha256": "3b4853a6537c9b340fe659e13d89d977f49d9af0b2e076470627a8ca058e3be8",
+      "bytes": 2045
+    },
+    "candidate/backend/app/corpus/pages/tu-delft/scholarships.html": {
+      "sha256": "b94c5420a8bab17db2eda1a5daaef80f486ed448422b5b587ae7c8375c148030",
+      "bytes": 1281
+    },
+    "candidate/backend/app/corpus/pages/tum/admissions.html": {
+      "sha256": "133d7890b6ca988f074407e0315032b8fe4b20cd4fd38d505efaf5817ff0257c",
+      "bytes": 1493
+    },
+    "candidate/backend/app/corpus/pages/tum/costs.html": {
+      "sha256": "51c8b84c9f0ab1b573b5adde85c9c7131b8eaeff4361c98b614a68d224910aca",
+      "bytes": 1893
+    },
+    "candidate/backend/app/corpus/pages/tum/program-0.html": {
+      "sha256": "c4070681e0c76823ee86a16f2235e179ce241687afea5254d9ee0cc72b7e4257",
+      "bytes": 2379
+    },
+    "candidate/backend/app/corpus/pages/tum/scholarship-0.html": {
+      "sha256": "cc96be16d38d5815090fe671af82b1cdbed5a28830abdbcd39f43e62bf43aaea",
+      "bytes": 1816
+    },
+    "candidate/backend/app/corpus/pages/tum/scholarships.html": {
+      "sha256": "5e1434cf92eb076db7c540b0d2588bf90f7fb29ec663ad27a911e7356f9a396d",
+      "bytes": 1265
+    },
+    "candidate/backend/app/corpus/pages/u-british-columbia/admissions.html": {
+      "sha256": "fbe0418289b89f562ca27de891822256afd4ab17422506e7333d35604a584fcf",
+      "bytes": 1493
+    },
+    "candidate/backend/app/corpus/pages/u-british-columbia/costs.html": {
+      "sha256": "efa05f8f870bb594ba2045eb300745a7a23084454c65f63b413b055d753318cd",
+      "bytes": 1793
+    },
+    "candidate/backend/app/corpus/pages/u-british-columbia/program-0.html": {
+      "sha256": "d714e2e74762ca14bdba8a19d2fc54b23fbf93c64e79a30b825a89753038740a",
+      "bytes": 2182
+    },
+    "candidate/backend/app/corpus/pages/u-british-columbia/scholarship-0.html": {
+      "sha256": "09d24df9eb66fd38889cf81d075f1e4c243d81e1c3527e9cfa3ff54fd96032b7",
+      "bytes": 1818
+    },
+    "candidate/backend/app/corpus/pages/u-british-columbia/scholarships.html": {
+      "sha256": "c7d9608b2df95d8bf94c7fd0a5a53a969f85df66f27f9b2ea2bbc96a925e960a",
+      "bytes": 1272
+    },
+    "candidate/backend/app/corpus/pages/u-groningen/admissions.html": {
+      "sha256": "84d526d05ec197090e1b94af8b4273a9d457111c0a6d613df37fda493b09c44b",
+      "bytes": 1467
+    },
+    "candidate/backend/app/corpus/pages/u-groningen/costs.html": {
+      "sha256": "d39d68708b8e410b3f676beb036dcb80f7832c4d6a9c4ff662c2d4dec4876e33",
+      "bytes": 1996
+    },
+    "candidate/backend/app/corpus/pages/u-groningen/fees.pdf": {
+      "sha256": "c61a8a9f546d0cc38e2e7f326961aaef7afd74413efc8272aa943f5d5ad7a2cc",
+      "bytes": 1022
+    },
+    "candidate/backend/app/corpus/pages/u-groningen/program-0.html": {
+      "sha256": "58f1f7fef446031ca782ebd290f11ce98baef7a4baa9918ba223749ff77727c0",
+      "bytes": 2604
+    },
+    "candidate/backend/app/corpus/pages/u-groningen/scholarship-0.html": {
+      "sha256": "da9f07ce044b7d4c20804127cea72e4190c10a0c613a0c54cf5afc5019a1aaeb",
+      "bytes": 2178
+    },
+    "candidate/backend/app/corpus/pages/u-groningen/scholarship-1.html": {
+      "sha256": "45635c61240a298eeef1e3f4393894ae8575989d4fe4fd4851811e971ffd9ef2",
+      "bytes": 1674
+    },
+    "candidate/backend/app/corpus/pages/u-groningen/scholarships.html": {
+      "sha256": "0c05433e884de4fed346d93f6d39bb3c7adaaf1c796503b951997a8273bc2edf",
+      "bytes": 1423
+    },
+    "candidate/backend/app/corpus/pages/u-melbourne/admissions.html": {
+      "sha256": "e775f03c1b6efe707e756e452d787424989bd6069695018e77ec687491d106a1",
+      "bytes": 1473
+    },
+    "candidate/backend/app/corpus/pages/u-melbourne/costs.html": {
+      "sha256": "e5fcfe65ae6800b732dcd209c3e68ffad6a0a14c7529f963ac3ce76b6352e182",
+      "bytes": 1872
+    },
+    "candidate/backend/app/corpus/pages/u-melbourne/program-0.html": {
+      "sha256": "207fa15ccb551be4a36c2a79527981561643ca1d7c148c271d48ff1d43c57e04",
+      "bytes": 2281
+    },
+    "candidate/backend/app/corpus/pages/u-melbourne/scholarship-0.html": {
+      "sha256": "fb7d95e400fec4f51762cda92121159a9729723d6f8fab4e4079c5f4a478d056",
+      "bytes": 1810
+    },
+    "candidate/backend/app/corpus/pages/u-melbourne/scholarships.html": {
+      "sha256": "d8aac81b36a35f8b55606599f567bf397bc6b1be1de58ade2e0aadd2b93a7d9b",
+      "bytes": 1247
+    },
+    "candidate/backend/app/corpus/pages/u-tokyo/admissions.html": {
+      "sha256": "3ba667e4796b70c99d6fc800340b338566a028a1ac1a7a24aece37259d6c2e8c",
+      "bytes": 1460
+    },
+    "candidate/backend/app/corpus/pages/u-tokyo/costs.html": {
+      "sha256": "149fff04c0a4afb286701eb4b45c02020c9f5195c21f1ba1c9b1266545126e8e",
+      "bytes": 1775
+    },
+    "candidate/backend/app/corpus/pages/u-tokyo/program-0.html": {
+      "sha256": "8a885a665c6f6f5eaefdc140b66a037862fb8ec55c21c420396ea58f06d4f961",
+      "bytes": 2460
+    },
+    "candidate/backend/app/corpus/pages/u-tokyo/scholarship-0.html": {
+      "sha256": "ab64dab374da4cef31ea19f96fd1bf7f45fcf940531be7afd362f30a8334bea7",
+      "bytes": 2063
+    },
+    "candidate/backend/app/corpus/pages/u-tokyo/scholarships.html": {
+      "sha256": "cf21db543058aea1828f3da564bf47789b8fa1543ebc7e3578856fd5f42ac2fd",
+      "bytes": 1301
+    },
+    "candidate/backend/app/corpus/pages/u-toronto/admissions.html": {
+      "sha256": "f8e20a4ca44a619aad1da195d8f43abec18d4f73a0464163818c3ae57f6241ea",
+      "bytes": 1466
+    },
+    "candidate/backend/app/corpus/pages/u-toronto/costs.html": {
+      "sha256": "7a3f46f42a300259c418f4c9bcf6b399d2024daa7648c69dd7e111a9ca211e36",
+      "bytes": 1870
+    },
+    "candidate/backend/app/corpus/pages/u-toronto/program-0.html": {
+      "sha256": "65cccb9f9a082853c388a4a0512e898fbc84c45995989cdc4a97de3eaa3e0b24",
+      "bytes": 2192
+    },
+    "candidate/backend/app/corpus/pages/u-toronto/scholarship-0.html": {
+      "sha256": "0217710133442102786d1551fac19c094b02a5e5d12fd1e3855f580cfc6cc0c0",
+      "bytes": 1989
+    },
+    "candidate/backend/app/corpus/pages/u-toronto/scholarships.html": {
+      "sha256": "aeaff2442da686fc287ac05b8fdf647ad34e5b6cf91a837c68add6eb5d6c16f1",
+      "bytes": 1265
+    },
+    "candidate/backend/app/corpus/pages/u-vienna/admissions.html": {
+      "sha256": "c2126aa78493373ef7352deab3c47b8b34ba91947aeb2bd20266b3d83534b3be",
+      "bytes": 1464
+    },
+    "candidate/backend/app/corpus/pages/u-vienna/costs.html": {
+      "sha256": "c9035837710740a6511ace289dd313f82717209d3244afcdef42c48a8b3cade9",
+      "bytes": 1658
+    },
+    "candidate/backend/app/corpus/pages/u-vienna/program-0.html": {
+      "sha256": "1f4e06d0653f43ca7ebf721cb8947d4f4bbf5ed9e63be2fd213b63340c664a67",
+      "bytes": 2048
+    },
+    "candidate/backend/app/corpus/pages/uni-warsaw/admissions.html": {
+      "sha256": "d3fad20ac7e10eb2070b746d5fa0db27ee3ea60090943751e75d18de606ea8c7",
+      "bytes": 1459
+    },
+    "candidate/backend/app/corpus/pages/uni-warsaw/costs.html": {
+      "sha256": "ad36e1e8bcad4654fef7bc62e33dd978a39b1914fb8b4fb91c2da61ba25bcefe",
+      "bytes": 1754
+    },
+    "candidate/backend/app/corpus/pages/uni-warsaw/program-0.html": {
+      "sha256": "ca161cfa4605f1d8b61260bf07f5bc5ab5aeb8c68b332d92531652d15ea861ff",
+      "bytes": 2042
+    },
+    "candidate/backend/app/corpus/pages/uni-warsaw/scholarship-0.html": {
+      "sha256": "8e7a8798182d9204456b9fd33bef36c76067e6dfc22d1deabd703f62b30ee15d",
+      "bytes": 1814
+    },
+    "candidate/backend/app/corpus/pages/uni-warsaw/scholarships.html": {
+      "sha256": "da78003b87e57677fcc859926ae8efd26a73a26508c8dd8e9fb42f3975637c85",
+      "bytes": 1236
+    },
+    "candidate/backend/app/db.py": {
+      "sha256": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319",
+      "bytes": 5783
+    },
+    "candidate/backend/app/domain/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/domain/avatar.py": {
+      "sha256": "ea3b8d4e0bfdb55c3bf04b1cdfc13fbca7b6e04518adaa6e0980b5ed0717649a",
+      "bytes": 4662
+    },
+    "candidate/backend/app/domain/campus.py": {
+      "sha256": "5b305236af0fed72356bf0ee3c1a5c00530adb617f2ceab45d18a040f73d9aa6",
+      "bytes": 2052
+    },
+    "candidate/backend/app/domain/change_detection.py": {
+      "sha256": "58d315ccc6d5c8dc7e854b18c969c9b5db061132f3c353d386af15ab32281331",
+      "bytes": 6798
+    },
+    "candidate/backend/app/domain/citizenship.py": {
+      "sha256": "6f47b0252d839dddaa8715102b999de1a69e71575412c28ebe0f3f501a2b441b",
+      "bytes": 6836
+    },
+    "candidate/backend/app/domain/claim_scope.py": {
+      "sha256": "e29c2f751734396d2208a8c968588f8f561813017785cd1a58067a56d1f5753c",
+      "bytes": 8009
+    },
+    "candidate/backend/app/domain/claim_verifier.py": {
+      "sha256": "7c33bada893a2e3c98fbd68e67d84ff9e8bf587a04c13088dfc904fc3219f249",
+      "bytes": 19603
+    },
+    "candidate/backend/app/domain/conflicts.py": {
+      "sha256": "b1376f1f22a8be6132a2de4b99175776224f264a03e0e1403cc56b04ddba85e9",
+      "bytes": 12574
+    },
+    "candidate/backend/app/domain/costs.py": {
+      "sha256": "a1c8f2ec954616a55ff75d01cc1d4d55ed04b321f3fc55008dcf7cda1c8413f6",
+      "bytes": 12998
+    },
+    "candidate/backend/app/domain/currency.py": {
+      "sha256": "26eabaa1e447885c8062933f1a452a4bec9e2be3b7373edcce29c260e965cc5b",
+      "bytes": 3099
+    },
+    "candidate/backend/app/domain/dates.py": {
+      "sha256": "ee39d75c589a953dd62600dbdc0c7c1dc7925107df4c17bf00fd9adaa519563c",
+      "bytes": 2507
+    },
+    "candidate/backend/app/domain/dedupe.py": {
+      "sha256": "b4a986c899077e7975e994fa0bde2ca159cd50cdd77bc72bf50ec0e2f7acd226",
+      "bytes": 2194
+    },
+    "candidate/backend/app/domain/diagnostics.py": {
+      "sha256": "7258ced7c67e1eb1c5e3df972b01aa54654dead3b989ba3263f7921402c1d054",
+      "bytes": 2966
+    },
+    "candidate/backend/app/domain/eligibility.py": {
+      "sha256": "ec246fc2c2b6953c901d3ba1658e92f26a20d7dd678d3434d05cd72512bf0387",
+      "bytes": 30132
+    },
+    "candidate/backend/app/domain/entity_resolution.py": {
+      "sha256": "4fc92776aa952e88804bbe38a6b65562f0e3ff8be1fa8d47e050750b01b7dc78",
+      "bytes": 5434
+    },
+    "candidate/backend/app/domain/enums.py": {
+      "sha256": "a72d0935767d4b1cfe37c3c255674bfdaa23a368fb3b0ed21a8a782b7e18db42",
+      "bytes": 18085
+    },
+    "candidate/backend/app/domain/evidence_queries.py": {
+      "sha256": "be145e2aa769447607736745ac88a415437e2c4d6c370da52ebb29066588e9f5",
+      "bytes": 4643
+    },
+    "candidate/backend/app/domain/freshness.py": {
+      "sha256": "9a52efded06fa83fa5af0085f955a0636ccf3ea609872dde7326d8298db36f0f",
+      "bytes": 2864
+    },
+    "candidate/backend/app/domain/funding.py": {
+      "sha256": "9f89ab805b7dd8196e0c0fdd47fd0bdb64559701b2c706322367bcaa26086b86",
+      "bytes": 16586
+    },
+    "candidate/backend/app/domain/grades.py": {
+      "sha256": "17d8b6d28bb2a3e9a830464e19bc8a115a3d6acbf2e97b5ea3ce12fa18c0b39c",
+      "bytes": 4620
+    },
+    "candidate/backend/app/domain/priorities.py": {
+      "sha256": "9822780d042b25de1a6f99afef824214b3742c1491551322eb78c06c1cd8b9ad",
+      "bytes": 4828
+    },
+    "candidate/backend/app/domain/programme_identity.py": {
+      "sha256": "1bf66f59ccf19dd2b859ebcae5783e01c292591b4e84faa59e624a368b92bc99",
+      "bytes": 5947
+    },
+    "candidate/backend/app/domain/ranking_v2.py": {
+      "sha256": "c615f212b2c3ce80a7b721c8cd57f3e3dc7acd2333bb90bcd067ce95a0c42741",
+      "bytes": 21794
+    },
+    "candidate/backend/app/domain/scoring.py": {
+      "sha256": "59d732b8581778ed506ee9ed54b67c6f64a96b6bfd64ab6020a52295d1c2e42f",
+      "bytes": 18208
+    },
+    "candidate/backend/app/domain/site_identity.py": {
+      "sha256": "2a86ca15effc55fc736fba42a26df78d33c69533e282ab0e137993b9fa1c3986",
+      "bytes": 2407
+    },
+    "candidate/backend/app/domain/social.py": {
+      "sha256": "647cca319a8c21df7dfeec824d824ff1d20ef70c91507cc3941cd0cc136f633c",
+      "bytes": 2657
+    },
+    "candidate/backend/app/domain/transcript.py": {
+      "sha256": "1be999bbc5a14e056e28309c9b2bb72c2244b6b947c9e0883fb430f2838f1cb0",
+      "bytes": 4273
+    },
+    "candidate/backend/app/domain/validation.py": {
+      "sha256": "030bc103e421adb68779a4de669a004586e71ce124ccad7b4cd368bca54a1395",
+      "bytes": 7358
+    },
+    "candidate/backend/app/export/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/export/calendar.py": {
+      "sha256": "187e6e1d0ec4d1393f5409676e26803497918531bbaa07f4345b8dabc786353a",
+      "bytes": 6146
+    },
+    "candidate/backend/app/export/tabular.py": {
+      "sha256": "e6426225edcad8bc7d377555c5bd8b876a5db94b586db0037dc4299d063e04e2",
+      "bytes": 13479
+    },
+    "candidate/backend/app/jobs/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/jobs/payment_reconcile.py": {
+      "sha256": "c94f48983f372ddf46ca2a1a236e13d275803d076314a6ca8f89feda52a2171d",
+      "bytes": 2148
+    },
+    "candidate/backend/app/jobs/source_scanner.py": {
+      "sha256": "d368d40fac3c173c270ee6ba6b6646d8ec3882d77124f0927b1dd1b6f8d5a811",
+      "bytes": 26226
+    },
+    "candidate/backend/app/jobs/store.py": {
+      "sha256": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+      "bytes": 18143
+    },
+    "candidate/backend/app/jobs/worker.py": {
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "bytes": 21474
+    },
+    "candidate/backend/app/logging_setup.py": {
+      "sha256": "182089e6357076a3413ced9919a299738dfe0533d6dbf7137458006c276f7d69",
+      "bytes": 4666
+    },
+    "candidate/backend/app/mail.py": {
+      "sha256": "d1a4949b803248fce2f7d1cc51bf61d6df932fbe0724ec4f1dd61a667b9fe483",
+      "bytes": 3738
+    },
+    "candidate/backend/app/main.py": {
+      "sha256": "60402424cd30768bc6460ee96239555c6414d89768dfe30a19308182e1de39d9",
+      "bytes": 11671
+    },
+    "candidate/backend/app/metrics.py": {
+      "sha256": "14a41ed3c4f809a8ad9671a54cae336497325f5140597e6a627ee60086e0e2a0",
+      "bytes": 7359
+    },
+    "candidate/backend/app/models/__init__.py": {
+      "sha256": "4b6ebf91de426aa924abfe9fdcd940ab4be80fa1e99a5ff696354c775402061c",
+      "bytes": 2106
+    },
+    "candidate/backend/app/models/applicant.py": {
+      "sha256": "114a0c513a3805cc1777d7d466fc3572a1cb89ad018f0f0d146660aebc948976",
+      "bytes": 1770
+    },
+    "candidate/backend/app/models/auth.py": {
+      "sha256": "ab24284d515dbff52159818f32aa4d3b80863ab023b12cdc51bc2a9da9aa2004",
+      "bytes": 5294
+    },
+    "candidate/backend/app/models/base.py": {
+      "sha256": "dfab71868df728ce3dc74d01f9d547512eb8076795207e113425a1eb1b786b62",
+      "bytes": 1241
+    },
+    "candidate/backend/app/models/billing.py": {
+      "sha256": "1bd1ca85b7716420ebf63e085d61dcdf24ba8b4bb355a3abdab925e05ee54d8f",
+      "bytes": 5619
+    },
+    "candidate/backend/app/models/jobs.py": {
+      "sha256": "438fff6a82ddadd99ab956e43054f3e606f039bfc1bddf0f654ccd9edf151789",
+      "bytes": 3559
+    },
+    "candidate/backend/app/models/meta.py": {
+      "sha256": "24cb01439ce6f086239b3e5142d832fbe5224cece3dad35edbe745ff4bb1ef80",
+      "bytes": 663
+    },
+    "candidate/backend/app/models/research.py": {
+      "sha256": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+      "bytes": 11415
+    },
+    "candidate/backend/app/models/social.py": {
+      "sha256": "e03ebee55c884dc718900af6c6fb7f4342f867e00c3c156329f7786a907d9788",
+      "bytes": 17511
+    },
+    "candidate/backend/app/models/source_page.py": {
+      "sha256": "82c165045449cd8f4283800aca20b3c3fa5d9d7b3a252e26509dc549038b82de",
+      "bytes": 12089
+    },
+    "candidate/backend/app/models/subscription.py": {
+      "sha256": "f19af12b5f4ff3907cd86d06ad4064695c2949c8d217de38d847202d7c47cec4",
+      "bytes": 2110
+    },
+    "candidate/backend/app/models/university.py": {
+      "sha256": "51cc33b2b6af3e33145cbaba7a6dc0b48db7d28c2b04fd1450ce1771b0e98ea6",
+      "bytes": 1759
+    },
+    "candidate/backend/app/payments/__init__.py": {
+      "sha256": "d4f581a9f2ece910b714c1d9ad37eaf7b6aff16136bd5374c14fb08953b2aedb",
+      "bytes": 74
+    },
+    "candidate/backend/app/payments/apipay.py": {
+      "sha256": "ce6f1749f245ee795fdbf3720a39de7944093d1b51f9c8cde4fdfb5c0e2b8aa6",
+      "bytes": 6424
+    },
+    "candidate/backend/app/payments/entitlements.py": {
+      "sha256": "c866a0c548331d8fd7ae5487006dd29c03b89fbd0256183e703cb79bad21190f",
+      "bytes": 3506
+    },
+    "candidate/backend/app/payments/errors.py": {
+      "sha256": "01e0f4ebe119de3b7d2dae6edf1593641d77a45f5538cfc49d6715f46ff34755",
+      "bytes": 1987
+    },
+    "candidate/backend/app/payments/fake.py": {
+      "sha256": "af35ef8e978cdc90c2076fff1b6e282b167dad5bcb02906ceb6dcd6280944395",
+      "bytes": 5194
+    },
+    "candidate/backend/app/payments/http.py": {
+      "sha256": "81994d3e620d8484bd52a341d682fe9bb9c247d43d408a40f62a5179e7bec3cd",
+      "bytes": 1309
+    },
+    "candidate/backend/app/payments/provider.py": {
+      "sha256": "41e011def88def69f246444b0eb5be1e5561c8d45cc442acac6a28e6cfab9ef0",
+      "bytes": 2892
+    },
+    "candidate/backend/app/payments/service.py": {
+      "sha256": "c09b5897dc84be21294a3d1002c6dc6d2787a587400c4b1568864af17a73afbe",
+      "bytes": 7419
+    },
+    "candidate/backend/app/payments/subscriptions.py": {
+      "sha256": "f5c72df1c0ff5a61c3d4452f71d7aa8e5a21e4748e55fca563e2117b2befe799",
+      "bytes": 6295
+    },
+    "candidate/backend/app/pipeline/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/pipeline/control.py": {
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "bytes": 520
+    },
+    "candidate/backend/app/pipeline/read_budget.py": {
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+      "bytes": 4349
+    },
+    "candidate/backend/app/pipeline/runner.py": {
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "bytes": 97639
+    },
+    "candidate/backend/app/pipeline/state.py": {
+      "sha256": "ccf94b89dc44f3cbf136e6e77bb627411dda36489d214e91ac3a599446086a79",
+      "bytes": 4786
+    },
+    "candidate/backend/app/schemas/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "candidate/backend/app/schemas/claim.py": {
+      "sha256": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794",
+      "bytes": 5548
+    },
+    "candidate/backend/app/schemas/money.py": {
+      "sha256": "54a91d7827cd5ef786b9fcb9e1d6a3867d2edbc195484d631f3aad4e42a4bed8",
+      "bytes": 1311
+    },
+    "candidate/backend/app/schemas/profile.py": {
+      "sha256": "b15ba3a8b4ee3519cee207caf2eb8504f22e1cb4b1039436ba4ce792850beff1",
+      "bytes": 14848
+    },
+    "candidate/backend/app/schemas/result.py": {
+      "sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+      "bytes": 16222
+    },
+    "candidate/backend/app/schemas/social.py": {
+      "sha256": "800d17f500164159fa5ac187cb0c5573666fac753cb9b382355e6e626d400da2",
+      "bytes": 5605
+    },
+    "candidate/backend/app/security.py": {
+      "sha256": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816",
+      "bytes": 8723
+    },
+    "candidate/backend/migrations/env.py": {
+      "sha256": "4c18ead0737f65c637fd0c515830c1ec870472835613ad71efc7de35b2083995",
+      "bytes": 2183
+    },
+    "candidate/backend/migrations/script.py.mako": {
+      "sha256": "304a8bfb6a804e5493f5300e79882c70c9f5bb2e87512f4d16f0e097dddd323f",
+      "bytes": 635
+    },
+    "candidate/backend/migrations/versions/a1f3c8d75e29_source_snapshots.py": {
+      "sha256": "b5169b154ca11f6a82a3bca27bc822f5eee6dab2418cb3eb8cc90b1b8f664552",
+      "bytes": 2400
+    },
+    "candidate/backend/migrations/versions/a4d1c7e58b92_result_bucket.py": {
+      "sha256": "f282e7e4817ded53b71884c07e84d4d28dafe8393574c7b33a87d965c7255171",
+      "bytes": 1043
+    },
+    "candidate/backend/migrations/versions/a4d61c8e73b2_moderation.py": {
+      "sha256": "e1bba93d0aa6cee7ed3fdd2c5bc4dd692254fbb995bdb31bf4fc181503338231",
+      "bytes": 3819
+    },
+    "candidate/backend/migrations/versions/a7c4e1f80b52_auth_flows.py": {
+      "sha256": "03885d611552459717b61b3ec2a351f9f0eaef05f1c5ad033a4b0cc5ef7612ec",
+      "bytes": 2529
+    },
+    "candidate/backend/migrations/versions/b4e8a1c2f6d9_source_pages.py": {
+      "sha256": "77f4a102c635069b50d8d781fb6fa291bbc4356ce21e96908b01e8b6a5eee1a4",
+      "bytes": 2932
+    },
+    "candidate/backend/migrations/versions/b8d2f6c103ae_run_unknowns.py": {
+      "sha256": "87af7fbf7f22eb66c027e7fdde093b62b3c1a888236a8a62c9b9ac08327c5c88",
+      "bytes": 916
+    },
+    "candidate/backend/migrations/versions/bb9a7d0ed5c3_initial_schema.py": {
+      "sha256": "0d719d0d621099320d93fa68680d8d02cda4a9574c88c805c92399b862cbdae6",
+      "bytes": 13637
+    },
+    "candidate/backend/migrations/versions/c3a1f4e9b2d7_auth_tenancy.py": {
+      "sha256": "e773aa3f79ccd7a0a911b872b9d8ea63b61a8cba3acb82e9f91030ba39f5c36f",
+      "bytes": 7038
+    },
+    "candidate/backend/migrations/versions/c5d01b7e4f83_claim_supersession_lineage.py": {
+      "sha256": "1a7d150278ee0002f0e85106146261cb90b8977a97c7e3ade9eb6af4e2f6be0b",
+      "bytes": 1633
+    },
+    "candidate/backend/migrations/versions/c8f3b0d47a19_avatars.py": {
+      "sha256": "0a8a0dcb30c2587a416d99d702641300c3c5419cf3126884399b4a88ed703e33",
+      "bytes": 1839
+    },
+    "candidate/backend/migrations/versions/c9e05a71f4d8_jsonb_on_postgres.py": {
+      "sha256": "6008543717b2fdad36208d7fb7b2557903f028a4754b0be2ab7247f2a6ab5456",
+      "bytes": 1889
+    },
+    "candidate/backend/migrations/versions/d4b2c8f17a90_billing.py": {
+      "sha256": "27eea4f32888ce2dc51828aeabf71110d998fb3e98f66f6d9e359a8181d3cb9e",
+      "bytes": 5477
+    },
+    "candidate/backend/migrations/versions/d8e412c6a901_university_catalogue.py": {
+      "sha256": "7dd9e92fbb42fbdb3320490fe6747be011bb6e31ec72dadd1100af04815e262f",
+      "bytes": 2366
+    },
+    "candidate/backend/migrations/versions/d9c4e7a21b83_claims_source_page_and_recheck_generation.py": {
+      "sha256": "dcc1ccffa717df85dbade001de5b3db3c276d40607c9f4f658a6b5ba7cb8b432",
+      "bytes": 2277
+    },
+    "candidate/backend/migrations/versions/e2f7a41c9b83_run_client_request_key.py": {
+      "sha256": "6c64e1a9a21454fe9446cbf1dd12e063b7dc020bd906463bc4e8965d126fa943",
+      "bytes": 1291
+    },
+    "candidate/backend/migrations/versions/e7c1a4d90b52_subscriptions.py": {
+      "sha256": "0189abfc119ae3e9783c1e1197d55ebb1718427ebf0f6b1f4ec4c0997672a017",
+      "bytes": 2374
+    },
+    "candidate/backend/migrations/versions/e7c4a91b6f20_social_module.py": {
+      "sha256": "8d678cfe28105060e36aaa3d7f40edb2e5c9516dd097506a69a651addc39c415",
+      "bytes": 6799
+    },
+    "candidate/backend/migrations/versions/f13b9c5d2a44_run_next_recheck.py": {
+      "sha256": "19f326685bd389c141f2e677483190ea755d2019c1758dde16607f60037d368f",
+      "bytes": 1044
+    },
+    "candidate/backend/migrations/versions/f2a8c17d9e04_direct_messages.py": {
+      "sha256": "f03e1ca2c76c9f929e2e136d88cd20092a11d36feaaa14b01967068abc571086",
+      "bytes": 4427
+    },
+    "candidate/backend/seed_demo.py": {
+      "sha256": "508a12c92a6e8ca6df1e77e5bd3593cb0b48b3dfe33bf6fd28e2e46ed4c190f9",
+      "bytes": 4061
+    },
+    "candidate-app-pins.json": {
+      "sha256": "b4ef4c7cc470231164a4b47bef12070e5248077cc7e4c4e53c0d9b1c484ed73e",
+      "bytes": 27487
+    },
+    "candidate-freeze.json": {
+      "sha256": "ad4b4f352263294b4dd707bbded1d4418ee57f7b177163715ed0287a8cde19f9",
+      "bytes": 816
+    },
+    "candidate-source-pins.json": {
+      "sha256": "1f2a7478c1fa86175745d8a63e50ad4a5f92ad9783add280793af5ec8aadd9d8",
+      "bytes": 30418
+    },
+    "commands.original.json": {
+      "sha256": "44d589da07ba5320fb0ae1e31a07dd1ce6c6c8607ca1750e9ea92a279d05509f",
+      "bytes": 2607
+    },
+    "copy-preflight.initial-error.json": {
+      "sha256": "a03c87bf110baaba9e72c8efd9aedda6c4cf52639ad1d5e0f268f774af6d6a67",
+      "bytes": 341
+    },
+    "execute_seed.py": {
+      "sha256": "b1d151651b104fe68ce3d6fc1343d79ff14a0b6355a70935738fe0ce0d6a88d5",
+      "bytes": 2263
+    },
+    "guarded_child.py": {
+      "sha256": "9090b0bb156cca399a25f73e91241b8f96f84e32b25c3d45fb69e1c08bfbbfd5",
+      "bytes": 4509
+    },
+    "heads.execution.json": {
+      "sha256": "da7da29f80372afa70997e9959689840ede73158ee25143acd458c9b515061dc",
+      "bytes": 603
+    },
+    "heads.raw.log": {
+      "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+      "bytes": 20
+    },
+    "inspect.execution.json": {
+      "sha256": "80e067b6ac974ea2fa9cdb9e832e386e9621da6b0bf90c5391868d2c0bb0c93f",
+      "bytes": 605
+    },
+    "inspect.raw.log": {
+      "sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709",
+      "bytes": 550
+    },
+    "inspection.original.json": {
+      "sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709",
+      "bytes": 550
+    },
+    "migrate.execution.json": {
+      "sha256": "1058d7667724ad6820c34f9536ac630721849ec7b5cae9a6abe9d184bcc26ac1",
+      "bytes": 605
+    },
+    "migrate.raw.log": {
+      "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+      "bytes": 2642
+    },
+    "primary-base-pins.json": {
+      "sha256": "12eede3fceb0c7134c31de0026e3f9fe03105efa0b43f625b24e99fe81cd73a1",
+      "bytes": 30418
+    },
+    "receipt.json": {
+      "sha256": "231f5c2bf979f05f626393185de9b190dcecafe8a49ffbcc4772bd6b685a3b13",
+      "bytes": 2436
+    },
+    "seed.execution.json": {
+      "sha256": "fcea1683b374155b0080338d765589f4443e1e7d29cd243a5ade57b03a5331bf",
+      "bytes": 602
+    },
+    "seed.raw.log": {
+      "sha256": "c666b76bb566673629626c3f31d54ffc0478200044708948e78923b4a22ebe88",
+      "bytes": 2569
+    }
+  },
+  "selected_files": 286,
+  "selected_bytes": 2894906,
+  "receipt_sha256": "231f5c2bf979f05f626393185de9b190dcecafe8a49ffbcc4772bd6b685a3b13",
+  "excluded": [
+    "owned runtime SQLite/cache/export",
+    "pyc/env"
+  ],
+  "final_primary_binding_pending": true
+}

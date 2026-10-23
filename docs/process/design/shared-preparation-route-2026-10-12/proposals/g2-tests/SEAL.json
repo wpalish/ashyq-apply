@@ -1,0 +1,230 @@
+{
+  "schema_version": "external-test-proposal-seal-v1",
+  "at_utc": "2026-10-12T02:00:23.572Z",
+  "status": "SEALED_SOURCE_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "stage": "G2_NATIVE_API_AND_PHYSICAL_WRITE_FENCE_CONTROLS",
+  "root_checkout": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "root_reported_head_at_source_review": "f3efd228",
+  "head_independently_git_verified": false,
+  "application_allowlist": [
+    "backend/tests/test_shared_route_api.py",
+    "backend/tests/test_preparation_write_concurrency.py"
+  ],
+  "application_preimages": {
+    "backend/tests/test_shared_route_api.py": {
+      "state": "ABSENT",
+      "live_read_only_absence_check": true,
+      "write_ahead": "G2_PERSISTENCE_SOURCE_WRITE_AHEAD.json"
+    },
+    "backend/tests/test_preparation_write_concurrency.py": {
+      "state": "ABSENT",
+      "live_read_only_absence_check": true,
+      "write_ahead": "G2_PERSISTENCE_SOURCE_WRITE_AHEAD.json"
+    }
+  },
+  "proposed_source_pins": {
+    "backend/tests/test_shared_route_api.py": {
+      "sha256": "dadff091663ff0e27a386667efc2499e845ebdf51caadfc9db819fff3d0aacd7",
+      "external_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-tests/files/backend/tests/test_shared_route_api.py"
+    },
+    "backend/tests/test_preparation_write_concurrency.py": {
+      "sha256": "f6a10320113a7bfe30dfea42fd70c8d229f8da0463cd349edc66bf481167ab25",
+      "external_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-tests/files/backend/tests/test_preparation_write_concurrency.py"
+    }
+  },
+  "package_members": {
+    "README.md": {
+      "sha256": "da47681d816ea9648ce9e0c30e313ef916766f2e7420eb9d223da98fef8cb5b1"
+    },
+    "files/backend/tests/test_shared_route_api.py": {
+      "sha256": "dadff091663ff0e27a386667efc2499e845ebdf51caadfc9db819fff3d0aacd7"
+    },
+    "files/backend/tests/test_preparation_write_concurrency.py": {
+      "sha256": "f6a10320113a7bfe30dfea42fd70c8d229f8da0463cd349edc66bf481167ab25"
+    }
+  },
+  "inspected_source_design_pins": [
+    {
+      "kind": "native",
+      "path": "AGENTS.md",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/AGENTS.md",
+      "sha256": "a28ea0f3c275f54e431169082e27aec5f156d048d30ad617c8a21d0021cc2f69"
+    },
+    {
+      "kind": "native",
+      "path": "backend/ruff.toml",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/ruff.toml",
+      "sha256": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc"
+    },
+    {
+      "kind": "native",
+      "path": "backend/tests/conftest.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/conftest.py",
+      "sha256": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6"
+    },
+    {
+      "kind": "native",
+      "path": "backend/tests/test_preparation_api.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_preparation_api.py",
+      "sha256": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437"
+    },
+    {
+      "kind": "native",
+      "path": "backend/tests/test_preparation_graph_api.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_preparation_graph_api.py",
+      "sha256": "61d52735b742a9a527e78331965a19a2a7f55d7ab76db947c2e380e77afd7987"
+    },
+    {
+      "kind": "native",
+      "path": "backend/tests/test_study_schedule_api.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_study_schedule_api.py",
+      "sha256": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194"
+    },
+    {
+      "kind": "native",
+      "path": "backend/tests/test_learning_schedule_api.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_learning_schedule_api.py",
+      "sha256": "57261dcbf27f483dcf90616d9b646cbbd1997c4aa2709e599ba6d167a258f1f1"
+    },
+    {
+      "kind": "native",
+      "path": "backend/app/db.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/db.py",
+      "sha256": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319"
+    },
+    {
+      "kind": "native",
+      "path": "backend/app/security.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/security.py",
+      "sha256": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816"
+    },
+    {
+      "kind": "native",
+      "path": "backend/app/models/auth.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/auth.py",
+      "sha256": "ab24284d515dbff52159818f32aa4d3b80863ab023b12cdc51bc2a9da9aa2004"
+    },
+    {
+      "kind": "native",
+      "path": "backend/app/models/study_schedule.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/study_schedule.py",
+      "sha256": "087ccef37010f3eeddce5329856832de1d4aeea796cba48a52e439cf0ca03626"
+    },
+    {
+      "kind": "native",
+      "path": "backend/app/api/routes_preparation.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_preparation.py",
+      "sha256": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2"
+    },
+    {
+      "kind": "native",
+      "path": "backend/app/api/routes_profile.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_profile.py",
+      "sha256": "9bf31ed16a78383b54cc526ebb77d670a8715616e75cf405aaa5bd6c3fe34b84"
+    },
+    {
+      "kind": "native",
+      "path": "backend/app/api/routes_account.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_account.py",
+      "sha256": "969bed563403140e81eb6f675f1b1302fc63e6a8e8a19b5f009ff21d3d322a7d"
+    },
+    {
+      "kind": "design",
+      "path": "ROOT_G2_PERSISTENCE_INTEGRATION_DECISIONS.md",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G2_PERSISTENCE_INTEGRATION_DECISIONS.md",
+      "sha256": "c664a4c0db76e23b56091cf0cb435b5ed657749eb3f1b31df9526eca668c4465"
+    },
+    {
+      "kind": "design",
+      "path": "G2_PERSISTENCE_SOURCE_WRITE_AHEAD.json",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G2_PERSISTENCE_SOURCE_WRITE_AHEAD.json",
+      "sha256": "5e16b0a03da60d638a6d043a0d24bd26ed543051101a9d5b48468522288e65e7"
+    },
+    {
+      "kind": "design",
+      "path": "proposals/g2-design/SHARED_ROUTE_PERSISTENCE_SPEC_V2.md",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/SHARED_ROUTE_PERSISTENCE_SPEC_V2.md",
+      "sha256": "27bc906301708c604c723e1a1d2fdb6ae79f454750871b4d6f82a98cd4728de3"
+    },
+    {
+      "kind": "design",
+      "path": "proposals/g2-design/TYPED_CONTRACT_DESIGN_V2.md",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/TYPED_CONTRACT_DESIGN_V2.md",
+      "sha256": "3916138d910830dfb0b484f2a562a488889798985f11ac2abdb2ffcd7282f37c"
+    },
+    {
+      "kind": "design",
+      "path": "proposals/g2-design/G2_DELETE_COORDINATION_DESIGN_V2.md",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/G2_DELETE_COORDINATION_DESIGN_V2.md",
+      "sha256": "23b43feb144033ce0c7dc83e28012cbd5954a38784c7009648b50beef8b9874b"
+    },
+    {
+      "kind": "design",
+      "path": "proposals/g2-design/G2_LEGACY_CAS_TRANSACTION_DESIGN.md",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/G2_LEGACY_CAS_TRANSACTION_DESIGN.md",
+      "sha256": "0fac39aa833050cba9819c4531707acb84eaf89577e61434d2d9995beab48f4f"
+    },
+    {
+      "kind": "design",
+      "path": "proposals/g2-design/G2_EVIDENCE_REVIEW_ADAPTER_DESIGN.md",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/G2_EVIDENCE_REVIEW_ADAPTER_DESIGN.md",
+      "sha256": "9cb523b4a1ab2c8cc855a31acf42db6280e7084e9cdcf32867319172feac8cb6"
+    },
+    {
+      "kind": "draft_backend",
+      "path": "proposals/g2-persistence/files/backend/app/api/routes_shared_route.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-persistence/files/backend/app/api/routes_shared_route.py",
+      "sha256": "e59abe2dd3d51736f9d8a52d3272ba6921ba44e97c7e4a435e5020eaba707635"
+    },
+    {
+      "kind": "draft_backend",
+      "path": "proposals/g2-persistence/files/backend/app/api/preparation_transactions.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-persistence/files/backend/app/api/preparation_transactions.py",
+      "sha256": "adaceee999ae5631e5bd72a26fea1e7d0531244102057058a56340204b881336"
+    },
+    {
+      "kind": "draft_backend",
+      "path": "proposals/g2-persistence/files/backend/app/schemas/shared_route.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-persistence/files/backend/app/schemas/shared_route.py",
+      "sha256": "9ba24abedbaef90d40fef03097176f9f6de9f803e6c895debf57ce3b5525cb1a"
+    },
+    {
+      "kind": "draft_backend",
+      "path": "proposals/g2-persistence/files/backend/app/models/shared_route.py",
+      "absolute_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-persistence/files/backend/app/models/shared_route.py",
+      "sha256": "82297c216c3ff6a2c07588607725be8379bd76587bbe37ec62f676024db9519f"
+    }
+  ],
+  "backend_seal": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-persistence/SEAL.json",
+    "sha256": "69d294842d5af3da3c5ee394307e061ec8f9a3a28e0ffd4db71880354a6a15da",
+    "all_four_inspected_schema_api_helper_model_pins_match": true,
+    "migration_and_parent_wiring_final_integration_owned_by_root": true
+  },
+  "validation_boundary": {
+    "application_imported": false,
+    "tests_collected": false,
+    "tests_executed": false,
+    "formatter_or_ruff_or_mypy_executed": false,
+    "migration_executed": false,
+    "runtime_started": false,
+    "application_source_or_git_or_handoff_edited": false,
+    "network_or_provider_or_llm_calls": false,
+    "closed_labels_or_real_auth_data_read": false,
+    "stopped_collector_resumed": false,
+    "manual_source_read_only_review": true,
+    "physical_two_database_proof": false,
+    "new_api_full_gate_pass": false,
+    "full_product_or_admission_ready": false
+  },
+  "future_runtime_evidence_required": [
+    "Source-bound static/format/mypy and native full gate after root integration",
+    "Physical driver distinction plus actual PG blocking-pids/ungranted-lock or SQLite driver-trace + SQLITE_BUSY evidence",
+    "Qualified PG execution: inherited pgserver skip means NOT_QUALIFIED",
+    "Raw first failure and source-before/after receipts; sealed originals stay immutable",
+    "Native current/history/UUID/failure/erase/export outcomes and complete unchanged synthetic state",
+    "Root approved binding only; no additional fixture/network/helper/provider exceptions"
+  ],
+  "source_write_authority": "Root only; external source proposals remain immutable until separately reviewed/applied",
+  "readme": "README.md"
+}

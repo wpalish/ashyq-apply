@@ -1,0 +1,374 @@
+{
+  "schema_version": "independent-source-review-seal-v1",
+  "created_at_utc": "2026-10-12T14:51:53Z",
+  "status": "SOURCE_QUALIFIED_FOR_ROOT_STATIC3_AND_FOCUS_NOT_RUN",
+  "scope": "Finite native type18 repair; final context2 combined diffs against exact primary originals",
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_TYPE_REPAIR_REVIEW.md",
+    "sha256": "c34057021494c8a504d3cc3aa059daa66a79b8a3fed61b549f7aba0ebb618094"
+  },
+  "reviewed_packets": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-type-repair1",
+      "seal_name": "SEALED_PROPOSAL.json",
+      "seal_sha256": "851a1dbce1b335d97f6e90e915a040bfcfc74d7673f265215ac4e8b0f5250656",
+      "verified_hash_and_size_count": 19,
+      "verified_members": {
+        ".ruff_cache/.gitignore": {
+          "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316",
+          "size_bytes": 35
+        },
+        ".ruff_cache/0.9.6/10534200269874772875": {
+          "sha256": "8435396ef240a4c82fac919b16c69648dad68020acf427644bfb453dbbbad774",
+          "size_bytes": 241
+        },
+        ".ruff_cache/0.9.6/10575505344995189327": {
+          "sha256": "9a5cd2a564fd37a2aa5e87efbb35ca889c6ac26f0c259ae042b351897fcfdd8a",
+          "size_bytes": 241
+        },
+        ".ruff_cache/0.9.6/11731384634163648847": {
+          "sha256": "e0598f9de51b2af376fbca4dd01a1ce0616bf9bac6bb182f6921a706f0ef2ccd",
+          "size_bytes": 224
+        },
+        ".ruff_cache/0.9.6/13992956174736620273": {
+          "sha256": "d93c72510f57038888760f09e2c4ad267e1272789e7c4b0e480bbe6567f68e8a",
+          "size_bytes": 242
+        },
+        ".ruff_cache/0.9.6/4153832062169671432": {
+          "sha256": "f40ca5936f3199722e6ba8e8a6054f17de2a4d755ddb166b95b17bc69b1ddfec",
+          "size_bytes": 224
+        },
+        ".ruff_cache/0.9.6/5767784963783333320": {
+          "sha256": "8ba9c38a4ca9a5fb8d14f86dea50b74dad9e99cca7ed5dd38f08b860713bd800",
+          "size_bytes": 225
+        },
+        ".ruff_cache/CACHEDIR.TAG": {
+          "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae",
+          "size_bytes": 43
+        },
+        "PREIMAGES.json": {
+          "sha256": "f3f2db87ed3ce226c6557719519612c3fc1fbaa277776aea2e4f67d308b3ffea",
+          "size_bytes": 346
+        },
+        "README.md": {
+          "sha256": "044bc5a0c21c0ff1e1cf6f153abe2abcc0632fe088f7acf66906482b5e4d5885",
+          "size_bytes": 752
+        },
+        "diffs/backend/app/domain/admissions_actions.py.diff": {
+          "sha256": "7906373577659c0e55e9dbd89091282a2ef39d0c4307dbcc0e6def921324a1e0",
+          "size_bytes": 26496
+        },
+        "diffs/backend/app/schemas/admissions_actions.py.diff": {
+          "sha256": "8233e43d2053e3666df7c6515f5c568c87d972b24a3102a6db4c7968aeb0fde8",
+          "size_bytes": 28572
+        },
+        "diffs/backend/tests/test_admissions_actions.py.diff": {
+          "sha256": "8076749897bbe0a9beaaf8c1ee700a9157167151e481f52e24e7abf029e61d8f",
+          "size_bytes": 39086
+        },
+        "files/backend/app/domain/admissions_actions.py": {
+          "sha256": "9c0951e5961c3b856198937e4e445aeb7cca73a8eef05769c19973f4809f2692",
+          "size_bytes": 58445
+        },
+        "files/backend/app/schemas/admissions_actions.py": {
+          "sha256": "90c041d7557dfe62fab5558152d1aa47cb1ecbfdad98c404d8000942388fa673",
+          "size_bytes": 60104
+        },
+        "files/backend/tests/test_admissions_actions.py": {
+          "sha256": "1349bfc3f6c34115deb46a0aff62f119c6e889448e4af3410b5920a9640561b1",
+          "size_bytes": 74222
+        },
+        "original/backend/app/domain/admissions_actions.py": {
+          "sha256": "e3d0c99b72a67b82c694596c7904bab0ae42122aafc6138abb668159f9c0c64a",
+          "size_bytes": 56808
+        },
+        "original/backend/app/schemas/admissions_actions.py": {
+          "sha256": "9f516e35f9b5486960c7dcdef720b2794d58f5bc18c8cb9d3f15ab6a158d477d",
+          "size_bytes": 58231
+        },
+        "original/backend/tests/test_admissions_actions.py": {
+          "sha256": "0c6ff0e8c4c6179e801c98c6923a21bf1ab31357dd26f37a7137b2be1e2c9cae",
+          "size_bytes": 71616
+        }
+      }
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-type-context2",
+      "seal_name": "SEALED_PROPOSAL.json",
+      "seal_sha256": "5472f83b6ad4a59f3a142e6a93eed51fab8276e36af9048d91855abade9551cc",
+      "verified_hash_and_size_count": 15,
+      "verified_members": {
+        ".ruff_cache/.gitignore": {
+          "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316",
+          "size_bytes": 35
+        },
+        ".ruff_cache/0.9.6/14254352206210844338": {
+          "sha256": "866ca98e5d4125ddf06d23a449b6263f2b4ed26c95289c65651f16a01596dfca",
+          "size_bytes": 225
+        },
+        ".ruff_cache/0.9.6/16820236097638437354": {
+          "sha256": "906d358abd900b95db7afdbc0217eb84ea52895909fad155ac358d61fd779202",
+          "size_bytes": 226
+        },
+        ".ruff_cache/0.9.6/9369518245742792390": {
+          "sha256": "0eafd792a34e8d97627e305231070c8074c03b64e521ae2321fa4128d2483758",
+          "size_bytes": 225
+        },
+        ".ruff_cache/CACHEDIR.TAG": {
+          "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae",
+          "size_bytes": 43
+        },
+        "README.md": {
+          "sha256": "b6894328fbb680878d3305d7004b3944f2e0958af55961c6dff1339162d3016a",
+          "size_bytes": 208
+        },
+        "combined-diffs/backend/app/domain/admissions_actions.py.diff": {
+          "sha256": "979db6d0c03b6390dc03e7fac386baca9b5ff2406d02acba6d3bec07b386bae2",
+          "size_bytes": 6055
+        },
+        "combined-diffs/backend/app/schemas/admissions_actions.py.diff": {
+          "sha256": "d2bf654a4f614a82e24b6eb03b2fb1ba685b227d64bdc99605dc95a51fea81e8",
+          "size_bytes": 9658
+        },
+        "combined-diffs/backend/tests/test_admissions_actions.py.diff": {
+          "sha256": "ecd92b49dc6af391c2aeb94497427b3c9b4258fd683a6ec6013c838ed136aa3c",
+          "size_bytes": 18605
+        },
+        "files/backend/app/domain/admissions_actions.py": {
+          "sha256": "7c8f29ca50ac71ab33cae402b879e7bcacc4396508e0bb811bcacd1937a77ec0",
+          "size_bytes": 57431
+        },
+        "files/backend/app/schemas/admissions_actions.py": {
+          "sha256": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+          "size_bytes": 59070
+        },
+        "files/backend/tests/test_admissions_actions.py": {
+          "sha256": "43603f435a86b89808d7fc5d9811f215f5e17d1d1cc9e0e533bfca72459de724",
+          "size_bytes": 73126
+        },
+        "original/backend/app/domain/admissions_actions.py": {
+          "sha256": "9c0951e5961c3b856198937e4e445aeb7cca73a8eef05769c19973f4809f2692",
+          "size_bytes": 58445
+        },
+        "original/backend/app/schemas/admissions_actions.py": {
+          "sha256": "90c041d7557dfe62fab5558152d1aa47cb1ecbfdad98c404d8000942388fa673",
+          "size_bytes": 60104
+        },
+        "original/backend/tests/test_admissions_actions.py": {
+          "sha256": "1349bfc3f6c34115deb46a0aff62f119c6e889448e4af3410b5920a9640561b1",
+          "size_bytes": 74222
+        }
+      }
+    }
+  ],
+  "primary_preimages": {
+    "backend/app/schemas/admissions_actions.py": "9f516e35f9b5486960c7dcdef720b2794d58f5bc18c8cb9d3f15ab6a158d477d",
+    "backend/app/domain/admissions_actions.py": "e3d0c99b72a67b82c694596c7904bab0ae42122aafc6138abb668159f9c0c64a",
+    "backend/tests/test_admissions_actions.py": "0c6ff0e8c4c6179e801c98c6923a21bf1ab31357dd26f37a7137b2be1e2c9cae"
+  },
+  "final_context2_postimages": {
+    "backend/app/schemas/admissions_actions.py": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+    "backend/app/domain/admissions_actions.py": "7c8f29ca50ac71ab33cae402b879e7bcacc4396508e0bb811bcacd1937a77ec0",
+    "backend/tests/test_admissions_actions.py": "43603f435a86b89808d7fc5d9811f215f5e17d1d1cc9e0e533bfca72459de724"
+  },
+  "independently_verified_combined_diff_reconstructions": [
+    {
+      "path": "backend/app/schemas/admissions_actions.py",
+      "hunks": 17,
+      "combined_diff_reconstructs_exact_final": true
+    },
+    {
+      "path": "backend/app/domain/admissions_actions.py",
+      "hunks": 10,
+      "combined_diff_reconstructs_exact_final": true
+    },
+    {
+      "path": "backend/tests/test_admissions_actions.py",
+      "hunks": 36,
+      "combined_diff_reconstructs_exact_final": true
+    }
+  ],
+  "independent_source_AST_observation": {
+    "changed_definition_names": {
+      "backend/app/domain/admissions_actions.py": [
+        "project_today"
+      ],
+      "backend/app/schemas/admissions_actions.py": [
+        "finite_wire",
+        "_utc",
+        "RawDocumentChecklist",
+        "CaseActionsStateV1",
+        "_learning_ref",
+        "validate_receipt_delta"
+      ],
+      "backend/tests/test_admissions_actions.py": [
+        "head",
+        "study"
+      ]
+    },
+    "interpreter": "3.12.13",
+    "method": "stdlib AST parse/dump only; no app import/execution",
+    "native_checklist_data_field_count": 13,
+    "native_checklist_field_names": [
+      "result_id",
+      "university",
+      "program",
+      "admission_documents",
+      "scholarship_documents",
+      "applicant_actions",
+      "school_actions",
+      "recommender_actions",
+      "certification_actions",
+      "ordered_steps",
+      "unresolved",
+      "generated_at",
+      "completeness"
+    ],
+    "native_fields_defaults_exact_with_only_RawDocumentItem_annotation_substitution": true,
+    "ordered_test_functions_unchanged": [
+      "test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance",
+      "test_closed_client_request_does_not_coerce_or_accept_server_fields",
+      "test_native_uppercase_uuid_is_the_same_canonical_intent_digest_and_original_replay",
+      "test_entered_dates_are_literal_valid_calendar_dates",
+      "test_confirmation_is_literal_boolean_true",
+      "test_event_ref_has_exact_three_fields_and_no_receipt_hash_cycle",
+      "test_full_actor_ids_not_display_prefixes_define_actor_reference",
+      "test_replay_keeps_original_actor_and_ack_independent_of_mutable_source_context",
+      "test_existing_personal_updates_require_no_target_source_plan_or_entitlement_observation",
+      "test_creation_scholarship_requires_exact_own_award_after_source_guard",
+      "test_target_intake_route_award_are_immutable_in_every_closed_personal_command",
+      "test_submission_is_applicant_declaration_and_mentioned_tasks_are_not_mutated",
+      "test_withdrawal_retains_submission_history_and_correction_requires_exact_loaded_own_receipt",
+      "test_a_prior_own_planning_correction_can_itself_be_corrected_without_rewriting_history",
+      "test_correction_distinguishes_a_wrong_own_application_from_missing_or_foreign_receipts",
+      "test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors",
+      "test_rebind_keeps_durable_id_and_original_report_with_separate_previous_binding_annotation",
+      "test_unbound_report_is_not_transferred_when_first_binding_is_explicitly_added",
+      "test_explicit_import_is_all_or_nothing_exact_snapshot_and_does_not_clear_native_marks",
+      "test_current_head_and_affected_roles_cannot_be_satisfied_by_merely_mentioned_record",
+      "test_rehashed_outer_state_does_not_replace_authoritative_head_delta",
+      "test_complete_export_detects_missing_current_and_interleaving_new_head",
+      "test_caps_are_current_records_and_distinct_source_union_not_history_size",
+      "test_four_hundred_task_cap_and_fifty_explicit_mapping_cap_are_literal",
+      "test_at_cap_metadata_reads_use_at_most_nine_batches_of_two_hundred_exact_ids",
+      "test_six_ordered_lists_duplicate_indices_and_native_scope_omission_are_proof_identity",
+      "test_present_raw_url_bytes_change_proof_not_semantics_and_never_enter_binding_ack",
+      "test_original_claim_order_scope_and_procedure_are_independent_identity_axes",
+      "test_real_native_cross_list_projection_must_cover_all_original_occurrences",
+      "test_same_list_duplicate_native_nodes_do_not_guess_numeric_occurrence_by_name_or_hash",
+      "test_actual_native_proof_change_is_hashed_without_copying_source_body_or_claiming_current_validity",
+      "test_scholarship_purpose_does_not_establish_named_award_document_validity",
+      "test_personal_planning_status_and_document_details_have_only_their_own_mutation_refs",
+      "test_closed_action_link_output_rejects_tampered_token_href_even_when_other_fields_match",
+      "test_lexical_public_actions_are_only_unverified_informational_links",
+      "test_blocked_links_emit_no_raw_literal_or_clickable_fallback",
+      "test_embedded_token_literals_affect_original_proof_but_never_action_href_or_ack",
+      "test_locked_link_and_source_envelope_expose_no_new_presence_hash_or_reason",
+      "test_selector_uses_exact_native_observed_head_and_replay_is_original_after_advance",
+      "test_derived_origin_uses_recorded_presence_and_never_corruption_fallback",
+      "test_today_preserves_one_accepted_slot_order_and_unknown_document_workload",
+      "test_today_selected_plan_failure_preserves_personal_actions_and_unknown_workload",
+      "test_today_expiry_blocks_new_lesson_but_keeps_exact_own_review_target_readable",
+      "test_today_one_recheck_withholds_mixed_actions_and_revoked_source_details",
+      "test_today_separate_twenty_source_and_twenty_native_goal_sets_allow_forty_union",
+      "test_date_only_due_and_dst_day_use_explicit_zones_without_official_urgency",
+      "test_unreadable_g3_today_is_unavailable_not_revision_zero_or_legacy_fallback",
+      "test_personal_creation_rehashed_receipt_cannot_inject_an_earlier_reviewed_source_binding",
+      "test_today_combined_personal_record_ids_are_stable_across_entity_types",
+      "test_today_future_preserves_study_before_stable_personal_actions_on_equal_dates"
+    ],
+    "raw_checklist_config_AST_unchanged": true,
+    "raw_document_item_AST_unchanged": true,
+    "test_count": 50,
+    "test_function_AST_digests": {
+      "test_a_prior_own_planning_correction_can_itself_be_corrected_without_rewriting_history": "1dff92a5b343e2c78afa563003240a10fa1310bcb2f8c016e7c5846e59e87952",
+      "test_actual_native_proof_change_is_hashed_without_copying_source_body_or_claiming_current_validity": "322ab828397be3d867ae92d95d7020ee9784aeee993093d7d2bb6f48eb7a1ac3",
+      "test_at_cap_metadata_reads_use_at_most_nine_batches_of_two_hundred_exact_ids": "2effbbf01f87e585791532688b840a512cc60640a4362dc79eefffa12530b0a2",
+      "test_blocked_links_emit_no_raw_literal_or_clickable_fallback": "ef8c8f947f4595055c9f9382680315b2624df0edc4c2074d280dc971d4ff851f",
+      "test_caps_are_current_records_and_distinct_source_union_not_history_size": "0369521c3e8b995f787808dc05fca5b31d9420d3594ed881eb71f1263552df53",
+      "test_closed_action_link_output_rejects_tampered_token_href_even_when_other_fields_match": "287ed4355a770aafb19a8d17a2cc19c43f780d00be95c85ce597cb2b252f2641",
+      "test_closed_client_request_does_not_coerce_or_accept_server_fields": "50bb964b70f1859d56ca319926ec02077f3234d242bdf07095c1758942873aef",
+      "test_complete_export_detects_missing_current_and_interleaving_new_head": "d81becb8de13b2a2032b69afe39f99b4a115b422e239b1be0f5def993efbc167",
+      "test_confirmation_is_literal_boolean_true": "483860ae20f14dcddd5bcd18270498d4c303dd2a0595280e0e7fe2620acc7815",
+      "test_correction_distinguishes_a_wrong_own_application_from_missing_or_foreign_receipts": "35af2882382cbfd207d2351b7931348f405dbdd9c862fb2b49acfa689d2055a3",
+      "test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors": "e9741dd5a01153aedd97db0a6735b703fa0fba5f06f7536b36571e23047cc194",
+      "test_creation_scholarship_requires_exact_own_award_after_source_guard": "61d796162b2023b16c16c4ea817fe6ec8748df3b0c0ac591bea4f2d40bac1486",
+      "test_current_head_and_affected_roles_cannot_be_satisfied_by_merely_mentioned_record": "a3363af8a83d94282f9c865a71d10595ded86a2f8d965955a3c5c411508ee482",
+      "test_date_only_due_and_dst_day_use_explicit_zones_without_official_urgency": "ed04a8c57a9c7e50107af8d4e7f1360306a81aef9693e044368772d07304c2a9",
+      "test_derived_origin_uses_recorded_presence_and_never_corruption_fallback": "47fb50fe58490e76e9b4d30f91bba264d77cbabfe4f2b544fa4c42f08c916b23",
+      "test_embedded_token_literals_affect_original_proof_but_never_action_href_or_ack": "246d979823043d28517817896bbb07535542b6b849f5d5741807560b85c0d353",
+      "test_entered_dates_are_literal_valid_calendar_dates": "d1d9179ce5ec8c981f71d008cc3458daed7a24a8da9d519a174b4150c4483c29",
+      "test_event_ref_has_exact_three_fields_and_no_receipt_hash_cycle": "5407c758efb967ae0123f059ce5c4b42164bf6ad94756a175ff0941b115d5799",
+      "test_existing_personal_updates_require_no_target_source_plan_or_entitlement_observation": "5ab915a85759395317d9ff08a1594ccf2ef72e9f1aa3a260869ed90cb83076ce",
+      "test_explicit_import_is_all_or_nothing_exact_snapshot_and_does_not_clear_native_marks": "91d09e243decc60fde0510a808068293b561ed64f3494fa2eb2f1b1d247e9036",
+      "test_four_hundred_task_cap_and_fifty_explicit_mapping_cap_are_literal": "5ba51b858c1d075bab7923aad29dc14a5f4dbaaaa654a81dbee1bd38dff71cd1",
+      "test_full_actor_ids_not_display_prefixes_define_actor_reference": "35dafcf1d16602523dcea280ee0263cad92a040675d054dcec3ecb0efb19d6e0",
+      "test_lexical_public_actions_are_only_unverified_informational_links": "eb6d926a5af7a351558566d8298781e566ea362500c285bf6c804cd30debf2c8",
+      "test_locked_link_and_source_envelope_expose_no_new_presence_hash_or_reason": "6ca94bc23e1725f2fbaf702202616b8ed8a92712bdd7f0ae0ea1c7445ce2b2f3",
+      "test_native_uppercase_uuid_is_the_same_canonical_intent_digest_and_original_replay": "26dee42543c31604dabf13492a5c297c25f4cd37d56e28b7787a61f3595828e6",
+      "test_original_claim_order_scope_and_procedure_are_independent_identity_axes": "7679db303d5bee9b89aa3dc4e8066c5b3fd6092b0394ee0379cc9ed780ed4b1f",
+      "test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance": "ce60bc001fecce9604986bea529e6eb660de92b7f2eaf0fe3cce902a6b0a0bfe",
+      "test_personal_creation_rehashed_receipt_cannot_inject_an_earlier_reviewed_source_binding": "f92c78a3848d373b6d3b89fcd07d2aef9a6733ec23b87bd47c8dfab2e4246088",
+      "test_personal_planning_status_and_document_details_have_only_their_own_mutation_refs": "4a1c8142491a5935c05192627abbf74c96cb5a0c3a2477342e33375af65b66be",
+      "test_present_raw_url_bytes_change_proof_not_semantics_and_never_enter_binding_ack": "d798082c635e8042bc0c14dc1653cd7dfbe95bf19eb8f4bef75ac70f0744e58b",
+      "test_real_native_cross_list_projection_must_cover_all_original_occurrences": "bb9863a67321c0f5cf47bc4decfadbc943d8143b47e686aee23fe7463a46c011",
+      "test_rebind_keeps_durable_id_and_original_report_with_separate_previous_binding_annotation": "ffafd7adce1e19d8f6198bbf01ea35e681e7baaa21b3a9b18b95907c4f036660",
+      "test_rehashed_outer_state_does_not_replace_authoritative_head_delta": "6485fcb7c8410cb76b14a92b72061654a2d797ff6297a5769c039ae649dafe5a",
+      "test_replay_keeps_original_actor_and_ack_independent_of_mutable_source_context": "ce489ed8615a78121e663b1e0ec0b39cf7546eee0ac2d1b7a35a4e253daa1d89",
+      "test_same_list_duplicate_native_nodes_do_not_guess_numeric_occurrence_by_name_or_hash": "deb58eeb36117c204aa1c5564d5a350bbfa1f954a3ab012125e33416822d9c38",
+      "test_scholarship_purpose_does_not_establish_named_award_document_validity": "4bc41a40d17ca9a56bcf0e8105e167a5940ed4d8073acd051fc750d0bf0cdcc1",
+      "test_selector_uses_exact_native_observed_head_and_replay_is_original_after_advance": "687884f599344d9cdbb46efad0bd588bf64144045f64cef8a3d41e9522653ec5",
+      "test_six_ordered_lists_duplicate_indices_and_native_scope_omission_are_proof_identity": "2ab9e98a189b4b58172328168f8951a085a871700d5126abf32ac2f2a8039a4f",
+      "test_submission_is_applicant_declaration_and_mentioned_tasks_are_not_mutated": "d958e7a5eb70b653c5e4e5be328f352669a92e684b71feeb38041b1e0be811d8",
+      "test_target_intake_route_award_are_immutable_in_every_closed_personal_command": "8558e0e7deebf1904afe0c5363f6446177199d0f5debd528e7ffd8335b88c227",
+      "test_today_combined_personal_record_ids_are_stable_across_entity_types": "5360524a7da20fcbda4d9641c98a6ad801e2d56adbf381abac03c6822c16accc",
+      "test_today_expiry_blocks_new_lesson_but_keeps_exact_own_review_target_readable": "433f4e9cdfea81f2505904d5e40cb5ae31a8f0a62f4b7f6137818da417f7e416",
+      "test_today_future_preserves_study_before_stable_personal_actions_on_equal_dates": "8c7ecd8a87a7723b24ceef126e9ff7514fb3b99c89361dab988309243178de97",
+      "test_today_one_recheck_withholds_mixed_actions_and_revoked_source_details": "d767fb9c86ebc2975628be00f91084b23959027f5cd445509c914f68118f2f63",
+      "test_today_preserves_one_accepted_slot_order_and_unknown_document_workload": "970e74c5eb30ca5d33398ebd8172314eb4ea9d9247449ed8aef16a4b41aede89",
+      "test_today_selected_plan_failure_preserves_personal_actions_and_unknown_workload": "658907a4bda2c02a5fde484d0675780c09336cfbd48d69415b339ce95eb4f4ef",
+      "test_today_separate_twenty_source_and_twenty_native_goal_sets_allow_forty_union": "4ebbe6f39d11ea02844a1861bd06205fce6e92442d68f9571af75341541674b5",
+      "test_unbound_report_is_not_transferred_when_first_binding_is_explicitly_added": "b6db135bddbe1a8b56bb6e232641b7a220236e6ac82a067e6cfa1b028c69b379",
+      "test_unreadable_g3_today_is_unavailable_not_revision_zero_or_legacy_fallback": "4384c5d9ba8ce66ab212c1a9608852d8fb72d3f50359bb9af65d2dfad5753f39",
+      "test_withdrawal_retains_submission_history_and_correction_requires_exact_loaded_own_receipt": "6443536a671e873b73c49723de51838dbf3e5c5274a7bff69f879700e8d56cfc"
+    },
+    "isolation_flags": [
+      "-I",
+      "-B",
+      "-S"
+    ],
+    "OS_network_policy": "DENY_NETWORK_ALL",
+    "OS_file_write_policy": "DENY_FILE_WRITE_ALL",
+    "modules": "Python stdlib ast/hashlib/json/pathlib/sys only; supplied application files read and parsed, never imported/executed"
+  },
+  "native_source_comparison": {
+    "result_py_sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+    "native_checklist_data_fields": 13,
+    "raw_checklist_field_annotations_defaults_and_config_preserved": true
+  },
+  "prior_failure_read": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-static-initial2/mypy.log",
+    "sha256": "4b780efab1364143f68c7a58b0000b933236929cb60bbe63b690cab31ec01eee",
+    "errors": 18,
+    "new_files": 3,
+    "rerun": false
+  },
+  "source_blockers": [],
+  "pending_root_gates": [
+    "Native static3 on final bound bytes",
+    "Authorized focused initial G3 runtime"
+  ],
+  "application_modules_imported": false,
+  "application_source_executed": false,
+  "tests_collected": false,
+  "tests_run": false,
+  "ruff_or_mypy_run_by_reviewer": false,
+  "primary_lab_git_handoff_helper_network_db_provider_mutations": false,
+  "earlier_packet_seals_preserved": true,
+  "external_review_writes_only": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_TYPE_REPAIR_REVIEW.md",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/SEALED_G3_INITIAL_TYPE_REPAIR_REVIEW.json"
+  ],
+  "no_runtime_release_deployment_or_product_acceptance_claim": true
+}
+

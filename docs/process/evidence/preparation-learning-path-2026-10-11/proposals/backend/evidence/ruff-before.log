@@ -1,0 +1,107 @@
+app/api/routes_preparation.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Original preparation: owned-case practice with a separate, read-only term entitlement."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from zoneinfo import ZoneInfo
+ 6 | |
+ 7 | | from fastapi import APIRouter, Depends, HTTPException, Query
+ 8 | | from pydantic import ValidationError
+ 9 | | from sqlalchemy import func, or_
+10 | | from sqlalchemy.exc import IntegrityError
+11 | | from sqlalchemy.orm import Session
+12 | |
+13 | | from app.api.tenancy import owned_profile
+14 | | from app.db import get_session
+15 | | from app.domain.claim_scope import RequestedScope
+16 | | from app.domain.enums import ClaimStatus
+17 | | from app.domain.freshness import age_days, is_stale
+18 | | from app.domain.preparation import NOTICE, combine_states, project_checks
+19 | | from app.domain.study_schedule import build_schedule
+20 | | from app.models import ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, StudyAttempt
+21 | | from app.models.base import ensure_utc, utcnow
+22 | | from app.models.study_schedule import StudyScheduleRow
+23 | | from app.payments.entitlements import has_full_access
+24 | | from app.payments.preparation import preparation_access
+25 | | from app.preparation.catalogue import (
+26 | |     CONTENT_VERSION,
+27 | |     LESSONS,
+28 | |     catalogue,
+29 | | )
+30 | | from app.preparation.learning_pack import (
+31 | |     PACK_VERSION, completed_lesson_refs, digest_dispatch, grade_dispatch,
+32 | |     lesson_dispatch, pack_catalogue, use_learning_pack,
+33 | | )
+34 | | from app.schemas.claim import ClaimOut, Conflict
+35 | | from app.schemas.preparation import (
+36 | |     LearningPackCatalogue,
+37 | |     LearningPackLesson,
+38 | |     LearningPackProgress,
+39 | |     LearningPackStudyAttemptIn,
+40 | |     LearningPackStudyAttemptOut,
+41 | |     PreparationAccess,
+42 | |     PreparationCatalogue,
+43 | |     PreparationLesson,
+44 | |     PreparationPlan,
+45 | |     PreparationProgress,
+46 | |     StudyAttemptIn,
+47 | |     StudyAttemptOut,
+48 | | )
+49 | | from app.schemas.profile import ApplicantProfileIn
+50 | | from app.schemas.result import RequirementCheck
+51 | | from app.schemas.study_schedule import ScheduleSettings, ScheduleWrite, StudyScheduleOut
+52 | | from app.security import Principal, get_principal
+   | |_________________________________________________^ I001
+53 |
+54 |   router = APIRouter(tags=["preparation"])
+   |
+   = help: Organize imports
+
+app/preparation/learning_pack.py:7:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 5 |   """
+ 6 |
+ 7 | / from __future__ import annotations
+ 8 | |
+ 9 | | import hashlib
+10 | | import json
+11 | | from dataclasses import dataclass
+12 | |
+13 | | from app.preparation.catalogue import (
+14 | |     CONTENT_VERSION, LESSONS, catalogue, get_lesson, grade, public_lesson, request_digest,
+15 | | )
+16 | | from app.schemas.preparation import (
+17 | |     Answer, AnswerFeedback, Choice, CompletedLesson, LearningPackCatalogue, LearningPackLesson,
+18 | |     LearningPackLessonSummary, LearningPackStudyAttemptIn, Question, ShortAnswer,
+19 | |     ShortAnswerFeedback, ShortQuestion, StudyAttemptIn, PreparationLesson, TrackId, TrackSummary,
+20 | | )
+   | |_^ I001
+21 |
+22 |   PACK_VERSION = "learning-pack-2026-10-11-v1"
+   |
+   = help: Organize imports
+
+tests/test_learning_pack_api.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Actual registered pack routes with existing isolated native SQLite/PG fixtures."""
+ 2 |
+ 3 | / from datetime import timedelta
+ 4 | | from uuid import uuid4
+ 5 | |
+ 6 | | import pytest
+ 7 | |
+ 8 | | from app.models import ApplicantProfileRow, AuditEvent, Entitlement, Job, Order, Organization, ResearchRun, StudyAttempt, StudySchedul…
+ 9 | | from app.models.base import utcnow
+10 | | from app.preparation.catalogue import CONTENT_VERSION, catalogue
+11 | | from app.preparation.learning_pack import PACK_VERSION, TRACK_ORDER
+12 | | from tests.test_learning_pack_domain import EXPECTED_KEYS, SHORT_ID, pack_payload
+13 | | from tests.test_preparation_api import body, grant, url
+   | |_______________________________________________________^ I001
+14 |
+15 |   pytest_plugins = ("tests.test_preparation_api",)
+   |
+   = help: Organize imports
+
+Found 3 errors.
+[*] 3 fixable with the `--fix` option.

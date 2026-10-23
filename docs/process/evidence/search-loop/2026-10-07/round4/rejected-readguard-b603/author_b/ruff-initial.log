@@ -1,0 +1,209 @@
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/adapters/discovery/catalog_walker.py:27:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+25 |   """
+26 |
+27 | / from __future__ import annotations
+28 | |
+29 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+30 | |
+31 | | import json
+32 | | import logging
+33 | | import re
+34 | | from collections import Counter
+35 | | from collections.abc import Callable
+36 | | from dataclasses import dataclass, field
+37 | | from urllib.parse import urljoin, urlparse
+38 | |
+39 | | from app.adapters.browser import BrowserFetcher
+40 | | from app.adapters.discovery.live_discovery import (
+41 | |     _DEGREE_SLUGS,
+42 | |     _URL_EXCLUSIONS,
+43 | |     MAX_LINKS_SCANNED,
+44 | |     canonical_url,
+45 | |     looks_like_catalogue,
+46 | |     matches_degree,
+47 | |     matches_field,
+48 | |     matches_field_text,
+49 | |     names_other_degree_level,
+50 | |     profile_rejects,
+51 | |     registrable_domain,
+52 | |     same_institution,
+53 | | )
+54 | | from app.adapters.fetching import Fetcher, FetchResult, same_source_site
+55 | | from app.adapters.html_parse import parse_html
+56 | | from app.adapters.page_classifier import (
+57 | |     PageClassification,
+58 | |     PageType,
+59 | |     classify_page,
+60 | | )
+   | |_^ I001
+61 |
+62 |   log = logging.getLogger("unimatch.discovery.walker")
+   |
+   = help: Organize imports
+
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/adapters/discovery/live_discovery.py:29:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+27 |   """
+28 |
+29 | / from __future__ import annotations
+30 | |
+31 | | from contextlib import AbstractContextManager, nullcontext
+32 | |
+33 | | import gzip
+34 | | import json
+35 | | import logging
+36 | | import re
+37 | | from collections.abc import Callable
+38 | | from dataclasses import dataclass, field
+39 | | from functools import lru_cache
+40 | | from pathlib import Path
+41 | | from typing import TYPE_CHECKING, TypedDict
+42 | | from urllib.parse import urljoin, urlparse, urlunparse
+43 | | from xml.etree import ElementTree
+44 | |
+45 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+46 | | from app.adapters.base import Candidate, CandidateProgram, PageOutcome
+47 | | from app.adapters.fetching import Fetcher, same_source_site
+48 | | from app.adapters.html_parse import parse_html
+49 | | from app.adapters.page_classifier import (
+50 | |     PageClassification,
+51 | |     PageType,
+52 | |     classify_page,
+53 | | )
+54 | | from app.adapters.search.ontology import canonical_field, load_ontology
+55 | | from app.domain.enums import FetchOutcome
+56 | | from app.domain.site_identity import hosts_share_site
+57 | | from app.domain.site_identity import registrable_domain as site_domain
+58 | | from app.schemas.profile import ApplicantProfileIn
+59 | | from app.schemas.result import RankingEntry
+   | |___________________________________________^ I001
+60 |
+61 |   if TYPE_CHECKING:  # pragma: no cover - the seam is only needed as an annotation
+   |
+   = help: Organize imports
+
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/catalogue/discovery.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Bounded live enrichment of local identities through the existing discovery adapter."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import asyncio
+ 6 | | from contextlib import nullcontext
+ 7 | | import hashlib
+ 8 | | import re
+ 9 | | from urllib.parse import urlsplit
+10 | |
+11 | | from bs4 import BeautifulSoup
+12 | | from sqlalchemy.orm import Session
+13 | |
+14 | | from app.adapters.base import Candidate
+15 | | from app.pipeline.control import UniversityReadStopped
+16 | | from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
+17 | | from app.adapters.fetching import same_source_site
+18 | | from app.adapters.search import SearchError, get_search_provider
+19 | | from app.adapters.search.base import search_failure_diagnostic
+20 | | from app.catalogue.importer import canonical_name, public_domain, stable_id
+21 | | from app.catalogue.retrieval import retrieve
+22 | | from app.domain.dedupe import normalize
+23 | | from app.domain.site_identity import registrable_domain
+24 | | from app.models import University, UniversityObservation
+25 | | from app.schemas.profile import ApplicantProfileIn
+   | |__________________________________________________^ I001
+26 |
+27 |   # SI-1: additional first-party homepage branding. Off until measured and approved.
+   |
+   = help: Organize imports
+
+work/search-loop-round4/reviews/expert_b-readguard/proposed/app/pipeline/runner.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 6 |   """
+ 7 |
+ 8 | / from __future__ import annotations
+ 9 | |
+10 | | import json
+11 | | import logging
+12 | | import os
+13 | | import socket
+14 | | from contextlib import contextmanager
+15 | | from copy import deepcopy
+16 | | from datetime import UTC, date, datetime, timedelta
+17 | |
+18 | | from sqlalchemy import select
+19 | | from sqlalchemy.orm import Session
+20 | |
+21 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+22 | | from app.adapters.cost.web_costs import WebCostAdapter
+23 | | from app.adapters.discovery.catalog_walker import CatalogRenderer
+24 | | from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+25 | | from app.adapters.discovery.live_discovery import (
+26 | |     MAX_PAGES_PER_CATEGORY,
+27 | |     LiveDiscoveryAdapter,
+28 | |     registry_campuses,
+29 | | )
+30 | | from app.adapters.documents.web_documents import (
+31 | |     DOCUMENT_CLAIM_TYPES,
+32 | |     WebDocumentsAdapter,
+33 | |     retain_failed_documents,
+34 | | )
+35 | | from app.adapters.fetching import Fetcher
+36 | | from app.adapters.government.web_government import WebGovernmentAdapter
+37 | | from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+38 | | from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+39 | | from app.catalogue.discovery import CatalogueDiscoveryAdapter
+40 | | from app.config import Settings
+41 | | from app.domain import dedupe, diagnostics
+42 | | from app.domain.campus import withhold_other_campuses
+43 | | from app.domain.citizenship import CitizenshipMatch, match_citizenship
+44 | | from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
+45 | | from app.domain.costs import compute_funding_gap, total_cost
+46 | | from app.domain.dates import parse_published_date
+47 | | from app.domain.eligibility import (
+48 | |     awards_needing_a_test_the_programme_made_optional,
+49 | |     evaluate_program,
+50 | |     population_deadlines,
+51 | | )
+52 | | from app.domain.enums import (
+53 | |     ClaimStatus,
+54 | |     ClaimType,
+55 | |     CostCategory,
+56 | |     EligibilityStatus,
+57 | |     PipelineStage,
+58 | |     UserDecision,
+59 | | )
+60 | | from app.domain.freshness import age_days, apply_freshness, is_stale, next_recheck_at
+61 | | from app.domain.funding import (
+62 | |     award_meets_shape,
+63 | |     classify,
+64 | |     funding_fit_for,
+65 | |     roll_up_availability,
+66 | |     unmet_coverage_requirements,
+67 | | )
+68 | | from app.domain.ranking_v2 import rank_result
+69 | | from app.domain.scoring import admissions_fit_for, score_result
+70 | | from app.domain.validation import validate_profile
+71 | | from app.models import (
+72 | |     AuditEvent,
+73 | |     ClaimRow,
+74 | |     ConflictRow,
+75 | |     ProgramResultRow,
+76 | |     ResearchRun,
+77 | |     SourcePage,
+78 | |     new_id,
+79 | | )
+80 | | from app.models.base import ensure_utc
+81 | | from app.pipeline import read_budget
+82 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+83 | | from app.pipeline.state import IN_PROGRESS_STAGES, RunState
+84 | | from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
+85 | | from app.schemas.profile import ApplicantProfileIn
+86 | | from app.schemas.result import CostBreakdown, ProgramResult, Tristate
+   | |_____________________________________________________________________^ I001
+87 |
+88 |   log = logging.getLogger("unimatch.pipeline")
+   |
+   = help: Organize imports
+
+Found 4 errors.
+[*] 4 fixable with the `--fix` option.

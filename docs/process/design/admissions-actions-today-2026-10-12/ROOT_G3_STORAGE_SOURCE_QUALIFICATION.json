@@ -1,0 +1,19 @@
+{
+  "at_utc": "2026-10-12T15:58:57.520016+00:00",
+  "status": "SOURCE_ONLY_QUALIFIED_NOT_RUN",
+  "first_seal": "f7a436b4e558bc45521f7814303d8939b72c34972a247fedb1e79a83e3860546",
+  "repair_seal": "12e9a9bd9f1fb7a51e5a2746711e6f5a2dcd33964e6ef2144d3fb4187242f99c",
+  "review": "Root and peer read4 postimages and full originaltest; sole found UUID-column defect repaired exactly3str assignments, original assertions retained. No other concrete defects.",
+  "effective_paths": {
+    "backend/app/models/admissions_actions.py": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+    "backend/app/models/applicant.py": "8bfa6ec53deb2913bd0e06f2aff1f455f57beb981087ed706ea91da0ff1caaff",
+    "backend/app/models/__init__.py": "4c81051140433a838e635edd1778fb94d2fe2e958478069a8ba5dfa2a5f7e2a9",
+    "backend/migrations/versions/d7a61e902024_admissions_actions.py": "b571ad0a7aea39bc8ef61697ebebe340e66366b62d8e35a66b194685f14e3244",
+    "backend/tests/test_admissions_actions_concurrency.py": "901f626e5c1c8dbe11365b8f71765d1084688985f8ab15fae41d6d1bc1dba840"
+  },
+  "baseline775_exact_primary_lab": true,
+  "native18_exact": true,
+  "new3_absent": true,
+  "runtime": "NOT_RUN",
+  "api_today_ui": "NOT_IMPLEMENTED"
+}

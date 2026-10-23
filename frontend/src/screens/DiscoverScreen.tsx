@@ -5,7 +5,8 @@
  * is not "who is on this service" but "who is going where I am going".
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { BookHelp } from '@/components/BookUI';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice } from '@/components/primitives';
 import { PersonTile } from '@/components/social';
@@ -21,38 +22,45 @@ const FIELDS: { key: keyof PeopleFilters; label: MessageKey; placeholder: string
 ];
 
 export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) => void }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
   const [filters, setFilters] = useState<PeopleFilters>({});
+  const [draftFilters, setDraftFilters] = useState<PeopleFilters>({});
+  const loadGeneration = useRef(0);
   const [people, setPeople] = useState<PersonCard[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const load = useCallback(async (active: PeopleFilters, from?: string | null) => {
+    const generation = ++loadGeneration.current;
     setLoading(true);
     try {
       const page = await api.people(active, from);
+      if (generation !== loadGeneration.current) return;
       setPeople((prev) => (from ? [...prev, ...page.items] : page.items));
       setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
-      setError(problem instanceof ApiError ? problem.message : 'Could not load people.');
+      if (generation === loadGeneration.current) setError(problem instanceof ApiError ? problem.message : 'Could not load people.');
     } finally {
-      setLoading(false);
+      if (generation === loadGeneration.current) setLoading(false);
     }
   }, []);
 
-  useEffect(() => { void load(filters); }, [load, filters]);
+  useEffect(() => {
+    void load(filters);
+    return () => { ++loadGeneration.current; };
+  }, [load, filters]);
 
   const filtered = Object.values(filters).some(Boolean);
 
   return (
-    <div className="community-page">
+    <div className={`community-page ${ru?'book-discover-page':''}`}>
     <div className="stack community-column">
       <div className="screen__head">
-        <p className="screen__eyebrow">GLOBAL COMMUNITY</p>
-        <h1 className="screen__title">{t('discover.title')}</h1>
-        <p className="screen__lede">{t('discover.lede')}</p>
+        <p className="screen__eyebrow">{ru?'Сообщество':'GLOBAL COMMUNITY'}</p>
+        <h1 className="screen__title">{ru?'Найти людей':t('discover.title')}</h1>
+        <p className="screen__lede">{ru?'Общайся с другими абитуриентами, делись опытом, задавай вопросы и находи единомышленников по всему миру.':t('discover.lede')}</p>
       </div>
 
       <div className="filters">
@@ -64,7 +72,9 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
             <input
               id={`discover-${field.key}`}
               placeholder={field.placeholder}
-              defaultValue={filters[field.key] ?? ''}
+              value={draftFilters[field.key] ?? ''}
+              onChange={(event) => setDraftFilters((draft) => ({ ...draft, [field.key]: event.target.value }))}
+              onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); setFilters(current => ({ ...current, ...Object.fromEntries(Object.entries(draftFilters).map(([key, value]) => [key, value?.trim() ?? ''])) })); } }}
               onBlur={(event) =>
                 setFilters((f) => ({ ...f, [field.key]: event.target.value.trim() }))
               }
@@ -84,13 +94,13 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
           </select>
         </div>
         {filtered && (
-          <button className="btn btn--sm btn--ghost" type="button" onClick={() => setFilters({})}>
+          <button className="btn btn--sm btn--ghost" type="button" onClick={() => { setFilters({}); setDraftFilters({}); }}>
             {t('community.clearFilters')}
           </button>
         )}
       </div>
 
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(filters); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
 
       <div className="person-grid">
         {people.map((person) => (
@@ -99,7 +109,7 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
       </div>
 
       {loading && <Loading label={t('discover.looking')} />}
-      {!loading && people.length === 0 && (
+      {!loading && !error && people.length === 0 && (
         <Empty title={t(filtered ? 'discover.noMatch' : 'discover.empty')}>
           <p className="small">{t(filtered ? 'discover.noMatchHint' : 'discover.emptyHint')}</p>
         </Empty>
@@ -110,14 +120,15 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
         </button>
       )}
     </div>
-    <aside className="community-aside" aria-label="About student discovery">
-      <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking toward a mountain campus" />
+    {!ru&&<aside className="community-aside" aria-label="About student discovery">
+      <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
       <div>
         <p className="screen__eyebrow">MORE THAN UNIVERSITIES</p>
         <h2>A clearer you starts with real people.</h2>
         <p>Explore public student profiles and open a conversation where their message settings allow it.</p>
       </div>
-    </aside>
+    </aside>}
+    {ru&&<BookHelp><strong>Вместе легче</strong><br/>Реальные истории, полезные советы и поддержка на пути к обучению за рубежом.</BookHelp>}
     </div>
   );
 }

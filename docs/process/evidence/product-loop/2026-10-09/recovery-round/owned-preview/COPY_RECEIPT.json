@@ -1,0 +1,59 @@
+{
+  "created_at": "2026-10-08T23:43:31.189643+00:00",
+  "files": {
+    "source-manifest.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/source-manifest.json",
+      "sha256": "3f24b902fb7329e53330b9ccae1cb3d4c4c6e72ab4e7560911d9d8a48ead4770",
+      "bytes": 2140609
+    },
+    "synthetic-fixture-receipt.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/synthetic-fixture-receipt.json",
+      "sha256": "a55f0e3af8da504d216ed2a140fcaf2f546af9d374da127849191ed9f0143388",
+      "bytes": 2948
+    },
+    "generated-test-output-delta.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/generated-test-output-delta.json",
+      "sha256": "3f645d11211c5866ae312337a3d2d711b78b7518e9312c004bfece08c84f5fb9",
+      "bytes": 11067
+    },
+    "preview-processes.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/preview-processes.json",
+      "sha256": "e6184c75d199a87024e396fef2f1070e48ba0a0ad05fb862afb3aab1c843e986",
+      "bytes": 404
+    },
+    "cleanup-receipt.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/cleanup-receipt.json",
+      "sha256": "589c5dfe78941008113cac9671c5980235aa860960c6012567e4d7fbd8517c57",
+      "bytes": 146
+    },
+    "synthetic-ui-targets.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/synthetic-ui-targets.json",
+      "sha256": "73c37a9ab24bb6e481b3407fbe34753cd1c309d8f8ba892a33950324b9515ce6",
+      "bytes": 554
+    },
+    "api.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/api.log",
+      "sha256": "ce7f3a230e3ba6f848822afe730e03c55b6072c95a31945f726b6f78561f1796",
+      "bytes": 8605
+    },
+    "frontend.log": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/frontend.log",
+      "sha256": "5288a1e8230aba2dae9b92d75fdb4cf5a1591f77afc9b298e9b5f0446fb9b13e",
+      "bytes": 111
+    },
+    "tool-results.json": {
+      "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/tool-results.json",
+      "sha256": "8f6aa4faf037548cf53a4048e1f5ed4f691f7ba13ef7cfcfd80f5ed59b40e7e4",
+      "bytes": 701
+    }
+  },
+  "count": 9,
+  "bytes": 2165145,
+  "helper_exit_code": 0,
+  "ports_free": [
+    5173,
+    8099
+  ],
+  "seed_final_sha256": "1bd0ba53d7dbcd830d652decfa7a25bb73d35d2e34d2a7c663b650ff5f6ef6db",
+  "qualification": "Nine exact selected preview records/logs only; no runtime database/source/dependency tree copied. Stage/cancelled fixture changes only; original completed stage_state remains, so100% Progress screenshot is not mid-run/worker cancellation proof. UI acceptance uses C separately. Initial fullSHA with explicit38generatedPNGdelta, not currentwholephysicaltree equality."
+}

@@ -1,0 +1,51 @@
+{
+  "generatedAt": "2026-10-19T07:57:53.721207+00:00",
+  "status": "LOCAL_CONNECTED_PATH_PASS__DATA_PARTIAL__500_REQUEST_OPEN",
+  "coverage": {
+    "institutions": 500,
+    "degreeSlots": 1000,
+    "programmeRecords": 14,
+    "publishedInstitutions": 9,
+    "publishedDegreeSlots": 14,
+    "completeInstitutions": 0,
+    "completeDegreeSlots": 0,
+    "byLevel": {
+      "bachelor": 7,
+      "master": 7
+    },
+    "externalProgrammeRoutes": 12,
+    "restrictedOrClosedRecords": 2
+  },
+  "frontend": {
+    "tests": 1049,
+    "files": 111,
+    "status": "PASS",
+    "log": "unimatch-official-tests-final3.log"
+  },
+  "build": "PASS_WITH_CHUNK_WARNING",
+  "lint": {
+    "errors": 0,
+    "inheritedWarnings": 9
+  },
+  "backendCatalogue": {
+    "passed": 53,
+    "warnings": 1,
+    "fullSuite": "NOT_RERUN"
+  },
+  "native": "See NATIVE_OBSERVATIONS.json; synthetic environment only",
+  "data": {
+    "status": "PASS",
+    "publishedProgrammeRecords": 14,
+    "publishedInstitutions": 9,
+    "archivedSnapshots": 13,
+    "factSourceReferencesIncludingHistory": 121,
+    "exactSavedSourceBodies": 9,
+    "degreeSlots": 1000,
+    "full500ProgrammeCompletion": false,
+    "runtimeOrAdmissionsAcceptance": false
+  },
+  "sourcePins": 796,
+  "sourcePinsMatch": true,
+  "noProductionAcceptance": true,
+  "historicalStopsUnchanged": true
+}

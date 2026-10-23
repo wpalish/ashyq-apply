@@ -1,0 +1,335 @@
+........................................................................ [  1%]
+........................................................................ [  2%]
+........................................................................ [  3%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  7%]
+........................................................................ [  8%]
+........................................................................ [  9%]
+........................................................................ [ 11%]
+........................................................................ [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 14%]
+........................................................................ [ 15%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 23%]
+........................................................................ [ 24%]
+........................................................................ [ 25%]
+........................................................................ [ 26%]
+........................................................................ [ 28%]
+........................................................................ [ 29%]
+........................................................................ [ 30%]
+........................................................................ [ 31%]
+........................................................................ [ 33%]
+........................................................................ [ 34%]
+...................................F.................................... [ 35%]
+........................................................................ [ 36%]
+........................................................................ [ 38%]
+........................................................................ [ 39%]
+........................................................................ [ 40%]
+........................................................................ [ 41%]
+........................................................................ [ 42%]
+........................................................................ [ 44%]
+........................................................................ [ 45%]
+........................................................................ [ 46%]
+........................................................................ [ 47%]
+........................................................................ [ 49%]
+........................................................................ [ 50%]
+........................................................................ [ 51%]
+........................................................................ [ 52%]
+........................................................................ [ 53%]
+........................................................................ [ 55%]
+........................................................................ [ 56%]
+........................................................................ [ 57%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 62%]
+........................................................................ [ 63%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+........................................................................ [ 67%]
+........................................................................ [ 68%]
+........................................................................ [ 69%]
+........................................................................ [ 71%]
+........................................................................ [ 72%]
+........................................................................ [ 73%]
+........................................................................ [ 74%]
+........................................................................ [ 76%]
+........................................................................ [ 77%]
+........................................................................ [ 78%]
+........................................................................ [ 79%]
+........................................................................ [ 80%]
+........................................................................ [ 82%]
+........................................................................ [ 83%]
+........................................................................ [ 84%]
+........................................................................ [ 85%]
+........................................................................ [ 87%]
+........................................................................ [ 88%]
+........................................................................ [ 89%]
+........................................................................ [ 90%]
+........................................................................ [ 91%]
+........................................................................ [ 93%]
+........................................................................ [ 94%]
+........................................................................ [ 95%]
+........................................................................ [ 96%]
+........................................................................ [ 98%]
+........................................................................ [ 99%]
+.......................................                                  [100%]
+=================================== FAILURES ===================================
+_ TestDemoRunIsByteIdentical.test_the_demo_pipeline_payload_is_byte_identical_to_baseline _
+
+self = <tests.test_freshness_regressions.TestDemoRunIsByteIdentical object at 0x10e804440>
+demo_session = (<sqlalchemy.orm.session.Session object at 0x1177c9ca0>, '037460d0a2404078a8a7339e42f4f16c')
+
+    def test_the_demo_pipeline_payload_is_byte_identical_to_baseline(self, demo_session):
+        session, run_id = demo_session
+        dump = _canonical_demo_dump(session, run_id)
+>       assert hashlib.sha256(dump.encode("utf-8")).hexdigest() == GOLDEN_DEMO_SHA256, (
+            "the demo pipeline output drifted from the baseline golden. If (and only if) "
+            "the drift is intended, prove it additive first (diff the dumps: no removed "
+            "lines, every addition confined to the documented shape) and record that "
+            "proof beside GOLDEN_DEMO_SHA256 as V2-22 did; otherwise fix the regression."
+        )
+E       AssertionError: the demo pipeline output drifted from the baseline golden. If (and only if) the drift is intended, prove it additive first (diff the dumps: no removed lines, every addition confined to the documented shape) and record that proof beside GOLDEN_DEMO_SHA256 as V2-22 did; otherwise fix the regression.
+E       assert 'c2d4688c3822...b2af7b01a0daf' == 'd1403ce29ee2...5041490333c53'
+E         
+E         - d1403ce29ee2e0f710a034b78afe222cc42b40059a6730a60fa5041490333c53
+E         + c2d4688c3822c4ce05a43b0188104c9fe610f14dd377c6592deb2af7b01a0daf
+
+tests/test_freshness_regressions.py:750: AssertionError
+=============================== warnings summary ===============================
+../../../../product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[nan]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[inf]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[-inf]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `uuid` - serialized value may not be as expected [field_name='client_write_uuid', input_value='00000000-0000-0000-0000-000000000001', input_type=str])
+    PydanticSerializationUnexpectedValue(Expected `PersonalTaskInputV1` - serialized value may not be as expected [field_name='personal', input_value={'label': 'Entered transc...epends_on_task_ids': []}, input_type=dict])
+    return self.__pydantic_serializer__.to_python(
+
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[nan]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[inf]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[-inf]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/backend/app/schemas/result.py:294: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='purpose', input_value='admission', input_type=str])
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='owner', input_value='applicant', input_type=str])
+    data = handler(self)
+
+tests/test_admissions_actions.py::test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors[forged_nonfinite]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `str` - serialized value may not be as expected [field_name='actor_ref_digest', input_value=nan, input_type=float])
+    return self.__pydantic_serializer__.to_python(
+
+tests/test_documents_by_completion.py: 1 warning
+tests/test_live_discovery.py: 20 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/backend/app/adapters/html_parse.py:20: MarkupResemblesLocatorWarning: The input looks more like a filename than markup. You may want to open this file and pass the filehandle into Beautiful Soup.
+    return BeautifulSoup(markup, parser)
+
+tests/test_live_discovery.py: 20 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/backend/app/adapters/html_parse.py:20: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
+    return BeautifulSoup(markup, parser)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+--------- coverage: platform darwin, python 3.12.13-final-0 ----------
+Name                                               Stmts   Miss  Cover
+----------------------------------------------------------------------
+app/__init__.py                                        0      0   100%
+app/adapters/__init__.py                               0      0   100%
+app/adapters/applicability.py                         92      6    93%
+app/adapters/base.py                                  66      0   100%
+app/adapters/browser.py                              133     36    73%
+app/adapters/cost/__init__.py                          0      0   100%
+app/adapters/cost/web_costs.py                        92      3    97%
+app/adapters/decisions/__init__.py                    14      9    36%
+app/adapters/decisions/base.py                        29      0   100%
+app/adapters/decisions/fake.py                        21      2    90%
+app/adapters/decisions/link_ranker.py                 33      0   100%
+app/adapters/decisions/typesafe.py                    68      7    90%
+app/adapters/discovery/__init__.py                     0      0   100%
+app/adapters/discovery/catalog_walker.py             330     24    93%
+app/adapters/discovery/fixture_discovery.py           45      2    96%
+app/adapters/discovery/live_discovery.py            1005     87    91%
+app/adapters/discovery/registry_identities.py         24      0   100%
+app/adapters/document_ir.py                          176      6    97%
+app/adapters/documents/__init__.py                     0      0   100%
+app/adapters/documents/structured_documents.py        60      4    93%
+app/adapters/documents/web_documents.py              342      5    99%
+app/adapters/extraction.py                           493     29    94%
+app/adapters/fetching.py                             542     52    90%
+app/adapters/government/__init__.py                    0      0   100%
+app/adapters/government/web_government.py             38      0   100%
+app/adapters/html_parse.py                             9      1    89%
+app/adapters/matching.py                              32      5    84%
+app/adapters/network_policy.py                        81      0   100%
+app/adapters/page_classifier.py                      406     22    95%
+app/adapters/ranking/__init__.py                       0      0   100%
+app/adapters/ranking/fixture_rankings.py              26      0   100%
+app/adapters/requirements/__init__.py                  0      0   100%
+app/adapters/requirements/section_scope.py            67      1    99%
+app/adapters/requirements/web_requirements.py        391     34    91%
+app/adapters/scholarship/__init__.py                   0      0   100%
+app/adapters/scholarship/conditional_benefits.py     174      6    97%
+app/adapters/scholarship/web_scholarships.py         577     15    97%
+app/adapters/scope_reader.py                          95      0   100%
+app/adapters/search/__init__.py                       61      3    95%
+app/adapters/search/base.py                           68      0   100%
+app/adapters/search/brave.py                          68      4    94%
+app/adapters/search/exa.py                            63      0   100%
+app/adapters/search/exa_mcp.py                       184      0   100%
+app/adapters/search/fake.py                           34      0   100%
+app/adapters/search/fusion.py                         75      0   100%
+app/adapters/search/identity.py                       61      0   100%
+app/adapters/search/intent.py                         97      0   100%
+app/adapters/search/navigation.py                    102      1    99%
+app/adapters/search/ontology.py                       81      0   100%
+app/adapters/search/prefilter.py                      88      2    98%
+app/adapters/search/retrieval.py                     207      5    98%
+app/adapters/search/serper.py                         68      4    94%
+app/adapters/search/site_search.py                   111      0   100%
+app/adapters/search/tavily.py                         66      4    94%
+app/adapters/structured_costs.py                     140      6    96%
+app/adapters/structured_extraction.py                 83      3    96%
+app/api/__init__.py                                    0      0   100%
+app/api/paywall.py                                    20      1    95%
+app/api/preparation_transactions.py                   52      7    87%
+app/api/profile_commands.py                           49      2    96%
+app/api/profile_revision.py                           38     12    68%
+app/api/routes_account.py                            171     12    93%
+app/api/routes_admin.py                               17      0   100%
+app/api/routes_admissions_actions.py                 955    141    85%
+app/api/routes_auth.py                               100      5    95%
+app/api/routes_billing.py                             97      3    97%
+app/api/routes_cases.py                               23      0   100%
+app/api/routes_meta.py                                50      2    96%
+app/api/routes_metrics.py                             18      0   100%
+app/api/routes_preparation.py                        304     23    92%
+app/api/routes_preparation_graph.py                  163      8    95%
+app/api/routes_profile.py                            146     16    89%
+app/api/routes_research.py                           238     20    92%
+app/api/routes_results.py                            294     12    96%
+app/api/routes_shared_route.py                       405     55    86%
+app/api/routes_social.py                             472     32    93%
+app/api/routes_universities.py                        26      0   100%
+app/api/routes_webhooks.py                            54      4    93%
+app/api/tenancy.py                                    20      4    80%
+app/catalogue/__init__.py                              0      0   100%
+app/catalogue/discovery.py                           181      4    98%
+app/catalogue/importer.py                            148     11    93%
+app/catalogue/retrieval.py                            18      0   100%
+app/config.py                                        173      2    99%
+app/corpus/demo_profile.py                             3      0   100%
+app/db.py                                             79      2    97%
+app/domain/__init__.py                                 0      0   100%
+app/domain/admissions_actions.py                     693     62    91%
+app/domain/avatar.py                                  63      7    89%
+app/domain/campus.py                                  23      0   100%
+app/domain/change_detection.py                        75      0   100%
+app/domain/citizenship.py                             52      0   100%
+app/domain/claim_scope.py                             63      0   100%
+app/domain/claim_verifier.py                         130      3    98%
+app/domain/conflicts.py                               86      0   100%
+app/domain/costs.py                                  126     11    91%
+app/domain/currency.py                                26      0   100%
+app/domain/dates.py                                   46      3    93%
+app/domain/dedupe.py                                  34      2    94%
+app/domain/diagnostics.py                             24      0   100%
+app/domain/eligibility.py                            226      7    97%
+app/domain/entity_resolution.py                       57      0   100%
+app/domain/enums.py                                  238      0   100%
+app/domain/evidence_queries.py                        25      0   100%
+app/domain/freshness.py                               23      0   100%
+app/domain/funding.py                                122      5    96%
+app/domain/grades.py                                  46     10    78%
+app/domain/learning_schedule.py                       72      1    99%
+app/domain/preparation.py                            104      2    98%
+app/domain/preparation_graph.py                      332     15    95%
+app/domain/priorities.py                              30      0   100%
+app/domain/profile_input_provenance.py                47      6    87%
+app/domain/programme_identity.py                      67      0   100%
+app/domain/ranking_v2.py                             242     12    95%
+app/domain/result_read.py                             18      0   100%
+app/domain/scoring.py                                150      4    97%
+app/domain/shared_route_allocator.py                 159      0   100%
+app/domain/site_identity.py                           54      3    94%
+app/domain/social.py                                  23      0   100%
+app/domain/study_schedule.py                         120      1    99%
+app/domain/transcript.py                              35      0   100%
+app/domain/validation.py                              31      0   100%
+app/export/__init__.py                                 0      0   100%
+app/export/calendar.py                                46      0   100%
+app/export/tabular.py                                101      0   100%
+app/jobs/__init__.py                                   0      0   100%
+app/jobs/payment_reconcile.py                         36      0   100%
+app/jobs/source_scanner.py                           226     18    92%
+app/jobs/store.py                                    143      3    98%
+app/jobs/worker.py                                   222     21    91%
+app/logging_setup.py                                  43      0   100%
+app/mail.py                                           43      0   100%
+app/main.py                                          136      6    96%
+app/metrics.py                                       100      3    97%
+app/models/__init__.py                                16      0   100%
+app/models/admissions_actions.py                      32      0   100%
+app/models/applicant.py                               18      0   100%
+app/models/auth.py                                    50      0   100%
+app/models/base.py                                    20      0   100%
+app/models/billing.py                                 63      0   100%
+app/models/jobs.py                                    34      0   100%
+app/models/meta.py                                    10      0   100%
+app/models/research.py                                93      0   100%
+app/models/shared_route.py                            28      0   100%
+app/models/social.py                                 134      0   100%
+app/models/source_page.py                             65      2    97%
+app/models/study.py                                   18      0   100%
+app/models/study_schedule.py                          13      0   100%
+app/models/subscription.py                            23      0   100%
+app/models/university.py                              22      0   100%
+app/payments/__init__.py                               0      0   100%
+app/payments/apipay.py                                59      4    93%
+app/payments/entitlements.py                          38      0   100%
+app/payments/errors.py                                24      0   100%
+app/payments/fake.py                                  58      2    97%
+app/payments/http.py                                  12      0   100%
+app/payments/preparation.py                           19      0   100%
+app/payments/provider.py                              30      2    93%
+app/payments/service.py                               82      1    99%
+app/payments/subscriptions.py                         76      3    96%
+app/pipeline/__init__.py                               0      0   100%
+app/pipeline/control.py                                7      0   100%
+app/pipeline/read_budget.py                           68      4    94%
+app/pipeline/runner.py                               937     36    96%
+app/pipeline/state.py                                 63      5    92%
+app/preparation/__init__.py                            0      0   100%
+app/preparation/catalogue.py                          51      1    98%
+app/preparation/learning_pack.py                     104      0   100%
+app/schemas/__init__.py                                0      0   100%
+app/schemas/admissions_actions.py                   1210    139    89%
+app/schemas/claim.py                                  68      0   100%
+app/schemas/learning_schedule.py                      87      2    98%
+app/schemas/money.py                                  20      0   100%
+app/schemas/preparation.py                           170      0   100%
+app/schemas/preparation_graph.py                     237     27    89%
+app/schemas/preparation_graph_loader.py               43      0   100%
+app/schemas/profile.py                               231      1    99%
+app/schemas/programme_observations.py                 91      2    98%
+app/schemas/research_read.py                          56      6    89%
+app/schemas/result.py                                229      0   100%
+app/schemas/shared_route.py                          588     46    92%
+app/schemas/social.py                                106      0   100%
+app/schemas/study_schedule.py                        126      2    98%
+app/security.py                                      121     12    90%
+----------------------------------------------------------------------
+TOTAL                                              21840   1268    94%
+
+Required test coverage of 92% reached. Total coverage: 94.19%
+=========================== short test summary info ============================
+FAILED tests/test_freshness_regressions.py::TestDemoRunIsByteIdentical::test_the_demo_pipeline_payload_is_byte_identical_to_baseline
+1 failed, 5870 passed, 49 warnings in 985.80s (0:16:25)

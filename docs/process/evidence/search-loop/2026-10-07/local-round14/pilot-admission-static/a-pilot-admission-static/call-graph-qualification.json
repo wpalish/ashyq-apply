@@ -1,0 +1,50 @@
+{
+  "initial_suspicion": "unconditional recall_metrics name might imply premature corpus scoring",
+  "resolution": "Refuted for this call: local row/native-output diagnostics only; no file/HTTP/scorer call in these three local helpers. Name alone is not gold access.",
+  "local_functions": {
+    "page_outcomes": {
+      "line": 213,
+      "end": 225,
+      "call_names": [
+        "_PAGE_OUTCOME_RE.match",
+        "found.append",
+        "list",
+        "match.groupdict",
+        "str"
+      ]
+    },
+    "false_positives": {
+      "line": 231,
+      "end": 337,
+      "call_names": [
+        "any",
+        "by_type.get",
+        "by_type.setdefault",
+        "by_type.setdefault(claim['claim_type'], []).append",
+        "c['claim_type'].startswith",
+        "c['payload'].get",
+        "claim.get",
+        "claim['payload'].get",
+        "flag",
+        "found.append",
+        "json.dumps",
+        "json.dumps(c['payload']).lower",
+        "scholarship.name.lower"
+      ]
+    },
+    "recall_metrics": {
+      "line": 388,
+      "end": 407,
+      "call_names": [
+        "(row.get('discovered') or {}).get",
+        "bool",
+        "len",
+        "row.get",
+        "sum"
+      ]
+    }
+  },
+  "canary_has_external_corpus_filename_literals": false,
+  "strict_shadow_gate": "live569–578 only calls _jev_shadow if budget is None; strict mode budget excludes that separate corpus/model branch.",
+  "no_actual_function_invoked": true
+}

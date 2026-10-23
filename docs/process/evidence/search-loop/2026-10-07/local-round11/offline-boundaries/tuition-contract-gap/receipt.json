@@ -1,0 +1,51 @@
+{
+  "verdict": "CONTRACT_GAP_NO_RULE_PATCH",
+  "PLAN_sha256": "8198f718fb37033ce846e06a33eaaff543d45e7186233b21e286f9572607d572",
+  "native_checks": {
+    "pass": 10,
+    "red": 0,
+    "checks": {
+      "OFF_native_full_output_repeat_equality": true,
+      "OFF_original_no_claim_or_arithmetic_item": true,
+      "original_degree_tables_Bachelor3_Master4_source_rows_only": true,
+      "original_table_quotes_whole_contiguous_under600": true,
+      "scope_from_mapping_drops_source_owned_cohort_field_period": true,
+      "native_typed_models_reject_unknown_cohort_dimensions": true,
+      "ClaimBuilder_unknown_year_allowed_without_requested2027": true,
+      "extra_normalized_value_not_typed_scope": true,
+      "unknown_year_scope_covers_requested2027_isUNKNOWN": true,
+      "no_scope_fields_for_effective_cohort_period_studyfield": true
+    }
+  },
+  "original_table_rows_diagnostic_only": {
+    "bachelor": 3,
+    "master": 4
+  },
+  "whole_contiguous_quote_chars": [
+    244,
+    300
+  ],
+  "new_reader_claims_emitted": 0,
+  "OFF_compatibility": "unchanged native full output twice repeated equal; no patched OFF equivalence claim",
+  "typed_gap": [
+    "effectivecohort",
+    "studyfield",
+    "period"
+  ],
+  "flat_unknown_academic_year_supported": true,
+  "new_requestedyear_inference": false,
+  "prepared_negative_controls": 16,
+  "prepared_negative_controls_executed": 0,
+  "unknown_reason": "no ON rule implemented because native typed scope drops/rejects cohort; arbitrary dict/notes do not supply native coverage",
+  "source_files_copied": 13,
+  "proposedflagdefault": false,
+  "sourceflag_or_patch_created": false,
+  "sourceproposalready": false,
+  "runtime_actions": {
+    "network_provider_model": 0,
+    "repo_source_git_handoff_STOPmutations": 0,
+    "semantic_labels_gold_score": 0,
+    "stable_ordering_scopechanges": 0
+  },
+  "report_sha256": "b001466103c3b15046f251d9cccfd5c1358fee5b7aac38e2895d77f5cf54d682"
+}

@@ -1,0 +1,582 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/runtime/on/frontend[39m
+
+ [32m✓[39m src/components/ResultDetail.scope.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 118[2mms[22m[39m
+ [31m❯[39m src/screens/ShortlistScreen.test.tsx [2m([22m[2m46 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 4705[2mms[22m[39m
+   [32m✓[39m rejecting a programme [2m(6)[22m
+     [32m✓[39m asks for a reason instead of silently sending an empty one[32m 45[2mms[22m[39m
+     [32m✓[39m records the reason typed by the applicant[32m 22[2mms[22m[39m
+     [32m✓[39m offers the common reasons as one click[32m 30[2mms[22m[39m
+     [32m✓[39m keeps the reason optional: saying No with nothing typed still works[32m 20[2mms[22m[39m
+     [32m✓[39m shows the stored reason on a row already rejected[32m 13[2mms[22m[39m
+     [32m✓[39m does not ask for a reason when approving[32m 14[2mms[22m[39m
+   [32m✓[39m filter labels [2m(2)[22m
+     [32m✓[39m offers readable statuses, not raw enum tokens[32m 17[2mms[22m[39m
+     [32m✓[39m keeps the enum as the option value, so filtering still works[32m 18[2mms[22m[39m
+   [32m✓[39m Find search [2m(4)[22m
+     [32m✓[39m removes a saved approved programme instead of changing its decision silently[32m 47[2mms[22m[39m
+     [32m✓[39m removes a saved maybe programme instead of changing its decision silently[32m 19[2mms[22m[39m
+     [32m✓[39m filters by university, programme and country without changing the saved results[32m 12[2mms[22m[39m
+     [32m✓[39m opens a source-backed result and compares only selected programmes[32m 33[2mms[22m[39m
+   [32m✓[39m notes [2m(1)[22m
+     [32m✓[39m saves a note without deciding the row[32m 25[2mms[22m[39m
+   [32m✓[39m the v2 ranking on the shortlist [2m(4)[22m
+     [32m✓[39m shows the match, what is confirmed, and the bucket[32m 12[2mms[22m[39m
+     [32m✓[39m never presents the match as a probability[32m 9[2mms[22m[39m
+     [32m✓[39m moves an unaffordable row out of the ranked table into its own section[32m 5[2mms[22m[39m
+     [32m✓[39m keeps a row assessed before v2 in the ranked table[32m 6[2mms[22m[39m
+   [32m✓[39m visible active filters [2m(13)[22m
+     [32m✓[39m keeps a readable removal button outside collapsed Filters and shows filtered / total[32m 28[2mms[22m[39m
+     [32m✓[39m removes only Search: Groningen and leaves the other active filters in place[32m 65[2mms[22m[39m
+     [32m✓[39m removes only List: Saved and leaves the other active filters in place[32m 60[2mms[22m[39m
+     [32m✓[39m removes only Country: Netherlands and leaves the other active filters in place[32m 56[2mms[22m[39m
+     [32m✓[39m removes only Eligibility: Met and leaves the other active filters in place[32m 50[2mms[22m[39m
+     [32m✓[39m removes only Funding: Full ride and leaves the other active filters in place[32m 53[2mms[22m[39m
+     [32m✓[39m removes only Hide rejected and leaves the other active filters in place[32m 53[2mms[22m[39m
+     [33m[2m✓[22m[39m clears all filters locally while preserving sort, compare, notes and unknown evidence[33m 525[2mms[22m[39m
+     [32m✓[39m uses the same local reset from the no-match recovery action[32m 32[2mms[22m[39m
+     [32m✓[39m does not describe whitespace-only search as an active filter[32m 12[2mms[22m[39m
+     [32m✓[39m makes Priority list context removable without changing decisions[32m 17[2mms[22m[39m
+     [32m✓[39m makes Saved list context removable without changing decisions[32m 34[2mms[22m[39m
+     [32m✓[39m makes Exploring list context removable without changing decisions[32m 17[2mms[22m[39m
+   [31m❯[39m research recovery in Find [2m(16)[22m
+     [32m✓[39m opens Progress for empty failed stage without starting work[32m 209[2mms[22m[39m
+     [32m✓[39m opens Progress for empty retryable stage without starting work[32m 205[2mms[22m[39m
+     [32m✓[39m opens Progress for empty cancelled stage without starting work[32m 206[2mms[22m[39m
+     [32m✓[39m opens Progress for empty cancelled flag despite a running job without starting work[32m 206[2mms[22m[39m
+     [32m✓[39m opens Progress for empty stale despite a running job without starting work[32m 206[2mms[22m[39m
+     [32m✓[39m opens Progress for empty dead job without starting work[32m 207[2mms[22m[39m
+     [32m✓[39m opens Progress for empty failed job without starting work[32m 207[2mms[22m[39m
+     [32m✓[39m opens Progress for empty cancelled job without starting work[32m 206[2mms[22m[39m
+     [32m✓[39m reviews an empty awaiting_user_decision run without claiming absence[32m 206[2mms[22m[39m
+     [32m✓[39m reviews an empty completed run without claiming absence[32m 206[2mms[22m[39m
+     [32m✓[39m shows progress for an empty queued job instead of a second start[32m 207[2mms[22m[39m
+     [32m✓[39m shows progress for an empty running job instead of a second start[32m 207[2mms[22m[39m
+     [32m✓[39m shows an honest empty-run notice without an inert callback button[32m 206[2mms[22m[39m
+     [32m✓[39m keeps the existing Start route only when no run exists[32m 206[2mms[22m[39m
+     [32m✓[39m retains partial rows, filters, compare, unsaved notes and unknowns when the run stops[32m 251[2mms[22m[39m
+[31m     [31m×[31m does not turn locally filtered-zero rows into a stopped or empty research run[39m[32m 215[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/screens/ShortlistScreen.test.tsx[2m > [22mresearch recovery in Find[2m > [22mdoes not turn locally filtered-zero rows into a stopped or empty research run
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Showing 0 of 1 results from this research run. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"find-page"[39m
+    [36m>[39m
+      [36m<details[39m
+        [33mclass[39m=[32m"catalogue-expand"[39m
+      [36m>[39m
+        [36m<summary>[39m
+          [0mExplore more universities from the local catalogue[0m
+        [36m</summary>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"University catalogue"[39m
+          [33mclass[39m=[32m"university-catalogue"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"catalogue-heading"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"screen__eyebrow"[39m
+              [36m>[39m
+                [0mEXPLORE UNIVERSITIES[0m
+              [36m</p>[39m
+              [36m<h2>[39m
+                [0mFind a place to begin.[0m
+              [36m</h2>[39m
+              [36m<p>[39m
+                [0mBrowse [0m
+                [0m0[0m
+                [0m universities, even when live research is unavailable. Select up to 5 to check against your profile.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"chip"[39m
+            [36m>[39m
+              [0m0[0m
+              [0m imported universities[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"catalogue-tools"[39m
+          [36m>[39m
+            [36m<label>[39m
+              [0mUniversity, city or country[0m
+              [36m<input[39m
+                [33mplaceholder[39m=[32m"Try MIT, Canada or Groningen"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<label>[39m
+              [0mCountry or region[0m
+              [36m<select>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mAll countries[0m
+                [36m</option>[39m
+                [36m<option>[39m
+                  [0mEurope[0m
+                [36m</option>[39m
+                [36m<option>[39m
+                  [0mAsia[0m
+                [36m</option>[39m
+                [36m<option>[39m
+                  [0mNorth America[0m
+                [36m</option>[39m
+                [36m<option>[39m
+                  [0mSouth America[0m
+                [36m</option>[39m
+                [36m<option>[39m
+                  [0mOceania[0m
+                [36m</option>[39m
+                [36m<option>[39m
+                  [0mAfrica[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</label>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"btn btn--primary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mComplete profile to research[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"catalogue-note"[39m
+          [36m>[39m
+            [0mThese are university candidates. Your requested programme, admission requirements, tuition and scholarships still need official verification. Missing information never means you are ineligible.[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0m0 universities found[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33maria-busy[39m=[32m"false"[39m
+            [33mclass[39m=[32m"catalogue-grid"[39m
+          [36m/>[39m
+          [36m<p>[39m
+            [0mNo universities match these filters. Try another country or name.[0m
+          [36m</p>[39m
+        [36m</section>[39m
+      [36m</details>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"find-hero"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"screen__head"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"screen__eyebrow"[39m
+          [36m>[39m
+            [0mGLOBAL OPPORTUNITIES. REAL MATCHES.[0m
+          [36m</p>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"screen__title"[39m
+          [36m>[39m
+            [0mFind your best [0m
+            [36m<span[39m
+              [33mclass[39m=[32m"find-yellow"[39m
+            [36m>[39m
+              [0mmatches.[0m
+            [36m</span>[39m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"screen__lede"[39m
+          [36m>[39m
+            [0mExplore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<img[39m
+          [33malt[39m=[32m"Unimatch mascot exploring a mountain landscape"[39m
+          [33msrc[39m=[32m"/brand/unimatch-journey.png"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"stack stack--loose"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"notice notice--demo"[39m
+          [33mrole[39m=[32m"note"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<strong>[39m
+              [0mDemo data.[0m
+            [36m</strong>[39m
+            [0m These figures come from a bundled synthetic corpus, not from real university pages. Every source below is a [0m
+            [36m<code>[39m
+              [0mfixture://[0m
+            [36m</code>[39m
+            [0m address.[0m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"find-toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"find-search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"visually-hidden"[39m
+            [36m>[39m
+              [0mSearch universities, programmes or countries[0m
+            [36m</span>[39m
+            [36m<input[39m
+              [33mplaceholder[39m=[32m"Search universities, programmes or countries…"[39m
+              [33mvalue[39m=[32m"No local match"[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFilters[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn btn--dark"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mCompare ([0m
+            [0m0[0m
+            [0m)[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Match list"[39m
+          [33mclass[39m=[32m"find-tabs"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAll[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mPriority[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mSaved[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mExploring[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<details[39m
+          [33mclass[39m=[32m"find-filters"[39m
+          [33mid[39m=[32m"find-filters"[39m
+        [36m>[39m
+          [36m<summary>[39m
+            [0mFilter and sort results[0m
+          [36m</summary>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"panel panel--sunken"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"filters"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"field__label"[39m
+                  [33mfor[39m=[32m"f-country"[39m
+                [36m>[39m
+                  [0mCountry[0m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33mid[39m=[32m"f-country"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mAll ([0m
+                    [0m1[0m
+                    [0m)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"Netherlands"[39m
+                  [36m>[39m
+                    [0mNetherlands[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"field__label"[39m
+                  [33mfor[39m=[32m"f-elig"[39m
+                [36m>[39m
+                  [0mEligibility[0m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33mid[39m=[32m"f-elig"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mAny[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"MET"[39m
+                  [36m>[39m
+                    [0mMet[0m
+                    [0m ([0m
+                    [0m1[0m
+                    [0m)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"NEEDS_OFFICIAL_CLARIFICATION"[39m
+                  [36m>[39m
+                    [0mUnverified[0m
+                    [0m ([0m
+                    [0m2[0m
+                    [0m)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"field__label"[39m
+                  [33mfor[39m=[32m"f-fund"[39m
+                [36m>[39m
+                  [0mFunding[0m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33mid[39m=[32m"f-fund"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mAny[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"FULL_RIDE_CONFIRMED"[39m
+                  [36m>[39m
+                    [0mFull ride[0m
+                    [0m ([0m
+                    [0m1[0m
+                    [0m)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"UNKNOWN"[39m
+                  [36m>[39m
+                    [0mUnknown[0m
+                    [0m ([0m
+                    [0m1[0m
+                    [0m)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"field__label"[39m
+                  [33mfor[39m=[32m"f-sort"[39m
+                [36m>[39m
+                  [0mSort by[0m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33mid[39m=[32m"f-sort"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"key"[39m
+                  [36m>[39m
+                    [0mMatch, discounted by what is unverified[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"fit"[39m
+                  [36m>[39m
+                    [0mMatch with your priorities[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"coverage"[39m
+                  [36m>[39m
+                    [0mMost confirmed[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"gap"[39m
+                  [36m>[39m
+                    [0mSmallest remaining cost[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"deadline"[39m
+                  [36m>[39m
+                    [0mEarliest deadline[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"university"[39m
+                  [36m>[39m
+                    [0mUniversity name[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"row row--tight small"[39m
+                [33mstyle[39m=[32m"padding-bottom: 6px;"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mHide rejected[0m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+        [36m</details>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Active filters"[39m
+          [33mclass[39m=[32m"row row--tight"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"small muted"[39m
+          [36m>[39m
+            [0mActive filters[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Remove filter: Search: No local match"[39m
+            [33mclass[39m=[32m"btn btn--sm"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mSearch: No local match[0m
+            [0m [0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m×[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn btn--sm"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mClear all filters[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-live[39m=[32m"polite"[39m
+          [33mclass[39m=[32m"find-results"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"find-results__count"[39m
+          [36m>[39m
+            [0mShowing [0m
+            [0m0[0m
+            [0m of [0m
+            [0m1[0m
+            [0m result[0m
+            [0m from this research run[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"find-empty"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"empty"[39m
+            [36m>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"empty__title"[39m
+              [36m>[39m
+                [0mNothing matches these filters yet.[0m
+              [36m</p>[39m
+              [0mTry another search or clear the filters.[0m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"btn"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mClear filters[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<details[39m
+          [33mclass[39m=[32m"find-advanced"[39m
+        [36m>[39m
+          [36m<summary>[39m
+            [0mDetailed evidence table[0m
+          [36m</summary>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notice notice--info"[39m
+            [33mrole[39m=[32m"note"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [0mNothing here is both affordable and verified enough to rank. Every option is in a section below, with the reason it is there.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"xs faint"[39m
+          [36m>[39m
+            [0mShowing [0m
+            [0m0[0m
+            [0m of [0m
+            [0m1[0m
+            [0m ranked rows. [0m
+            [36m<strong>[39m
+              [0mMatch[0m
+            [36m</strong>[39m
+            [0m is how well a place fits the priorities you stated, on confirmed data — not a probability of admission. The [0m
+            [36m<strong>[39m
+              [0mConfirmed[0m
+            [36m</strong>[39m
+            [0m percentage is how much of that judgement rests on data we could verify.[0m
+          [36m</p>[39m
+        [36m</details>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"xs faint"[39m
+        [36m>[39m
+          [0mShowing [0m
+          [0m0[0m
+          [0m of [0m
+          [0m1[0m
+          [0m. Rejected rows are kept with their reason so the same programme is not proposed again without new information.[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+[90m [2m❯[22m Object.getElementError ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/screens/ShortlistScreen.test.tsx:[2m513:19[22m[39m
+    [90m511|[39m     expect(screen.queryByText('Research needs attention.')).not.toBeIn…
+    [90m512|[39m     fireEvent.change(screen.getByPlaceholderText('Search universities,…
+    [90m513|[39m     expect(screen.getByText('Showing 0 of 1 results from this research…
+    [90m   |[39m                   [31m^[39m
+    [90m514|[39m     expect(screen.getByRole('button', { name: 'Clear filters' })).toBe…
+    [90m515|[39m     expect(screen.queryByRole('button', { name: 'View research progres…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m53 passed[39m[22m[90m (54)[39m
+[2m   Start at [22m 03:50:08
+[2m   Duration [22m 5.66s[2m (tests 75%, environment 15%, transform 6%, import 2%, setup 2%)[22m
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/b-recovery-proposal/logs/on.junit.xml

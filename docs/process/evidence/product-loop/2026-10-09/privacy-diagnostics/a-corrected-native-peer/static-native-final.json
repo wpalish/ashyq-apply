@@ -1,0 +1,56 @@
+{
+  "executions": [
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+        "check",
+        "app/adapters/cost/web_costs.py",
+        "app/adapters/discovery/catalog_walker.py",
+        "app/adapters/discovery/live_discovery.py",
+        "app/adapters/documents/web_documents.py",
+        "app/adapters/fetching.py",
+        "app/adapters/government/web_government.py",
+        "app/adapters/requirements/web_requirements.py",
+        "app/adapters/scholarship/web_scholarships.py",
+        "app/adapters/search/intent.py",
+        "app/jobs/worker.py",
+        "app/pipeline/runner.py",
+        "tests/test_fetch_pii_hops.py",
+        "tests/test_rejected_diagnostics.py",
+        "tests/test_rejected_diagnostics_persistence.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-correction-review/runtime/on/backend",
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": "",
+      "wall_seconds": 0.063
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "app/adapters/cost/web_costs.py",
+        "app/adapters/discovery/catalog_walker.py",
+        "app/adapters/discovery/live_discovery.py",
+        "app/adapters/documents/web_documents.py",
+        "app/adapters/fetching.py",
+        "app/adapters/government/web_government.py",
+        "app/adapters/requirements/web_requirements.py",
+        "app/adapters/scholarship/web_scholarships.py",
+        "app/adapters/search/intent.py",
+        "app/jobs/worker.py",
+        "app/pipeline/runner.py",
+        "tests/test_fetch_pii_hops.py",
+        "tests/test_rejected_diagnostics.py",
+        "tests/test_rejected_diagnostics_persistence.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-correction-review/runtime/on/backend",
+      "exit_code": 0,
+      "stdout": "14 files already formatted\n",
+      "stderr": "",
+      "wall_seconds": 0.016
+    }
+  ],
+  "no_edits": true
+}

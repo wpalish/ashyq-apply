@@ -1,0 +1,60 @@
+{
+  "at_utc": "2026-10-13T05:19:07.168102+00:00",
+  "status": "BACKEND_STATIC3_QUALIFIED_ONLY_NOT_RUNTIME_FULL_UI_PRODUCT_SEARCH",
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.129308667
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.039817083
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 3.191917083
+    }
+  ],
+  "sampled_before_after_count": 679,
+  "sampled_before_after_equal": true,
+  "wider_application_primary_lab_count": 781,
+  "wider_application_equal": true,
+  "raw_files": {
+    "result.json": "0c793caddb83f3f9612e9322f0fb35f3752c82568827042c201a73198b223418",
+    "format.log": "f93a7e052a696124850b665916ea664e486ced6bda38df36a179de5b86da83dc",
+    "source-before.json": "dbf8b879dfd3fdc0cca79ccb3781d2cd8123bef62e10ca57147ab50ae3ee7f65",
+    "source-after.json": "dbf8b879dfd3fdc0cca79ccb3781d2cd8123bef62e10ca57147ab50ae3ee7f65",
+    "mypy.log": "9a80b3cf1f7e7fb93ff6cd790e51962207038f57931a7807f5b655f80b357889",
+    "ruff.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  "mypy_checked_files": 406
+}

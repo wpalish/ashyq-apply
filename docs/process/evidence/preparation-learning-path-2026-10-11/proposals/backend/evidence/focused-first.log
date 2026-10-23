@@ -1,0 +1,36 @@
+...............FF...................................                     [100%]
+=================================== FAILURES ===================================
+_ test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-features-1] _
+
+lesson_id = 'ielts-reading-features-1'
+
+    @pytest.mark.parametrize("lesson_id", EXPECTED_KEYS)
+    def test_initial_lessons_have_five_questions_full_material_and_no_private_keys(lesson_id):
+        result = lesson_dispatch(lesson_id, PACK_VERSION).model_dump(mode="json")
+        assert len(result["questions"]) == 5 and result["unofficial"]
+        assert len(result["introduction"]) > 1200
+        assert "Teacher key" not in result["introduction"] and "Instructor answer key" not in result["introduction"]
+>       assert not any(field in json.dumps(result) for field in ("correct_choice_id", "accepted_answers", "explanation"))
+E       assert not True
+E        +  where True = any(<generator object test_initial_lessons_have_five_questions_full_material_and_no_private_keys.<locals>.<genexpr> at 0x10a3aa500>)
+
+tests/test_learning_pack_domain.py:116: AssertionError
+_ test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-completion-1] _
+
+lesson_id = 'ielts-reading-completion-1'
+
+    @pytest.mark.parametrize("lesson_id", EXPECTED_KEYS)
+    def test_initial_lessons_have_five_questions_full_material_and_no_private_keys(lesson_id):
+        result = lesson_dispatch(lesson_id, PACK_VERSION).model_dump(mode="json")
+        assert len(result["questions"]) == 5 and result["unofficial"]
+        assert len(result["introduction"]) > 1200
+        assert "Teacher key" not in result["introduction"] and "Instructor answer key" not in result["introduction"]
+>       assert not any(field in json.dumps(result) for field in ("correct_choice_id", "accepted_answers", "explanation"))
+E       assert not True
+E        +  where True = any(<generator object test_initial_lessons_have_five_questions_full_material_and_no_private_keys.<locals>.<genexpr> at 0x10a3fdd20>)
+
+tests/test_learning_pack_domain.py:116: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_learning_pack_domain.py::test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-features-1]
+FAILED tests/test_learning_pack_domain.py::test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-completion-1]
+2 failed, 50 passed in 0.14s

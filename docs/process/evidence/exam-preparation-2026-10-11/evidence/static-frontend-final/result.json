@@ -1,0 +1,20 @@
+{
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 1,
+      "seconds": 0.09389145905151963
+    }
+  ],
+  "before_after_equal": true,
+  "status": "FAIL_OR_INCOMPLETE"
+}

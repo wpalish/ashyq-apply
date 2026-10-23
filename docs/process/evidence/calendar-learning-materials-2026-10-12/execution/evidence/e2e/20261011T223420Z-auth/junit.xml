@@ -1,0 +1,83 @@
+<testsuites id="" name="" tests="9" failures="0" skipped="0" errors="1" time="15.213984">
+<testsuite name="auth-journey.spec.ts" timestamp="2026-10-11T22:34:23.089Z" hostname="desktop-chromium" tests="9" failures="0" skipped="0" time="11.959" errors="1">
+<testcase name="the sign-in screen stands in front of the app" classname="auth-journey.spec.ts" time="0.569">
+</testcase>
+<testcase name="a new workspace can be registered" classname="auth-journey.spec.ts" time="0.416">
+</testcase>
+<testcase name="the workspace can hold a profile and a finished run" classname="auth-journey.spec.ts" time="4.664">
+</testcase>
+<testcase name="original practice persists into a second signed-in browser session" classname="auth-journey.spec.ts" time="1.626">
+</testcase>
+<testcase name="signing out returns to the sign-in screen" classname="auth-journey.spec.ts" time="0.215">
+</testcase>
+<testcase name="signing in again finds the work still there" classname="auth-journey.spec.ts" time="0.758">
+</testcase>
+<testcase name="a session that dies mid-use returns to sign-in, not an error banner" classname="auth-journey.spec.ts" time="0.449">
+</testcase>
+<testcase name="versioned short practice and its accepted feedback survive a fresh signed-in session" classname="auth-journey.spec.ts" time="2.154">
+</testcase>
+<testcase name="opt-in dated material and own receipt persist through reload and a clean signed-in browser" classname="auth-journey.spec.ts" time="1.108">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/test-failed-2.png]]
+
+[[ATTACHMENT|test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<error message="locator.check: Clicking the checkbox did not change its state" type="Error">
+<![CDATA[  [desktop-chromium] › auth-journey.spec.ts:230:1 › opt-in dated material and own receipt persist through reload and a clean signed-in browser 
+
+    Error: locator.check: Clicking the checkbox did not change its state
+    Call log:
+      - waiting for getByRole('checkbox', { name: /^Completed:/ }).first()
+        - locator resolved to <input type="checkbox" aria-label="Completed: Arrange a component diagnostic and record its dated baseline; starter totals are not official scores (2026-10-12)"/>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - performing click action
+        - click action done
+        - waiting for scheduled navigations to finish
+        - navigations have finished
+
+
+      273 |       const tickSaved = first.waitForResponse(reply => reply.request().method() === 'PUT'
+      274 |         && /\/preparation\/schedule$/.test(new URL(reply.url()).pathname));
+    > 275 |       await firstTick.check();
+          |                       ^
+      276 |       expect((await tickSaved).ok()).toBeTruthy();
+      277 |     }
+      278 |     const before = await first.request.get(`/api/profiles/${profileId}/preparation/schedule`);
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/auth-journey.spec.ts:275:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T223420Z-auth/test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T223420Z-auth/test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261011T223420Z-auth/test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261011T223420Z-auth/test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T223420Z-auth/test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261011T223420Z-auth/test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+</testsuite>
+</testsuites>

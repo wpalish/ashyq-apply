@@ -1,0 +1,74 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_local_pilot.py",
+    "-q",
+    "--junitxml=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/logs/attempt3.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend",
+  "environment": {
+    "HOME": "/Users/wpalish",
+    "PATH": "/usr/bin:/bin",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-local-pilot-proposal/runtime/backend",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+  },
+  "source_before": {
+    "tests/test_local_pilot.py": {
+      "sha256": "a5dc860143157082359fa051cdbb9177af64019a0ab37f8f65a0908e1f22e70c",
+      "bytes": 27130
+    },
+    "evaluation/research/local_pilot.py": {
+      "sha256": "5f182fe74e343b1cfaf972c38c46e6eb958f4767fdd8a5957f5b5b4464cf9a5e",
+      "bytes": 50258
+    },
+    "evaluation/research/pilot_admission.py": {
+      "sha256": "6d3ef1414eaa52f50d5240a86fb2f375e0c647353ba12bb0a93036167a599c0d",
+      "bytes": 20229
+    },
+    "evaluation/research/expert/controller.py": {
+      "sha256": "b0d34d849140485125665b5805e4c6c2a08ccb1659271326cc7851ad955f7807",
+      "bytes": 45645
+    },
+    "evaluation/research/expert/models.py": {
+      "sha256": "5c18f43e83a131b34524036e040bbf941c478477e07992024362fe736af175e9",
+      "bytes": 44764
+    },
+    "evaluation/research/expert/selector.py": {
+      "sha256": "7ccb3649dfb4ff949bf24bbe2e019e9803eb9a3c2f1c39609da747f6bb3773ea",
+      "bytes": 3952
+    }
+  },
+  "qualification": "denied network with mock source/processes; not actual OS/runtime admission",
+  "exit_code": 1,
+  "source_after": {
+    "tests/test_local_pilot.py": {
+      "sha256": "a5dc860143157082359fa051cdbb9177af64019a0ab37f8f65a0908e1f22e70c",
+      "bytes": 27130
+    },
+    "evaluation/research/local_pilot.py": {
+      "sha256": "5f182fe74e343b1cfaf972c38c46e6eb958f4767fdd8a5957f5b5b4464cf9a5e",
+      "bytes": 50258
+    },
+    "evaluation/research/pilot_admission.py": {
+      "sha256": "6d3ef1414eaa52f50d5240a86fb2f375e0c647353ba12bb0a93036167a599c0d",
+      "bytes": 20229
+    },
+    "evaluation/research/expert/controller.py": {
+      "sha256": "b0d34d849140485125665b5805e4c6c2a08ccb1659271326cc7851ad955f7807",
+      "bytes": 45645
+    },
+    "evaluation/research/expert/models.py": {
+      "sha256": "5c18f43e83a131b34524036e040bbf941c478477e07992024362fe736af175e9",
+      "bytes": 44764
+    },
+    "evaluation/research/expert/selector.py": {
+      "sha256": "7ccb3649dfb4ff949bf24bbe2e019e9803eb9a3c2f1c39609da747f6bb3773ea",
+      "bytes": 3952
+    }
+  }
+}

@@ -1,0 +1,93 @@
+[
+  {
+    "name": "ruff",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "-m",
+      "ruff",
+      "check",
+      "evaluation/research/expert/controller.py",
+      "evaluation/research/expert/models.py",
+      "evaluation/research/expert/selector.py",
+      "evaluation/research/local_pilot.py",
+      "evaluation/research/pilot_admission.py",
+      "tests/test_local_pilot.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend",
+    "environment": {
+      "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/home",
+      "PATH": "/usr/bin:/bin",
+      "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/tmp",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "UNIMATCH_DEMO_MODE": "true",
+      "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+      "UNIMATCH_SEARCH_PROVIDER": "none",
+      "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend"
+    },
+    "exit_code": 0,
+    "started": "2026-10-08T08:12:15.687383+00:00",
+    "ended": "2026-10-08T08:12:15.768681+00:00"
+  },
+  {
+    "name": "format",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "-m",
+      "ruff",
+      "format",
+      "--check",
+      "evaluation/research/expert/controller.py",
+      "evaluation/research/expert/models.py",
+      "evaluation/research/expert/selector.py",
+      "evaluation/research/local_pilot.py",
+      "evaluation/research/pilot_admission.py",
+      "tests/test_local_pilot.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend",
+    "environment": {
+      "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/home",
+      "PATH": "/usr/bin:/bin",
+      "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/tmp",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "UNIMATCH_DEMO_MODE": "true",
+      "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+      "UNIMATCH_SEARCH_PROVIDER": "none",
+      "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend"
+    },
+    "exit_code": 0,
+    "started": "2026-10-08T08:12:15.768853+00:00",
+    "ended": "2026-10-08T08:12:15.816290+00:00"
+  },
+  {
+    "name": "mypy",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+      "-m",
+      "mypy",
+      "--config-file",
+      "mypy.ini",
+      "--cache-dir",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/tmp/mypy-cache",
+      "evaluation/research/expert/controller.py",
+      "evaluation/research/expert/models.py",
+      "evaluation/research/expert/selector.py",
+      "evaluation/research/local_pilot.py",
+      "evaluation/research/pilot_admission.py",
+      "tests/test_local_pilot.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend",
+    "environment": {
+      "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/home",
+      "PATH": "/usr/bin:/bin",
+      "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/tmp",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "UNIMATCH_DEMO_MODE": "true",
+      "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+      "UNIMATCH_SEARCH_PROVIDER": "none",
+      "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/runtime/backend"
+    },
+    "exit_code": 0,
+    "started": "2026-10-08T08:12:15.816427+00:00",
+    "ended": "2026-10-08T08:12:24.784304+00:00"
+  }
+]

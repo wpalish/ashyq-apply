@@ -1,0 +1,45 @@
+{
+  "queries": [
+    {
+      "at_ns": 810594778745000,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.id = ?",
+      "params": "('2026-10-07 23:12:18.274527', '6f92dcbf374a4470840935cbe5b9227a')"
+    },
+    {
+      "elapsed_ns": 81958,
+      "sql_prefix": "UPDATE research_runs SET heartbeat_at=research_runs.heartbeat_at, updated_at=? WHERE research_runs.i"
+    },
+    {
+      "at_ns": 810594778996875,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('6f92dcbf374a4470840935cbe5b9227a',)"
+    },
+    {
+      "elapsed_ns": 7791,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    },
+    {
+      "at_ns": 810594779208333,
+      "thread": 8419598720,
+      "sql": "UPDATE research_runs SET settings_snapshot=?, worker_id=?, heartbeat_at=?, updated_at=? WHERE research_runs.id = ?",
+      "params": "('{\"direct\": \"replacement\"}', 'iMac-Aliser.local:17036', '2026-10-07 23:12:18.274841', '2026-10-07 23:12:18.274988', '6f92dcbf374a4470840935cbe5b9227a')"
+    },
+    {
+      "elapsed_ns": 19875,
+      "sql_prefix": "UPDATE research_runs SET settings_snapshot=?, worker_id=?, heartbeat_at=?, updated_at=? WHERE resear"
+    },
+    {
+      "at_ns": 810594779570625,
+      "thread": 8419598720,
+      "sql": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?",
+      "params": "('6f92dcbf374a4470840935cbe5b9227a',)"
+    },
+    {
+      "elapsed_ns": 14583,
+      "sql_prefix": "SELECT research_runs.settings_snapshot \nFROM research_runs \nWHERE research_runs.id = ?"
+    }
+  ],
+  "sql_errors": []
+}

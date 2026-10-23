@@ -1,0 +1,654 @@
+{
+  "inputs": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/application-receipt.json": {
+      "sha256": "76dfc214830b4a8aee9fa574cf6ea658014f52cc188484dda885df69e339afc5",
+      "bytes": 4554
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/applied-source-pins.json": {
+      "sha256": "bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6",
+      "bytes": 3780
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/root-native-acceptance.json": {
+      "sha256": "f4af612d22fb22d94db3dce0472bbdb84b9dd8c8d4615ccc611ebc135b467074",
+      "bytes": 3504
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/integration-plan.json": {
+      "sha256": "80c63a44c35fd262eca8ff4720c18b1e3d31ab11fcd89dfcd37bf12f8495a02b",
+      "bytes": 4564
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/native-launch.json": {
+      "sha256": "936ccad68e7f8084fa3f7e471e2bf5010b29ad3c1c38602e94d66568297c9f19",
+      "bytes": 536
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/applied-head.txt": {
+      "sha256": "2d3b60cfc2ea38f0e4a1f65ac86e9edf2a31dc2d717cae1288ac110d5364c794",
+      "bytes": 41
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposal-source-manifest.json": {
+      "sha256": "ea5b45f2384597d5dc811b0559fcab917eb5d63be1552b799072dedc6dea13dc",
+      "bytes": 3337
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/current-source-pins.json": {
+      "sha256": "a1a55ed1ce5c6c97096dd8164d0f852fe17d42c64ca051dcac85e305723125b6",
+      "bytes": 20026
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/READY.json": {
+      "sha256": "2dd776c38d489df632fc84a89e87331943e5af8d1b33ccb48feb43c2a9f4c3f3",
+      "bytes": 108667
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-correction-review/READY.json": {
+      "sha256": "60cc8f31dc9038e3a8678028341f97708fea415b96ca026cd444b13252784a30",
+      "bytes": 7395
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-persistence-test-port/READY.json": {
+      "sha256": "4730997b9942f573b3c24976f358c014928a566ab1693293de63610fa02ca4b8",
+      "bytes": 1603
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/READY.json": {
+      "sha256": "f71dd805649545b612f97e40c35155106be60f3680c3ff702363f3404dc40c0f",
+      "bytes": 15683
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/READY.json": {
+      "sha256": "9a2607d2007e4ae89516a629a79b61f2ef295018d10c9a9105e22aa9dfe16846",
+      "bytes": 78804
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/cost/web_costs.py": {
+      "sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "bytes": 9177
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/cost/web_costs.py": {
+      "sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "bytes": 9177
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/discovery/catalog_walker.py": {
+      "sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "bytes": 33397
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/catalog_walker.py": {
+      "sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "bytes": 33397
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "bytes": 97093
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "bytes": 97093
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/documents/web_documents.py": {
+      "sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "bytes": 36438
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/documents/web_documents.py": {
+      "sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "bytes": 36438
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/fetching.py": {
+      "sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "bytes": 49209
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py": {
+      "sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "bytes": 49209
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/government/web_government.py": {
+      "sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "bytes": 3331
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/government/web_government.py": {
+      "sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "bytes": 3331
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "bytes": 43972
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "bytes": 43972
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/scholarship/web_scholarships.py": {
+      "sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "bytes": 62107
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/scholarship/web_scholarships.py": {
+      "sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "bytes": 62107
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/search/intent.py": {
+      "sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "bytes": 13298
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/intent.py": {
+      "sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "bytes": 13298
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/jobs/worker.py": {
+      "sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "bytes": 21770
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/jobs/worker.py": {
+      "sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "bytes": 21770
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/pipeline/runner.py": {
+      "sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "bytes": 98012
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/runner.py": {
+      "sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "bytes": 98012
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/tests/test_fetch_pii_hops.py": {
+      "sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "bytes": 28880
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_fetch_pii_hops.py": {
+      "sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "bytes": 28880
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/tests/test_rejected_diagnostics.py": {
+      "sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "bytes": 24483
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_rejected_diagnostics.py": {
+      "sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "bytes": 24483
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-persistence-test-port/proposed/backend/tests/test_rejected_diagnostics_persistence.py": {
+      "sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+      "bytes": 10710
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_rejected_diagnostics_persistence.py": {
+      "sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+      "bytes": 10710
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/config.py": {
+      "sha256": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497",
+      "bytes": 19728
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/main.py": {
+      "sha256": "a7a3ef71fc888414aa0f07433a69d315a968c5868dc9868062775acffb31840e",
+      "bytes": 12116
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_social.py": {
+      "sha256": "6421741d3e58df9c109b5b4c783f3479a770f5eea75112c1a039a19188e49a9a",
+      "bytes": 45271
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_social_moderation.py": {
+      "sha256": "2ce8db0807b56cfb7173c36687becc530afc09769532822caab51038e1651407",
+      "bytes": 22530
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/tests/test_security.py": {
+      "sha256": "69ab59495c93c2f7e5afc03b94527e73775d4f96ceb571521df7803e8692aba7",
+      "bytes": 28019
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/App.tsx": {
+      "sha256": "d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b",
+      "bytes": 21478
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/AuthGate.test.tsx": {
+      "sha256": "491b5ebcd44f969a63739388c863a3a2f85597af61afd29893396f1169941433",
+      "bytes": 16006
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/AuthGate.tsx": {
+      "sha256": "58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10",
+      "bytes": 12321
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/api/client.privacy.test.ts": {
+      "sha256": "56bec3c33132e26d9e31f474664a65fa7b888c76537658de45d7190eaee8ba18",
+      "bytes": 5938
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/api/client.ts": {
+      "sha256": "9167ad5895a0f7614ba1e4ce82b0504251a810a4cb501fd5b5d7f81940bd0252",
+      "bytes": 22015
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/lib/applicantStorage.ts": {
+      "sha256": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+      "bytes": 5051
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/lib/caseDrafts.ts": {
+      "sha256": "97395a4c9c391867375c06f864bc4a96f7b3a217941fa2cf97331bd77a864c8f",
+      "bytes": 7316
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/lib/store.test.tsx": {
+      "sha256": "c931d85257d275f85e789b37cbf92d7c756a4973a7c7521c05f94701281ed9be",
+      "bytes": 41883
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/lib/store.tsx": {
+      "sha256": "78364580ad47e200f8b22f3b8a2eff1b35e17e5cc6e5174d3cf2bd0dd13b401e",
+      "bytes": 34832
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/screens/DocumentsScreen.privacy.test.tsx": {
+      "sha256": "d35981bde8c65cb796ed629efadd9f28110a57aeabce62bbb24c95440451c6e5",
+      "bytes": 2019
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/screens/DocumentsScreen.tsx": {
+      "sha256": "4aea89570520c68b372ad7586341bc2bbe438509dee54f4e0564aa130c424def",
+      "bytes": 12043
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/screens/ExportScreen.tsx": {
+      "sha256": "718fcc2e76beb3c0d311096115296c9497ca371ba14fa8588060d3546403e105",
+      "bytes": 10748
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/screens/LegalScreen.tsx": {
+      "sha256": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+      "bytes": 14729
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/screens/LegalScreen.privacy.test.tsx": {
+      "sha256": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+      "bytes": 2492
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/screens/ExportScreen.privacy.test.tsx": {
+      "sha256": "f08e20842520c1e6c84bae9970b7b321255753705e04263cb00743f352154617",
+      "bytes": 12133
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source-manifest.json": {
+      "sha256": "5410f760db8cd95c086f4f802b9a86f84d5a6df4425bf0d4569575034499d251",
+      "bytes": 2482529
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/config.py": {
+      "sha256": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497",
+      "bytes": 19728
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/main.py": {
+      "sha256": "a7a3ef71fc888414aa0f07433a69d315a968c5868dc9868062775acffb31840e",
+      "bytes": 12116
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/api/routes_social.py": {
+      "sha256": "6421741d3e58df9c109b5b4c783f3479a770f5eea75112c1a039a19188e49a9a",
+      "bytes": 45271
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/tests/test_social_moderation.py": {
+      "sha256": "2ce8db0807b56cfb7173c36687becc530afc09769532822caab51038e1651407",
+      "bytes": 22530
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/tests/test_security.py": {
+      "sha256": "69ab59495c93c2f7e5afc03b94527e73775d4f96ceb571521df7803e8692aba7",
+      "bytes": 28019
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/App.tsx": {
+      "sha256": "d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b",
+      "bytes": 21478
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/AuthGate.test.tsx": {
+      "sha256": "491b5ebcd44f969a63739388c863a3a2f85597af61afd29893396f1169941433",
+      "bytes": 16006
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/AuthGate.tsx": {
+      "sha256": "58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10",
+      "bytes": 12321
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/api/client.privacy.test.ts": {
+      "sha256": "56bec3c33132e26d9e31f474664a65fa7b888c76537658de45d7190eaee8ba18",
+      "bytes": 5938
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/api/client.ts": {
+      "sha256": "9167ad5895a0f7614ba1e4ce82b0504251a810a4cb501fd5b5d7f81940bd0252",
+      "bytes": 22015
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/lib/applicantStorage.ts": {
+      "sha256": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+      "bytes": 5051
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/lib/caseDrafts.ts": {
+      "sha256": "97395a4c9c391867375c06f864bc4a96f7b3a217941fa2cf97331bd77a864c8f",
+      "bytes": 7316
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/lib/store.test.tsx": {
+      "sha256": "c931d85257d275f85e789b37cbf92d7c756a4973a7c7521c05f94701281ed9be",
+      "bytes": 41883
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/lib/store.tsx": {
+      "sha256": "78364580ad47e200f8b22f3b8a2eff1b35e17e5cc6e5174d3cf2bd0dd13b401e",
+      "bytes": 34832
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/screens/DocumentsScreen.privacy.test.tsx": {
+      "sha256": "d35981bde8c65cb796ed629efadd9f28110a57aeabce62bbb24c95440451c6e5",
+      "bytes": 2019
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/screens/DocumentsScreen.tsx": {
+      "sha256": "4aea89570520c68b372ad7586341bc2bbe438509dee54f4e0564aa130c424def",
+      "bytes": 12043
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/screens/ExportScreen.tsx": {
+      "sha256": "718fcc2e76beb3c0d311096115296c9497ca371ba14fa8588060d3546403e105",
+      "bytes": 10748
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/screens/LegalScreen.tsx": {
+      "sha256": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+      "bytes": 14729
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/screens/LegalScreen.privacy.test.tsx": {
+      "sha256": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+      "bytes": 2492
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/frontend/src/screens/ExportScreen.privacy.test.tsx": {
+      "sha256": "f08e20842520c1e6c84bae9970b7b321255753705e04263cb00743f352154617",
+      "bytes": 12133
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/cost/web_costs.py": {
+      "sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "bytes": 9177
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/discovery/catalog_walker.py": {
+      "sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "bytes": 33397
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "bytes": 97093
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/documents/web_documents.py": {
+      "sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "bytes": 36438
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/fetching.py": {
+      "sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "bytes": 49209
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/government/web_government.py": {
+      "sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "bytes": 3331
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "bytes": 43972
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/scholarship/web_scholarships.py": {
+      "sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "bytes": 62107
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/adapters/search/intent.py": {
+      "sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "bytes": 13298
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/jobs/worker.py": {
+      "sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "bytes": 21770
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/app/pipeline/runner.py": {
+      "sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "bytes": 98012
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/tests/test_fetch_pii_hops.py": {
+      "sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "bytes": 28880
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/tests/test_rejected_diagnostics.py": {
+      "sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "bytes": 24483
+    },
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T041531Z-check-d7321524/source/backend/tests/test_rejected_diagnostics_persistence.py": {
+      "sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+      "bytes": 10710
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/cost/web_costs.py": {
+      "sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "bytes": 9177
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/discovery/catalog_walker.py": {
+      "sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "bytes": 33397
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "bytes": 97093
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/documents/web_documents.py": {
+      "sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "bytes": 36438
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/fetching.py": {
+      "sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "bytes": 49209
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/government/web_government.py": {
+      "sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "bytes": 3331
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "bytes": 43972
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/scholarship/web_scholarships.py": {
+      "sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "bytes": 62107
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/adapters/search/intent.py": {
+      "sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "bytes": 13298
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/jobs/worker.py": {
+      "sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "bytes": 21770
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/app/pipeline/runner.py": {
+      "sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "bytes": 98012
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/tests/test_fetch_pii_hops.py": {
+      "sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "bytes": 28880
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/proposed/backend/tests/test_rejected_diagnostics.py": {
+      "sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "bytes": 24483
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-portable-persistence-tests/proposed/backend/tests/test_rejected_diagnostics_persistence.py": {
+      "sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+      "bytes": 10710
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/READY.json": {
+      "sha256": "2dd776c38d489df632fc84a89e87331943e5af8d1b33ccb48feb43c2a9f4c3f3",
+      "bytes": 108667
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v2-corrected/COPY_RECEIPT.json": {
+      "sha256": "2989d6b76876d527826efaebd2f9856b3924b8e5848847bda4054e13134220b4",
+      "bytes": 21483
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-corrected-native-peer/READY.json": {
+      "sha256": "60cc8f31dc9038e3a8678028341f97708fea415b96ca026cd444b13252784a30",
+      "bytes": 7395
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-corrected-native-peer/COPY_RECEIPT.json": {
+      "sha256": "359757394cf3a2eda3ce2464fcee61e47df7ac1969a6a44894c2c9a90422e443",
+      "bytes": 7612
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-portable-persistence-tests/READY.json": {
+      "sha256": "4730997b9942f573b3c24976f358c014928a566ab1693293de63610fa02ca4b8",
+      "bytes": 1603
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-portable-persistence-tests/COPY_RECEIPT.json": {
+      "sha256": "abcfbdfb872afbbb7fd5ae1398618b5d9fbee4d61b8936f8a0b37812b4a88b04",
+      "bytes": 2064
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-proposal-v1-rejected-peer/READY.json": {
+      "sha256": "f71dd805649545b612f97e40c35155106be60f3680c3ff702363f3404dc40c0f",
+      "bytes": 15683
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/a-proposal-v1-rejected-peer/COPY_RECEIPT.json": {
+      "sha256": "435030e48e04240d0abdb8900c74bdd00070468a7858ad7809d53d02abbfd8a8",
+      "bytes": 16247
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v1-not-accepted/READY.json": {
+      "sha256": "9a2607d2007e4ae89516a629a79b61f2ef295018d10c9a9105e22aa9dfe16846",
+      "bytes": 78804
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/c-proposal-v1-not-accepted/COPY_RECEIPT.json": {
+      "sha256": "5dee9395d30ff83599eb27e72c9ee299efbddf8521eea3ba19cf73c8c1527152",
+      "bytes": 23233
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/application-receipt.json": {
+      "sha256": "76dfc214830b4a8aee9fa574cf6ea658014f52cc188484dda885df69e339afc5",
+      "bytes": 4554
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/applied-source-pins.json": {
+      "sha256": "bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6",
+      "bytes": 3780
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/root-native-acceptance.json": {
+      "sha256": "f4af612d22fb22d94db3dce0472bbdb84b9dd8c8d4615ccc611ebc135b467074",
+      "bytes": 3504
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/integration-plan.json": {
+      "sha256": "80c63a44c35fd262eca8ff4720c18b1e3d31ab11fcd89dfcd37bf12f8495a02b",
+      "bytes": 4564
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/privacy-diagnostics/root-proposal-v1-blocker.json": {
+      "sha256": "94073b0bd65bca415602c7ee39da71bacc213a75c9f77c5a6b9b5c022c3f797a",
+      "bytes": 1272
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json": {
+      "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+      "bytes": 142
+    }
+  },
+  "accepted14": {
+    "backend/app/adapters/cost/web_costs.py": {
+      "before_primary_sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+      "proposed_sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "bytes": 9177
+    },
+    "backend/app/adapters/discovery/catalog_walker.py": {
+      "before_primary_sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "proposed_sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "bytes": 33397
+    },
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "before_primary_sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "proposed_sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "bytes": 97093
+    },
+    "backend/app/adapters/documents/web_documents.py": {
+      "before_primary_sha256": "2249d096c3623661d7f2620a3dd34e5e4404e23b0db49dff760e7605f07fdd3b",
+      "proposed_sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "bytes": 36438
+    },
+    "backend/app/adapters/fetching.py": {
+      "before_primary_sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "proposed_sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "bytes": 49209
+    },
+    "backend/app/adapters/government/web_government.py": {
+      "before_primary_sha256": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82",
+      "proposed_sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "bytes": 3331
+    },
+    "backend/app/adapters/requirements/web_requirements.py": {
+      "before_primary_sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "proposed_sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "bytes": 43972
+    },
+    "backend/app/adapters/scholarship/web_scholarships.py": {
+      "before_primary_sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "proposed_sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "bytes": 62107
+    },
+    "backend/app/adapters/search/intent.py": {
+      "before_primary_sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+      "proposed_sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "bytes": 13298
+    },
+    "backend/app/jobs/worker.py": {
+      "before_primary_sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "proposed_sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "bytes": 21770
+    },
+    "backend/app/pipeline/runner.py": {
+      "before_primary_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "proposed_sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "bytes": 98012
+    },
+    "backend/tests/test_fetch_pii_hops.py": {
+      "before_primary_sha256": "8696d69d94db618d9f84322e5af747daf81a784d25aed5a8c354e10a97f661fc",
+      "proposed_sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "bytes": 28880
+    },
+    "backend/tests/test_rejected_diagnostics.py": {
+      "before_primary_sha256": null,
+      "proposed_sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "bytes": 24483
+    },
+    "backend/tests/test_rejected_diagnostics_persistence.py": {
+      "before_primary_sha256": null,
+      "proposed_sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+      "bytes": 10710
+    }
+  },
+  "origins": {
+    "backend/app/adapters/cost/web_costs.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/cost/web_costs.py",
+    "backend/app/adapters/discovery/catalog_walker.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/discovery/catalog_walker.py",
+    "backend/app/adapters/discovery/live_discovery.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/discovery/live_discovery.py",
+    "backend/app/adapters/documents/web_documents.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/documents/web_documents.py",
+    "backend/app/adapters/fetching.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/fetching.py",
+    "backend/app/adapters/government/web_government.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/government/web_government.py",
+    "backend/app/adapters/requirements/web_requirements.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/requirements/web_requirements.py",
+    "backend/app/adapters/scholarship/web_scholarships.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/scholarship/web_scholarships.py",
+    "backend/app/adapters/search/intent.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/adapters/search/intent.py",
+    "backend/app/jobs/worker.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/jobs/worker.py",
+    "backend/app/pipeline/runner.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/app/pipeline/runner.py",
+    "backend/tests/test_fetch_pii_hops.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/tests/test_fetch_pii_hops.py",
+    "backend/tests/test_rejected_diagnostics.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/proposed/backend/tests/test_rejected_diagnostics.py",
+    "backend/tests/test_rejected_diagnostics_persistence.py": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-persistence-test-port/proposed/backend/tests/test_rejected_diagnostics_persistence.py"
+  },
+  "prior20": {
+    "backend/app/config.py": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497",
+    "backend/app/main.py": "a7a3ef71fc888414aa0f07433a69d315a968c5868dc9868062775acffb31840e",
+    "backend/app/api/routes_social.py": "6421741d3e58df9c109b5b4c783f3479a770f5eea75112c1a039a19188e49a9a",
+    "backend/tests/test_social_moderation.py": "2ce8db0807b56cfb7173c36687becc530afc09769532822caab51038e1651407",
+    "backend/tests/test_security.py": "69ab59495c93c2f7e5afc03b94527e73775d4f96ceb571521df7803e8692aba7",
+    "frontend/src/App.tsx": "d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b",
+    "frontend/src/AuthGate.test.tsx": "491b5ebcd44f969a63739388c863a3a2f85597af61afd29893396f1169941433",
+    "frontend/src/AuthGate.tsx": "58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10",
+    "frontend/src/api/client.privacy.test.ts": "56bec3c33132e26d9e31f474664a65fa7b888c76537658de45d7190eaee8ba18",
+    "frontend/src/api/client.ts": "9167ad5895a0f7614ba1e4ce82b0504251a810a4cb501fd5b5d7f81940bd0252",
+    "frontend/src/lib/applicantStorage.ts": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+    "frontend/src/lib/caseDrafts.ts": "97395a4c9c391867375c06f864bc4a96f7b3a217941fa2cf97331bd77a864c8f",
+    "frontend/src/lib/store.test.tsx": "c931d85257d275f85e789b37cbf92d7c756a4973a7c7521c05f94701281ed9be",
+    "frontend/src/lib/store.tsx": "78364580ad47e200f8b22f3b8a2eff1b35e17e5cc6e5174d3cf2bd0dd13b401e",
+    "frontend/src/screens/DocumentsScreen.privacy.test.tsx": "d35981bde8c65cb796ed629efadd9f28110a57aeabce62bbb24c95440451c6e5",
+    "frontend/src/screens/DocumentsScreen.tsx": "4aea89570520c68b372ad7586341bc2bbe438509dee54f4e0564aa130c424def",
+    "frontend/src/screens/ExportScreen.tsx": "718fcc2e76beb3c0d311096115296c9497ca371ba14fa8588060d3546403e105",
+    "frontend/src/screens/LegalScreen.tsx": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+    "frontend/src/screens/LegalScreen.privacy.test.tsx": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+    "frontend/src/screens/ExportScreen.privacy.test.tsx": "f08e20842520c1e6c84bae9970b7b321255753705e04263cb00743f352154617"
+  },
+  "merged34": {
+    "backend/app/config.py": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497",
+    "backend/app/main.py": "a7a3ef71fc888414aa0f07433a69d315a968c5868dc9868062775acffb31840e",
+    "backend/app/api/routes_social.py": "6421741d3e58df9c109b5b4c783f3479a770f5eea75112c1a039a19188e49a9a",
+    "backend/tests/test_social_moderation.py": "2ce8db0807b56cfb7173c36687becc530afc09769532822caab51038e1651407",
+    "backend/tests/test_security.py": "69ab59495c93c2f7e5afc03b94527e73775d4f96ceb571521df7803e8692aba7",
+    "frontend/src/App.tsx": "d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b",
+    "frontend/src/AuthGate.test.tsx": "491b5ebcd44f969a63739388c863a3a2f85597af61afd29893396f1169941433",
+    "frontend/src/AuthGate.tsx": "58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10",
+    "frontend/src/api/client.privacy.test.ts": "56bec3c33132e26d9e31f474664a65fa7b888c76537658de45d7190eaee8ba18",
+    "frontend/src/api/client.ts": "9167ad5895a0f7614ba1e4ce82b0504251a810a4cb501fd5b5d7f81940bd0252",
+    "frontend/src/lib/applicantStorage.ts": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+    "frontend/src/lib/caseDrafts.ts": "97395a4c9c391867375c06f864bc4a96f7b3a217941fa2cf97331bd77a864c8f",
+    "frontend/src/lib/store.test.tsx": "c931d85257d275f85e789b37cbf92d7c756a4973a7c7521c05f94701281ed9be",
+    "frontend/src/lib/store.tsx": "78364580ad47e200f8b22f3b8a2eff1b35e17e5cc6e5174d3cf2bd0dd13b401e",
+    "frontend/src/screens/DocumentsScreen.privacy.test.tsx": "d35981bde8c65cb796ed629efadd9f28110a57aeabce62bbb24c95440451c6e5",
+    "frontend/src/screens/DocumentsScreen.tsx": "4aea89570520c68b372ad7586341bc2bbe438509dee54f4e0564aa130c424def",
+    "frontend/src/screens/ExportScreen.tsx": "718fcc2e76beb3c0d311096115296c9497ca371ba14fa8588060d3546403e105",
+    "frontend/src/screens/LegalScreen.tsx": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+    "frontend/src/screens/LegalScreen.privacy.test.tsx": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+    "frontend/src/screens/ExportScreen.privacy.test.tsx": "f08e20842520c1e6c84bae9970b7b321255753705e04263cb00743f352154617",
+    "backend/app/adapters/cost/web_costs.py": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+    "backend/app/adapters/discovery/catalog_walker.py": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+    "backend/app/adapters/discovery/live_discovery.py": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+    "backend/app/adapters/documents/web_documents.py": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+    "backend/app/adapters/fetching.py": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+    "backend/app/adapters/government/web_government.py": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+    "backend/app/adapters/requirements/web_requirements.py": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+    "backend/app/adapters/scholarship/web_scholarships.py": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+    "backend/app/adapters/search/intent.py": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+    "backend/app/jobs/worker.py": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+    "backend/app/pipeline/runner.py": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+    "backend/tests/test_fetch_pii_hops.py": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+    "backend/tests/test_rejected_diagnostics.py": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+    "backend/tests/test_rejected_diagnostics_persistence.py": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9"
+  }
+}

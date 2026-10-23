@@ -1,0 +1,35 @@
+{
+  "status": "STATIC_REJECTED_MATERIAL_BOUNDARY_GAPS",
+  "recorded_at": "2026-10-09T00:43:02.564274+00:00",
+  "launcher_sha256": "b78dffa64c18530acd5e85850f3f6e241795ea56a69c42ade3656bed9f1f346b",
+  "helper_sha256": "4de011c7529cf4382901054ddea55d6998dafaa0f9601c10157dac8162879932",
+  "execution": "NOT_RUN",
+  "issues": [
+    {
+      "id": "L1",
+      "source": "preview_auth.py pre-Popen setup",
+      "reason": "No app-cwd .env* absence check before startup despite C final PLAN step2. Native Settings loads .env, and generated/unlisted files are outside declared source-map checks. No actual env file content was read or alleged."
+    },
+    {
+      "id": "L2",
+      "source": "preview_auth.py post-READY while all(p.poll() is None...)",
+      "reason": "A server early exit terminates loop silently; if cleanup succeeds the launcher returns0 and cleanup does not record early-exit reason. Record and fail that condition distinctly from deliberate root shutdown/deadline."
+    },
+    {
+      "id": "L3",
+      "source": "preview_auth.py loop and cleanup",
+      "reason": "Only STOP is rechecked. C final PLAN requires tested app/config hashes before and after preview; missing post hash evidence cannot confer source-stable execution."
+    },
+    {
+      "id": "L4",
+      "source": "preview_auth.py urllib.request.urlopen plus run_local.py safe_env",
+      "reason": "Default urllib opener honors inherited proxy settings and safe_env is a denylist, not the C-plan allowlist. Loopback readiness/auth probes should be proxy-free and child environment bounded. Conditional risk only; no request or actual proxy values inspected."
+    }
+  ],
+  "nonissues": [
+    "Helper locks read/print only by declared design; launcher lifetime flock spans launch/cleanup.",
+    "Fresh owned DB path/no-copy/no-seed and API without --with-worker are structurally correct.",
+    "finish_child attempts every recorded group with finite wait/kill/remaining-member checks; cleanup errors propagate."
+  ],
+  "scope": "This rejects this external launcher only; primary app/full gate conclusions unchanged."
+}

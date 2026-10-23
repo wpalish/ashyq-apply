@@ -1,0 +1,77 @@
+{
+  "baseline_source": "b0b1a9ccacd59d8cf1fe34b0a5b6d65cd7b8e594",
+  "source_file_sha256": {
+    "backend/app/catalogue/discovery.py": "b2f057bc90831ea465c35561e710ad4cded038e88c45a629f34c2bccf226daab",
+    "backend/evaluation/research/live.py": "d537aaef6527572dd6dda929e3ac235861e28a5e3ef5cd829ef11f3c71b73399"
+  },
+  "network_actions": 0,
+  "provider_actions": 0,
+  "rows": [
+    {
+      "case_id": "0386940c5cef525b3c8e7966868f5ed6",
+      "source_url": "https://www.wits.ac.za/",
+      "retained_body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-lsaouqcu/cache/7e/7eb8f66e5e3799173a4614921bdb7f21.body",
+      "raw_sha256": "c5791197e50f7bfe91d5531faecdc4912a0843ee1034f0f079fd102362fd1ace",
+      "normalized_content_hash": "3542e63f67f96127cd7718fcf05a126f043079b5c71617b1faad59ab90691eea",
+      "outcomes": {
+        "old": null,
+        "current_off": null,
+        "current_on": {
+          "name": "University of Witwatersrand",
+          "country": "South Africa",
+          "city": "Johannesburg",
+          "homepage": "https://www.wits.ac.za/"
+        }
+      },
+      "proof": {
+        "kind": "site_identity",
+        "source_url": "https://www.wits.ac.za/",
+        "accessed_at": "2026-10-07T16:50:30.094820+00:00",
+        "excerpt": "Copyright © 2026 - University of the Witwatersrand, Johannesburg.",
+        "name": "University of Witwatersrand",
+        "domain": "wits.ac.za",
+        "verification_status": "site_identity_checked",
+        "identity_basis": "homepage_copyright_owner"
+      },
+      "excerpt_check": "exact DOM text or exact metadata value; HTML entities decoded",
+      "offline_get_calls": [
+        "https://www.wits.ac.za/",
+        "https://www.wits.ac.za/",
+        "https://www.wits.ac.za/"
+      ]
+    },
+    {
+      "case_id": "05e4d59f87261553f15d14b0cdb470d2",
+      "source_url": "https://www.caltech.edu/",
+      "retained_body_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-baseline-temp/canary-bostmz9k/cache/b9/b9296da9bc0cac1dbac6b68130e5f383.body",
+      "raw_sha256": "8b397250e121b2ca303abd012100cfcfbd1484b8d0efa0866d4eb116726d3936",
+      "normalized_content_hash": "a50d95e9ec3558b2412af4ed7c2c691fde1fd47349027e717508bb05177af399",
+      "outcomes": {
+        "old": null,
+        "current_off": null,
+        "current_on": {
+          "name": "California Institute of Technology",
+          "country": "United States",
+          "city": "Pasadena",
+          "homepage": "https://www.caltech.edu/"
+        }
+      },
+      "proof": {
+        "kind": "site_identity",
+        "source_url": "https://www.caltech.edu/",
+        "accessed_at": "2026-10-07T16:50:50.640033+00:00",
+        "excerpt": "California Institute of Technology",
+        "name": "California Institute of Technology",
+        "domain": "caltech.edu",
+        "verification_status": "site_identity_checked",
+        "identity_basis": "homepage_og_site_name"
+      },
+      "excerpt_check": "exact DOM text or exact metadata value; HTML entities decoded",
+      "offline_get_calls": [
+        "https://www.caltech.edu/",
+        "https://www.caltech.edu/",
+        "https://www.caltech.edu/"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview_recovery_guarded.py", line 81, in <module>
+    assert hashlib.sha256((source / name).read_bytes()).hexdigest() == expected, name
+AssertionError: docs/screenshots/01-profile.png

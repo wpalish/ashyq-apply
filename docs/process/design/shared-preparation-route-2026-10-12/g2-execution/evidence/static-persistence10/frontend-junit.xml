@@ -1,0 +1,1855 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="596" failures="0" errors="0" time="25.972256788">
+    <testsuite name="src/App.preparation.test.tsx" timestamp="2026-10-12T04:44:22.340Z" hostname="iMac-Aliser.local" tests="11" failures="0" errors="0" skipped="0" time="0.673032666">
+        <testcase classname="src/App.preparation.test.tsx" name="shared-route unsaved input remains protected by the native shell &gt; cancels primary navigation even when the meaningful draft is durably journalled" time="0.179755583">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="shared-route unsaved input remains protected by the native shell &gt; guards switching cases and creating a new case before either store action is dispatched" time="0.139354875">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="shared-route unsaved input remains protected by the native shell &gt; rolls back a cancelled direct legal hash before the private route form unmounts" time="0.055102042">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="shared-route unsaved input remains protected by the native shell &gt; restores the same case journal after accepted navigation without an automatic preview or write" time="0.077171958">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="shared-route unsaved input remains protected by the native shell &gt; protects beforeunload while dirty and removes its risk token after accepted departure" time="0.053477541">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="shared-route unsaved input remains protected by the native shell &gt; protects logout and failed-persistence typing without trying to log out or send a route" time="0.04726225">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="preparation entry points &gt; opens from primary navigation with address, selected state and native main focus" time="0.017012">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="preparation entry points &gt; supports a direct preparation address without requiring research results" time="0.013198625">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="preparation entry points &gt; opens from the Home path action without changing the real research next step" time="0.018993125">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="preparation entry points &gt; opens selected programme goals from Plan while keeping document collection present" time="0.051172375">
+        </testcase>
+        <testcase classname="src/App.preparation.test.tsx" name="preparation entry points &gt; gives a safe save-case entry from empty Plan rather than fabricating requirements" time="0.019126041">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/AuthGate.test.tsx" timestamp="2026-10-12T04:44:22.341Z" hostname="iMac-Aliser.local" tests="19" failures="0" errors="0" skipped="0" time="0.373813833">
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; explains unavailable recovery while preserving sign in" time="0.044662542">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; asks new users to save their password and still creates their workspace" time="0.042338833">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; replaces a disabled recovery deep link with an explanation and a way back" time="0.07100625">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; keeps recovery available when the capability is true" time="0.012574125">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; keeps recovery available when the capability is undefined" time="0.015272458">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; preserves reset completion when recovery is enabled" time="0.008108792">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="public routes &gt; shows a public landing before authentication" time="0.0142685">
+            <system-err>
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/AuthGate.tsx:9:21)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="public routes &gt; makes the legal draft available before authentication" time="0.010204792">
+            <system-err>
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/AuthGate.tsx:9:21)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not auto-import an unowned local draft, old pointers or docsDone into an authenticated case" time="0.012126708">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; preserves the same authenticated owner local draft and pointer on reload" time="0.011913625">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not restore another user or organization local draft: {&quot;user_id&quot;:&quot;user-2&quot;,&quot;email&quot;:&quot;applicant@example.test&quot;,&quot;display_name&quot;:&quot;Applicant&quot;,&quot;organization_id&quot;:&quot;org-1&quot;,&quot;organization_name&quot;:&quot;My workspace&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;local_development&quot;:false}" time="0.005232792">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not restore another user or organization local draft: {&quot;user_id&quot;:&quot;user-1&quot;,&quot;email&quot;:&quot;applicant@example.test&quot;,&quot;display_name&quot;:&quot;Applicant&quot;,&quot;organization_id&quot;:&quot;org-2&quot;,&quot;organization_name&quot;:&quot;My workspace&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;local_development&quot;:false}" time="0.006020583">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; locks old private memory while a cross-tab owner transition awaits server revalidation" time="0.013815375">
+            <system-err>
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/AuthGate.tsx:9:21)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; preserves explicit anonymous demo local draft controls" time="0.0070865">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; keeps an unbound legacy draft only when the server explicitly disables authentication for demo" time="0.005317834">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not bind an older status response over a newer cross-tab owner even before its event arrives" time="0.007115584">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="independent A actual auth acknowledgment regression &gt; does not let post-login status A erase or supersede the newer acknowledged owner B" time="0.073874709">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="authenticated legal navigation preserves the private leave-guard owner &gt; keeps the identical private tree mounted through legal and back navigation after authentication" time="0.004487">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="authenticated legal navigation preserves the private leave-guard owner &gt; unmounts old private memory immediately on an owner transition even if a leave prompt would be declined" time="0.005232125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/api/client.billing.test.ts" timestamp="2026-10-12T04:44:22.342Z" hostname="iMac-Aliser.local" tests="6" failures="0" errors="0" skipped="0" time="0.003211042">
+        <testcase classname="src/api/client.billing.test.ts" name="billing client &gt; reads pricing" time="0.001185375">
+        </testcase>
+        <testcase classname="src/api/client.billing.test.ts" name="billing client &gt; opens an order without ever sending a price" time="0.000454541">
+        </testcase>
+        <testcase classname="src/api/client.billing.test.ts" name="billing client &gt; recognises a 402 and carries what the paywall needs" time="0.000496041">
+        </testcase>
+        <testcase classname="src/api/client.billing.test.ts" name="billing client &gt; does not mistake other errors for a paywall" time="0.000142209">
+        </testcase>
+        <testcase classname="src/api/client.billing.test.ts" name="billing client &gt; routes a locked export through the client so the paywall can be raised" time="0.000166">
+        </testcase>
+        <testcase classname="src/api/client.billing.test.ts" name="billing client &gt; still reports a non-JSON error body by status" time="0.000140209">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/api/client.learningPath.test.ts" timestamp="2026-10-12T04:44:22.343Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.005536458">
+        <testcase classname="src/api/client.learningPath.test.ts" name="opt-in learning-pack API compatibility &gt; encodes optional catalogue version while preserving the legacy no-argument URLs" time="0.003279208">
+        </testcase>
+        <testcase classname="src/api/client.learningPath.test.ts" name="opt-in learning-pack API compatibility &gt; preserves exact short text and immutable UUID/payload on replay without client-side grading" time="0.000641375">
+        </testcase>
+        <testcase classname="src/api/client.learningPath.test.ts" name="opt-in learning-pack API compatibility &gt; reads an encoded owned attempt UUID review without requiring a new lesson or write" time="0.000310834">
+        </testcase>
+        <testcase classname="src/api/client.learningPath.test.ts" name="opt-in learning-pack API compatibility &gt; fences short writes before transport and late opt-in history under a changed shared owner" time="0.000767291">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/api/client.preparation.test.ts" timestamp="2026-10-12T04:44:22.343Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.013519">
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; uses encoded case and lesson identifiers, version and own progress limit" time="0.006785709">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; sends the exact immutable attempt payload again without generating a new id in the client" time="0.001424959">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; retains the preparation access error and does not misclassify it as a case purchase" time="0.001117834">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; preserves the pre-existing case-unlock 402 classification" time="0.000314625">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; refuses a stale-tab attempt before any transport under the new shared cookie owner" time="0.000830625">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; rejects late history after another tab changes the owner" time="0.000272375">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="preparation API contract through the native owner boundary &gt; omits an empty programme rather than sending a fabricated result id" time="0.000184875">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="keeps schedule revision and entered buffers in an encoded owned PUT without retries" time="0.001067834">
+        </testcase>
+        <testcase classname="src/api/client.preparation.test.ts" name="blocks stale-tab schedule writes before transport and late schedule reads after owner change" time="0.000324083">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/api/client.privacy.test.ts" timestamp="2026-10-12T04:44:22.343Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.021294792">
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; refuses stale-tab applicant mutation before any fetch under another owner" time="0.005306834">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; rejects a late response after ownership changes instead of returning it into old memory" time="0.001256625">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; keeps ordinary same-owner request payload, URL, and cookie mode unchanged" time="0.001164542">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; locks old tab data while a login is pending and binds only the acknowledged new principal" time="0.00096825">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; does not let a late auth acknowledgment erase or replace a newer owner" time="0.001061083">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; clears applicant browser data only after logout succeeds" time="0.000628041">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; clears applicant browser data only after deleteAccount succeeds" time="0.004963333">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; retains applicant data and restores binding when logout fails" time="0.004397583">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; retains applicant data and restores binding when deleteAccount fails" time="0.000329334">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/AccountMenu.test.tsx" timestamp="2026-10-12T04:44:22.344Z" hostname="iMac-Aliser.local" tests="5" failures="0" errors="0" skipped="0" time="0.078985917">
+        <testcase classname="src/components/AccountMenu.test.tsx" name="changing the password &gt; says that other devices were signed out" time="0.038957916">
+        </testcase>
+        <testcase classname="src/components/AccountMenu.test.tsx" name="changing the password &gt; shows the reason from the server when the current password is wrong" time="0.007455292">
+        </testcase>
+        <testcase classname="src/components/AccountMenu.test.tsx" name="workspaces &gt; offers a switcher only when there is more than one" time="0.007261833">
+        </testcase>
+        <testcase classname="src/components/AccountMenu.test.tsx" name="workspaces &gt; hides the switcher for a single workspace" time="0.00519175">
+        </testcase>
+        <testcase classname="src/components/AccountMenu.test.tsx" name="deleting the account &gt; states what is destroyed and asks for the password" time="0.01756275">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/CommaSeparatedInput.test.tsx" timestamp="2026-10-12T04:44:22.344Z" hostname="iMac-Aliser.local" tests="3" failures="0" errors="0" skipped="0" time="0.086019458">
+        <testcase classname="src/components/CommaSeparatedInput.test.tsx" name="keeps unfinished text through unrelated updates and normalizes only on blur" time="0.058391834">
+        </testcase>
+        <testcase classname="src/components/CommaSeparatedInput.test.tsx" name="replaces local text when the parent loads a different case or clears the profile" time="0.0170565">
+        </testcase>
+        <testcase classname="src/components/CommaSeparatedInput.test.tsx" name="honours an external replacement even when its parsed values are unchanged" time="0.008973292">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/ComparePanel.preparation.test.tsx" timestamp="2026-10-12T04:44:22.344Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.226798708">
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; keeps requested intakes attached to each selected programme and distinguishes a missing list" time="0.08980725">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; distinguishes successful source reading, partial reading and an unavailable collection attempt" time="0.014982875">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; counts only saved required items in the two lists, without counting owner views again" time="0.020231209">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; uses the stored document source and marks a missing source instead of borrowing a programme URL" time="0.005003667">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; keeps unsafe sources non-clickable and does not invent an owner when a stored role is missing" time="0.004221458">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; shows saved checklist unknowns and treats blank intake as unknown" time="0.010058959">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; does not show another result’s checklist in Compare or the existing Documents detail" time="0.02786275">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; opens the chosen result and its saved evidence, switches results and closes a removed result" time="0.047547">
+        </testcase>
+        <testcase classname="src/components/ComparePanel.preparation.test.tsx" name="Compare preparation evidence &gt; can toggle details closed without persisting any preparation state" time="0.004966375">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/ErrorBoundary.test.tsx" timestamp="2026-10-12T04:44:22.345Z" hostname="iMac-Aliser.local" tests="3" failures="0" errors="0" skipped="0" time="0.064666333">
+        <testcase classname="src/components/ErrorBoundary.test.tsx" name="ErrorBoundary &gt; shows a fallback that says the data is safe, not a blank page" time="0.05966025">
+        </testcase>
+        <testcase classname="src/components/ErrorBoundary.test.tsx" name="ErrorBoundary &gt; names the error so a bug report can be written from it" time="0.00211325">
+        </testcase>
+        <testcase classname="src/components/ErrorBoundary.test.tsx" name="ErrorBoundary &gt; renders its children untouched when nothing throws" time="0.00094525">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/PaymentModal.test.tsx" timestamp="2026-10-12T04:44:22.345Z" hostname="iMac-Aliser.local" tests="6" failures="0" errors="0" skipped="0" time="0.184664167">
+        <testcase classname="src/components/PaymentModal.test.tsx" name="PaymentModal &gt; shows the price before asking for anything" time="0.014934542">
+        </testcase>
+        <testcase classname="src/components/PaymentModal.test.tsx" name="PaymentModal &gt; refuses a malformed phone number without calling the API" time="0.056092041">
+        </testcase>
+        <testcase classname="src/components/PaymentModal.test.tsx" name="PaymentModal &gt; opens an order and polls until it is paid" time="0.046807708">
+            <system-err>
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/components/PaymentModal.tsx:9:25)
+
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/components/PaymentModal.tsx:9:25)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/PaymentModal.test.tsx" name="PaymentModal &gt; never sends the full phone number to the screen after the invoice opens" time="0.022511041">
+        </testcase>
+        <testcase classname="src/components/PaymentModal.test.tsx" name="PaymentModal &gt; renders the payment payload as a scannable QR when QR is chosen" time="0.020955584">
+        </testcase>
+        <testcase classname="src/components/PaymentModal.test.tsx" name="PaymentModal &gt; reports a failure to open the order instead of spinning" time="0.020999666">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/PaywallNotice.test.tsx" timestamp="2026-10-12T04:44:22.345Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.126314375">
+        <testcase classname="src/components/PaywallNotice.test.tsx" name="PaywallNotice &gt; offers the price when there is no subscription" time="0.092886833">
+            <system-err>
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/PaywallNotice.test.tsx" name="PaywallNotice &gt; offers the subscription first when cases remain" time="0.0045285">
+            <system-err>
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/PaywallNotice.test.tsx" name="PaywallNotice &gt; falls back to the price when the quota is exhausted" time="0.007819292">
+            <system-err>
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/lib/store.tsx:157:26)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/components/PaywallNotice.test.tsx" name="PaywallNotice &gt; spends a subscription case when asked" time="0.017162833">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/ResultDetail.scope.test.tsx" timestamp="2026-10-12T04:44:22.346Z" hostname="iMac-Aliser.local" tests="8" failures="0" errors="0" skipped="0" time="0.080840834">
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="a requirement check &gt; shows the scope the page published it under" time="0.017678667">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="a requirement check &gt; says nothing when the page did not say" time="0.004945">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="an award &gt; says when an admission offer must come first" time="0.01093225">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="an award &gt; says when it is decided on financial need" time="0.007379875">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="an award &gt; stays quiet when the award page did not say" time="0.00613075">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="Documents for saved programmes &gt; explains collection in Plan for approved without asking for another approval" time="0.007397583">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="Documents for saved programmes &gt; explains collection in Plan for maybe without asking for another approval" time="0.004149333">
+        </testcase>
+        <testcase classname="src/components/ResultDetail.scope.test.tsx" name="Documents for saved programmes &gt; continues to show the returned checklist rather than the no-checklist hint" time="0.020568875">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/TeachingText.test.tsx" timestamp="2026-10-12T04:44:22.346Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.071688083">
+        <testcase classname="src/components/TeachingText.test.tsx" name="finite escaped original teaching text &gt; renders headings, paragraphs, numbered/bullet lists, emphasis and code without discarding the teaching words" time="0.051539917">
+        </testcase>
+        <testcase classname="src/components/TeachingText.test.tsx" name="finite escaped original teaching text &gt; contains semantic table headers and every original cell with keyboard access to its scroll region" time="0.011914584">
+        </testcase>
+        <testcase classname="src/components/TeachingText.test.tsx" name="finite escaped original teaching text &gt; never interprets HTML, URLs, links or malformed Markdown as executable markup" time="0.003707875">
+        </testcase>
+        <testcase classname="src/components/TeachingText.test.tsx" name="finite escaped original teaching text &gt; keeps ordinary old introductions as paragraphs and a non-table pipe paragraph intact" time="0.003327916">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/UniversityCatalogue.test.tsx" timestamp="2026-10-12T04:44:22.346Z" hostname="iMac-Aliser.local" tests="5" failures="0" errors="0" skipped="0" time="1.770901334">
+        <testcase classname="src/components/UniversityCatalogue.test.tsx" name="shows local candidates with unknown admission fit and no fabricated programme" time="0.47181075">
+        </testcase>
+        <testcase classname="src/components/UniversityCatalogue.test.tsx" name="starts live research only for selected identities and navigates to the new run" time="0.2411395">
+        </testcase>
+        <testcase classname="src/components/UniversityCatalogue.test.tsx" name="keeps candidates visible and allows retry after a catalogue request failure" time="0.628062416">
+        </testcase>
+        <testcase classname="src/components/UniversityCatalogue.test.tsx" name="lets a new applicant browse and open profile creation before selecting" time="0.210216833">
+        </testcase>
+        <testcase classname="src/components/UniversityCatalogue.test.tsx" name="clears the university selection when switching applicant cases" time="0.217670959">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/moderation.test.tsx" timestamp="2026-10-12T04:44:22.347Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.081546459">
+        <testcase classname="src/components/moderation.test.tsx" name="ReportButton &gt; says that a report is read by a person, and names the fast alternative" time="0.049687583">
+        </testcase>
+        <testcase classname="src/components/moderation.test.tsx" name="ReportButton &gt; offers the reasons the product defines and no free-text category" time="0.020071084">
+        </testcase>
+        <testcase classname="src/components/moderation.test.tsx" name="BlockButton &gt; explains what a block does before doing it, including the silence" time="0.006208791">
+        </testcase>
+        <testcase classname="src/components/moderation.test.tsx" name="BlockButton &gt; offers to undo when the person is already blocked" time="0.002073084">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/primitives.feedback.test.tsx" timestamp="2026-10-12T04:44:22.347Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.106144708">
+        <testcase classname="src/components/primitives.feedback.test.tsx" name="exposes the loading label as an atomic polite status and hides decorative motion from assistive technology" time="0.094250625">
+        </testcase>
+        <testcase classname="src/components/primitives.feedback.test.tsx" name="a failed operation takes priority over a previous saved acknowledgement" time="0.009949625">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/primitives.test.tsx" timestamp="2026-10-12T04:44:22.347Z" hostname="iMac-Aliser.local" tests="13" failures="0" errors="0" skipped="0" time="0.039610459">
+        <testcase classname="src/components/primitives.test.tsx" name="StatusChip &gt; shows the shortened label but keeps the full meaning available" time="0.00920925">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="StatusChip &gt; falls back to the humanised name for a status with no short label" time="0.000940958">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="StatusChip &gt; explains that a full ride is not a promise of an award" time="0.001488625">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="SourceLink &gt; renders a real source as an external link that cannot hijack the opener" time="0.019797708">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="SourceLink &gt; never renders a bundled demo page as a link" time="0.001782833">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="SourceLink &gt; never renders javascript:alert(document.cookie) as a link" time="0.001129292">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="SourceLink &gt; never renders JavaScript:alert(1) as a link" time="0.000620792">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="SourceLink &gt; never renders data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg== as a link" time="0.00053625">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="SourceLink &gt; never renders vbscript:msgbox(1) as a link" time="0.000518625">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="isSafeHref &gt; accepts the two schemes a published source can have" time="0.000141375">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="isSafeHref &gt; rejects script-bearing and unparseable URLs" time="0.00029575">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="Chip &gt; applies the tone class so status colour is not decorative" time="0.000599834">
+        </testcase>
+        <testcase classname="src/components/primitives.test.tsx" name="Notice &gt; is announced as a note to assistive technology" time="0.00125025">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/social.test.tsx" timestamp="2026-10-12T04:44:22.348Z" hostname="iMac-Aliser.local" tests="18" failures="0" errors="0" skipped="0" time="0.13855275">
+        <testcase classname="src/components/social.test.tsx" name="uses the selected language for relative post times" time="0.020124875">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="status &gt; says a status was not stated rather than assuming a waitlist" time="0.010202167">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="status &gt; labels the two statuses the product defines" time="0.000137125">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="initials &gt; takes one letter from each of the first two words" time="0.000198333">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="initials &gt; takes two letters when there is only one word" time="0.000226">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="initials &gt; handles a name in Cyrillic" time="0.000248375">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="initials &gt; never renders an empty tile" time="0.0001075">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Body &gt; marks the tags inside a post without touching the rest of the text" time="0.003643542">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Retract &gt; asks before deleting, and names what goes" time="0.039600333">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Retract &gt; deletes nothing if you change your mind" time="0.014364917">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Retract &gt; deletes once confirmed" time="0.004365584">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Composer &gt; shows the tags it will publish while you type" time="0.009344916">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Composer &gt; collapses two spellings of one tag into one" time="0.003814416">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Composer &gt; says nothing about tags when there are none" time="0.005518209">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Composer &gt; will not send an empty post" time="0.005106041">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Composer &gt; refuses to send a post the server would reject, and says by how much" time="0.00431025">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Composer &gt; counts down the characters that are left" time="0.003040333">
+        </testcase>
+        <testcase classname="src/components/social.test.tsx" name="Composer &gt; sends the trimmed text and then clears itself" time="0.011875709">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/draftIdentity.test.tsx" timestamp="2026-10-12T04:44:22.348Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.111384125">
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="acknowledged real-client logout erases A drafts before B or A can return" time="0.053612833">
+        </testcase>
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="organization change erases the previous workspace slot instead of keeping a private backup" time="0.010200458">
+        </testcase>
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="authenticated binding erases unowned drafts and pointers while preserving appearance" time="0.004063958">
+        </testcase>
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="an enabled authenticated response without a verified principal locks the private tree" time="0.004999875">
+        </testcase>
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="an old mounted identity cannot recreate its draft when the shared-cookie owner changes before an event" time="0.014310042">
+        </testcase>
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="a canonically scoped saved pointer still requires server ownership before restoring its draft" time="0.00305875">
+        </testcase>
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="changing the authenticated owner erases old run pointers and never requests that run" time="0.003846458">
+        </testcase>
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="the active owner keeps local edits after a failed save, recovers on reload and can explicitly retry" time="0.013892125">
+        </testcase>
+        <testcase classname="src/lib/draftIdentity.test.tsx" name="explicit and legacy helper callers share exactly one primary canonical authenticated namespace" time="0.000849417">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/drafts.test.tsx" timestamp="2026-10-12T04:44:22.349Z" hostname="iMac-Aliser.local" tests="16" failures="0" errors="0" skipped="0" time="0.118378834">
+        <testcase classname="src/lib/drafts.test.tsx" name="FE01: a brand-new unsaved case survives a reload &gt; restores the edits and flags draftRestored after a remount" time="0.023761334">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE01: a brand-new unsaved case survives a reload &gt; keeps a restored local-case draft across a second reload" time="0.012915875">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="a rejected save keeps the draft and reports the error &gt; loses nothing on a failed save and retires the slot on a successful retry" time="0.00588425">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE02: hydration gates autosave &gt; does not wipe the draft slot while getProfile is slower than the debounce" time="0.007600333">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE02: hydration gates autosave &gt; keeps hydrated false until the profile request settles" time="0.00312">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE02: hydration gates autosave &gt; keeps hydrated false until both the profile and the run settle" time="0.0047915">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE03: case isolation &gt; never applies case A saved edits to case B after a reload" time="0.009522792">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE03: case isolation &gt; keeps case A draft through a round trip A → B → A" time="0.006766084">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE03: case isolation &gt; discards a late response for case A after the user moved to case B" time="0.005485667">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE03: case isolation &gt; falls back to the server profile and drops an envelope with an unknown version" time="0.009683042">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE03: case isolation &gt; ignores an envelope that belongs to a different case" time="0.007090709">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="FE03: case isolation &gt; falls back cleanly when the draft slot holds broken JSON" time="0.003423416">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="error semantics on initial hydration &gt; treats 404 as proof the case is gone and forgets the pointer" time="0.001965292">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="error semantics on initial hydration &gt; keeps the case pointer and reports a 500" time="0.00407725">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="error semantics on initial hydration &gt; keeps the run pointer when the stored run cannot be fetched right now" time="0.001955541">
+        </testcase>
+        <testcase classname="src/lib/drafts.test.tsx" name="React StrictMode double mount &gt; leaves one final state and does not wipe the slot during hydration" time="0.007574292">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/format.test.ts" timestamp="2026-10-12T04:44:22.350Z" hostname="iMac-Aliser.local" tests="22" failures="0" errors="0" skipped="0" time="0.02440025">
+        <testcase classname="src/lib/format.test.ts" name="money &gt; shows the amount, the currency and the academic year" time="0.015367958">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="money &gt; says &quot;not found&quot; rather than rendering nothing" time="0.00076475">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="money &gt; never renders an absent value as zero" time="0.000559208">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="money &gt; renders a genuine zero as zero" time="0.000485875">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="money &gt; shows a range when the cost is published as one" time="0.000162041">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="money &gt; marks an estimate as an estimate" time="0.00008175">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="money &gt; omits the year when none was published" time="0.000067375">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="dates &gt; formats an ISO date readably, in the reader own locale" time="0.003330875">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="dates &gt; uses one locale for money and dates alike" time="0.000102542">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="dates &gt; reports a missing date rather than showing a dash" time="0.000112708">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="dates &gt; passes through anything it cannot parse instead of inventing one" time="0.000051375">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="humanize &gt; turns a screaming-snake status into a sentence" time="0.000062416">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="status vocabulary &gt; gives every eligibility status a tone" time="0.0000835">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="status vocabulary &gt; maps the four funding classifications a user acts on to distinct tones" time="0.000044375">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="status vocabulary &gt; never gives an unknown state a positive tone" time="0.000047083">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="status vocabulary &gt; explains every status it shortens" time="0.000095916">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="status vocabulary &gt; keeps each shortened label meaningfully shorter than the full phrase" time="0.000464417">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="scorePercent &gt; scales the total against the achievable maximum" time="0.00006425">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="scorePercent &gt; does not divide by zero" time="0.000029291">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="source labelling &gt; recognises bundled demo pages" time="0.000043542">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="source labelling &gt; marks a fixture URL as a bundled page rather than a link" time="0.000151958">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="source labelling &gt; shortens a real URL to host and path" time="0.000170166">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/hydrationErrors.test.tsx" timestamp="2026-10-12T04:44:22.351Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.090955416">
+        <testcase classname="src/lib/hydrationErrors.test.tsx" name="initial hydration error semantics &gt; keeps the per-tab case pointer and reports a 500" time="0.029239625">
+        </testcase>
+        <testcase classname="src/lib/hydrationErrors.test.tsx" name="initial hydration error semantics &gt; routes a 401 on the initial profile load to the reload path" time="0.059695833">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/i18n.test.ts" timestamp="2026-10-12T04:44:22.351Z" hostname="iMac-Aliser.local" tests="8" failures="0" errors="0" skipped="0" time="0.005314875">
+        <testcase classname="src/lib/i18n.test.ts" name="looking a message up &gt; answers in the chosen locale" time="0.001633625">
+        </testcase>
+        <testcase classname="src/lib/i18n.test.ts" name="looking a message up &gt; falls back to English rather than showing a key or an invented word" time="0.000168042">
+        </testcase>
+        <testcase classname="src/lib/i18n.test.ts" name="looking a message up &gt; never renders a raw key" time="0.001388208">
+        </testcase>
+        <testcase classname="src/lib/i18n.test.ts" name="choosing a language &gt; remembers the choice and tells the page what it is" time="0.000192958">
+        </testcase>
+        <testcase classname="src/lib/i18n.test.ts" name="choosing a language &gt; notifies subscribers, so a screen re-renders when it changes" time="0.00013325">
+        </testcase>
+        <testcase classname="src/lib/i18n.test.ts" name="the gaps are deliberate &gt; leaves the product vocabulary untranslated in both locales" time="0.000544917">
+        </testcase>
+        <testcase classname="src/lib/i18n.test.ts" name="the gaps are deliberate &gt; leaves nothing in the community untranslated" time="0.000178417">
+        </testcase>
+        <testcase classname="src/lib/i18n.test.ts" name="the gaps are deliberate &gt; translates the ordinary interface words in both locales" time="0.00018225">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/immutable.test.ts" timestamp="2026-10-12T04:44:22.351Z" hostname="iMac-Aliser.local" tests="11" failures="0" errors="0" skipped="0" time="0.0021765">
+        <testcase classname="src/lib/immutable.test.ts" name="get &gt; reads a nested value" time="0.000592709">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="get &gt; returns undefined for a missing branch instead of throwing" time="0.000084208">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="get &gt; reads through arrays" time="0.000059417">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="setIn &gt; does not mutate the original object" time="0.000081708">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="setIn &gt; leaves untouched branches referentially identical" time="0.000055833">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="setIn &gt; preserves arrays as arrays" time="0.00038825">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="setIn &gt; creates a missing branch rather than throwing" time="0.000075">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="castInput &gt; keeps strings as strings" time="0.000055584">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="castInput &gt; turns an emptied field into null, not zero" time="0.000060333">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="castInput &gt; parses integers and floats" time="0.000080541">
+        </testcase>
+        <testcase classname="src/lib/immutable.test.ts" name="castInput &gt; returns null rather than NaN for unparseable input" time="0.000053292">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/polling.test.tsx" timestamp="2026-10-12T04:44:22.352Z" hostname="iMac-Aliser.local" tests="5" failures="0" errors="0" skipped="0" time="0.114337666">
+        <testcase classname="src/lib/polling.test.tsx" name="polling &gt; issues one request per tick, not one per re-render" time="0.031992542">
+        </testcase>
+        <testcase classname="src/lib/polling.test.tsx" name="polling &gt; does not overlap requests when the server is slow" time="0.005073292">
+        </testcase>
+        <testcase classname="src/lib/polling.test.tsx" name="polling &gt; pauses while the tab is hidden and answers at once on return" time="0.022824625">
+        </testcase>
+        <testcase classname="src/lib/polling.test.tsx" name="polling &gt; backs off on errors and only complains after several in a row" time="0.026128167">
+        </testcase>
+        <testcase classname="src/lib/polling.test.tsx" name="polling &gt; stops entirely once the run settles" time="0.026200375">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/productRecovery.test.tsx" timestamp="2026-10-12T04:44:22.352Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.098012541">
+        <testcase classname="src/lib/productRecovery.test.tsx" name="first onboarding persists edits without requiring New applicant" time="0.030553375">
+        </testcase>
+        <testcase classname="src/lib/productRecovery.test.tsx" name="discarding a recovered local draft resets and preserves the blank case" time="0.010686833">
+        </testcase>
+        <testcase classname="src/lib/productRecovery.test.tsx" name="late result refresh from case A cannot overwrite case B rows" time="0.004464958">
+        </testcase>
+        <testcase classname="src/lib/productRecovery.test.tsx" name="recovered server draft stays local until explicit Save" time="0.051084833">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/sharedRouteRecovery.test.ts" timestamp="2026-10-12T04:44:22.352Z" hostname="iMac-Aliser.local" tests="27" failures="0" errors="0" skipped="0" time="0.026649042">
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; requires a native explicit demo or the exact owning React auth scope" time="0.001159583">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; never reads, writes or resets an old owner after native binding changes" time="0.01252875">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; persists exact original body and supplied partial targets without server or material payloads" time="0.000994875">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses version bytes without changing or deleting them" time="0.000535833">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses owner bytes without changing or deleting them" time="0.00032525">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses profile_id bytes without changing or deleting them" time="0.000296042">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses extra_material bytes without changing or deleting them" time="0.00031825">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses nonfinite bytes without changing or deleting them" time="0.00028775">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses oversize bytes without changing or deleting them" time="0.000899375">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses malformed bytes without changing or deleting them" time="0.0014995">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses invalid pending numeric capacity NaN" time="0.000131125">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses invalid pending numeric capacity Infinity" time="0.0000655">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses invalid pending numeric capacity -Infinity" time="0.000050458">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses invalid pending numeric capacity 29" time="0.000042292">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses invalid pending numeric capacity 1261" time="0.00004">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses invalid pending numeric capacity true" time="0.000053459">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; rejects malformed exact refs, a false confirmation and an impossible planning date" time="0.000201834">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; reports read/write failure without claiming a durable journal" time="0.000990792">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; refuses a journal revision overflow before replacing any stored bytes" time="0.000163083">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; keeps a newer edited draft after the exact old command ACK" time="0.001053541">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; keeps manual-id unsent form data dirty even without a later generation" time="0.000390334">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; keeps manual-review unsent form data dirty even without a later generation" time="0.00034025">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; keeps disabled-exam unsent form data dirty even without a later generation" time="0.000345125">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; marks only fully represented acknowledged form state clean" time="0.001259208">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; does not retire another original UUID, a newer journal revision or replaced raw bytes" time="0.000497875">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; an exact own reset removes only this case and keeps a different case draft" time="0.000252375">
+        </testcase>
+        <testcase classname="src/lib/sharedRouteRecovery.test.ts" name="strict per-tab own-case reference journal &gt; independent tab session stores keep different drafts for the same owner/case" time="0.000785541">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.authListFailure.test.tsx" timestamp="2026-10-12T04:44:22.353Z" hostname="iMac-Aliser.local" tests="1" failures="0" errors="0" skipped="0" time="0.016684833">
+        <testcase classname="src/lib/store.authListFailure.test.tsx" name="retains current-owner edits after an authorized case-list 500 and restores its own local slot on remount" time="0.014992458">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.authRecoveryMerge.test.tsx" timestamp="2026-10-12T04:44:22.353Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.018795208">
+        <testcase classname="src/lib/store.authRecoveryMerge.test.tsx" name="pointerless authenticated recovery uses the verified tree scope and case-filtered latest run without creating work" time="0.011384667">
+        </testcase>
+        <testcase classname="src/lib/store.authRecoveryMerge.test.tsx" name="an explicit new case overtakes delayed recovery detail and still persists its own edits after hydration settles" time="0.006418459">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.securityMerge.test.tsx" timestamp="2026-10-12T04:44:22.354Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.058540209">
+        <testcase classname="src/lib/store.securityMerge.test.tsx" name="a late acknowledged deletion of A retires A slots and marks without resetting active B" time="0.031709125">
+        </testcase>
+        <testcase classname="src/lib/store.securityMerge.test.tsx" name="successful current-case deletion returns a boolean receipt, resets private state and preserves future local edits" time="0.012027208">
+        </testcase>
+        <testcase classname="src/lib/store.securityMerge.test.tsx" name="a rejected deletion returns false and leaves the draft, checklist marks and active case intact" time="0.004595167">
+        </testcase>
+        <testcase classname="src/lib/store.securityMerge.test.tsx" name="a mounted save rechecks its original owner before follow-up requests when a deferred creation resolves" time="0.008288208">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.test.tsx" timestamp="2026-10-12T04:44:22.354Z" hostname="iMac-Aliser.local" tests="45" failures="0" errors="0" skipped="0" time="0.563279291">
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; hydrates the editable draft from the stored profile" time="0.026210042">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; never leaves the synthetic demo profile in the draft after restoring" time="0.004107084">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; forgets the pointer when the stored profile is gone" time="0.007936292">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; restores the profile even when no run is stored" time="0.004935708">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="toDraft &gt; strips the server-side fields the API rejects on write" time="0.000879416">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no synthetic scores" time="0.001010459">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; is distinguishable from the demo profile" time="0.000431416">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no invented preferences or family budget into a cleared or new case" time="0.001863459">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=false" time="0.004993709">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=true" time="0.005238583">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks save" time="0.009945458">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks start live" time="0.008047916">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; still opens an explicitly selected saved synthetic case unchanged" time="0.016793125">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="explicit demo loading &gt; only puts demo data in the draft when asked" time="0.047658209">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; joins the run already in flight instead of reporting a conflict" time="0.0054355">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; sends an idempotency key so a retried request cannot start a second run" time="0.003592917">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: true" time="0.005707916">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: false" time="0.004778958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; does not claim success or call the API without a run" time="0.002963542">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; carries a session stored under the old name across, once" time="0.001875625">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; prefers the new key when both exist" time="0.002019">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; knows the draft is dirty only after a real edit" time="0.002848917">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; aligns a saved form with the server-normalized profile" time="0.008905208">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; restores an unsaved draft after a reload without touching the saved profile" time="0.002274792">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; discarding a restored draft returns to the saved profile" time="0.004048709">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; never lets a restored draft become the saved profile by itself" time="0.002238417">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; reloads to the sign-in screen instead of showing an error banner" time="0.054894875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; still shows the banner for errors that are not about authentication" time="0.008645792">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; exports a saved profile with no research run without starting research" time="0.035601583">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; deletes a saved zero-run case only after explicit confirmation" time="0.017093083">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 403" time="0.02781725">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 500" time="0.015229375">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; returns an acknowledgment and clears only successful case draft memory and its marks" time="0.049707708">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unmounted applicant actions cannot resume under a newly bound owner &gt; refuses an old saveProfile closure before creating the old private draft" time="0.054193041">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unmounted applicant actions cannot resume under a newly bound owner &gt; refuses an old startRun closure before creating the old private draft" time="0.055858917">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; recovers latest run/results after logout removed every private pointer" time="0.005667333">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; uses first server-ordered authorized case when multiple cases exist" time="0.003728333">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; recovers a saved zero-run profile without creating research" time="0.004730958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps anonymous auth-disabled demo neutral despite saved server cases" time="0.003649958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps an explicit local new case and its own unsaved draft" time="0.004611834">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps an empty authenticated workspace neutral" time="0.003012083">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; reports a case-list failure instead of inventing recovered data" time="0.004838083">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps hydration closed while a server recovery waits, then honors newer new-case intent" time="0.005778083">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; drops a late profile answer after the authenticated owner changes" time="0.012154167">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="an explicit new case releases a cancelled case switch &gt; releases loading and preserves blank intent after the old detail answer arrives" time="0.006264">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/storeIsolation.test.tsx" timestamp="2026-10-12T04:44:22.356Z" hostname="iMac-Aliser.local" tests="12" failures="0" errors="0" skipped="0" time="0.108259208">
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a late cancel response cannot restore run A under case B" time="0.027246709">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a late retry response cannot restore run A under case B" time="0.005706166">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a late recheck response cannot restore run A under case B" time="0.004537042">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a late collect response cannot restore run A under case B" time="0.005776084">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a late rerank for A cannot overwrite B results" time="0.008641292">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a late decision summary for A cannot overwrite B summary" time="0.007654833">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a late notes failure for A does not raise an error on B" time="0.010919333">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a late deletion response for A does not clear B" time="0.008829083">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="starting a new run already invalidates a refresh from its predecessor" time="0.008050917">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a refresh begun before reranking cannot overwrite the new same-run order" time="0.004840792">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a 404 profile starts a locally persistable replacement without reviving the old pointer" time="0.009673792">
+        </testcase>
+        <testcase classname="src/lib/storeIsolation.test.tsx" name="a failed case deletion retains the exact own route journal and another case journal" time="0.004071208">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/BillingScreen.preparation.test.tsx" timestamp="2026-10-12T04:44:22.356Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.119757625">
+        <testcase classname="src/screens/BillingScreen.preparation.test.tsx" name="billing only advertises confirmed starter entitlement &gt; does not infer preparation inclusion from research full access or missing education metadata" time="0.0697295">
+        </testcase>
+        <testcase classname="src/screens/BillingScreen.preparation.test.tsx" name="billing only advertises confirmed starter entitlement &gt; confirms bounded starters when education access is allowed despite exhausted research quota" time="0.024814834">
+        </testcase>
+        <testcase classname="src/screens/BillingScreen.preparation.test.tsx" name="billing only advertises confirmed starter entitlement &gt; labels payments-disabled access as development rather than a paid subscription" time="0.004971291">
+        </testcase>
+        <testcase classname="src/screens/BillingScreen.preparation.test.tsx" name="billing only advertises confirmed starter entitlement &gt; does not transfer A education entitlement while B is loading" time="0.019052334">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/BillingScreen.test.tsx" timestamp="2026-10-12T04:44:22.356Z" hostname="iMac-Aliser.local" tests="3" failures="0" errors="0" skipped="0" time="0.085788375">
+        <testcase classname="src/screens/BillingScreen.test.tsx" name="uses server pricing for a case rather than a fictional monthly plan" time="0.070630792">
+        </testcase>
+        <testcase classname="src/screens/BillingScreen.test.tsx" name="spends a real subscription case when quota is available" time="0.006656792">
+        </testcase>
+        <testcase classname="src/screens/BillingScreen.test.tsx" name="does not offer payment before a case exists" time="0.006323125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/DocumentsScreen.ownerMerge.test.tsx" timestamp="2026-10-12T04:44:22.356Z" hostname="iMac-Aliser.local" tests="1" failures="0" errors="0" skipped="0" time="0.066275458">
+        <testcase classname="src/screens/DocumentsScreen.ownerMerge.test.tsx" name="an old mounted checklist cannot write its ticks into a newly bound owner before storage-event remount" time="0.064806125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/DocumentsScreen.privacy.test.tsx" timestamp="2026-10-12T04:44:22.357Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.152900625">
+        <testcase classname="src/screens/DocumentsScreen.privacy.test.tsx" name="native checklist mark owner scope &gt; does not restore the previous person mark for even the same result/document id" time="0.117172375">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.privacy.test.tsx" name="native checklist mark owner scope &gt; keeps a same-owner mark on ordinary remount without any collection or research" time="0.033348542">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/DocumentsScreen.recovery.test.tsx" timestamp="2026-10-12T04:44:22.357Z" hostname="iMac-Aliser.local" tests="10" failures="0" errors="0" skipped="0" time="0.155769875">
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="shows accepted active restart while the previous stage remains terminal: {&quot;stage&quot;:&quot;failed&quot;,&quot;job_status&quot;:&quot;queued&quot;,&quot;job_running&quot;:false}" time="0.068451042">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="shows accepted active restart while the previous stage remains terminal: {&quot;stage&quot;:&quot;cancelled&quot;,&quot;job_status&quot;:&quot;queued&quot;,&quot;job_running&quot;:false}" time="0.009462291">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="shows accepted active restart while the previous stage remains terminal: {&quot;stage&quot;:&quot;failed&quot;,&quot;job_status&quot;:&quot;running&quot;,&quot;job_running&quot;:true}" time="0.014589208">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="shows accepted active restart while the previous stage remains terminal: {&quot;stage&quot;:&quot;cancelled&quot;,&quot;job_status&quot;:&quot;running&quot;,&quot;job_running&quot;:true}" time="0.005419208">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="keeps an actual terminal, cancelled or stale run in recovery: {&quot;stage&quot;:&quot;failed&quot;,&quot;job_status&quot;:&quot;failed&quot;}" time="0.013154625">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="keeps an actual terminal, cancelled or stale run in recovery: {&quot;stage&quot;:&quot;cancelled&quot;,&quot;job_status&quot;:&quot;cancelled&quot;,&quot;cancelled&quot;:true}" time="0.017022">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="keeps an actual terminal, cancelled or stale run in recovery: {&quot;job_status&quot;:&quot;dead&quot;}" time="0.005742625">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="keeps an actual terminal, cancelled or stale run in recovery: {&quot;stage&quot;:&quot;cancelled&quot;,&quot;job_status&quot;:&quot;succeeded&quot;}" time="0.008788625">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="keeps an actual terminal, cancelled or stale run in recovery: {&quot;stage&quot;:&quot;document_collection&quot;,&quot;job_status&quot;:&quot;queued&quot;,&quot;cancelled&quot;:true}" time="0.005164417">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.recovery.test.tsx" name="keeps an actual terminal, cancelled or stale run in recovery: {&quot;stage&quot;:&quot;document_collection&quot;,&quot;job_status&quot;:&quot;running&quot;,&quot;job_running&quot;:true,&quot;stale&quot;:true}" time="0.006228125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ExportScreen.caseSwitch.test.tsx" timestamp="2026-10-12T04:44:22.357Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.1545965">
+        <testcase classname="src/screens/ExportScreen.caseSwitch.test.tsx" name="export state follows the same-owner active case &gt; retains confirmation and shown data on an ordinary same-case store redraw" time="0.070939875">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.caseSwitch.test.tsx" name="export state follows the same-owner active case &gt; does not transfer A confirmation or shown output to B at the delayed case commit" time="0.02965125">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.caseSwitch.test.tsx" name="export state follows the same-owner active case &gt; does not show a late A export response after the same-screen switch commits B" time="0.031960333">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.caseSwitch.test.tsx" name="export state follows the same-owner active case &gt; preserves the actual successful delete receipt when its own store acknowledgment clears the case" time="0.019129834">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ExportScreen.integration.test.tsx" timestamp="2026-10-12T04:44:22.357Z" hostname="iMac-Aliser.local" tests="6" failures="0" errors="0" skipped="0" time="0.073183459">
+        <testcase classname="src/screens/ExportScreen.integration.test.tsx" name="integrated export identity and deletion feedback &gt; rejects pending show at switch intent before the case id changes" time="0.029097708">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.integration.test.tsx" name="integrated export identity and deletion feedback &gt; rejects pending download at switch intent before the case id changes" time="0.005423667">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.integration.test.tsx" name="integrated export identity and deletion feedback &gt; clears opened JSON and confirmation on a same-id new intent" time="0.020685708">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.integration.test.tsx" name="integrated export identity and deletion feedback &gt; keeps only its own delete receipt when the blank render precedes the callback" time="0.008727792">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.integration.test.tsx" name="integrated export identity and deletion feedback &gt; retires export immediately after ACK while the old case is still rendered" time="0.004795333">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.integration.test.tsx" name="integrated export identity and deletion feedback &gt; does not accept an old delete acknowledgment after a new switch intent" time="0.002540958">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ExportScreen.privacy.test.tsx" timestamp="2026-10-12T04:44:22.358Z" hostname="iMac-Aliser.local" tests="15" failures="0" errors="0" skipped="0" time="0.237359459">
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; allows a saved no-run case to show the API record and download normally" time="0.098342167">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; clears an already opened JSON record only after acknowledgment" time="0.016781292">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; retains opened JSON and never claims success when deletion returns false" time="0.01739325">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not report success or clear JSON if the deletion callback rejects" time="0.010971875">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not let a late Show answer restore JSON after an acknowledged deletion" time="0.020271667">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not create a file from a pending Download after acknowledged deletion" time="0.004327625">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; keeps a pending Show usable when deletion is refused" time="0.00674325">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; retires the mounted previous JSON and confirmation when switching cases" time="0.007579917">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores a late show answer after a mounted case switch" time="0.006493417">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores a late download answer after a mounted case switch" time="0.003232167">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not mark a newly selected case Deleted or clear its JSON from an old acknowledgment" time="0.008628375">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; drops the old Deleted state for a different saved case" time="0.0070895">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; keeps honest acknowledgment if Store clears the case before callback resumes, then retires it for a new blank case" time="0.010165333">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores an earlier Show after A to B to A rather than trusting only a matching id" time="0.010128292">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not create a pending file after the component unmounts" time="0.0017525">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/JourneyScreens.test.tsx" timestamp="2026-10-12T04:44:22.358Z" hostname="iMac-Aliser.local" tests="22" failures="0" errors="0" skipped="0" time="0.209125917">
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;failed&quot;}" time="0.051578709">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;retryable_failed&quot;}" time="0.007020709">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;cancelled&quot;,&quot;cancelled&quot;:true}" time="0.005993041">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stale&quot;:true,&quot;job_status&quot;:&quot;running&quot;}" time="0.00572575">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;job_status&quot;:&quot;dead&quot;}" time="0.009085875">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; reviews the completed empty research instead of silently proposing a new run" time="0.00349225">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens existing partial checklists while keeping unresolved requirements visible" time="0.00579225">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens Plan when one of the chosen programmes still lacks a checklist" time="0.003354375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; shows queued collection before offering existing checklists" time="0.005480458">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; offers a direct Find route without selected programmes: empty research" time="0.007457208">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; offers a direct Find route without selected programmes: undecided results" time="0.005943083">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; opens Documents only when collection was accepted: true" time="0.037372208">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; opens Documents only when collection was accepted: false" time="0.011179208">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; shows confirmed dates and calendar export even when no checklist has been collected" time="0.004133167">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; sends a saved programme without requirements to Plan" time="0.00197475">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; keeps existing partial requirements visible during queued collection" time="0.003997167">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; does not pretend a stale worker is still collecting" time="0.000750375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; uses human group and row labels without calling an unknown programme an admission offer" time="0.0147305">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for approved" time="0.003491958">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for maybe" time="0.008647459">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for rejected" time="0.00731375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; uses choice wording before collecting documents while keeping collection disabled" time="0.001050417">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/LearningSchedulePanel.test.tsx" timestamp="2026-10-12T04:44:22.359Z" hostname="iMac-Aliser.local" tests="5" failures="0" errors="0" skipped="0" time="0.180810333">
+        <testcase classname="src/screens/LearningSchedulePanel.test.tsx" name="opt-in exact learning calendar &gt; keeps a nullable sidecar separate from legacy ticks until explicit preview and PUT" time="0.101152375">
+        </testcase>
+        <testcase classname="src/screens/LearningSchedulePanel.test.tsx" name="opt-in exact learning calendar &gt; invalidates the preview after a 409 even when conflict refresh fails" time="0.02202475">
+        </testcase>
+        <testcase classname="src/screens/LearningSchedulePanel.test.tsx" name="opt-in exact learning calendar &gt; keeps a server-confirmed own attempt review open when the legacy plan needs a fresh preview" time="0.014436292">
+        </testcase>
+        <testcase classname="src/screens/LearningSchedulePanel.test.tsx" name="opt-in exact learning calendar &gt; requires a successful fresh read after the parent revision changes" time="0.02118325">
+        </testcase>
+        <testcase classname="src/screens/LearningSchedulePanel.test.tsx" name="opt-in exact learning calendar &gt; asks the legacy panel to refresh a newer shared revision before enabling exact targets" time="0.0199415">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/LegalScreen.privacy.test.tsx" timestamp="2026-10-12T04:44:22.359Z" hostname="iMac-Aliser.local" tests="4" failures="0" errors="0" skipped="0" time="0.054107458">
+        <testcase classname="src/screens/LegalScreen.privacy.test.tsx" name="source-bound privacy notice &gt; does not imply that reading a policy records consent or verifies the operator" time="0.034651042">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.privacy.test.tsx" name="source-bound privacy notice &gt; distinguishes sharing inside a workspace from account closure and full erasure" time="0.008155375">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.privacy.test.tsx" name="source-bound privacy notice &gt; discloses configured mail, payment and infrastructure boundaries without promising a masked-only transfer" time="0.003354042">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.privacy.test.tsx" name="source-bound privacy notice &gt; separates implemented local processing from a future AI contract and preserves mandatory rights" time="0.005305">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/LegalScreen.test.tsx" timestamp="2026-10-12T04:44:22.360Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.060164333">
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; says up front that a lawyer has not reviewed them" time="0.021987666">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; does not hide that the product will be used by minors" time="0.00466725">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; repeats the promise the rest of the product is built on" time="0.003525792">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; says which part of the product is public, and what it publishes" time="0.003261709">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; does not forbid the feature the product ships" time="0.008638375">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; says what moderation there is, and what it still cannot do" time="0.005558459">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; names the picture and what is stripped from it" time="0.002595708">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; says private messages are private, and names the one exception" time="0.001989917">
+        </testcase>
+        <testcase classname="src/screens/LegalScreen.test.tsx" name="privacy and terms &gt; names what is stored rather than gesturing at &quot;your data&quot;" time="0.00640725">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/MessagesScreen.identity.test.tsx" timestamp="2026-10-12T04:44:22.360Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.107611333">
+        <testcase classname="src/screens/MessagesScreen.identity.test.tsx" name="late conversation A response cannot label recipient B as A" time="0.089140791">
+        </testcase>
+        <testcase classname="src/screens/MessagesScreen.identity.test.tsx" name="switching recipients resets the composer instead of sending A draft to B" time="0.016212125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/MessagesScreen.loading.test.tsx" timestamp="2026-10-12T04:44:22.360Z" hostname="iMac-Aliser.local" tests="1" failures="0" errors="0" skipped="0" time="0.087875875">
+        <testcase classname="src/screens/MessagesScreen.loading.test.tsx" name="blocks sending during the initial conversation read and allows the retained draft after it resolves" time="0.086813166">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/MessagesScreen.pagination.test.tsx" timestamp="2026-10-12T04:44:22.360Z" hostname="iMac-Aliser.local" tests="1" failures="0" errors="0" skipped="0" time="0.104329292">
+        <testcase classname="src/screens/MessagesScreen.pagination.test.tsx" name="keeps a reply after all earlier incoming messages when the remaining page is loaded" time="0.103285541">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/PreferencesScreen.runtime.test.tsx" timestamp="2026-10-12T04:44:22.360Z" hostname="iMac-Aliser.local" tests="1" failures="0" errors="0" skipped="0" time="0.056869958">
+        <testcase classname="src/screens/PreferencesScreen.runtime.test.tsx" name="waits for capabilities and sends demo_mode=false through the store and HTTP client" time="0.054208291">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/PreferencesScreen.test.tsx" timestamp="2026-10-12T04:44:22.360Z" hostname="iMac-Aliser.local" tests="8" failures="0" errors="0" skipped="0" time="0.222901083">
+        <testcase classname="src/screens/PreferencesScreen.test.tsx" name="the live-mode disclosure &gt; stays hidden while demo mode is on" time="0.0377855">
+        </testcase>
+        <testcase classname="src/screens/PreferencesScreen.test.tsx" name="the live-mode disclosure &gt; names the real size of the search when demo mode is turned off" time="0.027316667">
+        </testcase>
+        <testcase classname="src/screens/PreferencesScreen.test.tsx" name="the live-mode disclosure &gt; still warns about live mode when coverage is unknown" time="0.013066375">
+        </testcase>
+        <testcase classname="src/screens/PreferencesScreen.test.tsx" name="the deployment research mode &gt; starts live research by default on a live server" time="0.098263583">
+        </testcase>
+        <testcase classname="src/screens/PreferencesScreen.test.tsx" name="the deployment research mode &gt; keeps demo research as the default on a demo server" time="0.0085605">
+        </testcase>
+        <testcase classname="src/screens/PreferencesScreen.test.tsx" name="the deployment research mode &gt; waits for server settings before allowing a search, then uses live mode" time="0.014981917">
+        </testcase>
+        <testcase classname="src/screens/PreferencesScreen.test.tsx" name="the deployment research mode &gt; preserves an explicit override of server demo_mode=true" time="0.01007925">
+        </testcase>
+        <testcase classname="src/screens/PreferencesScreen.test.tsx" name="the deployment research mode &gt; preserves an explicit override of server demo_mode=false" time="0.010018125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/PreparationGraphPanel.test.tsx" timestamp="2026-10-12T04:44:22.361Z" hostname="iMac-Aliser.local" tests="14" failures="0" errors="0" skipped="0" time="0.405335458">
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; sends exactly the applicant-selected order and never reads before the explicit button" time="0.1220535">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; rejects the first A and B completions after selection cycles A→B→A" time="0.051101708">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; hides a prior selection immediately and prunes a result that is no longer eligible" time="0.015029875">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; does not accept an old owner or case response" time="0.008959959">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; rejects a mismatched profile before rendering any evidence" time="0.013924958">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; rejects a mismatched schema before rendering any evidence" time="0.012022166">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; rejects a mismatched source before rendering any evidence" time="0.008316584">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; rejects a mismatched requested echo before rendering any evidence" time="0.012290625">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; rejects a mismatched selected echo before rendering any evidence" time="0.012165458">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; rejects a mismatched programme order before rendering any evidence" time="0.017357084">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; rejects a mismatched manifest order before rendering any evidence" time="0.027260125">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; shows only the server-permitted receipt for a locked selection" time="0.01378075">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; keeps original values, exact scope, unresolved policy and document work distinct" time="0.072044125">
+        </testcase>
+        <testcase classname="src/screens/PreparationGraphPanel.test.tsx" name="read-only explicit G1 graph &gt; keeps identical exam labels for distinct awards separate in policy groups" time="0.017061125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/PreparationScreen.learningPath.test.tsx" timestamp="2026-10-12T04:44:22.361Z" hostname="iMac-Aliser.local" tests="23" failures="0" errors="0" skipped="0" time="2.387371791">
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; opts into the pack and uses track order, not unordered summaries or unqualified completion IDs" time="0.187065375">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; requires the requested pack version rather than silently adopting the legacy catalogue" time="0.011498291">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; opens a dated legacy starter with its own version and offers the ordered next lesson only after acceptance" time="0.2233315">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; renders bounded short input without keys and keeps exact text/UUID through double send, failure and retry" time="0.158413209">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; creates a new UUID and clears text feedback when explicitly starting another attempt" time="0.194983125">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; does not accept a different lesson version or present it as the requested material" time="0.0584025">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; rejects a matching UUID receipt with a different submitted answer payload" time="0.088629791">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; reviews persisted short feedback after expiry and remount without fetching or reconstructing current questions" time="0.137855583">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; uses stored choice IDs for an old saved version, not new lesson choice labels" time="0.062775125">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; reads exact immutable question and choice text through owned review rather than a current lesson fetch" time="0.059720791">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; keeps the same review request in flight and explicitly retries a failed read without writes" time="0.054471709">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; ignores an older review after a newer saved attempt is selected" time="0.036317">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; rejects mismatched review profile before rendering feedback" time="0.032612958">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; rejects mismatched review uuid before rendering feedback" time="0.029342416">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; rejects mismatched review lesson-version before rendering feedback" time="0.031608708">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; fences a review read after owner changes before a storage event reaches React" time="0.029063208">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; hides and discards a pending review at case switch-start before the new case commits" time="0.052226541">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; fences delayed short feedback after a shared owner change before React replacement" time="0.06358625">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; drops text, accepted history review and late submission across a case switch" time="0.152068667">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="versioned original learning units and saved mistake review &gt; keeps accepted saved-version markers even when the immediate history refresh fails" time="0.15307775">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="exact calendar actions outside latest catalogue and recent progress &gt; requests a pinned older lesson version rather than the current catalogue summary" time="0.222169833">
+            <system-err>
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="exact calendar actions outside latest catalogue and recent progress &gt; opens an owned pinned review by UUID even when it is outside the recent twenty attempts" time="0.262387166">
+            <system-err>
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.learningPath.test.tsx" name="exact calendar actions outside latest catalogue and recent progress &gt; refuses a mismatched version returned for the exact dated lesson" time="0.083986">
+            <system-err>
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/PreparationScreen.test.tsx" timestamp="2026-10-12T04:44:22.362Z" hostname="iMac-Aliser.local" tests="21" failures="0" errors="0" skipped="0" time="1.256582875">
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; keeps explicit comparison available after the catalogue learning read fails" time="0.098452375">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; keeps explicit comparison available after the progress learning read fails" time="0.025866375">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; keeps source details closed while retaining every excerpt, scope and extra link" time="0.059687958">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; retains loaded evidence when the selected programme is selected again" time="0.043019166">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; lets the current request finish when the selected programme is selected again" time="0.031413084">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; shows component thresholds and unstated scope in readable terms instead of raw JSON" time="0.030418791">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; refreshes saved history on entering Progress and ignores an older same-case refresh" time="0.152116459">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; does not call preparation for an unsaved case or an unavailable principal" time="0.001587042">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; uses explicit education access while personal goals stay unknown" time="0.096980291">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; blocks new practice for an expired term while retaining readable own history" time="0.060007416">
+            <system-err>
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; distinguishes locked evidence and never renders checks from a locked response" time="0.022033291">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; retains waiver, excerpt and recorded scope without promoting them to an unconditional goal" time="0.07614075">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; clears previous programme evidence immediately and ignores its late response" time="0.072034708">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; shows planned courses as external metadata, with no fabricated local practice" time="0.033643666">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; keeps one immutable UUID across double submit and network retry, then resets for a new attempt" time="0.182285667">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; hides A questions during switch-start and ignores late A lesson before B commits" time="0.041635916">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; does not show late A feedback or refresh its progress after B replaces the case" time="0.076053875">
+            <system-err>
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:139:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/src/screens/PreparationScreen.tsx:57:30)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; fences a submit response when the shared owner changes before React remounts" time="0.055983875">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; ignores a failed old-owner access read without showing its error in stale memory" time="0.002755584">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; ignores a lesson that resolves after a newer lesson intent" time="0.086602667">
+        </testcase>
+        <testcase classname="src/screens/PreparationScreen.test.tsx" name="owned starter preparation &gt; rejects mixed-case progress rather than rendering another case attempt" time="0.003917541">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ProfileLists.runtime.test.tsx" timestamp="2026-10-12T04:44:22.363Z" hostname="iMac-Aliser.local" tests="1" failures="0" errors="0" skipped="0" time="1.973349791">
+        <testcase classname="src/screens/ProfileLists.runtime.test.tsx" name="keeps typed separators and submits each complete list without inventing entries" time="1.971229875">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ProfileScreen.feedback.test.tsx" timestamp="2026-10-12T04:44:22.363Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.46238425">
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="announces an actual pending save and acknowledges only its resolved clean profile" time="0.110103834">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="keeps a rejected save from announcing success and permits retry" time="0.027383625">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="ignores a late resolve from a save belonging to the previous case" time="0.028017709">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="ignores a late reject from a save belonging to the previous case" time="0.058457625">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="acknowledges creation of a local case when saving gives it a server id" time="0.0624825">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="does not describe a case read or other store loading as Saving" time="0.029310541">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="does not show Saved while edits made during the request remain dirty" time="0.03523">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="does not automatically retry an unchanged failed saved draft and allows an explicit Save retry" time="0.045636459">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.feedback.test.tsx" name="a new semantic edit after failure permits one autosave without relying on an input-specific handler" time="0.063513375">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ProfileScreen.test.tsx" timestamp="2026-10-12T04:44:22.364Z" hostname="iMac-Aliser.local" tests="7" failures="0" errors="0" skipped="0" time="0.504203208">
+        <testcase classname="src/screens/ProfileScreen.test.tsx" name="applying a grade conversion &gt; leaves the grade untouched and explains itself when the API refuses" time="0.229082375">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.test.tsx" name="applying a grade conversion &gt; applies the converted value on success" time="0.095650708">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.test.tsx" name="applying a grade conversion &gt; does not call validateProfile just to convert one grade" time="0.054346458">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.test.tsx" name="reading a transcript &gt; shows what it read, quoting the line, and applies none of it on its own" time="0.035708584">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.test.tsx" name="reading a transcript &gt; applies one suggestion when asked, and keeps the scale name already typed" time="0.027894166">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.test.tsx" name="reading a transcript &gt; says why nothing came back, instead of showing an empty box" time="0.031991875">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.test.tsx" name="reading a transcript &gt; leaves the profile untouched when the upload is refused" time="0.026115833">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ProgressScreen.test.tsx" timestamp="2026-10-12T04:44:22.364Z" hostname="iMac-Aliser.local" tests="18" failures="0" errors="0" skipped="0" time="0.160332584">
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="retry controls &gt; retries from the stage that actually stopped" time="0.047300167">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="retry controls &gt; asks before re-running everything, and says decisions are kept" time="0.013578292">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="retry controls &gt; does not re-run when the confirmation is declined" time="0.00482375">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="retry controls &gt; offers a re-run on a finished run, where there is no failed stage to resume" time="0.008038333">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="a run whose worker died &gt; says the worker stopped instead of showing a frozen spinner" time="0.004380708">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="a run whose worker died &gt; offers a way out: resume from where it stopped, or cancel" time="0.004744666">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="a run whose worker died &gt; stays quiet while the worker is actually working" time="0.002530959">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="freshness &gt; says when the evidence is next re-read, and offers to do it now" time="0.002314917">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="freshness &gt; is honest when there is no dated evidence to re-check" time="0.002010166">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="diagnostics &gt; separates unconfirmed facts from pages that could not be read" time="0.013163084">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="diagnostics &gt; shows no failure panel on a clean run, however many unknowns there are" time="0.007232334">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="diagnostics &gt; still renders an older run that predates the split" time="0.004779041">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="work the queue gave up on &gt; says how many jobs need attention, and that nothing is retrying them" time="0.009957042">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="work the queue gave up on &gt; counts one job in the singular" time="0.008600834">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="work the queue gave up on &gt; says nothing at all when the queue is healthy" time="0.005103625">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="work the queue gave up on &gt; is invisible to anyone who may not read the queue" time="0.004285042">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="search provider failures &gt; shows a degraded completed search separately from unread pages and unknown facts" time="0.009823708">
+        </testcase>
+        <testcase classname="src/screens/ProgressScreen.test.tsx" name="search provider failures &gt; recognizes the safe diagnostic stored by older funding runs" time="0.005158667">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/SharedRoutePanel.test.tsx" timestamp="2026-10-12T04:44:22.365Z" hostname="iMac-Aliser.local" tests="26" failures="0" errors="0" skipped="0" time="4.396620333">
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; updates accessible route controls in Russian and Kazakh without changing the draft" time="0.391149708">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; keeps exact result IDs and lets the applicant place SAT first without creating a second budget" time="0.2915525">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; keeps an A→B→A preview response hidden until a new explicit request returns" time="0.168264">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; rejects a preview with a foreign case, reordered result IDs or changed weekly capacity" time="0.146565917">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; requires explicit exam and minutes for an exact own review and retains its attempt UUID" time="0.230696417">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; retries an uncertain PUT with the identical UUID and body, then trusts only a matching ACK" time="0.164819541">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; reconciles an unknown outcome only when a fresh own GET carries the exact original receipt" time="0.157974583">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; retains the original 409 intent and requires a fresh preview before any new save" time="0.239654541">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; does not show a saved plan when PUT returns a mismatched receipt" time="0.2599255">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; keeps expired own reviews open while exact lessons stay gated and missing reviews stay disabled" time="0.230720625">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; rejects foreign current body and an ACK with another case or input" time="0.012858875">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="explicit shared route and own revision fences &gt; discards a former case read after a keyed case replacement" time="0.01081425">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; restores partial form and manual IDs after unmount without previewing or sending" time="0.036313833">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; restores the unresolved exact command and requires an explicit identical retry" time="0.200770375">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; normalizes interrupted sending to uncertain and uses only owned GET on restore" time="0.182070042">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; reconciles exactly expected+1 history when a newer own head advanced, without replacing it" time="0.214232709">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; does not retire an unknown command from a mismatched historical receipt" time="0.169412708">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; refuses a new PUT when journaling fails, then explicitly retries the same not-sent UUID" time="0.145796166">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; does not relabel an already dispatched unknown request not-sent when retry journaling fails" time="0.192937958">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; keeps a known PUT200 ACK visible when journal cleanup and subsequent GET both fail" time="0.192936042">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; preserves newer edits made while PUT was pending and keeps their leave risk after ACK" time="0.147860333">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; retains genuinely unsent manual fields entered before the acknowledged command" time="0.1446795">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; retains genuinely unsent disabled-exam fields entered before the acknowledged command" time="0.17482875">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="per-tab original request recovery and unsaved boundaries &gt; does not overwrite unsupported local bytes and resets only after an explicit exact own action" time="0.024078209">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="expired command recovery after a newly allowed preparation term &gt; keeps the 402 original until explicit reviewed new intent, then saves a fresh UUID without resetting the form" time="0.224900875">
+        </testcase>
+        <testcase classname="src/screens/SharedRoutePanel.test.tsx" name="same-tab own-case draft restoration &gt; restores A after A→B→A without exposing B input or automatically writing either case" time="0.037423583">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ShortlistScreen.test.tsx" timestamp="2026-10-12T04:44:22.366Z" hostname="iMac-Aliser.local" tests="46" failures="0" errors="0" skipped="0" time="5.311821792">
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; asks for a reason instead of silently sending an empty one" time="0.039459708">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; records the reason typed by the applicant" time="0.046374292">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; offers the common reasons as one click" time="0.015757458">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; keeps the reason optional: saying No with nothing typed still works" time="0.0516155">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; shows the stored reason on a row already rejected" time="0.025181041">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="rejecting a programme &gt; does not ask for a reason when approving" time="0.020929667">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="filter labels &gt; offers readable statuses, not raw enum tokens" time="0.020097041">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="filter labels &gt; keeps the enum as the option value, so filtering still works" time="0.010703458">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; removes a saved approved programme instead of changing its decision silently" time="0.091011833">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; removes a saved maybe programme instead of changing its decision silently" time="0.010528834">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; filters by university, programme and country without changing the saved results" time="0.034053667">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="Find search &gt; opens a source-backed result and compares only selected programmes" time="0.052428291">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="notes &gt; saves a note without deciding the row" time="0.03015925">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; shows the match, what is confirmed, and the bucket" time="0.023435667">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; never presents the match as a probability" time="0.00978525">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; moves an unaffordable row out of the ranked table into its own section" time="0.006207709">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="the v2 ranking on the shortlist &gt; keeps a row assessed before v2 in the ranked table" time="0.003878208">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; keeps a readable removal button outside collapsed Filters and shows filtered / total" time="0.034734541">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Search: Groningen and leaves the other active filters in place" time="0.096022917">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only List: Saved and leaves the other active filters in place" time="0.098243709">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Country: Netherlands and leaves the other active filters in place" time="0.112304083">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Eligibility: Met and leaves the other active filters in place" time="0.077823291">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Funding: Full ride and leaves the other active filters in place" time="0.102234041">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; removes only Hide rejected and leaves the other active filters in place" time="0.11734125">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; clears all filters locally while preserving sort, compare, notes and unknown evidence" time="0.535650625">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; uses the same local reset from the no-match recovery action" time="0.069164167">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; does not describe whitespace-only search as an active filter" time="0.019522125">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Priority list context removable without changing decisions" time="0.032771083">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Saved list context removable without changing decisions" time="0.035646584">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="visible active filters &gt; makes Exploring list context removable without changing decisions" time="0.029984875">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty failed stage without starting work" time="0.223353416">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty retryable stage without starting work" time="0.208831708">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty cancelled stage without starting work" time="0.21004075">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty cancelled flag despite a running job without starting work" time="0.21148625">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty stale despite a running job without starting work" time="0.210316833">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty dead job without starting work" time="0.210660375">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty failed job without starting work" time="0.211078541">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; opens Progress for empty cancelled job without starting work" time="0.209178291">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; reviews an empty awaiting_user_decision run without claiming absence" time="0.21039675">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; reviews an empty completed run without claiming absence" time="0.209053292">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; shows progress for an empty queued job instead of a second start" time="0.208838">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; shows progress for an empty running job instead of a second start" time="0.210573">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; shows an honest empty-run notice without an inert callback button" time="0.2084825">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; keeps the existing Start route only when no run exists" time="0.206587375">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; retains partial rows, filters, compare, unsaved notes and unknowns when the run stops" time="0.293394083">
+        </testcase>
+        <testcase classname="src/screens/ShortlistScreen.test.tsx" name="research recovery in Find &gt; does not turn locally filtered-zero rows into a stopped or empty research run" time="0.214175791">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/SourcesScreen.test.tsx" timestamp="2026-10-12T04:44:22.368Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.097742666">
+        <testcase classname="src/screens/SourcesScreen.test.tsx" name="marks the preferred claim by claim ID even when the source URL differs" time="0.022534208">
+        </testcase>
+        <testcase classname="src/screens/SourcesScreen.test.tsx" name="preserves run-level access failures and unknowns even when returned programmes have no questions" time="0.072787958">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/StudySchedulePanel.test.tsx" timestamp="2026-10-12T04:44:22.368Z" hostname="iMac-Aliser.local" tests="12" failures="0" errors="0" skipped="0" time="1.0413955">
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; loads on mount and requires explicit dates, all targets, budget, study days and buffers for a new plan" time="0.415444209">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; retains the complete form and denies double writes until a failed save can be explicitly retried" time="0.091803083">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; refreshes a revision conflict without repeating PUT and requires review before explicitly applying the retained inputs" time="0.070956334">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; keeps conflict review blocked when the latest GET fails even if an edit clears the alert" time="0.092627375">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; saves one checkbox intent with unchanged settings/revision and never marks completion before acceptance" time="0.031866458">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; requires explicit calendar-reset confirmation when structural inputs change, then clears only task checkmarks" time="0.067619083">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; allows a newer partial current-score entry after preparation started without treating missing components as zero" time="0.057654208">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; clears current scores when selecting another active exam and keeps all SAT target components explicit" time="0.068538833">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; keeps saved own schedules readable without access while blocking writes and starter openings" time="0.019126959">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; remounts a changed case and ignores a late old-case read" time="0.022118958">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; rejects a mismatched saved-case response and suppresses a late write after the owner changes" time="0.022738708">
+        </testcase>
+        <testcase classname="src/screens/StudySchedulePanel.test.tsx" name="owned deadline study schedule &gt; shows fourteen upcoming tasks and preserves the rest and past warnings in a native disclosure" time="0.079448458">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/communityRecovery.test.tsx" timestamp="2026-10-12T04:44:22.369Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.341380208">
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="loads all 25 chronological messages without duplicating a page boundary" time="0.137527292">
+        </testcase>
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="makes the 21st conversation reachable" time="0.086028875">
+        </testcase>
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="ignores a late old-recipient message page after switching to B" time="0.021586666">
+        </testcase>
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="preserves a failed DM draft and clears it once after a successful retry" time="0.012087791">
+        </testcase>
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="preserves a failed public-post draft and clears it after a successful retry" time="0.023959792">
+        </testcase>
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="preserves a failed public-reply draft and clears it after a successful retry" time="0.023908375">
+        </testcase>
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="clears the discovery input and prevents blur from restoring its old city" time="0.008109458">
+        </testcase>
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="clears feed tag and city inputs and prevents blur from restoring them" time="0.018563">
+        </testcase>
+        <testcase classname="src/screens/communityRecovery.test.tsx" name="ignores a late filtered discovery response after Clear filters" time="0.007433375">
+        </testcase>
+    </testsuite>
+</testsuites>

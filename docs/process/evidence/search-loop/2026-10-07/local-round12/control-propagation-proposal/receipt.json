@@ -1,0 +1,653 @@
+{
+  "time": "2026-10-08T04:35:01.492907+00:00",
+  "status": "EXACT_SOURCE_NATIVE_PROPOSAL_AND_INDEPENDENT_ACCEPT_APPLIED_FRESH_FULL_RUNNING",
+  "origins": [
+    {
+      "folder": "local-round12/a-control-propagation-proposal",
+      "manifest_sha256": "6776d1ccedabd3d668b167cd1d8184b2cd179e01989e73a778e6081c642589ab",
+      "physical_selected_files": 79
+    },
+    {
+      "folder": "local-round12/b-control-propagation-proposal-review",
+      "manifest_sha256": "2b84ea9228203f987417addfb45c26d22cc2986d39175387f546bd6897fc75f5",
+      "physical_selected_files": 38
+    }
+  ],
+  "selected_files": 126,
+  "selected_bytes": 1469777,
+  "file_sha256": {
+    "author-proposal/PLAN.json": {
+      "sha256": "b9966b399654a783f7062b9c05f42764e3348cbeacb8a8fd77f62c8c2a984041",
+      "bytes": 2173,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/PLAN.json"
+    },
+    "author-proposal/REPORT.md": {
+      "sha256": "089ad1ba718e5f5c247159074eb767c00564b4046b2956c7f96d847b2c4fa2de",
+      "bytes": 4551,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/REPORT.md"
+    },
+    "author-proposal/bootstrap_pytest.py": {
+      "sha256": "1a2dd319f39a7d642b587f102ca5ea6553514be4ba02f6b620c6f588845e4e28",
+      "bytes": 1332,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/bootstrap_pytest.py"
+    },
+    "author-proposal/compatibility-check.initial-error.txt": {
+      "sha256": "7d7ea8d135ba326b1f019c7eac23154f8a050d8099da7d9d1fdfd842de7cb106",
+      "bytes": 473,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/compatibility-check.initial-error.txt"
+    },
+    "author-proposal/control-propagation.patch": {
+      "sha256": "630128bd48da6837ad22574159ac7715cea30cb8032ad6c5229df6a694c442a8",
+      "bytes": 7496,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/control-propagation.patch"
+    },
+    "author-proposal/dependency-after.json": {
+      "sha256": "4a02a49387984179a8babc421f0dee404be7973f3983184cc525b3b706ba5fd0",
+      "bytes": 29455,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/dependency-after.json"
+    },
+    "author-proposal/dependency-before.json": {
+      "sha256": "fc681282f87de598436683ee409af001bc8f6d7179969f5973713df93a5b6fcb",
+      "bytes": 23953,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/dependency-before.json"
+    },
+    "author-proposal/executions/off-A/execution.after.json": {
+      "sha256": "544cdc493d1cb3840f182de99b0e880e220bcf6c34b2e3cf0d24c70622df9f1c",
+      "bytes": 1874,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-A/execution.after.json"
+    },
+    "author-proposal/executions/off-A/execution.before.json": {
+      "sha256": "7c923242b0e76c1e18934fdc4129259bbabfc8f25b3fe879ed3d8e87ff47a38e",
+      "bytes": 1856,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-A/execution.before.json"
+    },
+    "author-proposal/executions/off-A/outcomes.attempt1.original.json": {
+      "sha256": "0518864bf2ebaa6a458a79bf169ef11d275bc1fa0efc4a92640e59541a110047",
+      "bytes": 37936,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-A/outcomes.attempt1.original.json"
+    },
+    "author-proposal/executions/off-A/stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-A/stderr.original.log"
+    },
+    "author-proposal/executions/off-A/stdout.original.log": {
+      "sha256": "fb041d93f848a482ac40f0da0fdefe64546eaf11b5c7686e7680c2fed27aaf84",
+      "bytes": 2292,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-A/stdout.original.log"
+    },
+    "author-proposal/executions/off-B/PLAN.json": {
+      "sha256": "79189d6efb33293e0b257caec336e003953294fc03085a8d1ca287e2911b00c6",
+      "bytes": 4140,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-B/PLAN.json"
+    },
+    "author-proposal/executions/off-B/boundaries.original.json": {
+      "sha256": "f9be6bb9e730b91391b15f0121105518d04b8e38d3cfa3e1e7f838d6e4d036e0",
+      "bytes": 25331,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-B/boundaries.original.json"
+    },
+    "author-proposal/executions/off-B/execution.after.json": {
+      "sha256": "ad51597fc0e2433e6b26a728a75d3a2aa1a5c5ea1f25d5c40254ebeccc579387",
+      "bytes": 1874,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-B/execution.after.json"
+    },
+    "author-proposal/executions/off-B/execution.before.json": {
+      "sha256": "6960409a604960ecfe387d94e8790e61f29d7955eb53517e52b378d37fb62c84",
+      "bytes": 1856,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-B/execution.before.json"
+    },
+    "author-proposal/executions/off-B/stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-B/stderr.original.log"
+    },
+    "author-proposal/executions/off-B/stdout.original.log": {
+      "sha256": "e219104bed02b32b7edc41187f441797867b71ce5d8e41fe23ba08033a1bcf0d",
+      "bytes": 59,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-B/stdout.original.log"
+    },
+    "author-proposal/executions/off-pytest/execution.after.json": {
+      "sha256": "c7e204d73e710ff663ee77ef03e01e9233cb5c5277f0534808c63364f939a39b",
+      "bytes": 2187,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-pytest/execution.after.json"
+    },
+    "author-proposal/executions/off-pytest/execution.before.json": {
+      "sha256": "a9865995c5d615cc5d0cc9e5a163ffc15333aee2d9d120982f24edcda6fca139",
+      "bytes": 2169,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-pytest/execution.before.json"
+    },
+    "author-proposal/executions/off-pytest/junit.original.xml": {
+      "sha256": "ea974d35befaf3af7502af85398f56d6420096038a17ef34fa3a1f00d5f53210",
+      "bytes": 60913,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-pytest/junit.original.xml"
+    },
+    "author-proposal/executions/off-pytest/pytest-native-imports.json": {
+      "sha256": "670082100ce9c08e65df8c60532242dd04e195250903da8a7f97fd20b69ddc9f",
+      "bytes": 1236,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-pytest/pytest-native-imports.json"
+    },
+    "author-proposal/executions/off-pytest/stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-pytest/stderr.original.log"
+    },
+    "author-proposal/executions/off-pytest/stdout.original.log": {
+      "sha256": "70c286c72a2bfc342f12b566ad6bf465722d71c9ae0973c61049816d1ecee6da",
+      "bytes": 46736,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/off-pytest/stdout.original.log"
+    },
+    "author-proposal/executions/on-A/execution.after.json": {
+      "sha256": "3933b15a22b9c8552623e162f81e4274213a1e1921ae68b08dbad744ed27e8dc",
+      "bytes": 1866,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-A/execution.after.json"
+    },
+    "author-proposal/executions/on-A/execution.before.json": {
+      "sha256": "3a6177e38d2d77c717f0761df14d2712518582675242af8b48a2039dfcb27ee6",
+      "bytes": 1848,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-A/execution.before.json"
+    },
+    "author-proposal/executions/on-A/outcomes.attempt1.original.json": {
+      "sha256": "f678fa0cf3cf688165fde6ac450233ee7d281bcc911c84ac93bcec1f2e27f4cb",
+      "bytes": 34659,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-A/outcomes.attempt1.original.json"
+    },
+    "author-proposal/executions/on-A/stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-A/stderr.original.log"
+    },
+    "author-proposal/executions/on-A/stdout.original.log": {
+      "sha256": "f7fa010cd8e114851acb78f83dd2e4239d3ceb87013a5844bb1aee9ed49cd9cb",
+      "bytes": 2297,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-A/stdout.original.log"
+    },
+    "author-proposal/executions/on-B/PLAN.json": {
+      "sha256": "1d8f5b597089ca119cf4343dc449174cd8c0dfca6177afe0ce7759f70148f80d",
+      "bytes": 4140,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-B/PLAN.json"
+    },
+    "author-proposal/executions/on-B/boundaries.original.json": {
+      "sha256": "6ca2aa008bc63eb6ddcea6208394075f3e3af6ef015aca864a162d5838f23d95",
+      "bytes": 21571,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-B/boundaries.original.json"
+    },
+    "author-proposal/executions/on-B/execution.after.json": {
+      "sha256": "b8ff8086c6b929bccfad3c94bb58eb1363aea426e54093ca3b3b4733027a9185",
+      "bytes": 1866,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-B/execution.after.json"
+    },
+    "author-proposal/executions/on-B/execution.before.json": {
+      "sha256": "51dd898ecdcd024b0e5441c17b818dc347079170e62b73787242f649a4f74131",
+      "bytes": 1848,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-B/execution.before.json"
+    },
+    "author-proposal/executions/on-B/stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-B/stderr.original.log"
+    },
+    "author-proposal/executions/on-B/stdout.original.log": {
+      "sha256": "846b6645c118f7de9ffb5ab789c09e952f0308f1fed955d8397c0822711779e5",
+      "bytes": 59,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-B/stdout.original.log"
+    },
+    "author-proposal/executions/on-format/execution.after.json": {
+      "sha256": "269983d302912ad9d069c9899e857a6a9086651f92aea8e2e9758894a17dcf09",
+      "bytes": 1953,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-format/execution.after.json"
+    },
+    "author-proposal/executions/on-format/execution.before.json": {
+      "sha256": "594430ab74cbbc5fe3fe589b950ada0a5aaed99d0bd06ea48b6dd0b532d17d16",
+      "bytes": 1935,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-format/execution.before.json"
+    },
+    "author-proposal/executions/on-format/stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-format/stderr.original.log"
+    },
+    "author-proposal/executions/on-format/stdout.original.log": {
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "bytes": 26,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-format/stdout.original.log"
+    },
+    "author-proposal/executions/on-pytest/execution.after.json": {
+      "sha256": "f75f1c99c9459ac8998d3bf1090f61fd450a322941ab9f8c689dbd086d4b2381",
+      "bytes": 2178,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-pytest/execution.after.json"
+    },
+    "author-proposal/executions/on-pytest/execution.before.json": {
+      "sha256": "2f098b456037a1b7363bdae4d35fb88d1922b5fefcc7e8f40458c2a2a61fbb96",
+      "bytes": 2160,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-pytest/execution.before.json"
+    },
+    "author-proposal/executions/on-pytest/junit.original.xml": {
+      "sha256": "e44eaee533c316106316b3c7b645249d2e385c30ba090019628ccfecea7cdab8",
+      "bytes": 16601,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-pytest/junit.original.xml"
+    },
+    "author-proposal/executions/on-pytest/pytest-native-imports.json": {
+      "sha256": "49252a8a7e63add3ad9899a943623c1d2d1f986c10dc56963cab5947c3d448ce",
+      "bytes": 1232,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-pytest/pytest-native-imports.json"
+    },
+    "author-proposal/executions/on-pytest/stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-pytest/stderr.original.log"
+    },
+    "author-proposal/executions/on-pytest/stdout.original.log": {
+      "sha256": "3390cb57d06632dff5172dd4610cc8fdc4a74b2046b72f35a2fd4eb078efd5da",
+      "bytes": 179,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-pytest/stdout.original.log"
+    },
+    "author-proposal/executions/on-ruff/execution.after.json": {
+      "sha256": "f140a7da90c059b6865dcc43e6c1b3a3cf72493efc4ac9c34e59065d19be9c63",
+      "bytes": 1927,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff/execution.after.json"
+    },
+    "author-proposal/executions/on-ruff/execution.before.json": {
+      "sha256": "15fa1572b2052ba19905651f9745b75fd9195d792f3d876a0c4ecbbd255d2a97",
+      "bytes": 1909,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff/execution.before.json"
+    },
+    "author-proposal/executions/on-ruff/stderr.original.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff/stderr.original.log"
+    },
+    "author-proposal/executions/on-ruff/stdout.original.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/executions/on-ruff/stdout.original.log"
+    },
+    "author-proposal/junit-qualification.json": {
+      "sha256": "aa43e18121cb48a9a54b9e7bc2a2b0cc030b17931f90502bad16de9077d3bba3",
+      "bytes": 1749,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/junit-qualification.json"
+    },
+    "author-proposal/original/backend/app/adapters/search/retrieval.py": {
+      "sha256": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+      "bytes": 21805,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/original/backend/app/adapters/search/retrieval.py"
+    },
+    "author-proposal/original/backend/pytest.ini": {
+      "sha256": "ab26b2621fe697dfd488b060d5b7ac1576464cdcb6360bf3948b9a76134a6ba0",
+      "bytes": 150,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/original/backend/pytest.ini"
+    },
+    "author-proposal/original/backend/ruff.toml": {
+      "sha256": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc",
+      "bytes": 416,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/original/backend/ruff.toml"
+    },
+    "author-proposal/original/backend/tests/conftest.py": {
+      "sha256": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6",
+      "bytes": 10851,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/original/backend/tests/conftest.py"
+    },
+    "author-proposal/original/backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "ff04b8e26c457ee9dc6f5195609174deeaf109fe1d34e8890f66f91c1d43bccd",
+      "bytes": 32699,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/original/backend/tests/test_hybrid_retrieval.py"
+    },
+    "author-proposal/original/backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "a037d3f48bff9da00879f289379e87938b1db58e903a373ec863f73a78ccf321",
+      "bytes": 12981,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/original/backend/tests/test_search_layer_budget_fixes.py"
+    },
+    "author-proposal/prepare_replay.py": {
+      "sha256": "83f365c67de5801a84194ea058a8e24c6c90d704b4f516b0caa95f7815e0a3c3",
+      "bytes": 3662,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/prepare_replay.py"
+    },
+    "author-proposal/proof-A.py": {
+      "sha256": "8e29f61539cb884c2ecaa4ebdb6b5a92f1b4b82b4340ae2b57b7baf906887652",
+      "bytes": 12554,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proof-A.py"
+    },
+    "author-proposal/proof-B.py": {
+      "sha256": "8ee3ae88a83547ff643f8d808be393f788cf36183d352bc3e94d53918fcc80cc",
+      "bytes": 9902,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proof-B.py"
+    },
+    "author-proposal/proposed/backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/app/adapters/search/retrieval.py"
+    },
+    "author-proposal/proposed/backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "62ad38770ad87665fd2e2b24f1deae811571b4a7881e0fc6f4d51e2a32f779e2",
+      "bytes": 35150,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_hybrid_retrieval.py"
+    },
+    "author-proposal/proposed/backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "e6f7f0da4e941512839c25bcc1650fe1d0eb326f7022b352fceaa8d145b54e63",
+      "bytes": 15815,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/proposed/backend/tests/test_search_layer_budget_fixes.py"
+    },
+    "author-proposal/prototype1-qualification.json": {
+      "sha256": "5a2305fb793b1605ce37d45a2112e3322f4460457d990cee896b37183b758fdd",
+      "bytes": 312,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/prototype1-qualification.json"
+    },
+    "author-proposal/prototype1-static-red/backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/prototype1-static-red/backend/app/adapters/search/retrieval.py"
+    },
+    "author-proposal/prototype1-static-red/backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "c99154c82e39967496f901fd5b7742e18f147966e3f290065d267536d8b25edf",
+      "bytes": 35199,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/prototype1-static-red/backend/tests/test_hybrid_retrieval.py"
+    },
+    "author-proposal/prototype1-static-red/backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "248f902e2c29cfd500cf72a94791aa3d0456e1875b1ba9e0c15564fc583094b5",
+      "bytes": 15808,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/prototype1-static-red/backend/tests/test_search_layer_budget_fixes.py"
+    },
+    "author-proposal/receipt.json": {
+      "sha256": "eb0f61a8ad7f1940a3e98ab1ea421095b509e824378b5aa2fba7a5fb9a04101c",
+      "bytes": 4342,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/receipt.json"
+    },
+    "author-proposal/replay-source-after.json": {
+      "sha256": "b74b348d3a2f0dbb020ee8c137820aefc090ed5475cd23c561c124f90a31b6d9",
+      "bytes": 150,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/replay-source-after.json"
+    },
+    "author-proposal/replay-source-manifest.json": {
+      "sha256": "51cafdbfe305c60d32ae259ade21d3347a7b316b3b7ff4c5828ef268ebd31c65",
+      "bytes": 50278,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/replay-source-manifest.json"
+    },
+    "author-proposal/ruff.format.log": {
+      "sha256": "292ab567521d30841d69b41a9cc01ed3f5b34d1b4bdb12e6083b8943098c57a4",
+      "bytes": 43,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/ruff.format.log"
+    },
+    "author-proposal/ruff.import-fix.log": {
+      "sha256": "aac3a0503d8b95052cc85fb9f1717dc82b74aa55853a5aa9749b41e30275d472",
+      "bytes": 38,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/ruff.import-fix.log"
+    },
+    "author-proposal/ruff.initial.log": {
+      "sha256": "4d984befbe3e726924ba28bd0cb39390d64b9586760427dd64d0d67128471725",
+      "bytes": 3618,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/ruff.initial.log"
+    },
+    "author-proposal/run_controls.py": {
+      "sha256": "1795c83ae48de0f6614f2f8cabaacc471737e81962a9570ca593845b4ca9c6cb",
+      "bytes": 3418,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/run_controls.py"
+    },
+    "author-proposal/source-before.json": {
+      "sha256": "d013d875589bb0d3b0ee1445d5dc47d463137fc44e36ab54033485c940e30879",
+      "bytes": 1790,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/source-before.json"
+    },
+    "author-proposal/test-body-compatibility.json": {
+      "sha256": "5482fefc124999e537f573d919cda0439a4f17548c2e3b762f8cfda94b45d3f5",
+      "bytes": 658,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/test-body-compatibility.json"
+    },
+    "author-proposal/verify-results.original.log": {
+      "sha256": "0bbe8bc36499022272866833d92753e57b42bef9acc2e73a739ec7378e3b2ef8",
+      "bytes": 1698,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/verify-results.original.log"
+    },
+    "author-proposal/verify_results.py": {
+      "sha256": "410fff2c0982d99842caf0bf35d86b5a507d37c92b11568a66d9861a5d65d6b6",
+      "bytes": 3587,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/verify_results.py"
+    },
+    "author-proposal/whole-output-equality.json": {
+      "sha256": "6ad29a8bca6b3f1b2ad2dc356d76f6fb7d7870bfacbf9826587197e1efa13f03",
+      "bytes": 1817,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/whole-output-equality.json"
+    },
+    "author-proposal/ready-manifest.json": {
+      "sha256": "6776d1ccedabd3d668b167cd1d8184b2cd179e01989e73a778e6081c642589ab",
+      "bytes": 13118,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/ready-manifest.json"
+    },
+    "independent-proposal-review/A-selected/control-propagation.patch": {
+      "sha256": "630128bd48da6837ad22574159ac7715cea30cb8032ad6c5229df6a694c442a8",
+      "bytes": 7496,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/control-propagation.patch"
+    },
+    "independent-proposal-review/A-selected/executions/off-A/outcomes.attempt1.original.json": {
+      "sha256": "0518864bf2ebaa6a458a79bf169ef11d275bc1fa0efc4a92640e59541a110047",
+      "bytes": 37936,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/executions/off-A/outcomes.attempt1.original.json"
+    },
+    "independent-proposal-review/A-selected/executions/off-B/boundaries.original.json": {
+      "sha256": "f9be6bb9e730b91391b15f0121105518d04b8e38d3cfa3e1e7f838d6e4d036e0",
+      "bytes": 25331,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/executions/off-B/boundaries.original.json"
+    },
+    "independent-proposal-review/A-selected/executions/off-pytest/junit.original.xml": {
+      "sha256": "ea974d35befaf3af7502af85398f56d6420096038a17ef34fa3a1f00d5f53210",
+      "bytes": 60913,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/executions/off-pytest/junit.original.xml"
+    },
+    "independent-proposal-review/A-selected/executions/on-A/outcomes.attempt1.original.json": {
+      "sha256": "f678fa0cf3cf688165fde6ac450233ee7d281bcc911c84ac93bcec1f2e27f4cb",
+      "bytes": 34659,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/executions/on-A/outcomes.attempt1.original.json"
+    },
+    "independent-proposal-review/A-selected/executions/on-B/boundaries.original.json": {
+      "sha256": "6ca2aa008bc63eb6ddcea6208394075f3e3af6ef015aca864a162d5838f23d95",
+      "bytes": 21571,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/executions/on-B/boundaries.original.json"
+    },
+    "independent-proposal-review/A-selected/executions/on-pytest/junit.original.xml": {
+      "sha256": "e44eaee533c316106316b3c7b645249d2e385c30ba090019628ccfecea7cdab8",
+      "bytes": 16601,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/executions/on-pytest/junit.original.xml"
+    },
+    "independent-proposal-review/A-selected/junit-qualification.json": {
+      "sha256": "aa43e18121cb48a9a54b9e7bc2a2b0cc030b17931f90502bad16de9077d3bba3",
+      "bytes": 1749,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/junit-qualification.json"
+    },
+    "independent-proposal-review/A-selected/original/backend/app/adapters/search/retrieval.py": {
+      "sha256": "89f9281f66c990380f54b026b3f54f6bd91887b001f493184a778eec0f5d4a04",
+      "bytes": 21805,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/original/backend/app/adapters/search/retrieval.py"
+    },
+    "independent-proposal-review/A-selected/original/backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "ff04b8e26c457ee9dc6f5195609174deeaf109fe1d34e8890f66f91c1d43bccd",
+      "bytes": 32699,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/original/backend/tests/test_hybrid_retrieval.py"
+    },
+    "independent-proposal-review/A-selected/original/backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "a037d3f48bff9da00879f289379e87938b1db58e903a373ec863f73a78ccf321",
+      "bytes": 12981,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/original/backend/tests/test_search_layer_budget_fixes.py"
+    },
+    "independent-proposal-review/A-selected/proposed/backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/proposed/backend/app/adapters/search/retrieval.py"
+    },
+    "independent-proposal-review/A-selected/proposed/backend/tests/test_hybrid_retrieval.py": {
+      "sha256": "62ad38770ad87665fd2e2b24f1deae811571b4a7881e0fc6f4d51e2a32f779e2",
+      "bytes": 35150,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/proposed/backend/tests/test_hybrid_retrieval.py"
+    },
+    "independent-proposal-review/A-selected/proposed/backend/tests/test_search_layer_budget_fixes.py": {
+      "sha256": "e6f7f0da4e941512839c25bcc1650fe1d0eb326f7022b352fceaa8d145b54e63",
+      "bytes": 15815,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/proposed/backend/tests/test_search_layer_budget_fixes.py"
+    },
+    "independent-proposal-review/A-selected/ready-manifest.json": {
+      "sha256": "6776d1ccedabd3d668b167cd1d8184b2cd179e01989e73a778e6081c642589ab",
+      "bytes": 13118,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/ready-manifest.json"
+    },
+    "independent-proposal-review/A-selected/receipt.json": {
+      "sha256": "eb0f61a8ad7f1940a3e98ab1ea421095b509e824378b5aa2fba7a5fb9a04101c",
+      "bytes": 4342,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/receipt.json"
+    },
+    "independent-proposal-review/A-selected/test-body-compatibility.json": {
+      "sha256": "5482fefc124999e537f573d919cda0439a4f17548c2e3b762f8cfda94b45d3f5",
+      "bytes": 658,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/test-body-compatibility.json"
+    },
+    "independent-proposal-review/A-selected/whole-output-equality.json": {
+      "sha256": "6ad29a8bca6b3f1b2ad2dc356d76f6fb7d7870bfacbf9826587197e1efa13f03",
+      "bytes": 1817,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/A-selected/whole-output-equality.json"
+    },
+    "independent-proposal-review/B-original/boundaries.original.json": {
+      "sha256": "e9cc4a80bb8f9493b22c779f78ccafd78fac1d7145790c0e3bf38a7d3bf484ff",
+      "bytes": 25155,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/B-original/boundaries.original.json"
+    },
+    "independent-proposal-review/B-original/ready-manifest.initial.json": {
+      "sha256": "bd73bc7e5f400d9a3a31beea7064d8dbf0e6088cd7407967299aa4be54410053",
+      "bytes": 3487,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/B-original/ready-manifest.initial.json"
+    },
+    "independent-proposal-review/B-original/run_boundaries.py": {
+      "sha256": "ebda58781550e90c835597429e451c0508ed3738301dbd74489d91dfd42514a4",
+      "bytes": 9881,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/B-original/run_boundaries.py"
+    },
+    "independent-proposal-review/PLAN.json": {
+      "sha256": "153961545c90517de0573c14d40da260e0976e8f47d3d58aa6292eb627011142",
+      "bytes": 1943,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/PLAN.json"
+    },
+    "independent-proposal-review/REPORT.ru.md": {
+      "sha256": "5c7d2a7efd0a921dcaf98318d10844e6171ce22294a03ed474abc649c4921c0d",
+      "bytes": 3339,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/REPORT.ru.md"
+    },
+    "independent-proposal-review/adaptation-off.patch": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/adaptation-off.patch"
+    },
+    "independent-proposal-review/adaptation-on.patch": {
+      "sha256": "c3e612b5feee1ebb73394fd3adb836863bbd65e2e4b1205bcf9513612e576f00",
+      "bytes": 1656,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/adaptation-on.patch"
+    },
+    "independent-proposal-review/execution-strategy-writeahead.json": {
+      "sha256": "6a03cc61ad2c74d1e9497c4b56131274d1a067f3128c401deefbb7d5a89bad6e",
+      "bytes": 1489,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/execution-strategy-writeahead.json"
+    },
+    "independent-proposal-review/execution-writeahead.json": {
+      "sha256": "1b5c0a1f70d3309ae49f8c6624744e604cbbf97e72afb2791907a925f9937383",
+      "bytes": 931,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/execution-writeahead.json"
+    },
+    "independent-proposal-review/finite-result-verification.json": {
+      "sha256": "ceea56af4d6a96fa359557866753eaf333c5b45b4a45aaf234b8b62a552d6c28",
+      "bytes": 892,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/finite-result-verification.json"
+    },
+    "independent-proposal-review/initial-manifest-inspection-error.json": {
+      "sha256": "7ff55f7b3c891e321ed9c05a110951196d9903c36266a459c60f0b9e22d5745a",
+      "bytes": 227,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/initial-manifest-inspection-error.json"
+    },
+    "independent-proposal-review/receipt.json": {
+      "sha256": "30d5959b50f05dc8e066e6a1c2d2621572af48167cf86abb514229d76af0138d",
+      "bytes": 2314,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/receipt.json"
+    },
+    "independent-proposal-review/replay-off/PLAN.json": {
+      "sha256": "163f8935e08b64a649048a16f38de60fea135dc8d1318011876a434a157b2d08",
+      "bytes": 4131,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/replay-off/PLAN.json"
+    },
+    "independent-proposal-review/replay-off/boundaries.original.json": {
+      "sha256": "e9cc4a80bb8f9493b22c779f78ccafd78fac1d7145790c0e3bf38a7d3bf484ff",
+      "bytes": 25155,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/replay-off/boundaries.original.json"
+    },
+    "independent-proposal-review/replay-off/run_boundaries.py": {
+      "sha256": "ebda58781550e90c835597429e451c0508ed3738301dbd74489d91dfd42514a4",
+      "bytes": 9881,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/replay-off/run_boundaries.py"
+    },
+    "independent-proposal-review/replay-on/PLAN.json": {
+      "sha256": "163f8935e08b64a649048a16f38de60fea135dc8d1318011876a434a157b2d08",
+      "bytes": 4131,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/replay-on/PLAN.json"
+    },
+    "independent-proposal-review/replay-on/boundaries.original.json": {
+      "sha256": "df6adf390ebd7926acbde3e042a037006684c5aa64d76f445d7dfa1e696120c5",
+      "bytes": 21459,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/replay-on/boundaries.original.json"
+    },
+    "independent-proposal-review/replay-on/run_boundaries.py": {
+      "sha256": "96b9323e57a37207a3f0dc6e15a6a7ec4e9c73b5c0209e13b5b7565b5b13d5d9",
+      "bytes": 10677,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/replay-on/run_boundaries.py"
+    },
+    "independent-proposal-review/source-and-test-delta.json": {
+      "sha256": "83c7746bf90fc58d74b898a031163d47487edee66f3d8ee034d97c65e4f8a37f",
+      "bytes": 759,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/source-and-test-delta.json"
+    },
+    "independent-proposal-review/ready-manifest.json": {
+      "sha256": "2b84ea9228203f987417addfb45c26d22cc2986d39175387f546bd6897fc75f5",
+      "bytes": 6121,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/ready-manifest.json"
+    },
+    "parent/source-before-999.json": {
+      "sha256": "3a4fdfc1c4489664aefbb69d9acbd2107bb5143620736c45e1ce027bb2a30443",
+      "bytes": 130335,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-before-999.json"
+    },
+    "parent/source-after-999.json": {
+      "sha256": "0ba2bba47c4ae3bd4a7d7566f6c810e79bbbe7d7001657ad84d55db02d6fb3f8",
+      "bytes": 130378,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-after-999.json"
+    },
+    "parent/source-integration.json": {
+      "sha256": "28d86c2c550228f913d436de8e4cda6a39a99116297fef69e7ebee54f66f9c87",
+      "bytes": 1051,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-integration.json"
+    },
+    "parent/source-ast-delta.json": {
+      "sha256": "74513e6eb067794043bf8b7e679a6658493f322fff38809cbe4bf7668cd23701",
+      "bytes": 267,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-ast-delta.json"
+    },
+    "parent/proposal-integration-preflight.json": {
+      "sha256": "53c49cc85ff6fc5a8672a6b237475b87ee8064841206b8ee1d64aef7d41eed7a",
+      "bytes": 1730,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/proposal-integration-preflight.json"
+    },
+    "parent/OUTER_TRACE_QUALIFICATION.md": {
+      "sha256": "5bc92e407dc8bfcfda6c2afbc92152e2c8be22727e3b8f9506e43030638c58ba",
+      "bytes": 406,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/OUTER_TRACE_QUALIFICATION.md"
+    },
+    "parent/first-preflight-schema-error.json": {
+      "sha256": "005a07378ba1670849c22088be60c00d0ed5a3985f12399c20ad739760f8e8b5",
+      "bytes": 408,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/first-preflight-schema-error.json"
+    },
+    "parent/archive_packets.py": {
+      "sha256": "8b9ebc23b2b0d1a63cb1c240a616c657942badbc2d757129de2827ecbcb7a4e5",
+      "bytes": 4368,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/archive_packets.py"
+    },
+    "parent/archive-config.json": {
+      "sha256": "9beea83e8f8d961339e28c2d8abe6f2960bb02b0da8a2f1954d097cf7e1d4d96",
+      "bytes": 2864,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/proposal-archive-config.json"
+    }
+  },
+  "source_prefix_selected_paths_matched": 999,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "qualification": "Physical originals include copied peer evidence; file counts are not unique experiments. No live calls or quality scoring."
+}

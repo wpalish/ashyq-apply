@@ -1,0 +1,73 @@
+work/search-loop-round6/reviews/expert_a/revision3/proposed_page_classifier.py:500:29: RUF005 Consider iterable unpacking instead of concatenation
+    |
+498 |           # with no award identity of its own.
+499 |           if plural_index or award_links >= 2 or (award_links >= 1 and named is None):
+500 |               index_signals = signals + [
+    |  _____________________________^
+501 | |                 f"{award_links} award links",
+502 | |                 "listing heading" if plural_index else "",
+503 | |                 "no award identity of its own" if named is None else "",
+504 | |             ]
+    | |_____________^ RUF005
+505 |               funding_index = PageClassification(
+506 |                   PageType.SCHOLARSHIP_INDEX, 0.8, [s for s in index_signals if s], title
+    |
+    = help: Replace with iterable unpacking
+
+work/search-loop-round6/reviews/expert_a/revision3/proposed_web_scholarships.py:9:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 7 |   """
+ 8 |
+ 9 | / from __future__ import annotations
+10 | |
+11 | | import re
+12 | | from dataclasses import replace
+13 | | from datetime import UTC, datetime
+14 | | from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
+15 | |
+16 | | from bs4 import BeautifulSoup
+17 | |
+18 | | from app.adapters.applicability import (
+19 | |     assess_degree_applicability,
+20 | |     assess_international_eligibility,
+21 | | )
+22 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+23 | | from app.adapters.extraction import (
+24 | |     ClaimBuilder,
+25 | |     html_title,
+26 | |     is_official_domain,
+27 | |     parse_date_string,
+28 | |     parse_money,
+29 | |     parse_timezone,
+30 | |     readable_text,
+31 | |     verification_domains,
+32 | | )
+33 | | from app.adapters.fetching import Fetcher, FetchResult
+34 | | from app.adapters.html_parse import parse_html
+35 | | from app.adapters.page_classifier import (
+36 | |     SUBSIDIARY_FUNDING_INDEX_SIGNAL,
+37 | |     PageType,
+38 | |     classify_page,
+39 | |     main_content,
+40 | | )
+41 | | from app.adapters.scholarship.conditional_benefits import read_conditional_policy
+42 | | from app.adapters.scope_reader import read_scope
+43 | | from app.domain.enums import (
+44 | |     ApplicationMode,
+45 | |     ClaimType,
+46 | |     CostCategory,
+47 | |     ScholarshipType,
+48 | |     SourceSpecificity,
+49 | | )
+50 | | from app.domain.funding import roll_up_availability
+51 | | from app.schemas.claim import MAX_EXCERPT_CHARS
+52 | | from app.schemas.money import Money
+53 | | from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
+   | |_______________________________________________________________________^ I001
+54 |
+55 |   #: One official-award query after an empty walk for a confirmed programme.
+   |
+   = help: Organize imports
+
+Found 2 errors.
+[*] 1 fixable with the `--fix` option (1 hidden fix can be enabled with the `--unsafe-fixes` option).

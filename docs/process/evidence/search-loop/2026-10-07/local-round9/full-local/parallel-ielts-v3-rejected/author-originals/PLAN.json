@@ -1,0 +1,39 @@
+{
+  "status": "PLAN_BEFORE_PROTOTYPE",
+  "created_utc": "2026-10-07T23:49:41.137710+00:00",
+  "scope": "External default-off IELTS prose grammar/ownership revision; original admission/classifier/Fetcher/table/PDF gates unchanged",
+  "rejected_predecessor": "v2 f5ee8caa, 12/15 parent independent actual-admitted controls fail; immutable",
+  "inputs_sha256": {
+    "work/local-round8/b-ielts-section-proposal-v2/manifest.json": "f5ee8caa8976829d532646b3fe0913108c704b738dae81d10e5256ed6b2aec15",
+    "work/local-round8/root-ielts-v2-review/original-controls.json": "89b799682e32710162d6501d6e9bab1aee77967d1e634c2b2acf3a1ec1c713ea",
+    "work/local-round8/root-ielts-v2-review/original-controls.log": "300d0a6fe1b84d86984c19d21b3467c7f6b29adb7dfba28399ba1f9228e3c0ef",
+    "work/local-round8/root-ielts-v2-review/review_controls.py": "ce5f34c3d09677895e69ed09a1159ffdd215f028452b542cfd4f6e80662e8302",
+    "work/local-round8/root-ielts-v2-review/PLAN.json": "735ab9409c389627b1a07b2c3231707a1c2947e4e2e007e227426e4c13fb3c62"
+  },
+  "requirements": [
+    "Reproduce exact15 parent controls before change",
+    "Retain all68 predecessor controls and four v1 repairs",
+    "Whole numeric atom and explicit score role; fee/GPA not score",
+    "Each-component minimum subscore only",
+    "List and direct div local blocks; no sibling/chrome leakage",
+    "Declined IELTS no score/type permission",
+    "OFF whole output exact10 saved cases; table/PDF/nonIELTS unaffected"
+  ],
+  "forbidden": [
+    "network",
+    "provider",
+    "model",
+    "DNS",
+    "HTTP",
+    "repo/source edits",
+    "Git",
+    "STOP",
+    "gold/labels",
+    "new agents"
+  ],
+  "limitations": [
+    "UNKNOWN Toronto language pages remain blocked; forced classifier is diagnostic only",
+    "Scope guarantee prose only; legacy table reader unchanged",
+    "No production recall gain inferred"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "status": "WIP_UTC_REPAIR_STATIC415_FOCUSED22_NATIVE8_PASS_FINAL_FULL_PENDING",
+  "at_utc": "2026-10-14T01:14:19.952204+00:00",
+  "utc": "Use existing ensure_utc DB read helper before authoritative ClaimOut instant; original4 failures and5 parameter tests unchanged, new2DB controls aware exactinstant",
+  "focused": "22PASS explicitSQLite/PG freshness plus unchanged old5 documentproof variants; NO FULL/COVERAGE",
+  "native_current": [
+    {
+      "run": "native-core7/evidence/e2e/20261014T010116Z-demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core7/evidence/e2e/20261014T010136Z-auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core8/evidence/e2e/20261014T010159Z-demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core8/evidence/e2e/20261014T010222Z-auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core9/evidence/e2e/20261014T010246Z-demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core9/evidence/e2e/20261014T010256Z-auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core10/evidence/e2e/20261014T010308Z-demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core10/evidence/e2e/20261014T010318Z-auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    }
+  ],
+  "frontend": "857/type/lint9old/build carried by exact frontend consumed bytes, backend-only repair revalidated with current8native",
+  "current_full": "NOT_RUN_AFTER_UTC_REPAIR",
+  "first_full": "ARCHIVED22_SQLITE5836PASS4FAIL94.22997_PG_NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_RETAINED"
+}

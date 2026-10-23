@@ -1,0 +1,15 @@
+const fs=require('node:fs');
+const ts=require('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/node_modules/typescript');
+const root=__dirname+'/..';
+const proposal='/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round2/b-filter-choice-proposal';
+function parse(p){const text=fs.readFileSync(p,'utf8');return ts.createSourceFile(p,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);}
+function tests(sf){const result=new Map();function visit(n){if(ts.isCallExpression(n)&&n.arguments.length>=2&&ts.isStringLiteral(n.arguments[0])&&n.expression.getText(sf).startsWith('it')&&(ts.isArrowFunction(n.arguments[1])||ts.isFunctionExpression(n.arguments[1])))result.set(n.arguments[0].text,n.arguments[1].getText(sf));ts.forEachChild(n,visit);}visit(sf);return result;}
+function variable(sf,name){let value;function visit(n){if(ts.isVariableDeclaration(n)&&n.name.getText(sf)===name)value=n.initializer.getText(sf);ts.forEachChild(n,visit);}visit(sf);return value;}
+const report={old_test_bodies:{},native_expressions:{}};
+for(const file of ['ShortlistScreen.test.tsx','JourneyScreens.test.tsx']){const old=tests(parse(proposal+'/original/frontend/src/screens/'+file));const next=tests(parse(proposal+'/proposed/frontend/src/screens/'+file));const bad=[...old].filter(([name,body])=>next.get(name)!==body).map(([name])=>name);report.old_test_bodies[file]={original:old.size,unchanged:old.size-bad.length,mismatches:bad};if(bad.length)throw new Error('old assertion body changed');}
+const old=parse(proposal+'/original/frontend/src/screens/ShortlistScreen.tsx');const next=parse(proposal+'/proposed/frontend/src/screens/ShortlistScreen.tsx');
+for(const name of ['rows','decideRow','renderTable']){report.native_expressions[name]=variable(old,name)===variable(next,name);if(!report.native_expressions[name])throw new Error(name);}
+function emptyBlock(sf){let value;function visit(n){if(ts.isJsxExpression(n)&&n.expression&&n.expression.getText(sf).replace(/\s/g,'').startsWith('!current&&!busy&&!needsAttention&&'))value=n.getText(sf);ts.forEachChild(n,visit);}visit(sf);return value;}
+const d0=parse(root+'/documents.original.tsx');const d1=parse(root+'/documents.reordered.tsx');const block0=emptyBlock(d0);const block1=emptyBlock(d1);const compact=x=>x.replace(/\s/g,'');report.documents={same_empty_panel:block0===block1,rest_exact_ignoring_whitespace:compact(d0.text.replace(block0,''))===compact(d1.text.replace(block1,'')),old_action_before_calendar:d0.text.indexOf(block0)<d0.text.indexOf('{results.length > 0 && <details'),new_action_before_calendar:d1.text.indexOf(block1)<d1.text.indexOf('{results.length > 0 && <details')};
+if(!report.documents.same_empty_panel||!report.documents.rest_exact_ignoring_whitespace||report.documents.old_action_before_calendar||!report.documents.new_action_before_calendar)throw new Error(JSON.stringify(report.documents));
+fs.writeFileSync(root+'/static-checks.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

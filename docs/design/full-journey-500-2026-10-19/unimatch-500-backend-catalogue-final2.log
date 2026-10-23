@@ -1,0 +1,35 @@
+........F..........................................                      [100%]
+=================================== FAILURES ===================================
+_______ test_seed_history_does_not_overwrite_live_identity_or_roll_back ________
+
+catalogue_session = <sqlalchemy.orm.session.Session object at 0x10b3a9580>
+
+    def test_seed_history_does_not_overwrite_live_identity_or_roll_back(catalogue_session):
+        s = catalogue_session
+        uni = retrieve(s, query="Massachusetts Institute")[0]
+        uni.domain = "mit.edu"
+        uni.domain_status = "site_identity_checked"
+        s.flush()
+        newer = snapshot()
+        newer["generated_on"] = "2026-10-03"
+        newer["universities"][0]["official_domain"] = "changed.edu"
+        newer["universities"][0]["official_site"] = "https://changed.edu/"
+        assert import_catalogue(s, newer)["new_observations"] == 500
+        assert uni.domain == "mit.edu"
+>       assert uni.seed_version == "2026-10-03/1.0"
+E       AssertionError: assert '2026-10-19/1.0' == '2026-10-03/1.0'
+E         
+E         - 2026-10-03/1.0
+E         ?         ^^
+E         + 2026-10-19/1.0
+E         ?         ^^
+
+tests/test_university_catalogue.py:111: AssertionError
+=============================== warnings summary ===============================
+tests/test_university_catalogue.py::test_catalogue_api_filters_and_returns_only_preliminary_facts
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_university_catalogue.py::test_seed_history_does_not_overwrite_live_identity_or_roll_back

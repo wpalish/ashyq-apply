@@ -1,0 +1,60 @@
+{
+  "decision": "QUALIFIED_ACCEPT",
+  "B_ready_sha256": "000bbdc3b78b503b5396eae20ab70855dac071ac91cfad9c85f0846fed29eee4",
+  "B_patch_sha256": "57f89f0e971e98c035a9a99b15a00c79ab32ab1df492eb3e428dd2e6631931fc",
+  "proposed_exact4": {
+    "frontend/src/screens/ShortlistScreen.test.tsx": {
+      "sha256": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6",
+      "bytes": 26010
+    },
+    "frontend/src/screens/ShortlistScreen.tsx": {
+      "sha256": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+      "bytes": 33547
+    },
+    "frontend/src/components/ResultDetail.scope.test.tsx": {
+      "sha256": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b",
+      "bytes": 6602
+    },
+    "frontend/src/components/ResultDetail.tsx": {
+      "sha256": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e",
+      "bytes": 23706
+    }
+  },
+  "native": {
+    "total": 56,
+    "passed": 56,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "B_cases": 54,
+    "own_cases": 2
+  },
+  "network_receipts": [
+    {
+      "pid": 49410,
+      "attempts": 0
+    },
+    {
+      "pid": 49751,
+      "attempts": 0
+    },
+    {
+      "pid": 49978,
+      "attempts": 0
+    }
+  ],
+  "network_attempts": 0,
+  "B42_post_mismatches": [],
+  "primary4_base_unchanged": true,
+  "runtime4_exact": true,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "old_templates_preserved": 27,
+  "reviewer_primary_edits": 0,
+  "reviewer_full_or_ports": 0,
+  "history": "Author initial singular-label fixture error retained; peer initial AST-helper quoting syntax failure retained separately, final static helper exit0. Native proposal/test bytes unchanged throughout peer.",
+  "limitations": [
+    "Front-end isolated unit/DOM proof only; not root native gates/full/browser/reload/a11y layout",
+    "No API/SQL/Worker/provider/model/university/live/quality proof",
+    "Checklist rendering and other recovery screens unchanged; no broader completion claim"
+  ]
+}

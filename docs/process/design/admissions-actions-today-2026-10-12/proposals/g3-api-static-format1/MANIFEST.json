@@ -1,0 +1,86 @@
+{
+  "at_utc": "2026-10-12T17:40:06.194122+00:00",
+  "status": "FORMATTED_SOURCE_ONLY_NOT_APPLIED_NOT_TYPECHECKED_NOT_TESTED",
+  "allowlist": [
+    "backend/app/api/routes_admissions_actions.py",
+    "backend/app/main.py",
+    "backend/app/api/routes_profile.py",
+    "backend/tests/test_admissions_actions_api.py",
+    "backend/tests/test_today.py",
+    "backend/tests/test_admissions_actions_concurrency.py"
+  ],
+  "source_before_count": 781,
+  "repair_seal": "390e9ac8ac790423fbc50e1a24ae9c8c505e4cdc9214e253b7dd2df330197196",
+  "formatting": [
+    {
+      "name": "import-sort",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "--select",
+        "I",
+        "--fix",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-static-format1/files/backend/app/api/routes_admissions_actions.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07763037500000003
+    },
+    {
+      "name": "format",
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-static-format1/files/backend/app/api/routes_admissions_actions.py",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-static-format1/files/backend/app/main.py",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-static-format1/files/backend/app/api/routes_profile.py",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-static-format1/files/backend/tests/test_admissions_actions_api.py",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-static-format1/files/backend/tests/test_today.py",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-static-format1/files/backend/tests/test_admissions_actions_concurrency.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03938750000000002
+    }
+  ],
+  "files": {
+    "backend/app/api/routes_admissions_actions.py": {
+      "preimage": "3cb752cd624ec084275f6796225112df16f2943acf6d2bfe9cafaa43653cb3b7",
+      "format_input": "3fea2df65bd575917f9b4d5b45aeaa9437c3260f997cb9a70180d5cf27b38cb2",
+      "postimage": "6fc7ff0875fe496307bd0cf1d8964f85a5151c9b6a11f1b35e57a3aba6727040",
+      "changed": true
+    },
+    "backend/app/main.py": {
+      "preimage": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573",
+      "format_input": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573",
+      "postimage": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573",
+      "changed": false
+    },
+    "backend/app/api/routes_profile.py": {
+      "preimage": "b8cf046ec9f6f9908ebf7c351083dc79f5fc81599592421f25420f6cec134ae2",
+      "format_input": "b8cf046ec9f6f9908ebf7c351083dc79f5fc81599592421f25420f6cec134ae2",
+      "postimage": "4f69baf65680c533f252c836406118b3974ab5e3969fcbcdb50bc455018ac39c",
+      "changed": true
+    },
+    "backend/tests/test_admissions_actions_api.py": {
+      "preimage": "6ff736b776d26aca16519874e4a4dd0785d9d0b8b40b54ee1869ccf97fc0ddc9",
+      "format_input": "4db39ea9192a3897e498d1b6a830586a733dac77b02529966609c7f071fe43af",
+      "postimage": "ecd23075788374447c2c96470dcd36b576dd207b18c4af1815ebf36392b6479c",
+      "changed": true
+    },
+    "backend/tests/test_today.py": {
+      "preimage": "c01bb4683ba1deb4dfb6479b989ad8017adecb805ff61a727137414a7e39660e",
+      "format_input": "c01bb4683ba1deb4dfb6479b989ad8017adecb805ff61a727137414a7e39660e",
+      "postimage": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16",
+      "changed": true
+    },
+    "backend/tests/test_admissions_actions_concurrency.py": {
+      "preimage": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d",
+      "format_input": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d",
+      "postimage": "987429f69ef3784ee84f46e06fd123e62b8535577746fc453eeddb032b20b3d8",
+      "changed": true
+    }
+  }
+}

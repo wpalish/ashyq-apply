@@ -1,0 +1,3 @@
+# Exact line-reference qualification
+
+The first sealed source-only packet READY SHA `2441ecaf9f0a4a04100b3e9cf049f6ffa054b73c6f8c9b39593700e5e4863f88` is preserved unchanged in the parent directory. Its REPORT contained two mistaken frontend/Dockerfile line numbers (18/23). A direct numbered reread confirmed the runtime image declaration is line15 and Nginx config COPY is line19. The qualified REPORT differs only by those two references; no finding, source byte, runtime qualification or acceptance changed. No test/server/live call occurred. This qualified sibling is the packet to use for exact path/line review.

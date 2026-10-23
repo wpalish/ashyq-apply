@@ -1,0 +1,290 @@
+{
+  "schema_version": "external-source-proposal-seal-v1",
+  "at_utc": "2026-10-12T01:59:58.798187+00:00",
+  "status": "SEALED_SOURCE_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "stage": "G2_PERSISTENCE_API",
+  "root_checkout": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "root_reported_head_at_final_review": "f3efd228",
+  "head_independently_git_verified_by_this_agent": false,
+  "source_write_authority": "root only; agent writes this external proposal only",
+  "application_allowlist": [
+    "backend/app/schemas/shared_route.py",
+    "backend/app/models/shared_route.py",
+    "backend/app/api/routes_shared_route.py",
+    "backend/app/api/preparation_transactions.py",
+    "backend/migrations/versions/c3e71d902023_shared_route.py"
+  ],
+  "application_preimages": {
+    "backend/app/schemas/shared_route.py": {
+      "state": "EXISTING",
+      "sha256": "36a0f1127dfdfa1a32bdc5424888d180a4cb571d42322ef878c62b941dddc286"
+    },
+    "backend/app/models/shared_route.py": {
+      "state": "ABSENT"
+    },
+    "backend/app/api/routes_shared_route.py": {
+      "state": "ABSENT"
+    },
+    "backend/app/api/preparation_transactions.py": {
+      "state": "ABSENT"
+    },
+    "backend/migrations/versions/c3e71d902023_shared_route.py": {
+      "state": "ABSENT"
+    }
+  },
+  "proposed_source_pins": {
+    "backend/app/schemas/shared_route.py": {
+      "sha256": "9ba24abedbaef90d40fef03097176f9f6de9f803e6c895debf57ce3b5525cb1a",
+      "bytes": 41520,
+      "lines": 896
+    },
+    "backend/app/models/shared_route.py": {
+      "sha256": "82297c216c3ff6a2c07588607725be8379bd76587bbe37ec62f676024db9519f",
+      "bytes": 2772,
+      "lines": 54
+    },
+    "backend/app/api/routes_shared_route.py": {
+      "sha256": "e59abe2dd3d51736f9d8a52d3272ba6921ba44e97c7e4a435e5020eaba707635",
+      "bytes": 35789,
+      "lines": 707
+    },
+    "backend/app/api/preparation_transactions.py": {
+      "sha256": "adaceee999ae5631e5bd72a26fea1e7d0531244102057058a56340204b881336",
+      "bytes": 4369,
+      "lines": 98
+    },
+    "backend/migrations/versions/c3e71d902023_shared_route.py": {
+      "sha256": "04ec483525d574506ad3d4dceb2c589b0ba55efc9351af8ebc5e7e77bf15360f",
+      "bytes": 2427,
+      "lines": 51
+    }
+  },
+  "unchanged_domain": {
+    "path": "backend/app/domain/shared_route_allocator.py",
+    "sha256": "da57a45f674133db42995138842d0ce8b904cea09f3b57e7abb0b851f776913b",
+    "included_in_application_delta": false
+  },
+  "schema_preservation": {
+    "all_old_function_class_ast_unchanged": true,
+    "node_count": 30,
+    "original_sha256": "36a0f1127dfdfa1a32bdc5424888d180a4cb571d42322ef878c62b941dddc286"
+  },
+  "package_members": {
+    "README.md": {
+      "sha256": "20a7c97aa500929e8f0150d1c535c9fa3c16c905f76280224593ea4904edda3c",
+      "bytes": 13814
+    },
+    "SEAL_CREATION_NOTES.json": {
+      "sha256": "5b393450890cee020d6f9fadc9b1e98bd9324cc3893718d3df2a4b0ccb25cc99",
+      "bytes": 360
+    },
+    "SOURCE_ONLY_CHECKS.json": {
+      "sha256": "4403830ab5c09e4d19703c7ddd39e01dbeaa28b16dcf12156c5d1e9d13641275",
+      "bytes": 11545
+    },
+    "design-references/G2_PERSISTENCE_SOURCE_WRITE_AHEAD.json": {
+      "sha256": "5e16b0a03da60d638a6d043a0d24bd26ed543051101a9d5b48468522288e65e7",
+      "bytes": 3039
+    },
+    "design-references/ROOT_G2_ADAPTER_DESIGN_ACCEPTANCE.md": {
+      "sha256": "e68cb61d63ff34d0caf30ac53c78e3f2c1522d46d29d9b8cba7c2ab01e085429",
+      "bytes": 2662
+    },
+    "design-references/ROOT_G2_DELETE_DESIGN_ACCEPTANCE.md": {
+      "sha256": "f56730f3a28d81f3344cbb6fd40552b7fafc101abc8fcf65adaa0db7f6a1a287",
+      "bytes": 4377
+    },
+    "design-references/ROOT_G2_INTEGRATION_DECISIONS.md": {
+      "sha256": "e9d51228d38316f650d057207fd933437600564e53007e4733b052b391d5cbf5",
+      "bytes": 4250
+    },
+    "design-references/ROOT_G2_PERSISTENCE_INTEGRATION_DECISIONS.md": {
+      "sha256": "c664a4c0db76e23b56091cf0cb435b5ed657749eb3f1b31df9526eca668c4465",
+      "bytes": 5416
+    },
+    "design-references/ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md": {
+      "sha256": "5a2f1deffba1ec2dc405e8b4893bd7100a7d1b3c2654747e5333c75986c52e87",
+      "bytes": 3191
+    },
+    "design-references/proposals/g2-design/G2_DELETE_COORDINATION_DESIGN_V2.md": {
+      "sha256": "23b43feb144033ce0c7dc83e28012cbd5954a38784c7009648b50beef8b9874b",
+      "bytes": 16496
+    },
+    "design-references/proposals/g2-design/G2_EVIDENCE_REVIEW_ADAPTER_DESIGN.md": {
+      "sha256": "9cb523b4a1ab2c8cc855a31acf42db6280e7084e9cdcf32867319172feac8cb6",
+      "bytes": 27019
+    },
+    "design-references/proposals/g2-design/G2_LEGACY_CAS_TRANSACTION_DESIGN.md": {
+      "sha256": "0fac39aa833050cba9819c4531707acb84eaf89577e61434d2d9995beab48f4f",
+      "bytes": 29729
+    },
+    "design-references/proposals/g2-design/SHARED_ROUTE_PERSISTENCE_SPEC_V2.md": {
+      "sha256": "27bc906301708c604c723e1a1d2fdb6ae79f454750871b4d6f82a98cd4728de3",
+      "bytes": 22554
+    },
+    "design-references/proposals/g2-design/TYPED_CONTRACT_DESIGN_V2.md": {
+      "sha256": "3916138d910830dfb0b484f2a562a488889798985f11ac2abdb2ffcd7282f37c",
+      "bytes": 32450
+    },
+    "files/backend/app/api/preparation_transactions.py": {
+      "sha256": "adaceee999ae5631e5bd72a26fea1e7d0531244102057058a56340204b881336",
+      "bytes": 4369
+    },
+    "files/backend/app/api/routes_shared_route.py": {
+      "sha256": "e59abe2dd3d51736f9d8a52d3272ba6921ba44e97c7e4a435e5020eaba707635",
+      "bytes": 35789
+    },
+    "files/backend/app/models/shared_route.py": {
+      "sha256": "82297c216c3ff6a2c07588607725be8379bd76587bbe37ec62f676024db9519f",
+      "bytes": 2772
+    },
+    "files/backend/app/schemas/shared_route.py": {
+      "sha256": "9ba24abedbaef90d40fef03097176f9f6de9f803e6c895debf57ce3b5525cb1a",
+      "bytes": 41520
+    },
+    "files/backend/migrations/versions/c3e71d902023_shared_route.py": {
+      "sha256": "04ec483525d574506ad3d4dceb2c589b0ba55efc9351af8ebc5e7e77bf15360f",
+      "bytes": 2427
+    },
+    "originals/backend/app/schemas/shared_route.py": {
+      "sha256": "36a0f1127dfdfa1a32bdc5424888d180a4cb571d42322ef878c62b941dddc286",
+      "bytes": 21679
+    },
+    "source-references/AGENTS.md": {
+      "sha256": "a28ea0f3c275f54e431169082e27aec5f156d048d30ad617c8a21d0021cc2f69",
+      "bytes": 8704
+    },
+    "source-references/backend/app/api/routes_preparation.py": {
+      "sha256": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2",
+      "bytes": 28922
+    },
+    "source-references/backend/app/api/routes_preparation_graph.py": {
+      "sha256": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9",
+      "bytes": 15722
+    },
+    "source-references/backend/app/api/tenancy.py": {
+      "sha256": "34557c1bae4f9cc36413cfd952a001342df9a35a1c5ecf5ad19bd83cf121363f",
+      "bytes": 1539
+    },
+    "source-references/backend/app/db.py": {
+      "sha256": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319",
+      "bytes": 5783
+    },
+    "source-references/backend/app/domain/learning_schedule.py": {
+      "sha256": "f5fb507796e5c7f6d4704ffff6f218fb8a59a35b79bf1fc659212544628e2e62",
+      "bytes": 5141
+    },
+    "source-references/backend/app/domain/preparation_graph.py": {
+      "sha256": "2ba1488a582a4a8e4a37d747a5a4e4d1d44ceb70c980ad50195438dae3b35c09",
+      "bytes": 32509
+    },
+    "source-references/backend/app/domain/shared_route_allocator.py": {
+      "sha256": "da57a45f674133db42995138842d0ce8b904cea09f3b57e7abb0b851f776913b",
+      "bytes": 13791
+    },
+    "source-references/backend/app/models/auth.py": {
+      "sha256": "ab24284d515dbff52159818f32aa4d3b80863ab023b12cdc51bc2a9da9aa2004",
+      "bytes": 5294
+    },
+    "source-references/backend/app/models/base.py": {
+      "sha256": "dfab71868df728ce3dc74d01f9d547512eb8076795207e113425a1eb1b786b62",
+      "bytes": 1241
+    },
+    "source-references/backend/app/models/research.py": {
+      "sha256": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+      "bytes": 11415
+    },
+    "source-references/backend/app/models/study.py": {
+      "sha256": "cd48802f039ef76f507328af22eb27735fab56ea5a25071bdca522053af59acc",
+      "bytes": 1684
+    },
+    "source-references/backend/app/models/study_schedule.py": {
+      "sha256": "087ccef37010f3eeddce5329856832de1d4aeea796cba48a52e439cf0ca03626",
+      "bytes": 1087
+    },
+    "source-references/backend/app/payments/entitlements.py": {
+      "sha256": "c866a0c548331d8fd7ae5487006dd29c03b89fbd0256183e703cb79bad21190f",
+      "bytes": 3506
+    },
+    "source-references/backend/app/payments/preparation.py": {
+      "sha256": "ab44ed538177c2ac765cd86ec326bb53c196c01927dc04565a9911fe50150a26",
+      "bytes": 1635
+    },
+    "source-references/backend/app/preparation/catalogue.py": {
+      "sha256": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+      "bytes": 15018
+    },
+    "source-references/backend/app/preparation/learning_pack.py": {
+      "sha256": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+      "bytes": 57596
+    },
+    "source-references/backend/app/schemas/learning_schedule.py": {
+      "sha256": "a5c26ea689d67aa68cf46936adc5057c854613a99691259282ba5ca64ea684b6",
+      "bytes": 4250
+    },
+    "source-references/backend/app/schemas/preparation.py": {
+      "sha256": "b88e53c64fab532e1662ee970a11cea4057bf5a1dcd473f73cfb3b2860d30cdc",
+      "bytes": 5600
+    },
+    "source-references/backend/app/schemas/preparation_graph.py": {
+      "sha256": "4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249",
+      "bytes": 18018
+    },
+    "source-references/backend/app/schemas/preparation_graph_loader.py": {
+      "sha256": "dd5c5c635a9b80832aeb334081667d2d5c69a65304fb348441aa44469781dd6b",
+      "bytes": 2592
+    },
+    "source-references/backend/app/schemas/study_schedule.py": {
+      "sha256": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+      "bytes": 7157
+    },
+    "source-references/backend/app/security.py": {
+      "sha256": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816",
+      "bytes": 8723
+    },
+    "source-references/backend/migrations/versions/b5c81d9e2022_learning_calendar.py": {
+      "sha256": "2c9e19365c4ca2835b48094191916667360fe2af94142148c36f60f9e921cad9",
+      "bytes": 482
+    }
+  },
+  "canonical_members_sha256": "4a9c0c4d1b177b57662a7f59e534acea38fc23f3e24b7016a43461ebb9ba1e90",
+  "source_only_checks_receipt": "SOURCE_ONLY_CHECKS.json",
+  "readme": "README.md",
+  "validation_boundary": {
+    "application_imported": false,
+    "ruff_mypy_executed": false,
+    "tests_collected": false,
+    "tests_executed": false,
+    "migration_executed": false,
+    "runtime_started": false,
+    "worktree_or_git_edited": false,
+    "network_or_provider_calls": false,
+    "security_collector_resumed": false,
+    "labels_or_private_runtime_data_read": false,
+    "full_product_ready": false
+  },
+  "root_review_fixes_in_source_not_runtime_qualified": [
+    "typed_finite_review_code_maps",
+    "fresh_acceptance_utc_to_local_planned_date_guard",
+    "current_pointer_and_latest_history_one_statement_consistency",
+    "export_loaded_current_and_history_head_consistency_fail_closed",
+    "legacy_child_id_only_lock_before_uuid_replay",
+    "raw_and_post_typed_native_graph_finite_guards",
+    "final_research_access_recheck_clears_all_visible_evidence"
+  ],
+  "runtime_acceptance_owner": "root source-bound gates; preserve first-failure receipts and new pins after any correction",
+  "metadata_revision": 2,
+  "preserved_predecessor": {
+    "path": "SEAL.json",
+    "sha256": "69d294842d5af3da3c5ee394307e061ec8f9a3a28e0ffd4db71880354a6a15da",
+    "status": "Preserved; one independently edited peer report hash superseded by this metadata-only correction."
+  },
+  "separately_authored_exclusions": {
+    "PEER_ROOT_WIRING_REVIEW.md": {
+      "reason": "Peer review is independent, not an agent-owned sealed source member; final observed hash retained for context only.",
+      "first_seal_sha256": "a49aca89873cd02ffef60fe2b4d67ddfd732e4517622b95cab7f49451e83ddba",
+      "observed_final_sha256": "3ae5e85b3d866a715b7b1948dcb5688753d5f87b0c9eee0e8f04697880e98351"
+    }
+  },
+  "metadata_correction_only": true
+}

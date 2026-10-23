@@ -1,0 +1,36 @@
+{
+  "qualification": "STATIC_CURRENT_SOURCE_PROFILE_CONTRACT_ONLY_NOT_RUNTIME_RECEIPT",
+  "source_file": "backend/scripts/canary_discovery.py",
+  "source_sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+  "profile_function_sha256": "8b8be5545994f5a5cfa94fdd9820ca0c5ce094f13dc1c3fc8ca66844009aa0f4",
+  "profile_function": "canary_profile",
+  "algorithm_degree_expression": "DegreeLevel.BACHELOR",
+  "public_context_constants": {
+    "intended_fields": [
+      "computer science"
+    ],
+    "intake_term": "fall",
+    "intake_year": 2027,
+    "citizenship": "Kazakhstan",
+    "country_of_residence": "Kazakhstan",
+    "education_country": "Kazakhstan",
+    "education_system": "KZ national secondary",
+    "graduation_date": "2027-05-25"
+  },
+  "call_chain": [
+    "evaluation.research.live.capture_one",
+    "scripts.canary_discovery.run_canary",
+    "scripts.canary_discovery._run_canary",
+    "canary_profile"
+  ],
+  "binding_requirement": "Fresh public expert request must describe the same canonical university/domain and source-bound synthetic profile actually used by the algorithm. Profile context copying never copies answers. Existing physical artifacts do not themselves serialize profile context; source-bound invocation and receipt witness must be qualified.",
+  "not_claimed": [
+    "runtime executed",
+    "expert packet generated",
+    "live or scorer admission",
+    "actual canonical university registry parsed"
+  ],
+  "imports": 0,
+  "network_calls": 0,
+  "model_CLI": 0
+}
