@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[ui-completion] Holder: gpt-6-astra; since 2026-10-23T05:30:32.039100+00:00; branch task/unimatch-ui-book, baseline6bf34976 clean/origin exact, one migration head a1b26e902028. Fresh owner asks to finish broken images, empty/dead areas throughout the site. Root sole source/Git writer; two read-only helpers inspect assets and route/action holes. Handoff checker nobody-semicolon age warning is a parser false positive; prior release is explicit. Preserve Apple/orbit/cobalt and source truth/recovery, no backend/search/provider/eval/heldout/security/default/production changes.
+
 [apple-editorial COMPLETE 2026-10-22T11:12:41.235897+00:00] Holder: nobody; released for owner visual review. Source57fff2df + final logo-return/evidence de721dc3 pushed to existing OPEN PR89 (base main, no merge). Apple-led public story/tour/search/evidence/plan/FAQ and shared editorial hierarchy implemented. Final113files1057FE PASS, TS/build PASS, lint0errors9inherited; mechanical detector[] once before final nonvisual logo handler. Native1280desktop/390mobile public RU/EN and synthetic home/find/programme/documents/profile observed.19finite proof members and804frontend source pins in docs/design/apple-editorial-2026-10-22; REVIEW.md records exact coverage/limits. Local explicit CORS origin18140 corrected test setup; auth remained enabled, logout completed. No backend/schema/provider/evaluation/heldout/security/default/real user save/new account/deployment work. OSpreferences/dark/kk/devicefps/full40screen new qualification NOT_RUN. All historical STOPs persist; await owner direction, no automatic further implementation/deploy/messages.
 
 [apple-editorial checkpoint 2026-10-22T11:06:11.906086+00:00] Root retains baton. Public Apple-led hero/search/product tour/evidence/plan/FAQ and shared editorial type/surfaces implemented. Source is ready for finite visual review: earlier113files1057frontendPASS, focused8PASS, currenttypes/buildPASS, lint0errors9inherited. Final full suite running after accessibility copy/type cleanup and grouped field-focus polish. Native1280desktop home/find/programme/documents/profile and390mobile profile/landing/search observed; public search->registration and tour reversal observed. Initial local logout403 was runtime CORS port mismatch; explicit loopback18140 configured, logout then completed, auth protection retained. No new account/profile/data commands. No deployment or backend code. REVIEW.md/final finite evidence and release metadata pending.
@@ -435,6 +437,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+[ui-completion] IN_PROGRESS. Repair actual frontend asset/render/route/action/empty-state gaps across public and private surfaces; owner asks broad completion, not another redesign. Keep unknown data honest and unsupported actions explained.
 
 [apple-editorial COMPLETE] Local design increment delivered; see de721dc3/REVIEW.md. Owner visual acceptance and production remain pending. Historical write-ahead:  Research official Apple + supplied Eleken collection; implement coherent public product story and shared app visual hierarchy. Preserve search/profile/requirements/documents/application flows, routes and saves. No new admissions/provider/data claims or backend work. No deployment.
 
@@ -2679,6 +2683,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[ui-completion WRITE-AHEAD] Inventory App.tsx/routes/components/public asset references; native traverse all available routes on owned synthetic local preview18140/API18141. Add resilient image/media display and useful empty/error/retry/navigation affordances where reproduction proves gaps. Targeted meaningful regressions, current fullfrontend/type/lint/build, desktop+mobile route/asset coverage and finite before/after report. Preserve command/revision/recovery contracts. No real applicant edits, external applications/messages/new accounts/payment or deployment. Existing synthetic login may be used. UI snapshot acceptance does not close search/platform gates.
 
 [apple-editorial NEXT] Await owner review of current public preview18140/#/welcome and finite REVIEW.md; baton released. No implicit deployment, further code or historical search/evaluation restart. All scope is local integrated UI; platform acceptance remains open.
 
@@ -7376,6 +7382,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+[ui-completion] Holder: gpt-6-astra; since 2026-10-23T05:30:32.039100+00:00; branch task/unimatch-ui-book, baseline6bf34976 clean/origin exact, one migration head a1b26e902028. Fresh owner asks to finish broken images, empty/dead areas throughout the site. Root sole source/Git writer; two read-only helpers inspect assets and route/action holes. Handoff checker nobody-semicolon age warning is a parser false positive; prior release is explicit. Preserve Apple/orbit/cobalt and source truth/recovery, no backend/search/provider/eval/heldout/security/default/production changes.
 
 [apple-editorial COMPLETE 2026-10-22T11:12:41.235897+00:00] Holder: nobody; released for owner visual review. Source57fff2df + final logo-return/evidence de721dc3 pushed to existing OPEN PR89 (base main, no merge). Apple-led public story/tour/search/evidence/plan/FAQ and shared editorial hierarchy implemented. Final113files1057FE PASS, TS/build PASS, lint0errors9inherited; mechanical detector[] once before final nonvisual logo handler. Native1280desktop/390mobile public RU/EN and synthetic home/find/programme/documents/profile observed.19finite proof members and804frontend source pins in docs/design/apple-editorial-2026-10-22; REVIEW.md records exact coverage/limits. Local explicit CORS origin18140 corrected test setup; auth remained enabled, logout completed. No backend/schema/provider/evaluation/heldout/security/default/real user save/new account/deployment work. OSpreferences/dark/kk/devicefps/full40screen new qualification NOT_RUN. All historical STOPs persist; await owner direction, no automatic further implementation/deploy/messages.
 
