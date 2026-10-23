@@ -32,8 +32,8 @@ const MAX_UNIVERSITIES = 10;
  * would attach the failure to the wrong action. `version` moves after each
  * change so the browser fetches the new bytes instead of its cached copy.
  */
-function AvatarField({ userId, name }: { userId: string; name: string }) {
-  const { t } = useTranslation();
+function AvatarField({ userId, name, onChanged }: { userId: string; name: string; onChanged: () => void }) {
+  const { t, locale } = useTranslation();
   const [version, setVersion] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -41,7 +41,7 @@ function AvatarField({ userId, name }: { userId: string; name: string }) {
   return (
     <div className="field">
       <span className="field__label">{t('person.avatar')}</span>
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span></Notice>}
       <div className="row">
         <Avatar key={version} name={name} status={null} userId={userId} large />
         <label className="btn btn--sm">
@@ -58,7 +58,7 @@ function AvatarField({ userId, name }: { userId: string; name: string }) {
               setBusy(true);
               try {
                 await api.uploadAvatar(file);
-                setVersion((n) => n + 1);
+                setVersion((n) => n + 1); onChanged();
                 setError('');
               } catch (problem) {
                 setError(
@@ -75,8 +75,13 @@ function AvatarField({ userId, name }: { userId: string; name: string }) {
           type="button"
           disabled={busy}
           onClick={async () => {
-            await api.deleteAvatar();
-            setVersion((n) => n + 1);
+            setBusy(true);
+            try {
+              await api.deleteAvatar();
+              setVersion((n) => n + 1); onChanged(); setError('');
+            } catch {
+              setError(locale === 'en' ? 'Could not remove the picture. Try again.' : 'Не удалось удалить фото. Попробуй ещё раз.');
+            } finally { setBusy(false); }
           }}
         >
           {t('person.avatarRemove')}
@@ -99,6 +104,7 @@ function ProfileForm({
   const [universities, setUniversities] = useState((initial?.universities ?? []).join(', '));
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [avatarVersion, setAvatarVersion] = useState(0);
 
   const parsed = universities
     .split(',')
@@ -131,9 +137,9 @@ function ProfileForm({
       }}
     >
       <div className="public-profile-editor"><div className="stack">
-      {error && <Notice kind="risk">{error}</Notice>}
-      {ru?<><label className="field book-social-name"><span className="field__label">Имя в сообществе</span><input value={initial?.display_name??''} readOnly/><span className="field__hint">Имя аккаунта. Отдельное переименование в сообществе пока недоступно.</span></label><div className="book-social-interests"><h3>Твои интересы и направления</h3><label className="field"><span className="field__label">Специальность</span><input value={major} maxLength={120} onChange={event=>setMajor(event.target.value)}/></label><label className="field"><span className="field__label">Университеты</span><input value={universities} onChange={event=>setUniversities(event.target.value)}/><span className="field__hint">Через запятую · {parsed.length}/{MAX_UNIVERSITIES}</span></label></div><details className="book-social-extra"><summary>Фото, город и этап поступления</summary>{initial&&<AvatarField userId={initial.user_id} name={initial.display_name}/>}<label className="field"><span className="field__label">На каком ты этапе</span><select value={status} onChange={event=>setStatus(event.target.value as ApplicantStatus|'')}><option value="">Не указан</option><option value="waitlist">В листе ожидания</option><option value="accepted">Поступил</option></select><span className="field__hint">Это личная отметка, а не решение, полученное от университета.</span></label><label className="field"><span className="field__label">Город, куда ты поступаешь</span><input value={city} maxLength={120} onChange={event=>setCity(event.target.value)}/></label></details></>:<>
-      {initial && <AvatarField userId={initial.user_id} name={initial.display_name} />}
+      {error && <Notice kind="risk"><span role="alert">{error}</span></Notice>}
+      {ru?<><label className="field book-social-name"><span className="field__label">Имя в сообществе</span><input value={initial?.display_name??''} readOnly/><span className="field__hint">Имя аккаунта. Отдельное переименование в сообществе пока недоступно.</span></label><div className="book-social-interests"><h3>Твои интересы и направления</h3><label className="field"><span className="field__label">Специальность</span><input value={major} maxLength={120} onChange={event=>setMajor(event.target.value)}/></label><label className="field"><span className="field__label">Университеты</span><input value={universities} onChange={event=>setUniversities(event.target.value)}/><span className="field__hint">Через запятую · {parsed.length}/{MAX_UNIVERSITIES}</span></label></div><details className="book-social-extra"><summary>Фото, город и этап поступления</summary>{initial&&<AvatarField userId={initial.user_id} name={initial.display_name} onChanged={() => setAvatarVersion(value => value + 1)}/>}<label className="field"><span className="field__label">На каком ты этапе</span><select value={status} onChange={event=>setStatus(event.target.value as ApplicantStatus|'')}><option value="">Не указан</option><option value="waitlist">В листе ожидания</option><option value="accepted">Поступил</option></select><span className="field__hint">Это личная отметка, а не решение, полученное от университета.</span></label><label className="field"><span className="field__label">Город, куда ты поступаешь</span><input value={city} maxLength={120} onChange={event=>setCity(event.target.value)}/></label></details></>:<>
+      {initial && <AvatarField userId={initial.user_id} name={initial.display_name} onChanged={() => setAvatarVersion(value => value + 1)} />}
       <div className="grid-2">
         <div className="field">
           <label className="field__label" htmlFor="profile-status">{t('person.formStatus')}</label>
@@ -222,8 +228,8 @@ function ProfileForm({
         </span>
       </div>
       </div><aside className="public-profile-preview" aria-label="Public profile preview">
-        <span className="public-profile-preview__initial" aria-hidden="true">{(initial?.display_name || 'U').slice(0,1)}</span>
-        <h2>{initial?.display_name || (ru?'Твой публичный профиль':'Your public profile')}</h2><p className="xs muted">{ru?'Предпросмотр · изменения публикуются только после сохранения':'Preview · changes are not published until you save'}</p>
+        <Avatar key={avatarVersion} name={initial?.display_name || (ru ? 'Твой профиль' : 'Your profile')} status={status || null} userId={initial?.user_id} large/>
+        <h2>{initial?.display_name || (ru?'Твой публичный профиль':'Your public profile')}</h2><p className="xs muted">{ru?'Предпросмотр · поля профиля публикуются после сохранения. Фото обновляется отдельно.':'Preview · profile fields are published after saving. The photo is updated separately.'}</p>
         <dl><dt>{t('person.formCity')}</dt><dd>{city.trim() || (ru?'Не указано':'Not provided')}</dd><dt>{t('person.formMajor')}</dt><dd>{major.trim() || (ru?'Не указано':'Not provided')}</dd><dt>{t('person.formUniversities')}</dt><dd>{parsed.join(', ') || (ru?'Не указано':'Not provided')}</dd></dl>
         <p className="small">{bio.trim() || (ru?'Здесь появится твой рассказ о себе.':'Your introduction will appear here.')}</p><p className="xs muted">{t('person.publicWarning')}</p>
       </aside></div>
@@ -279,7 +285,7 @@ export function PersonScreen({
   useEffect(() => { void load(); }, [load]);
 
   if (state === 'loading') return <Loading label={t('person.loading')} />;
-  if (state === 'error') return <Notice kind="risk">{message}</Notice>;
+  if (state === 'error') return <div className="stack">{ru && <BookCommunityNav active={isMe ? 'me' : 'discover'}/>}<h1>{ru ? 'Не удалось открыть профиль' : 'Could not open the profile'}</h1><Notice kind="risk"><span role="alert">{message}</span></Notice><button className="btn" type="button" onClick={() => { void load(); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></div>;
 
   if (state === 'absent') {
     return isMe ? (
@@ -297,7 +303,7 @@ export function PersonScreen({
       </div>
     ) : (
       <Empty title={t('person.noProfile')}>
-        <p className="small">{t('person.noProfileHint')}</p>
+        <p className="small">{t('person.noProfileHint')}</p><a className="btn" href="#/discover">{ru ? 'К поиску людей' : 'Find people'}</a>
       </Empty>
     );
   }
@@ -314,7 +320,7 @@ export function PersonScreen({
       {ru&&isMe&&<><BookCommunityNav active="me"/><BookPageHeading title="Мой публичный профиль">Расскажи о себе и своих интересах. Этот профиль видят другие участники сообщества. Личные данные дела, оценки и документы не отображаются.</BookPageHeading></>}
       {ru&&!isMe&&<a className="book-back" href="#/feed">← К сообществу</a>}
       <header className="profile-head">
-        <Avatar name={card.display_name} status={card.status} large />
+        <Avatar name={card.display_name} status={card.status} userId={card.user_id} large />
         <div className="stack stack--tight">
           <h1 className="profile-head__name">{card.display_name}</h1>
           <div className="row row--tight">

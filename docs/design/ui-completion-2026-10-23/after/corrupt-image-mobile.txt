@@ -1,0 +1,82 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - button "Unimatch home": unimatch
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Документы и сроки":
+  - generic "Состояние исследования и ограничения источников"
+  - navigation "Путь по программе":
+    - link "Подбор":
+      - /url: "#/shortlist?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1"
+    - link "Требования":
+      - /url: "#/approved?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1&view=requirements"
+    - link "Документы":
+      - /url: "#/documents?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1&application=730985b98790405da029e24be09cfc13"
+    - link "Заявка и сроки":
+      - /url: "#/applications?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1&application=730985b98790405da029e24be09cfc13"
+  - heading "KU Leuven" [level=2]
+  - paragraph: BSc Informatics
+  - 'link "Открыть заявку: Тестовый путь 500 — KU Leuven"':
+    - /url: "#/applications?case=8f86257ecca249c7a1339cd78d1be5b9&kind=application&id=730985b98790405da029e24be09cfc13"
+  - link "Создать заявку по программе":
+    - /url: "#/applications?case=8f86257ecca249c7a1339cd78d1be5b9&programme=ccf0bf6623884c4a9b75c57a16c76dc1&action=new"
+  - link "Все документы":
+    - /url: "#/documents"
+  - button "К списку документов":
+    - text: К списку документов
+  - heading "Secondary school diploma (certified copy)" [level=1]:
+    - text: Secondary school diploma (certified copy)
+  - paragraph: Проверь файл на своём устройстве, требования и свой личный статус. Файл не отправляется в университет.
+  - complementary:
+    - heading "Зачем нужна эта карточка?" [level=2]
+    - paragraph: Собери заметки, срок и личный статус документа. Применимость официального требования проверяй по источникам.
+  - heading "Проверить документ" [level=2]
+  - paragraph: Проверь файл «Secondary school diploma (certified copy)» на этом устройстве. Он не загружается на сервер и не отмечается готовым. Просмотр очистится при выходе со страницы или смене дела.
+  - strong: Перетащи файл сюда или выбери на компьютере
+  - generic: PDF, PNG или JPEG · не более 10 МБ
+  - button "Перетащи файл сюда или выбери на компьютере PDF, PNG или JPEG · не более 10 МБ" [active]
+  - alert: Изображение повреждено или не читается. Выбери другой PNG или JPEG.
+  - heading "Статус документа" [level=2]
+  - strong: В работе
+  - paragraph: Это твоя личная запись. Файл не загружен на сервер и не отправлен в университет.
+  - button "Обновить мой статус"
+  - button "Изменить запись"
+  - button "Удалить запись":
+    - text: Удалить запись
+  - heading "Сведения о документе" [level=2]
+  - term: Ответственный
+  - definition: Ты
+  - term: Личная плановая дата
+  - definition: Не указана
+  - term: Часовой пояс
+  - definition: Не подтверждён
+  - heading "Связь с требованиями" [level=2]
+  - paragraph: Запись связана с сохранённым требованием. Проверь его применимость и актуальность в разделе привязки ниже.
+  - button "История личных изменений →"
+  - generic: "Личная отметка сохранена: 19 окт. 2026 г., 11:26"
+  - generic "Требования, привязки к источникам и прежние отметки"
+  - generic "Восстановление сохранения"
+  - generic "Полные чеклисты, сроки и прежние браузерные отметки"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.

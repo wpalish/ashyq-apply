@@ -1,0 +1,202 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - button "Unimatch home": unimatch
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Preferences & budget" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - link "Профиль абитуриента":
+    - /url: "#/home"
+    - generic: ←
+    - text: Профиль абитуриента
+  - paragraph: Шаг 2 из 5
+  - paragraph: Профиль абитуриента
+  - heading "Направление и бюджет" [level=1]
+  - paragraph: Укажи, что и где ты хочешь изучать, и какой бюджет ты планируешь.
+  - complementary
+  - heading "Направление и локация" [level=2]
+  - generic: Что изучать
+  - textbox "Что изучать": computer science
+  - generic: Страны обучения
+  - button "Netherlands Убрать страну":
+    - text: Netherlands
+    - generic: Убрать страну
+  - button "Germany Убрать страну":
+    - text: Germany
+    - generic: Убрать страну
+  - button "Canada Убрать страну":
+    - text: Canada
+    - generic: Убрать страну
+  - button "Finland Убрать страну":
+    - text: Finland
+    - generic: Убрать страну
+  - button "Belgium Убрать страну":
+    - text: Belgium
+    - generic: Убрать страну
+  - combobox "Страны обучения":
+    - option "Добавить страну" [selected]
+    - option "United States"
+    - option "Canada" [disabled]
+    - option "United Kingdom"
+    - option "Germany" [disabled]
+    - option "Netherlands" [disabled]
+    - option "Australia"
+    - option "Japan"
+    - option "Finland" [disabled]
+    - option "Belgium" [disabled]
+    - option "France"
+    - option "Singapore"
+  - generic "Указать другую страну"
+  - generic: Год поступления
+  - combobox "Год поступления":
+    - option "Укажи год"
+    - option "2026"
+    - option "2027" [selected]
+    - option "2028"
+    - option "2029"
+    - option "2030"
+    - option "2031"
+  - generic: Период поступления
+  - combobox "Период поступления":
+    - option "Осень" [selected]
+    - option "Весна"
+    - option "Лето"
+    - option "Зима"
+  - heading "Бюджет и покрытие" [level=2]
+  - generic: Годовой бюджет семьи
+  - spinbutton "Годовой бюджет семьи": "6000"
+  - generic: Валюта
+  - combobox "Валюта":
+    - option "USD" [selected]
+    - option "AED"
+    - option "AUD"
+    - option "BRL"
+    - option "CAD"
+    - option "CHF"
+    - option "CNY"
+    - option "CZK"
+    - option "DKK"
+    - option "EUR"
+    - option "GBP"
+    - option "HKD"
+    - option "HUF"
+    - option "ILS"
+    - option "INR"
+    - option "JPY"
+    - option "KRW"
+    - option "KZT"
+    - option "MXN"
+    - option "MYR"
+    - option "NOK"
+    - option "NZD"
+    - option "PLN"
+    - option "QAR"
+    - option "RUB"
+    - option "SAR"
+    - option "SEK"
+    - option "SGD"
+    - option "TRY"
+    - option "ZAR"
+  - heading "Какая помощь подходит" [level=3]
+  - checkbox "Полная оплата обучения подходит" [checked]
+  - generic: Полная оплата обучения подходит
+  - checkbox "Стипендия должна покрывать проживание" [checked]
+  - generic: Стипендия должна покрывать проживание
+  - checkbox "Стипендия должна покрывать питание" [checked]
+  - generic: Стипендия должна покрывать питание
+  - checkbox "Стипендия должна покрывать страховку"
+  - generic: Стипендия должна покрывать страховку
+  - checkbox "Стипендия должна покрывать учебные материалы"
+  - generic: Стипендия должна покрывать учебные материалы
+  - generic "Дополнительные условия финансирования"
+  - note:
+    - strong: Стипендии и гранты
+    - text: Наличие финансирования зависит от университета и не гарантировано. Требование к покрытию — условие подбора, а не подтверждение присуждения стипендии.
+  - generic "Расширенные условия, приоритеты и пересчёт результатов"
+  - option "any"
+  - option "small"
+  - option "medium" [selected]
+  - option "large"
+  - option "metropolis"
+  - option "any"
+  - option "cold"
+  - option "temperate" [selected]
+  - option "warm"
+  - option "mediterranean"
+  - option "any"
+  - option "moderate"
+  - option "demanding" [selected]
+  - option "very demanding"
+  - option "any"
+  - option "top 50"
+  - option "top 100"
+  - option "top 300" [selected]
+  - option "top 500"
+  - option "any"
+  - option "small"
+  - option "medium"
+  - option "large" [selected]
+  - option "any"
+  - option "campus" [selected]
+  - option "urban"
+  - option "suburban"
+  - option "AED"
+  - option "AUD"
+  - option "BRL"
+  - option "CAD"
+  - option "CHF"
+  - option "CNY"
+  - option "CZK"
+  - option "DKK"
+  - option "EUR"
+  - option "GBP"
+  - option "HKD"
+  - option "HUF"
+  - option "ILS"
+  - option "INR"
+  - option "JPY"
+  - option "KRW"
+  - option "KZT"
+  - option "MXN"
+  - option "MYR"
+  - option "NOK"
+  - option "NZD"
+  - option "PLN"
+  - option "QAR"
+  - option "RUB"
+  - option "SAR"
+  - option "SEK"
+  - option "SGD"
+  - option "TRY"
+  - option "USD" [selected]
+  - option "ZAR"
+  - checkbox "Демонстрационный подбор — синтетические данные, без чтения сайтов" [checked]
+  - text: Демонстрационный подбор — синтетические данные, без чтения сайтов
+  - status
+  - button "Сохранить как черновик"
+  - button "Начать подбор":
+    - text: Начать подбор
+  - paragraph: Ты можешь изменить эти данные позже.
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.

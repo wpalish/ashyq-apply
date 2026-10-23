@@ -74,6 +74,7 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
               placeholder={field.placeholder}
               value={draftFilters[field.key] ?? ''}
               onChange={(event) => setDraftFilters((draft) => ({ ...draft, [field.key]: event.target.value }))}
+              onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); setFilters(current => ({ ...current, ...Object.fromEntries(Object.entries(draftFilters).map(([key, value]) => [key, value?.trim() ?? ''])) })); } }}
               onBlur={(event) =>
                 setFilters((f) => ({ ...f, [field.key]: event.target.value.trim() }))
               }
@@ -99,7 +100,7 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
         )}
       </div>
 
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(filters); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
 
       <div className="person-grid">
         {people.map((person) => (
@@ -108,7 +109,7 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
       </div>
 
       {loading && <Loading label={t('discover.looking')} />}
-      {!loading && people.length === 0 && (
+      {!loading && !error && people.length === 0 && (
         <Empty title={t(filtered ? 'discover.noMatch' : 'discover.empty')}>
           <p className="small">{t(filtered ? 'discover.noMatchHint' : 'discover.emptyHint')}</p>
         </Empty>

@@ -1,0 +1,64 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - button "Unimatch home": unimatch
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "University shortlist":
+  - generic "Состояние исследования и ограничения источников"
+  - region "Карточка университета":
+    - button "К каталогу 500 вузов":
+      - text: К каталогу 500 вузов
+    - img "Эмблема The University of Melbourne"
+    - heading "The University of Melbourne" [active] [level=1]
+    - paragraph: Melbourne · Australia
+    - button "Выбрать для проверки программ"
+    - button "Проверить программы в выбранных (0)" [disabled]
+    - link "Мой план":
+      - /url: "#/approved"
+    - region "Программы и план поступления":
+      - heading "Программы и план поступления" [level=2]
+      - paragraph: "Бакалавриат и магистратура: условия каждой программы хранятся отдельно. Дата чтения источника не гарантирует неизменность условий."
+      - paragraph: "Опубликовано: бакалавриат — 0, магистратура — 0. Покрытие вуза неполное; пробелы отмечены в каждой программе."
+      - heading "Проверенные программы этого вуза ещё не опубликованы" [level=3]
+      - paragraph: Вуз есть в справочнике500. Программы, стоимость и сроки здесь не подменяются общими университетскими оценками.
+    - heading "О вузе и его истории" [level=2]
+    - paragraph: The University of Melbourne (UniMelb) is a public research university located in Melbourne, Australia. Founded in 1853, it is Australia's second oldest university and the oldest in the state of Victoria. Its main campus is located in Parkville, an inner suburb north of Melbourne's central business district, with several other campuses located across the state of Victoria.
+    - paragraph: Краткая справка на английском. Источник и история изменений указаны ниже.
+    - link "Источник истории ↗":
+      - /url: https://en.wikipedia.org/wiki/University_of_Melbourne
+    - heading "Справочная информация" [level=2]
+    - term: Основан
+    - definition: Не подтверждено
+    - term: Тип
+    - definition: Public
+    - term: Студентов · импортированная оценка
+    - definition: —
+    - term: Иностранных студентов · оценка
+    - definition: —
+    - link "Сайт университета ↗":
+      - /url: https://unimelb.edu.au
+    - paragraph: Это справочные сведения, а не проверка применимости программы к твоему набору. Стоимость, требования и стипендии проверяются отдельно.
+    - generic "Происхождение данных и изображения"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.

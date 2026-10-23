@@ -1,7 +1,8 @@
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import App from './App';
 import { api } from '@/api/client';
+import { setLocale } from '@/lib/i18n';
 const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
 vi.mock('@/screens/ProfileScreen', () => ({ ProfileScreen: () => <h1>Applicant profile editor</h1> }));
@@ -11,6 +12,7 @@ const inactive = () => ({ scope: null, profile_id: null, case_epoch: 0 });
 const run = { id: 'existing-run', profile_id: 'profile-a' };
 const flush = async () => { await act(async () => { for (let i=0; i<8; i++) await Promise.resolve(); }); };
 beforeEach(() => {
+  setLocale('en');
   window.location.hash = '#/profile';
   vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
   vi.spyOn(api, 'authStatus').mockResolvedValue({ enabled: false, authenticated: true, registration_enabled: false, principal: null });
@@ -47,4 +49,24 @@ it('does not substitute the private owner profile for an incomplete member link'
   window.location.hash = '#/person'; render(<App />); await flush();
   expect(screen.getByRole('heading', { name: 'Member link incomplete' })).toBeInTheDocument();
   expect(screen.queryByText(/Public member/)).not.toBeInTheDocument();
+});
+it('explains an invalid address without replacing the current editor', async () => {
+  render(<App/>); await flush();
+  await act(async () => { window.location.hash = '#main-content'; window.dispatchEvent(new HashChangeEvent('hashchange')); });
+  expect(screen.queryByTestId('missing-route-notice')).toBeNull();
+  await act(async () => { window.location.hash = '#/missing-section'; window.dispatchEvent(new HashChangeEvent('hashchange')); });
+  expect(screen.getByTestId('missing-route-notice')).toHaveTextContent('This page does not exist');
+  expect(screen.getByRole('heading', { name: 'Applicant profile editor' })).toBeInTheDocument();
+  await act(async () => { window.location.hash = '#/profile'; window.dispatchEvent(new HashChangeEvent('hashchange')); });
+  expect(screen.queryByTestId('missing-route-notice')).toBeNull();
+});
+it('keeps the workspace open and explains a failed sign-out without automatically retrying', async () => {
+  const logout = vi.spyOn(api, 'logout').mockRejectedValue(new Error('Synthetic connection failure'));
+  render(<App/>); await flush();
+  fireEvent.click(screen.getByLabelText('Applicant workspace'));
+  fireEvent.click(screen.getByTestId('sign-out')); await flush();
+  expect(screen.getByRole('alert')).toHaveTextContent('Sign-out was not confirmed');
+  expect(screen.getByRole('heading', { name: 'Applicant profile editor' })).toBeInTheDocument();
+  expect(screen.getByTestId('sign-out')).toBeEnabled();
+  expect(logout).toHaveBeenCalledTimes(1);
 });

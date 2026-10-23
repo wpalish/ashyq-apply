@@ -1,0 +1,39 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - generic: unimatch
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - text: Абитуриент
+  - combobox "Абитуриент":
+    - option "Новый абитуриент"
+    - option "Тестовый Путь 500 · 1 исследований" [selected]
+    - option "Аружан Султанова · 1 исследований"
+  - button "Новая анкета"
+  - button "Настройки"
+  - button "Выйти"
+- main "Настройки" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - status: Открываем раздел…
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.
+  - strong: unimatch
+  - text: Больше возможностей для твоего завтра

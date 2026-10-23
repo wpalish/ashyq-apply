@@ -3,7 +3,7 @@ import { useTranslation } from '@/lib/useTranslation';
 import { FileImage, FilePdf, UploadSimple } from '@phosphor-icons/react';
 
 const LocalPdfPreview = lazy(() => import('./LocalPdfPreview'));
-type Preview = { name:string; size:number; url:string; image:boolean; pdfBytes:Uint8Array|null };
+type Preview = { request:number; name:string; size:number; url:string; image:boolean; pdfBytes:Uint8Array|null };
 
 /** Local inspection only. A selected file is never a saved/uploaded document. */
 export function LocalDocumentPreview({ label }: { label:string }) {
@@ -38,7 +38,7 @@ export function LocalDocumentPreview({ label }: { label:string }) {
       const blob = file.slice(0, file.size, pdf ? 'application/pdf' : png ? 'image/png' : 'image/jpeg');
       const pdfBytes = pdf ? new Uint8Array(await file.arrayBuffer()) : null;
       if (generation.current !== request) return;
-      setValue({ name:file.name, size:file.size, url:URL.createObjectURL(blob), image:!pdf, pdfBytes });
+      setValue({ request, name:file.name, size:file.size, url:URL.createObjectURL(blob), image:!pdf, pdfBytes });
     } catch (failure) {
       if (generation.current === request) setError(failure instanceof Error ? failure.message : (ru ? 'Не удалось прочитать файл.' : 'The file could not be read.'));
     } finally {
@@ -76,7 +76,11 @@ export function LocalDocumentPreview({ label }: { label:string }) {
         {ru ? 'Очистить просмотр' : 'Clear preview'}
       </button>
       {value.image
-        ? <img className="local-document__image" src={value.url} alt={ru ? 'Локальный просмотр выбранного документа' : 'Local preview of the selected document'}/>
+        ? <img className="local-document__image" src={value.url} alt={ru ? 'Локальный просмотр выбранного документа' : 'Local preview of the selected document'} onError={() => {
+          if (generation.current !== value.request) return;
+          setError(ru ? 'Изображение повреждено или не читается. Выбери другой PNG или JPEG.' : 'This image is damaged or cannot be decoded. Choose another PNG or JPEG.');
+          setValue(null);
+        }}/>
         : value.pdfBytes
           ? <Suspense fallback={<p role="status">{ru ? 'Загружаем локальный просмотр PDF…' : 'Loading local PDF reader…'}</p>}><LocalPdfPreview data={value.pdfBytes}/></Suspense>
           : null}

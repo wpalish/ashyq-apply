@@ -241,3 +241,9 @@ h1 { font-weight: 700; }
   .editorial-landing > .book-footer { padding: 24px 20px; gap: 14px; flex-direction: column; text-align: center; }
   .editorial-landing .book-footer > span:last-child { white-space: normal; }
 }
+
+/* Keep site icons crisp at their real resolution; the identity frame stays stable. */
+.book-university-logo img { width: auto; height: auto; max-width: 100%; max-height: 100%; }
+.university-identity-image img { width: auto; height: auto; max-width: 52px; max-height: 52px; }
+
+.public-profile-preview > .avatar { margin-bottom: 15px; }

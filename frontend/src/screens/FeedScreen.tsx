@@ -27,27 +27,29 @@ function Thread({
    *  answered, and "2 answers" over a thread showing one. */
   onCountChange: (delta: number) => void;
 }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation(); const ru = locale !== 'en';
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState<Page<ReplyView> | null>(null);
   const [replies, setReplies] = useState<ReplyView[]>([]);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async (cursor?: string | null) => {
+    setLoading(true);
     try {
       const next = await api.thread(postId, cursor);
-      setPage(next);
+      setPage(next); setError('');
       setReplies((prev) => (cursor ? [...prev, ...next.items] : next.items));
     } catch (problem) {
       setError(problem instanceof ApiError ? problem.message : 'Could not load this thread.');
-    }
+    } finally { setLoading(false); }
   }, [postId]);
 
   useEffect(() => { void load(); }, [load]);
 
   return (
     <div className="thread">
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
       {page === null && !error && <Loading label={t('community.openingThread')} />}
       {replies.map((reply) => (
         <div className="reply" key={reply.id} data-testid={`reply-${reply.id}`}>
@@ -69,7 +71,7 @@ function Thread({
           </div>
         </div>
       ))}
-      {page !== null && replies.length === 0 && (
+      {!error && page !== null && replies.length === 0 && (
         <p className="small muted">{t('community.noAnswers')}</p>
       )}
       {page?.next_cursor && (
@@ -206,7 +208,8 @@ export function FeedScreen({
             placeholder="KBTU"
             value={draftFilters.tag ?? ''}
             onChange={(event) => setDraftFilters((draft) => ({ ...draft, tag: event.target.value }))}
-            onBlur={(event) => setFilters((f) => ({ ...f, tag: event.target.value.trim() }))}
+            onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); setFilters(current => ({ ...current, ...Object.fromEntries(Object.entries(draftFilters).map(([key, value]) => [key, value?.trim() ?? ''])) })); } }}
+              onBlur={(event) => setFilters((f) => ({ ...f, tag: event.target.value.trim() }))}
           />
         </div>
         <div className="field">
@@ -216,7 +219,8 @@ export function FeedScreen({
             placeholder="Astana"
             value={draftFilters.city ?? ''}
             onChange={(event) => setDraftFilters((draft) => ({ ...draft, city: event.target.value }))}
-            onBlur={(event) => setFilters((f) => ({ ...f, city: event.target.value.trim() }))}
+            onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); setFilters(current => ({ ...current, ...Object.fromEntries(Object.entries(draftFilters).map(([key, value]) => [key, value?.trim() ?? ''])) })); } }}
+              onBlur={(event) => setFilters((f) => ({ ...f, city: event.target.value.trim() }))}
           />
         </div>
         <div className="field">
@@ -241,7 +245,7 @@ export function FeedScreen({
       </div>
       </details>
 
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(filters); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
 
       <div className="feed">
         {posts.map((post) => (
@@ -292,7 +296,7 @@ export function FeedScreen({
       </div>
 
       {loading && <Loading label={t('community.loadingPosts')} />}
-      {!loading && posts.length === 0 && (
+      {!loading && !error && posts.length === 0 && (
         <Empty title={t(filtered ? 'community.noMatch' : 'community.noPosts')}>
           <p className="small">
             {t(filtered ? 'community.noMatchHint' : 'community.noPostsHint')}

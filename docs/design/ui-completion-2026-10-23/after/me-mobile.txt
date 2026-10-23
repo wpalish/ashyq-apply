@@ -1,0 +1,82 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - button "Unimatch home": unimatch
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: Т
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований" [selected]
+  - option "Аружан Султанова · 1 исследований"
+- main "Мой профиль в сообществе" [active]:
+  - generic "Состояние исследования и ограничения источников"
+  - heading "Мой публичный профиль" [level=1]
+  - paragraph: Расскажи о себе и своих интересах. Этот профиль видят другие участники сообщества. Личные данные дела, оценки и документы не отображаются.
+  - heading "Ваш профиль" [level=2]
+  - generic: Имя в сообществе
+  - textbox "Имя в сообществе Имя аккаунта. Отдельное переименование в сообществе пока недоступно.": UI Review (synthetic)
+  - generic: Имя аккаунта. Отдельное переименование в сообществе пока недоступно.
+  - heading "Твои интересы и направления" [level=3]
+  - generic: Специальность
+  - textbox "Специальность": Computer Science
+  - generic: Университеты
+  - textbox "Университеты Через запятую · 1/10": University of Groningen
+  - generic: Через запятую · 1/10
+  - generic "Фото, город и этап поступления"
+  - option "Не указан" [selected]
+  - option "В листе ожидания"
+  - option "Поступил"
+  - generic: Кто может написать вам первым
+  - combobox "Кто может написать вам первым":
+    - option "Только те, кому я отвечал, или кто отвечал мне" [selected]
+    - option "Любой участник сообщества"
+    - option "Никто — входящие закрыты"
+  - generic: Это правило только для первого сообщения. Тот, с кем вы уже переписываетесь, сможет написать вам при любом выборе.
+  - generic: О себе
+  - textbox "О себе":
+    - /placeholder: Расскажи о своих интересах и целях. Не добавляй приватные данные.
+    - text: Synthetic profile for local interface verification. Not a real student or admission outcome.
+  - generic: 188 осталось
+  - button "Сохранить профиль"
+  - generic: Всё это видно другим абитуриентам. Ваше дело по поступлению — нет.
+  - complementary "Public profile preview":
+    - generic: U
+    - heading "UI Review (synthetic)" [level=2]
+    - paragraph: Предпросмотр · изменения публикуются только после сохранения
+    - term: Город, куда вы поступаете
+    - definition: Synthetic city
+    - term: Специальность
+    - definition: Computer Science
+    - term: Университеты, куда метите
+    - definition: University of Groningen
+    - paragraph: Synthetic profile for local interface verification. Not a real student or admission outcome.
+    - paragraph: Всё это видно другим абитуриентам. Ваше дело по поступлению — нет.
+  - heading "Ваши посты" [level=2]
+  - article:
+    - generic: UR
+    - button "UI Review (synthetic)"
+    - generic "Абитуриент не сказал, на каком он этапе.": Статус не указан
+    - time: 5 дней назад
+    - paragraph: "Local UI verification: my applicant case stays separate from my public community profile. This is synthetic test content."
+    - button "Удалить"
+  - heading "Выйти из сообщества" [level=2]
+  - paragraph: Аккаунт и ваше исследование останутся. Профиль, посты и ответы будут удалены, и вы исчезнете из поиска.
+  - button "Выйти из сообщества"
+- contentinfo:
+  - generic: Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.

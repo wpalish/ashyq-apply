@@ -64,16 +64,16 @@ function Conversation({
         </button>
         {person && (
           <span className="row row--tight">
-            <Avatar name={person.display_name} status={person.status} />
+            <Avatar name={person.display_name} status={person.status} userId={person.user_id} />
             {ru?<h1 className="book-conversation-title">{person.display_name}</h1>:<strong>{person.display_name}</strong>}
           </span>
         )}
       </div>
 
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
       {loading && <Loading label={t('messages.opening')} />}
 
-      {!loading && messages.length === 0 && (
+      {!loading && !error && messages.length === 0 && (
         <Empty title={t('messages.emptyThread')}>
           <p className="small">{t('messages.emptyThreadHint')}</p>
         </Empty>
@@ -99,7 +99,7 @@ function Conversation({
 
       {cursor && !loading && (
         <button className="btn btn--sm" type="button" onClick={() => { void load(cursor); }}>
-          Load more messages
+          {ru ? 'Более ранние сообщения' : 'Load more messages'}
         </button>
       )}
 
@@ -108,7 +108,7 @@ function Conversation({
         submitLabel={t('messages.send')}
         max={MESSAGE_MAX_CHARS}
         busy={sending}
-        disabled={loading}
+        disabled={loading || (!person && Boolean(error))}
         onSubmit={async (body) => {
           setSending(true);
           try {
@@ -160,6 +160,7 @@ export function MessagesScreen({
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+  const filteredItems = items.filter(conversation => `${conversation.person.display_name} ${conversation.last_message ?? ''}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
 
   return (
     <div className={`messages-page${openWith ? ' messages-page--open' : ''} ${ru?'book-messages-page':''}`}>
@@ -171,17 +172,18 @@ export function MessagesScreen({
       </div>
 
       {ru&&<label className="book-message-search"><span className="visually-hidden">Поиск по загруженным диалогам</span><input type="search" placeholder="Поиск сообщений…" value={query} onChange={event=>setQuery(event.target.value)}/></label>}
-      {error && <Notice kind="risk">{error}</Notice>}
+      {error && <Notice kind="risk"><span role="alert">{error}</span><button className="btn btn--sm" type="button" disabled={loading} onClick={() => { void load(); }}>{ru ? 'Повторить загрузку' : 'Retry loading'}</button></Notice>}
       {loading && <Loading label={t('messages.loading')} />}
 
-      {!loading && items.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty title={t('messages.empty')}>
-          <p className="small">{t('messages.emptyHint')}</p>
+          <p className="small">{t('messages.emptyHint')}</p><a className="btn btn--sm" href="#/discover">{ru ? 'Найти собеседника' : 'Find people'}</a>
         </Empty>
       )}
 
+      {!loading && !error && items.length > 0 && filteredItems.length === 0 && <Empty title={ru ? 'Диалоги не найдены' : 'No conversations match'}><p>{ru ? 'Попробуй другое имя или сбрось поиск. Поиск работает по загруженным диалогам.' : 'Try another name or clear the search. Only loaded conversations are searched.'}</p><button className="btn btn--sm" type="button" onClick={() => setQuery('')}>{ru ? 'Сбросить поиск' : 'Clear search'}</button></Empty>}
       <div className="feed">
-        {items.filter(conversation=>`${conversation.person.display_name} ${conversation.last_message??''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase())).map((conversation) => {
+        {filteredItems.map((conversation) => {
           const moment = when(conversation.last_message_at);
           return (
             <button
@@ -193,6 +195,7 @@ export function MessagesScreen({
             >
               <Avatar
                 name={conversation.person.display_name}
+                userId={conversation.person.user_id}
                 status={conversation.person.status}
                 large
               />
@@ -214,7 +217,7 @@ export function MessagesScreen({
       </div>
       {cursor && !loading && (
         <button className="btn btn--sm" type="button" onClick={() => { void load(cursor); }}>
-          Load more conversations
+          {ru ? 'Загрузить ещё диалоги' : 'Load more conversations'}
         </button>
       )}
       </div>

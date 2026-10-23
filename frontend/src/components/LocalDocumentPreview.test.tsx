@@ -31,3 +31,18 @@ it('rejects a misleading MIME type and does not finish a preview after leaving i
   await act(async()=>{finish(new Uint8Array([137,80,78,71,13,10,26,10]).buffer);});
   expect(create).not.toHaveBeenCalled();expect(network).not.toHaveBeenCalled();
 });
+it('explains a decode failure, releases its URL and accepts a new local image without uploading',async()=>{
+  render(<LocalDocumentPreview label="Synthetic image"/>);
+  const picker=screen.getByLabelText(/Choose a file to inspect/);
+  const file=new NodeFile([new Uint8Array([137,80,78,71,13,10,26,10])],'truncated.png',{type:'image/png'});
+  fireEvent.change(picker,{target:{files:[file]}});
+  const image=await screen.findByRole('img');
+  fireEvent.error(image);
+  expect(await screen.findByRole('alert')).toHaveTextContent('damaged or cannot be decoded');
+  await waitFor(()=>expect(revoke).toHaveBeenCalledWith('blob:synthetic-local'));
+  expect(screen.queryByRole('img')).toBeNull();
+  fireEvent.change(picker,{target:{files:[file]}});
+  expect(await screen.findByRole('img')).toBeVisible();
+  expect(screen.queryByRole('alert')).toBeNull();
+  expect(network).not.toHaveBeenCalled();
+});

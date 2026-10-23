@@ -165,6 +165,9 @@ export default function App() {
   }, []);
   const [role, setRole] = useState<string | null>(null);
   const [redirected, setRedirected] = useState<string | null>(null);
+  const [invalidLink, setInvalidLink] = useState(false);
+  const [signOutFailed, setSignOutFailed] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   /** Ask before throwing away typing the applicant has not saved. */
   const confirmDiscard = () =>
     confirmSharedLeave() && (!dirty ||
@@ -277,6 +280,7 @@ export default function App() {
   // The gates still decide what may be shown - a bookmark to #/shortlist made
   // before there were any results redirects to progress and says why.
   const commitScreen = useCallback((next: ScreenId) => {
+    setInvalidLink(false);
     screenRef.current = next;
     setScreenState(next);
     const target = next === 'person' && personRef.current ? `#/person?user=${encodeURIComponent(personRef.current)}` : `#/${next}`;
@@ -322,7 +326,8 @@ export default function App() {
 
   const openFromHash = useCallback(() => {
     const requested = screenFromHash();
-    if (!requested) return;
+    if (!requested) { setInvalidLink(!document.getElementById(window.location.hash.slice(1))); return; }
+    setInvalidLink(false);
     if (requested !== screenRef.current && !confirmSharedLeave()) {
       window.history.replaceState(null, '', acceptedHash.current);
       return;
@@ -353,7 +358,8 @@ export default function App() {
     // Stamp the hash on first load so Back has somewhere to return to, and
     // check a deep link before rendering the screen it names.
     if (screenFromHash()) openFromHash();
-    else window.location.replace(`#/${screen}`);
+    else if (['', '#', '#/', '#/welcome'].includes(window.location.hash)) window.location.replace(`#/${screen}`);
+    else setInvalidLink(true);
     return () => window.removeEventListener('hashchange', openFromHash);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openFromHash]);
@@ -502,20 +508,26 @@ export default function App() {
             newCase(); commitScreen('profile');
             window.requestAnimationFrame(()=>document.getElementById('book-first-name')?.focus());
           }}>{locale==='en'?t('topbar.newCase'):locale==='kk'?'Жаңа өтінім':'Новая анкета'}</button>
-          <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>{label('settings')}</button>
-          <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
+          <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={event => { setScreen('settings'); event.currentTarget.closest('details')?.removeAttribute('open'); }}>{label('settings')}</button>
+          <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" disabled={signingOut} onClick={async () => {
             if (!confirmSharedLeave()) return;
             const intent = ++logoutIntent.current;
+            setSignOutFailed(false); setSigningOut(true);
+            try {
             await api.logout();
             if (intent !== logoutIntent.current
               || window.localStorage.getItem(APPLICANT_OWNER_KEY) !== 'signed-out'
               || window.sessionStorage.getItem(APPLICANT_OWNER_KEY) !== 'signed-out') return;
             sharedLeaveRisks.current.clear(); // Only a real logout ACK retires the private workspace before reload.
             window.location.reload();
-          }}>{t('topbar.signOut')}</button>
+            } catch { if (intent === logoutIntent.current) setSignOutFailed(true); }
+            finally { if (intent === logoutIntent.current) setSigningOut(false); }
+          }}>{signingOut ? (locale === 'en' ? 'Signing out…' : 'Выходим…') : t('topbar.signOut')}</button>
           </div></details>
         </header>
 
+        {signOutFailed && <div className="notice notice--risk" role="alert"><span>{locale === 'en' ? 'Sign-out was not confirmed. Your workspace is still open. Check your connection and try Sign out again.' : 'Выход не подтверждён. Кабинет остался открыт. Проверь соединение и снова нажми «Выйти».'}</span></div>}
+        {invalidLink && <div className="notice notice--warn" role="alert" data-testid="missing-route-notice"><span>{locale === 'en' ? 'This page does not exist. Your current work is still open.' : 'Такой страницы нет. Текущая работа осталась открытой.'}</span><button className="btn btn--sm" type="button" onClick={() => setScreen('home')}>{locale === 'en' ? 'Go to home' : 'На главную'}</button></div>}
         {redirected && (
           <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
             <div className="notice notice--warn" role="status" data-testid="redirect-notice">
