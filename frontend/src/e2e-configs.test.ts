@@ -129,6 +129,37 @@ describe('the three Playwright configs', () => {
     expect(script).toMatch(/^export UNIMATCH_KNOWLEDGE_MODE=kb$/m);
   });
 
+  it.each(SUITES)('%s starts its API through a serve-api.sh under e2e/*-env/ (E2E-DB-1)', (suite) => {
+    const source = text(suite);
+    const api = webServerBlock(source);
+    // The first server is the API; its command is the env directory's script, nothing else.
+    expect(/command:\s*(`[^`]*`|'[^']*')/.exec(api)?.[1]).toBe('`bash "${SERVE_API}"`');
+    const from = /import \{[^}]*\bSERVE_API\b[^}]*\} from '\.\/(e2e\/[\w-]+-env)\/paths';/.exec(source);
+    expect(from, `${CONFIGS[suite]} imports SERVE_API from e2e/*-env/paths`).not.toBeNull();
+    const envDir = from![1]!;
+    expect(read(`${envDir}/paths.ts`)).toMatch(/export const SERVE_API = path\.join\(here, 'serve-api\.sh'\);/);
+    const script = read(`${envDir}/serve-api.sh`);
+    // The database lives inside the scratch directory the script wipes …
+    expect(script).toMatch(/^export UNIMATCH_DATABASE_URL="sqlite:\/\/\/\$SCRATCH\/[\w.-]+\.db"$/m);
+    // … and the directory's name is checked before anything is removed.
+    const guard = script.search(/^case "\$\(basename -- "\$SCRATCH"\)" in$/m);
+    const wipe = script.indexOf('rm -rf -- "$SCRATCH"');
+    expect(guard).toBeGreaterThan(-1);
+    expect(wipe).toBeGreaterThan(guard);
+  });
+
+  it.each([
+    ['demo', 'DEMO_SCRATCH_DIR'],
+    ['auth', 'AUTH_SCRATCH_DIR'],
+  ] as const)('%s hands the script its own scratch directory, never a database URL', (suite, dir) => {
+    const api = webServerBlock(text(suite));
+    expect(api).toContain(`E2E_SCRATCH_DIR: ${dir}`);
+    expect(api).not.toMatch(/UNIMATCH_DATABASE_URL/);
+    expect(read('e2e/demo-env/paths.ts')).toMatch(
+      new RegExp(`export const ${dir} = path\\.join\\(data, 'e2e-${suite}'\\);`),
+    );
+  });
+
   it('npm run typecheck reads all three configs', () => {
     const tsconfig = JSON.parse(read('tsconfig.json')) as { include: string[] };
     for (const file of Object.values(CONFIGS)) expect(tsconfig.include).toContain(file);

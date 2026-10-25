@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import { existsSync } from 'node:fs';
+import { DEMO_SCRATCH_DIR, SERVE_API } from './e2e/demo-env/paths';
 
 const PORT = 5173;
 const API_PORT = 8099;
@@ -39,11 +40,13 @@ export default defineConfig({
   // suite fails with a wall of ECONNREFUSED instead of a clear cause.
   webServer: [
     {
-      // The API only enqueues; a worker is needed to consume the queue.
+      // The API and its worker (the API only enqueues) on a scratch database,
+      // wiped on every start (E2E-DB-1): a local run starts from the empty
+      // database CI starts from, never the checkout's grown backend/data one.
       // Invoked through bash rather than as an executable: on Windows the
       // shebang means nothing to cmd.exe and the suite dies before the first
       // test with an unhelpful "'..' is not recognized".
-      command: 'bash ../backend/run.sh --with-worker',
+      command: `bash "${SERVE_API}"`,
       url: `http://127.0.0.1:${API_PORT}/api/health`,
       // Never adopt a server already on the port, as the auth and kb configs:
       // a stale run, or another worktree's suite on the same ports, would
@@ -56,7 +59,7 @@ export default defineConfig({
       // server whose knowledge mode is kb (both are the Settings defaults CI
       // runs with). Explicit, so a shell export or a backend/.env cannot turn
       // the local run into a different product (journey.spec.ts, MODE-1).
-      env: { UNIMATCH_DEMO_MODE: 'true', UNIMATCH_KNOWLEDGE_MODE: 'kb' },
+      env: { UNIMATCH_DEMO_MODE: 'true', UNIMATCH_KNOWLEDGE_MODE: 'kb', E2E_SCRATCH_DIR: DEMO_SCRATCH_DIR },
     },
     {
       command: 'npm run dev',

@@ -17,13 +17,10 @@
 
 import { defineConfig, devices } from '@playwright/test';
 import { existsSync } from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { AUTH_SCRATCH_DIR, SERVE_API } from './e2e/demo-env/paths';
 
 const PORT = 5173;
 const API_PORT = 8099;
-const here = path.dirname(fileURLToPath(import.meta.url));
-
 // The sandbox's preinstalled Chromium, when the installed Playwright's own
 // revision is not downloaded (as in the demo and kb configs). CI uses its own.
 const LOCAL_CHROMIUM = '/opt/pw-browsers/chromium';
@@ -55,7 +52,10 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: 'bash ../backend/run.sh --with-worker',
+      // The API and its worker on a scratch database of its own, wiped on
+      // every start (E2E-DB-1): never the dev one, which would get real users
+      // written into it and be migrated under different settings.
+      command: `bash "${SERVE_API}"`,
       url: `http://127.0.0.1:${API_PORT}/api/health`,
       // The interlock. With `true`, a backend left running from `npm run e2e`
       // or a dev shell would be silently adopted — auth disabled — and every
@@ -70,9 +70,7 @@ export default defineConfig({
         // playwright.config.ts: a demo server whose knowledge mode is kb.
         UNIMATCH_DEMO_MODE: 'true',
         UNIMATCH_KNOWLEDGE_MODE: 'kb',
-        // Its own database: pointing at the dev one would write real users
-        // into it and migrate it under different settings.
-        UNIMATCH_DATABASE_URL: `sqlite:///${path.resolve(here, '../backend/data/e2e-auth.db')}`,
+        E2E_SCRATCH_DIR: AUTH_SCRATCH_DIR,
         // Production hashes at 2**17, about a second each. This suite pays
         // that four times over plus once at import for the dummy hash, and
         // proves nothing by it. Same value and reasoning as the API tests.
