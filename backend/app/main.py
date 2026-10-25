@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import time
 from collections import defaultdict, deque
+from collections.abc import Callable
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, Response
@@ -114,10 +115,15 @@ class FixedWindowLimiter:
     for job idempotency and concurrency.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, clock: Callable[[], float] = time.monotonic) -> None:
         self.hits: dict[str, deque[float]] = defaultdict(deque)
+        #: The window's clock. Every caller charges hits on it, so a test can
+        #: hold time still instead of racing a real minute.
+        self.clock = clock
 
-    def allow(self, key: str, limit: int, now: float) -> bool:
+    def allow(self, key: str, limit: int, now: float | None = None) -> bool:
+        if now is None:
+            now = self.clock()
         bucket = self.hits[key]
         cutoff = now - 60.0
         while bucket and bucket[0] <= cutoff:
@@ -219,7 +225,7 @@ async def security_middleware(request: Request, call_next):
         group = ""
     if limit:
         peer = client_address(request)
-        if not _limiter.allow(f"{group}:{peer}", limit, time.monotonic()):
+        if not _limiter.allow(f"{group}:{peer}", limit):
             metrics.count_rate_limited(group)
             return _secure(
                 JSONResponse(

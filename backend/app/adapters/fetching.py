@@ -352,6 +352,13 @@ def _clock() -> float:
     return time.monotonic()
 
 
+def _network_clock() -> float:
+    """The clock a redirect chain's network budget is charged on; a module
+    attribute a test can replace. Kept apart from ``_clock``: tests that move
+    TB-1's case clock by a host's latency must not also drain this budget."""
+    return time.monotonic()
+
+
 async def _sleep(seconds: float) -> None:
     """The fetcher's pacing and backoff sleep; replaced with ``_clock`` in tests."""
     await asyncio.sleep(seconds)
@@ -1391,9 +1398,9 @@ class Fetcher:
         if deadline is not None:
             network_budget = min(network_budget, deadline)
         for _hop in range(MAX_REDIRECTS + 1):
-            resolve_started = time.monotonic()
+            resolve_started = _network_clock()
             target = await _resolve_checked(current)
-            network_budget -= time.monotonic() - resolve_started
+            network_budget -= _network_clock() - resolve_started
             if network_budget <= 0:
                 raise TimeoutError("redirect chain exhausted its network deadline")
             hop_result, network_used = await self._request_one_hop(
@@ -1500,9 +1507,9 @@ class Fetcher:
                 finally:
                     await response.aclose()
 
-            network_started = time.monotonic()
+            network_started = _network_clock()
             result = await asyncio.wait_for(exchange(), network_budget)
-            return result, time.monotonic() - network_started
+            return result, _network_clock() - network_started
 
     async def _redirect_policy(
         self, requested_url: str, redirect_url: str, host: str

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-from time import monotonic
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
@@ -154,7 +153,7 @@ def login(
     # slows credential stuffing, it is not a distributed quota.
     from app.main import _limiter
 
-    if not _limiter.allow(f"auth:email:{email}", settings.auth_rate_limit_per_minute, monotonic()):
+    if not _limiter.allow(f"auth:email:{email}", settings.auth_rate_limit_per_minute):
         raise HTTPException(
             429, "Too many sign-in attempts for this account. Try again in a minute."
         )

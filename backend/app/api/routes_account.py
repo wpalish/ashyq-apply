@@ -11,7 +11,6 @@ from __future__ import annotations
 import logging
 import secrets
 from datetime import UTC, datetime, timedelta
-from time import monotonic
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
@@ -84,7 +83,7 @@ def _limiter_allows(key: str, limit: int) -> bool:
     # replace the limiter instance wholesale.
     from app.main import _limiter
 
-    return _limiter.allow(key, limit, monotonic())
+    return _limiter.allow(key, limit)
 
 
 def _client_address(request: Request) -> str:

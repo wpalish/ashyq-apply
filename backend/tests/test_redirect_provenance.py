@@ -202,19 +202,32 @@ async def test_polite_redirect_delays_do_not_consume_network_timeout(tmp_path, m
             return httpx.Response(302, headers={"location": SAME_SITE})
         return httpx.Response(200, headers={"content-type": "text/html"}, text="programme")
 
+    # The budget is charged on a fake clock that only the polite delay moves:
+    # each delay alone is the whole budget, so charging any of it to the
+    # network leaves nothing for the next hop. Real time spent resolving and
+    # exchanging under a loaded machine costs nothing here, which is what made
+    # the old 50 ms real-time version fail under a parallel suite.
+    budget = 5.0
+    now = [0.0]
+    monkeypatch.setattr("app.adapters.fetching._network_clock", lambda: now[0])
+    delays: list[str] = []
+
     async with Fetcher(
-        tmp_path / "cache", delay_seconds=0, respect_robots=False, timeout=0.05
+        tmp_path / "cache", delay_seconds=0, respect_robots=False, timeout=budget
     ) as fetcher:
         fetcher._client = httpx.AsyncClient(
             transport=httpx.MockTransport(handler), follow_redirects=False
         )
 
-        async def polite_delay(_host, _url):
-            await asyncio.sleep(0.035)
+        async def polite_delay(_host, url):
+            delays.append(url)
+            now[0] += budget
+            await asyncio.sleep(0)
 
         fetcher._space_requests = polite_delay  # type: ignore[method-assign]
         result = await fetcher.get(SOURCE)
 
+    assert delays == [SOURCE, SAME_SITE]  # both hops waited, together twice the budget
     assert result.ok
     assert result.final_url == SAME_SITE
 

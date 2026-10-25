@@ -481,18 +481,29 @@ async def test_blocked_endpoint_never_reaches_transport(make_provider, monkeypat
     assert caught.value.reason is SearchFailureReason.NETWORK_POLICY
 
 
-async def test_timeout_bounds_the_entire_handshake_not_each_post(make_provider):
+async def test_timeout_bounds_the_entire_handshake_not_each_post(make_provider, monkeypatch):
+    # Each post moves the event loop's clock by 0.6 of the timeout instead of
+    # sleeping it: each post fits the timeout, the two together do not. The
+    # deadline is ``asyncio.timeout``'s, read on ``loop.time()``, so only these
+    # jumps count. The old version slept 30 ms of a 50 ms bound for real, and a
+    # loaded machine overshot the bound inside ``initialize`` alone.
+    timeout = 60.0
+    loop = asyncio.get_running_loop()
+    real_time = loop.time
+    offset = [0.0]
+    monkeypatch.setattr(loop, "time", lambda: real_time() + offset[0])
     calls: list[str] = []
     server = McpServer()
 
     async def delayed(request):
         calls.append(json.loads(request.content)["method"])
-        # Each individual post fits the timeout; their combined duration does not.
-        await asyncio.sleep(0.03)
+        offset[0] += 0.6 * timeout
+        for _ in range(10):
+            await asyncio.sleep(0)  # a deadline now due fires here
         return server(request)
 
     with pytest.raises(SearchUnavailable, match="did not answer") as caught:
-        await make_provider(delayed, timeout_seconds=0.05).search(query="q")
+        await make_provider(delayed, timeout_seconds=timeout).search(query="q")
     assert caught.value.reason is SearchFailureReason.TIMEOUT
     assert calls == ["initialize", "notifications/initialized"]
 
