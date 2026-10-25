@@ -106,7 +106,7 @@ export default function App() {
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'home');
-  const [role, setRole] = useState<string | null>(null);
+  const [isModerator, setIsModerator] = useState(false);
   const [redirected, setRedirected] = useState<string | null>(null);
   /** Ask before throwing away typing the applicant has not saved. */
   const confirmDiscard = () =>
@@ -142,7 +142,7 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    api.authStatus().then((status) => setRole(status.principal?.role ?? null)).catch(() => {});
+    api.authStatus().then((status) => setIsModerator(status.principal?.is_moderator === true)).catch(() => {});
     api.socialMe()
       .then((state) => { setJoined(state.joined); setMe(state.profile); })
       .catch(() => { /* the community is optional; its absence must not block the case */ });
@@ -354,7 +354,7 @@ export default function App() {
           <details className="journey-menu">
             <summary>Explore</summary>
             <div className="journey-menu__list">
-              {SCREENS.filter((item) => item.id !== 'moderation' || role === 'moderator').map((item) => (
+              {SCREENS.filter((item) => item.id !== 'moderation' || isModerator).map((item) => (
                 <button key={item.id} type="button" onClick={() => setScreen(item.id)} disabled={Boolean(gate[item.id])}>
                   {t(item.label)}
                 </button>

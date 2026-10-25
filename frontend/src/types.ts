@@ -639,6 +639,12 @@ export interface AuthPrincipal {
   organization_name: string;
   role: string;
   local_development: boolean;
+  /**
+   * Named in the deployment's moderator list (`Settings.is_moderator`), which
+   * is not a workspace role. It only decides whether the queue's nav entry is
+   * shown; the queue routes answer 403 to anyone else regardless.
+   */
+  is_moderator: boolean;
 }
 
 export interface AuthStatus {

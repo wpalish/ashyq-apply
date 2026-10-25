@@ -53,6 +53,10 @@ class PrincipalView(BaseModel):
     organization_name: str
     role: str
     local_development: bool
+    #: Named in `UNIMATCH_MODERATOR_EMAILS` (`Settings.is_moderator`), not a
+    #: workspace role. Only shows the app the queue's nav entry; the queue
+    #: routes check the same predicate themselves.
+    is_moderator: bool = False
 
 
 def _slug(value: str) -> str:
@@ -64,7 +68,11 @@ def _slug(value: str) -> str:
 
 def _view(session: Session, principal: Principal) -> PrincipalView:
     org = session.get(Organization, principal.organization_id)
-    return PrincipalView(**vars(principal), organization_name=org.name if org else "Workspace")
+    return PrincipalView(
+        **vars(principal),
+        organization_name=org.name if org else "Workspace",
+        is_moderator=get_settings().is_moderator(principal.email),
+    )
 
 
 @router.get("/status")
@@ -122,6 +130,7 @@ def register(
         organization_name=org.name,
         role="owner",
         local_development=False,
+        is_moderator=settings.is_moderator(user.email),
     )
 
 

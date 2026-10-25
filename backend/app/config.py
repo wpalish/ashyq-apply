@@ -222,6 +222,15 @@ class Settings(BaseSettings):
     def moderator_email_list(self) -> list[str]:
         return [e.strip().casefold() for e in self.moderator_emails.split(",") if e.strip()]
 
+    def is_moderator(self, email: str) -> bool:
+        """Whether this account works the report queue: the one test for it.
+
+        `require_moderator` refuses the queue routes with it, and the auth
+        status reports it so the app can show the queue's nav entry; both read
+        this, so the entry and the 403 cannot disagree.
+        """
+        return email.casefold() in self.moderator_email_list
+
     def ensure_dirs(self) -> None:
         directories = [self.cache_dir, self.export_dir]
         if self.database_url.startswith("sqlite:///"):

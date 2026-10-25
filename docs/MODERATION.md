@@ -40,9 +40,12 @@ community spans every workspace, so no workspace role (owners included) can read
 deployment operator decides who moderates by editing the setting. With the setting empty (the default), nobody
 can work the queue, and a deployment that turns the community on should name at least one moderator first.
 
-**Reaching the screen.** Open `#/moderation` in the app. The sidebar entry is shown only to a principal whose
-role is `moderator` (`frontend/src/App.tsx`), and no account has that role today: workspace roles are `owner`.
-So a named moderator reaches the queue by its address, not from the sidebar.
+**Reaching the screen.** A named moderator sees a **Moderation queue** entry in the app's Explore menu; the
+address is `#/moderation`. The entry follows the `is_moderator` flag that `/api/auth/status` reports for the
+signed-in account (`PrincipalView` in `backend/app/api/routes_auth.py`), and that flag comes from the same
+predicate the queue routes check (`Settings.is_moderator` in `backend/app/config.py`), so the entry and the 403
+cannot disagree (`test_the_app_is_told_only_a_named_moderator_moderates`, `frontend/src/App.test.tsx`). Nobody
+else sees the entry, workspace owners included; typing the address still gets them the 403 explanation.
 
 ## 3. What a moderator does with a report
 
