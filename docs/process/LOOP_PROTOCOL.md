@@ -27,10 +27,10 @@ Owner: Диас.
     removes its own pgserver clusters on exit;
   - a worktree gets its environment from `scripts/link_worktree_env.sh <worktree>` (symlinks, never committed);
   - the `SessionStart` hook builds a missing venv / `node_modules` and runs `scripts/clean_test_tmp.sh`.
-  - a change under `frontend/src` runs **all three** browser suites before it is merged (`npm run e2e`, `e2e:auth`,
-    `e2e:kb`), not only the one its ticket names: on 2026-10-25 MODE-1 passed `e2e:kb` and turned the demo suite red
-    on CI. After a local Playwright run, `git checkout -- docs/screenshots` and delete `frontend/playwright-report*`
-    and `frontend/test-results*` before eslint or a commit.
+  - **before every push, `scripts/pre_merge.sh`** (GATE-1): it runs exactly CI's gates for the areas the branch
+    touches — for any frontend change all three browser suites, not only the one a ticket names (on 2026-10-25
+    MODE-1 passed `e2e:kb` and turned the demo suite red on CI) — and exits non-zero on the first failure. Browser
+    runs write screenshots to the gitignored `test-results/` (E2E-HYG-1), so no cleanup is needed by hand.
 
 ## The plan
 
@@ -52,7 +52,7 @@ Owner: Диас.
 
 1. **When a worker finishes:**
    - cherry-pick its commits;
-   - run the full suite (`scripts/run_suite.sh`) and check its exit status;
+   - run `scripts/pre_merge.sh` (it runs the full suite through `scripts/run_suite.sh`) and check its exit status;
    - run the golden demo test;
    - push;
    - dispatch paired runs for every new flag on cohort, dev2, dev3 and dev4: `benchmark-capture.yml`, mode `expert_paired`, `extra_args=--<flag>`.
