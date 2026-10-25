@@ -138,11 +138,13 @@ Two files share one entry shape:
 - `kb_imported_dev.json` (`format: kb-imported-dev/1`) is the 21-university development import, documented
   in `KB_IMPORT_2026-10-19.md`.
 
-Committed version: **v23** (`2026-10-25.kb-cs-bachelor.23`, built 2026-10-25 by KB-2 from the 2026-10-20 check): v22 re-stamped from the
-2026-10-20 sandbox `--from-kb` check, Auckland's tuition and NTU's deadline re-quoted, Paris-Saclay's "no English
-test" turned `unverified_quote`; 813 known facts, 95 entries with verified data. It carries the refresh's
-`refreshed_at` and `review_queue` (58 records, 11 of them NUS/CityUHK documents behind a bot challenge). How it was
-built and the full v22 → v23 diff: `KB_REFRESH_2026-10-23.md`.
+Committed version: **v24** (`2026-10-25.kb-cs-bachelor.24`, built 2026-10-25 by KB-3): v23's evidence plus the two
+2026-10-25 CI `verify_evidence` runs (`topup_documents4`, run 40220078860; KB-2's batch, run 40220076931) and the TCD
+scholarship re-read (`kb_drafts.2026-10-26/batch1`). The 11 NUS/CityUHK document facts lose `review` (CI read the PDFs
+and found the quotes), UQ's 5 document facts keep value and date with `review` `http_403` (a runner 403 is access, not
+drift), TCD's E3 scholarship "exists" fact is re-quoted from the page as it stands; no value changed. 813 known facts,
+95 entries with verified data, `review_queue` 52. How it was built (`kb_drafts.2026-10-23/build_v24.py`) and the full
+v23 → v24 diff: `KB_REFRESH_2026-10-23.md`, section "KB-3".
 
 Top level of the built file: `version` and `built_at`, `list_version`, `intake`, `questions`,
 `stale_policy`, `evidence_reports`, `robots_override_excluded`, `robots_override_facts`, `entries`

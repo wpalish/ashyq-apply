@@ -53,8 +53,13 @@ def _drafts(batch: Path) -> list[Row]:
     ]
 
 
-def splice(refreshed: Row, built: Row, drafts: list[Row], *, today: date) -> list[str]:
-    """Replace the researched questions of each drafted entry in place; return a log."""
+def splice(
+    refreshed: Row, built: Row, drafts: list[Row], *, today: date, label: str = LABEL
+) -> list[str]:
+    """Replace the researched questions of each drafted entry in place; return a log.
+
+    ``label`` is the batch's ``source_batch`` (``build_v24.py`` splices two batches).
+    """
     log: list[str] = []
     entries = refreshed["entries"]
     intake = refreshed.get("intake") or "fall 2027"
@@ -73,7 +78,7 @@ def splice(refreshed: Row, built: Row, drafts: list[Row], *, today: date) -> lis
                 )
                 continue
             for record in (*facts, *na, *unknown):
-                record["source_batch"] = LABEL
+                record["source_batch"] = label
             for fact in facts:
                 reasons = current_stale_reasons(fact, today, intake)
                 fact["stale"] = bool(reasons)
@@ -105,7 +110,7 @@ def splice(refreshed: Row, built: Row, drafts: list[Row], *, today: date) -> lis
                 f"{len(facts)}/{len(na)}/{len(unknown)}"
             )
         batches = entry.get("source_batches") or [entry.get("source_batch")]
-        entry["source_batches"] = [*batches, LABEL] if LABEL not in batches else batches
+        entry["source_batches"] = [*batches, label] if label not in batches else batches
         records = [
             *(entry["programme"].get("evidence") or []),
             *[f for fs in entry["facts"].values() for f in fs],

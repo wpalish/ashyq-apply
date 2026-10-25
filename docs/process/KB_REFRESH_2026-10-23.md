@@ -81,10 +81,78 @@ pins that table against the committed KB, and the build reads it for the new rec
    `extra_args=evaluation/research/expert/data/kb_drafts.2026-10-23/batch1`. Keep its `report.json` as
    `kb_drafts.2026-10-23/batch1/evidence_check.ci-<date>.json` and re-run `build_v23.py` (the batch then has both
    reports; a passing CI row wins).
+   **Result (2026-10-25, run 40220076931):** 2/2 found (NTU deadline 2027-01-20, Auckland tuition range); kept as
+   `kb_drafts.2026-10-23/batch1/evidence_check.ci-2026-10-25.json`, folded into v24 (KB-3, below).
 2. NUS and CityUHK documents (the 11 Incapsula rows): `mode=verify_evidence`,
    `extra_args=evaluation/research/expert/data/kb_drafts.2026-10-19/topup_documents4`. If the runner reads the PDFs
    and the quotes match, the 11 facts stand as they are (their review mark goes on the next refresh); if a quote is
    gone there too, they go into a KB-3 batch as re-quotes or `unverified_quote`.
+   **Result (2026-10-25, run 40220078860):** 82 of 87 known rows found, NUS 6/6 and CityUHK 5/5 among them (the
+   runner read the PDFs; the sandbox's Incapsula stub was access, not drift); 5 UQ (qs2027-041) document rows
+   `HTTP 403`. Kept as `kb_drafts.2026-10-19/topup_documents4/evidence_check.ci-2026-10-25.json`, folded into v24
+   (KB-3, below).
+
+## KB-3: v24 — the two CI checks folded in, TCD's scholarship quote re-read (NEXT_CYCLES_2026-10-26 KB-3)
+
+Built 2026-10-25 (the real day; the plan's cycle date is 10-26). **RC-2's twelfth row:** its `verify_evidence --from-kb`
+on v23 from the sandbox (2026-10-25: 998 checked, 908 verified, 12 quote not found) found, besides the 11 NUS/CityUHK
+rows, one real drift: TCD (qs2027-075) `scholarships.e3_balanced_solutions_better.exists`, quoted 2026-10-19 from
+`https://www.tcd.ie/e3/education/scholarships/` as "1-year scholarships valued between €2,000 to €5,000 each and
+scholarships valued at €4,000. Scholarships are applied as a reduction to the tuition fees." Re-read on 2026-10-25
+through the production `Fetcher` from the sandbox (`--trust-env-proxy`; robots.txt honoured and allowing the read, so
+no `--robots-override-kb` was needed; HTTP 200, 4,486 readable characters): the page still publishes the
+"Undergraduate E3 Balanced Solutions for a Better World Scholarship" with "B.A. Computer Science" among its eligible
+majors, but the sentence now reads "1-year scholarships valued between €2,000 to €5,000 each. Scholarships are applied
+as a reduction to the tuition fees." (the "€4,000" clause is gone). Re-quoted verbatim in
+`kb_drafts.2026-10-26/batch1/core/qs2027-075.json` (value unchanged: the award exists); the sibling
+`…applicability.international` ("Applicants who have non-EU status and will pay tuition fees at the non-EU rate, …")
+is unchanged on the same read and re-drafted with it. Sandbox check of the batch:
+`evidence_check.recheck-2026-10-25.json`, 2/2 found; a `--from-kb` check of v24's TCD entry reads both rows as verified.
+
+**Commands** (from `backend`; no search provider):
+
+```bash
+PYTHONPATH=. python scripts/verify_evidence.py evaluation/research/expert/data/kb_drafts.2026-10-26/batch1 \
+    --trust-env-proxy --out evaluation/research/expert/data/kb_drafts.2026-10-26/batch1/evidence_check.recheck-2026-10-25.json
+git show 21fcbf69:backend/app/knowledge/kb_cs_bachelor.json > /tmp/kb_v22.json   # v22, the input, as for v23
+PYTHONPATH=. python evaluation/research/expert/data/kb_drafts.2026-10-23/build_v24.py --kb /tmp/kb_v22.json \
+    --from-kb evaluation/research/expert/data/kb_refresh/evidence_check.kb-refresh-sandbox-2026-10-20.json \
+    --draft-check evaluation/research/expert/data/kb_drafts.2026-10-19/topup_documents4/evidence_check.ci-2026-10-25.json \
+    --batch evaluation/research/expert/data/kb_drafts.2026-10-23 evaluation/research/expert/data/kb_drafts.2026-10-26 \
+    --built-at 2026-10-25 --version 2026-10-25.kb-cs-bachelor.24 --out app/knowledge/kb_cs_bachelor.json
+```
+
+`build_v24.py` = `build_v23.py`'s steps (its `splice` now takes the batch label) plus a second `kb_build.refresh` from
+the CI draft check, its rows joined to their drafts' quotes (document rows only), and `review_queue` recomputed from
+the records that carry `review`. Nothing under `app/` or in `kb_build.py` changed.
+
+**v23 → v24, every record changed** (no record added or dropped; no value changed; `diff` over programme evidence,
+facts, `not_applicable`, `unknown`; 91 records):
+
+- `review` removed, `verified_on` 2026-10-19 → 2026-10-25 (`verified_by: ci`): NUS (qs2027-010) documents
+  `application_form`, `english_test_report`, `entrance_test`, `essay`, `passport`, `transcript`; CityUHK (qs2027-052)
+  documents `english_test_report`, `entrance_test`, `secondary_diploma`, `transcript`, `translation` (11).
+- `review` added `{needed, class: http_403, outcome: http_error, status_code: 403, checked_on: 2026-10-25}`, value and
+  `verified_on` 2026-10-20 kept: UQ (qs2027-041) documents `application_form`, `english_test_report`, `passport`,
+  `secondary_diploma`, `transcript` (5; class `http_403` from `kb_refresh_diff.classify`; listed below under "Blocked").
+- re-quoted: TCD (qs2027-075) `scholarships.e3_balanced_solutions_better.exists` (`quote`, `notes`, `accessed_on` and
+  `verified_on` 2026-10-25, `verified_by: recheck`, `source_batch: kb_drafts.2026-10-26/batch1`); its sibling
+  `…applicability.international` re-dated the same way, quote unchanged (2).
+- re-dated only, `verified_by` recheck → ci, `verified_on` 2026-10-20 → 2026-10-25: the two KB-2 re-quotes (NTU
+  deadline, Auckland tuition; CI's row now wins over the sandbox's) and the 71 other `topup_documents4` document facts
+  CI found again (qs2027-004, -012, -017, -028, -029, -040, -042, -049, -069, -081, -088, -092) (73). The plan's bar
+  counted 18 + TCD; a passing CI row re-dates every record it checked, as `kb_build.refresh` always does.
+- entries: `verified_on` 2026-10-20 → 2026-10-25 for the 16 entries above; TCD's `source_batches` gains
+  `kb_drafts.2026-10-26/batch1`. Top level: `version`, `evidence_reports` (+3: the topup CI report, KB-2's batch with
+  both reports, KB-3's batch); `review_queue` 58 → 52 (−11 NUS/CityUHK, +5 UQ). `stale_facts` 144 unchanged.
+- known facts 813 → 813; merged view (built + import) 871 → 871; `has_verified_data` 95 → 95. The kb journey's nine
+  universities have no record in the change.
+
+**CI, for the main session to dispatch:** `benchmark-capture.yml`, `mode=verify_evidence`,
+`extra_args=evaluation/research/expert/data/kb_drafts.2026-10-26/batch1`. Keep its `report.json` as
+`kb_drafts.2026-10-26/batch1/evidence_check.ci-<date>.json` and re-run the command above (the batch is globbed; a
+CI-found quote wins over the sandbox read; `quote_gone` on CI too → the TCD facts become `unknown`, kind
+`unverified_quote`, dated, with a row in `unknown_kinds.json`).
 
 ## Re-draft: the page changed
 
@@ -160,6 +228,11 @@ HTTP 401/403, robots.txt refusals, time-outs and other fetch errors. Not evidenc
 | University of Pennsylvania | qs2027-015 | programme | https://www.cis.upenn.edu/computer-science-bse/ | programme | robots_unreachable (robots_disallowed) | https://www.cis.upenn.edu/computer-science-bse/ |
 | University of Pennsylvania | qs2027-015 | programme | https://www.cis.upenn.edu/undergraduate/ | programme | robots_unreachable (robots_disallowed) | https://www.cis.upenn.edu/undergraduate/ |
 | Zhejiang University | qs2027-047 | programme | http://www.en.cs.zju.edu.cn/22145/list.htm | programme | fetch_error (http_error 405); before: fetch_error on 2026-10-19 | http://www.en.cs.zju.edu.cn/22145/list.htm |
+| The University of Queensland | qs2027-041 | documents.application_form | documents.application_form | fact | http_403 (http_error 403) from the CI runner on 2026-10-25, run 40220078860 (added by KB-3); before: verified on 2026-10-20 | https://study.uq.edu.au/admissions/undergraduate/submit-your-application |
+| The University of Queensland | qs2027-041 | documents.english_test_report | documents.english_test_report | fact | http_403 (http_error 403) from the CI runner on 2026-10-25, run 40220078860 (added by KB-3); before: verified on 2026-10-20 | https://study.uq.edu.au/admissions/undergraduate/submit-your-application |
+| The University of Queensland | qs2027-041 | documents.passport | documents.passport | fact | http_403 (http_error 403) from the CI runner on 2026-10-25, run 40220078860 (added by KB-3); before: verified on 2026-10-20 | https://study.uq.edu.au/admissions/undergraduate/submit-your-application |
+| The University of Queensland | qs2027-041 | documents.secondary_diploma | documents.secondary_diploma | fact | http_403 (http_error 403) from the CI runner on 2026-10-25, run 40220078860 (added by KB-3); before: verified on 2026-10-20 | https://study.uq.edu.au/admissions/undergraduate/submit-your-application |
+| The University of Queensland | qs2027-041 | documents.transcript | documents.transcript | fact | http_403 (http_error 403) from the CI runner on 2026-10-25, run 40220078860 (added by KB-3); before: verified on 2026-10-20 | https://study.uq.edu.au/admissions/undergraduate/submit-your-application |
 
 ## Stale in the KB
 
