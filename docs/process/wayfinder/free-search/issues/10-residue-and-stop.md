@@ -24,6 +24,7 @@ instead of guessing?
 | Common Crawl seed / Wikidata fill | 06 | — | $0 | 06 | | staleness |
 | KB refresh cron (+ home runner) | — | — | $0 | ours | | `ua_or_waf_block`, `robots`, dead hosts (08) |
 | model hint | 09 audit | — | 09 | §6.4 / D9 | | |
+| **no search at all** (`search_provider=none`, today's defaults with FRH on) | **4/10 · 3/10 · 6/14 · 1/5 = 14/39** pages found (`frh2-*` on columns, runs 40220878232 / 40220885464 / 40220887559 / 40220880000; 13/39 when dev4's kit flakes) | **0** in every column | $0 | ours | **the $0 ceiling, declared 2026-10-25** (LOOP_REPORT "NS-RES-1"): no $0 rule reaches any of the 25 misses | 25 misses, cohort/dev2/dev3/dev4: access from every vantage point we have 6 (3/1/2/0); a department or catalogue host the homepage never links and no sitemap lists 9 (2/0/5/2); another registrable domain 1 (tsinghua); no usable sitemap and a gold deeper than two hops 1 (ethz); catalogue picks without the programme 4 (0/3/0/1); clock cases on unreachable golds 4 (1/1/1/1). Each class needs a provider, the owner's computer as a runner (01-Q4), or a product decision |
 | cheapest paid (fact only) | Serper $50 per 50 000; Exa $4 per 1 000; Brave $5 per 1 000; Mojeek £2 per 1 000 | | at 02's volume | | not recommended by this map | |
 
 ## Residue classes (carried from the finish-algorithm ledger, re-counted for a $0 layer)

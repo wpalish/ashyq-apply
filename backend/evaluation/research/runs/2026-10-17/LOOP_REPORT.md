@@ -1235,3 +1235,55 @@ loss-stage rule it reads as a twin. Signed as a twin in `programme_urls`, `rp-fr
 code change. Left as is, the cohort recorded bench reads 4/1/0/5 whenever you.ubc.ca's robots.txt times out from the
 runner, and target 2 (`wrong_programme_pages` 0) fails on access alone. `base4-cohort` (run 40225734198, in progress)
 adds four more columns of the same robots.txt reading.
+
+### 2026-10-25 19:50 — NS-RES-1: the no-search bench at its $0 ceiling, 14/39, 0 wrong ($0)
+
+**Declared: the no-search bench (`search_provider=none`, today's defaults with FRH on) stands at 14/39 programme pages,
+0 wrong pages.** It is at its $0 ceiling. FRH was the last rule with two development sets behind it
+(NO_SEARCH_FLOOR_2026-10-21 §4, §7.5, §8.3), and it landed (2026-10-25 19:00 above). Every one of the 25 misses below
+is in a class that no $0 rule reaches. The next movement on this bench is the search key (NEXT_CYCLES_2026-10-26 §4)
+or a second vantage point (01-Q4), not a worker ticket. The DoD is untouched: targets and denominators stay as written.
+
+**Source.** The four `frh2-*` runs (8ecf06df), read in the on columns. Both on columns agree on every case.
+- Runs: 40220878232 (cohort), 40220885464 (dev2), 40220887559 (dev3), 40220880000 (dev4).
+- Scoring: cohort on `reviewed11`; dev2, dev3 and dev4 on `draft3` with `--allow-drafts`.
+- **Hits (14):**
+  - cohort: groningen, delft, vienna, ntu;
+  - dev2: psaclay, tcd, khalifa;
+  - dev3: imperial, unsw, auckland, ucph, iitd, puc;
+  - dev4: kit.
+- **The denominator, 39.** These are the 44 development cases less the five whose programme is not known to the
+  corpus: utokyo (unadjudicated), and vut, taltech, boun and itu (`no_gold`, related-only labels).
+- **kit is a flake.** It was a hit in all four `frh2-dev4` columns, off included, and missed in every column of
+  `frh-dev4` and `sg1b-dev4` the same afternoon. So the bench reads 13/39 when kit misses; `ns-base4-dev4` says
+  which.
+
+| class (what stops it) | cases (25) | n | per set c/d2/d3/d4 | what it needs | $0 rule? |
+|---|---|---|---|---|---|
+| access from every vantage point we have | aalto, toronto, hku, kaznu, ub, kuleuven | 6 | 3/1/2/0 | the owner's computer as a runner (01-Q4) tells datacenter from us; a robots refusal stays a refusal | no |
+| the gold on a department or catalogue host the homepage never links and no sitemap we read lists | kaist, warsaw, ntutw, msu, um, usp, chula, unibo, ktu | 9 | 2/0/5/2 | a search provider (the key) | no |
+| another registrable domain | tsinghua | 1 | 0/1/0/0 | a provider, or a signed extra domain | no |
+| no usable sitemap and a gold deeper than two hops | ethz | 1 | 0/1/0/0 | a provider | no |
+| catalogue picks without the programme | tec, uba, uct, rwth | 4 | 0/3/0/1 | a provider, or a product decision about related programmes | no |
+| the clock cases, all on unreachable golds | uio, ctu, ubc, uppsala | 4 | 1/1/1/1 | nothing a rule changes; SG-1 saved 6 s, not 20–30 | no |
+| **total** | | **25** | **6/7/8/4** | | |
+
+Per set that is cohort 4/10, dev2 3/10, dev3 6/14 and dev4 1/5 found, 25 missed.
+
+The re-count against NEXT_CYCLES_2026-10-26 §2.2's list, which named 28 cases for 25 misses:
+- The three extra names are hits: groningen and delft (registry seeds) and tcd (navigation plus the walker).
+- The deep-gold class keeps ethz alone.
+
+Where `frh2-*` reads a case differently from its class, the class stands; no other class has a $0 rule either:
+- **ctu** read BLOCKED (8/8 failed, 1–3 s) instead of reaching its crawl-delay clock.
+- **uct** scored as `access` (PARTIALLY_BLOCKED 8/14).
+- **ubc**'s you.ubc.ca robots.txt timed out in 3 of 4 columns (WP-1 above).
+- **hku** read REACHED (2/41 failed) overall; NO_SEARCH_FLOOR §3 places its refusal (403 / robots) on the catalogue
+  host, which this re-count did not re-trace.
+
+Ledgers brought current with this entry:
+- `hypotheses.json`:
+  - FRH `tested`, on by default;
+  - CO-1-V1 and CO-1-V2 closed as superseded by FRH;
+  - SG-1 final under HC-1.
+- free-search ticket 10: the "no search at all" row.
