@@ -1,7 +1,13 @@
 import { defineConfig, devices } from '@playwright/test';
+import { existsSync } from 'node:fs';
 
 const PORT = 5173;
 const API_PORT = 8099;
+
+// The sandbox's preinstalled Chromium, when the installed Playwright's own
+// revision is not downloaded (as in playwright.kb.config.ts). CI uses its own.
+const LOCAL_CHROMIUM = '/opt/pw-browsers/chromium';
+const launchOptions = !process.env.CI && existsSync(LOCAL_CHROMIUM) ? { executablePath: LOCAL_CHROMIUM } : {};
 
 export default defineConfig({
   testDir: './e2e',
@@ -21,6 +27,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    launchOptions,
   },
   projects: [
     { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } } },
