@@ -27,6 +27,10 @@ Owner: Диас.
     removes its own pgserver clusters on exit;
   - a worktree gets its environment from `scripts/link_worktree_env.sh <worktree>` (symlinks, never committed);
   - the `SessionStart` hook builds a missing venv / `node_modules` and runs `scripts/clean_test_tmp.sh`.
+  - a change under `frontend/src` runs **all three** browser suites before it is merged (`npm run e2e`, `e2e:auth`,
+    `e2e:kb`), not only the one its ticket names: on 2026-10-25 MODE-1 passed `e2e:kb` and turned the demo suite red
+    on CI. After a local Playwright run, `git checkout -- docs/screenshots` and delete `frontend/playwright-report*`
+    and `frontend/test-results*` before eslint or a commit.
 
 ## The plan
 

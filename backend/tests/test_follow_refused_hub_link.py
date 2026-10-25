@@ -666,13 +666,13 @@ def test_the_on_plugin_switches_the_rule_on(monkeypatch: pytest.MonkeyPatch) -> 
 # --- 8. the default, the harness flag, and the demo ---------------------------------
 
 
-def test_off_by_default() -> None:
-    assert live_discovery.FOLLOW_REFUSED_HUB_LINK is False
+def test_on_by_default() -> None:
+    assert live_discovery.FOLLOW_REFUSED_HUB_LINK is True  # on since the 2026-10-25 FRH re-run (§8.6)
     assert live_discovery.FOLLOW_REFUSED_HUB_LINK_CAP == 3
     assert DiscoveryTrace(institution="U", domain=DOMAIN).as_dict().get("refused_hub_links") is None
 
 
-def test_the_flag_is_a_default_off_negatable_rule(
+def test_the_flag_is_a_negatable_rule(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     from tests.test_benchmark_rule_negations import _parent
@@ -680,7 +680,7 @@ def test_the_flag_is_a_default_off_negatable_rule(
     assert live.NEGATABLE_RULES["follow-refused-hub-link"] == (
         ("app.adapters.discovery.live_discovery", "FOLLOW_REFUSED_HUB_LINK"),
     )
-    assert "follow-refused-hub-link" in live.DEFAULT_OFF_NEGATABLE
+    assert "follow-refused-hub-link" not in live.DEFAULT_OFF_NEGATABLE
     commands = _parent(monkeypatch, tmp_path, "--follow-refused-hub-link")
     assert "--follow-refused-hub-link" in commands[0]
 

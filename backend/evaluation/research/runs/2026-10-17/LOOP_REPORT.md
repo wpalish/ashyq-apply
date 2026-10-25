@@ -1162,3 +1162,26 @@ clock-killed unsw `capture.json` (which the scorecard reads) says `BENCHMARK_WAL
 `stop_reason = parent_kill`, 120.01 s; only the per-case `unsw.json` beside it kept the child's last checkpoint, and
 that is the file this entry first read. HC-1b now writes the finalised observation back to `<case>.json` too. The SG-1 re-run (`sg1b-dev3`, `sg1b-dev4`) is
 dispatched under that fix.
+
+### 2026-10-25 19:00 — FRH amended (§8.6) re-run (6 runs) and the SG-1 re-run under HC-1 (2 runs)
+
+FRH after §8.6 (a hub's URL must name the whole field; one follow per hub). Columns off#1, off#2, on#1, on#2.
+
+| arm | off → on | note |
+|---|---|---|
+| frh2-cohort | 4/0/0/6 → 4/0/0/6 | **groningen kept** (hit in all four columns); no stable change |
+| frh2-dev2 | 2/0/1/7 → **3/0/0/7** both on | khalifa related → hit |
+| frh2-dev3 | 5/0/0/9 → **6/0/0/8** both on | auckland missed → hit; stable gains auckland deadline, ielts.overall, ielts.subscores |
+| frh2-dev4 | 1/0/0/8 → 1/0/0/8 | no follow on any case |
+| rp-frh2-cohort | 4/1/0/5 → 4/1/0/5 | identical |
+| rp-frh2-dev4 | 4/0/1/4 → 3/0/1/5 both on | **unibo** again; **no follow on unibo in either on column**, and both on captures show the `corsi.unibo.it` 20–23 s timeouts seen in the first run — the host, not the rule (§8.6) |
+
+**Verdict: FRH on by default.** Both predicted gains (+2 pages, +3 stable claims), 0 wrong pages, groningen
+restored, no stable claim loss anywhere; the one page difference is on a case where the rule did not act. Knockout
+was not re-run: §8.6 only removes knockout reads (45 → 9 follows) and the first knockout run was identical.
+No-search floor **12/39 → 14/39**.
+
+SG-1 re-run `sg1b-dev3` / `sg1b-dev4` (no search, `--sitemap-guess-cap`, HC-1 in place): labels identical in all
+columns (dev3 5/0/0/9, dev4 0/0/0/9 — kit missed in every column, off included), no stable change; reads dev3
+353 / 342 → 335 / 347, dev4 200 / 189 → **202 / 208**. The bar was fewer reads and seconds on both sets.
+**Verdict: SG-1 stays off for good** (NEXT_CYCLES_2026-10-23 §7: no further re-open).

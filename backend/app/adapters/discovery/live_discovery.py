@@ -139,8 +139,9 @@ CONFIRM_SEARCH_PROGRAMMES = False
 #: one per hub (a hub read again from a second catalogue is not followed
 #: again, §8.6), none once a programme page is confirmed, and a followed page
 #: is never a hub. The benchmark harness flips it per capture
-#: (``--follow-refused-hub-link``).
-FOLLOW_REFUSED_HUB_LINK = False
+#: (``--follow-refused-hub-link``). On by default since 2026-10-25 (LOOP_REPORT: no-search
+#: dev2 khalifa and dev3 auckland gained, groningen kept, 0 wrong pages).
+FOLLOW_REFUSED_HUB_LINK = True
 FOLLOW_REFUSED_HUB_LINK_CAP = 3
 #: Bounded content verification with backfill, unlike the older prune-only
 #: experiment. Programme variants and unresolved degrees are rejected, and

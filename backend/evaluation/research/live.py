@@ -1847,7 +1847,7 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "sitemap-stage-cap": (("app.adapters.discovery.live_discovery", "SITEMAP_STAGE_CAP"),),
     # Default-off (NEXT_CYCLES_2026-10-22 §3, SG-1).
     "sitemap-guess-cap": (("app.adapters.discovery.live_discovery", "SITEMAP_GUESS_RULE"),),
-    # Default-off (NO_SEARCH_FLOOR_2026-10-21 §8.5, FRH).
+    # On by default since 2026-10-25 (NO_SEARCH_FLOOR_2026-10-21 §8.5–8.6, FRH).
     "follow-refused-hub-link": (
         ("app.adapters.discovery.live_discovery", "FOLLOW_REFUSED_HUB_LINK"),
     ),
@@ -1866,7 +1866,6 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "same-site-award-links",
         "local-query-from-evidence",
         "sitemap-guess-cap",
-        "follow-refused-hub-link",
     }
 )
 
