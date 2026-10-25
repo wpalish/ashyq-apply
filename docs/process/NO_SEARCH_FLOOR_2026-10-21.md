@@ -613,6 +613,8 @@ page.
 
 ### 8.5 FRH step 2: worker-ready spec
 
+*Amended by §8.6 (2026-10-25): the URL half of the hub test is SR-1's whole-phrase test, and a hub is followed once.*
+
 **Rule FRH "follow a refused hub's field link".** A page the confirm stage or the walker reads as a programme
 candidate is a **hub** when all of these hold:
 - `profile_rejects` refuses it;
@@ -722,3 +724,236 @@ The rule is structural: a page class, an order and a read cap. It adds no word.
   - Then default-on. Otherwise record it in `hypotheses.json` with the §8.2 / §8.3 rows. If a run shows a page
     confirmed through a follow that is not gold or labelled related, that is a stop: diagnose it before any default
     change.
+
+### 8.6 FRH step 2 replay: why groningen and unibo were lost, and the amended trigger (2026-10-25)
+
+The 12 arms of §8.5 ran (columns off#1, on#1, on#2, off#2). The predicted gains came, with the follow confirming the
+gold in both on columns on no-search and recorded:
+- dev2 khalifa related → hit;
+- dev3 auckland missed → hit.
+
+There were 0 wrong pages and the knockout was identical. The bar still fails, because two hits were lost:
+- **cohort no-search** (`frh-cohort`, run 40215236690): groningen was a hit in both off columns and missed in
+  both on columns. The stable claim losses were groningen deadline, ielts.overall, programme.exists and tuition.
+- **recorded guard dev4** (`rp-frh-dev4`, run 40215253209): unibo was a hit off and missed on.
+
+**Verdict.**
+- **groningen is caused by the follow.** Three follows from two non-hubs spent 9.9 s. The walker hit its 55 s
+  stage deadline one read before the gold lead.
+  - Both hubs passed the trigger only because their URL contains "science", one word of "computer science".
+  - One of the two was then followed a second time, which breaks §8.5's "exactly one link is read per hub".
+- **unibo is network noise.** The follow did not cause it:
+  - on#2 made no follow at all and lost the same way;
+  - on#1's one follow was a 0.9 s read on another host, 20 s before the stall.
+- **The change: two narrowings of the trigger, behind the same flag.**
+  - (A) A hub's URL names the field as whole consecutive slug words: SR-1's phrase test, the conjunction R3
+    already uses.
+  - (B) A hub is followed once.
+
+  Replayed with the production functions over every follow in the 12 arms:
+  - khalifa and auckland keep their gold follow, unchanged;
+  - groningen and unibo make no follow, so groningen's reads are the off arm's;
+  - on no-search, follows fall from 27 to 4, and all 4 confirm a gold.
+
+#### 8.6.1 Inputs and method
+
+- **Captures**: this session's scratchpad, development sets only, every case of the 12 arms:
+  - `frh-<set>` and `frh-ko-<set>` (no-search);
+  - `rp-frh-<set>` (recorded).
+
+  Each capture holds `<case>.json`, `<case>.log` (every `get` with its start time, duration and outcome) and
+  `<case>.raw.json`. The last carries the discovery trace: `refused_hub_links`, `confirm_queue`, `pages_read`,
+  `walker`, `stage_budget` (`stage_stopped_by`), `host_cost.samples` (one row per read, with stage and seconds)
+  and `case_time`.
+- **Hub re-reads.** All 20 distinct hub URLs in any arm's `refused_hub_links` were re-read once each, on
+  2026-10-25 a few hours after the runs.
+  - The reads went through the production `Fetcher` (robots honoured, our user agent, its rate limit), with
+    `trust_env_proxy=True` as in §7 and §8.1.
+  - All 20 were read. Each was classified with `classify_page` and judged with `is_refused_hub`, at `HEAD`
+    before the change and after it.
+- **Replay.** The `refused_hub_links` rows of every on capture were walked in capture order:
+  - a row is kept when its hub passes the amended `is_refused_hub` and was not followed from already;
+  - a dropped row is a read the arm no longer makes.
+
+  The replay used production functions only: `matches_field`, `_field_slug_bonus`, `is_refused_hub` and
+  `classify_page`.
+- **Can the narrower trigger add a follow?** Only if an unfollowed refused listing page passes it. Every on
+  capture was scanned for refused listing reads whose URL passes the phrase test and that started no follow:
+  - walker `reads_as_unknown` / `reads_as_program_catalog` outcomes;
+  - `pages_read` "reads as unknown" / "program_catalog" verdicts.
+- **No search provider was called.** Not opened: any heldout file, capture, log or label,
+  `scratchpad/HELDOUT_QUARANTINE_DO_NOT_OPEN`, `scratchpad/DEV5_BLIND`, `DISCOVERY_ANALYSIS_2026-10-17.md`, or any
+  scratchpad path outside `runs/frh-*` and `runs/rp-frh-*`.
+
+#### 8.6.2 groningen (cohort, no-search): the follows spend the walker's deadline
+
+Both on columns are read-for-read identical. Both off columns are identical too.
+
+| | off#1 / off#2 | on#1 / on#2 |
+|---|---|---|
+| `refused_hub_links` | — | 1. `/research/openscience` → `/research/openscience/onderzoekspraktijken-en-ondersteuning`, reads unknown (1.1 s)<br>2. `/society-business/schools-for-science-society` → the same page's `?lang=nl` twin, reads unknown (4.4 s)<br>3. `/research/openscience` **again** (a cached re-read from a second catalogue's walk) → `/research/openscience/open-research-award`, reads irrelevant (4.4 s) |
+| follow seconds (`host_cost.samples`) | 0 | 9.9 / 10.0, all in the walker stage |
+| walker reads / seconds | 7 / 16.7 | 9 / 24.2 |
+| discovery seconds; `stage_stopped_by` | 49.8 / 49.7; none | 57.1 / 57.15; **`walker: deadline`** (SB-1 deadline 55 s) |
+| `/bachelors/alphabet` and `/bachelors/in-english` read at | t = 43 s, 44–45 s | t = 49 s, 50 s |
+| gold `/bachelors/computing-science` | get #36 at t = 47–48 s, `program_detail`, accepted | **never requested** |
+| `confirm_queue` | 5 reads, the same | 5 reads, the same (no follow ran in the confirm stage) |
+| outcome; latency | hit; 78 / 77 s | missed; 71 / 71 s |
+
+**Mechanism.**
+1. Follows 1 and 2 cost 5.5 s and moved the rest of the walk about 6 s later.
+2. After `in-english`, a later catalogue walk re-reads its leads from cache: `by-subject`, `/research/openscience`,
+   `schools-for-science-society`, `alphabet`, then the gold. The off arm reads them at get #32–#36 and the gold at
+   t ≈ 48 s. On the on arm, the cached re-read of `/research/openscience` is refused again, and the adapter follows
+   it a second time, at t = 53 → 58 s.
+   - `_hub_lead` skips a hub only when a follow *reached* it (`hub in self._hub_followed`), not when a follow
+     already *started* from it.
+3. The walker's `stop()` sees the spent deadline before the next lead. The gold, three leads later, is never
+   requested.
+4. No programme page means no programme, deadline, IELTS or tuition claims: the four stable claim losses.
+
+The on arm's lower latency is a result of the miss: there was nothing to verify.
+
+**Neither hub names the field.** `matches_field` counts 8 for every requested-field *word* longer than three
+letters that appears anywhere in the path. "science" in `openscience` and in `schools-for-science-society` is half
+of "computer science". The pages' heads name nothing: `classify_page` gives `subject = None` on both re-reads.
+Follow 2 also shows that a hub whose URL names the field passes the link filter with its own language twin, since
+the twin's URL is the hub's URL. That is noted in §8.6.5.
+
+#### 8.6.3 unibo (dev4, recorded): a stalled host in the on window, not the follow
+
+| column (start, UTC) | follow | slow reads on `www.unibo.it` | `corsi.unibo.it/` | gold `corsi.unibo.it/laurea/informatica` | discovery | outcome |
+|---|---|---|---|---|---|---|
+| off#1 (17:11:59) | none | none (robots 2.1 s) | 5.7 s ok | 0.9 s ok | 36.5 s | hit |
+| on#1 (17:12:41) | 1: `/it/ricerca/open-science` → its working-group page, 0.9 s at t = 20 s, reads unknown | `/it/ho-un-diploma` **20.0 s** (off#1: 1.4 s) | **23.1 s timeout** | **0.0 s timeout** (the host already stalled once) | 65.5 s; `walker: search_due`, `search: deadline` | missed |
+| on#2 (17:13:50) | **none**: navigation and walker skipped, so no hub was read | robots **20.2 s**, `sitemap.xml.gz` **19.6 s** | **22.6 s timeout** | **0.0 s timeout** | 64.3 s; `search: deadline` | missed |
+| off#2 (17:15:17) | none | robots 11.1 s (unreadable, so disallowed) | 1.8 s | 0.8 s ok | 19.5 s | hit |
+
+Why this is network and not the follow:
+- The ABBA order put both on columns back-to-back, from 17:12:41 to 17:15:15. Both saw `corsi.unibo.it` time out
+  on its root after 22–23 s, and the fetcher's stalled-host rule then failed the gold on that host at once.
+- The off columns ran just before and just after that window.
+- on#2 lost the gold with **no follow**. on#1's single 0.9 s follow read another host (`www.unibo.it`) 20 s before
+  the stall.
+- Under the amended trigger, `/it/ricerca/open-science` is not a hub either ("science" alone).
+
+The miss itself is not attributable to FRH.
+
+#### 8.6.4 The amended rule, and the offline check
+
+**(A) The URL half of the hub test.** The URL must name the field as whole consecutive slug words:
+`matches_field(url, fields) > 0 and _field_slug_bonus(path, fields) > 0`.
+- This is SR-1's phrase test of the field or one of its strong or localized aliases, applied whatever SR-1's flag.
+  R3's `evidence_only_score` uses the same conjunction for the same reason.
+- The head half (`matches_field_text(page.subject)`) is unchanged.
+- This narrows §8.5's trigger: every new hub was an old hub.
+
+**(B) One follow per hub.** `LiveDiscoveryAdapter._hubs_followed_from` is reset per institution. A hub read
+again, from a second catalogue or by both stages, is not followed again.
+- This is §8.5's own "exactly one link is read per hub".
+- The step-2 build enforced it only within one read of the hub.
+
+Nothing else changes:
+- `refused_hub_lead`, the cap, the stop conditions and the budget;
+- the flag (`FOLLOW_REFUSED_HUB_LINK`, still default off), so flag-off is byte-identical.
+
+**The 20 hubs**, re-read and judged with the production trigger:
+
+| hub (case) | `matches_field` | `_field_slug_bonus` | hub before → after |
+|---|---:|---:|---|
+| ku `/college-of-computing-and-mathematical-sciences` (khalifa) | 16 | 16 | yes → **yes** |
+| auckland `…/find-a-study-option/computer-science.html` (auckland) | 16 | 16 | yes → **yes** |
+| auckland `…/computer-science/postgraduate.html`, `…/research-ai-software-computing.html` (auckland, ko only) | 16, 8 | 16, 16 | yes → yes |
+| rwth `informatik…/~mxz/informatik` (rwth, ko only) | 8 | 16 | yes → yes |
+| rug `/research/openscience`, `/society-business/schools-for-science-society` (**groningen**) | 8 | 0 | yes → **no** |
+| unibo `/it/ricerca/open-science` (**unibo**) | 8 | 0 | yes → **no** |
+| vut `/en/rad/openscience`; psaclay `/en/research/open-science`; tudelft `/en/tu-delft-science-centre` | 8 | 0 | yes → no |
+| tcd ×2 short-course pages ("…-science-…"); taltech `…/computer-systems/studies/thesis-topics`, `…/software-science/cooperation` | 8 | 0 | yes → no |
+| ntu ×2 bachelor-of-(social-)science(s) pages; imperial `earth-science/…`, `…/neuroscience-…`; puc `bachillerato-…-ciencias-sociales` | 8 | 0 | yes → no |
+
+Every hub page's classified head is `None`, so the head half fires for none of them.
+
+**Replay of every follow in the 12 arms** (old → new follows per on capture; both on columns agree everywhere):
+
+| arm | case | old | new | what the new rule reads | predicted outcome |
+|---|---|---:|---:|---|---|
+| no-search | **groningen** | 3 + 3 | **0 + 0** | nothing: the walk reads what off reads; the gold at t ≈ 48 s, before the 55 s deadline | **hit (restored)** |
+| no-search | **khalifa** | 1 + 1 | 1 + 1 | the gold (`confirmed`) | **related → hit (kept)** |
+| no-search | **auckland** | 1 + 1 | 1 + 1 | the gold (`confirmed`) | **missed → hit (kept)** |
+| no-search | tcd, psaclay (dev2); taltech, vut, unibo (dev4) | 2+2, 1+1; 2+2, 3+3, 1 | 0 | nothing | unchanged (were refused reads) |
+| knockout | khalifa / auckland | 1+1 / 3+3 | 1+1 / 3+3 | the same reads; the gold is refused by the arm | unchanged |
+| knockout | rwth | 2 | **1** | the first footer page only; the second follow from the same hub is gone (B) | unchanged |
+| knockout | groningen, delft, ntu, tcd, psaclay, imperial, puc, taltech, unibo, vut | 34 | 0 | nothing | unchanged |
+| recorded | khalifa / auckland | 1+1 / 1+1 | 1+1 / 1+1 | the gold | unchanged (hit) |
+| recorded | tcd, psaclay, taltech, unibo, vut | 13 | 0 | nothing | unchanged; unibo's on-window stall is not ours (§8.6.3) |
+
+Totals: no-search follows fall 27 → 4 (4 gold), knockout 45 → 9, recorded 17 → 4 (4 gold).
+
+**Could the narrower trigger add a follow?** Not on these captures.
+- A case where the old rule made no follow runs identically under the new one, because every new hub was an old
+  hub. Examples on recorded are tec, msu, itu and kuleuven: unfollowed phrase-passing listings, no follows before
+  or after.
+- A follow can appear only where a dropped follow freed the cap, the clock or the skip set, and a refused
+  phrase-passing listing then finds the follows open. The cap was reached only on groningen, vut and auckland-ko:
+  - groningen and vut now have no hub at all;
+  - auckland-ko keeps its three hubs, so `school-of-computer-science.html` stays beyond the cap.
+- Among the cases with dropped follows, the scan found one refused listing that passes the phrase test and started
+  no follow: taltech's `…/informaatika-bakalaureus`, in all three arms.
+  - Its re-read now redirects to `/en/please-search-again`, which names nothing. If it redirected at run time too,
+    it is no hub under either rule, which explains why the old rule passed it by with its follows open.
+  - If it did not, the worst case is one more refused read on taltech, a missed case. No §8.2 page links a gold
+    from it.
+- The other unfollowed phrase-passing listings found by the scan are in two groups:
+  - auckland's `postgraduate.html`, refused after the gold follow had confirmed, so closed under both rules;
+  - delft, uba and imperial on recorded, cases where the old rule made no follow at all.
+
+**Tests** (`tests/test_follow_refused_hub_link.py`, synthetic: the subjects "geology" and "marine biology",
+`example-uni.edu`):
+- the predicate: one word of a two-word field in the URL (`/research/biology-labs`, `/events/biology-week`,
+  `/research/marine-research`) is no hub, and the phrase (`/find/marine-biology.html`,
+  `/faculty/school-of-marine-biology/study`) is;
+- end to end, a refused listing naming one word of the field causes no fetch of its programme-page link;
+- a hub the confirm stage refused and followed, then read again by the walker, is not followed again: one follow,
+  the second link never fetched.
+
+All three fail at the step-2 code and pass now. The 30 step-2 tests pass unchanged, including the flag-off
+byte-identity and the budget tests with the flag on.
+
+#### 8.6.5 Caveats
+
+- The hub pages were re-read hours after the runs. A head that named the field at run time and does not now would
+  keep a hub that the replay drops. None of the 20 has a head today, and none of the dropped hubs' URLs names the
+  field.
+- (A) narrows what FRH can ever reach. A refused listing whose URL names only one word of the field and whose head
+  is empty is no longer followed. On these four sets no such follow ever reached a gold or a labelled related page
+  (§8.3 and the table above). A field whose name is one word is unaffected: its word is the whole phrase.
+- **Not built:** a hub whose URL *does* name the field passes the link filter with its own language twin (the same
+  path with `?lang=…`). The twin's URL is the hub's own, as groningen's follow 2 shows. No kept hub on these
+  captures chose its twin, because a child or a field-named label always ranked first. If a run shows one, the
+  fix is to skip a link equal to the hub up to its query (`_without_query`).
+- Network variance on unibo's hosts stays. A recorded-guard loss on unibo in a re-run should be judged against
+  `host_cost.samples` and the `corsi.unibo.it` timeouts before it counts against FRH.
+
+#### 8.6.6 Re-run: dispatch inputs
+
+`benchmark-capture.yml` on the branch carrying this commit. Shared inputs: `mode=expert_paired`, `columns=4`,
+`case_parallelism=5`, `extra_args=--follow-refused-hub-link`, `base_args` empty, `seconds_per_case=120`,
+`max_pages=60`, `runner=ubuntu-latest`, `search_first=false`, `max_search_queries` empty.
+
+| run_tag | case | search_provider |
+|---|---|---|
+| `frh2-cohort` | *(blank: the ten cohort cases)* | `none` |
+| `frh2-dev4` | `dev4` | `none` |
+| `rp-frh2-cohort` | *(blank)* | `recorded` |
+| `rp-frh2-dev4` | `dev4` | `recorded` |
+| `frh2-dev2` | `dev2` | `none` |
+| `frh2-dev3` | `dev3` | `none` |
+
+**Pre-registered expectation:**
+- groningen hit in 4/4 columns, with no `refused_hub_links` on any cohort case;
+- khalifa related → hit and auckland missed → hit in both on columns;
+- on dev4, no follow on any case;
+- on recorded cohort and dev4, outcomes identical and `recorded_search_misses` equal.
+
+**The bar** is §8.5's, unchanged. Knockout was identical on step 2, and (A) and (B) only remove knockout reads, so
+it is not re-run. Dispatch `frh2-ko-<set>` if the planner wants it anyway.

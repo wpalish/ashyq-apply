@@ -128,14 +128,18 @@ CONFIRM_SEARCH_PROGRAMMES = False
 #: Rule FRH "follow a refused hub's field link" (NO_SEARCH_FLOOR_2026-10-21
 #: §8), off until a paired run passes. A page the confirm stage or the walker
 #: read and refused is a *hub* when it reads as a listing (unknown or
-#: catalogue) and its URL or its head names a requested field; the hub's one
+#: catalogue) and its URL or its head names a requested field — the URL as
+#: whole consecutive slug words (SR-1's phrase test, §8.6: "science" alone in
+#: an open-science page is not "computer science"); the hub's one
 #: best field link (:func:`catalog_walker.refused_hub_lead`: its own children
 #: first, then the link score) is read next, one hop, and judged like any
 #: candidate. One network read per follow, outside the confirm stage's
 #: ``MAX_PROGRAM_CANDIDATES_CHECKED`` but inside the stage budget, the case
 #: ledger and the case clock; at most ``FOLLOW_REFUSED_HUB_LINK_CAP`` per case,
-#: none once a programme page is confirmed, and a followed page is never a
-#: hub. The benchmark harness flips it per capture (``--follow-refused-hub-link``).
+#: one per hub (a hub read again from a second catalogue is not followed
+#: again, §8.6), none once a programme page is confirmed, and a followed page
+#: is never a hub. The benchmark harness flips it per capture
+#: (``--follow-refused-hub-link``).
 FOLLOW_REFUSED_HUB_LINK = False
 FOLLOW_REFUSED_HUB_LINK_CAP = 3
 #: Bounded content verification with backfill, unlike the older prune-only
@@ -3260,15 +3264,22 @@ def is_refused_hub(page: PageClassification, url: str, fields: list[str]) -> boo
 
     It reads as a listing (identity recovery's ``_LISTING_PAGE_TYPES``: a
     catalogue, or a page that reads as nothing in particular) and its final
-    URL or its classified head names a requested field. A page refused on
-    subject or on level is a programme page, not a hub. The caller asks this
-    only of a refused page that was not itself reached by a follow.
+    URL or its classified head names a requested field. The URL names it as
+    whole consecutive slug words (``matches_field`` and SR-1's phrase test of
+    ``_field_slug_bonus``, whatever SR-1's flag, as R3 asks of an
+    evidence-only URL): one word of a longer field name is not the field —
+    an open-science or science-centre page is no computer-science hub
+    (NO_SEARCH_FLOOR_2026-10-21 §8.6). A page refused on subject or on level
+    is a programme page, not a hub. The caller asks this only of a refused
+    page that was not itself reached by a follow.
     """
     from app.adapters.requirements.web_requirements import _LISTING_PAGE_TYPES
 
     if not fields or page.page_type not in _LISTING_PAGE_TYPES:
         return False
-    return matches_field(url, fields) > 0 or matches_field_text(page.subject or "", fields)
+    path = (urlparse(url).path or "").lower()
+    url_names_field = matches_field(url, fields) > 0 and _field_slug_bonus(path, fields) > 0
+    return url_names_field or matches_field_text(page.subject or "", fields)
 
 
 #: Plan v3 change #2(a) (loss stages v3 2026-10-18 §5 #2), off until a paired
@@ -5208,6 +5219,9 @@ class LiveDiscoveryAdapter:
         #: FRH: the links of refused hubs this institution followed (reset per
         #: institution); their number is what FOLLOW_REFUSED_HUB_LINK_CAP bounds.
         self._hub_followed: list[str] = []
+        #: FRH: the hubs those links were followed from, so a hub read again
+        #: (a second catalogue lists it) is not followed a second time (§8.6).
+        self._hubs_followed_from: set[str] = set()
 
     def registry(self) -> list[dict]:
         if not self.registry_path.exists():
@@ -5390,12 +5404,17 @@ class LiveDiscoveryAdapter:
         """FRH: the one link of a refused hub to read next, counted against the cap.
 
         ``hub`` is the refused page's final URL. A page reached by a follow is
-        never a hub. ``skip`` is what the calling stage read or queued; every
-        page discovery read, and every link already followed, is skipped too.
+        never a hub, and a hub is followed once. ``skip`` is what the calling
+        stage read or queued; every page discovery read, and every link
+        already followed, is skipped too.
         """
         from app.adapters.discovery.catalog_walker import refused_hub_lead
 
-        if hub in self._hub_followed or not is_refused_hub(page, hub, fields):
+        if (
+            hub in self._hub_followed
+            or hub in self._hubs_followed_from
+            or not is_refused_hub(page, hub, fields)
+        ):
             return None
         taken = {
             *skip,
@@ -5408,6 +5427,7 @@ class LiveDiscoveryAdapter:
         if link is None:
             return None
         self._hub_followed.append(link.url)
+        self._hubs_followed_from.add(hub)
         return link.url
 
     async def _read_hub_link(
@@ -5485,6 +5505,7 @@ class LiveDiscoveryAdapter:
         )
         trace.search_queries_sent = self._queries_before_discovery
         self._hub_followed = []
+        self._hubs_followed_from = set()
 
         candidate = Candidate(
             name=entry["name"],

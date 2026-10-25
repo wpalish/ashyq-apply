@@ -5,14 +5,16 @@ reads as a listing (unknown or catalogue) and its URL or head names a requested
 field. On (``FOLLOW_REFUSED_HUB_LINK``): the hub's one best field link
 (``catalog_walker.refused_hub_lead``: the hub's own children first, then the
 link score, then the URL) is read next, one hop, and judged like any candidate;
-at most ``FOLLOW_REFUSED_HUB_LINK_CAP`` follows per case, none once a programme
-page is confirmed, none once the stage budget is spent, and a followed page is
-never a hub. Off: nothing changes.
+at most ``FOLLOW_REFUSED_HUB_LINK_CAP`` follows per case and one per hub, none
+once a programme page is confirmed, none once the stage budget is spent, and a
+followed page is never a hub. A hub's URL names the field as whole consecutive
+slug words (§8.6): one word of a longer field name is not the field. Off:
+nothing changes.
 
 Every site, page, label and subject here is written for the test
-(``example-uni.edu``, the subject "geology"); no page, label or word comes from
-a development or heldout case. Offline: a fake fetcher serves the pages and a
-fake clock times the reads.
+(``example-uni.edu``, the subjects "geology" and "marine biology"); no page,
+label or word comes from a development or heldout case. Offline: a fake
+fetcher serves the pages and a fake clock times the reads.
 """
 
 from __future__ import annotations
@@ -307,6 +309,59 @@ class TestTrigger:
         assert not is_refused_hub(unknown, HUB, [])
         programme = classify_page(url=CHILD, html=program_html("Bachelor of Arts in History"))
         assert not is_refused_hub(programme, CHILD, FIELDS)
+
+    def test_one_word_of_a_longer_field_in_the_url_is_no_hub(self) -> None:
+        """§8.6: the URL names the whole field (SR-1's phrase test), not one of its words."""
+        fields = ["marine biology"]
+        listing = hub_html("Laboratories")
+        for url, hub in [
+            (f"{W}/research/biology-labs", False),
+            (f"{W}/events/biology-week", False),
+            (f"{W}/research/marine-research", False),
+            (f"{W}/find/marine-biology.html", True),
+            (f"{W}/faculty/school-of-marine-biology/study", True),
+        ]:
+            page = classify_page(url=url, html=listing)
+            assert live_discovery.matches_field(url, fields) > 0, url
+            assert is_refused_hub(page, url, fields) is hub, url
+
+    async def test_a_listing_naming_one_word_of_the_field_causes_no_fetch(
+        self, tmp_path, profile, monkeypatch
+    ):
+        profile.context.intended_fields = ["marine biology"]
+        profile.context.level = "bachelor"
+        page = f"{W}/research/biology-labs"
+        target = f"{W}/research/biology-labs/marine-biology-bsc"
+        pages = {
+            page: hub_html("Laboratories", (target, "Bachelor of Science in Marine Biology")),
+            target: program_html("Bachelor of Science in Marine Biology"),
+        }
+        trace, site = await _run(
+            tmp_path, profile, monkeypatch, pages=pages, seeds={"program_page": page}, on=True
+        )
+        assert page in site.requested and target not in site.requested
+        assert trace.refused_hub_links == []
+
+    async def test_a_hub_read_again_is_not_followed_again(self, tmp_path, geology, monkeypatch):
+        """§8.6: the confirm stage refuses the hub and follows it; the walker reads it again."""
+        first, second = f"{W}/find/geology/a.html", f"{W}/find/geology/b.html"
+        pages = {
+            HUB: hub_html(
+                "Geology",
+                ("/find/geology/a.html", "Geology overview a"),
+                ("/find/geology/b.html", "Geology overview b"),
+            ),
+            first: hub_html("Geology overview a"),
+            second: hub_html("Geology overview b"),
+            CATALOGUE: catalogue_html(("/find/geology.html", "Geology study options")),
+        }
+        seeds = {"program_page": HUB, "program_catalog": CATALOGUE}
+        trace, site = await _run(tmp_path, geology, monkeypatch, pages=pages, seeds=seeds, on=True)
+        outcomes = [(row["url"], row["outcome"]) for row in trace.walker["outcomes"]]
+        assert (HUB, "reads_as_unknown") in outcomes, "the walker read the hub a second time"
+        assert site.requested.count(first) == 1
+        assert second not in site.requested, "a hub is followed once"
+        assert trace.refused_hub_links == [(HUB, first, "reads as unknown, not a programme page")]
 
     async def test_the_walker_asks_no_follow_for_a_level_refusal_or_a_followed_page(
         self, tmp_path
