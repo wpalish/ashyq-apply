@@ -158,7 +158,10 @@ export function DocumentsScreen() {
             <button
               key={r.id}
               className="btn btn--sm"
-              style={r.id === current.id ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
+              aria-pressed={r.id === current.id}
+              // The border may be the brand yellow; the text may not. `--accent`
+              // on white is 1.56:1, `--accent-text` is 6.3:1 (WCAG AA is 4.5:1).
+              style={r.id === current.id ? { borderColor: 'var(--accent)', color: 'var(--accent-text)', fontWeight: 600 } : undefined}
               onClick={() => setSelected(r.id)}
               data-testid={`doc-tab-${r.id}`}
             >

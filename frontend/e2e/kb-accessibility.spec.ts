@@ -152,23 +152,7 @@ async function serious(page: Page): Promise<string[]> {
     .analyze();
   return report.violations
     .filter((v) => v.impact === 'serious' || v.impact === 'critical')
-    .map((v) => ({ ...v, nodes: v.nodes.filter((n) => !isKnown(v.id, n.html)) }))
-    .filter((v) => v.nodes.length > 0)
     .map((v) => `${v.id} (${v.nodes.length}): ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')}`);
-}
-
-/**
- * Violations found by this spec whose fix belongs to a file another ticket
- * owns, each excused node by node (any other node on the same rule still
- * fails). Remove an entry when its follow-up lands.
- *
- *  - color-contrast on the Documents screen: the selected university button
- *    is drawn in `--accent` (#F7C948) on white, 1.56:1 (needs 4.5:1). Fix:
- *    `--accent-text` plus `aria-pressed` in DocumentsScreen.tsx, which I18N-3
- *    owns — follow-up, not fixed here.
- */
-function isKnown(rule: string, html: string): boolean {
-  return rule === 'color-contrast' && html.includes('data-testid="doc-tab-') && html.includes('color: var(--accent)');
 }
 
 /**
@@ -294,6 +278,8 @@ for (const locale of LOCALES) {
     await expect(page.getByTestId(`doc-tab-${rows.edinburgh.id}`)).toBeVisible();
     await page.getByTestId(`doc-tab-${rows.edinburgh.id}`).click();
     await expect(page.locator('main')).toContainText(w.t('detail.docs.kb.official'));
+    // The selected university says so to a screen reader, not only in colour.
+    await expect(page.getByTestId(`doc-tab-${rows.edinburgh.id}`)).toHaveAttribute('aria-pressed', 'true');
 
     // (3) the deadlines open with Enter on their summary; "Add to calendar" downloads on Enter.
     const summary = page.locator('details.documents-deadlines > summary');
