@@ -32,8 +32,9 @@ an applicant would act on it.
 ## Provisional — results screens only (2026-10-19, gap B6)
 
 The results screens (`frontend/src/lib/i18n.results.ts`) are what a Russian or Kazakh reader acts
-on, so they carry the words below **without** a person's decision yet. Navigation keeps the English,
-and every Open row above stays open until someone reviews these. None of them is stronger than the
+on, so they carry the words below **without** a person's decision yet. Navigation keeps the English
+(until 2026-10-25, see "Provisional — navigation" below), and every Open row above stays open until
+someone reviews these. None of them is stronger than the
 English, and the fit is never called a probability or chance (a test checks this).
 
 | Term | Russian | Kazakh |
@@ -81,6 +82,23 @@ Also provisional; each poses the question beside it.
 | proof of financial resources | подтверждение наличия финансовых средств | қаржы қаражатының бар екенін растау | Is "справка о финансовой состоятельности" what a bank or embassy would call it? |
 | "as published" (optional / conditional notes) | как опубликовано | жарияланғандай | Same as `detail.docs.condition`; does it read as "as the university states it", not "as printed by us"? |
 | possibly outdated | возможно, устарело | ескірген болуы мүмкін | Must stay weaker than "не актуально" / "өзекті емес" (the stale chip); does it? |
+
+## Provisional — navigation (2026-10-25)
+
+The header's "Explore" menu and the sidebar name every screen at once, and a Russian or Kazakh reader
+met six English labels there. They now carry the provisional words above (owner request, 2026-10-25),
+**without** a person's decision: the Open rows for shortlist, preferences & budget, sources & conflicts,
+export & data deletion and research stay open, and a reviewer may change any of these.
+
+| Key | English | Russian | Kazakh | Note |
+|---|---|---|---|---|
+| `nav.preferences` | Preferences & budget | Приоритеты и бюджет | Басымдықтар және бюджет | "Preferences" here are weighted priorities, not settings, so not "настройки" / "баптаулар". |
+| `nav.shortlist` | University shortlist | Короткий список университетов | Университеттердің қысқа тізімі | Same word as the results screens. |
+| `nav.funding` | Funding comparison | Сравнение финансирования | Қаржыландыруды салыстыру | No glossary term (not "funding gap"). |
+| `nav.sources` | Sources & conflicts | Источники и расхождения | Дереккөздер және сәйкессіздіктер | "Conflict" = two official pages disagreeing: расхождение / сәйкессіздік, as on the results screens. |
+| `nav.export` | Export & data deletion | Экспорт и удаление данных | Деректерді экспорттау және жою | Must follow the reviewed privacy policy's wording once it exists. |
+| `nav.group.research` | Research | Исследование | Зерттеу | As in the existing `nav.progress`. |
+| `topbar.explore` | Explore | Разделы | Бөлімдер | The menu of screens ("sections"), not a verb: "Исследовать" would collide with research. |
 
 ## Settled
 

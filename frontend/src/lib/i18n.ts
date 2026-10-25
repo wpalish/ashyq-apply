@@ -66,6 +66,7 @@ const EN = {
   'nav.legal': 'Privacy & terms',
 
   'topbar.applicant': 'Applicant',
+  'topbar.explore': 'Explore',
   'topbar.newApplicant': 'New applicant',
   'topbar.newCase': 'New case',
   'topbar.signOut': 'Sign out',
@@ -307,12 +308,20 @@ export type MessageKey = keyof typeof EN;
 const RU: Partial<Record<MessageKey, string>> = {
   ...RU_RESULTS,
   'nav.group.prepare': 'Подготовка',
+  'nav.group.research': 'Исследование',
   'nav.group.decide': 'Решение',
   'nav.group.community': 'Сообщество',
   'nav.group.about': 'О сервисе',
 
   'nav.profile': 'Профиль абитуриента',
   'nav.progress': 'Ход исследования',
+  // Navigation carries the provisional glossary words (docs/i18n/GLOSSARY.md,
+  // "Provisional — navigation"), the same ones the results screens use.
+  'nav.preferences': 'Приоритеты и бюджет',
+  'nav.shortlist': 'Короткий список университетов',
+  'nav.funding': 'Сравнение финансирования',
+  'nav.sources': 'Источники и расхождения',
+  'nav.export': 'Экспорт и удаление данных',
   'nav.approved': 'Одобренные университеты',
   'nav.documents': 'Документы и сроки',
   'nav.feed': 'Лента',
@@ -321,6 +330,7 @@ const RU: Partial<Record<MessageKey, string>> = {
   'nav.legal': 'Конфиденциальность и условия',
 
   'topbar.applicant': 'Абитуриент',
+  'topbar.explore': 'Разделы',
   'topbar.newApplicant': 'Новый абитуриент',
   'topbar.signOut': 'Выйти',
   'topbar.connecting': 'соединение…',
@@ -541,12 +551,20 @@ const RU: Partial<Record<MessageKey, string>> = {
 const KK: Partial<Record<MessageKey, string>> = {
   ...KK_RESULTS,
   'nav.group.prepare': 'Дайындық',
+  'nav.group.research': 'Зерттеу',
   'nav.group.decide': 'Шешім',
   'nav.group.community': 'Қауымдастық',
   'nav.group.about': 'Сервис туралы',
 
   'nav.profile': 'Талапкер профилі',
   'nav.progress': 'Зерттеу барысы',
+  // Navigation carries the provisional glossary words (docs/i18n/GLOSSARY.md,
+  // "Provisional — navigation"), the same ones the results screens use.
+  'nav.preferences': 'Басымдықтар және бюджет',
+  'nav.shortlist': 'Университеттердің қысқа тізімі',
+  'nav.funding': 'Қаржыландыруды салыстыру',
+  'nav.sources': 'Дереккөздер және сәйкессіздіктер',
+  'nav.export': 'Деректерді экспорттау және жою',
   'nav.approved': 'Мақұлданған университеттер',
   'nav.documents': 'Құжаттар мен мерзімдер',
   'nav.feed': 'Таспа',
@@ -555,6 +573,7 @@ const KK: Partial<Record<MessageKey, string>> = {
   'nav.legal': 'Құпиялылық және шарттар',
 
   'topbar.applicant': 'Талапкер',
+  'topbar.explore': 'Бөлімдер',
   'topbar.newApplicant': 'Жаңа талапкер',
   'topbar.signOut': 'Шығу',
   'topbar.connecting': 'қосылуда…',
