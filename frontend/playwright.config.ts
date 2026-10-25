@@ -43,14 +43,23 @@ export default defineConfig({
       // test with an unhelpful "'..' is not recognized".
       command: 'bash ../backend/run.sh --with-worker',
       url: `http://127.0.0.1:${API_PORT}/api/health`,
-      reuseExistingServer: true,
+      // Never adopt a server already on the port, as the auth and kb configs:
+      // a stale run, or another worktree's suite on the same ports, would
+      // answer with its own code and its own env, and the run would assert
+      // against a product it did not start.
+      reuseExistingServer: false,
       timeout: 60_000,
       stdout: 'ignore',
+      // The mode this suite asserts, stated rather than inherited: a demo
+      // server whose knowledge mode is kb (both are the Settings defaults CI
+      // runs with). Explicit, so a shell export or a backend/.env cannot turn
+      // the local run into a different product (journey.spec.ts, MODE-1).
+      env: { UNIMATCH_DEMO_MODE: 'true', UNIMATCH_KNOWLEDGE_MODE: 'kb' },
     },
     {
       command: 'npm run dev',
       url: `http://127.0.0.1:${PORT}`,
-      reuseExistingServer: true,
+      reuseExistingServer: false,
       timeout: 60_000,
     },
   ],
