@@ -60,6 +60,16 @@
   Полный набор тестов идёт около 15 минут. Фронтенд проверяется в `frontend/` командами `npm run typecheck`,
   `npm run lint`, `npm test`. E2E-тесты в `frontend/e2e` проверяют пользовательский путь, и изменения в выдаче
   могут их ломать.
+- **Перед каждым push — одна команда:** `scripts/pre_merge.sh` (из любого worktree). Она запускает ровно те
+  проверки из `.github/workflows/ci.yml`, которые задевает ветка относительно `origin/claude/greeting-16wj2z`:
+  `backend/` → ruff, ruff format, mypy (`app tests evaluation`), полный набор через `scripts/run_suite.sh` с
+  покрытием 92 и золотое демо (Groningen первым, UBC в `OUT_OF_BUDGET`); `frontend/` → typecheck, lint, vitest,
+  build и все три Playwright-набора по очереди (порты 5173/8099 должны быть свободны); workflow и скрипты →
+  разбор YAML, `bash -n` и тесты workflow; в конце — трейлер `Agent:` у каждого коммита и ни одного `wip:`.
+  Останавливается на первой красной проверке, после себя убирает скриншоты и отчёты Playwright. `--dry-run`
+  печатает команды, `--scope all` запускает всё, `--pg` добавляет PostgreSQL-прогон CI, `--e2e never` — для
+  воркера, у которого заняты порты (тогда фронтенд-ветка красная). Тест `tests/test_pre_merge_script.py`
+  держит скрипт в точности равным `ci.yml`.
 - **Живое чтение сайтов — только через GitHub Actions**, workflow `.github/workflows/benchmark-capture.yml`
   (ручной запуск):
   - `mode=benchmark` — полный прогон, метрики и оракул;
