@@ -138,6 +138,12 @@ Two files share one entry shape:
 - `kb_imported_dev.json` (`format: kb-imported-dev/1`) is the 21-university development import, documented
   in `KB_IMPORT_2026-10-19.md`.
 
+Committed version: **v23** (`2026-10-25.kb-cs-bachelor.23`, built 2026-10-25 by KB-2 from the 2026-10-20 check): v22 re-stamped from the
+2026-10-20 sandbox `--from-kb` check, Auckland's tuition and NTU's deadline re-quoted, Paris-Saclay's "no English
+test" turned `unverified_quote`; 813 known facts, 95 entries with verified data. It carries the refresh's
+`refreshed_at` and `review_queue` (58 records, 11 of them NUS/CityUHK documents behind a bot challenge). How it was
+built and the full v22 → v23 diff: `KB_REFRESH_2026-10-23.md`.
+
 Top level of the built file: `version` and `built_at`, `list_version`, `intake`, `questions`,
 `stale_policy`, `evidence_reports`, `robots_override_excluded`, `robots_override_facts`, `entries`
 (keyed by `seed_id`), `stale_facts` and `unresolved_drafts`.

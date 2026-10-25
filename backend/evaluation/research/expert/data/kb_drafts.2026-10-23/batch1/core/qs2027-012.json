@@ -1,0 +1,38 @@
+{
+ "case": "qs2027-012",
+ "seed_id": "qs2027-012",
+ "university": "Nanyang Technological University, Singapore (NTU Singapore)",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json (deadline fact verified 2026-10-17; quote_gone in KB_REFRESH_2026-10-19.md)",
+  "source_case": "ntu",
+  "round": "kb_drafts.2026-10-23/batch1 (KB-2)"
+ },
+ "questions_researched": [
+  "deadline"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in KB-2)."
+ },
+ "answers": {
+  "deadline": {
+   "status": "known",
+   "value": "2027-01-20",
+   "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements",
+   "quote": "All other international qualifications not listed below (including German Abitur, Turkish High School, New Zealand NCEA, Bangladesh HSC, Pakistan HSC, Iran High School Diploma etc.) Open 15 Oct 2026 - 20 Jan 2027",
+   "date": "2026-10-20",
+   "page_language": "en",
+   "population": "international",
+   "notes": "KB-2 re-quote of the development import's deadline (its quote read 'Closed 15 Oct 2026 - 20 Jan 2027'; the 'Application status' column now reads 'Open'; same window). Read 2026-10-20 through the production Fetcher (--trust-env-proxy). Table 'Application windows' (columns: qualification, 'Application status', 'Application window', 'Deadline for Document submission'). Kazakhstan qualifications have no row of their own (rows: American High School Diploma, Australia, Brunei, Canada, French/Spanish/European Baccalaureate, HKDSE, India, Indonesia, IB, Malaysia STPM/UEC, Mauritius, Myanmar, Philippines, PRC, South Korea, Sri Lanka, Taiwan, Thailand, UK A-Level, Vietnam), so 'All other international qualifications' applies. Documents: 'Upload/Submit documents according to the Checklist within 3 days after application closing date.' Other qualifications (e.g. IB, UK A-Level) close 19 Mar 2027. No time zone printed."
+  }
+ }
+}

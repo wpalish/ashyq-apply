@@ -1,0 +1,44 @@
+{
+ "case": "qs2027-067",
+ "seed_id": "qs2027-067",
+ "university": "The University of Auckland",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json v22 (2026-10-20.kb-cs-bachelor.22)",
+  "source_case": "qs2027-067",
+  "round": "kb_drafts.2026-10-23/batch1 (KB-2)"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in KB-2)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 49581.6,
+    "amount_max": 60909.6,
+    "currency": "NZD",
+    "period": "year",
+    "academic_year": "2027",
+    "population": "international students, Bachelor of Science (range depends on courses taken)"
+   },
+   "url": "https://www.auckland.ac.nz/en/study/fees-and-money-matters/tuition-fees/international-student-fees/undergraduate-international-fees.html",
+   "quote": "Bachelor of Science NZ$49,581.60 - NZ$60,909.60",
+   "notes": "KB-2 re-quote of v22's fact (old quote 'Bachelor of Science NZ$49,581.60 - $60,909.60': the page now prints 'NZ$' before the upper bound too; same figures). Read 2026-10-20 through the production Fetcher (--trust-env-proxy). Row 'Bachelor of Science' of the table headed '2027 fees' (columns 'Programme', 'Estimated fees'); the page's intro now reads 'The table below shows the estimated tuition fees for 2027. This is an estimation assuming that you are studying full time for a full year (120 points), unless otherwise noted.' The quoted row occurs once: the '2028 fees' table's row reads 'Bachelor of Science NZ$52,556.00 - $64,564.00' (a later year, not drafted). The year is the table heading as printed, a calendar (NZ academic) year. Estimated, not final; a CS-major-specific figure is not given. Excludes the Student Services Fee ('In 2027, you will also pay a Student Services Fee of $9.65 per point, estimated at $1,158.00 for full-time study (120 points).').",
+   "date": "2026-10-20",
+   "page_language": "en"
+  }
+ }
+}
