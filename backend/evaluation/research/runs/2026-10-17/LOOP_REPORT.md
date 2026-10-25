@@ -1287,3 +1287,23 @@ Ledgers brought current with this entry:
   - CO-1-V1 and CO-1-V2 closed as superseded by FRH;
   - SG-1 final under HC-1.
 - free-search ticket 10: the "no search at all" row.
+
+### 2026-10-25 20:30 — clean baseline 4 with FRH on (8 runs) and the TCD CI check
+
+`base4-<set>` (recorded store base3) and `ns-base4-<set>` (no search), `columns=4`, today's defaults (FRH on,
+NS-1b + PC-1 on, SG-1 off). Columns off#1, off#2, on#1, on#2 are identical arms (no flag), so they read as four
+repetitions (hit/wrong/related/missed).
+
+| set | recorded search | no search |
+|---|---|---|
+| cohort (10) | 4/1/0/5 ×4 (ubc's Calendar page, WP-1) | 4/0/0/6 ×4 |
+| dev2 (10) | 6/0/1/3 ×4 | 3/0/0/7 ×4 |
+| dev3 (14) | 9/1/0/4, 9/0/0/5, 10/0/0/4, 10/0/0/4 | 6/0/0/8 ×4 |
+| dev4 (9) | 4/0/1/4, 3/0/1/5 ×3 (unibo's host) | 1/0/0/8 ×4 |
+| **total (39 with a known programme)** | **22–23 found, 1–2 wrong** | **14 found, 0 wrong** |
+
+The no-search floor holds at **14/39 with 0 wrong in every repetition** — the $0 ceiling NS-RES-1 declared. The
+recorded arm's wrong page is ubc's Calendar page whenever you.ubc.ca's robots.txt times out (owner: twin or wrong).
+
+TCD (`kb_drafts.2026-10-26/batch1`, run 40228499326): the GitHub runner finds both re-quoted facts (2/2 ok), so v24
+stands as built.
