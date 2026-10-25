@@ -1157,7 +1157,8 @@ open (mechanism per case, the smallest change that keeps both gains and both hit
 
 HC-1 check `hc1-dev3` / `rp-hc1-dev3` (no flag; four identical columns): unsw still ends `CAPTURE_IN_PROGRESS` at
 115–119 s in every column, but now **keeps its claims** (8–15 predictions per capture) and no column shows a stable
-loss. The claim-loss defect is fixed; the parent's finalisation (`stop_reason = parent_kill`) did not fire on the
-GitHub runner, so the error label stays the child's checkpoint — recorded for the HC-1 follow-up, harmless to scoring
-since the scorecard now reads `CAPTURE_IN_PROGRESS` as clock-killed. The SG-1 re-run (`sg1b-dev3`, `sg1b-dev4`) is
+loss. The claim-loss defect is fixed. **Correction (HC-1b):** the parent's finalisation did fire on the runner — every
+clock-killed unsw `capture.json` (which the scorecard reads) says `BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED`,
+`stop_reason = parent_kill`, 120.01 s; only the per-case `unsw.json` beside it kept the child's last checkpoint, and
+that is the file this entry first read. HC-1b now writes the finalised observation back to `<case>.json` too. The SG-1 re-run (`sg1b-dev3`, `sg1b-dev4`) is
 dispatched under that fix.
