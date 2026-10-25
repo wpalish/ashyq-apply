@@ -14,11 +14,19 @@ const TONE_CLASS: Record<Tone, string> = {
   neutral: '',
 };
 
+/**
+ * A chip. `name` makes it a named note (A11Y-KB): a plain span cannot carry an
+ * accessible name, so a chip that states a status on its own gets `role="note"`.
+ */
 export function Chip({
-  tone = 'neutral', children, title, mono = false,
-}: { tone?: Tone; children: ReactNode; title?: string; mono?: boolean }) {
+  tone = 'neutral', children, title, mono = false, name,
+}: { tone?: Tone; children: ReactNode; title?: string; mono?: boolean; name?: string }) {
   return (
-    <span className={`chip ${TONE_CLASS[tone]} ${mono ? 'chip--mono' : ''}`} title={title}>
+    <span
+      className={`chip ${TONE_CLASS[tone]} ${mono ? 'chip--mono' : ''}`}
+      title={title}
+      {...(name ? { role: 'note', 'aria-label': name } : {})}
+    >
       {children}
     </span>
   );

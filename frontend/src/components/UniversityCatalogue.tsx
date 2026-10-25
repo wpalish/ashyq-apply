@@ -79,7 +79,7 @@ export function UniversityCatalogue({ onStart, onProgress }: { onStart?: () => v
 
   const kbChips = (k: CatalogueKnowledge) => k.in_kb
     ? <div className="catalogue-kb-chips">
-      <Chip tone="ok">{t('catalogue.kb.chip')}</Chip>
+      <Chip tone="ok" name={t('catalogue.kb.chip')}>{t('catalogue.kb.chip')}</Chip>
       <Chip>{tf('catalogue.kb.answers', { n: k.core_answered })}</Chip>
       {k.documents > 0 && <Chip>{tn('catalogue.kb.documents', k.documents)}</Chip>}
       <Chip tone={k.programme_page === 'known' ? 'ok' : 'warn'}>{t(PROGRAMME_PAGE[k.programme_page])}</Chip>

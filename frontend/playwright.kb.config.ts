@@ -28,7 +28,8 @@ const launchOptions = !process.env.CI && existsSync(LOCAL_CHROMIUM) ? { executab
 
 export default defineConfig({
   testDir: './e2e',
-  testMatch: '**/kb-journey.spec.ts',
+  // The journey and its accessibility pass (A11Y-KB); each spec starts its own run.
+  testMatch: '**/kb-*.spec.ts',
   timeout: 120_000,
   expect: { timeout: 20_000 },
   fullyParallel: false,

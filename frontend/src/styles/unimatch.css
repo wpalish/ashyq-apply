@@ -401,7 +401,8 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
   .topbar { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 0.55rem; padding: 0.65rem 0.9rem; }
   .journey-menu__list { right: 0; left: auto; width: min(19rem, calc(100vw - 1.8rem)); }
   .topbar__brand { grid-column: 1; }
-  .topbar .chip { grid-column: 2; }
+  /* A11Y-KB: "Verified knowledge base" pushed Settings and New case 56 px past a 390 px screen; the chip wraps. */
+  .topbar .chip { grid-column: 2; min-width: 0; white-space: normal; }
   .journey-menu { grid-column: 3; }
   .topbar__settings { grid-column: 4; }
   .topbar__case { grid-column: 1 / 4; grid-row: 2; min-width: 0; }
@@ -454,3 +455,7 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
 .catalogue-expand { margin: 0 0 24px; }
 .catalogue-expand > summary { padding: 14px; cursor: pointer; font-weight: 600; }
 @media (max-width: 700px) { .university-catalogue { padding: 16px; } .catalogue-grid { grid-template-columns: 1fr; } .catalogue-heading { flex-direction: column; } .catalogue-tools > button { width: 100%; } }
+/* A11Y-KB: at a phone's width the ru/kk coverage chip and the verified filter wrap instead of widening the page. */
+@media (max-width: 700px) { .catalogue-heading .chip { white-space: normal; } .catalogue-tools .catalogue-verified { flex: 1 1 100%; } }
+/* A source URL breaks anywhere rather than setting a card's minimum width (the programme hero at 390 px). */
+a.mono { overflow-wrap: anywhere; }

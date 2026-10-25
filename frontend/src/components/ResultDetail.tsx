@@ -146,7 +146,8 @@ function KbUnknownLines({ result, tab }: { result: ProgramResult; tab: 'requirem
     lines.set(`${key}|${date}`, line);
   }
   return (
-    <div className="stack stack--tight" data-testid={`kb-unknown-${tab}`}>
+    // A named group, so a screen reader says what the lines below explain (A11Y-KB).
+    <div className="stack stack--tight" role="group" aria-label={t('detail.kbUnknown.label')} data-testid={`kb-unknown-${tab}`}>
       {[...lines.values()].map((line) => (
         <p key={`${line.key}|${line.date}`} className="xs muted" style={{ margin: 0 }}>
           {tf(`detail.kbUnknown.${line.key}`, { fields: line.fields.join(', '), date: line.date })}
