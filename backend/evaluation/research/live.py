@@ -1154,6 +1154,17 @@ async def capture_one(
     runners: list[Any] = []
     recorded_claims: set[str] = set()
     documents_phase = False
+    #: HC-1: the claims the runner has stored so far, mapped as ``record_claims``
+    #: maps them, until ``record_claims`` reads them back from the session at
+    #: the end of the decision stage. Every checkpoint writes them, so a case
+    #: the parent's kill ends before its own stop is written keeps what it had
+    #: already filed (LOOP_REPORT 2026-10-20 10:45: unsw's two IELTS claims).
+    filed: dict[str, Any] = {"read": False, "predictions": [], "raw": []}
+
+    def claims_so_far() -> tuple[list[Prediction], list[dict[str, Any]]]:
+        if filed["read"]:
+            return predictions, raw_claims
+        return filed["predictions"], filed["raw"]
 
     def budget_checkpoint() -> None:
         assert budget is not None
@@ -1177,6 +1188,9 @@ async def capture_one(
         observation.telemetry.browser_fetches = sum(
             f.tier_counts.get("browser", 0) for f in fetchers if hasattr(f, "tier_counts")
         )
+        # HC-1: the claims filed so far, the same list object the final write
+        # carries once the runner has read them (never a copy).
+        observation.predictions = claims_so_far()[0]
         temporary = output.with_suffix(".pending")
         temporary.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
         temporary.replace(output)
@@ -1323,6 +1337,10 @@ async def capture_one(
             "programme_urls": discovery["confirmed"],
             "discovery_trace": as_dict(),
         }
+        raw_so_far = claims_so_far()[1]
+        if raw_so_far:
+            # HC-1: the raw claims filed so far, as the raw report carries them.
+            snapshot["claims"] = raw_so_far
         temporary = trace_output.with_suffix(".pending-trace")
         temporary.write_text(
             json.dumps(snapshot, ensure_ascii=False, indent=2, default=str), encoding="utf-8"
@@ -1491,37 +1509,57 @@ async def capture_one(
                 runners.append(self)
                 self.record_claims()
 
+        def _store_claims(self, result_id, claims):
+            rows = super()._store_claims(result_id, claims)
+            if not documents_phase and not filed["read"]:
+                # HC-1: a checkpoint after every batch of claims the evidence
+                # stages file, so the parent's kill cannot drop them whole.
+                # ``record_claims`` stays the authority for every write the
+                # child makes itself; this copy only stands in until it runs.
+                for row in rows:
+                    filed["raw"].append(row.payload)
+                    filed["predictions"].extend(self.claim_predictions(row))
+                write_partial_trace("claims")
+                checkpoint()
+            return rows
+
         def record_claims(self) -> None:
+            filed["read"] = True
             for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
                 if row.id in recorded_claims:
                     continue
                 recorded_claims.add(row.id)
-                raw = row.payload
-                raw_claims.append(raw)
-                # With the owner-approved identity bindings (2026-09-23),
-                # the same split the offline mapper makes: an award or a
-                # document claim becomes the fields of the identity it is
-                # bound to, and an unbound one stays under its raw key.
-                mapped = normalize_subject_claims(row.claim_type, raw, identities)
-                excerpt = raw.get("original_text_excerpt")
-                for key, value, programme, degree in mapped:
-                    evidence = None
-                    if excerpt and str(row.source_url).startswith(("http://", "https://")):
-                        evidence = Evidence(
-                            url=row.source_url,
-                            excerpt=excerpt,
-                            scope=evidence_scope(
-                                raw,
-                                university=next(iter(self._candidates)).name
-                                if self._candidates
-                                else case_id,
-                                programme=programme,
-                                degree=degree,
-                            ),
-                            accessed_on=row.accessed_at.date(),
-                            source_type="official" if raw.get("official_domain") else "unknown",
-                        )
-                    predictions.append(Prediction(key=key, value=value, evidence=evidence))
+                raw_claims.append(row.payload)
+                predictions.extend(self.claim_predictions(row))
+
+        def claim_predictions(self, row: Any) -> list[Prediction]:
+            raw = row.payload
+            # With the owner-approved identity bindings (2026-09-23),
+            # the same split the offline mapper makes: an award or a
+            # document claim becomes the fields of the identity it is
+            # bound to, and an unbound one stays under its raw key.
+            mapped = normalize_subject_claims(row.claim_type, raw, identities)
+            excerpt = raw.get("original_text_excerpt")
+            out: list[Prediction] = []
+            for key, value, programme, degree in mapped:
+                evidence = None
+                if excerpt and str(row.source_url).startswith(("http://", "https://")):
+                    evidence = Evidence(
+                        url=row.source_url,
+                        excerpt=excerpt,
+                        scope=evidence_scope(
+                            raw,
+                            university=next(iter(self._candidates)).name
+                            if self._candidates
+                            else case_id,
+                            programme=programme,
+                            degree=degree,
+                        ),
+                        accessed_on=row.accessed_at.date(),
+                        source_type="official" if raw.get("official_domain") else "unknown",
+                    )
+                out.append(Prediction(key=key, value=value, evidence=evidence))
+            return out
 
     async def documents_stage() -> None:
         nonlocal documents_phase
@@ -1609,7 +1647,8 @@ async def capture_one(
             # claims already filed are kept: run_to_decision's finally reads
             # them on cancellation, which a killed process never reaches.
             # Runs 59-62: UBC filed nothing because the kill came mid-funding.
-            observation.predictions = predictions
+            # HC-1: the checkpointed claims if the runner never read its own.
+            observation.predictions = claims_so_far()[0]
             observation.programme_urls = [
                 HttpUrl(url)
                 for url in timeout_programme_urls(runners, predictions, discovery["confirmed"])
@@ -3503,10 +3542,17 @@ def main() -> None:
         process_elapsed_seconds = time.monotonic() - started
         if output.exists():
             observation = Observation.model_validate_json(output.read_text(encoding="utf-8"))
+            # HC-1: the child never wrote its own stop; what is on disk is its
+            # last checkpoint, claims filed so far included.
+            unfinished = observation.error == "CAPTURE_IN_PROGRESS"
             if error:
                 observation.error = error
                 if not args.strict_expert_budget:
                     observation.telemetry.latency_seconds = process_elapsed_seconds
+            if unfinished and error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED":
+                # The parent's kill ended the case: finalised here, with the
+                # predictions as checkpointed and the clock as the latency.
+                observation.telemetry.stop_reason = "parent_kill"
         else:
             observation = Observation(
                 case_id=case_id,

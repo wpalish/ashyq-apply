@@ -21,7 +21,7 @@ import pytest
 
 from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter, PageCategory
 from app.config import get_settings
-from evaluation.research import live
+from evaluation.research import live, scorecard
 from evaluation.research.schema import Capture, Observation
 from scripts import canary_discovery as canary
 
@@ -158,9 +158,12 @@ def _ielts_claims() -> list[Any]:
 
 
 def _arrange_filed_then_killed(
-    monkeypatch: pytest.MonkeyPatch, output: Path, seen: dict[str, Any]
+    monkeypatch: pytest.MonkeyPatch, output: Path, seen: dict[str, Any], *, stall: bool = False
 ) -> None:
-    """Discovery confirms a page, the evidence stage files two claims, the parent kills."""
+    """Discovery confirms a page, the evidence stage files two claims, the parent kills.
+
+    ``stall``: the run stalls instead, so the child's own stop ends it.
+    """
 
     async def confirm(adapter: Any, selected: Any, ranked: Any, trace: Any, profile: Any) -> None:
         selected[PageCategory.PROGRAM_PAGE] = [PROGRAMME]
@@ -183,13 +186,15 @@ def _arrange_filed_then_killed(
         seen["at_kill"] = Observation.model_validate_json(output.read_text())
         trace_file = output.with_suffix(".trace.json")
         seen["trace_at_kill"] = json.loads(trace_file.read_text()) if trace_file.exists() else {}
+        if stall:
+            await asyncio.sleep(5)
         raise _ParentKill
 
     monkeypatch.setattr(canary, "run_canary", run)
 
 
 @pytest.mark.asyncio
-async def test_a_parent_kill_after_two_claims_were_filed_leaves_the_confirm_checkpoint(
+async def test_a_parent_kill_after_two_claims_were_filed_keeps_them_on_disk(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     output = tmp_path / "ubc.json"
@@ -198,16 +203,40 @@ async def test_a_parent_kill_after_two_claims_were_filed_leaves_the_confirm_chec
     with pytest.raises(_ParentKill):
         await live.capture_one("ubc", output, 5, 100)
 
-    # Today: the last checkpoint before the kill is discovery's confirm
-    # checkpoint; filing the claims wrote nothing, so they are not on disk.
+    # Before HC-1 the last checkpoint was discovery's confirm checkpoint and
+    # held no claim. Now filing the claims is itself a checkpoint.
     on_disk = Observation.model_validate_json(output.read_text())
     assert on_disk == seen["at_kill"]
-    assert seen["trace_at_kill"]["checkpoint"] == "confirm"
     assert on_disk.error == "CAPTURE_IN_PROGRESS"
-    assert on_disk.predictions == []
+    assert [p.key for p in on_disk.predictions] == ["ielts.overall", "ielts.subscores"]
+    assert on_disk.predictions[0].value == 6.5
+    assert on_disk.predictions[0].evidence is not None
+    assert str(on_disk.predictions[0].evidence.url) == PAGE
+    assert [str(u) for u in on_disk.programme_urls] == [PROGRAMME]
+    partial = seen["trace_at_kill"]
+    assert partial["checkpoint"] == "claims"
+    assert [c["claim_type"] for c in partial["claims"]] == [
+        "ielts_min_overall",
+        "ielts_min_subscore",
+    ]
 
 
-def test_the_parent_collects_a_killed_case_with_no_claims(
+@pytest.mark.asyncio
+async def test_the_child_s_own_stop_keeps_the_filed_claims_when_the_runner_never_read_them(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "ubc.json"
+    seen: dict[str, Any] = {}
+    _arrange_filed_then_killed(monkeypatch, output, seen, stall=True)
+    await live.capture_one("ubc", output, 5, 0.3)
+
+    observation = Observation.model_validate_json(output.read_text())
+    assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    assert [p.key for p in observation.predictions] == ["ielts.overall", "ielts.subscores"]
+    assert observation.telemetry.stop_reason is None
+
+
+def test_the_parent_finalises_a_killed_case_with_the_claims_it_had_filed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ubc", "--out", str(tmp_path)])
@@ -225,5 +254,34 @@ def test_the_parent_collects_a_killed_case_with_no_claims(
     live.main()
     capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
     observation = capture.observations[0]
+    assert seen["at_kill"].error == "CAPTURE_IN_PROGRESS"
     assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
-    assert observation.predictions == []
+    assert observation.telemetry.stop_reason == "parent_kill"
+    assert [p.key for p in observation.predictions] == ["ielts.overall", "ielts.subscores"]
+    # The parent's clock, not the last checkpoint's.
+    assert observation.telemetry.latency_seconds is not None
+    assert observation.telemetry.latency_seconds >= seen["at_kill"].telemetry.latency_seconds
+    # The case is still over the latency budget, and reads as killed by the clock.
+    row = scorecard.cost(capture)["ubc"]
+    assert row["killed_by_clock"] == 1
+    assert "capture_in_progress" not in row
+
+
+def test_a_child_that_fails_on_its_own_is_not_finalised_as_a_parent_kill(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ubc", "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+
+    def child(command: list[str], **kwargs: Any) -> SimpleNamespace:
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="ubc", error="CAPTURE_IN_PROGRESS").model_dump_json())
+        return SimpleNamespace(returncode=1)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    observation = capture.observations[0]
+    assert observation.error == "PROCESS_EXIT_1"
+    assert observation.telemetry.stop_reason is None
+    assert "stop_reason" not in capture.model_dump_json()

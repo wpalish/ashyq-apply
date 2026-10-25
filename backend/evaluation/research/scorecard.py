@@ -371,7 +371,11 @@ def core_known(dataset: Dataset, outcomes: dict[str, Any]) -> dict[str, dict[str
 
 #: The errors a capture records when the case's wall clock ended it
 #: (``evaluation/research/live.py``: the child's own stop, or the parent's kill).
-CLOCK_KILLED_ERRORS = frozenset({"BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"})
+#: HC-1: ``CAPTURE_IN_PROGRESS`` is an older capture's case the parent's kill
+#: ended before the child wrote its stop; its claims were never written, and
+#: ``cost`` marks the row ``capture_in_progress`` so the scorecard counts them.
+CAPTURE_IN_PROGRESS = "CAPTURE_IN_PROGRESS"
+CLOCK_KILLED_ERRORS = frozenset({"BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED", CAPTURE_IN_PROGRESS})
 
 
 def cost(capture: Capture, *, count_timeouts: bool = True) -> dict[str, dict[str, float | None]]:
@@ -383,6 +387,8 @@ def cost(capture: Capture, *, count_timeouts: bool = True) -> dict[str, dict[str
     ``--count-timeouts-over-budget``, on by owner decision 2026-10-18;
     ``--no-count-timeouts-over-budget`` turns it off) counts such
     a case as over the latency budget and marks its row ``killed_by_clock``.
+    A case left at ``CAPTURE_IN_PROGRESS`` (HC-1) is such a case, and its row is
+    also marked ``capture_in_progress``: its claims were never written.
     """
     out: dict[str, dict[str, float | None]] = {}
     for o in capture.observations:
@@ -397,12 +403,23 @@ def cost(capture: Capture, *, count_timeouts: bool = True) -> dict[str, dict[str
             row["killed_by_clock"] = 1
             if "latency_seconds" not in over:
                 over.append("latency_seconds")
+        if o.error == CAPTURE_IN_PROGRESS:
+            # Only on such a row, so every other row keeps its shape.
+            row["capture_in_progress"] = 1
         row["over_budget"] = len(over)
         if t.t_first_query is not None:
             # Only where the capture recorded it: older captures keep their shape.
             row["t_first_query"] = t.t_first_query
         out[o.case_id] = row
     return out
+
+
+IN_PROGRESS_LABEL = "cases left in progress (claims never written)"
+
+
+def cases_left_in_progress(cost_rows: dict[str, dict[str, Any]]) -> int:
+    """HC-1: how many of a repetition's cases an older capture left at ``CAPTURE_IN_PROGRESS``."""
+    return sum(1 for row in cost_rows.values() if row.get("capture_in_progress"))
 
 
 def programme_pages(dataset: Dataset, capture: Capture, report: dict[str, Any]) -> dict[str, str]:
@@ -1257,6 +1274,10 @@ def render(card: dict[str, Any]) -> str:
         )
     reads = [sum(r["http_fetches"] or 0 for r in rep["cost"].values()) for _, _, rep in columns]
     lines.append("| reads (all cases) | " + " | ".join(str(r) for r in reads) + " |")
+    in_progress = [cases_left_in_progress(rep["cost"]) for _, _, rep in columns]
+    if any(in_progress):
+        # HC-1: shown only when an older capture has such a case.
+        lines.append(f"| {IN_PROGRESS_LABEL} | " + " | ".join(str(n) for n in in_progress) + " |")
     if "changes" in card:
         ch = card["changes"]
         lines += [
@@ -1421,6 +1442,11 @@ def summarize(card: dict[str, Any]) -> dict[str, Any]:
                 },
                 "reads": sum(r["http_fetches"] or 0 for r in rep["cost"].values()),
                 "cases_over_budget": sum(1 for r in rep["cost"].values() if r["over_budget"]),
+                **(
+                    {"cases_left_in_progress": left}
+                    if (left := cases_left_in_progress(rep["cost"]))
+                    else {}
+                ),
                 "wrong_claims": len(rep["outcomes"]["wrong_claims"]),
                 **({"search_health": dict(rep["search_health"])} if "search_health" in rep else {}),
                 **(
@@ -1521,6 +1547,11 @@ def render_summary(summary: dict[str, Any]) -> str:
     line("identity established", [frac(rep["identity_established"]) for *_, rep in columns])
     line("cases scored", [str(rep["cases_scored"]) for *_, rep in columns])
     line("cases over budget", [str(rep["cases_over_budget"]) for *_, rep in columns])
+    if any(rep.get("cases_left_in_progress") for *_, rep in columns):
+        line(
+            IN_PROGRESS_LABEL,
+            [str(rep.get("cases_left_in_progress", 0)) for *_, rep in columns],
+        )
     line("reads (all cases)", [str(rep["reads"]) for *_, rep in columns])
     line("wrong claims", [str(rep["wrong_claims"]) for *_, rep in columns])
     if all("search_health" in rep for *_, rep in columns):

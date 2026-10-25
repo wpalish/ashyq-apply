@@ -198,6 +198,11 @@ class Telemetry(Strict):
     recorded_search_misses_identity: int | None = Field(
         default=None, ge=0, exclude_if=lambda value: value is None
     )
+    #: HC-1: ``parent_kill`` when the parent's process timeout ended the case
+    #: before the child wrote its own stop, so the observation is the child's
+    #: last checkpoint (claims filed so far included), finalised by the parent.
+    #: Unset otherwise, so every other capture keeps its bytes.
+    stop_reason: str | None = Field(default=None, exclude_if=lambda value: value is None)
 
 
 class PageOutcome(Strict):
