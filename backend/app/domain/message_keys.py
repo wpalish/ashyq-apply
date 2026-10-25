@@ -22,6 +22,10 @@ A parameter that is itself a keyed sentence (a requirement label inside an
 explanation, an explanation inside a knock-out) is keyed again in
 ``MessageRef.parts`` (:data:`_PART_PARAMS`).
 
+I18N-3 does the same for the Documents screen: a document's name when it is
+one of the 18 document kinds, and the sentences of its ``format_notes``
+(optional, conditional, "Possibly outdated" with the stale reasons inside).
+
 Every template's English text is mirrored in
 ``frontend/src/lib/i18n.results.ts`` under ``msg.<key>``; a test keeps the
 two in step.
@@ -36,6 +40,8 @@ from dataclasses import dataclass
 
 from app.schemas.claim import ClaimOut, Conflict, MessageRef, UnresolvedQuestion
 from app.schemas.result import (
+    DocumentChecklist,
+    DocumentItem,
     FundingGap,
     ProgramResult,
     RankingV2,
@@ -980,6 +986,92 @@ CURRENCY: tuple[Template, ...] = (
     ),
 )
 
+# --- I18N-3: the Documents screen (``app.knowledge.documents``) ---------------
+
+#: One name per document kind: ``app.knowledge.documents.LIVE_KINDS`` (the live
+#: reader's own names, ``web_documents._DOC_RULES``) and ``EXTRA_KINDS``. The
+#: names are our vocabulary, not a university's words, so they translate. The
+#: key is ``document.<kind>``. Written out rather than imported: the domain
+#: imports nothing that reaches ``app.adapters``, and
+#: ``test_message_keys`` holds the two tables equal, kind for kind and word for word.
+DOCUMENT_NAMES: tuple[Template, ...] = (
+    _t("document.transcript", "Full academic transcript"),
+    _t("document.secondary_diploma", "Secondary school diploma (certified copy)"),
+    _t("document.translation", "Certified English translation of non-English documents"),
+    _t("document.apostille", "Apostille certification"),
+    _t("document.credential_evaluation", "Course-by-course credential evaluation (WES/ECE)"),
+    _t("document.passport", "Passport identity page (copy)"),
+    _t("document.photo", "Passport-size photograph (digital image)"),
+    _t("document.personal_statement", "Personal statement"),
+    _t("document.motivation_letter", "Statement of motivation"),
+    _t("document.essay", "Personal Essay"),
+    _t("document.recommendation_letter", "Letter of recommendation"),
+    _t("document.academic_reference", "Academic reference"),
+    _t("document.cv", "Curriculum vitae"),
+    _t("document.portfolio", "Portfolio"),
+    _t("document.financial_proof", "Proof of financial resources"),
+    _t("document.english_test_report", "English language test report"),
+    _t("document.entrance_test", "Admission test result"),
+    _t("document.application_form", "Application form"),
+)
+
+#: The sentences ``app.knowledge.documents.kb_checklist`` writes into
+#: ``DocumentItem.format_notes``: how an item applies (``_requirement_note``),
+#: then why it may be stale, with the claim's own stale reasons inside.
+DOCUMENT_NOTES: tuple[Template, ...] = (
+    _t("document.note.optional", "Optional, as published."),
+    _t("document.note.conditional", "Conditional, as published."),
+    _t("document.note.conditionWhen", "Required only when: {condition}."),
+    _t("document.note.possiblyOutdated", "Possibly outdated: {reasons}."),
+)
+
+#: Where ``format_notes`` is cut into sentences: a full stop, spaces, a capital.
+#: ``DocumentsScreen.tsx`` cuts the served English at the same place, so the
+#: n-th entry of ``notes_messages`` is the n-th sentence it shows.
+_NOTE_END = re.compile(r"(?<=\.) +(?=[A-Z])")
+
+
+def document_name_message(name: str) -> MessageRef | None:
+    """The key of a document name from the 18-kind vocabulary; None for any other name."""
+    return match(DOCUMENT_NAMES, name)
+
+
+def _document_note(sentence: str) -> MessageRef | None:
+    ref = match(DOCUMENT_NOTES, sentence)
+    if ref is not None and ref.key == "document.note.possiblyOutdated":
+        # A reason may hold "; " itself (a quoted list title): regroup the cut.
+        reasons = _split_reasons(ref.params["reasons"], "; ")
+        if reasons:
+            ref.parts["reasons"] = list(reasons)
+    return ref if _complete(ref) else None
+
+
+def document_notes_messages(notes: str) -> list[MessageRef | None]:
+    """One key per sentence of ``format_notes``; None for a sentence no template knows."""
+    text = notes.strip()
+    return [_document_note(sentence) for sentence in _NOTE_END.split(text)] if text else []
+
+
+def annotate_document(item: DocumentItem) -> None:
+    item.name_message = document_name_message(item.name)
+    item.notes_messages = document_notes_messages(item.format_notes)
+
+
+def annotate_checklist(checklist: DocumentChecklist) -> None:
+    for items in (
+        checklist.admission_documents,
+        checklist.scholarship_documents,
+        checklist.applicant_actions,
+        checklist.school_actions,
+        checklist.recommender_actions,
+        checklist.certification_actions,
+    ):
+        for item in items:
+            annotate_document(item)
+    for question in checklist.unresolved:
+        annotate_question(question)
+
+
 CATALOGUE: tuple[Template, ...] = (
     QUESTIONS
     + WHYS
@@ -1002,6 +1094,8 @@ CATALOGUE: tuple[Template, ...] = (
     + CONFLICT_RULES
     + CONFLICT_WHYS
     + CURRENCY
+    + DOCUMENT_NAMES
+    + DOCUMENT_NOTES
 )
 
 #: Parameters that are themselves keyed sentences, and the catalogue and
@@ -1125,10 +1219,11 @@ def _document_item(text: str) -> MessageRef | None:
         document, inner = text[: found.start()], text[found.end() : -1]
         reasons = _split_reasons(inner, ", ") if document else None
         if reasons:
+            name = document_name_message(document)  # I18N-3: the name in the reader's words
             return MessageRef(
                 key="stale.documentItem",
                 params={"document": document, "reasons": inner},
-                parts={"reasons": list(reasons)},
+                parts={"reasons": list(reasons), **({"document": [name]} if name else {})},
             )
     return None
 
@@ -1228,6 +1323,5 @@ def annotate_result(result: ProgramResult) -> ProgramResult:
     if result.funding_gap is not None:
         annotate_gap(result.funding_gap)
     if result.checklist is not None:
-        for question in result.checklist.unresolved:
-            annotate_question(question)
+        annotate_checklist(result.checklist)
     return result

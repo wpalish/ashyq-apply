@@ -527,6 +527,23 @@ function DocumentQuestions({ questions }: { questions: UnresolvedQuestion[] }) {
  * checklist leaves open. A row with no checklist shows why there is none when
  * the document stage said so, instead of asking to approve it again.
  */
+/**
+ * A suggested step with the document names in it said in the reader's words
+ * (I18N-3). The step is the backend's English ("You: Passport identity page
+ * (copy) (allow ~1 day) — after Offer letter"); the checklist's own items carry
+ * the key of each name. A name with no key stays as written, and `localStep`
+ * then says the owner, the lead time and "after" in the reader's language.
+ */
+function namedStep(step: string, names: Map<string, string>): string {
+  const owner = /^[^:]+: /.exec(step)?.[0] ?? '';
+  let rest = step.slice(owner.length);
+  const name = [...names.keys()].filter((n) => rest.startsWith(n)).sort((a, b) => b.length - a.length)[0];
+  if (name !== undefined) rest = `${names.get(name)}${rest.slice(name.length)}`;
+  rest = rest.replace(/ — after (.+)$/, (_whole, what: string) =>
+    ` — after ${what.split(', ').map((n) => names.get(n) ?? n).join(', ')}`);
+  return `${owner}${rest}`;
+}
+
 function Documents({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   const { t, tf } = useTranslation();
   const c = result.checklist;
@@ -540,6 +557,10 @@ function Documents({ result, knowledgeMode }: { result: ProgramResult; knowledge
     );
   }
   const items = [...c.admission_documents, ...c.scholarship_documents];
+  const names = new Map(
+    [...items, ...c.applicant_actions, ...c.school_actions, ...c.recommender_actions, ...c.certification_actions]
+      .map((d) => [d.name, localize(d.name_message, d.name)] as const),
+  );
   return (
     <div className="stack stack--tight">
       <div className="row">
@@ -556,7 +577,7 @@ function Documents({ result, knowledgeMode }: { result: ProgramResult; knowledge
           return (
             <li key={`${d.name}-${i}`} className="small" data-testid="document-item">
               <div className="row row--tight">
-                <strong>{d.name}</strong>
+                <strong>{localize(d.name_message, d.name)}</strong>
                 <Chip tone={requirementTone[requirement]}>{t(`detail.docs.${requirement}`)}</Chip>
                 <span className="xs muted">{t(`detail.docs.owner.${d.owner}`)}</span>
                 {claim?.is_stale && <Chip tone="warn">{localStaleChip(claim.age_days, stale !== null)}</Chip>}
@@ -574,7 +595,7 @@ function Documents({ result, knowledgeMode }: { result: ProgramResult; knowledge
         <>
           <p className="xs faint" style={{ margin: 0 }}>{t('detail.docs.order')}</p>
           <ol className="stack stack--tight" style={{ paddingLeft: '1.1rem', margin: 0 }}>
-            {c.ordered_steps.map((s, i) => <li key={i} className="small">{localStep(s.replace(/^\d+\.\s*/, ''))}</li>)}
+            {c.ordered_steps.map((s, i) => <li key={i} className="small">{localStep(namedStep(s.replace(/^\d+\.\s*/, ''), names))}</li>)}
           </ol>
         </>
       )}

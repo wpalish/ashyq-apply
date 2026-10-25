@@ -42,6 +42,8 @@ from app.domain.message_keys import (
     COVERAGE,
     DEGREE_REASONS,
     DOCUMENT_ITEMS,
+    DOCUMENT_NAMES,
+    DOCUMENT_NOTES,
     FUNDING,
     KNOCKOUTS,
     QUESTIONS,
@@ -53,6 +55,8 @@ from app.domain.message_keys import (
     annotate_conflict,
     annotate_result,
     conflict_why,
+    document_name_message,
+    document_notes_messages,
     match,
     match_sentences,
     stale_rates_message,
@@ -362,6 +366,8 @@ class TestTheSentencesThePipelineWritesAreRecognised:
             CONFLICT_LABELS,
             CONFLICT_SUBJECTS,
             CONFLICT_RULES,
+            DOCUMENT_NAMES,
+            DOCUMENT_NOTES,
         )
         for group in groups:
             for template in group:
@@ -1198,3 +1204,186 @@ class TestTheDemoServesEveryResultsSentenceKeyed:
                 assert item["why_message"]["key"] == "conflict.why"
         for c in client.get(f"/api/runs/{run['id']}/conflicts").json():
             assert c["subject_message"]
+
+
+# --- I18N-3: the Documents screen's names and notes ---------------------------
+
+_ACTION_LISTS = (
+    "applicant_actions",
+    "school_actions",
+    "recommender_actions",
+    "certification_actions",
+)
+_DOCUMENT_LISTS = ("admission_documents", "scholarship_documents", *_ACTION_LISTS)
+
+
+class TestTheDocumentsScreenIsRecognised:
+    def test_every_document_kind_has_a_template_and_every_template_a_kind(self):
+        from app.knowledge.documents import EXTRA_KINDS, LIVE_KINDS
+
+        kinds = {**LIVE_KINDS, **{kind: name for kind, (name, _owner) in EXTRA_KINDS.items()}}
+        assert {t.key: t.text for t in DOCUMENT_NAMES} == {
+            f"document.{kind}": name for kind, name in kinds.items()
+        }
+        assert len(DOCUMENT_NAMES) == 18
+        for kind, name in kinds.items():
+            ref = document_name_message(name)
+            assert ref is not None and ref.key == f"document.{kind}" and ref.params == {}
+
+    def test_a_name_outside_the_vocabulary_keeps_its_english(self):
+        assert document_name_message("Offer letter") is None
+        assert document_name_message("Portfolio of drawings") is None
+
+    def test_a_stale_conditional_item_is_keyed_sentence_by_sentence(self):
+        notes = (
+            "Required only when: the original document is not in Chinese or English. "
+            'Possibly outdated: document list published for "2026 Admission Information on '
+            'Chinese-taught Undergraduate Programs", not the fall 2027 intake; verified on '
+            "2024-01-01, more than 365 days ago."
+        )
+        condition, outdated = document_notes_messages(notes)
+        assert condition is not None and condition.key == "document.note.conditionWhen"
+        assert condition.params == {
+            "condition": "the original document is not in Chinese or English"
+        }
+        assert outdated is not None and outdated.key == "document.note.possiblyOutdated"
+        assert [r.key for r in outdated.parts["reasons"] if r] == [
+            "stale.documentsForCycle",
+            "stale.tooOld",
+        ]
+        assert outdated.parts["reasons"][0].params["cycle"] == (  # type: ignore[union-attr]
+            "2026 Admission Information on Chinese-taught Undergraduate Programs"
+        )
+
+    def test_a_reason_holding_the_separator_is_regrouped(self):
+        notes = (
+            'Possibly outdated: document list published for "Guide; 2026", not the fall 2027 '
+            "intake."
+        )
+        (outdated,) = document_notes_messages(notes)
+        assert outdated is not None
+        (reason,) = outdated.parts["reasons"]
+        assert reason is not None and reason.params["cycle"] == "Guide; 2026"
+
+    @pytest.mark.parametrize(
+        ("notes", "keys"),
+        [
+            ("Optional, as published.", ["document.note.optional"]),
+            ("Conditional, as published.", ["document.note.conditional"]),
+            ("", []),
+            ("PDF, JPG", [None]),
+            ("Possibly outdated: withdrawn by the page.", [None]),
+            ("Optional, as published. Possibly outdated: no verification date.",
+             ["document.note.optional", "document.note.possiblyOutdated"]),
+        ],
+    )  # fmt: skip
+    def test_each_note_shape(self, notes, keys):
+        assert [r.key if r else None for r in document_notes_messages(notes)] == keys
+
+    def test_the_kb_checklist_is_annotated_on_the_way_out(self):
+        from app.knowledge.documents import kb_checklist
+        from tests.test_knowledge_documents import MIT, _doc_fact, _mit_entry, kb_entry
+
+        reason = 'document list published for "Guide 2026", not the fall 2027 intake'
+        facts = [
+            _doc_fact(
+                "secondary_diploma",
+                "Diploma",
+                "conditional",
+                condition="the original is not in English",
+                stale_reasons=[reason],
+                verified_on="2024-01-01",
+                accessed_on="2024-01-01",
+            ),
+            _doc_fact("passport", "Passport", "optional"),
+            _doc_fact("application_form", "Form"),
+        ]
+        entry = kb_entry(MIT, _mit_entry(documents=facts), "kb.json")
+        built = kb_checklist(
+            entry, university="MIT", programme="CS", intake="fall 2027", today=date(2026, 10, 20)
+        )
+        assert built is not None
+        stored = built[0].model_dump(mode="json")
+        served = annotate_result(_kb_row(checklist=stored)).model_dump(mode="json")["checklist"]
+        diploma, passport, form = served["admission_documents"]
+        assert diploma["name_message"]["key"] == "document.secondary_diploma"
+        assert [m["key"] for m in diploma["notes_messages"]] == [
+            "document.note.conditionWhen",
+            "document.note.possiblyOutdated",
+        ]
+        assert [r["key"] for r in diploma["notes_messages"][1]["parts"]["reasons"]] == [
+            "stale.tooOld",
+            "stale.documentsForCycle",
+        ]
+        assert passport["notes_messages"][0]["key"] == "document.note.optional"
+        assert form["name_message"]["key"] == "document.application_form"
+        assert form["notes_messages"] == []
+        # The action lists hold the same items and are said the same way.
+        actions = [d for group in _ACTION_LISTS for d in served[group]]
+        assert actions and all(d["name_message"] for d in actions)
+        # The stale-list question names each document in the reader's words too.
+        question = next(q for q in served["unresolved"] if q.get("why_message"))
+        assert question["why_message"]["key"] == "why.documentsNotCurrent"
+        (item,) = question["why_message"]["parts"]["documents"]
+        assert item["parts"]["document"][0]["key"] == "document.secondary_diploma"
+        # Nothing is stored: removing the two served fields gives back the stored list.
+        assert "name_message" not in str(stored) and "notes_messages" not in str(stored)
+        for group in _DOCUMENT_LISTS:
+            for d in served[group]:
+                d.pop("name_message", None)
+                d.pop("notes_messages")
+            assert served[group] == stored[group], group
+
+    def test_an_unannotated_item_dumps_without_the_new_keys(self):
+        checklist = {
+            "result_id": "r",
+            "university": "Example University",
+            "program": "CS",
+            "admission_documents": [
+                {"name": "Portfolio", "purpose": "admission", "owner": "applicant"}
+            ],
+        }
+        item = _kb_row(checklist=checklist).model_dump(mode="json")["checklist"][
+            "admission_documents"
+        ][0]
+        assert "name_message" not in item and "notes_messages" not in item
+
+
+class TestTheDemoChecklistIsServedKeyed:
+    def test_a_live_checklist_keys_its_names_and_stores_nothing(self, client, finished_run):  # noqa: F811
+        import asyncio
+
+        from tests.test_api import drain_queue
+
+        _profile, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        )
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 1
+        served = client.get(f"/api/runs/{run['id']}/results/{result['id']}").json()["checklist"]
+        items = served["admission_documents"] + served["scholarship_documents"]
+        assert items and all("notes_messages" in d for d in items)
+        known = {t.text for t in DOCUMENT_NAMES}
+        for d in items:
+            if d["name"] in known:
+                assert d["name_message"]["key"].startswith("document."), d["name"]
+            else:
+                assert "name_message" not in d, d["name"]
+        assert any(d.get("name_message") for d in items), "the demo names a known kind"
+
+        import app.db as db_module
+        from app.models import ProgramResultRow
+
+        with db_module.SessionLocal() as session:
+            row = session.get(ProgramResultRow, result["id"])
+            assert row is not None
+            stored = row.payload["checklist"]
+        assert "name_message" not in str(stored) and "notes_messages" not in str(stored)
+        for group in _DOCUMENT_LISTS:
+            for d in served[group]:
+                d.pop("name_message", None)
+                d.pop("notes_messages")
+            assert served[group] == stored[group], group

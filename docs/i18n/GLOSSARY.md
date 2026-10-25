@@ -63,6 +63,25 @@ conflicts, the Documents screen). Also provisional; each poses the question besi
 | not a contradiction / scope difference | это не противоречие | бұл қайшылық емес | Distinct from "расхождение" / "сәйкессіздік" (conflict) as the glossary requires? |
 | lead time ("allow ~30 days") | заложите ~N дней | (existing `detail.docs.leadTime`) | — |
 
+Added by I18N-3 (2026-10-20: the Documents screen's 18 document names, `msg.document.<kind>`, and its
+four note sentences, `msg.document.note.*`). The names are our vocabulary, not a university's words.
+Also provisional; each poses the question beside it.
+
+| Term | Russian | Kazakh | The question to answer |
+|---|---|---|---|
+| (full academic) transcript | выписка оценок (транскрипт) | бағалардың транскрипті | Do Kazakhstani applicants say "транскрипт", or "приложение к аттестату" / "аттестатқа қосымша" for a school record? |
+| secondary school diploma | аттестат о среднем образовании | орта білім туралы аттестат | Right for a Kazakhstani school leaver; is a separate word needed for a foreign high-school diploma? |
+| certified (copy, translation) | заверенная копия / заверенный перевод | куәландырылған көшірме / аударма | "Certified" by whom: a school, a notary or a sworn translator? The English does not say, and neither may the translation. |
+| notarised copy (flag `needs_notarization`) | нотариальное заверение | нотариат куәландыруы | Same word as the existing `documents.notarisation` chip; is it distinct enough from "certified" above? |
+| apostille (certification) | заверение апостилем | апостильмен куәландыру | Is "апостилирование" the term an applicant would search for? |
+| course-by-course credential evaluation (WES/ECE) | попредметная оценка документов об образовании | білім туралы құжаттарды пән бойынша бағалау | Not "нострификация" (a different procedure); does "попредметная" read as WES's course-by-course report? |
+| personal statement | личное заявление | жеке мәлімдеме | UK/US sense (an essay about oneself), not an application form; is "личное эссе" clearer, and then how is it told apart from "Personal Essay" (личное эссе / жеке эссе)? |
+| statement of motivation | мотивационное письмо | мотивациялық хат | The established term; does it collide with "personal statement" for a reader? |
+| academic reference | рекомендация от преподавателя | оқытушының ұсынымы | A reference from a teacher; distinct from "letter of recommendation" (рекомендательное письмо / ұсыным хат)? |
+| proof of financial resources | подтверждение наличия финансовых средств | қаржы қаражатының бар екенін растау | Is "справка о финансовой состоятельности" what a bank or embassy would call it? |
+| "as published" (optional / conditional notes) | как опубликовано | жарияланғандай | Same as `detail.docs.condition`; does it read as "as the university states it", not "as printed by us"? |
+| possibly outdated | возможно, устарело | ескірген болуы мүмкін | Must stay weaker than "не актуально" / "өзекті емес" (the stale chip); does it? |
+
 ## Settled
 
 Ordinary interface words with no product-specific meaning — Save, Cancel,

@@ -363,6 +363,10 @@ export interface DocumentItem {
   lead_time_days: number | null;
   source_url: string | null;
   claim_ids: string[];
+  /** Served only (I18N-3): the key of `name` when it is one of the 18 document kinds. */
+  name_message?: MessageRef | null;
+  /** Served only (I18N-3): one key per sentence of `format_notes`, null where none matched. */
+  notes_messages?: (MessageRef | null)[] | null;
 }
 
 export interface DocumentChecklist {

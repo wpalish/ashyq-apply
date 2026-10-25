@@ -37,7 +37,7 @@ import { DEFAULT_PROFILE } from '../src/lib/defaultProfile';
 import { EN_RESULTS, KK_RESULTS, RU_RESULTS, type ResultsKey } from '../src/lib/i18n.results';
 import { caveatText, staleReason } from '../src/lib/format';
 import type { UniversityCandidate, UniversityCatalogue } from '../src/api/client';
-import type { ClaimOut, MessageRef, ProgramResult, RunView } from '../src/types';
+import type { ClaimOut, DocumentItem, MessageRef, ProgramResult, RunView } from '../src/types';
 import { NETGUARD_LOG } from './kb-env/paths';
 
 const CASES = {
@@ -227,6 +227,26 @@ function staleOf(w: Words, claim: ClaimOut): string {
   const pieces = english!.split('; ');
   if (w.locale === 'en' || pieces.length !== keyed.length) return english!;
   return pieces.map((piece, i) => w.msg(keyed[i], piece)).join('; ');
+}
+
+/** A checklist item by its served English name; it must carry its name's key (I18N-3). */
+function documentOf(row: ProgramResult, name: string): DocumentItem {
+  const found = [...row.checklist!.admission_documents, ...row.checklist!.scholarship_documents].find((d) => d.name === name);
+  expect(found?.name_message, `${row.university} lists ${name}, keyed`).toBeTruthy();
+  return found!;
+}
+
+/** A document's name in the locale, as the Documents screen and the detail tab say it (I18N-3). */
+function nameOf(w: Words, row: ProgramResult, name: string): string {
+  return w.msg(documentOf(row, name).name_message, name);
+}
+
+/** A document's `format_notes` in the locale, sentence by sentence, as `localNotes` says it (I18N-3). */
+function notesOf(w: Words, d: DocumentItem): string {
+  const sentences = d.format_notes.split(/(?<=\.) +(?=[A-Z])/);
+  const keyed = d.notes_messages ?? [];
+  if (w.locale === 'en' || sentences.length !== keyed.length) return d.format_notes;
+  return sentences.map((sentence, i) => w.msg(keyed[i], sentence)).join(' ');
 }
 
 async function text(locator: Locator): Promise<string> {
@@ -470,7 +490,10 @@ for (const locale of LOCALES) {
         .find((v): v is { requirement: string; condition: string } => typeof v === 'object' && v.requirement === 'conditional')!;
       await expect(detail).toContainText(w.t('detail.docs.conditional'));
       await expect(detail).toContainText(w.tf('detail.docs.condition', { condition: conditional.condition.replace(/\.$/, '') }));
-      await expect(detail).toContainText(`${w.t('detail.docs.step.school')}: Secondary school diploma (certified copy) (${w.tn('detail.docs.leadTime', 21)})`);
+      const diploma = nameOf(w, rows.fudan, 'Secondary school diploma (certified copy)');
+      await expect(items.filter({ hasText: diploma })).toHaveCount(1);
+      await expect(detail).toContainText(`${w.t('detail.docs.step.school')}: ${diploma} (${w.tn('detail.docs.leadTime', 21)})`);
+      if (locale !== 'en') expect(await text(detail)).not.toContain('Secondary school diploma');
       const listQuestion = checklist.unresolved[0]!;
       await expect(detail.getByTestId('document-questions')).toContainText(w.msg(listQuestion.question_message, listQuestion.question));
       await close();
@@ -494,8 +517,8 @@ for (const locale of LOCALES) {
       const all = await text(detail);
       expect(count(all, w.t('detail.docs.owner.recommender'))).toBeGreaterThan(0);
       await expect(detail).toContainText(w.t('detail.docs.order'));
-      await expect(detail).toContainText(`${w.t('detail.docs.step.applicant')}: Passport identity page (copy) (${w.tn('detail.docs.leadTime', 1)})`);
-      await expect(detail).toContainText(`${w.t('detail.docs.step.recommender')}: Academic reference (${w.tn('detail.docs.leadTime', 30)})`);
+      await expect(detail).toContainText(`${w.t('detail.docs.step.applicant')}: ${nameOf(w, rows.edinburgh, 'Passport identity page (copy)')} (${w.tn('detail.docs.leadTime', 1)})`);
+      await expect(detail).toContainText(`${w.t('detail.docs.step.recommender')}: ${nameOf(w, rows.edinburgh, 'Academic reference')} (${w.tn('detail.docs.leadTime', 30)})`);
       expect(all).not.toContain('~1 days');
       if (locale !== 'en') expect(all).not.toMatch(/(^|\s)(You|Your school|Your referee|A third party): /);
       await tab('costs');
@@ -549,6 +572,20 @@ for (const locale of LOCALES) {
     await expect(page.getByTestId(`doc-tab-${rows.sheffield.id}`)).toHaveCount(0);
     await page.getByTestId(`doc-tab-${rows.fudan.id}`).click();
     await expect(page.locator('main')).toContainText(w.t('detail.docs.kb.partial'));
+    // I18N-3: every name is one of the 18 kinds, and every note (the condition,
+    // "possibly outdated" with its reason) is a keyed sentence: said in the locale.
+    for (const d of rows.fudan.checklist!.admission_documents) {
+      await expect(page.locator('main')).toContainText(nameOf(w, rows.fudan, d.name));
+      if (!d.format_notes) continue;
+      expect(d.notes_messages?.length && d.notes_messages.every(Boolean), d.format_notes).toBeTruthy();
+      await expect(page.locator('main')).toContainText(notesOf(w, d));
+    }
+    if (locale !== 'en') {
+      const fudanScreen = await text(page.locator('main'));
+      expect(fudanScreen).not.toContain('Possibly outdated');
+      expect(fudanScreen).not.toContain('Required only when');
+      expect(fudanScreen).not.toContain('Secondary school diploma');
+    }
     await page.getByTestId(`doc-tab-${rows.edinburgh.id}`).click();
     await expect(page.locator('main')).toContainText(w.t('detail.docs.kb.official'));
     await expect(page.locator('main')).toContainText(w.tn('detail.docs.leadTime', 1));

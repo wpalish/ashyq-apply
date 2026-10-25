@@ -1009,6 +1009,53 @@ export const EN_RESULTS = {
   'msg.currency.staleRates':
     'These conversions use exchange rates from {date}, {days} days old. Treat converted amounts as indicative and check the current rate before relying on one.',
 
+  // --- I18N-3: the Documents screen — the 18 document names (our vocabulary, not a
+  // university's words) and the sentences of `DocumentItem.format_notes`.
+  'msg.document.transcript':
+    'Full academic transcript',
+  'msg.document.secondary_diploma':
+    'Secondary school diploma (certified copy)',
+  'msg.document.translation':
+    'Certified English translation of non-English documents',
+  'msg.document.apostille':
+    'Apostille certification',
+  'msg.document.credential_evaluation':
+    'Course-by-course credential evaluation (WES/ECE)',
+  'msg.document.passport':
+    'Passport identity page (copy)',
+  'msg.document.photo':
+    'Passport-size photograph (digital image)',
+  'msg.document.personal_statement':
+    'Personal statement',
+  'msg.document.motivation_letter':
+    'Statement of motivation',
+  'msg.document.essay':
+    'Personal Essay',
+  'msg.document.recommendation_letter':
+    'Letter of recommendation',
+  'msg.document.academic_reference':
+    'Academic reference',
+  'msg.document.cv':
+    'Curriculum vitae',
+  'msg.document.portfolio':
+    'Portfolio',
+  'msg.document.financial_proof':
+    'Proof of financial resources',
+  'msg.document.english_test_report':
+    'English language test report',
+  'msg.document.entrance_test':
+    'Admission test result',
+  'msg.document.application_form':
+    'Application form',
+  'msg.document.note.optional':
+    'Optional, as published.',
+  'msg.document.note.conditional':
+    'Conditional, as published.',
+  'msg.document.note.conditionWhen':
+    'Required only when: {condition}.',
+  'msg.document.note.possiblyOutdated':
+    'Possibly outdated: {reasons}.',
+
   // --- the catalogue cards in kb mode (CAT-1) -------------------------------
   'catalogue.kb.coverage': '{n} of {total} universities have verified data',
   'catalogue.kb.filter': 'Verified data only',
@@ -2017,6 +2064,52 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
   'msg.currency.staleRates':
     'Пересчёт использует курсы валют на {date}, им {days} дн. Считайте пересчитанные суммы ориентировочными и проверьте текущий курс, прежде чем на них полагаться.',
 
+  // --- I18N-3: document names and notes (provisional terms: docs/i18n/GLOSSARY.md)
+  'msg.document.transcript':
+    'Полная выписка оценок (транскрипт)',
+  'msg.document.secondary_diploma':
+    'Аттестат о среднем образовании (заверенная копия)',
+  'msg.document.translation':
+    'Заверенный перевод на английский документов, составленных не на английском',
+  'msg.document.apostille':
+    'Заверение апостилем',
+  'msg.document.credential_evaluation':
+    'Попредметная оценка документов об образовании (WES/ECE)',
+  'msg.document.passport':
+    'Страница паспорта с личными данными (копия)',
+  'msg.document.photo':
+    'Фотография паспортного формата (в электронном виде)',
+  'msg.document.personal_statement':
+    'Личное заявление',
+  'msg.document.motivation_letter':
+    'Мотивационное письмо',
+  'msg.document.essay':
+    'Личное эссе',
+  'msg.document.recommendation_letter':
+    'Рекомендательное письмо',
+  'msg.document.academic_reference':
+    'Рекомендация от преподавателя',
+  'msg.document.cv':
+    'Резюме (CV)',
+  'msg.document.portfolio':
+    'Портфолио',
+  'msg.document.financial_proof':
+    'Подтверждение наличия финансовых средств',
+  'msg.document.english_test_report':
+    'Результаты теста по английскому языку',
+  'msg.document.entrance_test':
+    'Результат вступительного теста',
+  'msg.document.application_form':
+    'Форма заявления',
+  'msg.document.note.optional':
+    'По желанию, как опубликовано.',
+  'msg.document.note.conditional':
+    'Требуется при определённых условиях, как опубликовано.',
+  'msg.document.note.conditionWhen':
+    'Требуется, только если: {condition}.',
+  'msg.document.note.possiblyOutdated':
+    'Возможно, устарело: {reasons}.',
+
   'catalogue.kb.coverage': 'Проверенные данные есть у {n} из {total} университетов',
   'catalogue.kb.filter': 'Только с проверенными данными',
   'catalogue.kb.chip': 'Проверенная база знаний',
@@ -3022,6 +3115,52 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     'Ресми дереккөздер «{subject}» бойынша сәйкес келмейді: {values}',
   'msg.currency.staleRates':
     'Айырбастау {date} күнгі валюта бағамдарын пайдаланады, олардың жасы {days} күн. Айырбасталған сомаларды шамамен деп санаңыз және оларға сүйенбес бұрын ағымдағы бағамды тексеріңіз.',
+
+  // --- I18N-3: document names and notes (provisional terms: docs/i18n/GLOSSARY.md)
+  'msg.document.transcript':
+    'Бағалардың толық транскрипті',
+  'msg.document.secondary_diploma':
+    'Орта білім туралы аттестат (куәландырылған көшірме)',
+  'msg.document.translation':
+    'Ағылшын тілінде емес құжаттардың ағылшын тіліне куәландырылған аудармасы',
+  'msg.document.apostille':
+    'Апостильмен куәландыру',
+  'msg.document.credential_evaluation':
+    'Білім туралы құжаттарды пән бойынша бағалау (WES/ECE)',
+  'msg.document.passport':
+    'Төлқұжаттың жеке деректер беті (көшірме)',
+  'msg.document.photo':
+    'Төлқұжат өлшеміндегі фотосурет (электрондық түрде)',
+  'msg.document.personal_statement':
+    'Жеке мәлімдеме',
+  'msg.document.motivation_letter':
+    'Мотивациялық хат',
+  'msg.document.essay':
+    'Жеке эссе',
+  'msg.document.recommendation_letter':
+    'Ұсыным хат',
+  'msg.document.academic_reference':
+    'Оқытушының ұсынымы',
+  'msg.document.cv':
+    'Түйіндеме (CV)',
+  'msg.document.portfolio':
+    'Портфолио',
+  'msg.document.financial_proof':
+    'Қаржы қаражатының бар екенін растау',
+  'msg.document.english_test_report':
+    'Ағылшын тілі тестінің нәтижелері',
+  'msg.document.entrance_test':
+    'Түсу тестінің нәтижесі',
+  'msg.document.application_form':
+    'Өтініш нысаны',
+  'msg.document.note.optional':
+    'Қалауыңыз бойынша, жарияланғандай.',
+  'msg.document.note.conditional':
+    'Белгілі бір шартпен талап етіледі, жарияланғандай.',
+  'msg.document.note.conditionWhen':
+    'Тек мына жағдайда талап етіледі: {condition}.',
+  'msg.document.note.possiblyOutdated':
+    'Ескірген болуы мүмкін: {reasons}.',
 
   'catalogue.kb.coverage': '{total} университеттің {n}-інде тексерілген деректер бар',
   'catalogue.kb.filter': 'Тек тексерілген деректері барлар',

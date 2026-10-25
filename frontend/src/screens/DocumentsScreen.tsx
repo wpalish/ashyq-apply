@@ -5,8 +5,11 @@
  * A reference letter with a thirty-day lead time is the thing that actually
  * sinks an application, not the form you can fill in on the last evening.
  *
- * Every fixed label goes through `t()` (I18N-2); document names, format notes
- * and prompts are the university's own words and stay as published.
+ * Every fixed label goes through `t()` (I18N-2). A document name from our
+ * 18-kind vocabulary and the sentences the backend writes into `format_notes`
+ * (optional, conditional, possibly outdated) come with keys and are said in
+ * the reader's language (I18N-3); anything unkeyed — a prompt, a name a live
+ * page used, a condition as the university wrote it — stays as published.
  */
 
 import { useMemo, useState } from 'react';
@@ -173,6 +176,21 @@ export function DocumentsScreen() {
 /** What a document asks for beyond its name, in the reader's language. */
 type Say = Pick<ReturnType<typeof useTranslation>, 't' | 'tf' | 'tn'>;
 
+/**
+ * `format_notes` sentence by sentence, each in the reader's language when the
+ * backend keyed it. The cut is the backend's (`message_keys._NOTE_END`: a full
+ * stop, spaces, a capital), so the n-th sentence meets the n-th key; when the
+ * counts differ the served English is shown whole.
+ */
+function localNotes(d: Pick<DocumentItem, 'format_notes' | 'notes_messages'>): string {
+  const notes = d.format_notes.trim();
+  const keyed = d.notes_messages;
+  if (!notes || !keyed) return notes;
+  const sentences = notes.split(/(?<=\.) +(?=[A-Z])/);
+  if (sentences.length !== keyed.length) return notes;
+  return sentences.map((sentence, i) => localize(keyed[i], sentence)).join(' ');
+}
+
 function documentMeta(d: DocumentItem, { t, tf, tn }: Say): string {
   return [
     d.purpose === 'scholarship' ? t('documents.forScholarship') : t('documents.forAdmission'),
@@ -180,7 +198,7 @@ function documentMeta(d: DocumentItem, { t, tf, tn }: Say): string {
     d.word_limit ? tf('documents.maxWords', { n: d.word_limit }) : null,
     d.max_pages ? tf('documents.maxPages', { n: d.max_pages }) : null,
     d.max_file_size_mb ? tf('documents.maxSize', { n: d.max_file_size_mb }) : null,
-    d.format_notes || null,
+    localNotes(d) || null,
     d.needs_translation ? t('documents.translation') : null,
     d.needs_notarization ? t('documents.notarisation') : null,
     d.needs_apostille ? t('documents.apostille') : null,
@@ -246,7 +264,7 @@ function ChecklistFor({
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
                     <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
                     <div>
-                      <div className="doc__name">{d.name}</div>
+                      <div className="doc__name">{localize(d.name_message, d.name)}</div>
                       <div className="doc__meta">{documentMeta(d, { t, tf, tn })}</div>
                       {d.prompt_text && (
                         <p className="xs faint" style={{ margin: '4px 0 0' }}>{d.prompt_text}</p>

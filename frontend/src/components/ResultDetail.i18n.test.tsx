@@ -224,3 +224,83 @@ describe('the backend\'s explanations on the results tabs (I18N-2)', () => {
     expect(screen.getByText('«Климат» бойынша қалау көрсетілмеген.')).toBeTruthy();
   });
 });
+
+const DIPLOMA = 'Secondary school diploma (certified copy)';
+const PASSPORT = 'Passport identity page (copy)';
+
+/** I18N-3: a Fudan-shaped checklist — a stale conditional diploma, a passport after it, and an unkeyed name. */
+function documentsResult(): ProgramResult {
+  const item = (name: string, owner: string, extra: Record<string, unknown> = {}) => ({
+    name, purpose: 'admission', owner, required: false, format_notes: '', lead_time_days: null,
+    word_limit: null, max_pages: null, max_file_size_mb: null, needs_translation: false,
+    needs_notarization: false, needs_apostille: false, needs_credential_evaluation: false,
+    prompt_text: null, deadline: null, depends_on: [], claim_ids: [], source_url: null, ...extra,
+  });
+  const diploma = item(DIPLOMA, 'school', {
+    lead_time_days: 21,
+    name_message: { key: 'document.secondary_diploma', params: {} },
+    notes_messages: [{ key: 'document.note.conditionWhen', params: { condition: 'the original is not in English' } }],
+    format_notes: 'Required only when: the original is not in English.',
+  });
+  const passport = item(PASSPORT, 'applicant', {
+    lead_time_days: 1, depends_on: [DIPLOMA], name_message: { key: 'document.passport', params: {} },
+  });
+  const offer = item('Offer letter', 'applicant');
+  return {
+    ...result(),
+    unresolved: [],
+    claims: [{
+      id: 'c1', claim_type: 'required_document', source_url: 'https://example.edu/docs', status: 'POSSIBLY_STALE',
+      normalized_value: { document: DIPLOMA, requirement: 'conditional', condition: 'the original is not in English' },
+      notes: 'Stale, not current: no verification date.', is_stale: true, age_days: 0,
+      stale_messages: [{ key: 'stale.noDate', params: {} }],
+    }],
+    checklist: {
+      result_id: 'result-1', university: 'Example University', program: 'Data Science',
+      admission_documents: [diploma, passport, offer], scholarship_documents: [],
+      applicant_actions: [passport, offer], school_actions: [diploma], recommender_actions: [], certification_actions: [],
+      ordered_steps: [
+        `1. Your school: ${DIPLOMA} (allow ~21 days)`,
+        `2. You: ${PASSPORT} (allow ~1 day) — after ${DIPLOMA}, Offer letter`,
+        '3. You: Offer letter',
+      ],
+      unresolved: [], generated_at: null, completeness: 'partial',
+    },
+  } as unknown as ProgramResult;
+}
+
+describe('the documents tab names the documents in the reader\'s words (I18N-3)', () => {
+  it('is the served English in English', () => {
+    render(<ResultDetail result={documentsResult()} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+    expect(screen.getByText(DIPLOMA)).toBeTruthy();
+    expect(screen.getByText(`Your school: ${DIPLOMA} (allow ~21 days)`)).toBeTruthy();
+    expect(screen.getByText(`You: ${PASSPORT} (allow ~1 day) — after ${DIPLOMA}, Offer letter`)).toBeTruthy();
+  });
+
+  it('re-renders in Russian: names, steps and what a step waits for', () => {
+    render(<ResultDetail result={documentsResult()} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+    act(() => setLocale('ru'));
+    expect(screen.getByText('Аттестат о среднем образовании (заверенная копия)')).toBeTruthy();
+    expect(screen.getByText('Страница паспорта с личными данными (копия)')).toBeTruthy();
+    expect(screen.getByText('Условие, как опубликовано: the original is not in English.')).toBeTruthy();
+    expect(screen.getByText('Ваша школа: Аттестат о среднем образовании (заверенная копия) (заложите ~21 день)')).toBeTruthy();
+    expect(screen.getByText(
+      'Вы: Страница паспорта с личными данными (копия) (заложите ~1 день) — после: ' +
+        'Аттестат о среднем образовании (заверенная копия), Offer letter',
+    )).toBeTruthy();
+    // A name outside the 18-kind vocabulary keeps its English.
+    expect(screen.getAllByText('Offer letter').length).toBeGreaterThan(0);
+    expect(document.body.textContent).not.toContain(DIPLOMA);
+  });
+
+  it('re-renders in Kazakh', () => {
+    act(() => setLocale('kk'));
+    render(<ResultDetail result={documentsResult()} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+    expect(screen.getByText('Орта білім туралы аттестат (куәландырылған көшірме)')).toBeTruthy();
+    expect(screen.getByText('Мектебіңіз: Орта білім туралы аттестат (куәландырылған көшірме) (~21 күн уақыт бөліңіз)')).toBeTruthy();
+    expect(document.body.textContent).not.toContain(PASSPORT);
+  });
+});

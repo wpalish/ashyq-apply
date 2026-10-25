@@ -306,6 +306,11 @@ class DocumentItem(Base):
     #: means nobody recorded a scope — not that the document is universal.
     #: Phase 3 §9: "store source and scope for each required document".
     scope: ClaimScope | None = None
+    #: I18N-3, served only (``message_keys.annotate_checklist``): the key of
+    #: ``name`` when it is one of the 18 document kinds, and one key per
+    #: sentence of ``format_notes`` (None where no template knows the sentence).
+    name_message: MessageRef | None = Field(default=None, exclude_if=_absent)
+    notes_messages: list[MessageRef | None] | None = Field(default=None, exclude_if=_absent)
 
     @model_serializer(mode="wrap")
     def _omit_unrecorded_scope(self, handler):
