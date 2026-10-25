@@ -2031,9 +2031,11 @@ class TestTheWalkerUsesOnePredicate:
             Path(__file__).resolve().parents[1] / "app/adapters/discovery/catalog_walker.py"
         ).read_text(encoding="utf-8")
         # CG-1 adds keyword arguments after the three; the fields stay the third.
-        assert (
-            " ".join(source.split()).count("profile_rejects( page, self.degree, self.fields,") == 1
-        )
+        # Every call judges subject: the walk's own and FRH's follow of a refused hub's link.
+        flat = " ".join(source.split())
+        calls = flat.count("profile_rejects(") - flat.count("import profile_rejects(")
+        assert calls >= 1
+        assert flat.count("profile_rejects( page, self.degree, self.fields,") == calls
         assert "profile_rejects(page, self.degree, [])" not in source
 
 
