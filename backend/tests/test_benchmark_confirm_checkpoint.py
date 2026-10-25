@@ -267,6 +267,57 @@ def test_the_parent_finalises_a_killed_case_with_the_claims_it_had_filed(
     assert "capture_in_progress" not in row
 
 
+def test_the_case_file_beside_the_capture_says_what_killed_the_case(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # HC-1b, runs hc1-dev3 / rp-hc1-dev3: capture.json carried the parent's
+    # finalisation, but unsw.json beside it stayed the child's last checkpoint
+    # (CAPTURE_IN_PROGRESS, no stop_reason, 115-119 s), and that file was read.
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ubc", "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    seen: dict[str, Any] = {}
+
+    def child(command: list[str], **kwargs: Any) -> None:
+        output = Path(command[command.index("--out") + 1])
+        _arrange_filed_then_killed(monkeypatch, output, seen)
+        with pytest.raises(_ParentKill):
+            asyncio.run(live.capture_one("ubc", output, 5, 100))
+        on_disk = Observation.model_validate_json(output.read_text(encoding="utf-8"))
+        assert on_disk.error == "CAPTURE_IN_PROGRESS"
+        assert on_disk.telemetry.stop_reason is None
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    capture_path = next(tmp_path.rglob("capture.json"))
+    capture = Capture.model_validate_json(capture_path.read_text())
+    case_file = Observation.model_validate_json((capture_path.parent / "ubc.json").read_text())
+    assert case_file.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    assert case_file.telemetry.stop_reason == "parent_kill"
+    assert case_file == capture.observations[0]
+    assert [p.key for p in case_file.predictions] == ["ielts.overall", "ielts.subscores"]
+    assert not list(capture_path.parent.glob("*.pending"))
+
+
+def test_a_case_the_child_finished_keeps_its_own_file_byte_for_byte(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ubc", "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    written: dict[str, bytes] = {}
+
+    def child(command: list[str], **kwargs: Any) -> SimpleNamespace:
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="ubc").model_dump_json(indent=2))
+        written["bytes"] = output.read_bytes()
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    capture_path = next(tmp_path.rglob("capture.json"))
+    assert (capture_path.parent / "ubc.json").read_bytes() == written["bytes"]
+
+
 def test_a_child_that_fails_on_its_own_is_not_finalised_as_a_parent_kill(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -284,4 +335,6 @@ def test_a_child_that_fails_on_its_own_is_not_finalised_as_a_parent_kill(
     observation = capture.observations[0]
     assert observation.error == "PROCESS_EXIT_1"
     assert observation.telemetry.stop_reason is None
+    case_file = next(tmp_path.rglob("ubc.json")).read_text()
+    assert Observation.model_validate_json(case_file).error == "PROCESS_EXIT_1"
     assert "stop_reason" not in capture.model_dump_json()

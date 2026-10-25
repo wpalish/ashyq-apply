@@ -3561,6 +3561,16 @@ def main() -> None:
                     latency_seconds=None if args.strict_expert_budget else process_elapsed_seconds
                 ),
             )
+        if error:
+            # HC-1b: the parent's label goes back into ``<case>.json`` too.
+            # Before, only ``capture.json`` carried it and the per-case file
+            # stayed the child's last checkpoint (``CAPTURE_IN_PROGRESS``, no
+            # ``stop_reason``, the checkpoint's latency) — the file read for
+            # unsw in hc1-dev3 / rp-hc1-dev3 (LOOP_REPORT 2026-10-25 18:00).
+            # A case the child finished itself (no ``error``) is not rewritten.
+            pending = output.with_suffix(".pending")
+            pending.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
+            pending.replace(output)
         observations.append(observation)
         if args.strict_expert_budget:
             budget_output = output.with_suffix(".budget.json")
