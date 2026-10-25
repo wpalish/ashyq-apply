@@ -1185,3 +1185,53 @@ SG-1 re-run `sg1b-dev3` / `sg1b-dev4` (no search, `--sitemap-guess-cap`, HC-1 in
 columns (dev3 5/0/0/9, dev4 0/0/0/9 — kit missed in every column, off included), no stable change; reads dev3
 353 / 342 → 335 / 347, dev4 200 / 189 → **202 / 208**. The bar was fewer reads and seconds on both sets.
 **Verdict: SG-1 stays off for good** (NEXT_CYCLES_2026-10-23 §7: no further re-open).
+
+### 2026-10-25 19:35 — WP-1: the cohort recorded wrong page is ubc's Vancouver Calendar page, read because you.ubc.ca's robots.txt timed out ($0)
+
+The question (NEXT_CYCLES_2026-10-26 §2.1, WP-1): `rp-frh2-cohort` (run 40220881831, `8ecf06df`, recorded store
+`recorded_search.base3.json` sha256 `9c526898…`, the same store as 10-20) reads 4/1/0/5 in all four columns where
+`aw2-cohort` (run 39371051329, 10-20 04:43) and `rp-sh1-cohort` (39367911618, 10-20 04:07) read 5/0/0/5. Read with
+`scorecard --dataset ground_truth.reviewed11.json`; artifacts in the worker's scratchpad only; cohort only.
+
+**The case is ubc; the wrong page is
+`https://vancouver.calendar.ubc.ca/faculties-colleges-and-schools/faculty-science/bachelor-science/computer-science`**
+— the Academic Calendar's section for the BSc Computer Science, Vancouver. The gold is
+`https://you.ubc.ca/programs/computer-science-vancouver-bsc/`; the corpus labels the BA page on the same host as
+related and has no label for the Calendar page, so a confirmed Calendar page scores **wrong**.
+
+| run (date, sha) | column | you.ubc.ca robots.txt | ubc access | returned programme page | outcome |
+|---|---|---|---|---|---|
+| `aw2-cohort` (10-20, `441756a6`) | all 4 | answered (13–15 you.ubc.ca reads `ok`) | REACHED (7/28 failed) | gold + BA (related) | hit ×4 |
+| `rp-frh-cohort` 40215248539 (10-25 17:11, `bfdbe91d`) | off#1, on#1 | **ReadTimeout** | PARTIALLY_BLOCKED | Calendar page | **wrong** ×2 |
+| | on#2, off#2 | answered (6–9 `ok`) | — | gold + BA | hit ×2 |
+| `rp-frh2-cohort` 40220881831 (10-25 18:21, `8ecf06df`) | all 4 | **ReadTimeout** | PARTIALLY_BLOCKED (16/36 failed) | Calendar page | **wrong** ×4 |
+| `frh2-cohort` 40220878232 (no search, same minutes) | 3 of 4 | **ReadTimeout** | — | none (ubc is a no-search miss anyway) | missed ×4 |
+
+**Mechanism.** On 10-25 the runner's request for `https://you.ubc.ca/robots.txt` timed out (`get #6 took 10.7s
+robots_disallowed`; the capture's reason reads "robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole
+site as disallowed"). The Fetcher then refuses every you.ubc.ca URL — eleven per capture, among them the gold
+(`get #19 … robots_disallowed`), the BA page and `/programs`. The recorded discovery list for ubc (base3 store,
+the `you.ubc.ca/programs/` query) has the Calendar page second; it is the first readable candidate, reads as a
+programme page for the requested field and degree (`get #23 took 3.4s ok`), and is confirmed. Nothing in the
+ranking or confirm changed: with the same lists and the same code (`bfdbe91d`), the two 17:11 columns whose
+robots.txt answered hit the gold, and the two whose robots.txt timed out confirm the Calendar page.
+
+**What changed since 10-20: the site's robots.txt answering from GitHub's runners — not a rule, not the KB.**
+- Not FRH: the wrong page is in both off and both on columns of both 10-25 runs, and FRH made no ubc follow.
+- Not NS-1b / PC-1 (on since 10-20 09:15) or any other default flip: within one run on one sha (`bfdbe91d`) the
+  outcome follows the robots.txt answer column by column.
+- Not the store: one sha256 for all three runs.
+- Not the KB: a capture child runs with `UNIMATCH_KNOWLEDGE_MODE=live` (`evaluation/research/live.py`
+  `search_environment`), so the web pipeline decides the page and the KB is never consulted.
+- The refusal is correct. RFC 9309 requires treating an unreachable robots.txt as a full disallow, and AGENTS §6
+  forbids weakening it. **No code ticket.**
+
+**Class (WP-1's (a)/(b)/(c)): (c), an access change that exposed a twin, not (a) or (b).** It is not RESIDUE_LEDGER
+Table A's ubc degree-word row (BA over BSc, both on you.ubc.ca), and no default flip is involved.
+
+**Follow-up — one twin note for the owner's signature queue.** Is the Calendar's BSc Computer Science section the
+same programme on another official page? It names the programme, the degree and the campus, so by the 2026-10-18
+loss-stage rule it reads as a twin. Signed as a twin in `programme_urls`, `rp-frh2-cohort` re-scores 5/0/0/5 with no
+code change. Left as is, the cohort recorded bench reads 4/1/0/5 whenever you.ubc.ca's robots.txt times out from the
+runner, and target 2 (`wrong_programme_pages` 0) fails on access alone. `base4-cohort` (run 40225734198, in progress)
+adds four more columns of the same robots.txt reading.
