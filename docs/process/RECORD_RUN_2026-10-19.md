@@ -9,6 +9,35 @@ R1 captures each of the 44 development cases once on Exa. The run produces three
 Second, ticket 03's `gold_returned_by_search` row for each query family. Third, the 51-query miss probe from
 MISS_STAGES §4, which is a subset of the run.
 
+## 0. Smoke before R1 (SM-1, added 2026-10-26)
+
+Before R1 spends 264 queries, one query checks that the key answers and lets the per-query cost be read off the
+provider's dashboard (NEXT_CYCLES_2026-10-26 §4.2 B1). Dispatch `benchmark-capture.yml` with:
+
+| input | value |
+|---|---|
+| `runner` | `ubuntu-latest` |
+| `mode` | `preflight` |
+| `search_provider` | `exa` (the job refuses `auto`, `none` and `recorded`: the smoke tests *that* key) |
+| `max_search_queries` | `1` (required, ≥ 1; the job plans exactly 1) |
+| `run_tag` | `smoke-exa` |
+| everything else | default (`case`, `base_args`, `extra_args` empty) |
+
+The `preflight` job runs the expert job's "Select the search layer" and "Search query cap" steps verbatim, then
+`python -m evaluation.research.search_preflight --max-search-queries "$CAP" --search-ledger out/search_ledger.json`:
+one public query with `max_results=1` through the product client, charged to the ledger before it is sent. Nothing
+is captured. The artifact `preflight-<run id>` holds `out/config.txt` (provider, `decided_by`, cap, the ledger),
+`search_ledger.json`, and the step's stdout and stderr. No key is printed; the adapter masks it in the error excerpt.
+
+- **Go:** the log says `search pre-flight ok: exa answered with 1 result(s)`. Read the dashboard balance before and
+  after and write the per-query cost into LOOP_REPORT.
+- **Stop** if the provider answers an error (402 = credit spent; the job is red with `::error::search pre-flight
+  FAILED: exa answered http …`): ask the owner and spend nothing more. **Stop** if cost × 264 > $5: ask before R1.
+- The expert job's own pre-flight stays Serper-only, so R1's plan stays 264 (§2).
+- **Fallback** if the `preflight` mode is not on the branch: `mode=expert_paired`, `columns=1`, `case=groningen`,
+  `search_provider=exa`, `max_search_queries=6`, `base_args` and `extra_args` empty, `run_tag=smoke-exa`. That is
+  one capture and at most 6 queries.
+
 ## 1. What W4 changed in the harness
 
 | piece | before | after W4 |
