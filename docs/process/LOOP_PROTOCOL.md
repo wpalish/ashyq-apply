@@ -18,7 +18,15 @@ Owner: Диас.
   1. cherry-picks the commits;
   2. runs the gates;
   3. pushes to `claude/greeting-16wj2z`.
-- Several workers run in parallel. The owner authorised maximum resources.
+- Several workers run in parallel, **at most 4 at once** (owner, 2026-10-25: nine workers spent the weekly
+  model limit in three hours and filled the disk). The `PreToolUse` hook `.claude/hooks/worker-cap.sh` refuses a
+  fifth worktree launch; merge and `git worktree remove` a finished worker first. Pipeline tickets that run the
+  full suite repeatedly count double in spirit: prefer one such ticket at a time.
+- Machine hygiene (harness rules, `.claude/settings.json`):
+  - the full suite runs through `scripts/run_suite.sh` — at most two suites at once, refuses under 3 GB free,
+    removes its own pgserver clusters on exit;
+  - a worktree gets its environment from `scripts/link_worktree_env.sh <worktree>` (symlinks, never committed);
+  - the `SessionStart` hook builds a missing venv / `node_modules` and runs `scripts/clean_test_tmp.sh`.
 
 ## The plan
 
@@ -40,7 +48,7 @@ Owner: Диас.
 
 1. **When a worker finishes:**
    - cherry-pick its commits;
-   - run the full suite (`cd backend && .venv/bin/pytest -q -p no:cacheprovider -o addopts="" -n 4 tests`) and check its exit status;
+   - run the full suite (`scripts/run_suite.sh`) and check its exit status;
    - run the golden demo test;
    - push;
    - dispatch paired runs for every new flag on cohort, dev2, dev3 and dev4: `benchmark-capture.yml`, mode `expert_paired`, `extra_args=--<flag>`.
