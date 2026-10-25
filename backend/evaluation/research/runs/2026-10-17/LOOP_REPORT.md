@@ -1135,3 +1135,29 @@ Inside the pre-registration on pages (found ≤ 3, no wrong page, nothing over b
 unavailable case than predicted, and the no-search arm makes two wrong-scope claims out of three on dev5, which the
 development sets do not show. Recorded as the first dev5 aggregate under today's defaults; the wrong-scope pair is
 an input for the next generalisation check, read only through aggregates.
+
+### 2026-10-25 18:00 — FRH step 2 (12 runs) and the HC-1 check (2 runs)
+
+FRH arms `frh-*` (no search), `frh-ko-*` (knockout, no search) and `rp-frh-*` (recorded guard), `--follow-refused-hub-link`;
+columns off#1, off#2, on#1, on#2 (hit/wrong/related/missed).
+
+| arm | off → on | note |
+|---|---|---|
+| frh-cohort | 4/0/0/6 → **3/0/0/7** both on | **groningen hit → missed** (stable losses: deadline, ielts.overall, programme.exists, tuition) |
+| frh-dev2 | 2/0/1/7 → **3/0/0/7** both on | khalifa related → hit, as predicted |
+| frh-dev3 | 5/0/0/9 → **6/0/0/8** both on | auckland missed → hit; stable gains auckland deadline, ielts.overall, ielts.subscores |
+| frh-dev4 | 0/0/0/9 → 0/0/0/9 | kit missed in every column, off included (not the rule) |
+| frh-ko-* (4 sets) | identical | wrong pages not up |
+| rp-frh-cohort / dev2 / dev3 | same or better | |
+| rp-frh-dev4 | 4/0/1/4 → **3/0/1/5** both on | **unibo hit → missed** (22–39 s off, 67–85 s on) |
+
+**Verdict: FRH stays off.** The two predicted gains arrived with no wrong page, but the bar also says no hit lost,
+and two are lost in both on columns (groningen without search, unibo with recorded search). A diagnosis ticket is
+open (mechanism per case, the smallest change that keeps both gains and both hits, verified offline first).
+
+HC-1 check `hc1-dev3` / `rp-hc1-dev3` (no flag; four identical columns): unsw still ends `CAPTURE_IN_PROGRESS` at
+115–119 s in every column, but now **keeps its claims** (8–15 predictions per capture) and no column shows a stable
+loss. The claim-loss defect is fixed; the parent's finalisation (`stop_reason = parent_kill`) did not fire on the
+GitHub runner, so the error label stays the child's checkpoint — recorded for the HC-1 follow-up, harmless to scoring
+since the scorecard now reads `CAPTURE_IN_PROGRESS` as clock-killed. The SG-1 re-run (`sg1b-dev3`, `sg1b-dev4`) is
+dispatched under that fix.
