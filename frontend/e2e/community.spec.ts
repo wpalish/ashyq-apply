@@ -13,7 +13,17 @@ import { expect, test, type Page } from '@playwright/test';
 
 test.describe.configure({ mode: 'serial' });
 
-const RUN = `e2e${Date.now().toString().slice(-7)}`;
+/**
+ * This run's tag, carrying the project (`e2ed…` desktop, `e2em…` mobile): both
+ * projects run this file against one API and one feed, so a tag that is only
+ * a timestamp is unique per project by luck. `test.info()` exists inside hooks
+ * and tests, not at module level, hence a hook.
+ */
+let RUN = '';
+test.beforeAll(() => {
+  const project = test.info().project.name === 'mobile' ? 'm' : 'd';
+  RUN = `e2e${project}${Date.now().toString().slice(-7)}`;
+});
 
 /** Open the community profile, joining first if this database has no profile. */
 async function ensureJoined(page: Page): Promise<void> {
@@ -122,6 +132,36 @@ test('a post can be taken back without leaving the community', async ({ page }) 
   await expect(
     page.getByPlaceholder('Ask something, or say where you are applying'),
   ).toBeVisible();
+});
+
+test('a post sent while the feed is still loading is shown once', async ({ page }) => {
+  // The interleaving behind CI run 39386144462's "[mobile] community.spec.ts:48"
+  // (strict mode: two .post__body for one POST), forced instead of waited for:
+  // the first page's GET reaches the server after the POST has written, and its
+  // response is applied before the POST's. The feed merges by post id since
+  // 1b29ff62; before that the created post was prepended onto a page that
+  // already held it.
+  await page.route('**/api/social/feed**', async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 1_500));
+    await route.continue();
+  });
+  await page.route('**/api/social/posts', async (route) => {
+    if (route.request().method() !== 'POST') return route.continue();
+    const response = await route.fetch();
+    await new Promise((resolve) => setTimeout(resolve, 4_000));
+    return route.fulfill({ response });
+  });
+
+  await page.goto('/');
+  await page.goto('/#/feed');
+  const body = `Пока лента грузится ${RUN}`;
+  const composer = page.getByPlaceholder('Ask something, or say where you are applying');
+  await composer.fill(body);
+  await page.getByRole('button', { name: 'Post', exact: true }).click();
+  await expect(composer).toHaveValue('');
+
+  await expect(page.locator('.post__body', { hasText: body })).toHaveCount(1);
+  await expect(page.getByText(body)).toBeVisible();
 });
 
 test('leaving the community is reversible from the same screen', async ({ page }) => {
