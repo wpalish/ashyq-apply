@@ -667,14 +667,14 @@ def test_the_on_plugin_switches_the_rule_on(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_on_by_default() -> None:
-    assert live_discovery.FOLLOW_REFUSED_HUB_LINK is True  # on since the 2026-10-25 FRH re-run (§8.6)
+    assert (
+        live_discovery.FOLLOW_REFUSED_HUB_LINK is True
+    )  # on since the 2026-10-25 FRH re-run (§8.6)
     assert live_discovery.FOLLOW_REFUSED_HUB_LINK_CAP == 3
     assert DiscoveryTrace(institution="U", domain=DOMAIN).as_dict().get("refused_hub_links") is None
 
 
-def test_the_flag_is_a_negatable_rule(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_the_flag_is_a_negatable_rule(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from tests.test_benchmark_rule_negations import _parent
 
     assert live.NEGATABLE_RULES["follow-refused-hub-link"] == (
