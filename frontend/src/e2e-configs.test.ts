@@ -160,6 +160,29 @@ describe('the three Playwright configs', () => {
     );
   });
 
+  it('screenshots go under the gitignored test-results/ unless E2E_SCREENSHOTS=docs (E2E-HYG-1)', () => {
+    const helpers = read('e2e/helpers.ts');
+    expect(helpers).toMatch(/^const DEFAULT_SHOT_ROOT = 'test-results\/[^']*';$/m);
+    expect(helpers).toMatch(/^const DOCS_SHOT_ROOT = '\.\.\/docs\/screenshots';$/m);
+    // docs/screenshots appears once, as the docs root, and is used only past the env check.
+    expect(helpers.match(/docs\/screenshots'/g)).toHaveLength(1);
+    const guard = helpers.indexOf("if (process.env.E2E_SCREENSHOTS !== 'docs') return `${DEFAULT_SHOT_ROOT}/");
+    expect(guard).toBeGreaterThan(-1);
+    const uses = [...helpers.matchAll(/\$\{DOCS_SHOT_ROOT\}/g)].map((m) => m.index);
+    expect(uses.length).toBeGreaterThan(0);
+    for (const at of uses) expect(at).toBeGreaterThan(guard);
+    // No spec writes a capture anywhere but through shot().
+    for (const spec of readdirSync(path.join(FRONTEND, 'e2e')).filter((f) => f.endsWith('.spec.ts'))) {
+      expect(read(`e2e/${spec}`), spec).not.toMatch(/docs\/screenshots/);
+    }
+  });
+
+  it('.gitignore ignores every config\'s report and output folder by glob', () => {
+    const ignore = read('../.gitignore').split('\n');
+    expect(ignore).toContain('/frontend/playwright-report*/');
+    expect(ignore).toContain('/frontend/test-results*/');
+  });
+
   it('npm run typecheck reads all three configs', () => {
     const tsconfig = JSON.parse(read('tsconfig.json')) as { include: string[] };
     for (const file of Object.values(CONFIGS)) expect(tsconfig.include).toContain(file);

@@ -57,11 +57,10 @@ yarn-error.log*
 /backend/baseline-pytest.log
 /backend/benchmark-*.log
 /frontend/benchmark-*.log
-playwright-report/
-playwright-report-auth/
-playwright-report-kb/
-test-results-kb/
-test-results/
+# Every Playwright config's report and output folder, by glob (E2E-HYG-1):
+# a new config's folders are ignored without a new line here.
+/frontend/playwright-report*/
+/frontend/test-results*/
 blob-report/
 .playwright/
 
