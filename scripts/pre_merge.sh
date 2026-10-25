@@ -1,51 +1,72 @@
 #!/usr/bin/env bash
 # The merge gate: exactly the CI gates (.github/workflows/ci.yml, jobs `backend` and `frontend`) of the
-# areas a branch touches, in one command. Run it before every push (GATE-1).
+# areas a branch touches, in one command, plus the container jobs (`security-and-containers`,
+# `compose-stack`): for real when a Docker daemon answers, approximated without one. Run it before every
+# push (GATE-1, GATE-2).
 #
-#   scripts/pre_merge.sh [--base REF] [--scope auto|backend|frontend|all] [--pg] [--e2e auto|always|never] [--dry-run]
+#   scripts/pre_merge.sh [--base REF] [--scope auto|backend|frontend|all] [--pg] [--e2e auto|always|never]
+#                        [--docker auto|always|never] [--dry-run]
 #
 #   --base REF     what the branch is compared with (default origin/claude/greeting-16wj2z)
 #   --scope        auto (default): from `git diff --name-only BASE...HEAD`
 #                    backend/            -> ruff, ruff format, mypy (app tests evaluation), the suite, the golden demo
 #                    frontend/           -> typecheck, lint, vitest, build, the three Playwright suites
 #                    .github/workflows/, scripts/ -> YAML parse, bash -n, the workflow tests
+#                    backend/ or frontend/ (that image), a Dockerfile, a .dockerignore, docker-compose*.yml,
+#                    ci.yml, verify_compose.sh, image_context.py (both images) -> the container gates
 #                    anything else only  -> the commit check alone
 #                  all: every gate. A push that bundles several cherry-picks is `all` unless every commit is docs.
 #   --pg           also CI's PostgreSQL job (off by default; CI runs it anyway)
 #   --e2e          auto (default): the browser suites when frontend/ is in scope; always: also for a diff
 #                  without frontend/; never: skip them (a worker whose ports are taken) - then the gate is red
 #                  whenever frontend/ is in scope, because CI would run them
+#   --docker       auto (default): `docker compose build` and scripts/verify_compose.sh when `docker info`
+#                  reaches a daemon; without one each image's build context is staged by
+#                  scripts/image_context.py (git-tracked files minus .dockerignore; every COPY source must be
+#                  in it) and the image's build runs there: web `npm run build`; api/worker/migrate import
+#                  app.main and app.jobs.worker, load the KB, `alembic upgrade head` on sqlite.
+#                  always: insist on the daemon (red without one); never: always the approximation
 #   --dry-run      print every command, run none
 #   --changed FILE (tests) read the changed paths from FILE instead of git diff
 #
-# Stops at the first red step (exit 1). The cleanup (screenshots, Playwright reports, the clean-tree check)
-# runs on exit whenever the preconditions passed. Run from any worktree: the backend venv and frontend
-# node_modules are the ones scripts/link_worktree_env.sh linked in.
+# Stops at the first red step (exit 1). The last line on stdout is always `pre_merge: GREEN` or
+# `pre_merge: RED`, and the exit status is 0 exactly when it says GREEN. The cleanup (screenshots,
+# Playwright reports, the compose stack, the clean-tree check) runs on exit whenever the preconditions
+# passed. Run from any worktree: the backend venv and frontend node_modules are the ones
+# scripts/link_worktree_env.sh linked in.
 set -uo pipefail
 
-ROOT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel) || exit 2
+ROOT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel) || { echo "pre_merge: RED"; exit 2; }
 BASE=origin/claude/greeting-16wj2z
 SCOPE=auto
 PG=0
 E2E=auto
+DOCKER=auto
 DRY=0
 CHANGED_FILE=
+CI_PASSWORD=ci-only-not-a-secret
+CI_COMPOSE="docker compose -f docker-compose.yml -f docker-compose.ci.yml"
 
-usage() { sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '2,36p' "$0" | sed 's/^# \{0,1\}//'; }
+# A usage error is red as well: the verdict is the last line on every exit path.
+usage_error() { echo "pre_merge: $1" >&2; usage >&2; echo "pre_merge: RED"; exit 2; }
+value() { [ $# -ge 2 ] && [ -n "$2" ] || usage_error "$1 needs a value"; }
 while [ $# -gt 0 ]; do
   case $1 in
-    --base) BASE=${2:?--base needs a ref}; shift 2 ;;
-    --scope) SCOPE=${2:?--scope needs a value}; shift 2 ;;
+    --base) value "$@"; BASE=$2; shift 2 ;;
+    --scope) value "$@"; SCOPE=$2; shift 2 ;;
     --pg) PG=1; shift ;;
-    --e2e) E2E=${2:?--e2e needs a value}; shift 2 ;;
+    --e2e) value "$@"; E2E=$2; shift 2 ;;
+    --docker) value "$@"; DOCKER=$2; shift 2 ;;
     --dry-run) DRY=1; shift ;;
-    --changed) CHANGED_FILE=${2:?--changed needs a file}; shift 2 ;;
+    --changed) value "$@"; CHANGED_FILE=$2; shift 2 ;;
     -h|--help) usage; exit 0 ;;
-    *) echo "pre_merge: unknown argument $1" >&2; usage >&2; exit 2 ;;
+    *) usage_error "unknown argument $1" ;;
   esac
 done
-case $SCOPE in auto|backend|frontend|all) ;; *) echo "pre_merge: --scope auto|backend|frontend|all" >&2; exit 2 ;; esac
-case $E2E in auto|always|never) ;; *) echo "pre_merge: --e2e auto|always|never" >&2; exit 2 ;; esac
+case $SCOPE in auto|backend|frontend|all) ;; *) usage_error "--scope auto|backend|frontend|all" ;; esac
+case $E2E in auto|always|never) ;; *) usage_error "--e2e auto|always|never" ;; esac
+case $DOCKER in auto|always|never) ;; *) usage_error "--docker auto|always|never" ;; esac
 
 RUN_TMP=$(mktemp -d "${TMPDIR:-/tmp}/pre-merge-XXXXXX")
 STEP_NAMES=()
@@ -53,6 +74,7 @@ STEP_CODES=()
 STEP_SECS=()
 NOTES=()
 ARMED=0      # the cleanup touches the tree only once the clean-tree precondition has passed
+COMPOSE_UP=0 # verify_compose.sh started the stack: the cleanup takes it down, as CI's always() step does
 RESULT=0
 
 record() { STEP_NAMES+=("$1"); STEP_CODES+=("$2"); STEP_SECS+=("$3"); }
@@ -61,8 +83,8 @@ record() { STEP_NAMES+=("$1"); STEP_CODES+=("$2"); STEP_SECS+=("$3"); }
 run() {
   local name=$1 dir=$2
   shift 2
-  local rel=${dir#"$ROOT"}
-  rel=${rel#/}
+  local rel=$dir
+  case $dir in "$ROOT" | "$ROOT"/*) rel=${dir#"$ROOT"}; rel=${rel#/} ;; esac
   echo "+ (${rel:-.}) $*"
   if [ "$DRY" = 1 ]; then
     record "$name" dry 0
@@ -80,16 +102,17 @@ run() {
   fi
 }
 
-# check NAME FUNCTION : a step whose body is a shell function of this script.
+# check NAME FUNCTION [ARG...] : a step whose body is a shell function of this script.
 check() {
   local name=$1 fn=$2
+  shift 2
   echo "+ check: $name"
   if [ "$DRY" = 1 ]; then
     record "$name" dry 0
     return 0
   fi
   local start=$SECONDS code
-  "$fn"
+  "$fn" "$@"
   code=$?
   record "$name" "$code" $((SECONDS - start))
   if [ "$code" -ne 0 ]; then
@@ -120,9 +143,11 @@ tree_clean() {
   return 1
 }
 
+# ports_free [PORT...] : default the Playwright pair 5173/8099; the compose stack wants 8080/8099.
 ports_free() {
-  local port busy=0 who
-  for port in 5173 8099; do
+  local port busy=0 who ports=("$@")
+  [ ${#ports[@]} -gt 0 ] || ports=(5173 8099)
+  for port in "${ports[@]}"; do
     if command -v ss >/dev/null 2>&1; then
       who=$(ss -ltnpH "sport = :$port" 2>/dev/null)
     elif command -v lsof >/dev/null 2>&1; then
@@ -132,7 +157,7 @@ ports_free() {
       return 1
     fi
     if [ -n "$who" ]; then
-      echo "pre_merge: port $port is busy (the Playwright configs refuse to adopt a server):" >&2
+      echo "pre_merge: port $port is busy (neither Playwright nor the compose stack adopts a server):" >&2
       printf '%s\n' "$who" >&2
       busy=1
     fi
@@ -160,8 +185,13 @@ PY
 }
 
 commits_ok() {
-  local sha bad=0 n=0
-  for sha in $(git -C "$ROOT" rev-list "$BASE..HEAD"); do
+  local sha bad=0 n=0 shas
+  # An unknown base is red, not "no commits": an empty loop over a failed rev-list printed GREEN.
+  if ! shas=$(git -C "$ROOT" rev-list "$BASE..HEAD"); then
+    echo "pre_merge: cannot list $BASE..HEAD (fetch it, or pass --base)" >&2
+    return 1
+  fi
+  for sha in $shas; do
     n=$((n + 1))
     if ! git -C "$ROOT" log -1 --format=%B "$sha" | grep -q '^Agent: '; then
       echo "pre_merge: $(git -C "$ROOT" log -1 --format='%h %s' "$sha") has no Agent: trailer" >&2
@@ -174,6 +204,40 @@ commits_ok() {
   done
   echo "commits in $BASE..HEAD: $n"
   return $bad
+}
+
+# Without the docker CLI: both compose files parse and every build context has its Dockerfile.
+compose_files_ok() {
+  "$ROOT/backend/.venv/bin/python" - "$ROOT" <<'PY'
+import sys
+from pathlib import Path
+
+import yaml
+
+root = Path(sys.argv[1])
+bad = 0
+for name in ("docker-compose.yml", "docker-compose.ci.yml"):
+    services = (yaml.safe_load((root / name).read_text()) or {}).get("services") or {}
+    for service, spec in services.items():
+        build = (spec or {}).get("build")
+        if build is None:
+            continue
+        context = root / (build if isinstance(build, str) else build.get("context", "."))
+        dockerfile = context / ("Dockerfile" if isinstance(build, str) else build.get("dockerfile", "Dockerfile"))
+        if not dockerfile.is_file():
+            print(f"{name}: service {service} builds {dockerfile}, which does not exist", file=sys.stderr)
+            bad = 1
+if not bad:
+    print("compose files parse; every build context has its Dockerfile")
+sys.exit(bad)
+PY
+}
+
+docker_daemon() { command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; }
+docker_compose_cli() { command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; }
+no_docker_daemon() {
+  echo "pre_merge: --docker always, but no Docker daemon answers \`docker info\`" >&2
+  return 1
 }
 
 summary() {
@@ -200,6 +264,9 @@ finish() {
     if tree_clean; then record "cleanup: tree clean again" 0 $((SECONDS - start))
     else record "cleanup: tree clean again" 1 $((SECONDS - start)); RESULT=1; fi
   fi
+  if [ "$COMPOSE_UP" = 1 ]; then
+    (cd "$ROOT" && POSTGRES_PASSWORD=$CI_PASSWORD $CI_COMPOSE down -v --remove-orphans) >/dev/null 2>&1
+  fi
   pkill -f -- "-D $RUN_TMP/" 2>/dev/null
   rm -rf -- "$RUN_TMP"
   summary
@@ -224,36 +291,53 @@ DO_BACKEND=0
 DO_FRONTEND=0
 DO_CI=0
 CI_FILES=()
+IMG_API=0    # the image docker-compose.yml builds from backend/ (migrate, api, worker)
+IMG_WEB=0    # the image it builds from frontend/ (web)
 OTHER=0
 while IFS= read -r path; do
   [ -n "$path" ] || continue
   case $path in
-    backend/*) DO_BACKEND=1 ;;
-    frontend/*) DO_FRONTEND=1 ;;
+    backend/*) DO_BACKEND=1; IMG_API=1 ;;
+    frontend/*) DO_FRONTEND=1; IMG_WEB=1 ;;
+    .github/workflows/ci.yml|scripts/verify_compose.sh|scripts/image_context.py)
+      DO_CI=1; CI_FILES+=("$path"); IMG_API=1; IMG_WEB=1 ;;
     .github/workflows/*|scripts/*) DO_CI=1; CI_FILES+=("$path") ;;
+    docker-compose*.yml|docker-compose*.yaml|Dockerfile*|.dockerignore|*/Dockerfile*|*/.dockerignore)
+      IMG_API=1; IMG_WEB=1 ;;
     *) OTHER=1 ;;
   esac
 done <<<"$CHANGED"
 case $SCOPE in
-  backend) DO_BACKEND=1 ;;
-  frontend) DO_FRONTEND=1 ;;
+  backend) DO_BACKEND=1; IMG_API=1 ;;
+  frontend) DO_FRONTEND=1; IMG_WEB=1 ;;
   all)
-    DO_BACKEND=1; DO_FRONTEND=1; DO_CI=1
+    DO_BACKEND=1; DO_FRONTEND=1; DO_CI=1; IMG_API=1; IMG_WEB=1
     CI_FILES=()
     while IFS= read -r path; do CI_FILES+=("$path"); done < <(
-      cd "$ROOT" && ls .github/workflows/*.yml .github/workflows/*.yaml scripts/*.sh 2>/dev/null)
+      cd "$ROOT" && ls .github/workflows/*.yml .github/workflows/*.yaml scripts/*.sh scripts/*.py 2>/dev/null)
     ;;
 esac
 DO_E2E=0
 if [ "$E2E" = always ] || { [ "$E2E" = auto ] && [ "$DO_FRONTEND" = 1 ]; }; then DO_E2E=1; fi
-if [ "$DO_BACKEND$DO_FRONTEND$DO_CI$DO_E2E" = 0000 ]; then
-  if [ "$OTHER" = 1 ]; then NOTES+=("docs only (no backend/, frontend/, workflow or script path): the commit check alone")
+DO_IMAGES=0
+[ "$IMG_API$IMG_WEB" != 00 ] && DO_IMAGES=1
+# The real container jobs need a daemon; the docker CLI alone (this sandbox has one) is not enough.
+REAL_DOCKER=0
+if [ "$DO_IMAGES" = 1 ]; then
+  case $DOCKER in
+    always) REAL_DOCKER=1 ;;
+    auto) docker_daemon && REAL_DOCKER=1 ;;
+  esac
+fi
+if [ "$DO_BACKEND$DO_FRONTEND$DO_CI$DO_E2E$DO_IMAGES" = 00000 ]; then
+  if [ "$OTHER" = 1 ]; then NOTES+=("docs only (no backend/, frontend/, workflow, script or container path): the commit check alone")
   else NOTES+=("no path changed against $BASE: the commit check alone"); fi
 fi
-echo "pre_merge: scope backend=$DO_BACKEND frontend=$DO_FRONTEND workflows/scripts=$DO_CI e2e=$DO_E2E"
+echo "pre_merge: scope backend=$DO_BACKEND frontend=$DO_FRONTEND workflows/scripts=$DO_CI e2e=$DO_E2E" \
+  "images=api:$IMG_API,web:$IMG_WEB docker=$([ "$REAL_DOCKER" = 1 ] && echo daemon || echo offline)"
 
 # 1. Preconditions (none for a docs-only diff: nothing runs that could dirty the tree).
-if [ "$DO_BACKEND$DO_FRONTEND$DO_CI$DO_E2E" != 0000 ]; then
+if [ "$DO_BACKEND$DO_FRONTEND$DO_CI$DO_E2E$DO_IMAGES" != 00000 ]; then
   check "precondition: tree clean" tree_clean
   [ "$DRY" = 0 ] && ARMED=1
   [ "$DO_E2E" = 1 ] && check "precondition: ports 5173/8099 free" ports_free
@@ -271,6 +355,7 @@ if [ "$DO_CI" = 1 ]; then
       *.yml|*.yaml) run "yaml: $path" "$ROOT" backend/.venv/bin/python -c \
         "import sys, yaml; yaml.safe_load(open(sys.argv[1]))" "$path" ;;
       *.sh) run "bash -n: $path" "$ROOT" bash -n "$path" ;;
+      scripts/*.py) run "py_compile: $path" "$ROOT" backend/.venv/bin/python -m py_compile "$path" ;;
     esac
   done
   if [ "$DO_BACKEND" = 0 ]; then
@@ -307,6 +392,56 @@ if [ "$DO_FRONTEND" = 1 ]; then
   run "vitest" "$F" npm test -- --run
   run "build (bundle budget)" "$F" npm run build
 fi
+
+# 6. Containers: ci.yml jobs `security-and-containers` (compose config, compose build) and `compose-stack`
+#    (verify_compose.sh with the CI override, then down). backend/tests/test_pre_merge_script.py fails when
+#    either job gains a step this block does not mirror or approximate.
+if [ "$DO_IMAGES" = 1 ]; then
+  if docker_compose_cli || [ "$REAL_DOCKER" = 1 ]; then
+    # `compose config` needs the CLI, not a daemon.
+    run "compose: config --quiet" "$ROOT" env "POSTGRES_PASSWORD=$CI_PASSWORD" docker compose config --quiet
+    run "compose: config --quiet (CI override)" "$ROOT" env "POSTGRES_PASSWORD=$CI_PASSWORD" \
+      $CI_COMPOSE config --quiet
+  else
+    check "compose: files parse, build contexts exist (no docker CLI)" compose_files_ok
+  fi
+  if [ "$REAL_DOCKER" = 1 ]; then
+    [ "$DRY" = 1 ] || docker_daemon || check "docker daemon (--docker always)" no_docker_daemon
+    run "compose: build" "$ROOT" env "POSTGRES_PASSWORD=$CI_PASSWORD" docker compose build
+    check "ports 8080/8099 free before the compose stack" ports_free 8080 8099
+    [ "$DRY" = 0 ] && COMPOSE_UP=1
+    run "compose-stack: verify_compose.sh" "$ROOT" env "POSTGRES_PASSWORD=$CI_PASSWORD" "COMPOSE=$CI_COMPOSE" \
+      bash scripts/verify_compose.sh
+  else
+    # No daemon: each image's build in a copy of exactly its build context (GATE-2; 146a4e8e was GREEN
+    # here while CI's `npm run build` inside the web image failed on a file .dockerignore dropped).
+    NOTES+=("no Docker daemon: docker compose build / verify_compose.sh approximated by staging each build context (scripts/image_context.py); CI runs the real ones")
+    if [ "$IMG_WEB" = 1 ]; then
+      WEB_CTX="$RUN_TMP/image-web"
+      run "image web: stage frontend/ context" "$ROOT" backend/.venv/bin/python scripts/image_context.py \
+        stage frontend "$WEB_CTX" --link node_modules=frontend/node_modules
+      # frontend/Dockerfile builder stage: `npm ci` (node_modules linked instead), then this.
+      run "image web: npm run build" "$WEB_CTX" npm run build
+    fi
+    if [ "$IMG_API" = 1 ]; then
+      API_CTX="$RUN_TMP/image-api"
+      # docker-compose.yml's backend-env, minus PostgreSQL (CI's postgresql leg covers that dialect).
+      API_ENV=(UNIMATCH_ENVIRONMENT=staging "UNIMATCH_DATABASE_URL=sqlite:///$RUN_TMP/image-api.db"
+        UNIMATCH_AUTO_MIGRATE=false UNIMATCH_DEMO_MODE=false UNIMATCH_KNOWLEDGE_MODE=kb
+        UNIMATCH_SEARCH_PROVIDER=none UNIMATCH_AUTH_ENABLED=true UNIMATCH_COOKIE_SECURE=false
+        PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1)
+      run "image api: stage backend/ context" "$ROOT" backend/.venv/bin/python scripts/image_context.py \
+        stage backend "$API_CTX"
+      # The api/worker commands, and what verify_compose.sh imports and serves (the demo profile, the KB);
+      # the code must come from the staged copy, not from backend/.
+      run "image api: import app.main, app.jobs.worker" "$API_CTX" env "${API_ENV[@]}" "$B/.venv/bin/python" -c \
+        "import os, app.main, app.jobs.worker, app.corpus.demo_profile; from app.knowledge import load_knowledge_base as kb; assert app.main.__file__.startswith(os.getcwd() + os.sep), app.main.__file__; n = len(kb().entries); assert n, 'no knowledge base in the image'; print('imports from', os.path.dirname(app.main.__file__), '- KB entries:', n)"
+      run "image migrate: alembic upgrade head" "$API_CTX" env "${API_ENV[@]}" "$B/.venv/bin/python" -m alembic \
+        upgrade head
+    fi
+  fi
+fi
+
 if [ "$DO_E2E" = 1 ]; then
   check "ports free before e2e" ports_free
   run "e2e (demo)" "$F" npm run e2e

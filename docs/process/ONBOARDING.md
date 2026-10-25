@@ -69,7 +69,10 @@
   Останавливается на первой красной проверке, после себя убирает скриншоты и отчёты Playwright. `--dry-run`
   печатает команды, `--scope all` запускает всё, `--pg` добавляет PostgreSQL-прогон CI, `--e2e never` — для
   воркера, у которого заняты порты (тогда фронтенд-ветка красная). Тест `tests/test_pre_merge_script.py`
-  держит скрипт в точности равным `ci.yml`.
+  держит скрипт в точности равным `ci.yml`. Контейнерные задания CI скрипт тоже повторяет: с работающим Docker —
+  настоящие `docker compose build` и `scripts/verify_compose.sh`, без него — собирает каждый образ в копии его
+  build context после `.dockerignore` (`scripts/image_context.py`), так что файл, которого нет в образе, роняет
+  проверку здесь, а не в CI.
 - **Живое чтение сайтов — только через GitHub Actions**, workflow `.github/workflows/benchmark-capture.yml`
   (ручной запуск):
   - `mode=benchmark` — полный прогон, метрики и оракул;
