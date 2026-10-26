@@ -3354,8 +3354,9 @@ FRONT_PAGE_VERDICT = "a site's front page is not a programme page"
 #: (:func:`other_campus_named`). No place is learned without the city (the
 #: entry's ``city``) or without such a pair, so the rule cannot fire there.
 #: The benchmark harness flips it per capture (``--campus-qualifier-guard``).
-#: False changes nothing.
-CAMPUS_QUALIFIER_GUARD = False
+#: On by default since 2026-10-26 (LOOP_REPORT: on the Exa store ubc's Okanagan page is refused in
+#: both on columns, no hit lost, no new wrong page).
+CAMPUS_QUALIFIER_GUARD = True
 #: DC-1: the verdict's opening words, pinned by tests.
 OTHER_CAMPUS_VERDICT = "page names another campus"
 

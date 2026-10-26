@@ -107,8 +107,8 @@ def dc1(request, monkeypatch) -> bool:
     return request.param
 
 
-def test_dc1_is_off_by_default() -> None:
-    assert live_discovery.CAMPUS_QUALIFIER_GUARD is False
+def test_dc1_is_on_by_default() -> None:
+    assert live_discovery.CAMPUS_QUALIFIER_GUARD is True  # on since the 2026-10-26 rp-dc1 run
 
 
 @pytest.mark.asyncio
@@ -151,7 +151,7 @@ def test_dc1_the_harness_flag_and_its_off_form(tmp_path, monkeypatch) -> None:
     assert live.NEGATABLE_RULES["campus-qualifier-guard"] == (
         ("app.adapters.discovery.live_discovery", "CAMPUS_QUALIFIER_GUARD"),
     )
-    assert "campus-qualifier-guard" in live.DEFAULT_OFF_NEGATABLE
+    assert "campus-qualifier-guard" not in live.DEFAULT_OFF_NEGATABLE
     result = subprocess.run(
         [sys.executable, "-m", "evaluation.research.live", "--help"],
         cwd=BACKEND,

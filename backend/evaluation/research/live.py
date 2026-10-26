@@ -1965,7 +1965,7 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "local-query-from-evidence": (
         ("app.adapters.search.intent", "LOCAL_QUERY_FROM_PAGE_EVIDENCE"),
     ),
-    # Default-off (TRACK_B_2026-10-26 §1, DC-1).
+    # On by default since 2026-10-26 (TRACK_B_2026-10-26 §1, DC-1).
     "campus-qualifier-guard": (
         ("app.adapters.discovery.live_discovery", "CAMPUS_QUALIFIER_GUARD"),
     ),
@@ -1980,7 +1980,6 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "same-site-award-links",
         "local-query-from-evidence",
         "sitemap-guess-cap",
-        "campus-qualifier-guard",
     }
 )
 

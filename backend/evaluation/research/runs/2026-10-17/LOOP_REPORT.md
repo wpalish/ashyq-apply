@@ -1335,3 +1335,32 @@ dev3 12; all others 0 — the B4 bar needs 0.
 programme pages than Serper, and misses 12 dev3 requests, so B4's bar (hits ≥ Serper − 1 per set, 0 wrong,
 0 misses) is not met as stated. Next: name the wrong pages and the 12 misses (a worker), then decide between Exa
 alone, a fused Exa + Serper store, or Exa with a wrong-page fix.
+
+### 2026-10-26 14:50 — DC-1 on the Exa store (4 runs) and the fused Exa + Serper store (4 runs)
+
+`rp-dc1-<set>`: Exa store r1, `--campus-qualifier-guard`, columns off#1, off#2, on#1, on#2 (hit/wrong/related/missed).
+
+| set | off → on | note |
+|---|---|---|
+| cohort | 5/2/0/3 ×2 → **5/1/0/4** ×2 | ubc's Okanagan page refused in both on columns (wrong → missed); its `programme.exists` claim goes with the wrong page |
+| dev2 | 4–6/0/1/3–5 → 6/0/1/3 ×2 | stable gains uppsala ×5 (column noise in off#1, not the rule) |
+| dev3 | 8/1–2/0/4–5 → 8/1/0/5 ×2 | |
+| dev4 | 3/0/1/5 → 3/0/1/5 | |
+
+**Verdict: DC-1 on by default** — the one wrong page it targets is gone, no hit lost, no new wrong page, claim
+precision 100 % in every column.
+
+`base6f-<set>`: the fused store `recorded_search.fused1.json` (Exa and Serper interleaved by rank), 4 identical columns.
+
+| set | fused | Exa r1 (base5) | Serper base3 (base4) |
+|---|---|---|---|
+| cohort | 5/2/0/3, answered 8/27 | 5/2/0/3, 8/27 | 4/1/0/5, 8/27 |
+| dev2 | 6/0/1/3, answered 8/21 (one column 5) | 5–6/0/1/3–4, 8/21 | 6/0/1/3, 2/21 |
+| dev3 | 7–8/1–2/0/5, answered 9/22 | 8/1–2/0/4–5, 9/22 | 9–10/0–1/0/4–5, 8/22 |
+| dev4 | **4**/0/1/4, answered 2/8 | 3/0/1/5, 2/8 | 3–4/0/1/4–5, 0/8 |
+| total | **22–23 found**, 27 answered | 21–22, 27 | 22–23, 18 |
+
+`recorded_search_misses`: fused cohort 0, dev2 0, dev3 **0** (was 12), dev4 3. The fused store matches Serper's
+pages and keeps Exa's 27 answers; its remaining wrong pages are the hku and kuleuven twins (owner to sign) and,
+until this flip, ubc's Okanagan page. Recommendation (main session): the default recorded store becomes **fused1**
+once the twins are signed, with DC-1 on.
