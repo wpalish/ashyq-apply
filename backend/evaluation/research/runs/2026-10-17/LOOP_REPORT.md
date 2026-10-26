@@ -1444,3 +1444,22 @@ The one wrong page, in every dev3 column: auckland's
 postgraduate-year programme in New Zealand, the same page FRH step 1 flagged (§8). It comes from the Exa half of the
 store. No "(Hons)" rule is safe in general (a UK BSc (Hons) is the bachelor's itself); a fix has to read the plan's
 own level. Open as a worker ticket; the default stays fused1 (+2 found, +10 answered, 1 wrong vs 0).
+
+### 2026-10-26 18:15 — HONS-1 paired run (4 runs) and the twin evidence read
+
+`hons1-<set>`: default fused1 store, `--honours-year-guard`, columns off#1, off#2, on#1, on#2.
+
+| set | off → on | note |
+|---|---|---|
+| cohort | 5/0/0/5 ×2 → 5/0/0/5 ×2 | identical arms; cohort reads 5 in all four columns here vs 7 in base7 — a run-to-run access difference in both arms, not the rule |
+| dev2 | 6/0/1/3 → 6/0/1/3 | identical |
+| dev3 | 9/0/0/5 ×2 → 8–9/0/0/5–6 | auckland's honours plan was **not** confirmed in this run's off columns, so the rule had nothing to refuse |
+| dev4 | 4/0/1/4 ×2 → 3–4/0/1/4–5 | |
+
+**Verdict: HONS-1 stays off for now** — no loss and no wrong page anywhere, but the gain it was built for (auckland
+wrong → hit) did not occur in the off arm this time, so the paired run shows no stable gain (13-Q2). The offline replay
+(1,050 captures: it fires on auckland's plan page only and the pipeline then confirms the gold) stands; re-run when a
+capture shows the honours page again, or accept it on the offline evidence.
+
+Twin evidence: CI `verify_evidence` (run 40370727316) found both remaining excerpts — uppsala syllabus and the central
+kuleuven page (checked 2, verified 2). The 2026-10-26 signatures are now fully evidenced.
