@@ -44,10 +44,12 @@ def test_the_signed_corpora_carry_their_new_version(name: str, version: str) -> 
     assert _load(name).version == version
 
 
-def test_the_scorecard_scores_reviewed11_by_default() -> None:
+def test_the_scorecard_scores_the_latest_signed_cohort_by_default() -> None:
     import inspect
 
-    assert "ground_truth.reviewed11.json" in inspect.getsource(scorecard.main)
+    # reviewed11 from 2026-10-18; reviewed12 (the 2026-10-26 twin signatures,
+    # tests/test_signed_twins_2026_10_26.py) since.
+    assert "ground_truth.reviewed12.json" in inspect.getsource(scorecard.main)
 
 
 class TestFeePeriod:

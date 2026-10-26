@@ -17,6 +17,23 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
 
+**reviewed12, dev2-draft4, dev3-draft4 (2026-10-26, owner: «Подтверждаю», twin signatures of
+`docs/process/TRACK_B_2026-10-26.md` §1).** Each is its predecessor (reviewed11, dev2-draft3, dev3-draft3) with signed
+twins appended to `programme_urls` and a dated line in the case's `review.notes`; no label, status, related page or
+other case changes. [reviewed12](data/ground_truth.reviewed12.json): hku
+`www.cs.hku.hk/programmes/undergraduate/beng-in-computer-science` (the department's page of the gold's BEng) and ubc
+`vancouver.calendar.ubc.ca/…/bachelor-science/computer-science` (the Vancouver Academic Calendar section, WP-1).
+[dev2-draft4](data/dev2.draft4.json): uppsala `www.uu.se/en/study/programme-syllabus?query=2332` (the gold
+programme's syllabus). [dev3-draft4](data/dev3.draft4.json): kuleuven `…/SC_51016742/diploma_omschrijving` (the gold's
+sub-page), `www.kuleuven.be/opleidingen/bachelor-informatica` and `www.kuleuven.be/programmes/opleidingen/bachelor-informatica`
+(supersedes TWIN_CHECKS_2026-10-20 Q2's conditional draft4). Each twin with a stored production-Fetcher read carries a
+`programme_evidence` excerpt from it (hku, ubc, kuleuven sub-page from the base4/base5 captures; kuleuven `/programmes/`
+from TW-2's CI read); the uppsala excerpt (the page title of Track B's Fetcher read) and the central kuleuven page
+(no excerpt) await a CI `verify_evidence` read. dev4-draft3 and every heldout file are unchanged. reviewed12 is the
+scorecard's default from this date; reviewed11, dev2-draft3 and dev3-draft3 stay frozen. Not signed: ubc's Okanagan
+pages (another campus; DC-1 refuses them) and kuleuven's `/leuven` and `/kortrijk` campus sub-pages. Re-scored
+captures: `runs/2026-10-17/LOOP_REPORT.md`, "2026-10-26 — twin signatures".
+
 **dev5-draft1 (2026-10-19, unsigned).** [dev5-draft1](data/dev5.draft1.json) is a new development set of
 13 more country proxies for the heldout nine: kbtu, satbayev, aitu, hacettepe, bilkent, ytu, upol, zcu, tud,
 lmu, unipd, sapienza and vilniustech. Every case is `draft`. Unlike dev4, draft1 carries the programme page
