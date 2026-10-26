@@ -1965,6 +1965,10 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "local-query-from-evidence": (
         ("app.adapters.search.intent", "LOCAL_QUERY_FROM_PAGE_EVIDENCE"),
     ),
+    # Default-off (TRACK_B_2026-10-26 §1, DC-1).
+    "campus-qualifier-guard": (
+        ("app.adapters.discovery.live_discovery", "CAMPUS_QUALIFIER_GUARD"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
@@ -1976,6 +1980,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "same-site-award-links",
         "local-query-from-evidence",
         "sitemap-guess-cap",
+        "campus-qualifier-guard",
     }
 )
 
@@ -2553,6 +2558,14 @@ def main() -> None:
         help="plan rule LL-1: identity recovery's listing follow-up also follows a link whose "
         "own heading (a card's name) matches the field through the ontology's aliases, and "
         "follows the links of a refused page whose head names only the requested level",
+    )
+    parser.add_argument(
+        "--campus-qualifier-guard",
+        action="store_true",
+        help="plan rule DC-1: identity recovery refuses a page of a domestic second campus - "
+        "a place the site's own URLs use beside the institution's city as a one-token "
+        "qualifier (…-vancouver-bsc / …-okanagan-bsc) - named in its host, URL or head, or in "
+        "its text when the text never names the city",
     )
     parser.add_argument(
         "--subpage-requirements-lead",
@@ -3201,6 +3214,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as ll1_module
 
             ll1_module.LISTING_FOLLOWS_LOCAL_ALIASES = True
+        if args.campus_qualifier_guard:
+            from app.adapters.discovery import live_discovery as dc1_module
+
+            dc1_module.CAMPUS_QUALIFIER_GUARD = True
         if args.subpage_requirements_lead:
             from app.adapters.discovery import live_discovery as sp2_module
 
@@ -3575,6 +3592,7 @@ def main() -> None:
                             if args.listing_follows_local_aliases
                             else []
                         ),
+                        *(["--campus-qualifier-guard"] if args.campus_qualifier_guard else []),
                         *(
                             ["--subpage-requirements-lead"]
                             if args.subpage_requirements_lead

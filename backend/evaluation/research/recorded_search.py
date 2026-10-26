@@ -479,6 +479,166 @@ def build_store(sources: list[tuple[str, str, str, str, Path]]) -> dict[str, Any
     }
 
 
+#: FUSE-1 orders: how a fused entry lists the two stores' URLs for one request.
+FUSE_ORDERS = ("interleave", "append")
+
+
+def _url_form(url: str) -> str:
+    """The form two stores' URLs are compared in: scheme and host case-folded, no trailing slash.
+
+    The same comparison ``metrics.canonical_url`` makes, so a URL the primary
+    lists with a slash and the secondary without is one result, not two.
+    """
+    parts = urlsplit(url)
+    return f"{parts.scheme.lower()}://{parts.netloc.lower()}{parts.path.rstrip('/')}?{parts.query}"
+
+
+def _fused_urls(primary: Sequence[str], secondary: Sequence[str], order: str) -> list[str]:
+    """One request's URLs from both stores, each result once, the primary's spelling kept.
+
+    ``append``: every primary URL, then the secondary's not already present.
+    ``interleave``: rank by rank, the primary's result before the secondary's
+    (P1, S1, P2, S2, ...), skipping a URL already listed. Replay hands discovery
+    the top ``max_results`` (10), so on a 25-result primary ``append`` reaches
+    discovery only where the primary returned fewer than 10.
+    """
+    if order not in FUSE_ORDERS:
+        raise ValueError(f"order must be one of {FUSE_ORDERS}, got {order!r}")
+    if order == "append":
+        ranked = [*primary, *secondary]
+    else:
+        ranked = []
+        for index in range(max(len(primary), len(secondary))):
+            ranked.extend(source[index] for source in (primary, secondary) if index < len(source))
+    seen: set[str] = set()
+    fused: list[str] = []
+    for url in ranked:
+        form = _url_form(url)
+        if form not in seen:
+            seen.add(form)
+            fused.append(url)
+    return fused
+
+
+def fuse_documents(
+    primary: dict[str, Any], secondary: dict[str, Any], *, order: str = "interleave"
+) -> dict[str, Any]:
+    """FUSE-1: one ``recorded-search/2`` store answering every request either store holds.
+
+    Per request key: a key in one store only is copied as it is; a key in both
+    lists ``_fused_urls`` of the two, each result row keeping the title and
+    snippet its own store recorded (none for a URL-only store), ranked by its
+    new position. The primary's metadata names the entry; its ``page`` record
+    is dropped once the secondary added a URL (the counts were the primary's
+    paid page), and ``fused`` says how many URLs each store gave. Both inputs
+    are validated by the loader first, and so is the result. Nothing is sent
+    anywhere: a fused store is two recordings combined offline.
+    """
+    from app.adapters.search.recorded import RecordedSearchStore, request_key
+
+    for document in (primary, secondary):
+        RecordedSearchStore.from_document(document)
+
+    def key_of(entry: dict[str, Any]) -> str:
+        return request_key(entry["query"], entry["domains"], entry.get("hl"), entry.get("gl"))
+
+    def rows_of(entry: dict[str, Any]) -> dict[str, tuple[str, str]]:
+        return {
+            row["url"]: (row.get("title", ""), row.get("snippet", ""))
+            for row in entry.get("results") or []
+        }
+
+    secondary_by_key: dict[str, dict[str, Any]] = {}
+    for entry in secondary["entries"]:
+        secondary_by_key.setdefault(key_of(entry), entry)
+    entries: list[dict[str, Any]] = []
+    used: set[str] = set()
+    for entry in primary["entries"]:
+        key = key_of(entry)
+        if key in used:
+            continue
+        used.add(key)
+        other = secondary_by_key.get(key)
+        if other is None:
+            entries.append(dict(entry))
+            continue
+        urls = _fused_urls(entry["urls"], other["urls"], order)
+        texts = {**rows_of(other), **rows_of(entry)}
+        fused = {k: v for k, v in entry.items() if k not in ("urls", "results", "page")}
+        added = len(urls) - len(entry["urls"])
+        if added == 0 and "page" in entry:
+            fused["page"] = entry["page"]
+        fused["urls"] = urls
+        fused["results"] = [
+            {
+                "url": url,
+                "title": texts.get(url, ("", ""))[0],
+                "snippet": texts.get(url, ("", ""))[1],
+                "rank": rank,
+            }
+            for rank, url in enumerate(urls, start=1)
+        ]
+        fused["fused"] = {"primary": len(entry["urls"]), "secondary_added": added}
+        entries.append(fused)
+    for entry in secondary["entries"]:
+        key = key_of(entry)
+        if key not in used:
+            used.add(key)
+            entries.append(
+                {**entry, "fused": {"primary": 0, "secondary_added": len(entry["urls"])}}
+            )
+    tally = Counter(
+        "primary_only"
+        if "fused" not in e
+        else "secondary_only"
+        if not e["fused"]["primary"]
+        else "both"
+        for e in entries
+    )
+    order_of_sets = {s: i for i, s in enumerate(DEV_SETS)}
+    entries.sort(
+        key=lambda e: (
+            order_of_sets.get(e.get("set", ""), len(order_of_sets)),
+            e.get("case", ""),
+            e.get("family", ""),
+            e["query"],
+        )
+    )
+    document = {
+        "schema": "recorded-search/2",
+        "provenance": {
+            "description": (
+                "FUSE-1: two recorded-search stores combined offline per request key; "
+                f"order {order!r} (see recorded_search._fused_urls). Snippets are ranking "
+                "hints, never evidence."
+            ),
+            "provider_recorded": " + ".join(
+                str(d.get("provenance", {}).get("provider_recorded", "?"))
+                for d in (primary, secondary)
+            ),
+            "key": "normalised query text, domain filter, hl, gl (max_results truncates)",
+            "fused": {
+                "order": order,
+                "primary_sources": primary.get("provenance", {}).get("sources", []),
+                "secondary_sources": secondary.get("provenance", {}).get("sources", []),
+                "entries": {
+                    name: tally[name] for name in ("both", "primary_only", "secondary_only")
+                },
+                "secondary_urls_added": sum(
+                    e["fused"]["secondary_added"] for e in entries if "fused" in e
+                ),
+            },
+            "sources": [
+                *primary.get("provenance", {}).get("sources", []),
+                *secondary.get("provenance", {}).get("sources", []),
+            ],
+        },
+        "entries": entries,
+    }
+    RecordedSearchStore.from_document(document)
+    return document
+
+
 def coverage(document: dict[str, Any]) -> dict[str, dict[str, int]]:
     """Set -> cases and requests the store answers."""
     out: dict[str, dict[str, int]] = {}
@@ -531,8 +691,34 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--cases", nargs="+", default=None, help="with --record-run: the run's case ids"
     )
+    parser.add_argument(
+        "--fuse",
+        nargs=2,
+        type=Path,
+        default=None,
+        metavar=("PRIMARY", "SECONDARY"),
+        help="FUSE-1: combine two committed stores per request key (no capture is read)",
+    )
+    parser.add_argument(
+        "--order",
+        choices=FUSE_ORDERS,
+        default="interleave",
+        help="with --fuse: how one request's URLs from both stores are listed",
+    )
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.fuse:
+        if args.source or args.record_run or args.cases:
+            parser.error("--fuse takes two stores and nothing else")
+        primary, secondary = (json.loads(p.read_text(encoding="utf-8")) for p in args.fuse)
+        document = fuse_documents(primary, secondary, order=args.order)
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(
+            json.dumps(document, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        )
+        for set_name, row in coverage(document).items():
+            print(f"{set_name}: {row['cases']} cases, {row['requests']} requests", file=sys.stdout)
+        return 0
     if bool(args.source) == bool(args.record_run):
         parser.error("pass --source (one per set) or --record-run, not both and not neither")
     if (args.cases is None) != (args.record_run is None):

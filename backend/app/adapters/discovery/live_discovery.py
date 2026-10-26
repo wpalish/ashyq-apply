@@ -3337,6 +3337,94 @@ def local_twin_wanted(verdict: str | None) -> bool:
 FRONT_PAGE_NOT_PROGRAMME = True
 #: FP-1: the verdict for a front page, pinned by tests.
 FRONT_PAGE_VERDICT = "a site's front page is not a programme page"
+#: Plan rule DC-1 (TRACK_B_2026-10-26 §1), off until a paired run passes.
+#: CG-1 refuses a branch campus abroad and, by design, never a domestic second
+#: campus; the applicant's request names no campus. On the Exa and Tavily
+#: stores (base5 / base5t) ubc confirmed UBC Okanagan's department page
+#: ``cs.ok.ubc.ca/undergraduate/computer-science`` in 7 of 8 columns whenever
+#: ``you.ubc.ca``'s robots.txt timed out, and with that page refused its own
+#: link to ``okanagan.calendar.ubc.ca/…/computer-science-bsc`` is next. On:
+#: the site's own URLs say which words are campus places - two search results
+#: on one host and parent path whose last segments differ in exactly one
+#: token, where one token is a word of the institution's city and the other
+#: is not (``computer-science-vancouver-bsc`` / ``computer-science-okanagan-bsc``)
+#: make the other a campus place (:func:`campus_places`); no word table. A lead
+#: identity recovery would accept is refused when its host, URL path or head
+#: names such a place, or when its text names one and never the city
+#: (:func:`other_campus_named`). No place is learned without the city (the
+#: entry's ``city``) or without such a pair, so the rule cannot fire there.
+#: The benchmark harness flips it per capture (``--campus-qualifier-guard``).
+#: False changes nothing.
+CAMPUS_QUALIFIER_GUARD = False
+#: DC-1: the verdict's opening words, pinned by tests.
+OTHER_CAMPUS_VERDICT = "page names another campus"
+
+
+def _place_tokens(text: str) -> list[str]:
+    """DC-1: the folded word tokens of a URL segment, host or title."""
+    return [t for t in re.split(r"[^a-z0-9]+", _fold(text)) if t]
+
+
+def campus_places(urls: Iterable[str], city: str) -> frozenset[str]:
+    """DC-1: the places the site's own URLs use as a campus qualifier beside ``city``.
+
+    Two URLs on one host and parent path whose last segments have the same
+    number of ``-``/``_``/``.`` tokens and differ in exactly one, where one
+    side's token is a word of the city and the other's is not: the other is a
+    campus place. Empty without a city or without such a pair.
+    """
+    city_words = set(_place_tokens(city))
+    if not city_words:
+        return frozenset()
+    groups: dict[tuple[str, str], list[list[str]]] = {}
+    for url in urls:
+        parts = urlparse(url)
+        segments = unquote(parts.path or "").lower().rstrip("/").split("/")
+        if len(segments) < 2 or not segments[-1]:
+            continue
+        key = ((parts.hostname or "").lower(), "/".join(segments[:-1]))
+        groups.setdefault(key, []).append(_place_tokens(segments[-1]))
+    places: set[str] = set()
+    for slugs in groups.values():
+        for one in slugs:
+            for other in slugs:
+                if len(one) != len(other) or one == other:
+                    continue
+                differ = [(a, b) for a, b in zip(one, other, strict=True) if a != b]
+                if (
+                    len(differ) == 1
+                    and differ[0][0] in city_words
+                    and differ[0][1] not in city_words
+                    and not differ[0][1].isdigit()
+                ):
+                    places.add(differ[0][1])
+    return frozenset(places)
+
+
+def other_campus_named(
+    page: PageClassification, url: str, text: str, places: frozenset[str], city: str
+) -> str | None:
+    """DC-1: the campus place (of ``places``) a page belongs to instead of ``city``, or ``None``.
+
+    The page's host labels, URL path and head (title and ``h1``) are read
+    token by token; its text counts only when it names the place and never
+    names the city.
+    """
+    if not places:
+        return None
+    parts = urlparse(url)
+    named = set(_place_tokens(parts.hostname or "")) | set(_place_tokens(unquote(parts.path or "")))
+    named |= set(_place_tokens(page.title or "")) | set(_place_tokens(page.heading or ""))
+    for place in sorted(places):
+        if place in named:
+            return place
+    folded = _fold(text)
+    if re.search(rf"(?<![a-z0-9]){re.escape(_fold(city))}(?![a-z0-9])", folded):
+        return None
+    for place in sorted(places):
+        if re.search(rf"(?<![a-z0-9]){re.escape(place)}(?![a-z0-9])", folded):
+            return place
+    return None
 
 
 def is_front_page(url: str) -> bool:
@@ -4215,6 +4303,8 @@ class DiscoveryTrace:
     homepage_hop_reads: list[tuple[str, int]] = field(default_factory=list)
     #: CG-1: the institution's country, for the campus guard. Never serialised.
     country: str = ""
+    #: DC-1: the institution's city, for the campus qualifier guard. Never serialised.
+    city: str = ""
     #: SB-1 only: seconds and reads per discovery stage, ``t_first_query`` and
     #: why the budget stopped discovery. Empty while the rule is off, and then
     #: not serialised.
@@ -5502,7 +5592,10 @@ class LiveDiscoveryAdapter:
     ) -> tuple[Candidate, DiscoveryTrace]:
         domain = urlparse(entry["homepage"]).netloc
         trace = DiscoveryTrace(
-            institution=entry["name"], domain=domain, country=str(entry.get("country") or "")
+            institution=entry["name"],
+            domain=domain,
+            country=str(entry.get("country") or ""),
+            city=str(entry.get("city") or ""),
         )
         trace.search_queries_sent = self._queries_before_discovery
         self._hub_followed = []
@@ -6893,6 +6986,24 @@ class LiveDiscoveryAdapter:
             ):
                 # FP-1: a front page lists programmes; it is not one of them.
                 reason = FRONT_PAGE_VERDICT
+            if reason is None and CAMPUS_QUALIFIER_GUARD and trace.city:
+                # DC-1: a domestic second campus the site's own URLs name.
+                place = other_campus_named(
+                    page,
+                    result.final_url or found.url,
+                    html_to_text(result.text),
+                    campus_places(
+                        [
+                            *(u for row in trace.search_results for u in row["urls"]),
+                            *(lead.url for lead in queue),
+                            found.url,
+                        ],
+                        trace.city,
+                    ),
+                    trace.city,
+                )
+                if place is not None:
+                    reason = f"{OTHER_CAMPUS_VERDICT} ({place}), not {trace.city}"
             trace.note_read(
                 found.url, result.final_url or found.url, result.text, reason, page.subject or ""
             )
