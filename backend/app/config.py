@@ -171,6 +171,12 @@ class Settings(BaseSettings):
     #: store the provider answers from. No key is read in that mode, and there is
     #: no fallback to any other provider (``app/adapters/search/recorded.py``).
     recorded_search_store: Path | None = None
+    #: SR-WIDE, the record path (``evaluation.research.live --record-wide``):
+    #: Exa and Tavily ask for the whole page one paid request buys (Exa 25
+    #: results, Tavily 20 at ``basic``) and hand the caller only the head it
+    #: asked for, so ranking is unchanged and the capture records the rest.
+    #: Off by default: the product's requests stay as narrow as they were.
+    search_record_wide: bool = False
     #: Where research answers come from (owner, 2026-10-19: live search frozen).
     #: ``kb`` (default): the verified knowledge base in ``app/knowledge`` - no
     #: discovery, no search, no page reads; a university not in it gets an

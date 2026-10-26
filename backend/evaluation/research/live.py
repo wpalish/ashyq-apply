@@ -510,9 +510,11 @@ def recorded_kind_telemetry(telemetry: Telemetry, counters: Any) -> None:
 SEARCH_LOG_SCHEMA = "search-log/1"
 #: Requests kept per case; a strict capture sends at most six discovery queries.
 SEARCH_LOG_CAP = 200
-#: Bounds on what one result keeps of the provider's text.
+#: Bounds on what one result keeps of the provider's text. The snippet bound
+#: is the adapters' own (Exa's highlights and Tavily's content are cut at
+#: 1000), so a logged snippet is exactly what ranking saw (SR-WIDE).
 SEARCH_LOG_TITLE_CHARS = 300
-SEARCH_LOG_SNIPPET_CHARS = 600
+SEARCH_LOG_SNIPPET_CHARS = 1000
 
 
 class SearchLog:
@@ -525,6 +527,11 @@ class SearchLog:
     request (the ``recorded`` provider) is never logged, and a case that sent
     no query writes no file, so a capture without one is unchanged.
     A snippet is the provider's ranking hint, never evidence.
+
+    SR-WIDE: when the adapter recorded wide (``--record-wide``), ``results``
+    holds the provider's whole page, and ``page`` says how many results were
+    asked for and returned, how many the caller consumed (the head, ranks
+    1..consumed), the parameters sent and the request's reported cost.
     """
 
     def __init__(self, path: Path, case_id: str) -> None:
@@ -543,6 +550,8 @@ class SearchLog:
         """Keep one answered request and rewrite the file (a killed case keeps it)."""
         if len(self.requests) >= SEARCH_LOG_CAP:
             return
+        consumed = tuple(getattr(response, "results", ()))
+        page = getattr(response, "page", None)
         results = [
             {
                 "rank": result.rank,
@@ -550,21 +559,29 @@ class SearchLog:
                 "title": (result.title or "")[:SEARCH_LOG_TITLE_CHARS],
                 "snippet": (result.snippet or "")[:SEARCH_LOG_SNIPPET_CHARS],
             }
-            for result in getattr(response, "results", ())
+            for result in (page.results if page is not None else consumed)
         ]
-        self.requests.append(
-            {
-                "provider": provider,
-                "method": method,
-                "kind": kind,
-                "query": str(request.get("query", "")),
-                "domains": [str(d) for d in request.get("domains") or ()],
-                "hl": request.get("hl"),
-                "gl": request.get("gl"),
-                "max_results": request.get("max_results", 10),
-                "results": results,
+        row: dict[str, Any] = {
+            "provider": provider,
+            "method": method,
+            "kind": kind,
+            "query": str(request.get("query", "")),
+            "domains": [str(d) for d in request.get("domains") or ()],
+            "hl": request.get("hl"),
+            "gl": request.get("gl"),
+            "max_results": request.get("max_results", 10),
+            "results": results,
+        }
+        if page is not None:
+            row["page"] = {
+                "requested": page.requested,
+                "returned": len(page.results),
+                "consumed": len(consumed),
+                "parameters": dict(page.parameters),
+                "cost": page.cost,
+                "cost_unit": page.cost_unit,
             }
-        )
+        self.requests.append(row)
         self.write()
 
     def as_dict(self) -> dict[str, Any]:
@@ -578,15 +595,85 @@ class SearchLog:
         temporary.replace(self.path)
 
 
-def search_environment(search_provider: str, recorded_store: Path | None) -> dict[str, str]:
+class CaseSearchCache:
+    """SR-WIDE, no duplicate spend: one capture's answered provider requests.
+
+    Keyed like the recorded-search store (provider, normalised query text,
+    domain filter, ``hl``/``gl``; ``max_results`` only truncates). A request
+    asked again is answered from the first answer's head — from the whole page
+    when the adapter recorded wide — and is never sent twice. The one case
+    re-sent is a caller asking for more results than a narrow first answer
+    could hold. A failed request is not kept, so it is not answered here.
+    """
+
+    def __init__(self) -> None:
+        #: Key -> (the answer, how many results its request asked the provider for).
+        self._answers: dict[str, tuple[Any, int]] = {}
+
+    @staticmethod
+    def _key(provider: str, request: dict[str, Any]) -> str:
+        from app.adapters.search.recorded import request_key
+
+        key = request_key(
+            str(request.get("query", "")),
+            [str(d) for d in request.get("domains") or ()],
+            request.get("hl"),
+            request.get("gl"),
+        )
+        return f"{provider}\n{key}"
+
+    def keep(self, provider: str, request: dict[str, Any], response: Any) -> None:
+        key = self._key(provider, request)
+        if key in self._answers:
+            return
+        page = getattr(response, "page", None)
+        asked = page.requested if page is not None else int(request.get("max_results", 10))
+        self._answers[key] = (response, asked)
+
+    def answer(self, provider: str, request: dict[str, Any]) -> Any | None:
+        """The earlier answer cut to this request's ``max_results``, or None to send it."""
+        entry = self._answers.get(self._key(provider, request))
+        if entry is None:
+            return None
+        from app.adapters.search.base import SearchResponse
+
+        response, asked = entry
+        page = getattr(response, "page", None)
+        held = tuple(page.results if page is not None else getattr(response, "results", ()))
+        wanted = int(request.get("max_results", 10))
+        if wanted > len(held) and len(held) >= asked:
+            # The first answer was cut at what it asked for; this asks for more.
+            return None
+        return SearchResponse(
+            query=str(request.get("query", "")),
+            provider=response.provider,
+            retrieved_at=response.retrieved_at,
+            results=held[:wanted],
+        )
+
+
+#: SR-WIDE: the providers whose adapters can record their whole paid page.
+RECORD_WIDE_PROVIDERS = frozenset({"exa", "tavily"})
+
+
+def search_environment(
+    search_provider: str, recorded_store: Path | None, *, record_wide: bool = False
+) -> dict[str, str]:
     """The environment a capture child is given for its search layer and mode.
 
     ``UNIMATCH_KNOWLEDGE_MODE=live`` always: since 2026-10-19 the product
     answers from the knowledge base by default, with an offline fetcher and
     no discovery, and a benchmark capture measures the web pipeline. In
     recorded mode the store path is passed and every paid key is blanked.
+    ``record_wide`` (SR-WIDE, ``--record-wide``) turns on
+    ``UNIMATCH_SEARCH_RECORD_WIDE``; it is never set otherwise, so a child
+    inherits whatever its parent was given.
     """
     environment = {"UNIMATCH_KNOWLEDGE_MODE": "live"}
+    if record_wide:
+        if search_provider not in RECORD_WIDE_PROVIDERS:
+            raise ValueError(f"--record-wide needs {' or '.join(sorted(RECORD_WIDE_PROVIDERS))}")
+        environment["UNIMATCH_SEARCH_RECORD_WIDE"] = "true"
     if search_provider == "recorded":
         if recorded_store is None:
             raise ValueError("recorded search needs a store")
@@ -1087,6 +1174,7 @@ async def capture_one(
     recorded_search.COUNTERS.reset()
     misses_printed = 0
     search_log = SearchLog(output.with_suffix(".search.json"), case_id)
+    search_cache = CaseSearchCache()
 
     budget = None
     if strict_expert_budget:
@@ -1250,9 +1338,20 @@ async def capture_one(
         # Each search call is counted and timed into this case's own log: a
         # case that runs out of wall clock after two fetches spent the time
         # somewhere, and search is the first place to look.
+        name = getattr(provider, "name", "")
+        # SR-WIDE, no duplicate spend: a request this case already had
+        # answered is answered again from that answer, never re-sent. It still
+        # counts against the case's own query budget, as an uncached capture
+        # counted it, so the pipeline's behaviour is unchanged; it does not
+        # touch the run's ledger, which counts real provider calls only.
+        cached = (
+            None
+            if name == recorded_search.RECORDED_PROVIDER_NAME
+            else search_cache.answer(name, kwargs)
+        )
         if budget:
-            budget.before_search(getattr(provider, "name", ""))
-        if search_ledger is not None and not search_ledger.reserve():
+            budget.before_search(name)
+        if cached is None and search_ledger is not None and not search_ledger.reserve():
             # Ticket 02: the run's cap is spent. Refused here, before the
             # provider is asked anything, so the (N+1)th query costs nothing.
             from app.adapters.search.base import SearchUnavailable
@@ -1277,6 +1376,17 @@ async def capture_one(
             observation.telemetry.search_localized_calls = (
                 observation.telemetry.search_localized_calls or 0
             ) + 1
+        if cached is not None:
+            observation.telemetry.search_cache_hits = (
+                observation.telemetry.search_cache_hits or 0
+            ) + 1
+            print(
+                f"search #{observation.telemetry.search_calls} answered from this case's "
+                "earlier answer; no request sent",
+                flush=True,
+            )
+            checkpoint()
+            return cached
         began = time.monotonic()
         if observation.telemetry.t_first_query is None:
             # On the case clock, like latency_seconds: how long the case ran
@@ -1288,8 +1398,8 @@ async def capture_one(
                 budget.remaining()
         try:
             response = await original_search(provider, *args, **kwargs)
-            name = getattr(provider, "name", "")
             if name != recorded_search.RECORDED_PROVIDER_NAME:
+                search_cache.keep(name, kwargs, response)
                 search_log.record(
                     name,
                     "search_localized" if localized else "search",
@@ -2000,6 +2110,14 @@ def main() -> None:
         help="the run's hard cap on provider queries, required for every provider but none, "
         "fake and recorded; the run refuses to start when 6 per case exceeds what it leaves, "
         "and the (N+1)th query is refused locally with no request sent",
+    )
+    parser.add_argument(
+        "--record-wide",
+        action="store_true",
+        help="SR-WIDE, a record run on exa or tavily: ask the provider for the whole page one "
+        "paid request buys (Exa 25 results with 1000-character highlights, Tavily 20 at basic "
+        "depth) and log every result in <case>.search.json, while the pipeline still ranks "
+        "exactly the head it asks for (10 for discovery); no extra query is sent",
     )
     parser.add_argument(
         "--search-ledger",
@@ -2811,6 +2929,13 @@ def main() -> None:
     if args.strict_expert_budget and search_provider not in STRICT_PROVIDERS:
         parser.error("Strict expert budget requires configured exa or exa_mcp")
     print(f"search provider: {search_provider}", flush=True)
+    if args.record_wide:
+        if search_provider not in RECORD_WIDE_PROVIDERS:
+            parser.error(
+                f"--record-wide records a keyed provider's whole page: it needs --search-provider "
+                f"{' or '.join(sorted(RECORD_WIDE_PROVIDERS))}, not {search_provider}"
+            )
+        print(f"search record-wide: on ({search_provider} asked for its whole page)", flush=True)
     cap = args.max_search_queries
     if cap is None and needs_cap(search_provider):
         parser.error(
@@ -3254,7 +3379,7 @@ def main() -> None:
         # the cache also covers direct --child invocation in an existing process.
         child_configuration = {
             "UNIMATCH_SEARCH_PROVIDER": search_provider,
-            **search_environment(search_provider, recorded_store),
+            **search_environment(search_provider, recorded_store, record_wide=args.record_wide),
         }
         if args.strict_expert_budget:
             child_configuration.update(
@@ -3305,7 +3430,7 @@ def main() -> None:
             UNIMATCH_FETCH_CONTACT="https://github.com/wpalish/ashyq-apply",
             UNIMATCH_SEARCH_PROVIDER=search_provider,
             PYTHONIOENCODING="utf-8",
-            **search_environment(search_provider, recorded_store),
+            **search_environment(search_provider, recorded_store, record_wide=args.record_wide),
         )
         if args.strict_expert_budget:
             environment["UNIMATCH_RESPECT_ROBOTS"] = "true"
@@ -3650,6 +3775,7 @@ def main() -> None:
                 **entry_path_config(args),
                 **recorded_store_config(recorded_store),
                 **({"trust_env_proxy": True} if args.trust_env_proxy else {}),
+                **({"search_record_wide": True} if args.record_wide else {}),
                 **(
                     {
                         "search_query_cap": cap_config(

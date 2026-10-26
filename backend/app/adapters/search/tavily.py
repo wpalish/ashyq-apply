@@ -12,6 +12,14 @@ says becomes a claim.
 **Fail closed and fail visibly.** Every transport error, timeout, quota
 rejection and malformed body becomes :class:`SearchUnavailable`, with no
 retries.
+
+**Record wide, rank narrow (SR-WIDE, the record path only).** A ``basic``
+search costs one credit whatever ``max_results`` is (up to 20), so built with
+``record_wide=True`` (``UNIMATCH_SEARCH_RECORD_WIDE``) the adapter asks for 20
+results, ``basic`` depth and the request's credit usage; the caller still gets
+exactly the head it asked for, and the full page travels in
+``SearchResponse.page`` for the capture's search log only. The product default
+is narrow and unchanged.
 """
 
 from __future__ import annotations
@@ -23,7 +31,13 @@ from typing import Any
 import httpx
 
 from app.adapters.network_policy import BlockedRequest, check_url
-from app.adapters.search.base import SearchResponse, SearchResult, SearchUnavailable
+from app.adapters.search.base import (
+    ProviderPage,
+    SearchResponse,
+    SearchResult,
+    SearchUnavailable,
+    reported_cost,
+)
 
 TAVILY_SEARCH_URL = "https://api.tavily.com/search"
 
@@ -34,6 +48,8 @@ DEFAULT_TIMEOUT_SECONDS = 15.0
 MAX_RESPONSE_BYTES = 1 * 1024 * 1024
 #: Tavily's own ceiling per query.
 MAX_RESULTS_PER_QUERY = 20
+#: Characters of a result's ``content`` kept as its snippet.
+SNIPPET_CHARS = 1000
 
 
 class TavilySearchProvider:
@@ -48,16 +64,21 @@ class TavilySearchProvider:
         search_depth: str = DEFAULT_SEARCH_DEPTH,
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
         client: httpx.AsyncClient | None = None,
+        record_wide: bool = False,
     ) -> None:
         if not api_key:
             raise ValueError(
                 "TavilySearchProvider needs an API key. It is read from the environment at "
                 "startup and never stored in the repository."
             )
+        if record_wide and search_depth != DEFAULT_SEARCH_DEPTH:
+            # The wide page is free only at one credit a query.
+            raise ValueError("record_wide asks for basic search depth only")
         self._api_key = api_key
         self._search_depth = search_depth
         self._timeout = timeout_seconds
         self._client = client
+        self._record_wide = record_wide
 
     def _headers(self) -> dict[str, str]:
         return {"authorization": f"Bearer {self._api_key}", "content-type": "application/json"}
@@ -86,6 +107,11 @@ class TavilySearchProvider:
             "search_depth": self._search_depth,
             "max_results": min(max_results, MAX_RESULTS_PER_QUERY),
         }
+        if self._record_wide:
+            # SR-WIDE: the same one credit buys 20 results; the caller still
+            # ranks only the head it asked for (below).
+            payload["max_results"] = MAX_RESULTS_PER_QUERY
+            payload["include_usage"] = True
         if domains:
             payload["include_domains"] = list(domains)
 
@@ -111,7 +137,8 @@ class TavilySearchProvider:
                 f"Tavily returned {len(response.content)} bytes, over the {MAX_RESPONSE_BYTES} cap"
             )
         try:
-            rows = response.json()["results"]
+            body = response.json()
+            rows = body["results"]
             if not isinstance(rows, list):
                 raise TypeError("results is not a list")
         except (ValueError, KeyError, TypeError) as exc:
@@ -133,12 +160,31 @@ class TavilySearchProvider:
                 SearchResult(
                     url=url,
                     title=row.get("title") or "",
-                    snippet=(content if isinstance(content, str) else "")[:1000],
+                    snippet=(content if isinstance(content, str) else "")[:SNIPPET_CHARS],
                     provider=self.name,
                     rank=len(results) + 1,
                     retrieved_at=retrieved_at,
                 )
             )
+        if not self._record_wide:
+            return SearchResponse(
+                query=query, provider=self.name, retrieved_at=retrieved_at, results=tuple(results)
+            )
         return SearchResponse(
-            query=query, provider=self.name, retrieved_at=retrieved_at, results=tuple(results)
+            query=query,
+            provider=self.name,
+            retrieved_at=retrieved_at,
+            # Rank narrow: exactly the head the caller asked for.
+            results=tuple(results[:max_results]),
+            page=ProviderPage(
+                results=tuple(results),
+                requested=MAX_RESULTS_PER_QUERY,
+                parameters=(
+                    ("search_depth", self._search_depth),
+                    ("max_results", MAX_RESULTS_PER_QUERY),
+                    ("include_usage", True),
+                ),
+                cost=reported_cost(body.get("usage"), "credits"),
+                cost_unit="credits",
+            ),
         )

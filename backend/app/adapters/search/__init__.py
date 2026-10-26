@@ -109,12 +109,22 @@ def get_search_provider() -> SearchProvider:
     if settings.search_provider == "exa":
         from app.adapters.search.exa import ExaSearchProvider
 
-        return _ThrottleLatch(ExaSearchProvider(settings.exa_api_key.get_secret_value()))
+        return _ThrottleLatch(
+            ExaSearchProvider(
+                settings.exa_api_key.get_secret_value(),
+                record_wide=settings.search_record_wide,
+            )
+        )
 
     if settings.search_provider == "tavily":
         from app.adapters.search.tavily import TavilySearchProvider
 
-        return _ThrottleLatch(TavilySearchProvider(settings.tavily_api_key.get_secret_value()))
+        return _ThrottleLatch(
+            TavilySearchProvider(
+                settings.tavily_api_key.get_secret_value(),
+                record_wide=settings.search_record_wide,
+            )
+        )
 
     if settings.search_provider == "brave":
         from app.adapters.search.brave import BraveSearchProvider

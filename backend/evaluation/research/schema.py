@@ -133,7 +133,9 @@ class Telemetry(Strict):
     browser_fetches: int | None = Field(default=None, ge=0)
     pdf_fetches: int | None = Field(default=None, ge=0)
     #: Every query sent to the provider, ``search`` and ``search_localized``
-    #: alike: the number the 6-query budget is held against.
+    #: alike: the number the 6-query budget is held against. Includes the
+    #: ``search_cache_hits`` answered without a request (SR-WIDE), which the
+    #: budget counts as before; real provider calls = the two's difference.
     search_calls: int | None = Field(default=None, ge=0)
     #: Of ``search_calls``, those sent through ``search_localized`` (R5's
     #: local-language family). Unset when none was, so every capture without
@@ -145,6 +147,13 @@ class Telemetry(Strict):
     #: refused before any request was sent (not in ``search_calls``). Unset
     #: when none was, so every capture without one keeps its bytes.
     search_cap_refusals: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    #: SR-WIDE: of ``search_calls``, requests this case had already had
+    #: answered and that were answered again from that answer, with no
+    #: request sent and nothing charged to the run's ledger. Unset when none
+    #: was, so every capture without one keeps its bytes.
+    search_cache_hits: int | None = Field(
         default=None, ge=0, exclude_if=lambda value: value is None
     )
     model_input_tokens: int | None = Field(default=None, ge=0)

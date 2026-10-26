@@ -37,6 +37,13 @@ alone (MISS_STAGES 2026-10-19 §0.1: warsaw is a replay-only miss).
 snippet beside each URL, as a capture's search log (``<case>.search.json``)
 recorded them; replay then hands ``rank_candidates`` what the live provider
 did. A snippet is a ranking hint only, never evidence (``SearchResult``).
+
+A v2 entry recorded wide (SR-WIDE, ``--record-wide``) lists the provider's
+whole paid page (Exa 25, Tavily 20), each result with its ``rank``, and a
+``page`` record (asked, returned, consumed, parameters, cost) the loader
+checks the shape of and replay never reads. Replay hands a caller the top
+``max_results`` of the list — discovery's ten, as the live adapter did — so a
+wide store and a narrow one answer discovery alike.
 """
 
 from __future__ import annotations
@@ -124,14 +131,35 @@ def _texts(row: dict[str, Any], urls: list[str], index: int) -> tuple[tuple[str,
     if not isinstance(results, list) or len(results) != len(urls):
         raise RecordedStoreError(f"entry {index}: 'results' must list every URL once")
     texts: list[tuple[str, str]] = []
-    for url, result in zip(urls, results, strict=True):
+    for position, (url, result) in enumerate(zip(urls, results, strict=True), start=1):
         if not isinstance(result, dict) or result.get("url") != url:
             raise RecordedStoreError(f"entry {index}: 'results' must follow 'urls' in order")
+        if "rank" in result and result["rank"] != position:
+            raise RecordedStoreError(f"entry {index}: a result's 'rank' is its 1-based position")
         title, snippet = result.get("title", ""), result.get("snippet", "")
         if not isinstance(title, str) or not isinstance(snippet, str):
             raise RecordedStoreError(f"entry {index}: a result's title and snippet are strings")
         texts.append((title, snippet))
     return tuple(texts)
+
+
+def _check_page(row: dict[str, Any], index: int) -> None:
+    """A wide entry's ``page`` record: counts that fit its URL list. Replay never reads it."""
+    page = row.get("page")
+    if page is None:
+        return
+    if not isinstance(page, dict) or "results" not in row:
+        raise RecordedStoreError(f"entry {index}: 'page' is an object beside 'results'")
+    counts = [page.get(name) for name in ("requested", "returned", "consumed")]
+    if not all(type(v) is int and v >= 0 for v in counts):
+        raise RecordedStoreError(f"entry {index}: 'page' counts are whole numbers")
+    _requested, returned, consumed = (int(v) for v in counts)  # type: ignore[arg-type]
+    # ``returned`` counts every result the provider sent; ``urls`` keeps its
+    # public http(s) ones, so it may be shorter, never longer.
+    if len(row.get("urls") or []) > returned or consumed > returned:
+        raise RecordedStoreError(
+            f"entry {index}: 'page' must count at least the URLs kept, and consumed no more"
+        )
 
 
 @dataclass(frozen=True)
@@ -171,8 +199,12 @@ class RecordedSearchStore:
                 raise RecordedStoreError(f"entry {index}: 'hl'/'gl' must be strings or null")
             if not isinstance(urls, list) or not all(_public_url(u) for u in urls):
                 raise RecordedStoreError(f"entry {index}: 'urls' must be http(s) URLs")
-            if not v2 and "results" in row:
-                raise RecordedStoreError(f"entry {index}: 'results' needs {STORE_SCHEMA_V2!r}")
+            for v2_field in ("results", "page"):
+                if not v2 and v2_field in row:
+                    raise RecordedStoreError(
+                        f"entry {index}: {v2_field!r} needs {STORE_SCHEMA_V2!r}"
+                    )
+            _check_page(row, index)
             key = request_key(query, domains, hl, gl)
             kept = tuple(urls)
             titled = _texts(row, urls, index)

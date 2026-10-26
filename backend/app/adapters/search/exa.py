@@ -18,6 +18,16 @@ becomes a claim. Never pass a highlight to an extractor.
 rejection and malformed body becomes :class:`SearchUnavailable`. There are no
 retries: a provider that answered 429 once will answer it three times, and a
 degraded run must look degraded rather than like a run that found less.
+
+**Record wide, rank narrow (SR-WIDE, the record path only).** Built with
+``record_wide=True`` (``UNIMATCH_SEARCH_RECORD_WIDE``, which a record run sets
+through ``evaluation.research.live --record-wide``), the adapter asks Exa for
+the whole page one request is billed for: ``numResults`` 25 and highlights of
+up to :data:`SNIPPET_CHARS` characters. The caller still gets exactly the head
+it asked for (``max_results``), so ranking sees the same number of results as
+always; the full page travels in ``SearchResponse.page`` for the capture's
+search log and the recorded-search store only. The product default is narrow
+and unchanged. Every result of the page is a hint under the first rule.
 """
 
 from __future__ import annotations
@@ -29,7 +39,13 @@ from typing import Any
 import httpx
 
 from app.adapters.network_policy import BlockedRequest, check_url
-from app.adapters.search.base import SearchResponse, SearchResult, SearchUnavailable
+from app.adapters.search.base import (
+    ProviderPage,
+    SearchResponse,
+    SearchResult,
+    SearchUnavailable,
+    reported_cost,
+)
 
 EXA_SEARCH_URL = "https://api.exa.ai/search"
 
@@ -48,6 +64,11 @@ MAX_RESPONSE_BYTES = 1 * 1024 * 1024
 #: Hard ceiling per query, whatever a caller asks for. Cost is per result.
 MAX_RESULTS_PER_QUERY = 25
 
+#: Characters of joined highlights one result keeps as its snippet. A record
+#: run asks Exa for highlights of exactly this length (``maxCharacters``), so
+#: what the store keeps is what ranking saw, uncut.
+SNIPPET_CHARS = 1000
+
 
 class ExaSearchProvider:
     """The Exa adapter. Construct it through ``get_search_provider``."""
@@ -61,6 +82,7 @@ class ExaSearchProvider:
         search_type: str = DEFAULT_SEARCH_TYPE,
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
         client: httpx.AsyncClient | None = None,
+        record_wide: bool = False,
     ) -> None:
         if not api_key:
             raise ValueError(
@@ -71,6 +93,7 @@ class ExaSearchProvider:
         self._search_type = search_type
         self._timeout = timeout_seconds
         self._client = client
+        self._record_wide = record_wide
 
     def _headers(self) -> dict[str, str]:
         return {"x-api-key": self._api_key, "content-type": "application/json"}
@@ -103,6 +126,12 @@ class ExaSearchProvider:
             "numResults": min(max_results, MAX_RESULTS_PER_QUERY),
             "contents": {"highlights": True},
         }
+        if self._record_wide:
+            # SR-WIDE: the whole page one request is billed for, with
+            # highlights long enough to read offline. The caller still ranks
+            # only the head it asked for (below).
+            payload["numResults"] = MAX_RESULTS_PER_QUERY
+            payload["contents"] = {"highlights": {"maxCharacters": SNIPPET_CHARS}}
         if domains:
             payload["includeDomains"] = list(domains)
 
@@ -152,16 +181,35 @@ class ExaSearchProvider:
                     url=url,
                     title=row.get("title") or "",
                     # Joined, truncated, and never cited. See the module docstring.
-                    snippet=" ".join(h for h in highlights if isinstance(h, str))[:1000],
+                    snippet=" ".join(h for h in highlights if isinstance(h, str))[:SNIPPET_CHARS],
                     provider=self.name,
                     rank=len(results) + 1,
                     retrieved_at=retrieved_at,
                 )
             )
 
+        if not self._record_wide:
+            return SearchResponse(
+                query=query,
+                provider=self.name,
+                retrieved_at=retrieved_at,
+                results=tuple(results),
+            )
         return SearchResponse(
             query=query,
             provider=self.name,
             retrieved_at=retrieved_at,
-            results=tuple(results),
+            # Rank narrow: exactly the head the caller asked for.
+            results=tuple(results[:max_results]),
+            page=ProviderPage(
+                results=tuple(results),
+                requested=MAX_RESULTS_PER_QUERY,
+                parameters=(
+                    ("type", self._search_type),
+                    ("numResults", MAX_RESULTS_PER_QUERY),
+                    ("highlights.maxCharacters", SNIPPET_CHARS),
+                ),
+                cost=reported_cost(body.get("costDollars"), "total"),
+                cost_unit="usd",
+            ),
         )

@@ -37,6 +37,13 @@ search) becomes an entry of its own, keyed by the logged request itself. A
 build that reads no log writes the URL-only ``recorded-search/1`` document
 it always did.
 
+Record wide (SR-WIDE, 2026-10-26): a capture run with ``--record-wide`` logs
+the provider's whole paid page per request (Exa 25, Tavily 20) beside a
+``page`` record (asked, returned, consumed, parameters, cost). Its entries
+then hold every returned URL (not the trace's ten), each result with its
+``rank``, and the ``page`` record; replay hands a caller the top
+``max_results`` of them, which is what the live adapter handed it.
+
 Evaluation tooling only: nothing under ``app/`` may import it.
 """
 
@@ -189,6 +196,26 @@ def _logged_key(row: dict[str, Any]) -> str:
     )
 
 
+def _logged_urls(answer: dict[str, Any]) -> tuple[str, ...]:
+    """Every public http(s) result URL of one logged request, in the provider's order."""
+    urls = (str(r.get("url") or "") for r in answer.get("results") or [] if isinstance(r, dict))
+    return tuple(
+        u for u in urls if urlsplit(u).scheme in {"http", "https"} and urlsplit(u).hostname
+    )
+
+
+#: What a wide (SR-WIDE) log row's ``page`` may carry into the store entry.
+PAGE_FIELDS = ("requested", "returned", "consumed", "parameters", "cost", "cost_unit")
+
+
+def _wide_page(answer: dict[str, Any] | None) -> dict[str, Any] | None:
+    """SR-WIDE: the logged request's page record (asked, returned, consumed, cost), if wide."""
+    page = (answer or {}).get("page")
+    if not isinstance(page, dict):
+        return None
+    return {name: page[name] for name in PAGE_FIELDS if name in page}
+
+
 def _texts_for(urls: Sequence[str], results: Sequence[dict[str, Any]]) -> Texts:
     """``(title, snippet)`` per URL, matched on the URL; "" where the log has none."""
     by_url: dict[str, tuple[str, str]] = {}
@@ -265,6 +292,11 @@ def collect(
                 traced.add(key)
                 urls = tuple(str(u) for u in row.get("urls") or [])
                 answer = answers.get(key)
+                page = _wide_page(answer)
+                if page is not None and answer is not None:
+                    # SR-WIDE: the trace keeps the ten discovery ranked; the
+                    # log keeps the whole page the request paid for.
+                    urls = _logged_urls(answer)
                 observed.append(
                     {
                         "set": set_name,
@@ -277,6 +309,7 @@ def collect(
                         else _texts_for(urls, answer.get("results") or []),
                         "kind": None if answer is None else answer.get("kind"),
                         "provider": None if answer is None else answer.get("provider"),
+                        "page": page,
                         "repetition": label,
                     }
                 )
@@ -287,11 +320,7 @@ def collect(
                 if key in traced or not str(answer.get("query") or "").strip():
                     continue
                 results = [r for r in answer.get("results") or [] if isinstance(r, dict)]
-                urls = tuple(
-                    url
-                    for url in (str(r.get("url") or "") for r in results)
-                    if urlsplit(url).scheme in {"http", "https"} and urlsplit(url).hostname
-                )
+                urls = _logged_urls(answer)
                 observed.append(
                     {
                         "set": set_name,
@@ -309,6 +338,7 @@ def collect(
                         "texts": _texts_for(urls, results),
                         "kind": answer.get("kind"),
                         "provider": answer.get("provider"),
+                        "page": _wide_page(answer),
                         "repetition": label,
                     }
                 )
@@ -372,6 +402,12 @@ def build_store(sources: list[tuple[str, str, str, str, Path]]) -> dict[str, Any
             for name in ("kind", "provider"):
                 if chosen[name]:
                     entry[name] = chosen[name]
+            if chosen.get("page") is not None:
+                # SR-WIDE: the whole paid page, ranked; ``page.consumed`` says
+                # how many of them the live caller ranked (the head).
+                for rank, result in enumerate(entry["results"], start=1):
+                    result["rank"] = rank
+                entry["page"] = chosen["page"]
         entries.append(entry)
     order = {s: i for i, s in enumerate(DEV_SETS)}
     entries.sort(
@@ -394,6 +430,19 @@ def build_store(sources: list[tuple[str, str, str, str, Path]]) -> dict[str, Any
                 unique.append(entry)
         entries = unique
         providers = sorted({e["provider"] for e in entries if e.get("provider")})
+        wide = [e for e in entries if "page" in e]
+        record_wide: dict[str, Any] = (
+            {
+                "record_wide": {
+                    "entries": len(wide),
+                    "results": sum(len(e["urls"]) for e in wide),
+                    "rule": "every result the provider returned per request, best first; "
+                    "replay hands a caller the top max_results, as the live adapter did",
+                }
+            }
+            if wide
+            else {}
+        )
         return {
             "schema": "recorded-search/2",
             "provenance": {
@@ -408,6 +457,7 @@ def build_store(sources: list[tuple[str, str, str, str, Path]]) -> dict[str, Any
                 "key": "normalised query text, domain filter, hl, gl (max_results truncates)",
                 "query_rules": "today's defaults (LOCAL_LANGUAGE_QUERIES on, ALIAS_QUERIES off)",
                 "sources": provenance,
+                **record_wide,
             },
             "entries": entries,
         }

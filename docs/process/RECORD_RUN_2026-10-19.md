@@ -1,8 +1,10 @@
 # Record run R1, 2026-10-19: dispatch inputs, the v2 store and its replay target
 
 Ticket W4 / WF-03a in [NEXT_CYCLES_2026-10-19.md](NEXT_CYCLES_2026-10-19.md) §2.1 and §4. The ledger is
-[SEARCH_VOLUME_LEDGER_2026-10-19.md](SEARCH_VOLUME_LEDGER_2026-10-19.md). **R1 has not been dispatched.** It needs
-the owner's Exa key in the repository secrets (owner question Q6). Nothing in this document has called a provider.
+[SEARCH_VOLUME_LEDGER_2026-10-19.md](SEARCH_VOLUME_LEDGER_2026-10-19.md). **R1 has not been dispatched.** It needed
+the owner's Exa key in the repository secrets (owner question Q6); the owner added the Exa and Tavily keys on
+2026-10-26 and asked for the most from every paid query, so R1 records wide (§2.1, SR-WIDE). Nothing in this
+document has called a provider.
 
 R1 captures each of the 44 development cases once on Exa. The run produces three things. First, a
 `recorded-search/2` store with titles and snippets, which also covers the topic, scholarship and identity searches.
@@ -49,7 +51,7 @@ is captured. The artifact `preflight-<run id>` holds `out/config.txt` (provider,
 | `python -m evaluation.research.recorded_search` | `--source SET RUN_ID CREATED_AT HEAD_SHA DIR`, given once per set | also takes `--record-run RUN_ID CREATED_AT HEAD_SHA DIR --cases ID …`, which reads the single artifact for every development set the case list touches. It refuses any heldout or dev5 id before reading anything. It writes nothing unless the store comes out as `recorded-search/2` (exit status 1). |
 | scorecard | the replay target was judged on discovery misses only | if a repetition replayed a `recorded-search/2` store, each arm gets one more row: `recorded_search_misses_topic_scholarship`, target `== 0 (v2 store)`. A v1 replay keeps its old targets. So does a replay captured before `capture.json.config.recorded_search_store.schema` existed. |
 
-## 2. R1 dispatch inputs (Exa, all four development sets, 264-query cap)
+## 2. R1 dispatch inputs (Exa, all four development sets, 264-query cap, record-wide)
 
 Dispatch `benchmark-capture` on a ref that contains W4.
 
@@ -60,7 +62,7 @@ Dispatch `benchmark-capture` on a ref that contains W4.
 | `case` | `groningen delft aalto vienna warsaw ubc toronto hku ntu kaist ethz psaclay uppsala tcd tsinghua tec uba kaznu uct khalifa imperial unsw utokyo ntutw um kuleuven auckland ucph msu iitd puc uio usp ub chula ctu vut rwth kit unibo taltech ktu boun itu` |
 | `search_provider` | `exa` (needs the secret `UNIMATCH_EXA_API_KEY`) |
 | `max_search_queries` | `264` |
-| `base_args` | *(empty)* |
+| `base_args` | `--record-wide` (SR-WIDE, §2.1: this is the switch; it changes what is *recorded*, not what the pipeline ranks) |
 | `extra_args` | *(empty)* |
 | `case_parallelism` | `5` |
 | `seconds_per_case` | `120` |
@@ -83,7 +85,68 @@ Before dispatch:
 - No heldout id and no dev5 id appears in the list. The builder never lists their files.
 
 **R1′ (Tavily comparison).** Use the same inputs with `search_provider=tavily` (secret `UNIMATCH_TAVILY_API_KEY`) and
-`run_tag=r1t`. The cap stays at 264 and is charged to Tavily's own 1 000 credits.
+`run_tag=r1t`, `base_args=--record-wide` included. The cap stays at 264 and is charged to Tavily's own 1 000 credits.
+
+### 2.1 Record wide, rank narrow (SR-WIDE, 2026-10-26)
+
+The owner added the Exa and Tavily keys and asked for the most from every paid query. One request already pays for
+more results than discovery ranks, so a record run asks for the whole paid page and records all of it, while the
+pipeline ranks exactly what it ranked before.
+
+| | Exa (`search_provider=exa`) | Tavily (`search_provider=tavily`) |
+|---|---|---|
+| what one request pays for | `auto` search: one flat price for up to 10 results with contents; each result above 10 costs $1 per 1 000, up to 25 | `basic` search: 1 credit whatever `max_results` is, up to 20 |
+| asked for with `--record-wide` | `numResults=25`, `contents.highlights.maxCharacters=1000`, `type=auto` (unchanged) | `max_results=20`, `search_depth=basic`, `include_usage=true` |
+| asked for without it (the product, every other run) | unchanged: `numResults=min(max_results, 25)`, `highlights: true` | unchanged: `max_results=min(max_results, 20)`, `basic` |
+| what the caller ranks | the head it asked for: discovery's 10 (`SEARCH_RESULTS_PER_QUERY`), the topic and scholarship searches' 5, identity's 3 | the same |
+| what is recorded per request in `<case>.search.json` | every result (rank, URL, title, highlight ≤ 1000 characters), the query text and parameters, provider, and `page`: `requested` 25, `returned`, `consumed`, the parameters sent, `cost` (Exa's own `costDollars.total`) in `cost_unit` `usd` | the same; `cost` is Tavily's `usage.credits` in `credits` |
+
+- **How to switch it on.** `base_args=--record-wide` on the expert_paired dispatch. `evaluation.research.live
+  --record-wide` sets `UNIMATCH_SEARCH_RECORD_WIDE=true` for every capture child; the setting is off by default, and
+  the product's requests are unchanged unless the owner turns it on. `--record-wide` with any provider but `exa` or
+  `tavily` is refused before anything starts. `capture.json` says `config.search_record_wide: true`; `out/config.txt`
+  has it in `base_args=`.
+- **Rank narrow.** The adapter hands the caller exactly the first `max_results` of the page, and the response must be
+  the head of its page (`SearchResponse.page`; a mismatch is refused). Discovery's outcome on the same top 10 is
+  byte-identical: `test_search_record_wide.py::test_discovery_ranks_the_same_ten_when_the_provider_returns_25` runs
+  `discover_candidates` on a provider returning 25, whose results 11–25 are the most relevant words on purpose, and
+  gets the same report as from the same provider asked for 10. One difference from a product Exa run remains: the
+  highlight is asked for at 1000 characters (Exa's default length is not published), so the snippet discovery ranks
+  on may be longer than a product request's. Serper's baseline had ≈ 160-character snippets either way.
+- **No duplicate spend.** A capture never sends a request it already had answered: the case's cache answers it
+  (keyed like the store: provider, normalised text, domain filter, `hl`/`gl`; `max_results` only truncates), from the
+  whole page when wide. A cache answer counts against the case's 6-query budget as an uncached capture counted it, so
+  the pipeline's choices are unchanged, but it does not touch the run's ledger (`used` counts real provider calls
+  only) and it is not logged as a request; `telemetry.search_cache_hits` counts them. A narrow answer is re-sent only
+  for a longer head than it could hold; a failed request is not cached.
+- **Nothing truncates the record.** `SEARCH_LOG_SNIPPET_CHARS` is 1000, the adapters' own snippet bound (it was 600,
+  which cut Tavily's content); `SEARCH_LOG_CAP` is 200 requests per case. The trace's `search_results`
+  (`SEARCH_RESULTS_TRACE_CAP` 24 rows × `SEARCH_RESULTS_PER_QUERY` 10 URLs) keeps what discovery ranked; the rest of
+  the page reaches the store through the log, and `make_v2_store` takes a wide request's URLs from the log.
+- **The store.** Still `recorded-search/2`, additive: a wide entry lists every returned URL (`urls`), each `results`
+  row gains `rank`, and the entry gains `page` (`requested`, `returned`, `consumed`, `parameters`, `cost`,
+  `cost_unit`) beside the `provider` it already had; `provenance.record_wide` counts the wide entries and results. The
+  loader checks `rank` is the position and the `page` counts fit; base3 (v1) and narrow v2 entries load unchanged.
+  `RecordedSearchProvider` replays the top `max_results` it is asked for — discovery's 10 — so a wide store answers
+  discovery as the live adapter did.
+- **Results stay hints.** Every recorded result, title and highlight is a discovery hint: never evidence, never
+  cited. The page is still fetched through `Fetcher` before anything it says becomes a claim.
+
+**Cost estimate, 264 queries** (list prices quoted above; Exa `auto` is $7 per 1 000 requests per exa.ai/pricing,
+2026-10-26):
+
+| provider | per query, narrow (10) | per query, wide | R1 at the 264 cap, wide | R1 at ≈ 205 expected, wide | wide minus narrow, at the cap |
+|---|---:|---:|---:|---:|---:|
+| Exa `auto` | $0.007 | $0.007 + 15 × $0.001 = **$0.022** | **$5.81** | **$4.51** | +$3.96 |
+| Tavily `basic` | 1 credit | 1 credit | **264 credits** of 1 000 | ≈ 205 credits | 0 |
+
+The Exa figures are a ceiling: a query restricted to one domain often returns fewer than 25 results, and each
+result above 10 is billed only if returned. Each logged request carries Exa's own `costDollars.total`, so the run's
+real cost is the sum of `page.cost` over the `<case>.search.json` files — no dashboard needed. **Stop rule (NEXT_CYCLES
+§4.2 B1), read for wide:** the smoke's 1-result query costs the narrow price, so R1's projection is
+(smoke cost + $0.015) × 264. At list price that is $5.81, over the $5 line (half the $10 monthly credit), while the
+expected ≈ 205 sent cost $4.51. The main session asks the owner once before B2 whether $5.81 at the cap is
+accepted; if not, dispatch R1 narrow (`base_args` empty: $1.85 at the cap) — nothing else changes.
 
 ## 3. After the run: `make_v2_store`
 
@@ -111,7 +174,12 @@ provider has that method. Serper and `recorded` have it; Exa and Tavily do not. 
 list with the rebuilt `hl`/`gl` request, so a replay still finds its URLs. The titles and snippets, however, sit on a
 second entry keyed by the request that was actually sent, which has no `hl`/`gl`. A replay therefore ranks
 `local_language` lists on URL words alone, as on base3. That family is not a miss, and the scorecard row in §4 does
-not count it.
+not count it. On a wide run the traced `hl`/`gl` entry keeps the trace's 10 URLs, and the sent request's own entry
+holds the whole page.
+
+**Size (wide).** About 205 requests × up to 25 results × about 1.2 kB (a 1000-character highlight, title, URL) is
+about 6 MB of store JSON, against base3's few hundred kB. STORE-1 commits it as it is; the size is the price of
+holding every paid result.
 
 ## 4. Re-baseline the replay on the v2 store ($0)
 
@@ -140,3 +208,16 @@ Run four `expert_paired` runs, one per development set. Use `columns=4` and `sea
   step's arguments;
 - the scorecard row on v2 and its absence on v1 or unlabelled replays;
 - `schema` in the capture config.
+
+`backend/tests/test_search_record_wide.py` (SR-WIDE) covers the following:
+- Exa asks for 25 with 1000-character highlights and Tavily for 20 at `basic` with usage, only when recording wide;
+  the narrow requests are byte-for-byte today's; each response's results are the head of its page;
+- every caller gets the same results wide or narrow, for `max_results` 1, 3, 5, 10 and 25;
+- `discover_candidates` returns the same report from a 25-result provider as from the same provider asked for 10;
+- the setting is off by default, `--record-wide` reaches every child and `capture.json`, and is refused for any
+  provider but exa and tavily;
+- the search log keeps the whole page uncut with its `page` record; no log or trace cap truncates it;
+- `make_v2_store` builds wide entries (all URLs, ranks, `page`), the loader refuses malformed ones, base3 still loads,
+  and replay hands back the top N asked for;
+- a request already answered in a case is never sent twice (strict budget and not), the ledger counts real calls
+  only, a narrow answer is re-sent only for a longer head, and a replay is never cached.
