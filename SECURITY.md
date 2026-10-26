@@ -1,6 +1,6 @@
 # Security and privacy model
 
-ASHYQ Apply handles applicant profiles, academic results and application plans.
+Unimatch handles applicant profiles, academic results and application plans.
 Treat every profile, export, backup and database snapshot as confidential student
 data. The service is a research assistant: it never submits an application,
 attests, pays, uploads to a portal or impersonates a recommender.
@@ -34,6 +34,12 @@ attests, pays, uploads to a portal or impersonates a recommender.
   too. A browser that dies mid-render surfaces as a diagnostic result rather
   than a crash. Production infrastructure should additionally deny private
   and metadata egress at the network layer.
+- PDF bytes are untrusted too. A PDF encrypted with an empty user password
+  (it opens in any viewer without asking; official guides often are) is
+  decrypted with `""` through the pinned `cryptography` package and read under
+  the same page and time caps as any PDF. A PDF that needs a real password is
+  not read: no password is guessed, and the result is empty text, never an
+  exception or its message.
 - The worker treats jobs as hostile state: leases, bounded attempts,
   idempotency keys and unique constraints prevent duplicate or immortal work.
 
@@ -174,6 +180,21 @@ attests, pays, uploads to a portal or impersonates a recommender.
   deny RFC1918, link-local and cloud metadata ranges, which is what actually
   bounds a resolver race. These rules gate outbound crawling only; the
   service's own PostgreSQL and API traffic is unaffected.
+- Proxy mode (`Fetcher(trust_env_proxy=True)`, evaluation tooling only) gives
+  up address pinning: the request is addressed by host name and the proxy
+  resolves it again, so the address the network policy checked is not
+  necessarily the one connected to, and a DNS-rebinding host could reach the
+  proxy's own network. `ProxySettings.from_env` therefore refuses to start
+  when `UNIMATCH_ENVIRONMENT` is `production`/`prod`.
+- A self-hosted Actions runner (RP-1's reads from the owner's computer) runs
+  whatever the dispatched ref says, and the repository is public: anyone who
+  can push and dispatch, or a pull request no one has to approve, can run
+  commands on that machine. No such runner is registered today. Every job a
+  push, a pull request or a schedule starts names a GitHub-hosted image
+  (`tests/test_workflow_runners.py`); a runner for a `workflow_dispatch` read
+  must be ephemeral, isolated from the owner's files and network, and started
+  only for that dispatch (`backend/evaluation/research/expert/data/read_pages/
+  README.self-hosted-2026-10-21.md`).
 - Live extraction is conservative but not authoritative. A sourced result is a
   statement about a page, never a guarantee of admission or funding.
 - The container stack is defined and CI builds it, but it has not been run on

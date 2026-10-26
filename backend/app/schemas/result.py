@@ -22,8 +22,13 @@ from app.domain.enums import (
     ScholarshipType,
     UserDecision,
 )
-from app.schemas.claim import ClaimOut, Conflict, UnresolvedQuestion
+from app.schemas.claim import ClaimOut, Conflict, MessageRef, UnresolvedQuestion
 from app.schemas.money import Money
+
+
+def _absent(value: object) -> bool:
+    """Leave an unset served-only message field out of the JSON (gap B6, I18N-2)."""
+    return value is None
 
 
 class Base(BaseModel):
@@ -61,6 +66,9 @@ class RequirementCheck(Base):
     #: this line exists so an applicant can see *whether* a rule is about them
     #: without opening the source.
     published_scope: str = ""
+    #: Keys for ``requirement`` and ``explanation`` (I18N-2). Served, never stored.
+    requirement_message: MessageRef | None = Field(default=None, exclude_if=_absent)
+    explanation_message: MessageRef | None = Field(default=None, exclude_if=_absent)
 
 
 class CoverageBreakdown(Base):
@@ -147,6 +155,9 @@ class Scholarship(Base):
     source_urls: list[str] = Field(default_factory=list)
     claim_ids: list[str] = Field(default_factory=list)
     last_verified: datetime | None = None
+    #: ``classification_reason`` sentence by sentence, keyed (I18N-2); set only
+    #: when every sentence is recognised. Served, never stored.
+    classification_messages: list[MessageRef] | None = Field(default=None, exclude_if=_absent)
 
 
 class CostBreakdown(Base):
@@ -184,6 +195,12 @@ class FundingGap(Base):
     #: missing one.
     missing_categories: list[CostCategory] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
+    #: Keys for ``reason`` and for each of ``warnings``, index for index (gap
+    #: B6); None where no template knows the sentence. Served, never stored.
+    reason_message: MessageRef | None = Field(default=None, exclude_if=lambda v: v is None)
+    warning_messages: list[MessageRef | None] | None = Field(
+        default=None, exclude_if=lambda v: v is None
+    )
 
 
 class ScoreComponent(Base):
@@ -227,6 +244,8 @@ class AxisScore(Base):
     weight: float = Field(ge=0.0)
     reason: str
     evidence_claim_ids: list[str] = Field(default_factory=list)
+    #: The key of ``reason`` (I18N-2). Served, never stored.
+    reason_message: MessageRef | None = Field(default=None, exclude_if=_absent)
 
 
 class RankingV2(Base):
@@ -254,6 +273,11 @@ class RankingV2(Base):
         "How well this matches your stated priorities, on confirmed data. "
         "Not a probability of admission."
     )
+    #: Keys for ``bucket_reason``, each of ``knocked_out_by`` (index for index)
+    #: and ``disclaimer`` (I18N-2). Served, never stored.
+    bucket_reason_message: MessageRef | None = Field(default=None, exclude_if=_absent)
+    knocked_out_messages: list[MessageRef | None] | None = Field(default=None, exclude_if=_absent)
+    disclaimer_message: MessageRef | None = Field(default=None, exclude_if=_absent)
 
 
 class DocumentItem(Base):
@@ -282,6 +306,11 @@ class DocumentItem(Base):
     #: means nobody recorded a scope — not that the document is universal.
     #: Phase 3 §9: "store source and scope for each required document".
     scope: ClaimScope | None = None
+    #: I18N-3, served only (``message_keys.annotate_checklist``): the key of
+    #: ``name`` when it is one of the 18 document kinds, and one key per
+    #: sentence of ``format_notes`` (None where no template knows the sentence).
+    name_message: MessageRef | None = Field(default=None, exclude_if=_absent)
+    notes_messages: list[MessageRef | None] | None = Field(default=None, exclude_if=_absent)
 
     @model_serializer(mode="wrap")
     def _omit_unrecorded_scope(self, handler):
@@ -311,6 +340,27 @@ class DocumentChecklist(Base):
     unresolved: list[UnresolvedQuestion] = Field(default_factory=list)
     generated_at: datetime | None = None
     completeness: Literal["official", "partial", "unavailable"] = "partial"
+
+
+#: Why a KB value is unknown (``app.knowledge.UNKNOWN_KINDS``; WHY-1).
+KbUnknownKind = Literal[
+    "not_published",
+    "access",
+    "unverified_quote",
+    "undated",
+    "other_year",
+    "not_researched",
+    "unspecified",
+]
+
+
+class KbUnknown(Base):
+    """One unanswered KB question and why: not published, not readable, not yet verified."""
+
+    question: str
+    kind: KbUnknownKind = "unspecified"
+    #: The expert check that left it unknown (the draft's research day).
+    checked_on: date | None = None
 
 
 class ProgramResult(Base):
@@ -397,6 +447,9 @@ class ProgramResult(Base):
     decided_at: datetime | None = None
 
     checklist: DocumentChecklist | None = None
+    #: WHY-1, kb mode only: why each unanswered KB question is unknown. Left
+    #: out of the JSON when empty, so live, demo and earlier rows are unchanged.
+    kb_unknown: list[KbUnknown] = Field(default_factory=list, exclude_if=lambda v: not v)
 
 
 class DecisionIn(Base):

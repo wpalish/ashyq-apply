@@ -1,6 +1,6 @@
 # Glossary — terms that must not be translated without a person
 
-ASHYQ Apply is built on the rule that an unknown is reported as unknown. That
+Unimatch is built on the rule that an unknown is reported as unknown. That
 rule applies to its own words too.
 
 The terms below carry exact meanings the whole product rests on. Choosing their
@@ -28,6 +28,77 @@ an applicant would act on it.
 | **sources & conflicts** | Navigation, screen 06 | "Conflicts" here means two official pages disagreeing, not a dispute. |
 | **export & data deletion** | Navigation, screen 09 | Legal weight: this is the GDPR-shaped right, and the wording should match what the reviewed privacy policy ends up saying. |
 | **research (run)** | Navigation, screens 03-06 | The product's "research" is automated evidence collection, not academic research. Kazakh "зерттеу" carries the academic sense. |
+
+## Provisional — results screens only (2026-10-19, gap B6)
+
+The results screens (`frontend/src/lib/i18n.results.ts`) are what a Russian or Kazakh reader acts
+on, so they carry the words below **without** a person's decision yet. Navigation keeps the English
+(until 2026-10-25, see "Provisional — navigation" below), and every Open row above stays open until
+someone reviews these. None of them is stronger than the
+English, and the fit is never called a probability or chance (a test checks this).
+
+| Term | Russian | Kazakh |
+|---|---|---|
+| claim | факт (из источника) | дерек |
+| shortlist | короткий список | қысқа тізім |
+| funding gap / remaining cost | остаток к оплате | төленетін қалдық |
+| full ride (`FULL_RIDE_CONFIRMED` chip) | Полное покрытие | Толық қамту |
+| unknown | неизвестно | белгісіз |
+| NEEDS_OFFICIAL_CLARIFICATION ("Unverified") | Не подтверждено (distinct from UNVERIFIED "Не проверено") | Расталмаған (distinct from "Тексерілмеген") |
+| conflict (sources disagree) | расхождение | сәйкессіздік |
+| research (run) | исследование (as in existing `nav.progress`) | зерттеу (as in existing `nav.progress`) |
+| match (fit) | совпадение | үйлесім |
+| conditional offer / admission offer | приглашение на учёбу | оқуға шақыру |
+
+Added by I18N-2 (2026-10-20: requirement explanations, award classifications, ranking reasons,
+conflicts, the Documents screen). Also provisional; each poses the question beside it.
+
+| Term | Russian | Kazakh | The question to answer |
+|---|---|---|---|
+| (budget) ceiling — "the stated ceiling" | указанный предел (бюджета) | көрсетілген шек | Is "предел" / "шек" how a family would say the most it can pay a year, or is "лимит" expected? |
+| fee population ("depends on your fee population here") | категория оплаты | ақы төлеу санаты | Home / EU / international fee status: is there an established term a Kazakhstani counsellor uses? |
+| full tuition (in a sentence, not the chip) | полная оплата обучения | оқу ақысын толық өтеу | Must stay visibly weaker than "Полное покрытие" / "Толық қамту"; does it? |
+| test-optional | не требует тестов в обязательном порядке | тестті міндетті етпейді | Is there a shorter accepted term for US "test-optional" in either language? |
+| need-based (award) | по нуждаемости | мұқтаждыққа қарай | Same word as the existing chip; does it read as "means-tested" to a family? |
+| credential evaluation | оценка документов об образовании | білім туралы құжаттарды бағалау | WES/ECE evaluation; is "нострификация" ever the right word (it is a different procedure)? |
+| not a contradiction / scope difference | это не противоречие | бұл қайшылық емес | Distinct from "расхождение" / "сәйкессіздік" (conflict) as the glossary requires? |
+| lead time ("allow ~30 days") | заложите ~N дней | (existing `detail.docs.leadTime`) | — |
+
+Added by I18N-3 (2026-10-20: the Documents screen's 18 document names, `msg.document.<kind>`, and its
+four note sentences, `msg.document.note.*`). The names are our vocabulary, not a university's words.
+Also provisional; each poses the question beside it.
+
+| Term | Russian | Kazakh | The question to answer |
+|---|---|---|---|
+| (full academic) transcript | выписка оценок (транскрипт) | бағалардың транскрипті | Do Kazakhstani applicants say "транскрипт", or "приложение к аттестату" / "аттестатқа қосымша" for a school record? |
+| secondary school diploma | аттестат о среднем образовании | орта білім туралы аттестат | Right for a Kazakhstani school leaver; is a separate word needed for a foreign high-school diploma? |
+| certified (copy, translation) | заверенная копия / заверенный перевод | куәландырылған көшірме / аударма | "Certified" by whom: a school, a notary or a sworn translator? The English does not say, and neither may the translation. |
+| notarised copy (flag `needs_notarization`) | нотариальное заверение | нотариат куәландыруы | Same word as the existing `documents.notarisation` chip; is it distinct enough from "certified" above? |
+| apostille (certification) | заверение апостилем | апостильмен куәландыру | Is "апостилирование" the term an applicant would search for? |
+| course-by-course credential evaluation (WES/ECE) | попредметная оценка документов об образовании | білім туралы құжаттарды пән бойынша бағалау | Not "нострификация" (a different procedure); does "попредметная" read as WES's course-by-course report? |
+| personal statement | личное заявление | жеке мәлімдеме | UK/US sense (an essay about oneself), not an application form; is "личное эссе" clearer, and then how is it told apart from "Personal Essay" (личное эссе / жеке эссе)? |
+| statement of motivation | мотивационное письмо | мотивациялық хат | The established term; does it collide with "personal statement" for a reader? |
+| academic reference | рекомендация от преподавателя | оқытушының ұсынымы | A reference from a teacher; distinct from "letter of recommendation" (рекомендательное письмо / ұсыным хат)? |
+| proof of financial resources | подтверждение наличия финансовых средств | қаржы қаражатының бар екенін растау | Is "справка о финансовой состоятельности" what a bank or embassy would call it? |
+| "as published" (optional / conditional notes) | как опубликовано | жарияланғандай | Same as `detail.docs.condition`; does it read as "as the university states it", not "as printed by us"? |
+| possibly outdated | возможно, устарело | ескірген болуы мүмкін | Must stay weaker than "не актуально" / "өзекті емес" (the stale chip); does it? |
+
+## Provisional — navigation (2026-10-25)
+
+The header's "Explore" menu and the sidebar name every screen at once, and a Russian or Kazakh reader
+met six English labels there. They now carry the provisional words above (owner request, 2026-10-25),
+**without** a person's decision: the Open rows for shortlist, preferences & budget, sources & conflicts,
+export & data deletion and research stay open, and a reviewer may change any of these.
+
+| Key | English | Russian | Kazakh | Note |
+|---|---|---|---|---|
+| `nav.preferences` | Preferences & budget | Приоритеты и бюджет | Басымдықтар және бюджет | "Preferences" here are weighted priorities, not settings, so not "настройки" / "баптаулар". |
+| `nav.shortlist` | University shortlist | Короткий список университетов | Университеттердің қысқа тізімі | Same word as the results screens. |
+| `nav.funding` | Funding comparison | Сравнение финансирования | Қаржыландыруды салыстыру | No glossary term (not "funding gap"). |
+| `nav.sources` | Sources & conflicts | Источники и расхождения | Дереккөздер және сәйкессіздіктер | "Conflict" = two official pages disagreeing: расхождение / сәйкессіздік, as on the results screens. |
+| `nav.export` | Export & data deletion | Экспорт и удаление данных | Деректерді экспорттау және жою | Must follow the reviewed privacy policy's wording once it exists. |
+| `nav.group.research` | Research | Исследование | Зерттеу | As in the existing `nav.progress`. |
+| `topbar.explore` | Explore | Разделы | Бөлімдер | The menu of screens ("sections"), not a verb: "Исследовать" would collide with research. |
 
 ## Settled
 

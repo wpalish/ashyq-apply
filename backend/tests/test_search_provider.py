@@ -259,6 +259,7 @@ class TestNobodySearchesByAccident:
         assert set(KNOWN_SEARCH_PROVIDERS) == {
             "none",
             "fake",
+            "recorded",
             "exa",
             "exa_mcp",
             "tavily",

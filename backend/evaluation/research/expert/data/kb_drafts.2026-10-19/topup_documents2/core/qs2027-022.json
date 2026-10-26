@@ -1,0 +1,63 @@
+{
+ "case": "qs2027-022",
+ "seed_id": "qs2027-022",
+ "university": "EPFL – École polytechnique fédérale de Lausanne",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-022",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Bachelor's applicants with a foreign (non-Swiss) upper secondary education",
+   "academic_year": null,
+   "notes": "Bachelor's 'How to apply?' page: step 1 documents (online form, by 30 April) and step 2 documents (uploading form, by 10 July; 30 September exceptionally for certificates issued later). Not drafted (no vocabulary kind): French language competence certificate ('except for applicants with a Swiss or francophone education'; EPFL Bachelor teaching is in French), Swiss residence permit ('when applicable'), end-of-matriculation certificate from prior higher-education institutions ('when applicable'). The document attesting completion of the admission title must reach EPFL by 30 September or admission is cancelled. The page states no academic year for the list.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+     "quote": "Registration form to be completed, paid for, and submitted on April 30 at the latest"
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+     "quote": "identity photo (portrait with the face and neck, filling the whole image) with a 3/4 vertical format"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+     "quote": "identity document (passport or identity card, both sides)"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+     "quote": "intermediary grade sheets from the last two years of upper secondary education (except for applicants with a Swiss education)"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+     "quote": "upper secondary school certificate (or higher-education diploma when applicable) if already available",
+     "notes": "Step 2 (uploading form, 10 July; 30 September exceptionally for certificates delivered after 10 July)."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+     "quote": "All documents should be in English, French, German, or Italian. Please join a legalized translation of all documents in another language.",
+     "condition": "a document is in a language other than English, French, German or Italian (legalized translation)"
+    }
+   ]
+  }
+ }
+}

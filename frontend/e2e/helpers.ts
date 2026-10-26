@@ -1,6 +1,14 @@
 import { expect, test, type Browser, type Page } from '@playwright/test';
 
-const SHOT_ROOT = '../docs/screenshots';
+/**
+ * Where the suites' captures go (E2E-HYG-1). By default under the gitignored
+ * test-results/, so a local run leaves no tracked file changed — every run
+ * used to rewrite the 38 PNGs in docs/screenshots. `E2E_SCREENSHOTS=docs` is
+ * the deliberate regeneration of the README's screenshots, into
+ * docs/screenshots exactly as before. CI sets nothing.
+ */
+const DEFAULT_SHOT_ROOT = 'test-results/screenshots';
+const DOCS_SHOT_ROOT = '../docs/screenshots';
 
 /**
  * Screenshot path for the current project.
@@ -10,9 +18,10 @@ const SHOT_ROOT = '../docs/screenshots';
  */
 export function shot(name: string): string {
   const project = test.info().project.name;
+  if (process.env.E2E_SCREENSHOTS !== 'docs') return `${DEFAULT_SHOT_ROOT}/${project}/${name}`;
   return project === 'desktop-chromium'
-    ? `${SHOT_ROOT}/${name}`
-    : `${SHOT_ROOT}/mobile/${name}`;
+    ? `${DOCS_SHOT_ROOT}/${name}`
+    : `${DOCS_SHOT_ROOT}/mobile/${name}`;
 }
 
 /**

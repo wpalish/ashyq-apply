@@ -19,13 +19,20 @@ with its own ``site:`` operator.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 from datetime import UTC, datetime
 
 import httpx
 
 from app.adapters.network_policy import BlockedRequest, check_url
-from app.adapters.search.base import SearchResponse, SearchResult, SearchUnavailable
+from app.adapters.search import intent as intent_module
+from app.adapters.search.base import (
+    SearchResponse,
+    SearchResult,
+    SearchUnavailable,
+    error_body_excerpt,
+)
 
 SERPER_SEARCH_URL = "https://google.serper.dev/search"
 
@@ -33,12 +40,24 @@ DEFAULT_TIMEOUT_SECONDS = 15.0
 MAX_RESPONSE_BYTES = 1 * 1024 * 1024
 #: Serper answers up to 100 a page; discovery never asks for more than 20.
 MAX_RESULTS_PER_QUERY = 20
+#: ``hl``/``gl`` as Google takes them: ``no``, ``zh-cn``, ``pt-BR``.
+_LOCALE_CODE = re.compile(r"[a-z]{2}(?:-[A-Za-z]{2})?")
 
 
 def _with_domains(query: str, domains: Sequence[str]) -> str:
-    """The query restricted to ``domains`` with Google's ``site:`` operator."""
+    """The query restricted to ``domains`` with Google's ``site:`` operator.
+
+    Under QA-1 a query that already carries ``site:`` for every one of the
+    domains is sent as it is: discovery's operator families start with
+    ``site:<domain>``, and appending the same operator again only duplicated
+    it. Gated with QA-1 rather than unconditional because it changes the
+    bytes Google is sent, and every measured Serper baseline carried the
+    duplicate.
+    """
     sites = [f"site:{d}" for d in domains if d]
     if not sites:
+        return query
+    if intent_module.ALIAS_QUERIES and all(site in query.split() for site in sites):
         return query
     scope = sites[0] if len(sites) == 1 else "(" + " OR ".join(sites) + ")"
     return f"{query} {scope}"
@@ -75,6 +94,41 @@ class SerperSearchProvider:
         domains: Sequence[str] = (),
         max_results: int = 10,
     ) -> SearchResponse:
+        return await self._search(query=query, domains=domains, max_results=max_results)
+
+    async def search_localized(
+        self,
+        *,
+        query: str,
+        hl: str,
+        gl: str,
+        domains: Sequence[str] = (),
+        max_results: int = 10,
+    ) -> SearchResponse:
+        """``search`` with Serper's ``hl`` (interface language) and ``gl`` (country).
+
+        Plan v3 M5 (ticket 07 Q2, shape d): the query-shape probe asks whether
+        a local-language query does better when Google is also told the site's
+        language and country. It did (5 of 6), so R5's ``local_language``
+        family is sent through this while ``LOCAL_LANGUAGE_QUERIES`` is on, and
+        nothing else is. Both values describe the *institution* (its country's
+        language), never the applicant, and must be plain locale codes.
+        """
+        for name, value in (("hl", hl), ("gl", gl)):
+            if not _LOCALE_CODE.fullmatch(value):
+                raise ValueError(f"{name}={value!r} is not a locale code")
+        return await self._search(
+            query=query, domains=domains, max_results=max_results, locale={"hl": hl, "gl": gl}
+        )
+
+    async def _search(
+        self,
+        *,
+        query: str,
+        domains: Sequence[str],
+        max_results: int,
+        locale: dict[str, str] | None = None,
+    ) -> SearchResponse:
         if not query.strip():
             raise ValueError("A search needs a query")
         if max_results < 1:
@@ -87,10 +141,12 @@ class SerperSearchProvider:
                 f"The search endpoint is not reachable under policy: {exc}"
             ) from exc
 
-        payload = {
+        payload: dict[str, str | int] = {
             "q": _with_domains(query, domains),
             "num": min(max_results, MAX_RESULTS_PER_QUERY),
         }
+        if locale:
+            payload.update(locale)
         client = self._client
         owns_client = client is None
         if client is None:
@@ -104,9 +160,15 @@ class SerperSearchProvider:
                 await client.aclose()
 
         if response.status_code != httpx.codes.OK:
-            # The body is external text and may echo the request; not repeated.
+            # The body is external text and may echo the request, so the
+            # message and every diagnostic built from it stay status-only. The
+            # body goes to ``body_excerpt`` (an operator's log: one capped line,
+            # the key masked) so that an exhausted account or a revoked key
+            # reads as what it is, not as "no reason, http 400".
             raise SearchUnavailable(
-                f"Serper answered {response.status_code}", http_status=response.status_code
+                f"Serper answered {response.status_code}",
+                http_status=response.status_code,
+                body_excerpt=error_body_excerpt(response.content, secrets=(self._api_key,)),
             )
         if len(response.content) > MAX_RESPONSE_BYTES:
             raise SearchUnavailable(

@@ -1,0 +1,75 @@
+{
+ "case": "qs2027-072",
+ "seed_id": "qs2027-072",
+ "university": "University of Texas at Austin",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-072",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International freshman applicants",
+   "academic_year": null,
+   "notes": "'International Students' (freshman) and 'Transcript Info'. Major-specific items 'may be required' by the first- and second-choice majors; none is drafted. The page's decision dates are for the cycle releasing decisions in 2027; the materials list states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admissions.utexas.edu/apply/international-students/",
+     "quote": "Apply using the Common App for summer/fall admission."
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://admissions.utexas.edu/apply/international-students/",
+     "quote": "Submit at least one essay and the required short answer prompts."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://admissions.utexas.edu/apply/international-students/",
+     "quote": "Send at least one official SAT or ACT score directly from the testing agency"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admissions.utexas.edu/apply/international-students/",
+     "quote": "Submit transcripts showing that you have completed (or are in progress to complete) an accredited secondary school series equivalent to that of US grade 9-12."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admissions.utexas.edu/apply/international-students/",
+     "quote": "If applicable, submit either an official Test of English as a Foreign Language (TOEFL), International English Language Testing System (IELTS) or Duolingo English Test (DET).",
+     "condition": "if applicable (the page's 'Info for International' criteria)"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admissions.utexas.edu/apply/application-materials/transcript-info/",
+     "quote": "If the documents you are submitting are written in a language other than English, you must also submit complete and official English translations together with the original language records.",
+     "condition": "the documents are written in a language other than English"
+    },
+    {
+     "kind": "cv",
+     "requirement": "optional",
+     "url": "https://admissions.utexas.edu/apply/international-students/",
+     "quote": "You may submit a resume offering additional information about your achievements, activities, leadership positions and student employment."
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "optional",
+     "url": "https://admissions.utexas.edu/apply/international-students/",
+     "quote": "You can submit up to two letters of recommendation."
+    }
+   ]
+  }
+ }
+}

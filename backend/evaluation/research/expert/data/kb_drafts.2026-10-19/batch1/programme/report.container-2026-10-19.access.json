@@ -1,0 +1,86 @@
+[
+ {
+  "case": "qs2027-052",
+  "item": "programme",
+  "draft_status": "access",
+  "url": "https://www.cityu.edu.hk/admo/programmes/bsc-computer-science-0",
+  "outcome": "bot_challenge",
+  "status_code": 200,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): HTTP 200 but the body is an Imperva/Incapsula bot-challenge stub (212 bytes: _Incapsula_Resource script, empty body, meta robots noindex,nofollow); robots.txt allows the path; not bypassed, page not read"
+ },
+ {
+  "case": "qs2027-052",
+  "item": "programme",
+  "draft_status": "access",
+  "url": "https://www.cityu.edu.hk/admo/programmes/bsc-computer-science",
+  "outcome": "bot_challenge",
+  "status_code": 200,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): HTTP 200 but the body is an Imperva/Incapsula bot-challenge stub (212 bytes: _Incapsula_Resource script, empty body, meta robots noindex,nofollow); robots.txt allows the path; not bypassed, page not read"
+ },
+ {
+  "case": "qs2027-052",
+  "item": "programme",
+  "draft_status": "access",
+  "url": "https://www.cityu.edu.hk/admo/admissions/non-jupas-year-1-admission",
+  "outcome": "bot_challenge",
+  "status_code": 200,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): HTTP 200 but the body is an Imperva/Incapsula bot-challenge stub (212 bytes: _Incapsula_Resource script, empty body, meta robots noindex,nofollow); robots.txt allows the path; not bypassed, page not read"
+ },
+ {
+  "case": "qs2027-052",
+  "item": "programme",
+  "draft_status": "access",
+  "url": "https://www.cityu.edu.hk/admo/apply-now/non-local-applicants",
+  "outcome": "bot_challenge",
+  "status_code": 200,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): HTTP 200 but the body is an Imperva/Incapsula bot-challenge stub (212 bytes: _Incapsula_Resource script, empty body, meta robots noindex,nofollow); robots.txt allows the path; not bypassed, page not read"
+ },
+ {
+  "case": "qs2027-052",
+  "item": "programme",
+  "draft_status": "access",
+  "url": "https://www.cityu.edu.hk/admo/",
+  "outcome": "bot_challenge",
+  "status_code": 200,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): HTTP 200 but the body is an Imperva/Incapsula bot-challenge stub (212 bytes: _Incapsula_Resource script, empty body, meta robots noindex,nofollow); robots.txt allows the path; not bypassed, page not read"
+ },
+ {
+  "case": "qs2027-052",
+  "item": "programme",
+  "draft_status": "access",
+  "url": "https://www.cityu.edu.hk/catalogue/ug/current/",
+  "outcome": "bot_challenge",
+  "status_code": 200,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): HTTP 200 but the body is an Imperva/Incapsula bot-challenge stub (212 bytes: _Incapsula_Resource script, empty body, meta robots noindex,nofollow); robots.txt allows the path; not bypassed, page not read"
+ },
+ {
+  "case": "qs2027-028",
+  "item": "programme",
+  "draft_status": "related",
+  "url": "https://www.sydney.edu.au/courses/courses/uc/bachelor-of-advanced-computing.html",
+  "outcome": "ok",
+  "status_code": 200,
+  "official": true,
+  "quote_found": true,
+  "chars": 309,
+  "note": "expert container only: course body (entry scores, fees, English) is rendered client-side by JavaScript; readable text is the title and site chrome only, so only the title is checkable. robots.txt on www.sydney.edu.au intermittently reset the connection (curl 35) and succeeded on retry."
+ }
+]

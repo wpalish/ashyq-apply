@@ -1,0 +1,61 @@
+{
+ "case": "qs2027-033",
+ "seed_id": "qs2027-033",
+ "university": "The Hong Kong University of Science and Technology",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-033",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Applicants with international qualifications (direct application)",
+   "academic_year": null,
+   "notes": "'Application Procedures for International Qualification Holders'. Not drafted (no vocabulary kind): public examination result certificates ('if any'), proof of significant prizes and awards ('if any'), nomination of an IB Coordinator or Career Counselor for predicted grades (IB, GCE-AL/IAL/Cambridge Pre-U, Indian High School Examination). The page's dates are for the cycle opening 2 Oct 2026 and closing 30 Jun 2027; the document list itself states no year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+     "quote": "Create an account on the HKUST Online Application System and start filling out your application."
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+     "quote": "Copies of national ID card and/or travel documentation"
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+     "quote": "You are required to include identity documents, a personal statement, high school transcripts for the past three years, proof of English language proficiency"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+     "quote": "You are required to include identity documents, a personal statement, high school transcripts for the past three years"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+     "quote": "high school transcripts for the past three years, proof of English language proficiency, public examination certificates"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+     "quote": "Each student is required to nominate at least ONE academic referee."
+    }
+   ]
+  }
+ }
+}

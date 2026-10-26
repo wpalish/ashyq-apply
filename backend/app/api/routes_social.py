@@ -1032,7 +1032,7 @@ def require_moderator(principal: Principal = Depends(get_principal)) -> Principa
     theirs — it spans every workspace — so no tenant role can carry this. See
     `Settings.moderator_emails` for why that is a setting rather than a table.
     """
-    if principal.email.casefold() not in config.get_settings().moderator_email_list:
+    if not config.get_settings().is_moderator(principal.email):
         raise HTTPException(403, "This is the moderation queue for this deployment.")
     return principal
 

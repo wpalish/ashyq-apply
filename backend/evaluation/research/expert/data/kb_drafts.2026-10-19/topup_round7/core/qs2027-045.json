@@ -1,0 +1,32 @@
+{
+ "case": "qs2027-045",
+ "seed_id": "qs2027-045",
+ "university": "Northwestern University",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-045",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.mccormick.northwestern.edu/computer-science/academics/undergraduate/cs-major/index.html",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "No minimum published (rounds 2-3: a proficiency score is required, 'no minimum score'). Re-check on 2026-10-20 was blocked: admissions.northwestern.edu and catalogs.northwestern.edu robots.txt unreachable (ConnectError), which RFC 9309 treats as disallowed. Nothing new to draft.",
+   "date": "2026-10-20"
+  }
+ }
+}

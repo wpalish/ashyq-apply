@@ -1,0 +1,48 @@
+{
+ "case": "qs2027-075",
+ "seed_id": "qs2027-075",
+ "university": "Trinity College Dublin, The University of Dublin",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-075",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.tcd.ie/courses/undergraduate/courses/computer-science/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Undergraduate E3 Balanced Solutions for a Better World Scholarship"
+   },
+   "url": "https://www.tcd.ie/e3/education/scholarships/",
+   "quote": "1-year scholarships valued between €2,000 to €5,000 each and scholarships valued at €4,000. Scholarships are applied as a reduction to the tuition fees.",
+   "notes": "School-level (E3) award; eligible majors include 'B.A. Computer Science'. The university-wide Global Excellence Undergraduate Scholarship (tcd.ie/study/international/scholarships/undergraduate/geug.php) states that 'computer science and statistics courses are exempt' and points CS applicants to this E3 page. Partial (EUR 2,000-5,000, one year, as a tuition reduction). Batch deadlines printed are for the 2026 cycle (1 February, 15 March, 1 May 2026); 2027-entry dates not yet published.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://www.tcd.ie/e3/education/scholarships/",
+   "quote": "Applicants who have non-EU status and will pay tuition fees at the non-EU rate, and hold an offer letter for first year entry into the programmes above.",
+   "notes": "Open only to non-EU fee-status applicants with a first-year offer for a listed programme (B.A. Computer Science is listed). Assessed on academic achievement and a 200-word statement.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

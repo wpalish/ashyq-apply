@@ -5,10 +5,10 @@ from __future__ import annotations
 import logging
 
 from fastapi import APIRouter, Depends, Query, Response
-from sqlalchemy import text
+from sqlalchemy import func, select, text
 from sqlalchemy.orm import Session
 
-from app.config import get_settings
+from app.config import Settings, get_settings
 from app.db import get_session
 from app.domain import enums
 from app.domain.currency import (
@@ -18,7 +18,9 @@ from app.domain.currency import (
     rates_are_stale,
     supported_currencies,
 )
-from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
+from app.domain.message_keys import COVERAGE, match, stale_rates_message
+from app.models import CURRENT_SCHEMA_VERSION, AuditEvent, University
+from app.schemas.claim import MessageRef
 from app.security import Principal, get_principal
 
 log = logging.getLogger("unimatch.meta")
@@ -60,22 +62,31 @@ def health(response: Response) -> dict:
 
 
 @router.get("/capabilities")
-def capabilities() -> dict:
-    """What this build can and cannot do — surfaced in the UI, not buried."""
+def capabilities(session: Session = Depends(get_session)) -> dict:
+    """What this build can and cannot do — surfaced in the UI, not buried.
+
+    The session is read in kb mode only (the catalogue's size for the
+    coverage note); live and demo mode answer from the settings alone.
+    """
     s = get_settings()
+    # Demo mode ignores the knowledge mode (it keeps its fixtures), so does this.
+    knowledge_mode = "demo" if s.demo_mode else s.knowledge_mode
+    stale_warning = (
+        f"These conversions use exchange rates from {RATE_DATE.isoformat()}, "
+        f"{rate_age_days()} days old. Treat converted amounts as indicative and "
+        f"check the current rate before relying on one."
+        if rates_are_stale()
+        else ""
+    )
+    stale_message = stale_rates_message(stale_warning)
     return {
         "demo_mode": s.demo_mode,
-        "data_origin": "bundled synthetic corpus" if s.demo_mode else "live official sources",
-        "adapters": [
-            {"name": "fixture-catalog", "role": "discovery", "live": False},
-            {"name": "fixture-rankings", "role": "ranking (discovery only)", "live": False},
-            {"name": "live-institution-registry", "role": "discovery", "live": True},
-            {"name": "web-requirements", "role": "admission requirements", "live": True},
-            {"name": "web-costs", "role": "cost of attendance (HTML + PDF)", "live": True},
-            {"name": "web-scholarships", "role": "scholarships and coverage", "live": True},
-            {"name": "web-documents", "role": "document checklist", "live": True},
-            {"name": "web-government", "role": "post-study work rules", "live": True},
-        ],
+        "knowledge_mode": knowledge_mode,
+        "data_origin": {
+            "demo": "bundled synthetic corpus",
+            "kb": "verified knowledge base (bachelor's in Computer Science); no live search",
+        }.get(knowledge_mode, "live official sources"),
+        "adapters": adapters(knowledge_mode),
         "fetch_tiers": ["structured data", "plain HTTP", "Playwright render", "PDF parsing"],
         "currency": {
             "supported": supported_currencies(),
@@ -84,16 +95,16 @@ def capabilities() -> dict:
             "rate_age_days": rate_age_days(),
             # The snapshot is deliberately static; saying nothing about its age
             # is what would make it dishonest.
-            "stale_warning": (
-                f"These conversions use exchange rates from {RATE_DATE.isoformat()}, "
-                f"{rate_age_days()} days old. Treat converted amounts as indicative and "
-                f"check the current rate before relying on one."
-                if rates_are_stale()
-                else ""
+            "stale_warning": stale_warning,
+            # I18N-2: its key, so ru and kk can say it; absent while fresh.
+            **(
+                {"stale_warning_message": stale_message.model_dump()}
+                if stale_message is not None
+                else {}
             ),
         },
         # Keep the scope tied to the current registry and make evidence limits visible.
-        "live_coverage": live_coverage(),
+        "live_coverage": live_coverage(s, session),
         "guarantees": [
             "robots.txt is honoured before every fetch, including the browser tier",
             "applicant data is never placed in an outbound URL",
@@ -107,6 +118,50 @@ def capabilities() -> dict:
             "Currency rates are a dated static snapshot, not a live feed.",
         ],
     }
+
+
+#: The adapters a live run reads the web with. A kb-mode run uses none of them
+#: (no discovery, no search, no page reads), and the capabilities say so.
+WEB_ADAPTERS = frozenset(
+    {
+        "live-institution-registry",
+        "web-requirements",
+        "web-costs",
+        "web-scholarships",
+        "web-documents",
+        "web-government",
+    }
+)
+KB_ADAPTER = {
+    "name": "verified-knowledge-base",
+    "role": "discovery and verification",
+    "live": False,
+}
+
+
+def adapters(knowledge_mode: str) -> list[dict]:
+    """Every adapter this build has; in kb mode, the KB first and the web ones inactive.
+
+    ``active`` appears in kb mode only (additive): live and demo mode list the
+    adapters exactly as before. ``live`` says what an adapter is, ``active``
+    whether this deployment's runs use it.
+    """
+    rows: list[dict] = [
+        {"name": "fixture-catalog", "role": "discovery", "live": False},
+        {"name": "fixture-rankings", "role": "ranking (discovery only)", "live": False},
+        {"name": "live-institution-registry", "role": "discovery", "live": True},
+        {"name": "web-requirements", "role": "admission requirements", "live": True},
+        {"name": "web-costs", "role": "cost of attendance (HTML + PDF)", "live": True},
+        {"name": "web-scholarships", "role": "scholarships and coverage", "live": True},
+        {"name": "web-documents", "role": "document checklist", "live": True},
+        {"name": "web-government", "role": "post-study work rules", "live": True},
+    ]
+    if knowledge_mode != "kb":
+        return rows
+    return [
+        {**KB_ADAPTER, "active": True},
+        *({**r, "active": False} if r["name"] in WEB_ADAPTERS else r for r in rows),
+    ]
 
 
 @router.get("/vocabulary")
@@ -164,7 +219,59 @@ def audit_log(
     ]
 
 
-def live_coverage() -> dict:
+def live_coverage(settings: Settings | None = None, session: Session | None = None) -> dict:
+    """How far a research run reaches, read from what the run reads rather than asserted.
+
+    kb mode (RM-1): the verified knowledge base, its entries with verified data
+    and the catalogue they sit in — no page is read, so the registry is not the
+    reach. Live mode: the institution registry, as before, plus ``mode`` and the
+    note's :class:`MessageRef`. Demo mode (or no settings): exactly as before —
+    plus, on a demo server whose ``knowledge_mode`` is kb (MODE-1), an additive
+    ``kb_coverage`` block: unticking demo there starts a kb run
+    (``runner.kb_mode``), so the screen must show the kb notice, not the live one.
+    """
+    if settings is not None and not settings.demo_mode and settings.knowledge_mode == "kb":
+        return kb_coverage(settings, session)
+    body = registry_coverage()
+    if settings is None:
+        return body
+    if settings.demo_mode:
+        if settings.knowledge_mode == "kb":
+            return {**body, "kb_coverage": kb_coverage(settings, session)}
+        return body
+    ref = match(COVERAGE, body["recall_note"])
+    return {
+        **body,
+        "mode": "live",
+        **({"recall_message": ref.model_dump()} if ref is not None else {}),
+    }
+
+
+def kb_coverage(settings: Settings, session: Session | None) -> dict:
+    """The KB's reach: universities with verified data, their countries, the catalogue size."""
+    from app.api.routes_universities import _knowledge_base
+
+    kb = _knowledge_base(settings.knowledge_base_path, settings.knowledge_imported_path)
+    verified = [e for e in kb.entries.values() if e.has_verified_data]
+    countries = sorted({e.country for e in verified if e.country})
+    total = (
+        int(session.scalar(select(func.count()).select_from(University)) or 0)
+        if session is not None
+        else 0
+    )
+    params = {"universities": str(len(verified)), "total": str(total)}
+    template = next(t for t in COVERAGE if t.key == "coverage.kb")
+    return {
+        "mode": "kb",
+        "institutions": len(verified),
+        "countries": countries,
+        "catalogue_total": total,
+        "recall_note": template.text.format(**params),
+        "recall_message": MessageRef(key=template.key, params=params).model_dump(),
+    }
+
+
+def registry_coverage() -> dict:
     """How far live mode reaches, read from the registry rather than asserted."""
     import json
     from pathlib import Path

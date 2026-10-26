@@ -1,0 +1,46 @@
+{
+ "case": "qs2027-021",
+ "seed_id": "qs2027-021",
+ "university": "University of California, Berkeley (UCB)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-021",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International first-year applicants",
+   "academic_year": null,
+   "notes": "UC Berkeley 'Requirements for International Students'. Applicants self-report their academic record in the UC application (no transcript at application). Not drafted: Non-immigrant Information Form (after admission), optional InitialView interview materials.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://admissions.berkeley.edu/apply-to-berkeley/international-students/requirements-for-international-students/",
+     "quote": "If your curriculum requires further certification (examination results such as French Baccalaureate, IGCSE, A Levels, ATAR, etc.) you will also be required to submit those for the official academic record once admitted.",
+     "condition": "once admitted, if the curriculum requires further certification (examination results)"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admissions.berkeley.edu/apply-to-berkeley/international-students/requirements-for-international-students/",
+     "quote": "English Proficiency Exams and Minimum Score Requirements Test of English as a Foreign Language (TOEFL) with a minimum score of 90/4.5 or better",
+     "condition": "English proficiency not shown otherwise (3+ years of English language of instruction, AP/IB English or ACT/SAT scores)"
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "conditional",
+     "url": "https://admissions.berkeley.edu/apply-to-berkeley/international-students/requirements-for-international-students/",
+     "quote": "A guarantee by the applicant's financial sponsor proving sufficient funds for the first year of study is required.",
+     "condition": "admitted international students (visa documentation)"
+    }
+   ]
+  }
+ }
+}

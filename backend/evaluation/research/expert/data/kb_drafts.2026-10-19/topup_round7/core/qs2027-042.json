@@ -1,0 +1,31 @@
+{
+ "case": "qs2027-042",
+ "seed_id": "qs2027-042",
+ "university": "Yonsei University",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-042",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://cs.yonsei.ac.kr/csai/faculty/computerScience.do",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "No score published; cycle_stated '2027학년도 3월 신입학' (Spring/March 2027 entry), not the fall 2027 intake. The 2027 international-track guide (https://admission.yonsei.ac.kr/seoul/upload/guide/20260529144906YVFHLB.PDF, re-read 2026-10-20) asks every unit except medicine/dentistry/nursing/pharmacy for one language proof '[택1] - 한국어 또는 영어 공인어학시험 성적표 - 국내·외 소재 한국어 교육기관 수료증명서 - 교육과정 내 한국어 또는 영어로 진행된 수업이 있음을 입증하는 공식 서류' with no score threshold; the listed units are Korean-taught ('한국어로 진행되는 학부과정'). No Fall 2027 guide is published.",
+   "date": "2026-10-20"
+  }
+ }
+}

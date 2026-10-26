@@ -1,0 +1,87 @@
+{
+ "case": "qs2027-064",
+ "seed_id": "qs2027-064",
+ "university": "Kyoto University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-064",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+   "academic_year": null,
+   "notes": "Kyoto iUP Application Guidelines for October 2027 Enrollment (correct as of 1 July 2026; application period 2 November - 3 December 2026; preparatory course from October 2027, undergraduate course from April 2028). The guidelines name an enrollment date, not an academic year, so academic_year is null. Shortlisted applicants mail original documents (transcripts, Form A, Form B, English and standardized test results) by 16 March 2027. Not drafted: Form C (English Proficiency Evaluation Form, an alternative to an English test for native speakers / English-medium secondary education), the resume of educational history for the eligibility screening, optional award and extracurricular documents.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Applications, including the submission of the required documents, must be made via the Online Application System."
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Digital identification photograph Applicant A digital photograph of the applicant taken within the last six months."
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Copy of passport Applicant Copied page(s) containing the applicant's name, photograph, passport number, nationality, and expiration date."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Official transcripts covering the applicant's entire time at secondary/high school from their first year to the present or graduation."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Form A must be completed by the secondary/high school from which the applicant graduated or is expected to graduate. A copy of the original certificate of graduation or high school diploma can also be substituted instead of Form A."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Form B must be filled out in English by a staff member of the secondary/high school that the applicant currently attends or has most recently attended, or by a third party."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Either a specified English proficiency test result or Form C is required.",
+     "condition": "not a native English speaker and secondary education not completed in English (those applicants may submit Form C instead)"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Applicants must submit their official results for at least one of the standardized tests listed in Appendix 1."
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "Form D: Essay Applicant The essay must be written in English within the word count specified in Form D, and submitted using Form D."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+     "quote": "If documents are in a language other than English, the original documents and their English translation must be submitted together. The English translation must be certified by the issuing school or by a notary office.",
+     "condition": "a document is in a language other than English"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "case": "qs2027-026",
+ "note": "kb batch9 qs2027-026.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. Major introduction page of the College of Computer Science and Artificial Intelligence (cs.fudan.edu.cn). Its body text is not in the readable text (only the navigation and the page heading are), so the heading is the quote and verify_evidence can only match it through title_in.",
+ "programme": {
+  "url": "https://cs.fudan.edu.cn/15/33/c24750a267571/page.htm",
+  "title": "计算机科学与技术专业简介"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "known",
+ "page_title": "计算机科学与技术专业简介",
+ "heading": "计算机科学与技术专业简介",
+ "degree": "Bachelor (4 years), major Computer Science and Technology (计算机科学与技术), College of Computer Science and Artificial Intelligence",
+ "teaching_language": "Chinese (listed among the 2026 Chinese-taught Undergraduate Programs for international students; remark 'Some courses are taught in English.')",
+ "population_scope": "international (Fudan International Students Office: 2026 Chinese-taught undergraduate programmes for non-Chinese citizens holding foreign passports)",
+ "twins": null,
+ "twin_mechanism": "no English version of the college page found",
+ "how_found": "iso.fudan.edu.cn (no robots.txt: 404) -> Admissions -> Undergraduate -> '2026 Fudan University Chinese-taught Undergraduate Programs' (xlsx) lists 'Computer Science and Technology | Computer Science and Technology | College of Computer Science and Artificial Intelligence'; the college page was located by an official-domain search (计算机科学与技术 专业介绍).",
+ "related_programme_urls": []
+}

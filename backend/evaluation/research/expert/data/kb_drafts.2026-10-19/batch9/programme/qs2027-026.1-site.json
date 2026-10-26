@@ -1,0 +1,10 @@
+{
+ "case": "qs2027-026",
+ "note": "kb batch9 qs2027-026.1-site: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. International Students Office list '2026 Fudan University Chinese-taught Undergraduate Programs' (an .xlsx file, published 2025-09-29). Remarks for the row: '(1) Not suitable for applicants with color blindness or color weakness; (2) Applicants must have excellent performance in Maths and Physics in high school; (3) Some courses are taught in English.' The checker's text extraction is for HTML and PDF, so this spreadsheet row is expected to fail the word-for-word check.",
+ "programme": {
+  "url": "https://iso.fudan.edu.cn/_upload/article/files/bd/21/c69e98d5483e91d05f3c278f4cca/89b78b35-1ba5-42b2-bd16-1d6a352da800.xlsx",
+  "title": "Computer Science and Technology | Computer Science and Technology | College of Computer Science and Artificial Intelligence"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19"
+}

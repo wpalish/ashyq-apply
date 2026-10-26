@@ -17,6 +17,123 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
 
+**Scorer definition changed 2026-10-26 (owner: «Подтверждаю», the bare-host rule of
+`docs/process/TRACK_B_2026-10-26.md` §1.3).** Programme-page matching only; claims are untouched. A URL that
+differs from a gold (or twin, or labelled related) URL only by a leading `www.` on the host is the same page:
+`metrics._page_forms` writes every canonical form with the bare host (`metrics._bare_host`), so both sides of
+`same_programme_page` fold it, and so do `gold_seen`, `gold_confirm_rank`, recall@k and the index ceiling's form
+index, which share it. One label only: `www2.`, `cs.`, a doubled `www.www.`, another registrable domain, another
+port or a host left without a dot are never merged. Effect on the Track B captures: Exa's usp
+`icmc.usp.br/en/…` (base5/base6f/rp-dc1 dev3, every column) and Tavily's delft `tudelft.nl/…` score hits instead
+of wrong. No committed baseline holds a bare-host variant of a gold URL.
+
+**reviewed12, dev2-draft4, dev3-draft4 (2026-10-26, owner: «Подтверждаю», twin signatures of
+`docs/process/TRACK_B_2026-10-26.md` §1).** Each is its predecessor (reviewed11, dev2-draft3, dev3-draft3) with signed
+twins appended to `programme_urls` and a dated line in the case's `review.notes`; no label, status, related page or
+other case changes. [reviewed12](data/ground_truth.reviewed12.json): hku
+`www.cs.hku.hk/programmes/undergraduate/beng-in-computer-science` (the department's page of the gold's BEng) and ubc
+`vancouver.calendar.ubc.ca/…/bachelor-science/computer-science` (the Vancouver Academic Calendar section, WP-1).
+[dev2-draft4](data/dev2.draft4.json): uppsala `www.uu.se/en/study/programme-syllabus?query=2332` (the gold
+programme's syllabus). [dev3-draft4](data/dev3.draft4.json): kuleuven `…/SC_51016742/diploma_omschrijving` (the gold's
+sub-page), `www.kuleuven.be/opleidingen/bachelor-informatica` and `www.kuleuven.be/programmes/opleidingen/bachelor-informatica`
+(supersedes TWIN_CHECKS_2026-10-20 Q2's conditional draft4). Each twin with a stored production-Fetcher read carries a
+`programme_evidence` excerpt from it (hku, ubc, kuleuven sub-page from the base4/base5 captures; kuleuven `/programmes/`
+from TW-2's CI read); the uppsala excerpt (the page title of Track B's Fetcher read) and the central kuleuven page
+(no excerpt) await a CI `verify_evidence` read. dev4-draft3 and every heldout file are unchanged. reviewed12 is the
+scorecard's default from this date; reviewed11, dev2-draft3 and dev3-draft3 stay frozen. Not signed: ubc's Okanagan
+pages (another campus; DC-1 refuses them) and kuleuven's `/leuven` and `/kortrijk` campus sub-pages. Re-scored
+captures: `runs/2026-10-17/LOOP_REPORT.md`, "2026-10-26 — twin signatures".
+
+**dev5-draft1 (2026-10-19, unsigned).** [dev5-draft1](data/dev5.draft1.json) is a new development set of
+13 more country proxies for the heldout nine: kbtu, satbayev, aitu, hacettepe, bilkent, ytu, upol, zcu, tud,
+lmu, unipd, sapienza and vilniustech. Every case is `draft`. Unlike dev4, draft1 carries the programme page
+and the six core questions together. Built by `expert/core_drafts_dev5.py` from
+`expert/data/programme_drafts_dev5.2026-10-19/` and `core_drafts_dev5.2026-10-19/`. The rules for core
+labels are `core_drafts_dev4.build`'s, now parameterised by set. A label is `known` only when its quote is
+in a CI `verify_evidence` report (`evidence_check.ci-2026-10-19.json`; programme pages 33/39, core quotes
+49/50). There are 94 labels: 36 known, 19 `not_applicable`, 39 unknown.
+- **Known programme:** aitu, upol, zcu, tud, lmu, unipd, sapienza.
+- **Related programme** (`programme_status` unknown, pages in `related_programme_urls`): hacettepe,
+  bilkent and ytu (computer engineering), and vilniustech (Information Technologies).
+- **Access cases:** kbtu and satbayev. Their robots.txt is unreachable over TLS, so every label is unknown
+  and only the expert's related pages are kept.
+
+[identity_bindings.dev5-draft1](data/identity_bindings.dev5-draft1.json) holds nine draft award bindings and
+is part of the measurement workflow's extra bindings. Open rulings are in
+`docs/process/SIGN_DEV5_2026-10-19.md`.
+
+**dev2-draft3, dev3-draft3, dev4-draft3 (2026-10-18, owner: «Раунд 2 и 3: все как рекомендовано», finish-algorithm
+tickets 09 and 10).** [dev2-draft3](data/dev2.draft3.json) and [dev3-draft3](data/dev3.draft3.json) are draft2 with the
+signed programme pages of ticket 10 (13/13 proposal quotes verified by the CI `verify_evidence` run): tec, kaznu,
+uct (related: BA Informatics, BBusSc CS), khalifa (related: ZMU), ntutw, msu and usp (IME and ICMC) become
+`programme_status: known` with `programme_evidence`; utokyo stays `unknown`; their core labels are unchanged
+and unsigned. [dev4-draft3](data/dev4.draft3.json) is dev4-draft2 signed (ticket 09; every case
+`human_verified`, reviewer Диас, 25/25 core quotes verified): ktu `gpa` `unknown` (prose, as 02-Q7); taltech's IT
+faculty IAIB page added to `related_programme_urls`; vut, boun, itu unchanged.
+[identity_bindings.dev4-draft3](data/identity_bindings.dev4-draft3.json) adds the RWTH Deutschlandstipendium
+award page as a second source URL of `scholarships.deutschlandstipendium` and is the measurement workflow's dev4
+extra-bindings file. The draft2 files stay frozen. Re-scored captures: `runs/2026-10-17/LOOP_REPORT.md`,
+"Signed labels: tickets 09 and 10".
+
+**reviewed11, dev2-draft2, dev3-draft2 and ID-1 on (2026-10-18, owner: «Все да», finish-algorithm
+ticket 02 Q1–Q8).** [reviewed11](data/ground_truth.reviewed11.json) is reviewed10 with: NTU's
+`english_evidence.sat.minimum` population `international` (the SAT line sits in the "International
+Qualifications" section; was a description); NTU `gpa` `unknown` (prose); Delft's TOEFL label cites the
+live `…/admission-requirements` beside `…/1-admission-requirements/` (twins). [dev2-draft2](data/dev2.draft2.json):
+Uppsala `deadline = 2027-01-15`, population `international` (the official bachelor's application page,
+international round); the national round's 2027-04-15 is kept as `deadline.eu_national` (population
+`eu_national`, not critical). [dev3-draft2](data/dev3.draft2.json): Imperial's £47,800 tuition population
+`international`; Chula's five ISE/ICE labels (`ielts.overall`, TOEFL, Duolingo, `scholarships.ise_foreign.*`)
+`not_applicable` — the case is the Faculty of Science BSc; um, ucph and msu `gpa` `unknown` (prose). The
+award URL alias (`identities.ID1_URL_ALIAS`) and the SAT key alias (`metrics.ID1_SCORER_ALIASES`) are **on
+by default**. Scorer: a fee (`tuition`, `mandatory_fees`) compares amount, currency **and period**
+(`metrics.values_match`; no `period` = `academic_year`), so a semester fee is labelled as published with
+`period: semester` and an annualised reading is a wrong value; the pipeline never multiplies. reviewed11 is the
+scorecard's default from this date; reviewed10, dev2-draft1 and dev3-draft1 stay frozen. Re-scored captures:
+`runs/2026-10-17/LOOP_REPORT.md`, "Corpus corrections round".
+
+**Scorer definition changed 2026-10-18 (v3-M2; owner: ticket 03 Q2–Q3 of the programme-discovery
+wayfinder, "да").** Programme-page scoring only; claims are untouched. (1) A returned page matches the gold
+up to a *canonical variant*: the same path with or without one intake-year segment (`/2027/`), a trailing
+slash or `index.html`; `?lang=` only when the capture records the page's own `<html lang>` naming that
+language (`Observation.programme_page_languages`); every other query parameter stays. (2) A *related
+programme* — labelled in the corpus (`Case.related_programme_urls`, not serialised while empty, so no corpus
+digest moves) or recorded by discovery instead of returned (`Observation.related_programme_urls`) — is
+neither a hit nor a wrong page: it leaves the `programme_page_precision` denominator and the case reads
+`related` in the scorecard's new "programme pages hit/wrong/related/missed" row. Effect: **no published
+number moved** — every `baseline/metrics*.json` replays unchanged on the frozen capture (no returned URL there
+is a variant of a gold URL, and no corpus labels a related page), and re-scoring the bundle5 development captures
+(cohort, dev2, dev3; both arms, both repetitions) moves no recall, precision or recall@k value.
+
+**Mapping and scorer definition, 2026-10-18 (ID-1 / D2, core-gap analysis change 3; measurement only,
+unsigned — awaits the owner).** (1) *Award URL alias* (`IdentityMap.resolve`, live and offline mapping): when
+no binding matches a claim's URL exactly, an award binding with the claim's exact subject matches a URL on the
+same host with the same query and the same final path segment, provided that segment names the award (a word
+of it that is neither generic nor a number is a word of the award's name); bindings that would disagree bind
+none. NTU's Nanyang Global Scholarship is read at `/admissions/ug/…/nanyang-scholarship`, bound at
+`/admissions/undergraduate/…`. (2) *Corpus key alias* (`metrics.scored_key`, used by `score`, the scorecard and
+the scope/support reports): a `sat.minimum` prediction is scored as `english_evidence.sat.minimum` for a case
+whose corpus knows that key and does not know `sat.minimum` (NTU only). Effect: **no published number moved** —
+every `baseline/metrics*.json` replays unchanged (mapping happens at capture time and the frozen capture holds
+no SAT prediction for NTU). Re-mapping the base6 development captures from their raw claims (cohort; both arms,
+both repetitions; regeneration with the old rule reproduces every stored capture exactly) moves cohort known core
+answered 8/7/8/9 → 10/9/10/11 of 28, claim recall 17/14/16/18 → 24/21/23/25 of 84, claim precision stays 100%
+(21/18/20/22 → 42/39/41/43), critical-field coverage 17/14/18/18 → 26/23/27/27 of 231, scholarship discovery recall 0/7 → 1/7, applicability recall 0/12 → 2/12,
+partial-claim rate 0 → 6 per repetition (NTU application mode and degree, coarser readings); dev2 and dev3 move
+nothing.
+
+**reviewed10 and heldout reviewed1 (2026-10-17, owner: "Подписываю", option "draft10 + heldout1 + 3
+правки").** [reviewed10](data/ground_truth.reviewed10.json) is draft10, built from independent expert
+drafts whose quotes were checked on the official pages with the production fetcher
+(docs/process/SIGN_CORE_2026-10-17.md), plus three owner-approved changes: Warsaw's
+`programmes-first/IN/S1-INF/` page is accepted beside the identical `programmes-all` page; Groningen's
+programme URL is accepted without `?lang=en`; Groningen's IELTS 6.5 evidence moves from the Faculty of
+Science and Engineering page, now 404, to the university-wide language requirements page, whose FSE row
+lists Computing Science. [heldout reviewed1](data/heldout.reviewed1.json) is heldout.draft1 with every
+case marked `human_verified`; it stays the validation split and is not used to design rules. reviewed10
+is the scorecard's default from this date; reviewed9 stays frozen. Not replayed on the frozen 2026-09
+capture: its core-question labels postdate that capture.
+
 **reviewed9 (2026-10-05, owner: "1").** NTU's three IELTS labels (`ielts.overall`, `ielts.subscores`,
 `english_evidence.ielts.minimum`) are `unknown`: two current official NTU pages disagree. The general
 admission requirements page states 6.5 / 6.5 / 6.5 (draft8's source); the "other international
@@ -188,3 +305,12 @@ are not directly comparable on budget-bound cases; each capture's `config.second
 rises from 31 to 34 of 62; no label, binding or existing definition changes. Separately,
 `parse_money` now reads country-prefixed dollars (S$, HK$, C$, A$, NZ$) and KRW/HKD/NZD instead of
 calling them USD.
+
+**Scorer definition, 2026-10-18 — a brand name built on the acronym names the same university.** The
+`university` scope dimension already matched a name with its acronym beside it ("KIT, Karlsruhe Institute
+of Technology"). It now also matches when one name carries, as a whole word, the initials of the other
+(minus "of"/"and"), at least three letters: the dev3 corpus reads "UNSW Sydney", the catalogue "The
+University of New South Wales", and both SC-2 IELTS claims of the evb dev3 run (values equal to gold)
+scored `wrong_scope` on the name alone. Two-letter initials never match. Rescoring every saved capture
+(ap1c, base2, di1, ef1, evb, fp1, pl1 on cohort/dev2/dev3/dev4) changes only evb-dev3 on#1: 2 wrong-scope
+claims become hits; no label changes.

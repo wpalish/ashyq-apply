@@ -85,10 +85,11 @@ Prefixes in use: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, `style:`.
 
 ## Naming
 
-The product is **ASHYQ Apply** everywhere a person can read it. Internal
-package, database and environment names remain `unimatch` (`UNIMATCH_` prefix,
-`unimatch.db`, logger names) — a deliberate decision, not an oversight. See the
-note at the top of the README.
+The product is **Unimatch** everywhere a person can read it (owner decision,
+2026-10-19). The repository name `ashyq-apply`, internal package, database and
+environment names (`UNIMATCH_` prefix, `unimatch.db`, logger names), metric names
+and browser storage keys stay as they are — a deliberate decision, not an
+oversight. See the note at the top of the README.
 
 ## Where the rules live
 

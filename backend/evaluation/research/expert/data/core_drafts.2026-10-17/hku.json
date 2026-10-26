@@ -1,0 +1,139 @@
+{
+ "case": "hku",
+ "university": "The University of Hong Kong (HKU)",
+ "researched_on": "2026-10-17",
+ "programme": {
+  "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science/",
+  "title": "Computing and Data Science (CDS) [programme code 6999] - leading to Bachelor of Engineering in Computer Science [BEng(CompSc)] (or BEng(AI&DataSc) / BASc(AppliedAI), chosen by end of Year 1)",
+  "title_quote": "Programme Name Computing and Data Science (CDS) 計算與數據科學 Specialized Degree Programme (students can choose by the end of Year 1) Bachelor of Engineering in Computer Science [BEng(CompSc)] 工學學士(計算機科學)",
+  "teaching_language": "English",
+  "teaching_language_url": "https://tl.hku.hk/common-learning-experiences/international/",
+  "teaching_language_quote": "In support of the internationalization of our campus, English has been adopted as HKU's lingua franca. It is the common language used for lectures, tutorials, seminars, forums and other events",
+  "campus": "HKU main campus, Pokfulam, Hong Kong (School of Computing and Data Science, Chow Yei Ching Building)",
+  "campus_quote": "Address: Room 206 Chow Yei Ching Building, The University of Hong Kong, Pokfulam",
+  "how_found": "Web search 'HKU Bachelor of Arts and Sciences in Computing and Data Science programme' (hku.hk only) -> result '6999 Computing and Data Science - HKU School of Computing and Data Science' -> page fetched (curl, after one connection reset). Teaching language: web search 'University of Hong Kong \"medium of instruction\" English undergraduate...' -> tl.hku.hk page. Campus from the 6999 page footer.",
+  "notes": "There is no 'BASc in Computing and Data Science' at HKU. The computer-science bachelor for international applicants is BEng(CompSc), entered through the umbrella programme 6999 'Computing and Data Science' run by the School of Computing and Data Science; the same programme also leads to BEng(AI&DataSc) and BASc(AppliedAI). A sister programme 6200 'Computing and Data Science (Delta+)' (2.5 years Pokfulam + 1.5 years Shanghai) also exists. The 6999 page itself does not state medium of instruction or campus; the University-wide statement on tl.hku.hk and the School address were used. The programme page on admissions.hku.hk (programmes/undergraduate-programmes/computing-and-data-science) and the BEng(CompSc) page on cs.hku.hk could not be loaded (see access_notes)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "value": {},
+   "url": "https://admissions.hku.hk/apply/international-qualifications/english-language-requirement",
+   "quote": "",
+   "how_found": "Web search 'HKU international qualifications admissions requirements English language non-local' -> admissions.hku.hk English Language Requirement page (and the www. variant): HTTP 503 via fetch tool and TCP connection reset via curl on every attempt. Faculty pages checked instead: ug.hkubs.hku.hk FAQ, www4.fbe.hku.hk FAQ, ugadmissions.engg.hku.hk FAQ, hkumed-ugadmissions.hku.hk, facdent.hku.hk, handbook.hku.hk General Regulations, cds.hku.hk 6999 page and leaflet - none reproduces the University undergraduate IELTS/TOEFL thresholds with numbers.",
+   "pointer_url": "https://ug.hkubs.hku.hk/admission/faq/non-jupas-applicants",
+   "pointer_quote": "Applicants should refer to the HKU's admissions webpage (https://admissions.hku.hk/apply/international-qualifications#admissions-standard) for details of the admission requirements and standards applicable to students from different countries with different qualifications.",
+   "notes": "The official page exists (title 'ENGLISH LANGUAGE REQUIREMENT' on admissions.hku.hk) but the whole admissions.hku.hk host was unreachable from this environment, so no verbatim quote could be taken and no value is recorded. UNVERIFIED search-engine snippets of that page (not official text, not to be used as a value) indicate: IELTS Academic overall 6.5 with no less than 6.0 in Writing and Speaking in the same attempt; TOEFL iBT 95 with no less than 25 in Writing and Speaking for tests before 21 Jan 2026, and 5.0 overall (new TOEFL scale) for tests on/after 21 Jan 2026; marked 'subject to approval'; test within 2 years of programme start; IELTS Online/Indicator and TOEFL Home Edition not accepted. Programme-specific tables on faculty pages (e.g. HKU Business School) set their own higher benchmarks and were not used. Must be re-checked on the official page."
+  },
+  "gpa": {
+   "status": "known",
+   "value": {
+    "description": "HKU publishes programme-specific 'Lower Boundary' expected scores for named international qualifications on the 6999 Computing and Data Science page (IB Diploma, GCE/International A-level, SAT/AP, Indian Board Exams). They are expected competitive scores, not guaranteed minima, and no boundary is published for a Kazakhstan NIS grade-12 diploma; such qualifications are assessed individually.",
+    "value": {
+     "ib_diploma_points": 38,
+     "gce_a_level_best_three": "2A*1A",
+     "sat_ap": "Grade 5 in three AP subjects and SAT superscore 1400 or above (or Grade 4 or above in two additional AP subjects)",
+     "indian_board_exams_percent": 95,
+     "kazakhstan_nis": null
+    }
+   },
+   "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science/",
+   "quote": "IB Lower Boundary 38 Subject Requirements Grade 6 or better in one of the following subjects: Mathematics: Analysis and Approaches (HL), Mathematics: Applications and Interpretation (HL)",
+   "quote_2": "GCE A-level /International A-level Lower Boundary 2A*1A or better in the best three subjects (English and Chinese language subjects, Critical Thinking, General Studies, Global Perspectives and Research, Knowledge and Enquiry, Project Work, Thinking Skills, and Extended Project Qualification",
+   "how_found": "Same 6999 programme page (Entrance Requirements -> Non-JUPAS tab). Corroborated by the Faculty-hosted HKU 'Admissions Standards / Expected lower boundary for admissions' PDF found via web search 'HKU non-JUPAS international qualifications application deadline 2027 intake undergraduate' -> psychology.hku.hk/wp-content/admission/UG/Non-JUPAS.pdf (row 'Computing and Data Science 38 2A* 1A 3AP (Grade 5) + SAT 1400 / 3AP (Grade 5) + 2AP (Grade 4)'), and by ugadmissions.engg.hku.hk/faq/.",
+   "notes": "Nature of the figures, verbatim from psychology.hku.hk Non-JUPAS.pdf (HKU Admissions Standards, file dated 2025-10-22): 'The information below refers to school leaving examination scores that are considered competitive for entry to the specific programme. For qualifications that are not listed, reference information can be found on our website.' And from ugadmissions.engg.hku.hk/faq/: 'Requirements vary, depending on the academic qualifications attained. Please visit the Admission Office webpage for the specific certificate requirements relevant to your qualification. The expected score for admission serves as reference only.' No GPA-style threshold and nothing for Kazakhstan NIS is published; the central country-by-country 'admissions standard' page on admissions.hku.hk was unreachable."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-11-25",
+   "url": "https://ug.hkubs.hku.hk/admission-key-date/non-jupas",
+   "quote": "Deadline for application under First Round Evaluation (12:00 noon HKT) Nov 25, 2026",
+   "how_found": "Web search 'HKU non-JUPAS international qualifications application deadline 2027 intake undergraduate' (hku.hk only) -> 'Application & Admissions Information' ug.hkubs.hku.hk/admission-key-date/non-jupas (fetch tool; curl was reset). Corroborated on facdent.hku.hk/learning/undergraduate.php ('Guidelines for Undergraduate Admissions 2026': '12:00 noon, November 25, 2026 (HKT)').",
+   "notes": "This is the University-wide Non-JUPAS (international qualifications) timeline for entry in September 2027, as reproduced on two HKU faculty sites (HKU Business School, Faculty of Dentistry); the quote is a table row (label + date cell). Application opens Sep 23, 2026; applications after the first-round deadline are evaluated on a rolling basis until the final close 'Application closes (12:00 noon HKT) Aug 25, 2027'. The central HKU Admissions page/PDF for 2027 (admissions.hku.hk/.../HKU_General_Information_NJ_2027.pdf) was unreachable, so the date was not confirmed on admissions.hku.hk itself."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 249000,
+    "currency": "HKD",
+    "period": "year",
+    "academic_year": "2026/27",
+    "population": "non-local (STEM faculties and schools, incl. School of Computing and Data Science)"
+   },
+   "url": "https://www.hku.hk/en/admission-aid/tuition-fee-scholarships",
+   "quote": "For Non-local Students Admitted to the STEM Faculties and Schools (inclusive of STEM Fee)^ Tuition Fees HKD249,000 Per annum, 2026-2027 cohort ^Faculties of Dentistry, Engineering, Medicine, and Science; School of Biomedical Engineering, School of Computing and Data Science*, and School",
+   "how_found": "Web search 'HKU non-local students tuition fee undergraduate 2026-27 HK$ per annum' (hku.hk only) -> 'Tuition Fee & Scholarships' www.hku.hk/en/admission-aid/tuition-fee-scholarships (fetched with curl, text extracted).",
+   "notes": "2027/28 fee not yet published on this page; latest is the 2026-2027 cohort. Same page: non-local non-STEM HKD224,000, local HKD47,000 per annum. The central fees page admissions.hku.hk/fees-and-scholarships/fees was unreachable."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "School of Computing and Data Science Entrance Scholarship"
+   },
+   "url": "https://www.cds.hku.hk/prospective-students/scholarships/",
+   "quote": "1.School of Computing and Data Science Entrance Scholarship This flagship scholarship, valued at HK$200,000 per recipient, is awarded to top-performing students admitted to any undergraduate programme within CDS: • Computing and Data Science (Delta+) [6200] • Computing and Data Science [6999]",
+   "how_found": "cds.hku.hk home page -> 'Scholarships' link -> www.cds.hku.hk/prospective-students/scholarships/ (also surfaced by web search 'HKU entrance scholarships non-local international undergraduate students admissions').",
+   "notes": "Page heading: 'Entrance Scholarships for Undergraduate Students (2026/27 intake)'. Alternative university-run award for this applicant: 'HKU Faculty of Engineering Global Scholarship' on ugadmissions.engg.hku.hk/apply-scholarships/ ('one off award of up to half of the tuition fee to attract outstanding non-local students', 2027 intake, 'No separate application is required'). HKU-wide entrance scholarships are described on admissions.hku.hk (unreachable)."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://www.cds.hku.hk/prospective-students/scholarships/",
+   "quote": "The School of Computing and Data Science (CDS) at the University of Hong Kong (HKU) is pleased to announce a series of prestigious entrance scholarships for high-achieving local and international students admitted in the 2026/27 academic year.",
+   "how_found": "Same CDS scholarships page as scholarship_exists.",
+   "notes": "The scholarship's eligibility table is headed 'Non-JUPAS (both Local and Non-local)' with criteria 'IB Total Points (including bonus points) ... 43 or above' and 'Grades in GCE / IAL Subjects ... 5A*'; page also states 'Scholarships are available for local and non-local students at all levels'. Criteria shown are for the 2026/27 intake; 2027/28 criteria not yet published."
+  }
+ },
+ "access_notes": [
+  "admissions.hku.hk (and www.admissions.hku.hk) - the central HKU undergraduate admissions site - was unreachable for every path tried (international-qualifications, english-language-requirement, programme page, fees/scholarships, 2026 and 2027 PDFs): the fetch tool returned HTTP 503 and curl got a TCP connection reset from the CloudFront edge (13.226.251.54). Not bypassed. English requirement therefore unknown; deadline and admission-standard wording taken from HKU faculty subdomains instead.",
+  "cs.hku.hk/index.php/programmes/beng-compsc returned HTTP 503; cds.hku.hk gave intermittent connection resets (6999 page obtained on retry; /prospective-students/undergraduate/ and the SCDS brochure not obtained).",
+  "intlad.hku.hk and global.hku.hk: DNS name not found.",
+  "ug.hkubs.hku.hk: curl connection reset, but the fetch tool succeeded; quotes for the deadline come from the fetch tool's row-by-row extraction of the key-dates table.",
+  "No pdftotext/mutool available; PDF text extracted with PyMuPDF (cds leaflet 6999, psychology.hku.hk Non-JUPAS.pdf, handbook.hku.hk General Regulations 2024-25)."
+ ],
+ "pages_read": [
+  "https://admissions.hku.hk/apply/international-qualifications (FAILED 503 / TCP reset)",
+  "https://admissions.hku.hk/tuition-and-scholarships (FAILED 503)",
+  "https://www.cds.hku.hk/ (ok)",
+  "https://www.cs.hku.hk/index.php/programmes/beng-compsc (FAILED 503)",
+  "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science/ (ok, curl)",
+  "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science (FAILED 503)",
+  "https://admissions.hku.hk/apply/international-qualifications/english-language-requirement (FAILED 503)",
+  "https://www.admissions.hku.hk/apply/international-qualifications/english-language-requirement (FAILED 503)",
+  "https://www.cds.hku.hk/prospective-students/scholarships/ (ok)",
+  "https://admissions.hku.hk/sites/default/files/2025-10/HKU-International-Admissions-Information-2026.pdf (FAILED 503)",
+  "https://admissions.hku.hk/sites/default/files/2026-09/HKU_General_Information_NJ_2027.pdf (FAILED 503)",
+  "https://www.hku.hk/en/admission-aid/tuition-fee-scholarships (ok)",
+  "https://www.hku.hk/en/admission-aid (ok)",
+  "https://ugadmissions.engg.hku.hk/ (ok)",
+  "https://ugadmissions.engg.hku.hk/apply-overview/ (ok)",
+  "https://ugadmissions.engg.hku.hk/apply-scholarships/ (ok)",
+  "https://ugadmissions.engg.hku.hk/faq/ (ok)",
+  "https://www.cds.hku.hk/prospective-students/undergraduate/ (FAILED 503 / TCP reset)",
+  "https://www.cds.hku.hk/wp-content/uploads/2024/10/hku-cds_a5-programme-leaflet_6999.pdf (ok, curl; 2025/26 leaflet)",
+  "https://intlad.hku.hk/ (FAILED DNS)",
+  "https://global.hku.hk/students (FAILED DNS)",
+  "https://ug.hkubs.hku.hk/admission-key-date/non-jupas (ok)",
+  "https://ug.hkubs.hku.hk/admission/faq/non-jupas-applicants (ok)",
+  "https://ug.hkubs.hku.hk/programme/degree-programmes/bglis/admissions-criteria (ok; programme-specific English only)",
+  "https://psychology.hku.hk/wp-content/admission/UG/Non-JUPAS.pdf (ok; HKU Admissions Standards PDF)",
+  "https://handbook.hku.hk/ug/files/pdf/2024-25/General%20Regulations%202024-25.pdf (ok; no UG IELTS/TOEFL numbers)",
+  "https://infoday.hku.hk/computing-and-data-science (ok)",
+  "https://hkumed-ugadmissions.hku.hk/admissions-non-jupas-scheme/ (ok; 2025 cycle)",
+  "https://www4.fbe.hku.hk/ug/admission/faq/non-jupas-applicants (ok; 2021 cycle)",
+  "https://tl.hku.hk/common-learning-experiences/international/ (ok)",
+  "https://facdent.hku.hk/learning/undergraduate.php (ok)"
+ ],
+ "searches": [
+  "HKU international qualifications admissions requirements English language non-local",
+  "HKU Bachelor of Arts and Sciences in Computing and Data Science programme",
+  "HKU non-local students tuition fee undergraduate 2026-27 HK$ per annum",
+  "HKU entrance scholarships non-local international undergraduate students admissions",
+  "HKU non-JUPAS international qualifications application deadline 2027 intake undergraduate",
+  "HKU undergraduate \"medium of instruction\" English Pokfulam campus Computing and Data Science",
+  "HKU undergraduate non-JUPAS English language requirement IELTS 6.5 TOEFL international qualifications 2027",
+  "University of Hong Kong \"medium of instruction\" English undergraduate international students Pokfulam",
+  "HKU \"English language requirement\" undergraduate admission IELTS \"Writing and Speaking\" \"6.0\" non-JUPAS faculty page",
+  "HKU undergraduate non-local applicants \"overall band score of 6.5\" IELTS TOEFL English requirement faculty"
+ ]
+}

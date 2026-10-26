@@ -1,0 +1,68 @@
+{
+ "case": "qs2027-003",
+ "seed_id": "qs2027-003",
+ "university": "Stanford University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-003",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants (international applicants follow the first-year instructions)",
+   "academic_year": null,
+   "notes": "Stanford 'First-Year Applicants: Requirements and Deadlines' (updated 10 September 2026) and the International Applicants FAQ. Not drafted: the USD 100 application fee or fee waiver request, midyear transcript (due 15 February), optional arts portfolio.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admission.stanford.edu/apply/first-year/index.html",
+     "quote": "Required Application Components Common Application"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://admission.stanford.edu/apply/first-year/index.html",
+     "quote": "ACT or SAT test scores"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://admission.stanford.edu/apply/first-year/index.html",
+     "quote": "School Report form and counselor letter of recommendation"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admission.stanford.edu/apply/first-year/index.html",
+     "quote": "Official transcript(s) or academic results"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://admission.stanford.edu/apply/first-year/index.html",
+     "quote": "Letters of recommendation from two academic teachers"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admission.stanford.edu/apply/international/index.html",
+     "quote": "Yes, transcripts and teacher recommendations must be translated into English.",
+     "condition": "transcripts or teacher recommendations not in English (not self-translated; originals also submitted when applicable)"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "optional",
+     "url": "https://admission.stanford.edu/apply/international/index.html",
+     "quote": "No, we do not require any English proficiency exams. If you would like to send us one, you are welcome to self-report your scores from any English proficiency exam."
+    }
+   ]
+  }
+ }
+}

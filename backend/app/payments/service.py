@@ -98,7 +98,7 @@ def create_order(
     settings = get_settings()
     provider = get_provider()
     external_order_id = f"case-{profile_id[:12]}-{uuid.uuid4().hex[:8]}"
-    description = "ASHYQ Apply — full report for one case"
+    description = "Unimatch — full report for one case"
 
     if method == PaymentMethod.PHONE.value:
         # Narrowed by the guard above; restated for the type checker.

@@ -1,0 +1,78 @@
+{
+ "case": "qs2027-038",
+ "university": "Seoul National University",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "Korean and English (not quoted)",
+  "title": "Department Overview - Computer Science and Engineering (컴퓨터공학부)",
+  "page_url": "https://cse.snu.ac.kr/en/about/overview",
+  "language_twins": [],
+  "degree": "Bachelor's programme of the Department of Computer Science and Engineering (컴퓨터공학부), College of Engineering; 4 years; academic year starts in March",
+  "how_found": "Search (official domain only) -> cse.snu.ac.kr/en (department site) -> About -> Department Overview; en.snu.ac.kr Academics -> Programs -> Undergraduate lists 'Dept. of Computer Science and Engineering' with an 'English-taught Courses' link.",
+  "notes": "Computer Science and Engineering counts as CS (owner ruling). Language: the university lists English-taught courses per department but the programme is mainly Korean-taught; no verbatim language-of-instruction quote found, so none drafted. kb_top100_list.json has official_domain null for this row; the drafts use snu.ac.kr (en.snu.ac.kr, cse.snu.ac.kr), the university's own domain. The hosts reset the connection intermittently from the expert container (TLS SSL_ERROR_SYSCALL / connection reset); every page below was read on a retry."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "toefl_ibt": 80,
+    "ielts_overall": 6.0,
+    "alternative": "Korean: TOPIK level 3"
+   },
+   "url": "https://en.snu.ac.kr/webdata/uploads/eng/file/2026/06/Admissions_for_Undergraduate_Spring_2027.pdf",
+   "quote": "[English] TOEFL iBT 80 (a score of 4.0 for tests taken on or after January 21, 2026) OR IELTS Academic Band Score 6.0 OR TEPS 269",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "2027 Spring Undergraduate Admissions Guide for International Students, 'Minimum criteria for Korean or English language proficiency scores': Korean OR English proficiency is required ('[Korean] TOPIK (or TOPIK IBT) level 3 OR completion of a level 4 at language centers in Korean universities'). Scores obtained on or after July 9, 2024. No per-section minimum."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade minimum published in the 2027 Spring international guide; document-based selection (transcripts, personal statement, recommendation)."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-07-09",
+   "url": "https://en.snu.ac.kr/webdata/uploads/eng/file/2026/06/Admissions_for_Undergraduate_Spring_2027.pdf",
+   "quote": "Online Application ✼ Monday, July 6, 2026, 10:00 - Thursday, July 9, 2026, 17:00",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "population": "international",
+   "notes": "Spring 2027 (March 2027 entry) international undergraduate round; times in Korea Standard Time. Also on the notice https://en.snu.ac.kr/admission/overview/notice?md=v&bbsidx=170606. SNU 'offers international admissions for both the spring and fall semesters' (en.snu.ac.kr/admission/undergraduate/application) but no Fall 2027 guide is published yet; this round has already closed."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 2998000,
+    "currency": "KRW",
+    "period": "semester",
+    "academic_year": "2026",
+    "population": "international first-year admits (all students of the college)"
+   },
+   "url": "https://en.snu.ac.kr/webdata/uploads/eng/file/2026/06/Admissions_for_Undergraduate_Spring_2027.pdf",
+   "quote": "공과대학 전 학과(부) 2,998,000",
+   "date": "2026-10-19",
+   "page_language": "ko",
+   "notes": "Korean section, '부록 2 신입학기 등록금 일람표 (2026학년도 기준) (단위: 원)': tuition of the entering semester, College of Engineering, all departments, based on academic year 2026. Not multiplied."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Glo-Harmony Scholarship"
+   },
+   "url": "https://en.snu.ac.kr/admission/undergraduate/scholarships/after_admission",
+   "quote": "Full tuition exemption and 600,000 KRW per month of living expenses",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "For admitted students; 'Subsidized period: maximum of 8 semesters'; application periods January and July; selection by SNU Office of Global Affairs then Samsung Foundation: competitive. Also listed: Global Korea Scholarship (government, via embassies, https://en.snu.ac.kr/admission/undergraduate/scholarships/before_admission)."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://en.snu.ac.kr/admission/undergraduate/scholarships/after_admission",
+   "quote": "International students from developing countries in the DAC list of ODA Recipients",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Eligibility of the Glo-Harmony Scholarship: international students, restricted to countries on the DAC list of ODA recipients."
+  }
+ }
+}

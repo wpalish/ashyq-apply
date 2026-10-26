@@ -19,12 +19,17 @@ may import it, and it is never part of a run.
 from __future__ import annotations
 
 import argparse
-import json
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-from .metrics import SUPPORTING_QUOTE_MAX, _domain, canonical_url
+from .metrics import (
+    SUPPORTING_QUOTE_MAX,
+    _domain,
+    canonical_url,
+    scored_predictions,
+    values_match,
+)
 from .schema import Capture, Dataset
 
 #: Our quote lies inside the reviewer's: the original rule.
@@ -91,7 +96,7 @@ def support_shapes(dataset: Dataset, capture: Capture) -> list[Support]:
             continue
         labels = {label.key: label for label in case.labels if label.status == "known"}
         seen: set[str] = set()
-        for prediction in observation.predictions:
+        for prediction in scored_predictions(observation.predictions, labels):
             if prediction.value is None or prediction.value == "UNKNOWN":
                 continue
             fingerprint = prediction.model_dump_json()
@@ -101,9 +106,7 @@ def support_shapes(dataset: Dataset, capture: Capture) -> list[Support]:
             label = labels.get(prediction.key)
             if label is None:
                 continue
-            if json.dumps(prediction.value, sort_keys=True) != json.dumps(
-                label.value, sort_keys=True
-            ):
+            if not values_match(prediction.key, prediction.value, label.value):
                 continue
             shape, theirs = _shape(prediction, label)
             ours = prediction.evidence.excerpt if prediction.evidence else ""

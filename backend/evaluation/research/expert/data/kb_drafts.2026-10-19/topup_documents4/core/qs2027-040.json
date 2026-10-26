@@ -1,0 +1,52 @@
+{
+ "case": "qs2027-040",
+ "seed_id": "qs2027-040",
+ "university": "The University of Manchester",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-040",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Undergraduate applicants, including international applicants ('International applicants apply via UCAS in the same way as UK applicants'), BSc Computer Science (UCAS G400)",
+   "academic_year": null,
+   "notes": "Manchester's undergraduate 'How to apply' page (applying for a course beginning in September 2027 via UCAS), its 'UCAS personal statement' page and the BSc Computer Science course page (Year of entry: 2027). The CS page: 'At present, there is no requirement for an additional aptitude test for entry to the course.' Not drafted: the parental consent and UK guardianship proof for students under 18 at registration (no vocabulary kind); the course page's country-specific entry criteria are on the Department of Computer Science website. Round 2 read www.manchester.ac.uk/study/undergraduate/applications/how-to-apply/, which redirects to an http:// URL that answers HTTP 405; the current https path is readable.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.manchester.ac.uk/study/undergraduate/applying/how-to-apply/ucas-personal-statement/",
+     "quote": "To study for an undergraduate degree at Manchester or any UK university, you must make your application through UCAS."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://www.manchester.ac.uk/study/undergraduate/applying/how-to-apply/ucas-personal-statement/",
+     "quote": "A personal statement – an opportunity to tell us why you're interested in your chosen course."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.manchester.ac.uk/study/undergraduate/courses/2027/00560/bsc-computer-science/",
+     "quote": "Your referee should give realistic grade predictions for all qualifications that you are currently studying at the top of their reference. If you attend a non-UK school or college that does not provide predicted grades your referee should explain this policy within their reference.",
+     "academic_year": "2027/2028 (Year of entry: 2027)"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://www.manchester.ac.uk/study/undergraduate/courses/2027/00560/bsc-computer-science/",
+     "quote": "All applicants to the University (from the UK and Overseas) are required to show evidence of English Language proficiency. The minimum English Language requirement for this course is:",
+     "academic_year": "2027/2028 (Year of entry: 2027)",
+     "notes": "The course page lists GCSE/IGCSE English Language grade C/4, IELTS 6.5 (no subskill below 6.5) or TOEFL iBT 90 among the accepted evidence; 'Your English Language test report must be valid on the start date of the course'."
+    }
+   ]
+  }
+ }
+}

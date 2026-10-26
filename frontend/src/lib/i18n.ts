@@ -19,9 +19,16 @@
  * strings containing them stay in English, and that is the correct behaviour,
  * not a gap to be quietly filled.
  *
+ * The exception is the results screens (`i18n.results.ts`, gap B6): an
+ * applicant reading Russian or Kazakh needs them more than any other screen,
+ * so they carry provisional words for those terms, each recorded in the
+ * glossary as provisional and awaiting review. Navigation keeps the English.
+ *
  * No i18n library: this is a lookup with a fallback. A framework would bring
  * plural rules and interpolation for a dictionary of forty strings.
  */
+
+import { EN_RESULTS, KK_RESULTS, RU_RESULTS } from '@/lib/i18n.results';
 
 export type Locale = 'en' | 'ru' | 'kk';
 
@@ -59,6 +66,7 @@ const EN = {
   'nav.legal': 'Privacy & terms',
 
   'topbar.applicant': 'Applicant',
+  'topbar.explore': 'Explore',
   'topbar.newApplicant': 'New applicant',
   'topbar.newCase': 'New case',
   'topbar.signOut': 'Sign out',
@@ -286,6 +294,9 @@ const EN = {
   'leave.confirmSuffix': 'This cannot be undone.',
   'leave.yes': 'Yes, delete it',
   'leave.keep': 'Keep my profile',
+
+  // Results screens and backend sentences: `i18n.results.ts` (gap B6).
+  ...EN_RESULTS,
 } as const;
 
 export type MessageKey = keyof typeof EN;
@@ -295,13 +306,22 @@ export type MessageKey = keyof typeof EN;
  * from the glossary whose Russian equivalent a person has to choose.
  */
 const RU: Partial<Record<MessageKey, string>> = {
+  ...RU_RESULTS,
   'nav.group.prepare': 'Подготовка',
+  'nav.group.research': 'Исследование',
   'nav.group.decide': 'Решение',
   'nav.group.community': 'Сообщество',
   'nav.group.about': 'О сервисе',
 
   'nav.profile': 'Профиль абитуриента',
   'nav.progress': 'Ход исследования',
+  // Navigation carries the provisional glossary words (docs/i18n/GLOSSARY.md,
+  // "Provisional — navigation"), the same ones the results screens use.
+  'nav.preferences': 'Приоритеты и бюджет',
+  'nav.shortlist': 'Короткий список университетов',
+  'nav.funding': 'Сравнение финансирования',
+  'nav.sources': 'Источники и расхождения',
+  'nav.export': 'Экспорт и удаление данных',
   'nav.approved': 'Одобренные университеты',
   'nav.documents': 'Документы и сроки',
   'nav.feed': 'Лента',
@@ -310,6 +330,7 @@ const RU: Partial<Record<MessageKey, string>> = {
   'nav.legal': 'Конфиденциальность и условия',
 
   'topbar.applicant': 'Абитуриент',
+  'topbar.explore': 'Разделы',
   'topbar.newApplicant': 'Новый абитуриент',
   'topbar.signOut': 'Выйти',
   'topbar.connecting': 'соединение…',
@@ -528,13 +549,22 @@ const RU: Partial<Record<MessageKey, string>> = {
 
 /** Kazakh, on the same rule. */
 const KK: Partial<Record<MessageKey, string>> = {
+  ...KK_RESULTS,
   'nav.group.prepare': 'Дайындық',
+  'nav.group.research': 'Зерттеу',
   'nav.group.decide': 'Шешім',
   'nav.group.community': 'Қауымдастық',
   'nav.group.about': 'Сервис туралы',
 
   'nav.profile': 'Талапкер профилі',
   'nav.progress': 'Зерттеу барысы',
+  // Navigation carries the provisional glossary words (docs/i18n/GLOSSARY.md,
+  // "Provisional — navigation"), the same ones the results screens use.
+  'nav.preferences': 'Басымдықтар және бюджет',
+  'nav.shortlist': 'Университеттердің қысқа тізімі',
+  'nav.funding': 'Қаржыландыруды салыстыру',
+  'nav.sources': 'Дереккөздер және сәйкессіздіктер',
+  'nav.export': 'Деректерді экспорттау және жою',
   'nav.approved': 'Мақұлданған университеттер',
   'nav.documents': 'Құжаттар мен мерзімдер',
   'nav.feed': 'Таспа',
@@ -543,6 +573,7 @@ const KK: Partial<Record<MessageKey, string>> = {
   'nav.legal': 'Құпиялылық және шарттар',
 
   'topbar.applicant': 'Талапкер',
+  'topbar.explore': 'Бөлімдер',
   'topbar.newApplicant': 'Жаңа талапкер',
   'topbar.signOut': 'Шығу',
   'topbar.connecting': 'қосылуда…',
@@ -803,6 +834,55 @@ export function subscribe(listener: () => void): () => void {
 /** The message for this key, in the current locale, falling back to English. */
 export function t(key: MessageKey): string {
   return DICTIONARIES[current][key] ?? EN[key];
+}
+
+/** `t()` with `{name}` parameters filled in; an unknown parameter stays visible. */
+export function tf(key: MessageKey, params: Record<string, string | number>): string {
+  return fill(t(key), params);
+}
+
+/**
+ * `tf()` for a count. The locale's plural category picks the key when the
+ * dictionary has one for it (Russian `.few` and `.many`: "2 дня", "5 дней");
+ * otherwise the `.one` key for 1 and the `.other` key for anything else.
+ */
+export function tn(
+  base: string,
+  n: number,
+  params: Record<string, string | number> = {},
+): string {
+  const exact = `${base}.${pluralCategory(n)}`;
+  const key = exact in EN ? exact : `${base}.${n === 1 ? 'one' : 'other'}`;
+  return tf(key as MessageKey, { n, ...params });
+}
+
+function pluralCategory(n: number): string {
+  try {
+    return new Intl.PluralRules(current).select(n);
+  } catch {
+    return n === 1 ? 'one' : 'other';
+  }
+}
+
+export function fill(template: string, params: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (whole, name: string) =>
+    name in params ? String(params[name]) : whole,
+  );
+}
+
+/** Whether the current locale has its own text for a key built at run time. */
+export function translated(key: string): string | undefined {
+  return (DICTIONARIES[current] as Record<string, string | undefined>)[key];
+}
+
+/**
+ * A translation where the English is owned elsewhere (`format.ts`, a backend
+ * enum, a sentence the server wrote): English readers get `english`
+ * untouched, others the key's translation, or `english` when there is none.
+ */
+export function tOr(key: string, english: string): string {
+  if (current === 'en') return english;
+  return translated(key) ?? english;
 }
 
 /** Which keys a locale has not settled yet — read by the glossary test. */

@@ -1,4 +1,4 @@
-# ASHYQ Apply — API and worker share this image; the command differs.
+# Unimatch — API and worker share this image; the command differs.
 #
 # Multi-stage: the builder holds the toolchain, the runtime holds only what is
 # needed to serve. Runs as a non-root user with no shell.

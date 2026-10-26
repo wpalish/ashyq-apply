@@ -1,0 +1,37 @@
+{
+ "case": "qs2027-063",
+ "seed_id": "qs2027-063",
+ "university": "KFUPM",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-063",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International undergraduate applicants, SAT Track",
+   "academic_year": null,
+   "notes": "KFUPM's international admissions page (SAT Track: graduate of an international high school, natural-sciences track, SAT 1350+). After SAT verification the applicant is invited to a KFUPM math assessment (a test taken, not a document). The ISEF Winners Track is a separate route. The 'Personal Guide to Joining KFUPM 2027' PDF lists documents for Saudi students and resident non-Saudis (with an Iqama), not for applicants from abroad, so it was not used.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://kfupm.edu.sa/study/international-students/apply-as-an-international-student",
+     "quote": "Submit your SAT scores through College Board directly to KFUPM"
+    },
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://kfupm.edu.sa/study/international-students/apply-as-an-international-student",
+     "quote": "Complete your application through our Admission Website"
+    }
+   ]
+  }
+ }
+}

@@ -24,6 +24,20 @@ class CandidateProgram:
     url: str | None = None
 
 
+@dataclass(frozen=True)
+class RequirementsLead:
+    """SP-2: a page discovery read and refused as a process sub-page of a programme.
+
+    Not the programme page, but its admissions process page, so a lead for the
+    requirements and deadline questions. ``names_programme``: the page's ``h1``
+    names the requested level and subject, so its claims may take the
+    programme's scope; otherwise the page keeps its own read scope.
+    """
+
+    url: str
+    names_programme: bool = False
+
+
 @dataclass
 class Candidate:
     """A university found during discovery, before anything is verified."""
@@ -42,6 +56,30 @@ class Candidate:
     notes: str = ""
     #: Provider queries discovery already spent on this institution.
     search_queries_used: int = 0
+    #: DI-1 (``ADMISSIONS_HOST_FROM_HOMEPAGE``): registrable domains, beyond
+    #: ``domain``, that this institution's own homepage names as its admissions
+    #: site. At most one; empty unless the rule is on and found one. Every
+    #: official-domain reader takes ``official_domains`` rather than ``domain``.
+    extra_domains: list[str] = field(default_factory=list)
+    #: QR-1 (``QUESTION_ROUTED_EVIDENCE``): official pages the requirements
+    #: adapter reached for the fees question (a "Fees" link on the programme or
+    #: admissions page, or the fees topic query), at most two. The cost adapter
+    #: reads them after ``costs_url`` when that page states no tuition. Empty
+    #: unless the rule is on.
+    question_fee_urls: list[str] = field(default_factory=list)
+    #: SP-2 (``live_discovery.SUBPAGE_REQUIREMENTS_LEAD``): a process sub-page
+    #: SP-1 refused, at most one, for the requirements adapter to read after
+    #: QR-1's question links. Empty unless the rule is on and found one.
+    requirements_leads: list[RequirementsLead] = field(default_factory=list)
+
+    @property
+    def official_domains(self) -> tuple[str, ...]:
+        """The institution's own domain first, then any DI-1 admissions domain.
+
+        With no extra domain this is exactly ``(domain,)`` — the one-element
+        list every reader passed before — so a run without DI-1 is unchanged.
+        """
+        return (self.domain, *self.extra_domains)
 
     @property
     def verifiable(self) -> bool:
@@ -65,6 +103,13 @@ class PageOutcome:
     page_type: str = ""
     detail: str = ""
     readable_chars: int = 0
+    #: ES-2 (measurement only, funding stage): the page's ``<html lang>``
+    #: primary subtag (``""`` when it declares none) and the classifier's
+    #: ``funding_category`` (``"not_funding"`` outside the funding branch).
+    #: ``None`` where not recorded. The runner's outcome line never prints
+    #: them; only the evaluation capture reads them.
+    html_lang: str | None = None
+    classifier_signal: str | None = None
 
 
 @dataclass

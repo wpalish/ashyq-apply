@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-046",
+ "seed_id": "qs2027-046",
+ "university": "University of British Columbia",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-046",
+  "round": "topup_round11"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 1769.4,
+    "currency": "CAD",
+    "period": "credit",
+    "academic_year": "2026/27",
+    "population": "international undergraduate students in Science (the Faculty of Science, which offers the Computer Science B.Sc.), column 'International per-credit rate (commenced in 2026S or later)'"
+   },
+   "url": "https://vancouver.calendar.ubc.ca/fees/tuition-fees/undergraduate",
+   "quote": "Science $1,769.40 $1,752.39 $1,719.01 $1,686.27 $1,654.15 $1,622.35 $1,591.15 Social Work",
+   "notes": "UBC Vancouver Academic Calendar, Fees > Tuition Fees > Undergraduate, table 'International Students - Program'. The first rate column is headed 'International per-credit rate (commenced in 2026S or later)', and its footnote 2 reads 'For international undergraduate students starting their degree programs in the 2026/27 academic year, tuition will increase by no more than 3% each year for the subsequent four years'. The row 'Science' reads $1,769.40 in that column (the other six columns are earlier start cohorts). The page prints a per-credit rate only: no yearly figure and no Science credit load, so nothing is multiplied out (period 'credit'). Correction to topup_round10's README: $1,789.18 is the 'Applied Science' row, not Science. The year recorded is 2026/27 (the footnote's start year); no 2027/28 rate is published, so the build keeps it stale for a fall 2027 intake. 'Tuition fees are reviewed annually by the Board of Governors.' The page prints '$' only; the currency is the Canadian dollar (UBC Vancouver). The Computer Science B.Sc. being a Science degree is from the KB's programme page (you.ubc.ca/programs/computer-science-vancouver-bsc), not from this page. Student fees are not included.",
+   "date": "2026-10-20",
+   "page_language": "en"
+  }
+ }
+}

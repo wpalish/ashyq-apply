@@ -1,0 +1,32 @@
+{
+ "case": "qs2027-015",
+ "seed_id": "qs2027-015",
+ "university": "University of Pennsylvania",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-015",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.cis.upenn.edu/computer-science-bse/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "No minimum published (re-read 2026-10-20). https://admissions.upenn.edu/how-to-apply/international-applicants lists the accepted tests ('We accept TOEFL , IELTS Academic , and the Duolingo English Test') and gives only guidance: 'Competitive applicants tend to have a composite score of 5 or above' (new TOEFL scale), 'Competitive applicants tend to have a composite score of 100 or above' (0-120 TOEFL), Duolingo 'Competitive applicants should have an overall score of 130 or above'. These are competitive levels, not minimums, so nothing is drafted.",
+   "date": "2026-10-20"
+  }
+ }
+}

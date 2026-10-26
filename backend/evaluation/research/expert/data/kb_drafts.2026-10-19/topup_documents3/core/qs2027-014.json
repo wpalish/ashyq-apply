@@ -1,0 +1,111 @@
+{
+ "case": "qs2027-014",
+ "seed_id": "qs2027-014",
+ "university": "Tsinghua University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-014",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International applicants (foreign nationals) to undergraduate programmes",
+   "academic_year": null,
+   "notes": "'List of Uploading Documents in the Online Application System (for International applicants of Undergraduate Programs)', linked from the Application Procedures page; its dates are the 2026 cycle's (passport valid after 1 October 2026, graduation by August 2026), while the Eligibility page refers to the 2027 nationality instructions and age on 1 September 2027. Not drafted (no vocabulary kind): parents' passports and visa/entry-stamp pages, HSK 4+ test report or HSK waiver proof (not required for English-taught programmes), citizenship documents for former Chinese citizens, self-introduction video (Chinese and English, max 3 minutes), other supporting materials, guardian certificate (under 18). Portfolio applies only to the Arts and Architecture divisions. Hard copies of the application form and transcripts are sent after the Comprehensive Assessment.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://international.join-tsinghua.edu.cn/Admission1/Application_Procedures.htm",
+     "quote": "Complete the application form within the designated application periods."
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false,
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "Front page of personal and parents' passport, personal visa , and passport pages with entry customs stamps (if applicable)."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false,
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "The final degree certificate or pre-graduation certificate (in Chinese or English, must be an original copy)."
+    },
+    {
+     "kind": "cv",
+     "requirement": "required",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false,
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "Curriculum Vitae (in Chinese or English)."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false,
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "High school/University (if applicable) transcripts (in Chinese or English, must be original copy)."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false,
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "Certificate of National/Regional Graduation Examination/Matriculation Examination and/or the results of international standard tests (e.g. SAT/ACT/A-Level/AP/IB/CSCA/others)."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://international.join-tsinghua.edu.cn/Admission1/Eligibility.htm",
+     "quote": "Applicants whose native language is not English must provide official English language proficiency test results (e.g. TOEFL/IELTS/others).",
+     "condition": "native language is not English"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false,
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "Two Recommendation Letters: the letter template will be sent directly to the recommender's email address by the online application system."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false,
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "Personal statement (in Chinese or English)."
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "required",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false,
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "Form for the Financial Sponsor (template is available in the online application system) , Employment or Income Certificate of the Financial Sponsor."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+     "quote": "If the original copy is of 3 rd party language (such as Korean), then a notarized translated copy (in Chinese or English) must be submitted with the original.",
+     "condition": "the original document is in a language other than Chinese or English",
+     "cycle_stated": "applicants who will graduate from high school by August 2026",
+     "cycle_is_intake": false
+    }
+   ]
+  }
+ }
+}

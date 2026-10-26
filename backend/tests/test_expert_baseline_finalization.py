@@ -15,6 +15,7 @@ import pytest
 from app.config import get_settings
 from evaluation.research import live
 from evaluation.research.schema import Capture, Observation
+from evaluation.research.search_cap import SearchQueryLedger
 from scripts import canary_discovery as canary
 
 
@@ -297,6 +298,8 @@ def test_parent_forwards_reserve_and_advertises_the_unchanged_full_caps(
             "--strict-expert-budget",
             "--finalization-reserve-ms",
             "1000",
+            "--max-search-queries",
+            "6",
         ],
     )
     monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-source-sha")
@@ -347,13 +350,21 @@ def test_child_receives_the_reserve_with_the_full_case_clock(
             "--strict-expert-budget",
             "--finalization-reserve-ms",
             "1000",
+            "--max-search-queries",
+            "6",
+            "--search-ledger",
+            str(tmp_path / "search_ledger.json"),
         ],
     )
     live.main()
     assert called == [
         (
             ("groningen", tmp_path, 60, 120),
-            {"strict_expert_budget": True, "finalization_reserve_ms": 1000},
+            {
+                "strict_expert_budget": True,
+                "finalization_reserve_ms": 1000,
+                "search_ledger": SearchQueryLedger(tmp_path / "search_ledger.json", 6),
+            },
         )
     ]
 

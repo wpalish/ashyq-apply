@@ -1,0 +1,49 @@
+{
+ "case": "qs2027-001",
+ "seed_id": "qs2027-001",
+ "university": "Massachusetts Institute of Technology (MIT)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-001",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International first-year applicants (anyone without US citizenship or permanent residency)",
+   "academic_year": null,
+   "notes": "MIT Admissions 'First-year applicants: International applicants'. The essays, activities, letters of recommendation and interview are described on separate MIT pages that were not read for this draft. Only admitted students send final grades.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://mitadmissions.org/apply/firstyear/international/",
+     "quote": "We require a Secondary School Report (SSR) with transcript to be sent by your high school counselor"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://mitadmissions.org/apply/firstyear/international/",
+     "quote": "Your high school transcript should include three years of grades and the results of any external examinations"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://mitadmissions.org/apply/firstyear/international/",
+     "quote": "We require the SAT or the ACT from both prospective first-year and transfer students."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "optional",
+     "url": "https://mitadmissions.org/apply/firstyear/international/",
+     "quote": "For non-native English speakers, we strongly recommend providing the results of an English proficiency exam if you have been using English for fewer than five years or do not speak English at home or in school"
+    }
+   ]
+  }
+ }
+}

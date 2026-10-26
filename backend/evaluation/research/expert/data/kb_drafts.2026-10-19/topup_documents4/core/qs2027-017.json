@@ -1,0 +1,69 @@
+{
+ "case": "qs2027-017",
+ "seed_id": "qs2027-017",
+ "university": "Yale University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-017",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants to Yale College, including international applicants (who fulfil the same requirements as domestic applicants); Computer Science is a Yale College major",
+   "academic_year": null,
+   "notes": "Yale Undergraduate Admissions 'Requirements', 'International applicants' and 'Standardized Testing' pages. Standing pages; no year is printed on the list. High school seniors also submit a Mid-Year Report with official first-marking-period grades (January or February). 'Scores from other exams, including international leaving exams or English proficiency exams will not fulfill Yale's testing requirement.' Supplementary material (visual art, dance, music, film, STEM research) is optional; the Yale essay topics were not read and are not drafted. Not drafted: the Mid-Year Report (no vocabulary kind distinct from the transcript). Round 3 found admissions.yale.edu/application-requirements answering 404; the current paths are /apply and /requirements.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admissions.yale.edu/requirements",
+     "quote": "Step 1 Complete and submit the Common Application , Coalition Application on SCOIR , or QuestBridge Application , online."
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://admissions.yale.edu/requirements",
+     "quote": "Letters of recommendation from two teachers and one counselor"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://admissions.yale.edu/requirements",
+     "quote": "Also request a letter from your school’s college counselor. If your school does not have someone serving as a college counselor, please request a recommendation from a school administrator."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admissions.yale.edu/requirements",
+     "quote": "Ask your counselor or other school official to submit a School Report with an official transcript that includes all completed secondary school courses"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://admissions.yale.edu/international",
+     "quote": "International applicants fulfill the same standardized testing requirements as domestic applicants. First-year and transfer applicants must submit scores from the SAT or ACT."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admissions.yale.edu/standardized-testing",
+     "quote": "If you are a non-native English speaker without two or more years of enrollment in an English-medium school, you are required to submit scores from an English proficiency test, in addition to fulfilling Yale’s standardized testing requirement with ACT or SAT scores.",
+     "condition": "non-native English speaker without two or more years of enrollment in an English-medium school"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admissions.yale.edu/international",
+     "quote": "If any of your documents, including transcripts and letters of recommendation, are in a language other than English, they must be accompanied by a certified translation. We are not able to accept any documents that you have translated yourself.",
+     "condition": "documents in a language other than English"
+    }
+   ]
+  }
+ }
+}

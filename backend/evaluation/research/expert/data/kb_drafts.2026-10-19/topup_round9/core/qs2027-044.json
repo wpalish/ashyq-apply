@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-044",
+ "seed_id": "qs2027-044",
+ "university": "Institut Polytechnique de Paris",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-044",
+  "round": "topup_round9"
+ },
+ "questions_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [],
+ "programme": {
+  "title": null,
+  "page_url": null,
+  "notes": "Programme as recorded in the merged KB (École Polytechnique Bachelor of Science; not re-researched in this top-up)."
+ },
+ "answers": {
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Need-based tuition fee waiver (École Polytechnique Bachelor of Science)"
+   },
+   "url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/scholarships-and-financial-aid",
+   "quote": "All other candidates, i.e. international, European and French students not entitled to the CROUS bursary, may benefit from need-based financial aid proposed directly by Ecole Polytechnique and by the Foundation of Ecole Polytechnique, in the form of: a tuition fee waiver granted by Ecole Polytechnique and/or an interest-free loan supported by Ecole Polytechnique Foundation.",
+   "page_language": "en",
+   "notes": "NEED_BASED_POSSIBLE, partial: same page, 'Any need-based financial aid that may be awarded will only partially cover fees or expenses.' and 'The total amount of need-based financial aid will depend on the family's resources.' Waivers are deducted from tuition; 'The exact number of tuition fee waivers is determined according to available funds.'; the 1,500 Euro annual administration fee is always due. Applied for after admission ('admitted candidates may apply for need-based financial aid'), decided by the Bachelor of Science Financial Aid Committee; no amount and no year printed. MERGE EFFECT: this replaces the base Excellence Scholarship fact (4,800 Euros per year for 3 years, honors admits only, international eligibility not stated on the page), because kb_build merges scholarship_exists as one answer. Reviewer decision: drop this file if the Excellence award should stay the KB's answer.",
+   "date": "2026-10-20"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/scholarships-and-financial-aid",
+   "quote": "All other candidates, i.e. international, European and French students not entitled to the CROUS bursary, may benefit from need-based financial aid proposed directly by Ecole Polytechnique and by the Foundation of Ecole Polytechnique, in the form of: a tuition fee waiver granted by Ecole Polytechnique and/or an interest-free loan supported by Ecole Polytechnique Foundation.",
+   "page_language": "en",
+   "notes": "The page names international students as eligible for the Ecole Polytechnique need-based tuition fee waiver (CROUS bursaries are for French and assimilated students). No citizenship restriction is printed.",
+   "date": "2026-10-20"
+  }
+ }
+}

@@ -43,7 +43,7 @@ test('profile screen states the cost of every gap', async () => {
   await page.getByTestId('ielts-overall').fill('7');
 });
 
-test('preferences screen exposes the scoring weights and warns about live mode', async () => {
+test('preferences screen exposes the scoring weights and says what a non-demo run reads', async () => {
   await page.goto('/#/profile');
   await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(0).click();
   await page.getByTestId('load-demo-profile').click();
@@ -52,7 +52,10 @@ test('preferences screen exposes the scoring weights and warns about live mode',
   await expect(page.getByText('It is not a probability of admission')).toBeVisible();
 
   await page.getByTestId('demo-toggle').uncheck();
-  await expect(page.getByText('Live mode fetches real university websites')).toBeVisible();
+  // The e2e API runs the deployment default, knowledge mode kb (MODE-1): unticking demo starts a kb run,
+  // so the notice says the verified knowledge base answers and no page is read — not the live warning.
+  await expect(page.getByTestId('kb-mode-notice')).toBeVisible();
+  await expect(page.getByTestId('live-mode-notice')).toHaveCount(0);
   await page.getByTestId('demo-toggle').check();
   await page.screenshot({ path: shot('02-preferences.png'), fullPage: true });
 });

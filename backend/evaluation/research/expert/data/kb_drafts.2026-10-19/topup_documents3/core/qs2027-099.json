@@ -1,0 +1,51 @@
+{
+ "case": "qs2027-099",
+ "seed_id": "qs2027-099",
+ "university": "Freie Universitaet Berlin",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-099",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Applicants with a non-German university entrance qualification to undergraduate programmes",
+   "academic_year": null,
+   "notes": "Freie Universität Berlin 'Application with Non-German University Entrance Qualification'. The VPD is applied for at uni-assist (year-round; valid one year), then the application is made in the FU application portal by 15 July (restricted programmes) or 1 September (unrestricted). Not drafted (no vocabulary kind): APS certificate (certificates from China, India or Vietnam), proof of sufficient German depending on the programme, documents for second-degree, teaching-degree, higher-semester and special requests.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.fu-berlin.de/en/studium/bewerbung/bachelor/ausl-hzb",
+     "quote": "Upload all required documents to the application portal of Freie Universität Berlin, including your VPD, which you received from uni-assist."
+    },
+    {
+     "kind": "credential_evaluation",
+     "requirement": "required",
+     "url": "https://www.fu-berlin.de/en/studium/bewerbung/bachelor/ausl-hzb",
+     "quote": "valid VPD from uni-assist the VPD must be issued for Freie Universität Berlin.",
+     "notes": "uni-assist preliminary review documentation (VPD)."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.fu-berlin.de/en/studium/bewerbung/bachelor/ausl-hzb",
+     "quote": "all school leaving and university certificates which are part of your university entrance qualification"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.fu-berlin.de/en/studium/bewerbung/bachelor/ausl-hzb",
+     "quote": "official translations of all certificates if issued in any language other than English or German issued either by a sworn translator or by an institution authorized to provide translations for official purposes",
+     "condition": "certificates issued in a language other than English or German"
+    }
+   ]
+  }
+ }
+}

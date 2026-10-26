@@ -21,7 +21,11 @@ with ``FetchOutcome.value`` verbatim; the walker layer uses ``program_detail``,
 ``degree_level_mismatch``, ``field_mismatch``, ``off_domain``, ``short_label``,
 ``excluded_url``, ``walker_budget_exhausted`` and ``js_no_program_list``; and,
 since 2026-09-23, ``walker_no_signal`` for a link off the catalogue's own host
-that carries no programme signal at all, which is recorded and not read.
+that carries no programme signal at all, which is recorded and not read; and,
+under CC-1 (``live_discovery.COURSE_LEAD_GUARD``), ``course_page`` for a link to
+one course rather than a programme; and, under FRH
+(``live_discovery.FOLLOW_REFUSED_HUB_LINK``), ``hub_link_<page_type>`` or
+``hub_link_<fetch outcome>`` for the one link read below a refused hub.
 """
 
 from __future__ import annotations
@@ -30,24 +34,32 @@ import json
 import logging
 import re
 from collections import Counter
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable, Iterable, Sequence
 from dataclasses import dataclass, field
-from urllib.parse import urljoin, urlparse
+from functools import lru_cache
+from itertools import pairwise
+from urllib.parse import urlparse
+
+from bs4 import Tag
 
 from app.adapters.browser import BrowserFetcher
+from app.adapters.discovery import live_discovery as _discovery
 from app.adapters.discovery.live_discovery import (
     _DEGREE_SLUGS,
-    _URL_EXCLUSIONS,
     MAX_LINKS_SCANNED,
+    _url_excluded,
     canonical_url,
+    declared_alternates,
+    is_related_refusal,
+    label_names_other_level,
     looks_like_catalogue,
     matches_degree,
     matches_field,
     matches_field_text,
     names_other_degree_level,
+    on_institution_site,
     profile_rejects,
     registrable_domain,
-    same_institution,
 )
 from app.adapters.fetching import Fetcher, FetchResult, same_source_site
 from app.adapters.html_parse import parse_html
@@ -56,6 +68,8 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
 )
+from app.adapters.search.ontology import load_ontology
+from app.adapters.url_canonical import page_link
 
 log = logging.getLogger("unimatch.discovery.walker")
 
@@ -149,6 +163,11 @@ class WalkerLink:
     #: "html" (an anchor on the catalogue page) or "json" (an entry of the
     #: page's own JSON programme list).
     source: str
+    #: LL-1 (``live_discovery.LISTING_FOLLOWS_LOCAL_ALIASES``): the text of the
+    #: first heading inside the anchor - a card's own name ("Компьютерные
+    #: науки") beside its code and description. Empty when the anchor has no
+    #: heading, and always empty while LL-1 is off.
+    heading: str = ""
 
 
 @dataclass
@@ -165,6 +184,15 @@ class CatalogWalk:
     confirmed_subjects: dict[str, str] = field(default_factory=dict)
     #: (url, frozen outcome) for every link the walk decided something about.
     outcomes: list[tuple[str, str]] = field(default_factory=list)
+    #: WF-17, recording only: the declared ``hreflang`` twins of each
+    #: confirmed page, for the benchmark's alias rule.
+    alternates: dict[str, list[str]] = field(default_factory=dict)
+    #: R2 (16-Q6), recording only: (url, subject) of each page refused only
+    #: on the subject-head rule, a related programme.
+    related: list[tuple[str, str]] = field(default_factory=list)
+    #: FRH only: ``(hub, link, verdict)`` per refused hub whose field link was
+    #: read, the verdict ``"confirmed"`` for an accepted page.
+    hub_links: list[tuple[str, str, str]] = field(default_factory=list)
 
 
 def _structural_score(url: str, label: str) -> int:
@@ -185,6 +213,7 @@ def extract_links(
     base_url: str,
     domain: str,
     drops: list[tuple[str, str]] | None = None,
+    extra_domains: Sequence[str] = (),
 ) -> list[WalkerLink]:
     """The catalogue's same-domain links, resolved and deduplicated.
 
@@ -199,10 +228,13 @@ def extract_links(
     out: list[WalkerLink] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
-        url = urljoin(base_url, anchor["href"]).split("#")[0]
+        link = page_link(base_url, anchor["href"])
+        if link is None:
+            continue
+        url = link.split("#")[0]
         if urlparse(url).scheme not in ("http", "https"):
             continue
-        if not same_institution(url, domain):
+        if not on_institution_site(url, domain, extra_domains):
             if drops is not None:
                 drops.append((canonical_url(url), "off_domain"))
             continue
@@ -217,9 +249,24 @@ def extract_links(
                 label=label,
                 score=_structural_score(canonical, label),
                 source="html",
+                heading=_anchor_heading(anchor) if _discovery.LISTING_FOLLOWS_LOCAL_ALIASES else "",
             )
         )
     return out
+
+
+def _anchor_heading(anchor: Tag) -> str:
+    """LL-1: the first heading inside a link, as one line, or ``""``.
+
+    A listing of cards wraps each programme in one anchor whose text runs the
+    code, the name and a description together (kaznu: "6B06104 Компьютерные
+    науки Целью образовательной программы …"); the card's heading is the name
+    alone.
+    """
+    heading = anchor.find(["h1", "h2", "h3", "h4", "h5", "h6"])
+    if not isinstance(heading, Tag):
+        return ""
+    return re.sub(r"\s+", " ", heading.get_text(" ", strip=True))[:160]
 
 
 def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:
@@ -255,9 +302,13 @@ def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:
                 and isinstance(name, str)
                 and name.strip()
             ):
-                url = urljoin(base_url, raw_url.strip()) if base_url else raw_url.strip()
-                resolved = canonical_url(url)
-                if resolved not in seen and urlparse(resolved).scheme in ("http", "https"):
+                url = page_link(base_url, raw_url.strip())
+                resolved = canonical_url(url) if url is not None else ""
+                if (
+                    resolved
+                    and resolved not in seen
+                    and urlparse(resolved).scheme in ("http", "https")
+                ):
                     seen.add(resolved)
                     label = re.sub(r"\s+", " ", name.strip())[:160]
                     entries.append((label, resolved))
@@ -269,13 +320,89 @@ def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:
     return entries
 
 
+#: CC-1: a course code - one token of 2-4 letters directly followed by 3-4
+#: digits (``COL100``, ``CSL102``, ``COMP1511``) - at the start of a label or a
+#: slug. A programme code with one digit (``S1-INF``) or digits only (``6999``)
+#: is no course code, nor is an intake or degree token joined to a year
+#: (``fall2027``, ``bsc2025``: :func:`_starts_with_course_code`).
+_COURSE_CODE_START = re.compile(
+    r"^\W*(?P<letters>[a-z]{2,4})(?P<digits>\d{3,4})(?![a-z0-9])", re.IGNORECASE
+)
+#: CC-1: the path segments under which one course is addressed by identifier.
+_COURSE_SEGMENTS = frozenset({"course", "courses"})
+#: CC-1: a segment that identifies one course by number (``294207``) or view
+#: endpoint (``view``, ``view.php``); a course-code segment is the third kind.
+_COURSE_ID_SEGMENT = re.compile(r"^(\d+|view(\.\w+)?)$", re.IGNORECASE)
+#: CC-1: a four-digit year after ``courses`` is an intake, not a course id.
+_YEAR_SEGMENT = re.compile(r"^(19|20)\d\d$")
+#: CC-1: the intake seasons that a slug joins to a year (``fall2027``).
+_INTAKE_SEASONS = frozenset({"fall", "autumn", "spring", "summer", "winter"})
+
+
+@lru_cache(maxsize=1)
+def _year_slug_words() -> frozenset[str]:
+    """Words that, joined to a year, name an intake or a degree, never a course.
+
+    The seasons, and every one-word degree alias in the ontology (``bsc``,
+    ``ba``, ``msc``, ``beng``, ``phd``, ...), so ``bsc2025`` is no course code.
+    """
+    degrees = {
+        alias.lower()
+        for level in load_ontology().degrees.values()
+        for alias in level["aliases"]
+        if alias.isalpha()
+    }
+    return frozenset(degrees | _INTAKE_SEASONS)
+
+
+def _starts_with_course_code(text: str) -> bool:
+    """Whether ``text`` opens with a course code (``COMP1511``, ``col100-...``).
+
+    Four digits that read as a year (19xx/20xx) after an intake season or a
+    degree word are an intake or a cohort (``fall2027``, ``bsc2025``), not a
+    course; ``COMP2041`` stays a course, since ``comp`` is neither.
+    """
+    match = _COURSE_CODE_START.match(text)
+    if match is None:
+        return False
+    return not (
+        _YEAR_SEGMENT.match(match["digits"]) and match["letters"].lower() in _year_slug_words()
+    )
+
+
+def is_course_link(url: str, label: str) -> bool:
+    """CC-1: whether a link names one course rather than a programme.
+
+    True when the label or the last path segment starts with a course code, or
+    the path has a ``course``/``courses`` segment followed directly by a course
+    identifier (a number other than a year, a course code) or ``view``. A
+    programme path such as ``/courses/undergraduate/courses/computer-science/``
+    has neither.
+    """
+    if _starts_with_course_code(re.sub(r"\s+", " ", label or "").strip()):
+        return True
+    segments = [segment for segment in (urlparse(url).path or "").split("/") if segment]
+    if segments and _starts_with_course_code(segments[-1]):
+        return True
+    for before, after in pairwise(segments):
+        if before.lower() not in _COURSE_SEGMENTS:
+            continue
+        if (_COURSE_ID_SEGMENT.match(after) and not _YEAR_SEGMENT.match(after)) or (
+            _starts_with_course_code(after)
+        ):
+            return True
+    return False
+
+
 def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | None:
     """How strongly one catalogue link could be the applicant's programme.
 
     ``None`` is a hard reject — the link is never worth a fetch: its URL is on
     the exclusion list, its label is too short to name anything, or the URL
     names a degree level the applicant did not ask for (an MSc link is not a
-    weak bachelor lead, it is the wrong page). Otherwise the score adds
+    weak bachelor lead, it is the wrong page), or, under CC-1
+    (``COURSE_LEAD_GUARD``), it names one course (:func:`is_course_link`).
+    Otherwise the score adds
 
     * +5 for a URL that names a degree level at all,
     * +4 for a label that names one (the university calling it a programme),
@@ -288,12 +415,14 @@ def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | No
     :meth:`CatalogWalker.walk_catalog`.
     """
     path = urlparse(url).path or ""
-    if _URL_EXCLUSIONS.search(path):
+    if _url_excluded(path):
         return None
     clean = re.sub(r"\s+", " ", label or "").strip()
     if len(clean) < MIN_LABEL_CHARS:
         return None
     if names_other_degree_level(url, degree):
+        return None
+    if _discovery.COURSE_LEAD_GUARD and is_course_link(url, clean):
         return None
     score = 0
     for pattern, _level in DEGREE_MARKERS:
@@ -307,6 +436,60 @@ def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | No
     score += matches_field(url, fields)
     score += matches_degree(url, degree)
     return score
+
+
+#: FRH: the page suffix a hub's path loses before its children are told apart
+#: (``/find/subject.html`` lists ``/find/subject/...``).
+_HUB_PAGE_SUFFIX = re.compile(r"\.(?:html?|php|aspx|jsp|cfm)$", re.IGNORECASE)
+
+
+def _hub_directory(hub_url: str) -> str:
+    """FRH: the host and path under which a hub's own children sit, ending in ``/``."""
+    parsed = urlparse(hub_url)
+    path = _HUB_PAGE_SUFFIX.sub("", (parsed.path or "/").rstrip("/"))
+    return f"{parsed.netloc.lower()}{path}/"
+
+
+def _is_hub_child(url: str, hub_directory: str) -> bool:
+    """FRH: whether ``url`` sits on the hub's host, below the hub's own path."""
+    parsed = urlparse(url)
+    return f"{parsed.netloc.lower()}{parsed.path or '/'}".startswith(hub_directory)
+
+
+def refused_hub_lead(
+    html: str,
+    page_url: str,
+    hub_url: str,
+    domain: str,
+    extra_domains: Sequence[str],
+    degree: str,
+    fields: list[str],
+    skip: Iterable[str],
+) -> WalkerLink | None:
+    """FRH: the one link a refused hub offers toward the applicant's programme.
+
+    A link is kept only when :func:`score_link` keeps it (no excluded URL, no
+    short label, no URL naming another level, no course), its label names no
+    other level, its label or its URL names a requested field, and it is not
+    in ``skip`` (read, queued, or followed already). The hub's own children
+    come first, then the higher score, then the URL. Pure: no read.
+    """
+    skipped = {canonical_url(url) for url in skip}
+    hub_directory = _hub_directory(hub_url)
+    kept: list[tuple[bool, int, str, WalkerLink]] = []
+    for link in extract_links(html, page_url, domain, extra_domains=extra_domains):
+        score = score_link(link.url, link.label, degree, fields)
+        if score is None or label_names_other_level(link.label, degree):
+            continue
+        if not (matches_field_text(link.label, fields) or matches_field(link.url, fields) > 0):
+            continue
+        if link.url in skipped:
+            continue
+        child = _is_hub_child(link.url, hub_directory)
+        kept.append((not child, -score, link.url, WalkerLink(link.url, link.label, score, "html")))
+    if not kept:
+        return None
+    return min(kept, key=lambda row: row[:3])[3]
 
 
 def _host(url: str) -> str:
@@ -339,8 +522,10 @@ def _drop_outcome(url: str, label: str) -> str:
     clean = re.sub(r"\s+", " ", label or "").strip()
     if len(clean) < MIN_LABEL_CHARS:
         return "short_label"
-    if _URL_EXCLUSIONS.search(urlparse(url).path or ""):
+    if _url_excluded(urlparse(url).path or ""):
         return "excluded_url"
+    if _discovery.COURSE_LEAD_GUARD and is_course_link(url, clean):
+        return "course_page"
     return "degree_level_mismatch"
 
 
@@ -357,8 +542,22 @@ _LIST_WORDS = re.compile(
 )
 
 
+#: R4 (``live_discovery.LOCAL_CATALOGUE_ENTRY``): the same plural listing words
+#: in the other languages of ``languages.json`` ("Carreras de pregrado",
+#: "Studieprogrammer", "Bölümler"), accents as written.
+_LOCAL_LIST_WORDS = re.compile(
+    r"(carreras|grados|titulaciones|formations|corsi di laurea|cursos|licenciaturas"
+    r"|uddannelser|studieprogrammer|utbildningar|koulutukset|studijní programy"
+    r"|študijné programy|bölümler|programlar|õppekavad|studijų programos|programas"
+    r"|образовательные программы|бағдарламалары)\b",
+    re.I,
+)
+
+
 def _names_a_list(link: WalkerLink) -> bool:
     """Whether a lead reads as a list of programmes rather than one page."""
+    if _discovery.LOCAL_CATALOGUE_ENTRY and _LOCAL_LIST_WORDS.search(link.label or ""):
+        return True
     return looks_like_catalogue(link.url) or bool(_LIST_WORDS.search(link.label or ""))
 
 
@@ -432,9 +631,29 @@ class CatalogWalker:
         degree: str,
         fields: list[str],
         page_recorder: Callable[..., object] | None = None,
+        extra_domains: Sequence[str] = (),
+        stop: Callable[[], bool] | None = None,
+        stop_when_confirmed: bool = False,
+        country: str = "",
+        follow: Callable[[str, str, PageClassification], Awaitable[str | None]] | None = None,
     ) -> None:
         self.fetcher = fetcher
+        #: FRH: asked with (final URL, HTML, classification) of a lead refused
+        #: as ``reads_as_<type>``; returns the one link to read below it, or
+        #: None. The caller owns the hub test, the cap and the stop condition.
+        self.follow = follow
+        #: FRH: every catalogue, lead and followed link this walker read or
+        #: queued, so a follow never reads one of them again.
+        self.leads: set[str] = set()
+        #: CG-1: the institution's country, for the campus guard.
+        self.country = country
+        #: SB-1: asked before each read; True ends the walk (budget spent).
+        self.stop = stop
+        #: SB-1: no lead is read once one is confirmed.
+        self.stop_when_confirmed = stop_when_confirmed
         self.domain = domain
+        #: DI-1 admissions domains accepted beside ``domain``; empty by default.
+        self.extra_domains = tuple(extra_domains)
         self.degree = degree
         self.fields = fields
         self.page_recorder = page_recorder
@@ -448,6 +667,8 @@ class CatalogWalker:
         seen = {_without_query(u) for u, _ in queue}
         descents = 0
         while queue:
+            if self.stop is not None and self.stop():
+                break
             catalogue_url, depth = queue.pop(0)
             top_n = WALKER_TOP_N if depth == 0 else WALKER_DESCENT_TOP_N
             try:
@@ -500,22 +721,27 @@ class CatalogWalker:
         by the same applicant predicate the confirm stage uses.
         """
         walk = CatalogWalk(catalogue_url=catalogue_url)
+        self.leads.add(catalogue_url)
         html, payloads, catalogue_outcome = await self._read_catalogue(catalogue_url)
         if catalogue_outcome is not None:
             walk.outcomes.append((catalogue_url, catalogue_outcome))
 
         drops: list[tuple[str, str]] = []
-        links = extract_links(html, catalogue_url, self.domain, drops) if html else []
+        links = (
+            extract_links(html, catalogue_url, self.domain, drops, self.extra_domains)
+            if html
+            else []
+        )
         for url, outcome in drops:
             walk.outcomes.append((url, outcome))
 
         candidates: dict[str, WalkerLink] = {}
         for response_url, _content_type, body in payloads:
-            if not same_institution(response_url, self.domain):
+            if not on_institution_site(response_url, self.domain, self.extra_domains):
                 walk.outcomes.append((response_url, "off_domain_json"))
                 continue
             for name, url in parse_catalog_json(body, base_url=catalogue_url):
-                if not same_institution(url, self.domain):
+                if not on_institution_site(url, self.domain, self.extra_domains):
                     walk.outcomes.append((url, "off_domain"))
                     continue
                 if url not in candidates:
@@ -562,8 +788,16 @@ class CatalogWalker:
             budget = [link for link in budget if id(link) in kept]
         for link in scored[top_n:]:
             walk.outcomes.append((link.url, "walker_budget_exhausted"))
+        self.leads.update(link.url for link in budget)
 
-        for link in budget:
+        for index, link in enumerate(budget):
+            if (self.stop_when_confirmed and walk.confirmed) or (
+                self.stop is not None and self.stop()
+            ):
+                # SB-1: the programme is found, or the discovery budget is spent.
+                for unread in budget[index:]:
+                    walk.outcomes.append((unread.url, "walker_stopped"))
+                break
             await self._read_lead(link, walk)
         return walk
 
@@ -642,8 +876,17 @@ class CatalogWalker:
         # every stage is what the owner settled on 2026-09-22: a university
         # listing a programme says the programme exists, not that it is the
         # one this applicant asked about.
-        reason = profile_rejects(page, self.degree, self.fields)
+        reason = profile_rejects(
+            page,
+            self.degree,
+            self.fields,
+            url=result.final_url or link.url,
+            country=self.country,
+            html=result.text,
+        )
         if reason is not None:
+            if is_related_refusal(reason):
+                walk.related.append((link.url, page.subject or ""))
             mismatch = page.degree_level and page.degree_level != self.degree
             walk.outcomes.append(
                 (
@@ -651,10 +894,58 @@ class CatalogWalker:
                     "degree_level_mismatch" if mismatch else f"reads_as_{page.page_type.value}",
                 )
             )
+            if self.follow is not None and not mismatch and not walk.confirmed:
+                target = await self.follow(result.final_url or link.url, result.text, page)
+                if target is not None:
+                    await self._read_hub_link(link.url, target, walk)
             return
         walk.confirmed.append(link.url)
         walk.confirmed_subjects[link.url] = page.subject or ""
+        twins = declared_alternates(result.final_url or link.url, result.text, self.domain)
+        if twins:
+            walk.alternates[link.url] = twins
         walk.outcomes.append((link.url, page.page_type.value))
+
+    async def _read_hub_link(self, hub: str, url: str, walk: CatalogWalk) -> None:
+        """FRH (b): read a refused hub's one field link, judged like any lead.
+
+        One read, never retried, and the page read is never itself a hub. Its
+        outcome is ``hub_link_<page_type>`` or ``hub_link_<fetch outcome>``,
+        never ``reads_as_*``, so the descent rule does not see it.
+        """
+        self.leads.add(url)
+        result = await self.fetcher.get(url)
+        if result.ok and not same_source_site(url, result.final_url or url):
+            walk.outcomes.append((url, "hub_link_off_domain_redirect"))
+            walk.hub_links.append((hub, url, "programme redirected off the institution's site"))
+            return
+        page: PageClassification | None = None
+        if result.ok:
+            page = classify_page(url=result.final_url or url, html=result.text)
+        self._record(url, result, page)
+        if page is None:
+            walk.outcomes.append((url, f"hub_link_{result.outcome.value}"))
+            walk.hub_links.append((hub, url, f"could not be read ({result.outcome.value})"))
+            return
+        reason = profile_rejects(
+            page,
+            self.degree,
+            self.fields,
+            url=result.final_url or url,
+            country=self.country,
+            html=result.text,
+        )
+        walk.outcomes.append((url, f"hub_link_{page.page_type.value}"))
+        walk.hub_links.append((hub, url, reason or "confirmed"))
+        if reason is not None:
+            if is_related_refusal(reason):
+                walk.related.append((url, page.subject or ""))
+            return
+        walk.confirmed.append(url)
+        walk.confirmed_subjects[url] = page.subject or ""
+        twins = declared_alternates(result.final_url or url, result.text, self.domain)
+        if twins:
+            walk.alternates[url] = twins
 
     async def _read_catalogue(
         self, catalogue_url: str

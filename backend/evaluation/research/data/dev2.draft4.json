@@ -1,0 +1,1928 @@
+{
+  "schema_version": "1",
+  "version": "2026-10-26.dev2-draft4",
+  "split": "development",
+  "cases": [
+    {
+      "id": "ethz",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "ETH Zurich",
+      "domain": "ethz.ch",
+      "country": "Switzerland",
+      "site_types": [],
+      "request": {
+        "university": "ETH Zurich",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+          "excerpt": "Bachelor Computer Science (official German title: Bachelor Informatik; BSc ETH, 180 credits)",
+          "scope": {
+            "university": "ETH Zurich",
+            "programme": "Bachelor Computer Science (official German title: Bachelor Informatik; BSc ETH, 180 credits)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/language-requirements.html",
+              "excerpt": "The German C1 language certificate must be submitted by the application deadline (=31 March) at the latest.",
+              "scope": {
+                "university": "ETH Zurich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is German (german_level=C1). Expert (2026-10-17): The requirement is German, not English, and is recorded here as instructed. ETH: 'The main teaching language during Bachelor’s degree studies is German.' No English proficiency test is listed. A native speaker of Kazakh or Russian from NIS gets no waiver; waivers cover German mother tongue and cert…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/language-requirements.html",
+              "excerpt": "The German C1 language certificate must be submitted by the application deadline (=31 March) at the latest.",
+              "scope": {
+                "university": "ETH Zurich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is German (german_level=C1)."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere-qual/ETH-ZulassungsbedingungenHS2026_EN.pdf",
+              "excerpt": "Kazakhstan (L) Upper secondary school-leaving certificate + certificate of university admission in the desired academic subject provided by a recognised university in Kazakhstan + Reduced Entrance Examination ETHZ. Otherwise: Comprehensive Entrance Examination ETHZ",
+              "scope": {
+                "university": "ETH Zurich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade threshold on the school record for this applicant. A Kazakh school-leaving certificate never gives direct admission. Route A: the certificate plus a certificate of university admission in the chosen subject from a recognised Kazakh university, then the ETH Reduced Entrance Examination (4 subjects). Route B, otherwise: the ETH Comprehensiv…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-03-31). Expert (2026-10-17): This applicant goes through the entrance exam route, which takes more than a year from application to start. The exam-route table for a study start on '20.09.2027' reads 'Regular application period for autumn semester 2026' '01.12.2025 - 31.03.2026', then entrance exam '18.01.2027 - 28.01.2027'. Fo…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 (regulation in force since autumn semester 2025; no 2027/28 schedule pu… fee is published, not 2027/28 (expert value 2,190 CHF per semester). Expert (2026-10-17): The page says: 'All students who do not fulfil the criteria for simple tuition fee will be assigned to the second group paying a threefold tuition fee.' The simple fee is CHF 730/semester for Swiss and Liechtenstein citizens and residents. Compulsory semester fees come on top of tuition and are not…"
+        },
+        {
+          "key": "scholarships.eth.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living/international-students.html",
+              "excerpt": "International Bachelor students may apply for financial aid after passing the first year exams (Basisprüfung).",
+              "scope": {
+                "university": "ETH Zurich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "ETH Scholarship (need-based financial aid, Financial Aid Office, applied for via eSTIP). Expert (2026-10-17): This is not an entry scholarship. It is need-based, and an international bachelor student can apply only after passing the first-year Basisprüfung. ETH runs no merit scholarship at entry for international bachelor applicants; the Excellence Scholarship (ESOP) is for Master's only. ETH also says: 'I…"
+        },
+        {
+          "key": "scholarships.eth.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living.html",
+              "excerpt": "Bachelorstudents are eligible after passing successfully the first year examination in all parts.",
+              "scope": {
+                "university": "ETH Zurich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): True, but only after the first year. The sentence sits under the heading 'Scholarships for international students'. International bachelor students cannot get it at admission or in year 1."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Teaching language (expert): German."
+      }
+    },
+    {
+      "id": "psaclay",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "Université Paris-Saclay",
+      "domain": "universite-paris-saclay.fr",
+      "country": "France",
+      "site_types": [],
+      "request": {
+        "university": "Université Paris-Saclay",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.universite-paris-saclay.fr/formation/licence/informatique"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.universite-paris-saclay.fr/formation/licence/informatique",
+          "excerpt": "Licence mention Informatique (entry year: L1 Portail Mathématiques, Informatique (MI))",
+          "scope": {
+            "university": "Université Paris-Saclay",
+            "programme": "Licence mention Informatique (entry year: L1 Portail Mathématiques, Informatique (MI))",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): Programme is French-taught, so the language requirement is French, not English; no IELTS/TOEFL requirement. No Paris-Saclay page read states a numeric French level (e.g. B2) for L1 DAP applicants; the university's Learning French page names TEF/DELF/DALF without a level and says requirements vary b…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.universite-paris-saclay.fr/formation/licence/informatique/l1-portail-mathematiques-informatique-mi",
+              "excerpt": "Public visé et prérequis Bachelier.ère.s avec un bon niveau en mathématiques.",
+              "scope": {
+                "university": "Université Paris-Saclay",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published grade/average threshold. L1 admission is via national platform dossier review (Parcoursup for French/EU bac holders; DAP via Études en France for non-EU applicants abroad) against stated prerequisites; capacity 90 places."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 2026-12-15 unverified: source host is not an official domain. Expert (2026-10-17): National Campus France page used because the Paris-Saclay page links to it; Paris-Saclay itself only says the DAP must be made 'entre les mois de novembre et de janvier précédant l’année universitaire'. The Campus France calendar is headed 'Si vous souhaitez intégrer l'enseignement supérieur pour l…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 178 EUR per year). Expert (2026-10-17): Same page: 'Pour l’année 2026-2027, les droits d’inscription sont fixés comme suit :' with table 'Cursus Licence 178 €'. 2027/28 fees not yet published; 2026/27 is latest. Exemption applies 'dans les conditions fixées par la délibération n° CA-2026-013 du CA du 3 février 2026', which was not read (…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (Every university-run study scholarship listed is for master/doctorate (Bourses internationales de master, Eiffel, LPDP, Sophie Germain, Erasmus Mundus, etc.) or starts at L3 (Mathématique au Féminin)…); no scholarship keys written. Teaching language (expert): French."
+      }
+    },
+    {
+      "id": "uppsala",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "Uppsala University",
+      "domain": "uu.se",
+      "country": "Sweden",
+      "site_types": [],
+      "request": {
+        "university": "Uppsala University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+        "https://www.uu.se/en/study/programme-syllabus?query=2332"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+          "excerpt": "Bachelor's Programme in Computer Science (Kandidatprogram i datavetenskap), 180 credits, application code UU-P1100",
+          "scope": {
+            "university": "Uppsala University",
+            "programme": "Bachelor's Programme in Computer Science (Kandidatprogram i datavetenskap), 180 credits, application code UU-P1100",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.uu.se/en/study/programme-syllabus?query=2332",
+          "excerpt": "Programme syllabus for Bachelor's Programme in Computer Science",
+          "scope": {
+            "university": "Uppsala University",
+            "programme": "Bachelor's Programme in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-26",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://www.uu.se/en/study/bachelors-studies/application/entry-requirements",
+              "excerpt": "IELTS Academic: an overall score of 6.5 and no section below 5.5 TOEFL iBT: score of 20 (scale 0-30) in written test, total score of 90 Cambridge English: CAE or CPE",
+              "scope": {
+                "university": "Uppsala University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): These scores are the university-wide English 6 equivalents for bachelor's programmes. The programme also requires Swedish. The English programme page says: 'Note! This programme requires knowledge of Swedish. For information about the programme, see the Swedish page.' The uu.se page on foreign educ…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 5.5,
+            "reading": 5.5,
+            "speaking": 5.5,
+            "writing": 5.5
+          },
+          "evidence": [
+            {
+              "url": "https://www.uu.se/en/study/bachelors-studies/application/entry-requirements",
+              "excerpt": "IELTS Academic: an overall score of 6.5 and no section below 5.5 TOEFL iBT: score of 20 (scale 0-30) in written test, total score of 90 Cambridge English: CAE or CPE",
+              "scope": {
+                "university": "Uppsala University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): These scores are the university-wide English 6 equivalents for bachelor's programmes. The programme also requires Swedish. The English programme page says: 'Note! This programme requires knowledge of Swedish. For information about the programme, see the Swedish page.' The uu.se page on foreign educ…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "known",
+          "value": 90,
+          "evidence": [
+            {
+              "url": "https://www.uu.se/en/study/bachelors-studies/application/entry-requirements",
+              "excerpt": "IELTS Academic: an overall score of 6.5 and no section below 5.5 TOEFL iBT: score of 20 (scale 0-30) in written test, total score of 90 Cambridge English: CAE or CPE",
+              "scope": {
+                "university": "Uppsala University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): These scores are the university-wide English 6 equivalents for bachelor's programmes. The programme also requires Swedish. The English programme page says: 'Note! This programme requires knowledge of Swedish. For information about the programme, see the Swedish page.' The uu.se page on foreign educ…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+              "excerpt": "Selection Final school grades (66%) - Swedish Scholastic Aptitude Test (34%)",
+              "scope": {
+                "university": "Uppsala University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published minimum grade or average. Eligible applicants are ranked by final school grades (66% of places) and the Swedish Scholastic Aptitude Test, högskoleprovet (34% of places). Eligibility requires the general entry requirements plus Mathematics Further level 2, or Mathematics 4/Mathematics D."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-01-15",
+          "evidence": [
+            {
+              "url": "https://www.uu.se/en/study/bachelors-studies/application",
+              "excerpt": "The next application will open 16 October 2026 and close 15 January 2027",
+              "scope": {
+                "university": "Uppsala University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "international",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q5: «Все да». The product serves an international applicant: the international round (universityadmissions.se) closes 15 January 2027 on the official bachelor's application page. The national round's 15 April 2027 on the programme page is the second label `deadline.eu_national`."
+        },
+        {
+          "key": "deadline.eu_national",
+          "status": "known",
+          "value": "2027-04-15",
+          "evidence": [
+            {
+              "url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+              "excerpt": "Application deadline 15 April 2027 Application code UU-P1100",
+              "scope": {
+                "university": "Uppsala University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "eu_national",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q5: «Все да». The Swedish national round (antagning.se, application code UU-P1100), for EU/EEA and Swedish applicants; kept beside the international `deadline`. Was the case's `deadline` in dev2-draft1. Expert (2026-10-17): The 2027 cycle is published: 'Autumn 2027' accordion, study period 30 August 2027–9 June 2030. 15 April is the Swedish national-round deadline. The programme's 'Apply now' link goes to antagning.se (period HT_2027, id UU-P1100), not to universityadmissions.se. The general bachelor's entry-requireme…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The figure is per programme total (3 years); the corpus records a yearly amount (expert value 450,000 SEK). Expert (2026-10-17): The fee is quoted from the Autumn 2027 accordion; Autumn 2026 shows identical figures. The page states: 'If you are not a citizen of a European Union (EU) or European Economic Area (EEA) country, or Switzerland, you are required to pay application and tuition fees.' The per-year figure of SEK 150,0…"
+        },
+        {
+          "key": "scholarships.anders_wall_studies_at.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.uu.se/en/study/bachelors-studies/scholarships/uppsala-university-scholarships",
+              "excerpt": "This scholarship covers the full tuition fee for an international Bachelor’s or Master’s programme at Uppsala University. Please note that it does not cover living expenses.",
+              "scope": {
+                "university": "Uppsala University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Anders Wall's Scholarship for Studies at Uppsala University. Expert (2026-10-17): This is the only bachelor's scholarship listed. It is open only to 'Citizens of a country in Africa.', so a Kazakhstan citizen is NOT eligible. It also covers only 'international' Bachelor's programmes, and the application guide requires an international Bachelor's programme ranked first at univers…"
+        },
+        {
+          "key": "scholarships.anders_wall_studies_at.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.uu.se/en/study/bachelors-studies/scholarships",
+              "excerpt": "Uppsala University has a very limited number of scholarships that will cover tuition fees for international students admitted to our Bachelor’s programmes, and only students from a select number of countries can apply.",
+              "scope": {
+                "university": "Uppsala University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The scholarship is aimed at international, fee-paying students, but only citizens of selected countries can apply. Currently that means Africa only (Anders Wall), which excludes this applicant."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Teaching language (expert): Swedish. Owner 2026-10-26 («Подтверждаю», Диас, docs/process/TRACK_B_2026-10-26.md §1): the gold programme's syllabus page (www.uu.se/en/study/programme-syllabus?query=2332, \"Programme syllabus for Bachelor's Programme in Computer Science - Uppsala University\", the Track B Fetcher read) is the same programme as the gold, signed as a twin in programme_urls. The excerpt awaits a CI verify_evidence read."
+      }
+    },
+    {
+      "id": "tcd",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "Trinity College Dublin",
+      "domain": "tcd.ie",
+      "country": "Ireland",
+      "site_types": [],
+      "request": {
+        "university": "Trinity College Dublin",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.tcd.ie/courses/undergraduate/courses/computer-science/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.tcd.ie/courses/undergraduate/courses/computer-science/",
+          "excerpt": "Computer Science — B.A. (Moderatorship) Honours Bachelor Degree (NFQ Level 8) / Optional: M.C.S. in Computer Science (NFQ Level 9); CAO code TR033; 4 years full-time",
+          "scope": {
+            "university": "Trinity College Dublin",
+            "programme": "Computer Science — B.A. (Moderatorship) Honours Bachelor Degree (NFQ Level 8) / Optional: M.C.S. in Computer Science (NFQ Level 9); CAO code TR033; 4 years full-time",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://www.tcd.ie/study/english-language-requirements/",
+              "excerpt": "Band B (Standard entry) UG & PG Standard requirements 6.5 overall 6.0 in each band 120 overall 100 in each subscore 90 overall 21 in each section 4.5 overall 4.0 in each section 180 overall no score below 170 69 overall 59 in each section",
+              "scope": {
+                "university": "Trinity College Dublin",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Table columns in order: IELTS Academic, Duolingo English Test (Integrated score), TOEFL iBT (before January 2026), TOEFL iBT (after January 2026, new 1-6 scale: 4.5 overall, 4.0 each section), Cambridge Advanced/Proficiency, PTE Academic. Quote is table cell text joined with spaces. Results must be…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 6.0,
+            "reading": 6.0,
+            "speaking": 6.0,
+            "writing": 6.0
+          },
+          "evidence": [
+            {
+              "url": "https://www.tcd.ie/study/english-language-requirements/",
+              "excerpt": "Band B (Standard entry) UG & PG Standard requirements 6.5 overall 6.0 in each band 120 overall 100 in each subscore 90 overall 21 in each section 4.5 overall 4.0 in each section 180 overall no score below 170 69 overall 59 in each section",
+              "scope": {
+                "university": "Trinity College Dublin",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Table columns in order: IELTS Academic, Duolingo English Test (Integrated score), TOEFL iBT (before January 2026), TOEFL iBT (after January 2026, new 1-6 scale: 4.5 overall, 4.0 each section), Cambridge Advanced/Proficiency, PTE Academic. Quote is table cell text joined with spaces. Results must be…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "known",
+          "value": 90,
+          "evidence": [
+            {
+              "url": "https://www.tcd.ie/study/english-language-requirements/",
+              "excerpt": "Band B (Standard entry) UG & PG Standard requirements 6.5 overall 6.0 in each band 120 overall 100 in each subscore 90 overall 21 in each section 4.5 overall 4.0 in each section 180 overall no score below 170 69 overall 59 in each section",
+              "scope": {
+                "university": "Trinity College Dublin",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): Table columns in order: IELTS Academic, Duolingo English Test (Integrated score), TOEFL iBT (before January 2026), TOEFL iBT (after January 2026, new 1-6 scale: 4.5 overall, 4.0 each section), Cambridge Advanced/Proficiency, PTE Academic. Quote is table cell text joined with spaces. Results must be…"
+        },
+        {
+          "key": "english_evidence.duolingo.minimum",
+          "status": "known",
+          "value": 120,
+          "evidence": [
+            {
+              "url": "https://www.tcd.ie/study/english-language-requirements/",
+              "excerpt": "Band B (Standard entry) UG & PG Standard requirements 6.5 overall 6.0 in each band 120 overall 100 in each subscore 90 overall 21 in each section 4.5 overall 4.0 in each section 180 overall no score below 170 69 overall 59 in each section",
+              "scope": {
+                "university": "Trinity College Dublin",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Duolingo total. Expert (2026-10-17): Table columns in order: IELTS Academic, Duolingo English Test (Integrated score), TOEFL iBT (before January 2026), TOEFL iBT (after January 2026, new 1-6 scale: 4.5 overall, 4.0 each section), Cambridge Advanced/Proficiency, PTE Academic. Quote is table cell text joined with spaces. Results must be…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.tcd.ie/study/country/kazakhstan/",
+              "excerpt": "Accepted qualifications for direct applications include: GCE A Levels GCE A Levels International Baccalaureate US High School Diploma with SAT or ACT",
+              "scope": {
+                "university": "Trinity College Dublin",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade threshold is published."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-05-01). Expert (2026-10-17): Only the 2026-entry cycle is published (applications opened 1 November 2025). No September 2027 deadline is published yet as of 2026-10-17. For 2026 entry Computer Science closed early (1 May 2026) because it reached capacity; the general non-EU closing date was 30 June 2026, with 1 February as pri…"
+        },
+        {
+          "key": "tuition",
+          "status": "known",
+          "value": {
+            "amount": 30450.0,
+            "currency": "EUR"
+          },
+          "evidence": [
+            {
+              "url": "https://www.tcd.ie/courses/undergraduate/fees/",
+              "excerpt": "2027/28 School of Computer Science & Statistics Computer Science (Year 5 is postgraduate) UICS-ICSC-2F UF_000031 €4,982.00 €2,350.00 €7,332.00 €30,450.00",
+              "scope": {
+                "university": "Trinity College Dublin",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Column order: Academic Year, School, Course Name, Course Code, Fee Profile Code, EU Tuition, EU Student Contribution, EU Student Total Fee - Year 1, Non-EU Student Total Fee - Year 1. €30,450 is the year-one non-EU fee for new entrants in 2027/28 (2026/27 was €29,570). Fees for continuing students…"
+        },
+        {
+          "key": "scholarships.e3_balanced_solutions_better.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.tcd.ie/e3/education/scholarships/",
+              "excerpt": "Undergraduate E3 Balanced Solutions for a Better World Scholarship 1-year scholarships valued between €2,000 to €5,000 each and scholarships valued at €4,000. Scholarships are applied as a reduction to the tuition fees.",
+              "scope": {
+                "university": "Trinity College Dublin",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Undergraduate E3 Balanced Solutions for a Better World Scholarship. Expert (2026-10-17): The general Global Excellence Undergraduate Scholarship (€2,000-€5,000) does NOT apply: 'Medicine, dentistry, acting, engineering, natural sciences, and computer science and statistics courses are exempt from this scholarship programme.' E3 page currently shows 2026 batch deadlines (1 Feb, 15 Mar,…"
+        },
+        {
+          "key": "scholarships.e3_balanced_solutions_better.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.tcd.ie/e3/education/scholarships/",
+              "excerpt": "Who can apply: Applicants who have non-EU status and will pay tuition fees at the non-EU rate, and hold an offer letter for first year entry into the programmes above.",
+              "scope": {
+                "university": "Trinity College Dublin",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Requires an offer letter for first-year entry; selection on academic achievement and potential to contribute to the E3 initiative; 200-word statement required."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Teaching language (expert): English."
+      }
+    },
+    {
+      "id": "tsinghua",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "Tsinghua University",
+      "domain": "tsinghua.edu.cn",
+      "country": "China",
+      "site_types": [],
+      "request": {
+        "university": "Tsinghua University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://international.join-tsinghua.edu.cn/Divisions1.htm"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://international.join-tsinghua.edu.cn/Divisions1.htm",
+          "excerpt": "Computer Science and Technology (Computer Science Division, Department of Computer Science and Technology) - Chinese and English Programs",
+          "scope": {
+            "university": "Tsinghua University",
+            "programme": "Computer Science and Technology (Computer Science Division, Department of Computer Science and Technology) - Chinese and English Programs",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "No IELTS figure given. Expert (2026-10-17): The binding language requirement is Chinese (HSK), recorded here per instructions. Section 4.2.3 also says: 'Those whose native language is not English must provide official English language proficiency test results (e.g. TOEFL/IELTS/others)' but no minimum TOEFL/IELTS score is published. HSK waive…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://international.join-tsinghua.edu.cn/Admission1/Application_Procedures.htm",
+              "excerpt": "Admission decisions are made based on a holistic evaluation of academic performance, language proficiency, supporting materials, and the results of the Comprehensive Assessment.",
+              "scope": {
+                "university": "Tsinghua University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published grade/GPA minimum or test cut-off; holistic evaluation (document screening + Comprehensive Assessment). Academic performance shown via transcripts, national graduation exam certificates, optional international tests (CSCA/SAT/ACT/A-Level/AP/IB), Olympiad awards."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-02-28",
+          "evidence": [
+            {
+              "url": "https://international.join-tsinghua.edu.cn/Admission1/Schedule.htm",
+              "excerpt": "Online application (Beijing Time): 8:00 AM November 21, 2026—5:00 PM February 28, 2027 The Second Round result will be issued by: Early May , 2027",
+              "scope": {
+                "university": "Tsinghua University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Final deadline (second round) 2027-02-28 17:00 Beijing time. Earlier first round: 8:00 AM September 30, 2026 - 5:00 PM November 20, 2026 (results January 2027). Chinese-English programmes may apply in either round. Comprehensive Assessment dates announced later."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the not stated on page (published on the 2027-intake admissions site; assumed appli… fee is published, not 2027/28 (expert value 30,000 CNY per year). Expert (2026-10-17): The fees table groups items 1-14 (incl. '4. Computer Science') followed by '30,000.00 / Per Year' (RMB). The page does not name an academic year; it sits alongside 2027-dated Schedule/Eligibility pages. Other costs: application fee RMB 800 (non-refundable), insurance RMB 800/year, accommodation sep…"
+        },
+        {
+          "key": "scholarships.tsinghua_freshmen.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm",
+              "excerpt": "Outstanding international freshmen who apply for and are awarded the scholarship through the application system will receive financial support for their first academic year, including full-tuition, half-tuition, and partial-tuition scholarships.",
+              "scope": {
+                "university": "Tsinghua University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Tsinghua University International Undergraduate Freshmen Scholarship. Expert (2026-10-17): Covers first academic year only (full/half/partial tuition). Page states 'In 2026, approximately 45% of international undergraduate freshmen were awarded this scholarship.' Applied for via the application system. Chinese Government Scholarship (CSC, via embassy, Type A) also listed but is not unive…"
+        },
+        {
+          "key": "scholarships.tsinghua_freshmen.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm",
+              "excerpt": "In 2026, approximately 45% of international undergraduate freshmen were awarded this scholarship.",
+              "scope": {
+                "university": "Tsinghua University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The scholarship is specifically for international undergraduate freshmen."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Teaching language (expert): Chinese-English taught (listed under 'Divisions (Chinese and English Programs)'; HSK 5 required plus English proficienc…."
+      }
+    },
+    {
+      "id": "tec",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "Tecnológico de Monterrey",
+      "domain": "tec.mx",
+      "country": "Mexico",
+      "site_types": [],
+      "request": {
+        "university": "Tecnológico de Monterrey",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://tec.mx/es/ingenieria-y-ciencias/ingenieria-en-tecnologias-computacionales"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://tec.mx/es/ingenieria-y-ciencias/ingenieria-en-tecnologias-computacionales",
+          "excerpt": "Este programa también se ofrece como B.S. in Computer Science and Technology en inglés",
+          "scope": {
+            "university": "Tecnológico de Monterrey",
+            "programme": "Ingeniería en Tecnologías Computacionales | Tecnológico de Monterrey",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "No IELTS figure given. Expert (2026-10-17): This minimum applies to admission to the English-taught ITC (Monterrey, 'Admisión al programa con cupo limitado'). For the Spanish-taught track there is no published English admission minimum: applicants take the EUC placement exam or submit TOEFL iBT/B2 First/PET/Pearson, and 'All Tec students hav…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "known",
+          "value": 72,
+          "evidence": [
+            {
+              "url": "https://tec.mx/es/ingenieria-y-ciencias/ingenieria-en-tecnologias-computacionales",
+              "excerpt": "Al menos 72 puntos en el TOEFL iBT o 40 puntos de EUC o su equivalente al nivel B2 del idioma inglés referenciado al MCER.",
+              "scope": {
+                "university": "Tecnológico de Monterrey",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): This minimum applies to admission to the English-taught ITC (Monterrey, 'Admisión al programa con cupo limitado'). For the Spanish-taught track there is no published English admission minimum: applicants take the EUC placement exam or submit TOEFL iBT/B2 First/PET/Pearson, and 'All Tec students hav…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://tec.mx/es/profesional",
+              "excerpt": "El ensayo y tu currículo son elementos determinantes para tomar una decisión de admisión.",
+              "scope": {
+                "university": "Tecnológico de Monterrey",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published minimum average or admission-test cut-off. Holistic decision on GPA, admission test (PAA, or SAT/ACT), résumé and essay. An average below 80/100 triggers a profile review with possible additional requirements, not automatic rejection."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-28). Expert (2026-10-17): Admission is ROLLING (admisión continua): you complete your file by a cut-off and get results ~12 days later. The table for August 2027 currently lists cut-offs from 3 Oct 2026 to '28 de noviembre 2026' (results '10 de diciembre 2026'); 2026-11-28 is the latest listed cut-off, NOT a stated final cl…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): Degree-programme tuition is only shown through an interactive JavaScript simulator (by programme and campus); no amount is in the page text, and no tuition PDF was found. Tuition is charged per credit (typical load 18 credits/semester). Only related published figure: Study in Mexico FAQ (https://st…"
+        },
+        {
+          "key": "scholarships.beca_al_talento_academico.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://tec.mx/es/profesional/becas",
+              "excerpt": "Dirigida a estudiantes con un promedio de 90/100 en sus estudios de preparatoria.",
+              "scope": {
+                "university": "Tecnológico de Monterrey",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Beca al Talento Académico (Academic Talent Scholarship). Expert (2026-10-17): Requirements on page: average >= 90/100 and PAA >= 1,360 (SAT/ACT converted); 'El porcentaje de beca puede ser de 20% hasta 60% sobre el costo de la colegiatura'. A separate 'Beca al Talento Académico Internacional' (40%-60%, August 2027 call, apply from 24 Aug 2026, closes 22 Jan 2027) is restrict…"
+        },
+        {
+          "key": "scholarships.beca_al_talento_academico.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://tec.mx/sites/default/files/repositorio/conocenos/sacscoc/catalogos/profesional/reglamento_becas_preparatoria_profesional_eng.pdf",
+              "excerpt": "Academic Talent. Designed to attract students with high academic performance to pursue their studies regardless of family economic situation or nationality.",
+              "scope": {
+                "university": "Tecnológico de Monterrey",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The regulation says Academic Talent is awarded regardless of nationality, and the becas page lists no nationality restriction for Beca al Talento Académico. Caveat: the country-specific 'Beca al Talento Académico Internacional' excludes Kazakhstan, and the 'Estudiantes internacionales' profile sect…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Expert programme page https://tec.mx/es/ingenieria-y-ciencias/ingenieria-en-tecnologias-computacionales (Ingeniería en Tecnologías Computacionales (ITC); English-taught version: B.S. in Computer Science and Technology) unverified. Teaching language (expert): Spanish or English depending on campus; full English-taught plan only at Monterrey campus ('Completo en español / Compl…. Ticket 10 signed 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), on the proposal in docs/process/LABEL_PROPOSALS_2026-10-18.md after the CI verify_evidence run of the 13 proposal quotes (13/13 found on official hosts): programme page = the Spanish ITC page; its declared English hreflang twin (https://tec.mx/en/engineering-and-sciences/bs-in-computer-science-and-technology) is matched by the scorer's twin rule and was not separately verified (403 to the second request), so it is not listed. The core-question labels of this case are unchanged and stay unsigned."
+      }
+    },
+    {
+      "id": "uba",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "Universidad de Buenos Aires",
+      "domain": "uba.ar",
+      "country": "Argentina",
+      "site_types": [],
+      "request": {
+        "university": "Universidad de Buenos Aires",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/",
+          "excerpt": "Licenciatura en Ciencias de la Computación (plan 2023)",
+          "scope": {
+            "university": "Universidad de Buenos Aires",
+            "programme": "Licenciatura en Ciencias de la Computación (plan 2023)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.cbc.uba.ar/resoluciones/RESCS-2023-1924-UBA.pdf",
+              "excerpt": "Todos los estudiantes cuyo título de nivel secundario provenga de una institución sita en un país no hispanohablante deberán poseer un nivel mínimo de conocimiento y uso del español equivalente al nivel C1 del Marco de Referencia Común Europeo (MRCE)",
+              "scope": {
+                "university": "Universidad de Buenos Aires",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Spanish (spanish_level=Spanish C1 (CEFR/MCER) - SIELE GLOBAL C1 or Certificado de Español Avanzado (Fa…). Expert (2026-10-17): No English test exists: the requirement is Spanish proficiency, recorded here under 'english'. It is C1, not CELU. Applies because a Kazakhstan (NIS) diploma comes from a non-Spanish-speaking country. RAA-2023-36 (https://www.cbc.uba.ar/resoluciones/RS-2023-07691006-UBA.pdf) accepts two certificate…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.cbc.uba.ar/resoluciones/RESCS-2023-1924-UBA.pdf",
+              "excerpt": "Todos los estudiantes cuyo título de nivel secundario provenga de una institución sita en un país no hispanohablante deberán poseer un nivel mínimo de conocimiento y uso del español equivalente al nivel C1 del Marco de Referencia Común Europeo (MRCE)",
+              "scope": {
+                "university": "Universidad de Buenos Aires",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Spanish (spanish_level=Spanish C1 (CEFR/MCER) - SIELE GLOBAL C1 or Certificado de Español Avanzado (Fa…)."
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome ok). Open admission via the CBC: no entrance exam and no published minimum secondary-school grade"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-26). Expert (2026-10-17): This is the general pre-registration window (12-26 November 2026) for the 1st semester 2027. It is mandatory for anyone starting a UBA degree through UBA XXI and/or the CBC. The page does not mention foreign applicants specifically. In the 2026 cycle, UBA said foreigners without an Argentine DNI di…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2027 fee is published, not 2027/28 (expert value 0 ARS per year). Expert (2026-10-17): The page has no year label. The statement is general and current, so it was applied to 2027. Some administrative fees are separate from tuition: UBA legalisation of the secondary diploma is marked 'REQUIERE PAGO EN CONCEPTO DE LEGALIZACIÓN' (exactas.uba.ar/inscripcion-ingresantes)."
+        },
+        {
+          "key": "scholarships.beca_de_ayuda_economica.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/",
+              "excerpt": "Beca de Ayuda Económica Sarmiento para carrera de grado",
+              "scope": {
+                "university": "Universidad de Buenos Aires",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Beca de Ayuda Económica Sarmiento (UBA, carreras de grado; call for ingresantes). Expert (2026-10-17): This is a UBA-run, means-tested monthly stipend; the application is online at becasbienestar.rec.uba.ar. Applicants must be a regular student at a UBA faculty, have an average of at least 5 and be 30 or younger. Foreigners must hold permanent residence (see scholarship_international), so a new inte…"
+        },
+        {
+          "key": "scholarships.beca_de_ayuda_economica.applicability.international",
+          "status": "known",
+          "value": false,
+          "evidence": [
+            {
+              "url": "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/",
+              "excerpt": "Ser argentino/a nativo/a o por opción, o extranjero/a con residencia permanente.",
+              "scope": {
+                "university": "Universidad de Buenos Aires",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): False for an international applicant without Argentine permanent residence. The regulation (Art. 2 inc. 3) says: 'Sean argentinos/as nativos/as o por opción, o extranjeros/as con residencia permanente.'"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Teaching language (expert): Spanish."
+      }
+    },
+    {
+      "id": "kaznu",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "Al-Farabi Kazakh National University",
+      "domain": "kaznu.kz",
+      "country": "Kazakhstan",
+      "site_types": [],
+      "request": {
+        "university": "Al-Farabi Kazakh National University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1730",
+        "https://welcome.kaznu.kz/en/education_programs/bachelor/speciality/1730"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1730",
+          "excerpt": "Компьютерные науки 6B06104 Бакалавриат",
+          "scope": {
+            "university": "Al-Farabi Kazakh National University",
+            "programme": "Компьютерные науки 6B06104 Бакалавриат",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://welcome.kaznu.kz/en/education_programs/bachelor/speciality/1730",
+          "excerpt": "The aim of the educational program 6B06104 – Computer Science is to prepare competitive, competent specialists",
+          "scope": {
+            "university": "Al-Farabi Kazakh National University",
+            "programme": null,
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://welcome.kaznu.kz/ru/admissions/bachelor/docs-list/",
+              "excerpt": "Перечень необходимых документов: Аттестат / диплом + приложения (оригинал и копия) Удостоверение личности (оригинал и 2 копии) Сертификат ЕНТ в распечатанном виде",
+              "scope": {
+                "university": "Al-Farabi Kazakh National University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No English language test result is required for this route. Expert (2026-10-17): Domestic bachelor admission document list requires the UNT (ЕНТ) certificate and no English test certificate; status inferred from the official list (absence of an English requirement), not from an explicit 'no English test' sentence. International applicants differ: they take a KazNU language-of-i…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://welcome.kaznu.kz/ru/admissions/bachelor/docs-list/",
+              "excerpt": "Перечень необходимых документов: Аттестат / диплом + приложения (оригинал и копия) Удостоверение личности (оригинал и 2 копии) Сертификат ЕНТ в распечатанном виде",
+              "scope": {
+                "university": "Al-Farabi Kazakh National University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No English language test result is required for this route."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://welcome.kaznu.kz/media/admissions/bachelor/editor/2026-2027-porog-bally_3yzxkra_BVh4KIx.pdf",
+              "excerpt": "в057 Акпараттык технологиялар 100 90",
+              "scope": {
+                "university": "Al-Farabi Kazakh National University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: Minimum UNT (ЕНТ) score for UNT group B057 Information technologies (which contains 6B06104 Computer Science and 6B06102 Information Systems), 2026-27 admission: 100 to compete for an educational grant, 90 for fee-paying admission"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-08-25). Expert (2026-10-17): Only the 2026 cycle is published; no 2027 date found. This is the deadline for submitting documents to the KazNU admissions office (offline) in the 2026 cycle; the year is inferred from the 'Поступающим 2026' section. State-grant competition applications are filed via the national testing/ministry…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 1,100,000 KZT per year). Expert (2026-10-17): PDF is a scanned image with no text layer; the quote is a manual transcription of row 6 ('После школы' columns: Стоимость, тенге в год / 1 ECTS), not machine-verifiable. Exceptions in the same faculty: Системы информационной безопасности, Криптология 1 400 000; Программная инженерия, Вычислительная…"
+        },
+        {
+          "key": "scholarships.award.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://welcome.kaznu.kz/ru/admissions/foreign/foreign_rules/",
+              "excerpt": "Данные контакты указаны только для подачи на платной основе. Образовательные гранты выдаются Министерством образования.",
+              "scope": {
+                "university": "Al-Farabi Kazakh National University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Государственный образовательный грант (state educational grant, awarded via UNT-based competition by the Ministry of Education). Expert (2026-10-17): Grant covers tuition; grant students also receive a monthly stipend — welcome.kaznu.kz/ru/welcome/bachelor: 'бакалавриат 52 372 тг сумма стипендии'. The grant is awarded by the Ministry, not the university; KazNU-run grant administration pages (government site) were not opened."
+        },
+        {
+          "key": "scholarships.award.applicability.international",
+          "status": "known",
+          "value": false,
+          "evidence": [
+            {
+              "url": "https://welcome.kaznu.kz/ru/19388/page",
+              "excerpt": "Иностранные студенты принимаются на обучение в КазНУ им. аль-Фараби на платной основе за исключением студентов, поступающих на основании межправительственных соглашений.",
+              "scope": {
+                "university": "Al-Farabi Kazakh National University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Foreign nationals study on a fee-paying basis except under intergovernmental agreements; the KazNU pages do not state whether ethnic Kazakhs without citizenship (kandas) may compete for state grants. Irrelevant for this applicant (Kazakhstani citizen, domestic)."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Expert programme page https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1730 (6B06104 Компьютерные науки (EN: Computer Science), Faculty of Information Technology and Artificial Intelligence) unverified. Teaching language (expert): unknown — programme page returns a backend error (adapi GetSpecialityById HTTP 500) in ru/en/kz; Kazakh/Russian/English…. Ticket 10 signed 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), on the proposal in docs/process/LABEL_PROPOSALS_2026-10-18.md after the CI verify_evidence run of the 13 proposal quotes (13/13 found on official hosts): programme page = speciality/1730 in RU and EN (no hreflang declared, both listed); the page header reads 'Admissions 2026'. The core-question labels of this case are unchanged and stay unsigned."
+      }
+    },
+    {
+      "id": "uct",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "University of Cape Town",
+      "domain": "uct.ac.za",
+      "country": "South Africa",
+      "site_types": [],
+      "request": {
+        "university": "University of Cape Town",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://sit.uct.ac.za/bsc-degrees"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://sit.uct.ac.za/bsc-degrees",
+          "excerpt": "A BSc degree in Computer Science includes a sequence of courses that constitute a complete undergraduate training in Computer Science",
+          "scope": {
+            "university": "University of Cape Town",
+            "programme": "BSc degrees | School of Information Technology",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://sit.uct.ac.za/ba-informatics",
+          "excerpt": "Information Systems or Computer Science can be taken as a major along with another Humanities subject as part of a general BA/BSocSc degree",
+          "scope": {
+            "university": "University of Cape Town",
+            "programme": null,
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://sit.uct.ac.za/bachelor-business-science-specialising-computer-science",
+          "excerpt": "Bachelor of Business Science specialising in Computer Science",
+          "scope": {
+            "university": "University of Cape Town",
+            "programme": null,
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://uct.ac.za/students/applications-admission-requirements/language-requirements",
+              "excerpt": "IELTS: A valid (no more than 2 years old) IELTS Academic Test Report Form with an overall score of band 6.5 or above, with at least 6.0 in each component.",
+              "scope": {
+                "university": "University of Cape Town",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Applies because a Kazakhstan NIS applicant's school is not English-medium/English is not a home language (the requirement applies to 'All international students for whom English is not a first/home language...'). CONFLICT: the older '2026 Guidelines for Holders of International School-Leaving Certi…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 6.0,
+            "reading": 6.0,
+            "speaking": 6.0,
+            "writing": 6.0
+          },
+          "evidence": [
+            {
+              "url": "https://uct.ac.za/students/applications-admission-requirements/language-requirements",
+              "excerpt": "IELTS: A valid (no more than 2 years old) IELTS Academic Test Report Form with an overall score of band 6.5 or above, with at least 6.0 in each component.",
+              "scope": {
+                "university": "University of Cape Town",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Applies because a Kazakhstan NIS applicant's school is not English-medium/English is not a home language (the requirement applies to 'All international students for whom English is not a first/home language...'). CONFLICT: the older '2026 Guidelines for Holders of International School-Leaving Certi…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 88 is not in the quoted excerpt. Expert (2026-10-17): Applies because a Kazakhstan NIS applicant's school is not English-medium/English is not a home language (the requirement applies to 'All international students for whom English is not a first/home language...'). CONFLICT: the older '2026 Guidelines for Holders of International School-Leaving Certi…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://uct.ac.za/sites/default/files/media/documents/ug-directions-for-applicants-2027.pdf",
+              "excerpt": "Should you hold a school-leaving certificate for which admission criteria are not specified in the 2027 Undergraduate Prospectus, your application will be considered individually, taking into account your school curriculum, academic performance and National Benchmark Test results, where appropriate.",
+              "scope": {
+                "university": "University of Cape Town",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published threshold for a Kazakhstan (NIS Grade 12) school-leaving certificate. UCT publishes a Faculty of Science FPS of 34+ (best five subjects) and subject minima only for CAIE, NSSC and IB; all other international qualifications are assessed individually (curriculum, academic performance, NBTs where appropriate). Eligibility for South Afric…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-07-31). Expert (2026-10-17): Intake Feb 2027 = South African academic year 2027, which is the intake an applicant applying now targets; the 2027 cycle is published. The application deadline (31 July 2026) has ALREADY PASSED as of 2026-10-17; the next possible intake is 2028 (applications typically open 1 April of the preceding…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 fee is published, not 2027/28 (expert value 167,400 ZAR per year). Expert (2026-10-17): Derived figure: UCT charges per course, so there is no single published BSc tuition for internationals. 167,400 = 2026 typical first-year BSc fee R87,000 (stated as 'for South African applicants'; varies with course choice) + 2026 International Term Fee for Bachelors, students from outside Africa (…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (No named university-run scholarship open to an incoming non-South-African BSc applicant was found. The Faculty of Science 2027 entrance scholarships are for 'South African applicants' (FPS 720+, NSC…); no scholarship keys written. Expert programme page https://uct.ac.za/students/study-uct-degrees-diplomas-science/science-undergraduate (Bachelor of Science (BSc, SB001) with a major in Computer Science (application plan code SB001CSC05; a second major must also be chosen)) unverified. Teaching language (expert): English. Ticket 10 signed 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), on the proposal in docs/process/LABEL_PROPOSALS_2026-10-18.md after the CI verify_evidence run of the 13 proposal quotes (13/13 found on official hosts): programme page = sit.uct.ac.za/bsc-degrees; related = BA Informatics and BBusSc (CS); the department hub is neither (a wrong page). The core-question labels of this case are unchanged and stay unsigned."
+      },
+      "related_programme_urls": [
+        "https://sit.uct.ac.za/ba-informatics",
+        "https://sit.uct.ac.za/bachelor-business-science-specialising-computer-science"
+      ]
+    },
+    {
+      "id": "khalifa",
+      "dataset_version": "2026-10-26.dev2-draft4",
+      "university": "Khalifa University of Science and Technology",
+      "domain": "ku.ac.ae",
+      "country": "United Arab Emirates",
+      "site_types": [],
+      "request": {
+        "university": "Khalifa University of Science and Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "https://www.ku.ac.ae/ar/program/bsc-in-computer-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+          "excerpt": "The BSc in Computer Science program is concerned with the theoretical foundations of information and computation",
+          "scope": {
+            "university": "Khalifa University of Science and Technology",
+            "programme": "BSc in Computer Science - Khalifa University",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.ku.ac.ae/zmu",
+          "excerpt": "By combining academic excellence with rigorous military training, ZMU upholds the highest standards to prepare cadets for future security challenges",
+          "scope": {
+            "university": "Khalifa University of Science and Technology",
+            "programme": "BSc in Computer Science at ZMU",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 6 unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-17): Academic IELTS only. EmSAT English is not in the current mandatory table; an older section of the same FAQ page (written for the Fall 2024 cycle) lists 'Dircte Admissions: IETS 6.0 – TOFEL IBT 79 – EmSAT English 1400' and conditional admission at IELTS 5.5 / TOEFL 70 / EmSAT 1250, so EmSAT and cond…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 79 unverified: quote not found on the page (fetch outcome robots_disallowed). TOEFL iBT, 0-120. Expert (2026-10-17): Academic IELTS only. EmSAT English is not in the current mandatory table; an older section of the same FAQ page (written for the Fall 2024 cycle) lists 'Dircte Admissions: IETS 6.0 – TOFEL IBT 79 – EmSAT English 1400' and conditional admission at IELTS 5.5 / TOEFL 70 / EmSAT 1250, so EmSAT and cond…"
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No grade threshold is published for Kazakhstan / NIS. The listed curricula have their own minimums (e.g. American/CBSE 80% in Mathematics and one science subject; 'Russian or equivalent' minimum 4.0 in the final year, grade 11); anything not listed falls under 'Other Not Listed: Conditions apply according to the admission's policy set by Khalifa U…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-03-02). Expert (2026-10-17): This is the FALL 2026 cycle deadline, not Fall 2027. On 2026-10-17 the main undergraduate admissions page says 'Undergraduate admissions will not be offered for Spring 2027. Applications for Fall 2027 will open soon.' and 'Stay tuned for the Fall 2027 application timeline'. The Fall 2026 cycle open…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the not stated (current published rate as of 2026-10-17) fee is published, not 2027/28 (expert value 81,250 AED per year). Expert (2026-10-17): The quote is the fee table flattened into one line of text. The page gives an approximate yearly figure based on credit hours (AED 2,500 per credit hour); it names no academic year and makes no national/international distinction. Tuition fees page: '*The University reserves the right to change the…"
+        },
+        {
+          "key": "scholarships.award.exists",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Scholarships for International Students (Tier I–V). Expert (2026-10-17): Tiers: I full tuition + textbooks; II 75% tuition waiver; III 50%; IV 25%; V textbooks only. No separate application: eligibility is assessed with the admission application. Slots are limited, and meeting the minimum criteria does not guarantee an award. The international tiers do not list accommod…"
+        },
+        {
+          "key": "scholarships.award.applicability.international",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-17): The same page has a separate section, 'SCHOLARSHIPS FOR INTERNATIONAL STUDENTS'."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev2 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV2_2026-10-17.md; unsigned. Expert programme page https://www.ku.ac.ae/program/bsc-in-computer-science (BSc in Computer Science) unverified. Teaching language (expert): English. Ticket 10 signed 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), on the proposal in docs/process/LABEL_PROPOSALS_2026-10-18.md after the CI verify_evidence run of the 13 proposal quotes (13/13 found on official hosts): programme page = program/bsc-in-computer-science and its declared AR hreflang twin (not fetched: connection reset); related = /zmu (the same degree for Zayed Military University cadets). The core-question labels of this case are unchanged and stay unsigned."
+      },
+      "related_programme_urls": [
+        "https://www.ku.ac.ae/zmu"
+      ]
+    }
+  ]
+}

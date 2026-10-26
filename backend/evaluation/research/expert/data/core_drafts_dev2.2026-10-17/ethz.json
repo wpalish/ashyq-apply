@@ -1,0 +1,110 @@
+{
+  "case": "ethz",
+  "university": "ETH Zurich (Eidgenössische Technische Hochschule Zürich)",
+  "researched_on": "2026-10-17",
+  "programme": {
+    "url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+    "title": "Bachelor Computer Science (official German title: Bachelor Informatik; BSc ETH, 180 credits)",
+    "teaching_language": "German",
+    "campus": "Zurich (Department of Computer Science, Universitätstrasse 6, CAB building, ETH Zentrum)",
+    "how_found": "Direct official URL on ethz.ch (Studies > Bachelor's degree programmes > Engineering Sciences > Computer Science); German page https://ethz.ch/de/studium/bachelor/studienangebot/ingenieurwissenschaften/informatik.html linked from it. Teaching language from https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/admission-prerequisites.html: 'The main teaching language in all Bachelor’s degree programmes is German.' Field match: Informatik is the direct official equivalent of computer science."
+  },
+  "answers": {
+    "english": {
+      "status": "known",
+      "value": {
+        "german_level": "C1",
+        "description": "No English test is required. The programme is taught in German, and applicants must submit a recognised German C1 certificate by 31 March of the application year. Accepted examples: Goethe-Zertifikat C1 with at least 80 points on average; TestDaF TDN 5 in three sections and TDN 4 in one; telc Deutsch C1 Hochschule with grade 'gut'; ÖSD C1 'gut bestanden'; DSH-3; DSD second level at C1 in every part; Goethe or ÖSD C2. A C1 certificate may be no older than 2 years at the start of the application period."
+      },
+      "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/language-requirements.html",
+      "quote": "The German C1 language certificate must be submitted by the application deadline (=31 March) at the latest.",
+      "how_found": "Link 'language requirements' on the admission-prerequisites page for non-Swiss certificates. The certificate list loads from the page's own table JSON (…/language-requirements/_jcr_content/par/table.tableComp.json).",
+      "notes": "The requirement is German, not English, and is recorded here as instructed. ETH: 'The main teaching language during Bachelor’s degree studies is German.' No English proficiency test is listed. A native speaker of Kazakh or Russian from NIS gets no waiver; waivers cover German mother tongue and certain German-language school certificates only. 'Applications with invalid, insufficient or missing language certificate will be rejected after 31 March on formal grounds.'"
+    },
+    "gpa": {
+      "status": "not_applicable",
+      "value": {
+        "description": "No grade threshold on the school record for this applicant. A Kazakh school-leaving certificate never gives direct admission. Route A: the certificate plus a certificate of university admission in the chosen subject from a recognised Kazakh university, then the ETH Reduced Entrance Examination (4 subjects). Route B, otherwise: the ETH Comprehensive Entrance Examination (8 subjects). Admission is decided by passing the ETH entrance exam.",
+        "value": null
+      },
+      "url": "https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere-qual/ETH-ZulassungsbedingungenHS2026_EN.pdf",
+      "quote": "Kazakhstan (L) Upper secondary school-leaving certificate + certificate of university admission in the desired academic subject provided by a recognised university in Kazakhstan + Reduced Entrance Examination ETHZ. Otherwise: Comprehensive Entrance Examination ETHZ",
+      "how_found": "admission-prerequisites page > 'country list (PDF)': 'Admission requirements ETH Zurich, Academic Year 2026/27', Kazakhstan entry.",
+      "notes": "The country list is for academic year 2026/27. The only certificate it names for Kazakhstan is 'Chalpy Orta Bilim Turaly Attestat'. It does not mention the NIS Grade 12 certificate (Nazarbayev Intellectual Schools), so whether that certificate counts as the Attestat is unconfirmed. ETH decides only after a complete eApply application: 'We can only ascertain whether you need to sit an ETH entrance examination (reduced or comprehensive) after receiving your complete application in eApply.' ETH also says entry requirements for all Bachelor's programmes will change from autumn semester 2028, with details due in spring 2027. The certificate-of-university-admission deadline for the exam route is 15.10.2026 for a start on 20.09.2027."
+    },
+    "deadline": {
+      "status": "known",
+      "value": "2026-03-31",
+      "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/dates.html",
+      "quote": "Late applications after 31 March 2026 are not possible.",
+      "how_found": "Search 'ETH Zurich bachelor admission foreign secondary school certificate Kazakhstan entrance examination' > 'Dates Autumn Semester 2026 & 2027'. The table cells load from the page's own JSON (…/dates/_jcr_content/par/table_1322192949_cop.tableComp.json).",
+      "notes": "This applicant goes through the entrance exam route, which takes more than a year from application to start. The exam-route table for a study start on '20.09.2027' reads 'Regular application period for autumn semester 2026' '01.12.2025 - 31.03.2026', then entrance exam '18.01.2027 - 28.01.2027'. For an autumn 2027 start the deadline was therefore 2026-03-31, which has already passed (today is 2026-10-17). The next exam-route window, 01.12.2026 - 31.03.2027, leads to a start on 18.09.2028, with entrance exam 17.01.2028 - 27.01.2028, and the planned 2028 rule changes may apply to it. The 01.12.2026 - 31.03.2027 window for a start on 20.09.2027 covers only applicants admitted without an entrance examination, which does not include a Kazakh certificate. Each deadline is 23:59 CET per ETH."
+    },
+    "tuition": {
+      "status": "known",
+      "value": {
+        "amount": 2190,
+        "currency": "CHF",
+        "period": "semester",
+        "academic_year": "2026/27 (regulation in force since autumn semester 2025; no 2027/28 schedule published)",
+        "population": "international (foreign students not meeting simple-fee criteria, i.e. tuition fee group 2)"
+      },
+      "url": "https://ethz.ch/students/en/studies/financial/tuition-fees.html",
+      "quote": "Threefold tuition fee: CHF 2190 / semester",
+      "how_found": "Search 'ETH Zurich tuition fees per semester students foreign 2026/27 2027/28' > ethz.ch/students/en/studies/financial/tuition-fees.html",
+      "notes": "The page says: 'All students who do not fulfil the criteria for simple tuition fee will be assigned to the second group paying a threefold tuition fee.' The simple fee is CHF 730/semester for Swiss and Liechtenstein citizens and residents. Compulsory semester fees come on top of tuition and are not included here. The page carries no year label beyond 'Since the autumn semester 2025', so this is the latest published fee, not a confirmed 2027/28 figure."
+    },
+    "scholarship_exists": {
+      "status": "known",
+      "value": {
+        "name": "ETH Scholarship (need-based financial aid, Financial Aid Office, applied for via eSTIP)"
+      },
+      "url": "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living/international-students.html",
+      "quote": "International Bachelor students may apply for financial aid after passing the first year exams (Basisprüfung).",
+      "how_found": "Search 'ETH Zurich scholarships bachelor students foreign university entrance qualification eligibility' > Scholarships for cost of living/studying > International students.",
+      "notes": "This is not an entry scholarship. It is need-based, and an international bachelor student can apply only after passing the first-year Basisprüfung. ETH runs no merit scholarship at entry for international bachelor applicants; the Excellence Scholarship (ESOP) is for Master's only. ETH also says: 'International students at ETH should seek first in their home country for financial support or scholarships to study at ETH.' The Solidarity Fund for Foreign Students (from the second semester) is run by a separate foundation, not by ETH."
+    },
+    "scholarship_international": {
+      "status": "known",
+      "value": true,
+      "url": "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living.html",
+      "quote": "Bachelorstudents are eligible after passing successfully the first year examination in all parts.",
+      "how_found": "Same search; page section 'Scholarships for international students'.",
+      "notes": "True, but only after the first year. The sentence sits under the heading 'Scholarships for international students'. International bachelor students cannot get it at admission or in year 1."
+    }
+  },
+  "access_notes": [
+    "The EN programme page has no admission details; it points to the German pages.",
+    "The dates and language-requirement tables on ethz.ch render from JSON endpoints referenced in each page's own HTML (data-json-url). These were fetched directly from ethz.ch, with no login or bypass.",
+    "The admission-prerequisites page links only the Academic Year 2026/27 country list. The guessed ETH-ZulassungsbedingungenHS2027_EN.pdf returned 404. The page also says '(This information is not relevant for prospective students starting their degree in the autumn semester 2027.)', placed near the country-list link; it is ambiguous whether that refers to the country list or the 2028 notice.",
+    "ETH defers to swissuniversities for country-specific rules. That site is not an ethz.ch domain and was not consulted.",
+    "https://ethz.ch/en/studies/bachelor/application.html shows only legal bases; its sub-navigation is not in the static HTML."
+  ],
+  "pages_read": [
+    "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+    "https://ethz.ch/de/studium/bachelor/studienangebot/ingenieurwissenschaften/informatik.html",
+    "https://ethz.ch/en/studies/bachelor/application.html",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate.html",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/admission-prerequisites.html",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/dates.html",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/dates/_jcr_content/par/table_1322192949_cop.tableComp.json",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/dates/_jcr_content/par/table_83420306_copy_.tableComp.json",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/dates/_jcr_content/par/table_1322192949_cop_1566530997.tableComp.json",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/language-requirements.html",
+    "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/language-requirements/_jcr_content/par/table.tableComp.json",
+    "https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere-qual/ETH-ZulassungsbedingungenHS2026_EN.pdf",
+    "https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere-qual/ETH-ZulassungsbedingungenHS2027_EN.pdf (404)",
+    "https://ethz.ch/students/en/studies/financial/tuition-fees.html",
+    "https://ethz.ch/content/dam/ethz/main/education/finanzielles/files-en/tuition-fees.pdf (downloaded, not used)",
+    "https://ethz.ch/en/studies/fees-and-financial-support/tuition-fees.html (404)",
+    "https://ethz.ch/en/studies/financial/tuition.html (404)",
+    "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living.html",
+    "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living/international-students.html"
+  ],
+  "searches": [
+    "ETH Zurich bachelor admission foreign secondary school certificate Kazakhstan entrance examination (site: ethz.ch)",
+    "ETH Zurich tuition fees per semester students foreign 2026/27 2027/28 (site: ethz.ch)",
+    "ETH Zurich scholarships bachelor students foreign university entrance qualification eligibility (site: ethz.ch)"
+  ]
+}

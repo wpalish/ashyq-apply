@@ -82,6 +82,13 @@ class Case(Strict):
     programme_evidence: list[Evidence] = Field(default_factory=list)
     labels: list[Label]
     review: Review
+    #: v3-M2 (ticket 03 Q3): pages the reviewer labels as a related programme
+    #: (a sibling specialisation, a major page, the field's bachelor in another
+    #: faculty). Returned, one is neither a hit nor a wrong page. Not serialised
+    #: while empty, so every corpus written before it keeps its digest.
+    related_programme_urls: list[HttpUrl] = Field(
+        default_factory=list, exclude_if=lambda urls: not urls
+    )
 
     @model_validator(mode="after")
     def unique_labels(self) -> Self:
@@ -125,7 +132,30 @@ class Telemetry(Strict):
     http_fetches: int | None = Field(default=None, ge=0)
     browser_fetches: int | None = Field(default=None, ge=0)
     pdf_fetches: int | None = Field(default=None, ge=0)
+    #: Every query sent to the provider, ``search`` and ``search_localized``
+    #: alike: the number the 6-query budget is held against. Includes the
+    #: ``search_cache_hits`` answered without a request (SR-WIDE), which the
+    #: budget counts as before; real provider calls = the two's difference.
     search_calls: int | None = Field(default=None, ge=0)
+    #: Of ``search_calls``, those sent through ``search_localized`` (R5's
+    #: local-language family). Unset when none was, so every capture without
+    #: one keeps its bytes.
+    search_localized_calls: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    #: Free-search ticket 02: queries the run's ``--max-search-queries`` cap
+    #: refused before any request was sent (not in ``search_calls``). Unset
+    #: when none was, so every capture without one keeps its bytes.
+    search_cap_refusals: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    #: SR-WIDE: of ``search_calls``, requests this case had already had
+    #: answered and that were answered again from that answer, with no
+    #: request sent and nothing charged to the run's ledger. Unset when none
+    #: was, so every capture without one keeps its bytes.
+    search_cache_hits: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
     model_input_tokens: int | None = Field(default=None, ge=0)
     jev_input_tokens: int | None = Field(default=None, ge=0)
     latency_seconds: float | None = Field(default=None, ge=0)
@@ -135,6 +165,53 @@ class Telemetry(Strict):
     document_reads: int | None = Field(default=None, ge=0)
     document_seconds: float | None = Field(default=None, ge=0)
     document_stop: str | None = None
+    #: Seconds on the case clock before the first search query was sent; unset
+    #: when no query was sent (structural analysis 2026-10-18, section 4).
+    t_first_query: float | None = Field(default=None, ge=0)
+    #: Per discovery stage, seconds and page reads, copied from the discovery
+    #: trace when the trace records them; unset otherwise, never estimated.
+    stage_seconds: dict[str, float] | None = None
+    stage_reads: dict[str, int] | None = None
+    #: G-07, the gold-knockout arm only: how many gold programme URLs the
+    #: harness made unreachable (0: the case has no programme label, a no-op)
+    #: and how many reads it answered with a synthetic 404. Not serialised off
+    #: the arm, so every other capture keeps its bytes.
+    knockout_gold_urls: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    knockout_refused: int | None = Field(default=None, ge=0, exclude_if=lambda value: value is None)
+    #: Recorded-search replay only (``--search-provider recorded``): requests the
+    #: store answered, and requests it had no answer for (answered with nothing,
+    #: never sent anywhere). A rule that changes the queries shows up here. Not
+    #: serialised off the replay, so every other capture keeps its bytes.
+    recorded_search_hits: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    recorded_search_misses: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    #: H-1 (replay plan 2026-10-19 §5.4): the misses above by the stage that
+    #: sent them. The store holds discovery's requests only, so the replay
+    #: target is judged on ``recorded_search_misses_discovery``; the other three
+    #: vary with what a case read. A miss outside the four stages is in the
+    #: total only. Absent on captures made before H-1.
+    recorded_search_misses_discovery: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    recorded_search_misses_topic: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    recorded_search_misses_scholarship: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    recorded_search_misses_identity: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    #: HC-1: ``parent_kill`` when the parent's process timeout ended the case
+    #: before the child wrote its own stop, so the observation is the child's
+    #: last checkpoint (claims filed so far included), finalised by the parent.
+    #: Unset otherwise, so every other capture keeps its bytes.
+    stop_reason: str | None = Field(default=None, exclude_if=lambda value: value is None)
 
 
 class PageOutcome(Strict):
@@ -151,6 +228,32 @@ class PageOutcome(Strict):
     page_type: str = ""
     detail: str = ""
     characters: int | None = Field(default=None, ge=0)
+    #: ES-2: on a funding-stage page the classifier read, the page's
+    #: ``<html lang>`` primary subtag (``""``: none declared) and the
+    #: classifier's category (``index``, ``award``, ``faq``, ``signals:<n>``,
+    #: ``no_award_name:<n>``, ``not_funding``). Absent elsewhere and on
+    #: captures made before ES-2, and then not written.
+    html_lang: str | None = Field(default=None, exclude_if=lambda value: value is None)
+    classifier_signal: str | None = Field(default=None, exclude_if=lambda value: value is None)
+
+
+class SiteIdentity(Strict):
+    """v3-M3: what production's site-identity gate said about one case.
+
+    Recorded only on the ``--through-identity-gate`` arm, where the case's seed
+    row goes through ``CatalogueDiscoveryAdapter._identify_site`` instead of
+    being handed a verified homepage (ticket 05 Q3).
+    """
+
+    #: The gate returned an entry; until it does (or if the case is killed
+    #: first) this stays false.
+    established: bool = False
+    #: The homepage the gate established identity on, as it returned it.
+    homepage: str | None = None
+    #: R6 (``--site-identity-v2``): the identity branch that fired -
+    #: ``official_site``, ``native_name``, ``english_alternate`` or
+    #: ``title_name``. None with the rule off or when nothing was established.
+    proof: str | None = None
 
 
 class Observation(Strict):
@@ -162,6 +265,20 @@ class Observation(Strict):
     #: Defaulted, so every capture written before this field existed - the
     #: certified one included - still validates byte-for-byte unchanged.
     page_outcomes: list[PageOutcome] = Field(default_factory=list)
+    #: WF-17: declared ``hreflang`` twins of each returned programme page, keyed
+    #: by that page's URL as in ``programme_urls``. The scorer counts a twin of
+    #: the gold page as a hit. Defaulted: older captures carry none.
+    programme_url_aliases: dict[str, list[str]] = Field(default_factory=dict)
+    #: v3-M2 (ticket 16 Q6): pages discovery read and refused only as a related
+    #: programme (``related_programmes`` on the trace). Never returned, so never
+    #: a hit or a wrong page; a case with nothing better scores ``related``.
+    related_programme_urls: list[str] = Field(default_factory=list)
+    #: v3-M2 (ticket 03 Q2): the ``<html lang>`` of a returned programme page as
+    #: read, keyed by its URL. Only this confirms a ``?lang=`` variant; a page
+    #: with no recorded language keeps ``?lang=`` as part of its identity.
+    programme_page_languages: dict[str, str] = Field(default_factory=dict)
+    #: v3-M3: unset unless the case ran through the identity gate.
+    site_identity: SiteIdentity | None = None
     error: str | None = None
 
 

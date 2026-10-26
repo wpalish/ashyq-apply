@@ -74,7 +74,7 @@ def test_production_refuses_unusable_smtp_from(sender: str) -> None:
 
 
 def test_production_accepts_explicit_display_name_sender() -> None:
-    _settings(smtp_from="ASHYQ Apply <no-reply@example.test>").validate_runtime()
+    _settings(smtp_from="Unimatch <no-reply@example.test>").validate_runtime()
 
 
 def test_development_console_keeps_its_placeholder_sender() -> None:

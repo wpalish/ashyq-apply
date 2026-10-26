@@ -15,6 +15,9 @@ BACKEND_ROOT = Path(__file__).resolve().parent.parent
 #: ones; a short value is a placeholder somebody meant to replace.
 MIN_WEBHOOK_SECRET_CHARS = 16
 
+#: ``UNIMATCH_KNOWLEDGE_MODE`` values.
+KNOWLEDGE_MODES = frozenset({"kb", "live"})
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="UNIMATCH_", env_file=".env", extra="ignore")
@@ -164,6 +167,26 @@ class Settings(BaseSettings):
     #: exa_mcp is an explicit keyless, rate-limited hosted search alternative.
     #: Provider quotas still cause visible SearchUnavailable; no automatic retries.
     search_provider: str = "none"
+    #: ``recorded`` only (evaluation replay, 2026-10-19): the recorded-search
+    #: store the provider answers from. No key is read in that mode, and there is
+    #: no fallback to any other provider (``app/adapters/search/recorded.py``).
+    recorded_search_store: Path | None = None
+    #: SR-WIDE, the record path (``evaluation.research.live --record-wide``):
+    #: Exa and Tavily ask for the whole page one paid request buys (Exa 25
+    #: results, Tavily 20 at ``basic``) and hand the caller only the head it
+    #: asked for, so ranking is unchanged and the capture records the rest.
+    #: Off by default: the product's requests stay as narrow as they were.
+    search_record_wide: bool = False
+    #: Where research answers come from (owner, 2026-10-19: live search frozen).
+    #: ``kb`` (default): the verified knowledge base in ``app/knowledge`` - no
+    #: discovery, no search, no page reads; a university not in it gets an
+    #: honest "no verified data yet". ``live``: the web pipeline as before.
+    #: Demo mode ignores this and keeps its own fixtures.
+    knowledge_mode: str = "kb"
+    #: The built KB file; the default is ``app/knowledge/kb_cs_bachelor.json``.
+    knowledge_base_path: Path | None = None
+    #: The development-corpus import merged into it, when present.
+    knowledge_imported_path: Path | None = None
 
     #: SecretStr like every other credential. Read from UNIMATCH_EXA_API_KEY
     #: (or EXA_API_KEY via the environment), never from a file in the repo.
@@ -204,6 +227,15 @@ class Settings(BaseSettings):
     @property
     def moderator_email_list(self) -> list[str]:
         return [e.strip().casefold() for e in self.moderator_emails.split(",") if e.strip()]
+
+    def is_moderator(self, email: str) -> bool:
+        """Whether this account works the report queue: the one test for it.
+
+        `require_moderator` refuses the queue routes with it, and the auth
+        status reports it so the app can show the queue's nav entry; both read
+        this, so the entry and the 403 cannot disagree.
+        """
+        return email.casefold() in self.moderator_email_list
 
     def ensure_dirs(self) -> None:
         directories = [self.cache_dir, self.export_dir]
@@ -290,11 +322,28 @@ class Settings(BaseSettings):
         # must not grow an import edge to the adapters above it.
         from app.adapters.search import KNOWN_SEARCH_PROVIDERS
 
+        if self.knowledge_mode not in KNOWLEDGE_MODES:
+            raise RuntimeError(
+                f"UNIMATCH_KNOWLEDGE_MODE={self.knowledge_mode!r} is not one of "
+                f"{sorted(KNOWLEDGE_MODES)}."
+            )
         if self.search_provider not in KNOWN_SEARCH_PROVIDERS:
             raise RuntimeError(
                 f"UNIMATCH_SEARCH_PROVIDER={self.search_provider!r} is not a search provider "
                 f"this build knows. Use one of {sorted(KNOWN_SEARCH_PROVIDERS)}."
             )
+        if self.search_provider == "recorded":
+            if self.is_production:
+                raise RuntimeError(
+                    "UNIMATCH_SEARCH_PROVIDER must not be 'recorded' in production. It replays "
+                    "benchmark captures and answers every other query with nothing."
+                )
+            store = self.recorded_search_store
+            if store is None or not Path(store).is_file():
+                raise RuntimeError(
+                    "UNIMATCH_SEARCH_PROVIDER='recorded' needs UNIMATCH_RECORDED_SEARCH_STORE "
+                    "pointing at a recorded-search store file."
+                )
         if self.search_provider == "exa" and not self.exa_api_key.get_secret_value():
             raise RuntimeError(
                 "UNIMATCH_SEARCH_PROVIDER='exa' needs UNIMATCH_EXA_API_KEY. Refusing to start "

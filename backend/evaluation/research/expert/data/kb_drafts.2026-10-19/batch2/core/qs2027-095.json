@@ -1,0 +1,63 @@
+{
+ "case": "qs2027-095",
+ "university": "The University of Osaka",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "Japanese",
+  "title": "The Department of Information and Computer Sciences aims at educating undergraduate students to acquire basic scientific ability and technological mastery in the fields of informatics and mathematical science.",
+  "page_url": "https://www.es.osaka-u.ac.jp/en/faculty-research/school-of-engineering-science/department-of-information-and-computer-sciences/index.html",
+  "language_twins": [],
+  "degree": "bachelor, School of Engineering Science, Department of Information and Computer Sciences",
+  "how_found": "web search restricted to osaka-u.ac.jp (discovery only) -> department page; admissions from osaka-u.ac.jp/en/admissions/faculty/expense and /ja/admissions/faculty/expense/index2.html.",
+  "notes": "RELATED (owner ruling): no bachelor titled Computer Science; Information and Computer Sciences is the closest. ACCESS: the AY2027 application guidelines for privately-funded international students (https://www.osaka-u.ac.jp/ja/admissions/faculty/expense/files/2027shihi_guideline.pdf/@@download/file, published September 2026) are an AES-encrypted PDF; the production extractor (pypdf without the cryptography package) reads no text from it, so its deadlines and TOEFL thresholds could not be quoted."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Japanese-taught programme. Selection for privately-funded international students uses EJU and TOEFL scores, a written exam and an interview. The FAQ (https://www.osaka-u.ac.jp/ja/admissions/faculty/expense/files/2027tokubetsunyushi_faq.pdf/@@download/file) says: '学部によっては、 大阪大学に出願する条件としての基準点があります。 大阪大学に合格する条件 としての基準点はありません。詳しくは、募集要項を参考にしてください。' - thresholds are in the encrypted 2027 guideline, not read."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade threshold found; selection by EJU, TOEFL, written exam and interview (thresholds, if any, in the encrypted 2027 guideline)."
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "AY2027 (April 2027) Special Screening for Privately-funded International Students: the application period is only in the encrypted 2027 guideline PDF; the HTML pages (en and ja) list the procedure but no dates."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 535800,
+    "currency": "JPY",
+    "period": "year",
+    "academic_year": "not stated on the page",
+    "population": "all undergraduate students (national university standard fee; no separate international rate)"
+   },
+   "url": "https://www.osaka-u.ac.jp/en/campus/tuition/tuition.html",
+   "quote": "Category Tuition Fee per year Tuition Fee per half year Matriculation Fee Entrance Examination Fee Undergraduate student ¥535,800 ¥267,900 ¥282,000 ¥17,000",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Tuition per year ¥535,800 (per half year ¥267,900), matriculation fee ¥282,000, entrance examination fee ¥17,000. The page names no academic year."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Tuition Fee Exemption Program for Privately Funded International Students Experiencing Financial Difficulties"
+   },
+   "url": "https://www.osaka-u.ac.jp/en/international/inbound/support/support-office/campuslife/scholarship",
+   "quote": "The tuition fee exemption program is designed for privately funded international students who excel academically but face difficulty paying tuition due to financial reasons. The application deadline is generally in late March for the first semester and late September for the second semester.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "A university tuition waiver (full or partial), need- and merit-based, applied for after enrolment each semester (NEED_BASED_POSSIBLE). The same page lists the MEXT Honors Scholarship for Privately Financed International Students (government, via JASSO) and private/municipal scholarships, mostly after enrolment."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://www.osaka-u.ac.jp/en/international/inbound/support/support-office/campuslife/scholarship",
+   "quote": "The tuition fee exemption program is designed for privately funded international students",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Specifically for privately funded international students."
+  }
+ }
+}

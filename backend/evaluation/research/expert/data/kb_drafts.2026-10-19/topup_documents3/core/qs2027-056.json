@@ -1,0 +1,78 @@
+{
+ "case": "qs2027-056",
+ "seed_id": "qs2027-056",
+ "university": "Universiti Malaya (UM)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-056",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+   "academic_year": null,
+   "cycle_stated": "Last Update: 02/12/2021",
+   "cycle_is_intake": false,
+   "notes": "Universiti Malaya Academic Services Department, 'FAQ Undergraduate International Admission' (page footer 'Last Update: 02/12/2021'; it remains the official FAQ on 2026-10-19). Documents must be certified by the school principal, government officers, a Commissioner of Oath or the embassy. Applicants without an English certificate may apply but must provide one within the stipulated deadline if accepted. Not drafted: the RM300 processing fee.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "All applications must be submitted online via e-application."
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "Recent passport-size photographs with a blue background"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "Certified copies of passport (first page only - photo, owner details and validity)"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "Certified copies of academic certificate with detailed academic transcripts/results for Higher School Certificate (HSC)"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "detailed academic transcripts/results for Higher School Certificate (HSC) , Grade 12 or GCE (A' Level) or Diploma from recognized Institutions."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "Official translation is needed for applicants whose native language is not English or Malay",
+     "condition": "native language is not English or Malay"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "Certified copies of TOEFL/IELTS or other equivalent examinations indicating English proficiency (if available)",
+     "condition": "if available at application; accepted applicants without one must provide it within the stipulated deadline"
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "conditional",
+     "url": "https://aasd.um.edu.my/faq-ug-international-admission",
+     "quote": "A letter of guarantee from the sponsor for sponsored students",
+     "condition": "sponsored students"
+    }
+   ]
+  }
+ }
+}

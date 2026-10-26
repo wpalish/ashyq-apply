@@ -1,0 +1,44 @@
+{
+ "case": "qs2027-067",
+ "seed_id": "qs2027-067",
+ "university": "The University of Auckland",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-067",
+  "round": "topup_round4"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 49581.6,
+    "amount_max": 60909.6,
+    "currency": "NZD",
+    "period": "year",
+    "academic_year": "2027",
+    "population": "international students, Bachelor of Science (range depends on courses taken)"
+   },
+   "url": "https://www.auckland.ac.nz/en/study/fees-and-money-matters/tuition-fees/international-student-fees/undergraduate-international-fees.html",
+   "quote": "Bachelor of Science NZ$49,581.60 - $60,909.60",
+   "notes": "University-wide 'Undergraduate fees for international students' page, row 'Bachelor of Science' of the table headed '2027 fees' (columns 'Programme', 'Estimated fees'). The page's own intro still says the table shows 'the estimated tuition fees for 2026' and estimates assume full-time study for a full year (120 points). The quoted row occurs once on the page: the '2026 fees' table's row reads 'Bachelor of Science NZ$47,221 - NZ$58,009' (the stale KB fact). The heading '2027 fees' is about 1,050 characters before the row, so it is not inside the quote; the year is the table heading as printed, a calendar (NZ academic) year, not a 2027/28 academic year. A CS-major-specific figure is not given; the range depends on the courses taken. Excludes the Student Services Fee ('The Student Services Fee for 2027 will be set in late 2026'). The BSc programme page (the stale fact's source) still shows only '2026 fees'.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

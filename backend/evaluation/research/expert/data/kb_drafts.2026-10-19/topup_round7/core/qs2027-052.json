@@ -1,0 +1,30 @@
+{
+ "case": "qs2027-052",
+ "seed_id": "qs2027-052",
+ "university": "City University of Hong Kong (CityUHK)",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-052",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.cs.cityu.edu.hk/en/academic-programmes/bsc-computer-science/aims",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Access. Re-tried 2026-10-20: https://www.cityu.edu.hk/admo/, /admo/admissions/non-jupas-year-1-admission, /admo/faq and /international/admissions/entrance-requirements all answer HTTP 200 with an empty body (0 characters, bot wall); www.admo.cityu.edu.hk does not resolve. Needs the CI read of https://www.cityu.edu.hk/admo/admissions/non-jupas-year-1-admission (web search only, not evidence, suggests a university-wide IELTS/TOEFL floor and higher programme-specific levels).",
+   "date": "2026-10-20"
+  }
+ }
+}

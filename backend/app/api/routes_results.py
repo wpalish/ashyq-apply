@@ -17,6 +17,12 @@ from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import Bucket, ClaimStatus, UserDecision
+from app.domain.message_keys import (
+    annotate_conflict,
+    annotate_question,
+    annotate_result,
+    conflict_why,
+)
 from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
 from app.export import calendar, tabular
 from app.jobs.source_scanner import enqueue_reextract
@@ -30,6 +36,7 @@ from app.models import (
 )
 from app.payments.entitlements import free_view, truncate_shortlist
 from app.pipeline.runner import apply_fit_labels, store_result
+from app.schemas.claim import Conflict
 from app.schemas.profile import (
     ApplicantProfileIn,
     FundingNeeds,
@@ -56,7 +63,7 @@ class ShortlistSummary(BaseModel):
 def _safe_filename_stem(value: str) -> str:
     """A filename stem that cannot break out of a quoted header value."""
     cleaned = re.sub(r"[^a-z0-9-]+", "-", value.lower()).strip("-")
-    return cleaned or "ashyq-export"
+    return cleaned or "unimatch-export"
 
 
 def _results(session: Session, run_id: str, **filters) -> list[ProgramResultRow]:
@@ -126,7 +133,10 @@ def list_results(
         country=country,
         bucket=bucket,
     )
-    results = _sorted([ProgramResult.model_validate(r.payload) for r in rows], sort)
+    # Message keys ride on what is served only (gap B6); nothing here is stored.
+    results = _sorted(
+        [annotate_result(ProgramResult.model_validate(r.payload)) for r in rows], sort
+    )
     if allowed:
         return results
     # Truncated, not refused: a free user must see that results exist and
@@ -174,7 +184,7 @@ def get_result(
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
-    return ProgramResult.model_validate(row.payload)
+    return annotate_result(ProgramResult.model_validate(row.payload))
 
 
 class RefreshOut(BaseModel):
@@ -296,7 +306,8 @@ def set_decision(
         )
     )
     session.commit()
-    return result
+    # After the payload was written: the keys are served, never stored.
+    return annotate_result(result)
 
 
 class NotesIn(BaseModel):
@@ -337,7 +348,8 @@ def set_notes(
         )
     )
     session.commit()
-    return result
+    # After the payload was written: the keys are served, never stored.
+    return annotate_result(result)
 
 
 @router.get("/claims")
@@ -378,7 +390,17 @@ def list_conflicts(
 ) -> list[dict]:
     require_full_access(session, run_id, principal)
     rows = session.query(ConflictRow).filter(ConflictRow.run_id == run_id).all()
-    return [{"id": c.id, "result_id": c.result_id, **c.payload} for c in rows]
+    return [{"id": c.id, "result_id": c.result_id, **_served_conflict(c.payload)} for c in rows]
+
+
+def _served_conflict(payload: dict) -> dict:
+    """A stored conflict with its message keys beside the English (I18N-2)."""
+    conflict = Conflict.model_validate(payload)
+    annotate_conflict(conflict)
+    return {**payload, **conflict.model_dump(mode="json", include=_CONFLICT_KEYS)}
+
+
+_CONFLICT_KEYS = {"subject_message", "resolution_message"}
 
 
 @router.get("/questions")
@@ -393,6 +415,7 @@ def open_questions(
     for row in _results(session, run_id):
         result = ProgramResult.model_validate(row.payload)
         for q in result.unresolved:
+            annotate_question(q)
             out.append(
                 {
                     "result_id": row.id,
@@ -402,6 +425,8 @@ def open_questions(
                 }
             )
         for c in result.conflicts:
+            annotate_conflict(c)
+            why, why_message = conflict_why(c)
             out.append(
                 {
                     "result_id": row.id,
@@ -409,7 +434,8 @@ def open_questions(
                     "program": result.program,
                     "topic": "source conflict",
                     "question": c.question_for_admissions,
-                    "why_it_matters": f"Official sources disagree on {c.subject}: {c.values}",
+                    "why_it_matters": why,
+                    **({"why_message": why_message.model_dump()} if why_message else {}),
                     "blocking": True,
                     "conflict": c.model_dump(mode="json"),
                 }
@@ -439,7 +465,7 @@ def deadlines_ics(
         media_type="text/calendar; charset=utf-8",
         headers={
             "Content-Disposition": (
-                f'attachment; filename="{_safe_filename_stem(f"ashyq-{run_id[:8]}-deadlines")}.ics"'
+                f'attachment; filename="{_safe_filename_stem(f"unimatch-{run_id[:8]}-deadlines")}.ics"'
             )
         },
     )
@@ -489,7 +515,7 @@ def export(
     }
     # Belt and braces: even a validated value is rebuilt from a safe alphabet,
     # so no future caller can smuggle a quote or a newline into the header.
-    stem = _safe_filename_stem(f"ashyq-{run_id[:8]}{'-' + decision if decision else ''}")
+    stem = _safe_filename_stem(f"unimatch-{run_id[:8]}{'-' + decision if decision else ''}")
 
     if fmt == "csv":
         return Response(
@@ -640,7 +666,7 @@ def shortlist(
     ]
     chosen, notes = build_shortlist(candidates, quotas)
     return ShortlistOut(
-        chosen=[ProgramResult.model_validate(rows[c.id].payload) for c in chosen],
+        chosen=[annotate_result(ProgramResult.model_validate(rows[c.id].payload)) for c in chosen],
         notes=notes,
         quotas=asdict(quotas),
     )

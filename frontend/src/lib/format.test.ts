@@ -7,6 +7,13 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  caveatText,
+  claimValue,
+  documentRequirement,
+  sourceModeLabel,
+  staleChip,
+  staleReason,
+  unusedTuitionLines,
   DISPLAY_LOCALE,
   NOT_FOUND,
   STATUS_LABEL,
@@ -133,6 +140,9 @@ describe('status vocabulary', () => {
 
   it('keeps each shortened label meaningfully shorter than the full phrase', () => {
     for (const [key, label] of Object.entries(STATUS_LABEL)) {
+      // A rename, not a shortening: "Possibly stale" read as an age, and a KB
+      // fact can be out of date on the day it was verified (KB smoke B8).
+      if (key === 'POSSIBLY_STALE') continue;
       expect(label.length).toBeLessThan(humanize(key).length);
     }
   });
@@ -161,5 +171,114 @@ describe('source labelling', () => {
   it('shortens a real URL to host and path', () => {
     expect(sourceLabel('https://www.rug.nl/education/bachelor?x=1'))
       .toBe('www.rug.nl/education/bachelor');
+  });
+});
+
+describe('stale knowledge-base claims (KB smoke 2026-10-19)', () => {
+  const notes =
+    'Verified knowledge base (expert-checked, quote verified); quote found on the official page on '
+    + "2026-10-19. Stale, not current: academic year 2026/2027 is before the fall 2027 intake's 2027/28.";
+
+  it('reads the reason a claim is stale from its notes', () => {
+    expect(staleReason(notes)).toBe("academic year 2026/2027 is before the fall 2027 intake's 2027/28");
+    expect(staleReason('Verified knowledge base.')).toBeNull();
+    expect(staleReason(undefined)).toBeNull();
+  });
+
+  it('reads a caveat beside a stale sentence, and none where there is none', () => {
+    const caveated =
+      'Verified knowledge base; quote found on the official page on 2026-10-19. Caveat: year not '
+      + 'printed on the page; assumed current application cycle. Stale, not current: deadline '
+      + '2026-10-15 has passed.';
+    expect(caveatText(caveated)).toBe('year not printed on the page; assumed current application cycle');
+    expect(staleReason(caveated)).toBe('deadline 2026-10-15 has passed');
+    expect(caveatText(notes)).toBeNull();
+    expect(caveatText(undefined)).toBeNull();
+  });
+
+  it('never calls a claim verified today "0d old"', () => {
+    expect(staleChip(0)).toBe('not current');
+    expect(staleChip(400)).toBe('400d old');
+  });
+
+  it('never gives an age to a claim stale for a stated reason (KB v18 smoke U1)', () => {
+    expect(staleChip(1, true)).toBe('not current');
+    expect(staleChip(400, true)).toBe('not current');
+  });
+
+  it('names the knowledge base in the header chip, not "Live sources"', () => {
+    expect(sourceModeLabel({ demo_mode: false, knowledge_mode: 'kb' })).toBe('Verified knowledge base');
+    expect(sourceModeLabel({ demo_mode: false, knowledge_mode: 'live' })).toBe('Live sources');
+    expect(sourceModeLabel({ demo_mode: false })).toBe('Live sources');
+    expect(sourceModeLabel({ demo_mode: true, knowledge_mode: 'demo' })).toBe('Demo data');
+  });
+
+  it('formats a money value instead of [object Object]', () => {
+    expect(claimValue({ amount: 66720, currency: 'USD' })).toBe('66,720 USD');
+    expect(claimValue({ writing: 5.5 })).toBe('writing: 5.5');
+    expect(claimValue(false)).toBe('no');
+  });
+
+  it('formats a printed fee range as the range, not its upper bound', () => {
+    expect(claimValue({ amount: 34670, currency: 'GBP', range_low: 27650, range_high: 34670 })).toBe('27,650–34,670 GBP');
+  });
+
+  it('lists a stale printed range and a per-credit rate in their own words', () => {
+    const fee = (normalized_value: unknown, academic_year: string | null, extra: string) => ({
+      claim_type: 'tuition', normalized_value, academic_year, notes: `Verified knowledge base. ${extra}`,
+    });
+    expect(unusedTuitionLines([
+      fee({ amount: 51106, currency: 'USD', range_low: 42554, range_high: 51106 }, '2026-27',
+        "Published as a range, not a single figure. Stale, not current: academic year 2026-27 is before the fall 2027 intake's 2027/28."),
+      fee({ amount: 1789.18, currency: 'CAD' }, '2027/28', 'Amount per credit, as published; not a yearly figure.'),
+    ])).toEqual([
+      "published range 42,554–51,106 USD a year, academic year 2026-27 (not current: academic year 2026-27 is before the fall 2027 intake's 2027/28)",
+      '1,789.18 CAD per credit, academic year 2027/28 (published per credit (no yearly figure printed))',
+    ]);
+  });
+
+  it('labels a stale claim "Possibly outdated", not "Ageing"', () => {
+    expect(STATUS_LABEL.POSSIBLY_STALE).toBe('Possibly outdated');
+  });
+
+  it('lists a verified fee the cost table does not use, with its value, period and reason', () => {
+    const fee = (normalized_value: unknown, academic_year: string | null, extra: string) => ({
+      claim_type: 'tuition', normalized_value, academic_year, notes: `Verified knowledge base. ${extra}`,
+    });
+    expect(unusedTuitionLines([
+      fee({ amount: 66720, currency: 'USD' }, '2026/2027', notes.slice(notes.indexOf('Stale'))),
+      fee({ amount: 2190, currency: 'CHF' }, '2027/28', 'Amount per semester, as published; not a yearly figure.'),
+      fee({ amount: 30000, currency: 'EUR' }, '2027/28', ''),
+      { claim_type: 'ielts_min_overall', normalized_value: 7, academic_year: null, notes },
+    ])).toEqual([
+      "66,720 USD a year, academic year 2026/2027 (not current: academic year 2026/2027 is before the fall 2027 intake's 2027/28)",
+      '2,190 CHF per semester, academic year 2027/28 (published per semester, not as a yearly figure)',
+    ]);
+  });
+});
+
+describe('documentRequirement', () => {
+  const doc = (normalized_value: unknown) => ({ claim_type: 'required_document', normalized_value });
+
+  it('reads required, optional and conditional from the item claim, with the condition', () => {
+    const claims = [
+      doc('Passport identity page (copy)'),
+      doc({ document: 'Portfolio', requirement: 'conditional', condition: 'the programme asks for it.' }),
+      doc({ document: 'Curriculum vitae', requirement: 'optional' }),
+    ];
+    expect(documentRequirement({ name: 'Passport identity page (copy)', required: true }, claims))
+      .toMatchObject({ requirement: 'required', condition: null, claim: claims[0] });
+    expect(documentRequirement({ name: 'Portfolio', required: false }, claims))
+      .toMatchObject({ requirement: 'conditional', condition: 'the programme asks for it.' });
+    expect(documentRequirement({ name: 'Curriculum vitae', required: false }, claims))
+      .toMatchObject({ requirement: 'optional', condition: null });
+  });
+
+  it('falls back to the item flag for a live claim or no claim, inventing no condition', () => {
+    const live = [doc({ document: 'Personal statement', status: 'found' })];
+    expect(documentRequirement({ name: 'Personal statement', required: true }, live))
+      .toMatchObject({ requirement: 'required', condition: null, claim: live[0] });
+    expect(documentRequirement({ name: 'Portfolio', required: false }, []))
+      .toEqual({ requirement: 'optional', condition: null, claim: null });
   });
 });

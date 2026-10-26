@@ -6,11 +6,12 @@
  * you keep your position in the list while you read an answer.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Byline, Composer, Post, Retract } from '@/components/social';
 import { ReportButton } from '@/components/moderation';
+import { appendPage, firstPage, prependPost } from '@/lib/feed';
 import { useTranslation } from '@/lib/useTranslation';
 import type { FeedFilters, Page, PostView, ReplyView } from '@/types';
 
@@ -114,12 +115,21 @@ export function FeedScreen({
   const [error, setError] = useState('');
   const [openThread, setOpenThread] = useState<string | null>(null);
   const [posting, setPosting] = useState(false);
+  /** Posts created here since the latest first-page load started. That load
+   *  may have read before they were written, so it must not drop them — and
+   *  it may have read after, so every merge dedupes by id (see lib/feed). */
+  const createdSinceLoad = useRef(new Set<string>());
 
   const load = useCallback(async (active: FeedFilters, from?: string | null) => {
     setLoading(true);
+    if (!from) createdSinceLoad.current = new Set();
+    const created = createdSinceLoad.current;
     try {
       const page = await api.feed(active, from);
-      setPosts((prev) => (from ? [...prev, ...page.items] : page.items));
+      const keep = new Set(created);
+      setPosts((prev) =>
+        from ? appendPage(prev, page.items) : firstPage(page.items, prev, keep),
+      );
       setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
@@ -173,7 +183,8 @@ export function FeedScreen({
               setPosting(true);
               try {
                 const created = await api.createPost(body);
-                setPosts((prev) => [created, ...prev]);
+                createdSinceLoad.current.add(created.id);
+                setPosts((prev) => prependPost(prev, created));
                 setError('');
               } catch (problem) {
                 setError(problem instanceof ApiError ? problem.message : 'Could not post that.');

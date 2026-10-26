@@ -1,0 +1,38 @@
+{
+ "case": "qs2027-065",
+ "university": "KAIST",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "kaist"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://cs.kaist.ac.kr/content?menu=188",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Target: admission.kaist.ac.kr/intl-undergraduate (application requirements). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate' on robots.txt and pages). Not bypassed. cs.kaist.ac.kr and www.kaist.ac.kr carry no international admission requirements."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Target: admission.kaist.ac.kr/intl-undergraduate (evaluation). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate' on robots.txt and pages). Not bypassed. cs.kaist.ac.kr and www.kaist.ac.kr carry no international admission requirements."
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Target: admission.kaist.ac.kr/intl-undergraduate (application schedule, Fall 2027). Access failure: https://admission.kaist.ac.kr/ (the international undergraduate admissions site, linked from www.kaist.ac.kr/en/) fails TLS verification from the container (curl 60 'unable to get local issuer certificate' on robots.txt and pages). Not bypassed. cs.kaist.ac.kr and www.kaist.ac.kr carry no international admission requirements."
+  }
+ }
+}

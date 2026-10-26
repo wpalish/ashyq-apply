@@ -1,0 +1,110 @@
+{
+ "case": "qs2027-018",
+ "seed_id": "qs2027-018",
+ "university": "The Chinese University of Hong Kong (CUHK)",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-018",
+  "round": "topup_round8"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international",
+  "documents"
+ ],
+ "questions_already_known_not_researched": [],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.cse.cuhk.edu.hk/admission/cscin/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "deadline": {
+   "status": "known",
+   "value": "2027-01-07",
+   "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+   "quote": "Applicants who are not given an advance offer will compete on equal footing with all other applicants in the regular round, the application deadline of which is 7 January 2027.",
+   "population": "international (non-local applicants, International Students Admissions Scheme)",
+   "academic_year": "2027/28",
+   "notes": "CUHK Office of Admissions and Financial Aid, 'International Students Admissions Scheme (2027 Entry) Guide on Application for Admission (Full-time Undergraduate Studies)', dated October 2026 (PDF on www.cuhk.edu.hk), read on the GitHub Actions runner with the production Fetcher on 2026-10-20 (mode=read_pages). Regular Round Deadline 7 January 2027 (sections V and VI); no time of day or timezone is printed. An earlier Advance Offer Round closes 12 November 2026 ('candidates who apply to CUHK on or before 12 November 2026 will be considered for advance offers'); applying in it is not required. academic_year as printed in the guide's Note 3: 'programmes / streams offered by the University in the 2027 / 28 academic year'; the timeline has the 1st teaching term commencing early September. The scheme is for non-local applicants; current Gaokao candidates from the Chinese Mainland cannot apply through it (Note 2).",
+   "date": "2026-10-20",
+   "page_language": "en"
+  },
+  "documents": {
+   "status": "known",
+   "population": "Non-local applicants to CUHK full-time undergraduate programmes under the International Students Admissions Scheme (2027 Entry)",
+   "academic_year": "2027/28",
+   "notes": "Section VIII 'Submission of Application Form' of the International Students Admissions Scheme (2027 Entry) guide (October 2026), same PDF and read as the deadline. The list is introduced as 'provided the following supporting documents, if applicable, through our Online Application System', so, per the KB documents rule ('if applicable' is a condition), each listed supporting document is conditional; only the application form itself is drafted as required. academic_year as printed in Note 3 ('2027 / 28 academic year'). Not drafted (no vocabulary kind, or no requirement the page states): predicted grades, result slips, statements of results and certificates of public examinations (GCE AL / IB / SAT / AP / ACT / GCSE / IGCSE / others; College Board code 5690, ACT code 7050), certificates of professional or academic achievements and of international awards, other award certificates (vi), the Mainland student-status letter, and the HK$500 online application fee for 2027 entry. Original certificates are required for verification upon request before registration; the guide recommends uploading the documentary evidence within 14 days after submitting the form. The guide names no English minimum score ('Please refer to our office website for the minimum required scores'), no grade threshold and no tuition amount.",
+   "date": "2026-10-20",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "Before submitting your application, please make sure that you have fully completed your application form and provided the following supporting documents, if applicable, through our Online Application System"
+    },
+    {
+     "kind": "passport",
+     "requirement": "conditional",
+     "condition": "if applicable (the guide asks for 'the following supporting documents, if applicable')",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "copies of your Passport, Hong Kong Identity Card, Dependant Visa, Student Visa, Entry Permit, other Identity Card / Resident Card issued by the country which you are studying in",
+     "notes": "For verification purposes only; deleted from the applicant's file afterwards. Uploaded under 'Identity Document(s)', which the programme assessment panels may not review."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "condition": "if applicable (the guide asks for 'the following supporting documents, if applicable')",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "high school reports / transcripts (from secondary 1 or grade 7 to the latest academic term) and graduation certificate / diploma"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "conditional",
+     "condition": "if applicable (the guide asks for 'the following supporting documents, if applicable')",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "high school reports / transcripts (from secondary 1 or grade 7 to the latest academic term) and graduation certificate / diploma"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "condition": "if applicable (the guide asks for 'the following supporting documents, if applicable')",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "English / Chinese / other language tests results (TOEFL / IELTS / others). Validity of IELTS and TOEFL results is two years."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "condition": "transcripts and diplomas not in English or Chinese",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "Transcripts and diplomas, which are not in English or Chinese, must be accompanied by a certified translation in English."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "conditional",
+     "condition": "if applicable; the guide states it as required only for Medicine applicants (a separate 250-word personal statement)",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "(iii) Personal Statement • Applicants applying to Medicine are required to submit a separate 250 -word personal statement."
+    },
+    {
+     "kind": "cv",
+     "requirement": "optional",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "(iv) Resume / Curriculum Vitae (optional)"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "optional",
+     "url": "https://www.cuhk.edu.hk/adm/ApplicationGuide/ApplicationGuide_International.pdf",
+     "quote": "Recommendation of an academic referee via online system: • You may nominate up to three referees in the “Referee Information” section of the application.",
+     "notes": "Nominated referees get an email invitation to complete the Confidential Recommendation / Referee Report; 'You may nominate' is drafted as optional."
+    }
+   ]
+  }
+ }
+}

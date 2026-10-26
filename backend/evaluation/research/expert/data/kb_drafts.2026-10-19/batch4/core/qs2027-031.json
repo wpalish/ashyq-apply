@@ -1,0 +1,49 @@
+{
+ "case": "qs2027-031",
+ "university": "Monash University",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "English",
+  "title": "C2001 - Bachelor of Computer Science - Monash University",
+  "page_url": "https://handbook.monash.edu/2027/courses/C2001",
+  "language_twins": [],
+  "degree": "Bachelor of Computer Science (BCompSci), 144 credit points, Faculty of Information Technology",
+  "how_found": "handbook.monash.edu 2027 course C2001.",
+  "notes": "The handbook is a JavaScript app: the readable text holds the title only; the course data (English requirement, credit points, mode) sits in the page's embedded JSON. www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.5,
+    "ielts_min_section": 6.0,
+    "toefl_ibt": 79
+   },
+   "url": "https://handbook.monash.edu/2027/courses/C2001",
+   "quote": "IELTS (Academic): 6.5 overall (no band lower than 6.0); or Pearson Test of English (Academic): score of 58 overall with no band lower than 50; or TOEFL Internet-based test: score of 79 overall",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "\"Monash Level A\". The text is in the handbook page's embedded JSON (field english_language), not in the readable text, so verify_evidence is expected NOT to find it. TOEFL iBT minimum section scores: Writing 21, Listening 12, Reading 13, Speaking 18 (as printed)."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "ATAR/international qualification thresholds are on the www.monash.edu course page, which could not be read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed."
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed. The handbook links fees to student.monash.edu.au/fees-international, whose robots.txt could not be fetched (proxy 502), so it was treated as closed."
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "Not read: www.monash.edu (course finder, admissions, fees, scholarships, robots.txt) answers HTTP 403 with a Cloudflare \"Just a moment...\" JavaScript challenge to the production user agent on 2026-10-19; not bypassed."
+  }
+ }
+}

@@ -58,3 +58,64 @@ def test_a_single_course_page_is_excluded_but_a_course_list_path_is_not():
     )
     assert not is_excluded_path("https://informatorects.uw.edu.pl/en/programmes-all/IN")
     assert not is_excluded_path("https://uni.edu/study/courses/computer-science")
+
+
+# --- LI-1: localized aliases (plan rule, flag off by default) ---------------
+
+
+def test_off_a_localized_alias_is_not_the_field(monkeypatch):
+    from app.adapters.discovery import live_discovery
+
+    monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", False)
+    assert not matches_field_text("Informatik", FIELDS)
+    assert "informatik" not in [n.lower() for n in with_strong_aliases(FIELDS)]
+
+
+def test_on_informatik_is_computer_science_and_its_compounds_are_not(monkeypatch):
+    """A German page subject, "Informatik", and its one-word compounds."""
+    from app.adapters.discovery import live_discovery
+
+    monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
+    names = [n.lower() for n in with_strong_aliases(FIELDS)]
+    assert "informatik" in names
+    assert "datavetenskap" in names
+    assert matches_field_text("Informatik", FIELDS)
+    assert not matches_field_text("Wirtschaftsinformatik", FIELDS)
+    assert not matches_field_text("Bioinformatik", FIELDS)
+    assert not matches_field_text("Medizininformatik", FIELDS)
+
+
+def test_on_the_filler_rule_still_refuses_another_subject(monkeypatch):
+    from app.adapters.discovery import live_discovery
+
+    monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
+    assert matches_field_text("Laurea in Informatica", FIELDS)
+    assert not matches_field_text("Ingegneria Informatica", FIELDS)
+    assert matches_field_text("Licenciatura en Ciencias de la Computación", FIELDS)
+    assert matches_field_text("Информатика", FIELDS)
+    # The English rules are unchanged under the flag.
+    assert matches_field_text("Informatics", FIELDS)
+    assert not matches_field_text("Business Informatics (bachelor's programme)", FIELDS)
+    assert not matches_field_text("Data Science", FIELDS)
+
+
+def test_on_a_localized_alias_scores_only_as_a_whole_slug_word(monkeypatch):
+    from app.adapters.discovery import live_discovery
+
+    monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
+    assert matches_field("https://u.de/studium/informatik", FIELDS) == 8
+    assert matches_field("https://u.de/studium/bioinformatik", FIELDS) == 0
+
+
+def test_flagged_ontology_entries_stay_out_of_every_settled_reader():
+    """Off means byte-identical: the new aliases reach only LI-1."""
+    from app.adapters.search.ontology import (
+        canonical_field,
+        localized_aliases,
+        retrieval_candidates,
+    )
+
+    assert canonical_field("datavetenskap") is None
+    assert "datavetenskap" not in {c.term for c in retrieval_candidates("computer science")}
+    assert "datavetenskap" not in localized_aliases("computer science")
+    assert "datavetenskap" in localized_aliases("computer science", include_flagged=True)

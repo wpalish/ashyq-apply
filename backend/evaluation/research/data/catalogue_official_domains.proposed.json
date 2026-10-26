@@ -1,0 +1,4685 @@
+{
+  "schema": "catalogue_official_domains.proposed/1",
+  "generated_at": "2026-10-19T16:52:01Z",
+  "source": "Wikidata P856 via query.wikidata.org (CC0)",
+  "status": "proposals only - the catalogue is never written from this file; the owner confirms row by row in each proposal's `review` block",
+  "confidence_rule": "high = one live item in the row's country whose label (or alias, for the label query) equals a name variant, with one P856 registrable domain; medium = the same without an exact label, or P856 spanning several domains; low = an equally strong rival item; none = no item in the country with P856",
+  "counts": {
+    "catalogue_rows": 500,
+    "missing_official_domain": 147,
+    "excluded_heldout": 4,
+    "queried": 143,
+    "proposed": 142,
+    "by_confidence": {
+      "high": 109,
+      "low": 5,
+      "medium": 28,
+      "none": 1
+    },
+    "kb_rows_checked": 98,
+    "kb_by_verdict": {
+      "agree": 96,
+      "unresolved": 2
+    },
+    "requests": 39,
+    "throttled_responses": 0
+  },
+  "excluded_heldout": [
+    {
+      "seed_id": "qs2027-025",
+      "case": "tum"
+    },
+    {
+      "seed_id": "qs2027-087",
+      "case": "polimi"
+    },
+    {
+      "seed_id": "qs2027-273",
+      "case": "charles"
+    },
+    {
+      "seed_id": "qs2027-456",
+      "case": "masaryk"
+    }
+  ],
+  "proposals": [
+    {
+      "seed_id": "qs2027-009",
+      "name": "UCL",
+      "country": "United Kingdom",
+      "wikidata_item": "Q193196",
+      "wikidata_label": "University College London",
+      "p856": [
+        "https://www.ucl.ac.uk"
+      ],
+      "proposed_official_domain": "ucl.ac.uk",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'UCL' (name tier 0); country United Kingdom",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-012",
+      "name": "Nanyang Technological University, Singapore (NTU Singapore)",
+      "country": "Singapore",
+      "wikidata_item": "Q721064",
+      "wikidata_label": "Nanyang Technological University",
+      "p856": [
+        "https://ntu.edu.sg"
+      ],
+      "proposed_official_domain": "ntu.edu.sg",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Nanyang Technological University' (name tier 1); country Singapore",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-023",
+      "name": "The University of Melbourne",
+      "country": "Australia",
+      "wikidata_item": "Q319078",
+      "wikidata_label": "University of Melbourne",
+      "p856": [
+        "https://www.unimelb.edu.au/"
+      ],
+      "proposed_official_domain": "unimelb.edu.au",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Melbourne', 'University of Melbourne' (name tier 0); country Australia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-028",
+      "name": "The University of Sydney",
+      "country": "Australia",
+      "wikidata_item": "Q487556",
+      "wikidata_label": "University of Sydney",
+      "p856": [
+        "https://www.sydney.edu.au/"
+      ],
+      "proposed_official_domain": "sydney.edu.au",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Sydney', 'University of Sydney' (name tier 0); country Australia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-034",
+      "name": "Université PSL",
+      "country": "France",
+      "wikidata_item": "Q1163431",
+      "wikidata_label": "PSL Research University",
+      "p856": [
+        "https://psl.eu"
+      ],
+      "proposed_official_domain": "psl.eu",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'Université PSL' (name tier 0); country France",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-035",
+      "name": "The University of Edinburgh",
+      "country": "United Kingdom",
+      "wikidata_item": "Q160302",
+      "wikidata_label": "University of Edinburgh",
+      "p856": [
+        "https://www.ed.ac.uk"
+      ],
+      "proposed_official_domain": "ed.ac.uk",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Edinburgh', 'University of Edinburgh' (name tier 0); country United Kingdom",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-038",
+      "name": "Seoul National University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q39913",
+      "wikidata_label": "Seoul National University",
+      "p856": [
+        "https://www.snu.ac.kr"
+      ],
+      "proposed_official_domain": "snu.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Seoul National University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-039",
+      "name": "The University of Tokyo",
+      "country": "Japan",
+      "wikidata_item": "Q7842",
+      "wikidata_label": "University of Tokyo",
+      "p856": [
+        "https://www.u-tokyo.ac.jp/en/index.html",
+        "https://www.u-tokyo.ac.jp/ja/index.html",
+        "https://www.u-tokyo.ac.jp/ko/index.html",
+        "https://www.u-tokyo.ac.jp/zh/index.html"
+      ],
+      "proposed_official_domain": "u-tokyo.ac.jp",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Tokyo', 'University of Tokyo' (name tier 0); country Japan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-040",
+      "name": "The University of Manchester",
+      "country": "United Kingdom",
+      "wikidata_item": "Q230899",
+      "wikidata_label": "University of Manchester",
+      "p856": [
+        "https://manchester.ac.uk"
+      ],
+      "proposed_official_domain": "manchester.ac.uk",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Manchester', 'University of Manchester' (name tier 0); country United Kingdom",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-041",
+      "name": "The University of Queensland",
+      "country": "Australia",
+      "wikidata_item": "Q866012",
+      "wikidata_label": "University of Queensland",
+      "p856": [
+        "https://www.uq.edu.au"
+      ],
+      "proposed_official_domain": "uq.edu.au",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Queensland', 'University of Queensland' (name tier 0); country Australia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-042",
+      "name": "Yonsei University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q39988",
+      "wikidata_label": "Yonsei University",
+      "p856": [
+        "https://www.yonsei.ac.kr/"
+      ],
+      "proposed_official_domain": "yonsei.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Yonsei University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-044",
+      "name": "Institut Polytechnique de Paris",
+      "country": "France",
+      "wikidata_item": "Q48759778",
+      "wikidata_label": "Polytechnic Institute of Paris",
+      "p856": [
+        "https://www.ip-paris.fr/"
+      ],
+      "proposed_official_domain": "ip-paris.fr",
+      "match_confidence": "medium",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'Polytechnic Institute of Paris' (differs from the catalogue name); country France",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-053",
+      "name": "Korea University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q39997",
+      "wikidata_label": "Korea University",
+      "p856": [
+        "http://www.korea.ac.kr/",
+        "http://www.korea.edu/"
+      ],
+      "proposed_official_domain": "korea.ac.kr",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "label match on 'Korea University' (name tier 0); country South Korea; P856 spans 2 registrable domains",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-054",
+      "name": "National Taiwan University (NTU)",
+      "country": "Taiwan",
+      "wikidata_item": "Q32746",
+      "wikidata_label": "National Taiwan University",
+      "p856": [
+        "https://www.ntu.edu.tw",
+        "https://www.ntu.edu.tw/english/index.html"
+      ],
+      "proposed_official_domain": "ntu.edu.tw",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'NTU', 'National Taiwan University' (name tier 0); country Taiwan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-063",
+      "name": "KFUPM",
+      "country": "Saudi Arabia",
+      "wikidata_item": "Q4116241",
+      "wikidata_label": "King Fahd University of Petroleum and Minerals",
+      "p856": [
+        "http://www.kfupm.edu.sa"
+      ],
+      "proposed_official_domain": "kfupm.edu.sa",
+      "match_confidence": "medium",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'King Fahd University of Petroleum and Minerals' (differs from the catalogue name); country Saudi Arabia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-065",
+      "name": "KAIST",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q39949",
+      "wikidata_label": "KAIST",
+      "p856": [
+        "https://kaist.ac.kr"
+      ],
+      "proposed_official_domain": "kaist.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'KAIST' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-067",
+      "name": "The University of Auckland",
+      "country": "New Zealand",
+      "wikidata_item": "Q492467",
+      "wikidata_label": "University of Auckland",
+      "p856": [
+        "https://www.auckland.ac.nz/en.html",
+        "https://www.auckland.ac.nz"
+      ],
+      "proposed_official_domain": "auckland.ac.nz",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Auckland', 'University of Auckland' (name tier 0); country New Zealand",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-068",
+      "name": "The University of Warwick",
+      "country": "United Kingdom",
+      "wikidata_item": "Q865528",
+      "wikidata_label": "University of Warwick",
+      "p856": [
+        "http://www.warwick.ac.uk/",
+        "https://warwick.ac.uk/"
+      ],
+      "proposed_official_domain": "warwick.ac.uk",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Warwick', 'University of Warwick' (name tier 0); country United Kingdom",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-073",
+      "name": "Sorbonne University",
+      "country": "France",
+      "wikidata_item": "Q41497113",
+      "wikidata_label": "Sorbonne University",
+      "p856": [
+        "https://www.sorbonne-universite.fr/"
+      ],
+      "proposed_official_domain": "sorbonne-universite.fr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Sorbonne University' (name tier 0); country France",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-077",
+      "name": "The University of Western Australia",
+      "country": "Australia",
+      "wikidata_item": "Q1517021",
+      "wikidata_label": "University of Western Australia",
+      "p856": [
+        "https://www.uwa.edu.au/"
+      ],
+      "proposed_official_domain": "uwa.edu.au",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Western Australia', 'University of Western Australia' (name tier 0); country Australia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-086",
+      "name": "Universität Heidelberg",
+      "country": "Germany",
+      "wikidata_item": "Q151510",
+      "wikidata_label": "Heidelberg University",
+      "p856": [
+        "https://www.uni-heidelberg.de/"
+      ],
+      "proposed_official_domain": "uni-heidelberg.de",
+      "match_confidence": "medium",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'Heidelberg University' (differs from the catalogue name); country Germany",
+      "alternatives": [
+        "Q5698706"
+      ],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-097",
+      "name": "Institute of Science Tokyo",
+      "country": "Japan",
+      "wikidata_item": "Q116264906",
+      "wikidata_label": "Institute of Science Tokyo",
+      "p856": [
+        "https://www.isct.ac.jp/"
+      ],
+      "proposed_official_domain": "isct.ac.jp",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Institute of Science Tokyo' (name tier 0); country Japan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-099",
+      "name": "Freie Universitaet Berlin",
+      "country": "Germany",
+      "wikidata_item": "Q153006",
+      "wikidata_label": "Freie Universität Berlin",
+      "p856": [
+        "https://www.fu-berlin.de/"
+      ],
+      "proposed_official_domain": "fu-berlin.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Freie Universität Berlin' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-100",
+      "name": "University of Zurich",
+      "country": "Switzerland",
+      "wikidata_item": "Q206702",
+      "wikidata_label": "University of Zurich",
+      "p856": [
+        "https://www.uzh.ch/"
+      ],
+      "proposed_official_domain": "uzh.ch",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Zurich' (name tier 0); country Switzerland",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-105",
+      "name": "RWTH Aachen University",
+      "country": "Germany",
+      "wikidata_item": "Q273263",
+      "wikidata_label": "RWTH Aachen University",
+      "p856": [
+        "https://www.rwth-aachen.de/"
+      ],
+      "proposed_official_domain": "rwth-aachen.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'RWTH Aachen University' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-107",
+      "name": "Pohang University of Science And Technology (POSTECH)",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q40018",
+      "wikidata_label": "Pohang University of Science and Technology",
+      "p856": [
+        "http://www.postech.edu/",
+        "https://postech.ac.kr/"
+      ],
+      "proposed_official_domain": "postech.edu",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "label match on 'POSTECH' (name tier 0); country South Korea; P856 spans 2 registrable domains",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-109",
+      "name": "Sungkyunkwan University (SKKU)",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q41085",
+      "wikidata_label": "Sungkyunkwan University",
+      "p856": [
+        "https://www.skku.edu/"
+      ],
+      "proposed_official_domain": "skku.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Sungkyunkwan University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-111",
+      "name": "KIT, Karlsruhe Institute of Technology",
+      "country": "Germany",
+      "wikidata_item": "Q309988",
+      "wikidata_label": "Karlsruhe Institute of Technology",
+      "p856": [
+        "https://www.kit.edu/"
+      ],
+      "proposed_official_domain": "kit.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'KIT', 'Karlsruhe Institute of Technology' (name tier 1); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-112",
+      "name": "Sapienza University of Rome",
+      "country": "Italy",
+      "wikidata_item": "Q209344",
+      "wikidata_label": "Sapienza University of Rome",
+      "p856": [
+        "https://www.uniroma1.it/en/",
+        "https://www.uniroma1.it/it/"
+      ],
+      "proposed_official_domain": "uniroma1.it",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Sapienza University of Rome' (name tier 0); country Italy",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-119",
+      "name": "Leiden University",
+      "country": "Netherlands",
+      "wikidata_item": "Q156598",
+      "wikidata_label": "Leiden University",
+      "p856": [
+        "https://www.universiteitleiden.nl/"
+      ],
+      "proposed_official_domain": "universiteitleiden.nl",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Leiden University' (name tier 0); country Netherlands",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-121",
+      "name": "RMIT University",
+      "country": "Australia",
+      "wikidata_item": "Q1057890",
+      "wikidata_label": "RMIT University",
+      "p856": [
+        "https://www.rmit.edu.au/"
+      ],
+      "proposed_official_domain": "rmit.edu.au",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'RMIT University' (name tier 0); country Australia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-140",
+      "name": "Humboldt-Universität zu Berlin",
+      "country": "Germany",
+      "wikidata_item": "Q152087",
+      "wikidata_label": "Humboldt-Universität zu Berlin",
+      "p856": [
+        "https://www.hu-berlin.de/"
+      ],
+      "proposed_official_domain": "hu-berlin.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Humboldt-Universität zu Berlin' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-141",
+      "name": "University of Vienna",
+      "country": "Austria",
+      "wikidata_item": "Q165980",
+      "wikidata_label": "University of Vienna",
+      "p856": [
+        "https://www.univie.ac.at/"
+      ],
+      "proposed_official_domain": "univie.ac.at",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Vienna' (name tier 0); country Austria",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-143",
+      "name": "National Tsing Hua University - NTHU",
+      "country": "Taiwan",
+      "wikidata_item": "Q43406",
+      "wikidata_label": "National Tsing Hua University",
+      "p856": [
+        "https://nthu-en.site.nthu.edu.tw/",
+        "https://www.nthu.edu.tw/"
+      ],
+      "proposed_official_domain": "nthu.edu.tw",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'NTHU', 'National Tsing Hua University' (name tier 1); country Taiwan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-144",
+      "name": "Western University",
+      "country": "Canada",
+      "wikidata_item": "Q1144262",
+      "wikidata_label": "University of Western Ontario",
+      "p856": [
+        "https://www.uwo.ca/"
+      ],
+      "proposed_official_domain": "uwo.ca",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'Western University' (name tier 0); country Canada",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-150",
+      "name": "Ghent University",
+      "country": "Belgium",
+      "wikidata_item": "Q1137665",
+      "wikidata_label": "Ghent University",
+      "p856": [
+        "https://www.ugent.be/"
+      ],
+      "proposed_official_domain": "ugent.be",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Ghent University' (name tier 0); country Belgium",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-154",
+      "name": "Wageningen University & Research",
+      "country": "Netherlands",
+      "wikidata_item": "Q422208",
+      "wikidata_label": "Wageningen University & Research",
+      "p856": [
+        "https://www.wur.nl/"
+      ],
+      "proposed_official_domain": "wur.nl",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Wageningen University & Research' (name tier 0); country Netherlands",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-155",
+      "name": "Hanyang University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q40006",
+      "wikidata_label": "Hanyang University",
+      "p856": [
+        "https://hanyang.ac.kr",
+        "https://hanyang.ac.kr/web/chn",
+        "https://hanyang.ac.kr/web/eng"
+      ],
+      "proposed_official_domain": "hanyang.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Hanyang University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-163",
+      "name": "Washington University in St. Louis",
+      "country": "United States of America",
+      "wikidata_item": "Q777403",
+      "wikidata_label": "Washington University in St. Louis",
+      "p856": [
+        "https://washu.edu/"
+      ],
+      "proposed_official_domain": "washu.edu",
+      "match_confidence": "high",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'Washington University in St.\\xa0Louis' (equals the catalogue name); country United States",
+      "alternatives": [
+        "Q7972509",
+        "Q5354197"
+      ],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-164",
+      "name": "Lancaster University",
+      "country": "United Kingdom",
+      "wikidata_item": "Q262854",
+      "wikidata_label": "University of Lancaster",
+      "p856": [
+        "http://www.lancs.ac.uk/",
+        "https://www.lancaster.ac.uk/"
+      ],
+      "proposed_official_domain": "lancs.ac.uk",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "label match on 'Lancaster University' (name tier 0); country United Kingdom; P856 spans 2 registrable domains",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-176",
+      "name": "Queen's University Belfast",
+      "country": "United Kingdom",
+      "wikidata_item": "Q877925",
+      "wikidata_label": "Queen's University Belfast",
+      "p856": [
+        "https://qub.ac.uk/"
+      ],
+      "proposed_official_domain": "qub.ac.uk",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on \"Queen's University Belfast\" (name tier 0); country United Kingdom",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-178",
+      "name": "National Yang Ming Chiao Tung University (NYCU Taiwan)",
+      "country": "Taiwan",
+      "wikidata_item": "Q85877927",
+      "wikidata_label": "National Yang Ming Chiao Tung University",
+      "p856": [
+        "https://en.nycu.edu.tw/",
+        "https://www.nycu.edu.tw/"
+      ],
+      "proposed_official_domain": "nycu.edu.tw",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'National Yang Ming Chiao Tung University' (name tier 0); country Taiwan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-181",
+      "name": "Queen's University at Kingston",
+      "country": "Canada",
+      "wikidata_item": "Q1420038",
+      "wikidata_label": "Queen's University",
+      "p856": [
+        "https://queensu.ca/"
+      ],
+      "proposed_official_domain": "queensu.ca",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on \"Queen's University at Kingston\" (name tier 0); country Canada",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-191",
+      "name": "National Cheng Kung University (NCKU)",
+      "country": "Taiwan",
+      "wikidata_item": "Q706708",
+      "wikidata_label": "National Cheng Kung University",
+      "p856": [
+        "https://www.ncku.edu.tw/"
+      ],
+      "proposed_official_domain": "ncku.edu.tw",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'NCKU', 'National Cheng Kung University' (name tier 0); country Taiwan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-194",
+      "name": "University of Bern",
+      "country": "Switzerland",
+      "wikidata_item": "Q659080",
+      "wikidata_label": "University of Bern",
+      "p856": [
+        "https://www.unibe.ch/"
+      ],
+      "proposed_official_domain": "unibe.ch",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Bern' (name tier 0); country Switzerland",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-199",
+      "name": "Complutense University of Madrid",
+      "country": "Spain",
+      "wikidata_item": "Q219694",
+      "wikidata_label": "Complutense University of Madrid",
+      "p856": [
+        "https://www.ucm.es"
+      ],
+      "proposed_official_domain": "ucm.es",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Complutense University of Madrid' (name tier 0); country Spain",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-201",
+      "name": "The Ohio State University",
+      "country": "United States of America",
+      "wikidata_item": "Q309331",
+      "wikidata_label": "Ohio State University",
+      "p856": [
+        "https://osu.edu"
+      ],
+      "proposed_official_domain": "osu.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Ohio State University', 'The Ohio State University' (name tier 0); country United States",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-204",
+      "name": "Università di Padova",
+      "country": "Italy",
+      "wikidata_item": "Q193510",
+      "wikidata_label": "University of Padua",
+      "p856": [
+        "https://www.unipd.it",
+        "https://www.unipd.it/en/"
+      ],
+      "proposed_official_domain": "unipd.it",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'Università di Padova' (name tier 0); country Italy",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-206",
+      "name": "Gadjah Mada University",
+      "country": "Indonesia",
+      "wikidata_item": "Q1145992",
+      "wikidata_label": "Gadjah Mada University",
+      "p856": [
+        "https://www.ugm.ac.id"
+      ],
+      "proposed_official_domain": "ugm.ac.id",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Gadjah Mada University' (name tier 0); country Indonesia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-207",
+      "name": "Politecnico di Torino",
+      "country": "Italy",
+      "wikidata_item": "Q392897",
+      "wikidata_label": "Polytechnic University of Turin",
+      "p856": [
+        "https://www.polito.it"
+      ],
+      "proposed_official_domain": "polito.it",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Politecnico di Torino' (name tier 0); country Italy",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-219",
+      "name": "The Hebrew University of Jerusalem",
+      "country": "Israel",
+      "wikidata_item": "Q174158",
+      "wikidata_label": "Hebrew University of Jerusalem",
+      "p856": [
+        "https://new.huji.ac.il/",
+        "https://international.huji.ac.il/chinese"
+      ],
+      "proposed_official_domain": "huji.ac.il",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Hebrew University of Jerusalem', 'The Hebrew University of Jerusalem' (name tier 0); country Israel",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-221",
+      "name": "Indian Institute of Science (IISc) Bangalore",
+      "country": "India",
+      "wikidata_item": "Q948720",
+      "wikidata_label": "Indian Institute of Science, Bengaluru",
+      "p856": [
+        "https://www.iisc.ac.in/"
+      ],
+      "proposed_official_domain": "iisc.ac.in",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'IISc' (name tier 1); country India",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-225",
+      "name": "University of Gothenburg",
+      "country": "Sweden",
+      "wikidata_item": "Q371522",
+      "wikidata_label": "University of Gothenburg",
+      "p856": [
+        "http://www.gu.se",
+        "https://www.gu.se",
+        "https://www.gu.se/en"
+      ],
+      "proposed_official_domain": "gu.se",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Gothenburg' (name tier 0); country Sweden",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-234",
+      "name": "University of Lausanne",
+      "country": "Switzerland",
+      "wikidata_item": "Q658975",
+      "wikidata_label": "University of Lausanne",
+      "p856": [
+        "https://www.unil.ch/"
+      ],
+      "proposed_official_domain": "unil.ch",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Lausanne' (name tier 0); country Switzerland",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-238",
+      "name": "University of Lisbon",
+      "country": "Portugal",
+      "wikidata_item": "Q1122926",
+      "wikidata_label": "University of Lisbon",
+      "p856": [
+        "https://www.ulisboa.pt/"
+      ],
+      "proposed_official_domain": "ulisboa.pt",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Lisbon' (name tier 0); country Portugal",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-239",
+      "name": "Central European University",
+      "country": "Austria",
+      "wikidata_item": "Q757391",
+      "wikidata_label": "Central European University",
+      "p856": [
+        "https://www.ceu.edu"
+      ],
+      "proposed_official_domain": "ceu.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Central European University' (name tier 0); country Austria",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-244",
+      "name": "The University of Newcastle, Australia (UON)",
+      "country": "Australia",
+      "wikidata_item": "Q531285",
+      "wikidata_label": "University of Newcastle",
+      "p856": [
+        "http://www.newcastle.edu.au/"
+      ],
+      "proposed_official_domain": "newcastle.edu.au",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Newcastle', 'The University of Newcastle, Australia', 'UON', 'University of Newcastle' (name tier 0); country Australia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-245",
+      "name": "Albert-Ludwigs-Universitaet Freiburg",
+      "country": "Germany",
+      "wikidata_item": "Q153987",
+      "wikidata_label": "University of Freiburg",
+      "p856": [
+        "https://uni-freiburg.de/"
+      ],
+      "proposed_official_domain": "uni-freiburg.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Albert-Ludwigs-Universität Freiburg' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-246",
+      "name": "Université Paris 1 Panthéon-Sorbonne",
+      "country": "France",
+      "wikidata_item": "Q999763",
+      "wikidata_label": "University of Paris 1 Pantheon-Sorbonne",
+      "p856": [
+        "https://www.pantheonsorbonne.fr"
+      ],
+      "proposed_official_domain": "pantheonsorbonne.fr",
+      "match_confidence": "medium",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'University of Paris 1 Pantheon-Sorbonne' (differs from the catalogue name); country France",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-250",
+      "name": "Technical University of Darmstadt",
+      "country": "Germany",
+      "wikidata_item": "Q310695",
+      "wikidata_label": "Technical University of Darmstadt",
+      "p856": [
+        "https://www.tu-darmstadt.de/index.en.jsp",
+        "https://www.tu-darmstadt.de/"
+      ],
+      "proposed_official_domain": "tu-darmstadt.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Technical University of Darmstadt' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-256",
+      "name": "University of Porto",
+      "country": "Portugal",
+      "wikidata_item": "Q1422903",
+      "wikidata_label": "University of Porto",
+      "p856": [
+        "http://www.up.pt"
+      ],
+      "proposed_official_domain": "up.pt",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Porto' (name tier 0); country Portugal",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-260",
+      "name": "University of Massachusetts Amherst",
+      "country": "United States of America",
+      "wikidata_item": "Q15142",
+      "wikidata_label": "University of Massachusetts Amherst",
+      "p856": [
+        "https://www.umass.edu/"
+      ],
+      "proposed_official_domain": "umass.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Massachusetts Amherst' (name tier 0); country United States",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-261",
+      "name": "Universiti Teknologi PETRONAS (UTP)",
+      "country": "Malaysia",
+      "wikidata_item": "Q2096395",
+      "wikidata_label": "Universiti Teknologi Petronas",
+      "p856": [
+        "http://www.utp.edu.my/"
+      ],
+      "proposed_official_domain": "utp.edu.my",
+      "match_confidence": "high",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'Universiti Teknologi Petronas' (equals the catalogue name); country Malaysia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-262",
+      "name": "University of Göttingen",
+      "country": "Germany",
+      "wikidata_item": "Q152838",
+      "wikidata_label": "University of Göttingen",
+      "p856": [
+        "https://www.uni-goettingen.de/"
+      ],
+      "proposed_official_domain": "uni-goettingen.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Göttingen' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-268",
+      "name": "University of Virginia",
+      "country": "United States of America",
+      "wikidata_item": "Q213439",
+      "wikidata_label": "University of Virginia",
+      "p856": [
+        "https://virginia.edu"
+      ],
+      "proposed_official_domain": "virginia.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Virginia' (name tier 0); country United States",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-269",
+      "name": "University of Cologne",
+      "country": "Germany",
+      "wikidata_item": "Q54096",
+      "wikidata_label": "University of Cologne",
+      "p856": [
+        "https://uni-koeln.de"
+      ],
+      "proposed_official_domain": "uni-koeln.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Cologne' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-272",
+      "name": "Taylor's University",
+      "country": "Malaysia",
+      "wikidata_item": "Q841775",
+      "wikidata_label": "Taylor's University",
+      "p856": [
+        "http://www.taylors.edu.my/"
+      ],
+      "proposed_official_domain": "taylors.edu.my",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on \"Taylor's University\" (name tier 0); country Malaysia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-278",
+      "name": "University of Antwerp",
+      "country": "Belgium",
+      "wikidata_item": "Q175241",
+      "wikidata_label": "University of Antwerp",
+      "p856": [
+        "https://www.uantwerpen.be/"
+      ],
+      "proposed_official_domain": "uantwerpen.be",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Antwerp' (name tier 0); country Belgium",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-280",
+      "name": "University of Navarra",
+      "country": "Spain",
+      "wikidata_item": "Q705316",
+      "wikidata_label": "IESE Business School",
+      "p856": [
+        "https://www.iese.edu/",
+        "https://www.iese.edu/es"
+      ],
+      "proposed_official_domain": "iese.edu",
+      "match_confidence": "low",
+      "match_method": "label",
+      "reason": "alias match on 'University of Navarra' (name tier 0); country Spain; 3 equally strong rival item(s): Q5428945, Q56247883, Q118836063",
+      "alternatives": [
+        "Q5428945",
+        "Q56247883",
+        "Q118836063",
+        "Q118402462"
+      ],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-286",
+      "name": "University of Southern Denmark (SDU)",
+      "country": "Denmark",
+      "wikidata_item": "Q2166335",
+      "wikidata_label": "University of Southern Denmark",
+      "p856": [
+        "https://www.sdu.dk/"
+      ],
+      "proposed_official_domain": "sdu.dk",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'SDU', 'University of Southern Denmark' (name tier 0); country Denmark",
+      "alternatives": [
+        "Q116136207"
+      ],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-296",
+      "name": "Stellenbosch University",
+      "country": "South Africa",
+      "wikidata_item": "Q1066492",
+      "wikidata_label": "Stellenbosch University",
+      "p856": [
+        "https://www.su.ac.za"
+      ],
+      "proposed_official_domain": "su.ac.za",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Stellenbosch University' (name tier 0); country South Africa",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-297",
+      "name": "Xi’an Jiaotong University",
+      "country": "China (Mainland)",
+      "wikidata_item": "Q981237",
+      "wikidata_label": "Xi'an Jiaotong University",
+      "p856": [
+        "http://www.xjtu.edu.cn/"
+      ],
+      "proposed_official_domain": "xjtu.edu.cn",
+      "match_confidence": "high",
+      "match_method": "search",
+      "reason": "entity search rank 0, label \"Xi'an Jiaotong University\" (equals the catalogue name); country People's Republic of China",
+      "alternatives": [
+        "Q15914622",
+        "Q99286759",
+        "Q15925879"
+      ],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-299",
+      "name": "Ulsan National Institute of Science and Technology (UNIST)",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q484108",
+      "wikidata_label": "Ulsan National Institute of Science and Technology",
+      "p856": [
+        "http://www.unist.ac.kr/"
+      ],
+      "proposed_official_domain": "unist.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'UNIST', 'Ulsan National Institute of Science and Technology' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-303",
+      "name": "Université Paris Cité",
+      "country": "France",
+      "wikidata_item": "Q55849612",
+      "wikidata_label": "Paris Cité University",
+      "p856": [
+        "https://u-paris.fr"
+      ],
+      "proposed_official_domain": "u-paris.fr",
+      "match_confidence": "medium",
+      "match_method": "search",
+      "reason": "entity search rank 1, label 'Paris Cité University' (differs from the catalogue name); country France",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-309",
+      "name": "Kyung Hee University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q496536",
+      "wikidata_label": "Kyung Hee University",
+      "p856": [
+        "http://www.khu.ac.kr/"
+      ],
+      "proposed_official_domain": "khu.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Kyung Hee University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-313",
+      "name": "The University of Arizona",
+      "country": "United States of America",
+      "wikidata_item": "Q503419",
+      "wikidata_label": "University of Arizona",
+      "p856": [
+        "https://www.arizona.edu"
+      ],
+      "proposed_official_domain": "arizona.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'The University of Arizona', 'University of Arizona' (name tier 0); country United States",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-314",
+      "name": "Rutgers University–New Brunswick",
+      "country": "United States of America",
+      "wikidata_item": "Q7382826",
+      "wikidata_label": "Rutgers University–New Brunswick",
+      "p856": [
+        "http://www.rutgers.edu/"
+      ],
+      "proposed_official_domain": "rutgers.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Rutgers University–New Brunswick' (name tier 0); country United States",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-321",
+      "name": "University of Colorado Boulder",
+      "country": "United States of America",
+      "wikidata_item": "Q736674",
+      "wikidata_label": "University of Colorado Boulder",
+      "p856": [
+        "https://www.colorado.edu/"
+      ],
+      "proposed_official_domain": "colorado.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Colorado Boulder' (name tier 0); country United States",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-330",
+      "name": "Jagiellonian University",
+      "country": "Poland",
+      "wikidata_item": "Q189441",
+      "wikidata_label": "Jagiellonian University",
+      "p856": [
+        "https://www.uj.edu.pl/"
+      ],
+      "proposed_official_domain": "uj.edu.pl",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Jagiellonian University' (name tier 0); country Poland",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-343",
+      "name": "University of Coimbra",
+      "country": "Portugal",
+      "wikidata_item": "Q368643",
+      "wikidata_label": "University of Coimbra",
+      "p856": [
+        "https://www.uc.pt/"
+      ],
+      "proposed_official_domain": "uc.pt",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Coimbra' (name tier 0); country Portugal",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-344",
+      "name": "University of Rome \"Tor Vergata\"",
+      "country": "Italy",
+      "wikidata_item": "Q1031803",
+      "wikidata_label": "Tor Vergata University of Rome",
+      "p856": [
+        "https://web.uniroma2.it/it"
+      ],
+      "proposed_official_domain": "uniroma2.it",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'University of Rome Tor Vergata' (name tier 0); country Italy",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-347",
+      "name": "Universiti Brunei Darussalam (UBD)",
+      "country": "Brunei Darussalam",
+      "wikidata_item": "Q569243",
+      "wikidata_label": "Universiti Brunei Darussalam",
+      "p856": [
+        "http://www.ubd.edu.bn"
+      ],
+      "proposed_official_domain": "ubd.edu.bn",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'UBD', 'Universiti Brunei Darussalam' (name tier 0); country Brunei",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-349",
+      "name": "Beihang University (former BUAA)",
+      "country": "China (Mainland)",
+      "wikidata_item": "Q2299797",
+      "wikidata_label": "Beihang University",
+      "p856": [
+        "https://buaa.edu.cn",
+        "https://ev.buaa.edu.cn/"
+      ],
+      "proposed_official_domain": "buaa.edu.cn",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Beihang University' (name tier 0); country People's Republic of China",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-351",
+      "name": "Satbayev University",
+      "country": "Kazakhstan",
+      "wikidata_item": "Q1513804",
+      "wikidata_label": "Satbayev University",
+      "p856": [
+        "https://satbayev.university"
+      ],
+      "proposed_official_domain": "satbayev.university",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Satbayev University' (name tier 0); country Kazakhstan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-352",
+      "name": "University of Tsukuba",
+      "country": "Japan",
+      "wikidata_item": "Q743615",
+      "wikidata_label": "University of Tsukuba",
+      "p856": [
+        "https://www.tsukuba.ac.jp/"
+      ],
+      "proposed_official_domain": "tsukuba.ac.jp",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Tsukuba' (name tier 0); country Japan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-353",
+      "name": "Brunel University of London",
+      "country": "United Kingdom",
+      "wikidata_item": "Q932411",
+      "wikidata_label": "Brunel University London",
+      "p856": [
+        "https://www.brunel.ac.uk/"
+      ],
+      "proposed_official_domain": "brunel.ac.uk",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'Brunel University of London' (name tier 0); country United Kingdom",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-354",
+      "name": "Birkbeck, University of London",
+      "country": "United Kingdom",
+      "wikidata_item": "Q375606",
+      "wikidata_label": "Birkbeck, University of London",
+      "p856": [
+        "https://bbk.ac.uk"
+      ],
+      "proposed_official_domain": "bbk.ac.uk",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Birkbeck, University of London' (name tier 0); country United Kingdom",
+      "alternatives": [
+        "Q170027"
+      ],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-355",
+      "name": "Sciences Po",
+      "country": "France",
+      "wikidata_item": "Q859363",
+      "wikidata_label": "Paris Institute of Political Studies",
+      "p856": [
+        "https://www.sciencespo.fr/"
+      ],
+      "proposed_official_domain": "sciencespo.fr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Sciences Po' (name tier 0); country France",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-356",
+      "name": "Sunway University",
+      "country": "Malaysia",
+      "wikidata_item": "Q4475815",
+      "wikidata_label": "Sunway University",
+      "p856": [
+        "https://university.sunway.edu.my/",
+        "http://www.sunway.edu.my/"
+      ],
+      "proposed_official_domain": "sunway.edu.my",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Sunway University' (name tier 0); country Malaysia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-359",
+      "name": "RUDN University",
+      "country": "Russian Federation",
+      "wikidata_item": "Q839669",
+      "wikidata_label": "Peoples' Friendship University of Russia",
+      "p856": [
+        "http://www.rudn.ru",
+        "https://eng.rudn.ru/",
+        "https://fr.rudn.ru/",
+        "https://esp.rudn.ru/",
+        "https://cn.rudn.ru/",
+        "https://ar.rudn.ru/"
+      ],
+      "proposed_official_domain": "rudn.ru",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'RUDN University' (name tier 0); country Russia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-361",
+      "name": "University of Chinese Academy of Sciences (UCAS)",
+      "country": "China (Mainland)",
+      "wikidata_item": "Q6544465",
+      "wikidata_label": "University of Chinese Academy of Sciences",
+      "p856": [
+        "https://www.ucas.ac.cn"
+      ],
+      "proposed_official_domain": "ucas.ac.cn",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'UCAS', 'University of Chinese Academy of Sciences' (name tier 0); country People's Republic of China",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-363",
+      "name": "City St George’s, University of London",
+      "country": "United Kingdom",
+      "wikidata_item": "Q170027",
+      "wikidata_label": "University of London",
+      "p856": [
+        "https://www.london.ac.uk/"
+      ],
+      "proposed_official_domain": "london.ac.uk",
+      "match_confidence": "low",
+      "match_method": "label",
+      "reason": "label match on 'University of London' (name tier 2); country United Kingdom; matched only a piece of a split name",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-366",
+      "name": "Université de Liège",
+      "country": "Belgium",
+      "wikidata_item": "Q1334582",
+      "wikidata_label": "University of Liège",
+      "p856": [
+        "https://www.uliege.be/"
+      ],
+      "proposed_official_domain": "uliege.be",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'Université de Liège' (name tier 0); country Belgium",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-367",
+      "name": "Virginia Polytechnic Institute and State University",
+      "country": "United States of America",
+      "wikidata_item": "Q65379",
+      "wikidata_label": "Virginia Tech",
+      "p856": [
+        "https://www.vt.edu/"
+      ],
+      "proposed_official_domain": "vt.edu",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'Virginia Polytechnic Institute and State University' (name tier 0); country United States",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-372",
+      "name": "University of Münster",
+      "country": "Germany",
+      "wikidata_item": "Q168426",
+      "wikidata_label": "University of Münster",
+      "p856": [
+        "https://www.uni-muenster.de/"
+      ],
+      "proposed_official_domain": "uni-muenster.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Münster' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-375",
+      "name": "Flinders University",
+      "country": "Australia",
+      "wikidata_item": "Q15575",
+      "wikidata_label": "Flinders University",
+      "p856": [
+        "https://www.flinders.edu.au/"
+      ],
+      "proposed_official_domain": "flinders.edu.au",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Flinders University' (name tier 0); country Australia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-376",
+      "name": "Goethe-University Frankfurt am Main",
+      "country": "Germany",
+      "wikidata_item": "Q50662",
+      "wikidata_label": "Goethe University Frankfurt",
+      "p856": [
+        "https://www.goethe-university-frankfurt.de/"
+      ],
+      "proposed_official_domain": "goethe-university-frankfurt.de",
+      "match_confidence": "low",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'Goethe University Frankfurt' (differs from the catalogue name); country Germany; found only by the shortened name 'Goethe University Frankfurt'",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-377",
+      "name": "University of Luxembourg",
+      "country": "Luxembourg",
+      "wikidata_item": "Q59668",
+      "wikidata_label": "University of Luxembourg",
+      "p856": [
+        "https://www.uni.lu"
+      ],
+      "proposed_official_domain": "uni.lu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Luxembourg' (name tier 0); country Luxembourg",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-379",
+      "name": "Gwangju Institute of Science and Technology (GIST)",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q484900",
+      "wikidata_label": "Gwangju Institute of Science and Technology",
+      "p856": [
+        "https://www.gist.ac.kr/en/main.html",
+        "https://www.gist.ac.kr/kr/main.html"
+      ],
+      "proposed_official_domain": "gist.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'GIST', 'Gwangju Institute of Science and Technology' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-380",
+      "name": "National Taiwan University of Science and Technology (Taiwan Tech)",
+      "country": "Taiwan",
+      "wikidata_item": "Q699543",
+      "wikidata_label": "National Taiwan University of Science and Technology",
+      "p856": [
+        "https://www-i.ntust.edu.tw/home.php",
+        "https://www.ntust.edu.tw/home.php?Lang=En",
+        "https://www.ntust.edu.tw/home.php?Lang=zh-tw"
+      ],
+      "proposed_official_domain": "ntust.edu.tw",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'National Taiwan University of Science and Technology', 'Taiwan Tech' (name tier 0); country Taiwan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-384",
+      "name": "National University of Sciences & Technology (NUST) Islamabad",
+      "country": "Pakistan",
+      "wikidata_item": "Q3696003",
+      "wikidata_label": "National University of Sciences and Technology",
+      "p856": [
+        "http://www.nust.edu.pk/"
+      ],
+      "proposed_official_domain": "nust.edu.pk",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'NUST' (name tier 1); country Pakistan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-385",
+      "name": "Daegu Gyeongbuk Institute of Science and Technology (DGIST)",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q12591209",
+      "wikidata_label": "Daegu Gyeongbuk Institute of Science and Technology",
+      "p856": [
+        "https://dgist.ac.kr/",
+        "https://dgist.ac.kr/en/"
+      ],
+      "proposed_official_domain": "dgist.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'DGIST', 'Daegu Gyeongbuk Institute of Science and Technology' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-388",
+      "name": "Università Cattolica del Sacro Cuore",
+      "country": "Italy",
+      "wikidata_item": "Q229022",
+      "wikidata_label": "Catholic University of the Sacred Heart",
+      "p856": [
+        "http://www.unicatt.it/ucsc.asp",
+        "https://www.unicatt.it",
+        "https://www.unicatt.it/en"
+      ],
+      "proposed_official_domain": "unicatt.it",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Università Cattolica del Sacro Cuore' (name tier 0); country Italy",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-390",
+      "name": "LUT University",
+      "country": "Finland",
+      "wikidata_item": "Q1809949",
+      "wikidata_label": "Lappeenranta-Lahti University of Technology LUT",
+      "p856": [
+        "https://www.lut.fi/",
+        "https://www.lut.fi/en"
+      ],
+      "proposed_official_domain": "lut.fi",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'LUT University' (name tier 0); country Finland",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-391",
+      "name": "Saint Petersburg State University",
+      "country": "Russian Federation",
+      "wikidata_item": "Q27621",
+      "wikidata_label": "Saint Petersburg State University",
+      "p856": [
+        "http://www.spbu.ru/"
+      ],
+      "proposed_official_domain": "spbu.ru",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Saint Petersburg State University' (name tier 0); country Russia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-393",
+      "name": "The American University in Cairo",
+      "country": "Egypt",
+      "wikidata_item": "Q469476",
+      "wikidata_label": "The American University in Cairo",
+      "p856": [
+        "https://www.aucegypt.edu/",
+        "https://www.aucegypt.edu/ar"
+      ],
+      "proposed_official_domain": "aucegypt.edu",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'American University in Cairo', 'The American University in Cairo' (name tier 0); country Egypt",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-399",
+      "name": "Sejong University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q491711",
+      "wikidata_label": "Sejong University",
+      "p856": [
+        "http://www.sejong.ac.kr/"
+      ],
+      "proposed_official_domain": "sejong.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Sejong University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-403",
+      "name": "National and Kapodistrian University of Athens",
+      "country": "Greece",
+      "wikidata_item": "Q547867",
+      "wikidata_label": "National and Kapodistrian University of Athens",
+      "p856": [
+        "https://www.uoa.gr"
+      ],
+      "proposed_official_domain": "uoa.gr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'National and Kapodistrian University of Athens' (name tier 0); country Greece",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-405",
+      "name": "University of the Philippines",
+      "country": "Philippines",
+      "wikidata_item": "Q746592",
+      "wikidata_label": "University of the Philippines",
+      "p856": [
+        "https://up.edu.ph/"
+      ],
+      "proposed_official_domain": "up.edu.ph",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of the Philippines' (name tier 0); country Philippines",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-410",
+      "name": "Graz University of Technology",
+      "country": "Austria",
+      "wikidata_item": "Q689775",
+      "wikidata_label": "Graz University of Technology",
+      "p856": [
+        "https://www.tugraz.at/",
+        "https://www.tugraz.at/en/home/"
+      ],
+      "proposed_official_domain": "tugraz.at",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Graz University of Technology' (name tier 0); country Austria",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-416",
+      "name": "University of Kent",
+      "country": "United Kingdom",
+      "wikidata_item": "Q1516684",
+      "wikidata_label": "University of Kent",
+      "p856": [
+        "https://www.kent.ac.uk"
+      ],
+      "proposed_official_domain": "kent.ac.uk",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Kent' (name tier 0); country United Kingdom",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-419",
+      "name": "University at Buffalo SUNY",
+      "country": "United States of America",
+      "wikidata_item": "Q681025",
+      "wikidata_label": "University at Buffalo",
+      "p856": [
+        "https://www.buffalo.edu/"
+      ],
+      "proposed_official_domain": "buffalo.edu",
+      "match_confidence": "low",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'University at Buffalo' (differs from the catalogue name); country United States; 2 equally strong rival item(s): Q7894990, Q16982582",
+      "alternatives": [
+        "Q7894990",
+        "Q16982582",
+        "Q100993236"
+      ],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-420",
+      "name": "IPB University (Bogor Agricultural University)",
+      "country": "Indonesia",
+      "wikidata_item": "Q2306715",
+      "wikidata_label": "IPB University",
+      "p856": [
+        "https://www.ipb.ac.id"
+      ],
+      "proposed_official_domain": "ipb.ac.id",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Bogor Agricultural University', 'IPB University' (name tier 0); country Indonesia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-424",
+      "name": "HSE University",
+      "country": "Russian Federation",
+      "wikidata_item": "Q1959511",
+      "wikidata_label": "National Research University – Higher School of Economics",
+      "p856": [
+        "http://www.hse.ru/"
+      ],
+      "proposed_official_domain": "hse.ru",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'HSE University' (name tier 0); country Russia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-425",
+      "name": "National Taiwan Normal University (NTNU)",
+      "country": "Taiwan",
+      "wikidata_item": "Q706712",
+      "wikidata_label": "National Taiwan Normal University",
+      "p856": [
+        "http://www.ntnu.edu.tw"
+      ],
+      "proposed_official_domain": "ntnu.edu.tw",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'NTNU', 'National Taiwan Normal University' (name tier 0); country Taiwan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-426",
+      "name": "Northwestern Polytechnical University",
+      "country": "China (Mainland)",
+      "wikidata_item": "Q832550",
+      "wikidata_label": "Northwestern Polytechnical University",
+      "p856": [
+        "http://www.nwpu.edu.cn/"
+      ],
+      "proposed_official_domain": "nwpu.edu.cn",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Northwestern Polytechnical University' (name tier 0); country People's Republic of China",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-429",
+      "name": "University of Aveiro",
+      "country": "Portugal",
+      "wikidata_item": "Q29671",
+      "wikidata_label": "University of Aveiro",
+      "p856": [
+        "http://www.ua.pt"
+      ],
+      "proposed_official_domain": "ua.pt",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Aveiro' (name tier 0); country Portugal",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-431",
+      "name": "Julius-Maximilians-Universität Würzburg",
+      "country": "Germany",
+      "wikidata_item": "Q161976",
+      "wikidata_label": "University of Würzburg",
+      "p856": [
+        "http://www.uni-wuerzburg.de/",
+        "http://www.uni-wuerzburg.de/en/"
+      ],
+      "proposed_official_domain": "uni-wuerzburg.de",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'Julius-Maximilians-Universität Würzburg' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-433",
+      "name": "Chung-Ang University (CAU)",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q41790",
+      "wikidata_label": "Chung-Ang University",
+      "p856": [
+        "https://newchn.cau.ac.kr/",
+        "https://neweng.cau.ac.kr/",
+        "https://www.cau.ac.kr/"
+      ],
+      "proposed_official_domain": "cau.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'CAU', 'Chung-Ang University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-434",
+      "name": "Czech Technical University in Prague",
+      "country": "Czechia",
+      "wikidata_item": "Q1329478",
+      "wikidata_label": "Czech Technical University in Prague",
+      "p856": [
+        "https://cvut.cz"
+      ],
+      "proposed_official_domain": "cvut.cz",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Czech Technical University in Prague' (name tier 0); country Czech Republic",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-435",
+      "name": "Universitat Politècnica de Catalunya · BarcelonaTech (UPC)",
+      "country": "Spain",
+      "wikidata_item": "Q1640731",
+      "wikidata_label": "Polytechnic University of Catalonia",
+      "p856": [
+        "https://www.upc.edu"
+      ],
+      "proposed_official_domain": "upc.edu",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'UPC', 'Universitat Politècnica de Catalunya · BarcelonaTech' (name tier 0); country Spain",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-436",
+      "name": "Universitat Politecnica de Valencia",
+      "country": "Spain",
+      "wikidata_item": "Q2003976",
+      "wikidata_label": "Technical University of Valencia",
+      "p856": [
+        "https://www.upv.es/"
+      ],
+      "proposed_official_domain": "upv.es",
+      "match_confidence": "medium",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'Technical University of Valencia' (differs from the catalogue name); country Spain",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-438",
+      "name": "Tampere University",
+      "country": "Finland",
+      "wikidata_item": "Q56403399",
+      "wikidata_label": "Tampere University",
+      "p856": [
+        "https://www.tuni.fi",
+        "https://www.tuni.fi/en"
+      ],
+      "proposed_official_domain": "tuni.fi",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Tampere University' (name tier 0); country Finland",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-440",
+      "name": "James Cook University",
+      "country": "Australia",
+      "wikidata_item": "Q536512",
+      "wikidata_label": "James Cook University",
+      "p856": [
+        "http://www.jcu.edu.au/"
+      ],
+      "proposed_official_domain": "jcu.edu.au",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'James Cook University' (name tier 0); country Australia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-441",
+      "name": "National Sun Yat-sen University (NSYSU)",
+      "country": "Taiwan",
+      "wikidata_item": "Q32751",
+      "wikidata_label": "National Sun Yat-sen University",
+      "p856": [
+        "https://www.nsysu.edu.tw/"
+      ],
+      "proposed_official_domain": "nsysu.edu.tw",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'NSYSU', 'National Sun Yat-sen University' (name tier 0); country Taiwan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-444",
+      "name": "Aix-Marseille University",
+      "country": "France",
+      "wikidata_item": "Q2302586",
+      "wikidata_label": "Aix-Marseille University",
+      "p856": [
+        "https://www.univ-amu.fr/",
+        "https://www.univ-amu.fr/en"
+      ],
+      "proposed_official_domain": "univ-amu.fr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Aix-Marseille University' (name tier 0); country France",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-449",
+      "name": "University of Granada",
+      "country": "Spain",
+      "wikidata_item": "Q1232180",
+      "wikidata_label": "University of Granada",
+      "p856": [
+        "https://www.ugr.es"
+      ],
+      "proposed_official_domain": "ugr.es",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Granada' (name tier 0); country Spain",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-451",
+      "name": "Pusan National University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q53122",
+      "wikidata_label": "Pusan National University",
+      "p856": [
+        "http://www.pusan.ac.kr/"
+      ],
+      "proposed_official_domain": "pusan.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Pusan National University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-452",
+      "name": "Universitat de Valencia",
+      "country": "Spain",
+      "wikidata_item": "Q383568",
+      "wikidata_label": "University of Valencia",
+      "p856": [
+        "https://www.uv.es/",
+        "https://www.uv.es/uvweb/college/en/university-valencia-1285845048380.html",
+        "https://www.uv.es/uvweb/universidad/es/universidad-valencia-1285845048380.html"
+      ],
+      "proposed_official_domain": "uv.es",
+      "match_confidence": "medium",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'University of Valencia' (differs from the catalogue name); country Spain",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-454",
+      "name": "Shoolini University of Biotechnology and Management Sciences",
+      "country": "India",
+      "wikidata_item": "Q28172491",
+      "wikidata_label": "Shoolini University",
+      "p856": [
+        "https://www.shooliniuniversity.com"
+      ],
+      "proposed_official_domain": "shooliniuniversity.com",
+      "match_confidence": "low",
+      "match_method": "search",
+      "reason": "entity search rank 0, label 'Shoolini University' (differs from the catalogue name); country India; found only by the shortened name 'Shoolini University of'",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-458",
+      "name": "USI - Università della Svizzera italiana",
+      "country": "Switzerland",
+      "wikidata_item": "Q689617",
+      "wikidata_label": "Università della Svizzera italiana",
+      "p856": [
+        "https://www.usi.ch/"
+      ],
+      "proposed_official_domain": "usi.ch",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'USI', 'Università della Svizzera italiana' (name tier 1); country Switzerland",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-459",
+      "name": "Johannes Kepler University Linz",
+      "country": "Austria",
+      "wikidata_item": "Q682739",
+      "wikidata_label": "Johannes Kepler University Linz",
+      "p856": [
+        "https://www.jku.at/"
+      ],
+      "proposed_official_domain": "jku.at",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Johannes Kepler University Linz' (name tier 0); country Austria",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-460",
+      "name": "SOAS University of London",
+      "country": "United Kingdom",
+      "wikidata_item": "Q220144",
+      "wikidata_label": "SOAS, University of London",
+      "p856": [
+        "https://soas.ac.uk"
+      ],
+      "proposed_official_domain": "soas.ac.uk",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'SOAS University of London' (name tier 0); country United Kingdom",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-461",
+      "name": "Tashkent Institute of Irrigation and Agricultural Mechanization Engineers - National Research University (TIIAME-NRU)",
+      "country": "Uzbekistan",
+      "wikidata_item": null,
+      "wikidata_label": null,
+      "p856": [],
+      "proposed_official_domain": null,
+      "match_confidence": "none",
+      "match_method": "none",
+      "reason": "1 label hit(s), none in Uzbekistan (countries seen: Russia); no search hit for any name variant",
+      "alternatives": [
+        "Q1719898"
+      ],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-467",
+      "name": "Università Vita-Salute San Raffaele",
+      "country": "Italy",
+      "wikidata_item": "Q3551506",
+      "wikidata_label": "Vita-Salute San Raffaele University",
+      "p856": [
+        "https://www.unisr.it"
+      ],
+      "proposed_official_domain": "unisr.it",
+      "match_confidence": "medium",
+      "match_method": "label",
+      "reason": "alias match on 'Università Vita-Salute San Raffaele' (name tier 0); country Italy",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-469",
+      "name": "Kazan (Volga region) Federal University",
+      "country": "Russian Federation",
+      "wikidata_item": "Q113788",
+      "wikidata_label": "Kazan Federal University",
+      "p856": [
+        "https://kpfu.ru/"
+      ],
+      "proposed_official_domain": "kpfu.ru",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Kazan (Volga region) Federal University', 'Kazan Federal University' (name tier 0); country Russia",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-472",
+      "name": "Leibniz University Hannover",
+      "country": "Germany",
+      "wikidata_item": "Q678982",
+      "wikidata_label": "Leibniz University Hannover",
+      "p856": [
+        "https://www.uni-hannover.de/"
+      ],
+      "proposed_official_domain": "uni-hannover.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Leibniz University Hannover' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-473",
+      "name": "University of Bayreuth",
+      "country": "Germany",
+      "wikidata_item": "Q702482",
+      "wikidata_label": "University of Bayreuth",
+      "p856": [
+        "https://www.uni-bayreuth.de/"
+      ],
+      "proposed_official_domain": "uni-bayreuth.de",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Bayreuth' (name tier 0); country Germany",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-483",
+      "name": "Kyungpook National University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q487841",
+      "wikidata_label": "Kyungpook National University",
+      "p856": [
+        "http://www.knu.ac.kr/"
+      ],
+      "proposed_official_domain": "knu.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Kyungpook National University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-488",
+      "name": "University of Bordeaux",
+      "country": "France",
+      "wikidata_item": "Q13344",
+      "wikidata_label": "University of Bordeaux",
+      "p856": [
+        "https://www.u-bordeaux.fr/"
+      ],
+      "proposed_official_domain": "u-bordeaux.fr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'University of Bordeaux' (name tier 0); country France",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-489",
+      "name": "Ewha Womans University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q41114",
+      "wikidata_label": "Ewha Womans University",
+      "p856": [
+        "https://www.ewha.ac.kr/",
+        "https://www.ewha.ac.kr/ewhaen/index.do"
+      ],
+      "proposed_official_domain": "ewha.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Ewha Womans University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-494",
+      "name": "National Taipei University of Technology",
+      "country": "Taiwan",
+      "wikidata_item": "Q6978828",
+      "wikidata_label": "National Taipei University of Technology",
+      "p856": [
+        "http://www.ntut.edu.tw/"
+      ],
+      "proposed_official_domain": "ntut.edu.tw",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'National Taipei University of Technology' (name tier 0); country Taiwan",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    },
+    {
+      "seed_id": "qs2027-495",
+      "name": "Sogang University",
+      "country": "Republic of Korea",
+      "wikidata_item": "Q374457",
+      "wikidata_label": "Sogang University",
+      "p856": [
+        "http://www.sogang.ac.kr/"
+      ],
+      "proposed_official_domain": "sogang.ac.kr",
+      "match_confidence": "high",
+      "match_method": "label",
+      "reason": "label match on 'Sogang University' (name tier 0); country South Korea",
+      "alternatives": [],
+      "review": {
+        "decision": null,
+        "reviewer": null,
+        "note": null
+      }
+    }
+  ],
+  "kb_check": [
+    {
+      "seed_id": "qs2027-001",
+      "name": "Massachusetts Institute of Technology (MIT)",
+      "kb_official_domain": "mit.edu",
+      "kb_extra_domains": [
+        "mitadmissions.org"
+      ],
+      "wikidata_item": "Q49108",
+      "wikidata_label": "Massachusetts Institute of Technology",
+      "p856": [
+        "https://mit.edu"
+      ],
+      "wikidata_domains": [
+        "mit.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'MIT', 'Massachusetts Institute of Technology' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-002",
+      "name": "Imperial College London",
+      "kb_official_domain": "imperial.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q189022",
+      "wikidata_label": "Imperial College London",
+      "p856": [
+        "https://www.imperial.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "imperial.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Imperial College London' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-003",
+      "name": "Stanford University",
+      "kb_official_domain": "stanford.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q41506",
+      "wikidata_label": "Stanford University",
+      "p856": [
+        "https://stanford.edu"
+      ],
+      "wikidata_domains": [
+        "stanford.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Stanford University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-004",
+      "name": "University of Oxford",
+      "kb_official_domain": "ox.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q34433",
+      "wikidata_label": "University of Oxford",
+      "p856": [
+        "https://ox.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "ox.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Oxford' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-005",
+      "name": "Harvard University",
+      "kb_official_domain": "harvard.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q13371",
+      "wikidata_label": "Harvard University",
+      "p856": [
+        "https://www.harvard.edu"
+      ],
+      "wikidata_domains": [
+        "harvard.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Harvard University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-006",
+      "name": "University of Cambridge",
+      "kb_official_domain": "cam.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q35794",
+      "wikidata_label": "University of Cambridge",
+      "p856": [
+        "https://www.cam.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "cam.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Cambridge' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-007",
+      "name": "California Institute of Technology (Caltech)",
+      "kb_official_domain": "caltech.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q161562",
+      "wikidata_label": "California Institute of Technology",
+      "p856": [
+        "https://caltech.edu"
+      ],
+      "wikidata_domains": [
+        "caltech.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'California Institute of Technology', 'Caltech' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-008",
+      "name": "ETH Zurich",
+      "kb_official_domain": "ethz.ch",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q11942",
+      "wikidata_label": "ETH Zurich",
+      "p856": [
+        "https://www.ethz.ch/"
+      ],
+      "wikidata_domains": [
+        "ethz.ch"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'ETH Zurich' (name tier 0); country Switzerland"
+    },
+    {
+      "seed_id": "qs2027-009",
+      "name": "UCL",
+      "kb_official_domain": "ucl.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q193196",
+      "wikidata_label": "University College London",
+      "p856": [
+        "https://www.ucl.ac.uk"
+      ],
+      "wikidata_domains": [
+        "ucl.ac.uk"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "alias match on 'UCL' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-010",
+      "name": "National University of Singapore (NUS)",
+      "kb_official_domain": "nus.edu.sg",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q738236",
+      "wikidata_label": "National University of Singapore",
+      "p856": [
+        "https://nus.edu.sg"
+      ],
+      "wikidata_domains": [
+        "nus.edu.sg"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'NUS', 'National University of Singapore' (name tier 0); country Singapore"
+    },
+    {
+      "seed_id": "qs2027-011",
+      "name": "The University of Hong Kong",
+      "kb_official_domain": "hku.hk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q15568",
+      "wikidata_label": "University of Hong Kong",
+      "p856": [
+        "https://hku.hk"
+      ],
+      "wikidata_domains": [
+        "hku.hk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Hong Kong', 'University of Hong Kong' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-012",
+      "name": "Nanyang Technological University, Singapore (NTU Singapore)",
+      "kb_official_domain": "ntu.edu.sg",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q721064",
+      "wikidata_label": "Nanyang Technological University",
+      "p856": [
+        "https://ntu.edu.sg"
+      ],
+      "wikidata_domains": [
+        "ntu.edu.sg"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Nanyang Technological University' (name tier 1); country Singapore"
+    },
+    {
+      "seed_id": "qs2027-013",
+      "name": "Peking University",
+      "kb_official_domain": "pku.edu.cn",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q16952",
+      "wikidata_label": "Peking University",
+      "p856": [
+        "https://english.pku.edu.cn",
+        "https://pku.edu.cn"
+      ],
+      "wikidata_domains": [
+        "pku.edu.cn"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Peking University' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-014",
+      "name": "Tsinghua University",
+      "kb_official_domain": "tsinghua.edu.cn",
+      "kb_extra_domains": [
+        "join-tsinghua.edu.cn"
+      ],
+      "wikidata_item": "Q16955",
+      "wikidata_label": "Tsinghua University",
+      "p856": [
+        "https://www.tsinghua.edu.cn",
+        "https://www.tsinghua.edu.cn/en/"
+      ],
+      "wikidata_domains": [
+        "tsinghua.edu.cn"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Tsinghua University' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-015",
+      "name": "University of Pennsylvania",
+      "kb_official_domain": "upenn.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q49117",
+      "wikidata_label": "University of Pennsylvania",
+      "p856": [
+        "https://upenn.edu"
+      ],
+      "wikidata_domains": [
+        "upenn.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Pennsylvania' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-016",
+      "name": "Cornell University",
+      "kb_official_domain": "cornell.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q49115",
+      "wikidata_label": "Cornell University",
+      "p856": [
+        "https://cornell.edu"
+      ],
+      "wikidata_domains": [
+        "cornell.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Cornell University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-017",
+      "name": "Yale University",
+      "kb_official_domain": "yale.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q49112",
+      "wikidata_label": "Yale University",
+      "p856": [
+        "https://yale.edu"
+      ],
+      "wikidata_domains": [
+        "yale.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Yale University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-018",
+      "name": "The Chinese University of Hong Kong (CUHK)",
+      "kb_official_domain": "cuhk.edu.hk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q15570",
+      "wikidata_label": "The Chinese University of Hong Kong",
+      "p856": [
+        "https://cuhk.edu.hk"
+      ],
+      "wikidata_domains": [
+        "cuhk.edu.hk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'CUHK', 'Chinese University of Hong Kong', 'The Chinese University of Hong Kong' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-019",
+      "name": "The University of New South Wales (UNSW Sydney)",
+      "kb_official_domain": "unsw.edu.au",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q734764",
+      "wikidata_label": "University of New South Wales",
+      "p856": [
+        "https://www.unsw.edu.au/"
+      ],
+      "wikidata_domains": [
+        "unsw.edu.au"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of New South Wales', 'UNSW Sydney', 'University of New South Wales' (name tier 0); country Australia"
+    },
+    {
+      "seed_id": "qs2027-020",
+      "name": "Johns Hopkins University",
+      "kb_official_domain": "jh.edu",
+      "kb_extra_domains": [
+        "jhu.edu"
+      ],
+      "wikidata_item": "Q193727",
+      "wikidata_label": "Johns Hopkins University",
+      "p856": [
+        "https://jhu.edu"
+      ],
+      "wikidata_domains": [
+        "jhu.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Johns Hopkins University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-021",
+      "name": "University of California, Berkeley (UCB)",
+      "kb_official_domain": "berkeley.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q168756",
+      "wikidata_label": "University of California, Berkeley",
+      "p856": [
+        "https://berkeley.edu"
+      ],
+      "wikidata_domains": [
+        "berkeley.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Berkeley', 'UCB', 'University of California', 'University of California, Berkeley' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-022",
+      "name": "EPFL – École polytechnique fédérale de Lausanne",
+      "kb_official_domain": "epfl.ch",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q262760",
+      "wikidata_label": "École polytechnique fédérale de Lausanne",
+      "p856": [
+        "https://www.epfl.ch/"
+      ],
+      "wikidata_domains": [
+        "epfl.ch"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'EPFL', 'École polytechnique fédérale de Lausanne' (name tier 1); country Switzerland"
+    },
+    {
+      "seed_id": "qs2027-023",
+      "name": "The University of Melbourne",
+      "kb_official_domain": "unimelb.edu.au",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q319078",
+      "wikidata_label": "University of Melbourne",
+      "p856": [
+        "https://www.unimelb.edu.au/"
+      ],
+      "wikidata_domains": [
+        "unimelb.edu.au"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Melbourne', 'University of Melbourne' (name tier 0); country Australia"
+    },
+    {
+      "seed_id": "qs2027-024",
+      "name": "University of Chicago",
+      "kb_official_domain": "uchicago.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q131252",
+      "wikidata_label": "University of Chicago",
+      "p856": [
+        "https://uchicago.edu/",
+        "https://uchicago.cn/",
+        "https://uchicago.hk/",
+        "https://uchicago.in/",
+        "https://urb-bd.org/"
+      ],
+      "wikidata_domains": [
+        "uchicago.edu",
+        "uchicago.cn",
+        "uchicago.hk",
+        "uchicago.in",
+        "urb-bd.org"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "label match on 'University of Chicago' (name tier 0); country United States; P856 spans 5 registrable domains"
+    },
+    {
+      "seed_id": "qs2027-026",
+      "name": "Fudan University",
+      "kb_official_domain": "fudan.edu.cn",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q495015",
+      "wikidata_label": "Fudan University",
+      "p856": [
+        "https://www.fudan.edu.cn"
+      ],
+      "wikidata_domains": [
+        "fudan.edu.cn"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Fudan University' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-027",
+      "name": "Princeton University",
+      "kb_official_domain": "princeton.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q21578",
+      "wikidata_label": "Princeton University",
+      "p856": [
+        "https://princeton.edu"
+      ],
+      "wikidata_domains": [
+        "princeton.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Princeton University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-028",
+      "name": "The University of Sydney",
+      "kb_official_domain": "sydney.edu.au",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q487556",
+      "wikidata_label": "University of Sydney",
+      "p856": [
+        "https://www.sydney.edu.au/"
+      ],
+      "wikidata_domains": [
+        "sydney.edu.au"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Sydney', 'University of Sydney' (name tier 0); country Australia"
+    },
+    {
+      "seed_id": "qs2027-029",
+      "name": "Australian National University (ANU)",
+      "kb_official_domain": "anu.edu.au",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q127990",
+      "wikidata_label": "Australian National University",
+      "p856": [
+        "https://www.anu.edu.au/"
+      ],
+      "wikidata_domains": [
+        "anu.edu.au"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'ANU', 'Australian National University' (name tier 0); country Australia"
+    },
+    {
+      "seed_id": "qs2027-030",
+      "name": "McGill University",
+      "kb_official_domain": "mcgill.ca",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q201492",
+      "wikidata_label": "McGill University",
+      "p856": [
+        "https://www.mcgill.ca/"
+      ],
+      "wikidata_domains": [
+        "mcgill.ca"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'McGill University' (name tier 0); country Canada"
+    },
+    {
+      "seed_id": "qs2027-031",
+      "name": "Monash University",
+      "kb_official_domain": "monash.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q598841",
+      "wikidata_label": "Monash University",
+      "p856": [
+        "https://www.monash.edu/",
+        "https://www.monashuniversity.cn"
+      ],
+      "wikidata_domains": [
+        "monash.edu",
+        "monashuniversity.cn"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "label match on 'Monash University' (name tier 0); country Australia; P856 spans 2 registrable domains"
+    },
+    {
+      "seed_id": "qs2027-032",
+      "name": "University of Toronto",
+      "kb_official_domain": "utoronto.ca",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q180865",
+      "wikidata_label": "University of Toronto",
+      "p856": [
+        "https://www.utoronto.ca/"
+      ],
+      "wikidata_domains": [
+        "utoronto.ca"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Toronto' (name tier 0); country Canada"
+    },
+    {
+      "seed_id": "qs2027-033",
+      "name": "The Hong Kong University of Science and Technology",
+      "kb_official_domain": "ust.hk",
+      "kb_extra_domains": [
+        "hkust.edu.hk"
+      ],
+      "wikidata_item": "Q1333303",
+      "wikidata_label": "Hong Kong University of Science and Technology",
+      "p856": [
+        "https://hkust.edu.hk"
+      ],
+      "wikidata_domains": [
+        "hkust.edu.hk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Hong Kong University of Science and Technology', 'The Hong Kong University of Science and Technology' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-034",
+      "name": "Université PSL",
+      "kb_official_domain": "psl.eu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q1163431",
+      "wikidata_label": "PSL Research University",
+      "p856": [
+        "https://psl.eu"
+      ],
+      "wikidata_domains": [
+        "psl.eu"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "alias match on 'Université PSL' (name tier 0); country France"
+    },
+    {
+      "seed_id": "qs2027-035",
+      "name": "The University of Edinburgh",
+      "kb_official_domain": "ed.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q160302",
+      "wikidata_label": "University of Edinburgh",
+      "p856": [
+        "https://www.ed.ac.uk"
+      ],
+      "wikidata_domains": [
+        "ed.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Edinburgh', 'University of Edinburgh' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-036",
+      "name": "Shanghai Jiao Tong University",
+      "kb_official_domain": "sjtu.edu.cn",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q525169",
+      "wikidata_label": "Shanghai Jiao Tong University",
+      "p856": [
+        "https://en.sjtu.edu.cn/",
+        "https://www.sjtu.edu.cn/"
+      ],
+      "wikidata_domains": [
+        "sjtu.edu.cn"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Shanghai Jiao Tong University' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-037",
+      "name": "King's College London",
+      "kb_official_domain": "kcl.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q245247",
+      "wikidata_label": "King's College London",
+      "p856": [
+        "https://kcl.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "kcl.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on \"King's College London\" (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-038",
+      "name": "Seoul National University",
+      "kb_official_domain": "snu.ac.kr",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q39913",
+      "wikidata_label": "Seoul National University",
+      "p856": [
+        "https://www.snu.ac.kr"
+      ],
+      "wikidata_domains": [
+        "snu.ac.kr"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Seoul National University' (name tier 0); country South Korea"
+    },
+    {
+      "seed_id": "qs2027-039",
+      "name": "The University of Tokyo",
+      "kb_official_domain": "u-tokyo.ac.jp",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q7842",
+      "wikidata_label": "University of Tokyo",
+      "p856": [
+        "https://www.u-tokyo.ac.jp/en/index.html",
+        "https://www.u-tokyo.ac.jp/ja/index.html",
+        "https://www.u-tokyo.ac.jp/ko/index.html",
+        "https://www.u-tokyo.ac.jp/zh/index.html"
+      ],
+      "wikidata_domains": [
+        "u-tokyo.ac.jp"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Tokyo', 'University of Tokyo' (name tier 0); country Japan"
+    },
+    {
+      "seed_id": "qs2027-040",
+      "name": "The University of Manchester",
+      "kb_official_domain": "manchester.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q230899",
+      "wikidata_label": "University of Manchester",
+      "p856": [
+        "https://manchester.ac.uk"
+      ],
+      "wikidata_domains": [
+        "manchester.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Manchester', 'University of Manchester' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-041",
+      "name": "The University of Queensland",
+      "kb_official_domain": "uq.edu.au",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q866012",
+      "wikidata_label": "University of Queensland",
+      "p856": [
+        "https://www.uq.edu.au"
+      ],
+      "wikidata_domains": [
+        "uq.edu.au"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Queensland', 'University of Queensland' (name tier 0); country Australia"
+    },
+    {
+      "seed_id": "qs2027-042",
+      "name": "Yonsei University",
+      "kb_official_domain": "yonsei.ac.kr",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q39988",
+      "wikidata_label": "Yonsei University",
+      "p856": [
+        "https://www.yonsei.ac.kr/"
+      ],
+      "wikidata_domains": [
+        "yonsei.ac.kr"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Yonsei University' (name tier 0); country South Korea"
+    },
+    {
+      "seed_id": "qs2027-043",
+      "name": "Columbia University",
+      "kb_official_domain": "columbia.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q49088",
+      "wikidata_label": "Columbia University",
+      "p856": [
+        "https://columbia.edu"
+      ],
+      "wikidata_domains": [
+        "columbia.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Columbia University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-044",
+      "name": "Institut Polytechnique de Paris",
+      "kb_official_domain": "ip-paris.fr",
+      "kb_extra_domains": [
+        "polytechnique.edu"
+      ],
+      "wikidata_item": "Q48759778",
+      "wikidata_label": "Polytechnic Institute of Paris",
+      "p856": [
+        "https://www.ip-paris.fr/"
+      ],
+      "wikidata_domains": [
+        "ip-paris.fr"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "entity search rank 0, label 'Polytechnic Institute of Paris' (differs from the catalogue name); country France"
+    },
+    {
+      "seed_id": "qs2027-045",
+      "name": "Northwestern University",
+      "kb_official_domain": "northwestern.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q309350",
+      "wikidata_label": "Northwestern University",
+      "p856": [],
+      "wikidata_domains": [],
+      "match_confidence": "none",
+      "verdict": "unresolved",
+      "reason": "Q309350 (Northwestern University) matches name and country but has no P856"
+    },
+    {
+      "seed_id": "qs2027-046",
+      "name": "University of British Columbia",
+      "kb_official_domain": "ubc.ca",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q391028",
+      "wikidata_label": "University of British Columbia",
+      "p856": [
+        "https://www.ubc.ca/"
+      ],
+      "wikidata_domains": [
+        "ubc.ca"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of British Columbia' (name tier 0); country Canada"
+    },
+    {
+      "seed_id": "qs2027-047",
+      "name": "Zhejiang University",
+      "kb_official_domain": "zju.edu.cn",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q197543",
+      "wikidata_label": "Zhejiang University",
+      "p856": [
+        "https://www.zju.edu.cn"
+      ],
+      "wikidata_domains": [
+        "zju.edu.cn"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Zhejiang University' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-048",
+      "name": "Delft University of Technology",
+      "kb_official_domain": "tudelft.nl",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q752663",
+      "wikidata_label": "Delft University of Technology",
+      "p856": [
+        "https://www.tudelft.nl/",
+        "https://www.tudelft.nl/en/"
+      ],
+      "wikidata_domains": [
+        "tudelft.nl"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Delft University of Technology' (name tier 0); country Netherlands"
+    },
+    {
+      "seed_id": "qs2027-049",
+      "name": "University of California, Los Angeles (UCLA)",
+      "kb_official_domain": "ucla.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q174710",
+      "wikidata_label": "University of California, Los Angeles",
+      "p856": [
+        "https://ucla.edu"
+      ],
+      "wikidata_domains": [
+        "ucla.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'UCLA', 'University of California, Los Angeles' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-050",
+      "name": "The Hong Kong Polytechnic University",
+      "kb_official_domain": "polyu.edu.hk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q1187271",
+      "wikidata_label": "Hong Kong Polytechnic University",
+      "p856": [
+        "https://polyu.edu.hk",
+        "https://polyu.edu.hk/sc/",
+        "https://polyu.edu.hk/tc/"
+      ],
+      "wikidata_domains": [
+        "polyu.edu.hk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Hong Kong Polytechnic University' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-051",
+      "name": "University of Michigan-Ann Arbor",
+      "kb_official_domain": "umich.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q230492",
+      "wikidata_label": "University of Michigan",
+      "p856": [
+        "https://umich.edu"
+      ],
+      "wikidata_domains": [
+        "umich.edu"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "alias match on 'University of Michigan-Ann Arbor' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-052",
+      "name": "City University of Hong Kong (CityUHK)",
+      "kb_official_domain": "cityu.edu.hk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q787360",
+      "wikidata_label": "City University of Hong Kong",
+      "p856": [
+        "https://cityu.edu.hk"
+      ],
+      "wikidata_domains": [
+        "cityu.edu.hk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'City University of Hong Kong' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-053",
+      "name": "Korea University",
+      "kb_official_domain": "korea.ac.kr",
+      "kb_extra_domains": [
+        "korea.edu"
+      ],
+      "wikidata_item": "Q39997",
+      "wikidata_label": "Korea University",
+      "p856": [
+        "http://www.korea.ac.kr/",
+        "http://www.korea.edu/"
+      ],
+      "wikidata_domains": [
+        "korea.ac.kr",
+        "korea.edu"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "label match on 'Korea University' (name tier 0); country South Korea; P856 spans 2 registrable domains"
+    },
+    {
+      "seed_id": "qs2027-054",
+      "name": "National Taiwan University (NTU)",
+      "kb_official_domain": "ntu.edu.tw",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q32746",
+      "wikidata_label": "National Taiwan University",
+      "p856": [
+        "https://www.ntu.edu.tw",
+        "https://www.ntu.edu.tw/english/index.html"
+      ],
+      "wikidata_domains": [
+        "ntu.edu.tw"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'NTU', 'National Taiwan University' (name tier 0); country Taiwan"
+    },
+    {
+      "seed_id": "qs2027-055",
+      "name": "Carnegie Mellon University",
+      "kb_official_domain": "cmu.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q190080",
+      "wikidata_label": "Carnegie Mellon University",
+      "p856": [
+        "https://cmu.edu"
+      ],
+      "wikidata_domains": [
+        "cmu.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Carnegie Mellon University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-056",
+      "name": "Universiti Malaya (UM)",
+      "kb_official_domain": "um.edu.my",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q1142924",
+      "wikidata_label": "Universiti Malaya",
+      "p856": [
+        "https://www.um.edu.my/"
+      ],
+      "wikidata_domains": [
+        "um.edu.my"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'UM', 'Universiti Malaya' (name tier 0); country Malaysia"
+    },
+    {
+      "seed_id": "qs2027-057",
+      "name": "University of Bristol",
+      "kb_official_domain": "bristol.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q459506",
+      "wikidata_label": "University of Bristol",
+      "p856": [
+        "https://bristol.ac.uk"
+      ],
+      "wikidata_domains": [
+        "bristol.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Bristol' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-058",
+      "name": "New York University (NYU)",
+      "kb_official_domain": "nyu.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q49210",
+      "wikidata_label": "New York University",
+      "p856": [
+        "https://nyu.edu"
+      ],
+      "wikidata_domains": [
+        "nyu.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'NYU', 'New York University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-059",
+      "name": "KU Leuven",
+      "kb_official_domain": "kuleuven.be",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q833670",
+      "wikidata_label": "Katholieke Universiteit Leuven",
+      "p856": [
+        "https://www.kuleuven.be/english/",
+        "https://www.kuleuven.be/"
+      ],
+      "wikidata_domains": [
+        "kuleuven.be"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "alias match on 'KU Leuven' (name tier 0); country Belgium"
+    },
+    {
+      "seed_id": "qs2027-060",
+      "name": "University of Amsterdam",
+      "kb_official_domain": "uva.nl",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q214341",
+      "wikidata_label": "University of Amsterdam",
+      "p856": [
+        "https://www.uva.nl/"
+      ],
+      "wikidata_domains": [
+        "uva.nl"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Amsterdam' (name tier 0); country Netherlands"
+    },
+    {
+      "seed_id": "qs2027-061",
+      "name": "Ludwig-Maximilians-Universität München",
+      "kb_official_domain": "lmu.de",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q55044",
+      "wikidata_label": "Ludwig-Maximilians-Universität München",
+      "p856": [
+        "https://www.lmu.de/"
+      ],
+      "wikidata_domains": [
+        "lmu.de"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Ludwig-Maximilians-Universität München' (name tier 0); country Germany"
+    },
+    {
+      "seed_id": "qs2027-062",
+      "name": "The London School of Economics and Political Science (LSE)",
+      "kb_official_domain": "lse.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q174570",
+      "wikidata_label": "London School of Economics and Political Science",
+      "p856": [
+        "https://lse.ac.uk"
+      ],
+      "wikidata_domains": [
+        "lse.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'LSE', 'London School of Economics and Political Science' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-063",
+      "name": "KFUPM",
+      "kb_official_domain": "kfupm.edu.sa",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q4116241",
+      "wikidata_label": "King Fahd University of Petroleum and Minerals",
+      "p856": [
+        "http://www.kfupm.edu.sa"
+      ],
+      "wikidata_domains": [
+        "kfupm.edu.sa"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "entity search rank 0, label 'King Fahd University of Petroleum and Minerals' (differs from the catalogue name); country Saudi Arabia"
+    },
+    {
+      "seed_id": "qs2027-064",
+      "name": "Kyoto University",
+      "kb_official_domain": "kyoto-u.ac.jp",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q336264",
+      "wikidata_label": "Kyoto University",
+      "p856": [
+        "https://www.kyoto-u.ac.jp/ja"
+      ],
+      "wikidata_domains": [
+        "kyoto-u.ac.jp"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Kyoto University' (name tier 0); country Japan"
+    },
+    {
+      "seed_id": "qs2027-065",
+      "name": "KAIST",
+      "kb_official_domain": "kaist.ac.kr",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q39949",
+      "wikidata_label": "KAIST",
+      "p856": [
+        "https://kaist.ac.kr"
+      ],
+      "wikidata_domains": [
+        "kaist.ac.kr"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'KAIST' (name tier 0); country South Korea"
+    },
+    {
+      "seed_id": "qs2027-066",
+      "name": "Brown University",
+      "kb_official_domain": "brown.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q49114",
+      "wikidata_label": "Brown University",
+      "p856": [
+        "https://www.brown.edu/"
+      ],
+      "wikidata_domains": [
+        "brown.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Brown University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-067",
+      "name": "The University of Auckland",
+      "kb_official_domain": "auckland.ac.nz",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q492467",
+      "wikidata_label": "University of Auckland",
+      "p856": [
+        "https://www.auckland.ac.nz/en.html",
+        "https://www.auckland.ac.nz"
+      ],
+      "wikidata_domains": [
+        "auckland.ac.nz"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Auckland', 'University of Auckland' (name tier 0); country New Zealand"
+    },
+    {
+      "seed_id": "qs2027-068",
+      "name": "The University of Warwick",
+      "kb_official_domain": "warwick.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q865528",
+      "wikidata_label": "University of Warwick",
+      "p856": [
+        "http://www.warwick.ac.uk/",
+        "https://warwick.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "warwick.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Warwick', 'University of Warwick' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-069",
+      "name": "University of Birmingham",
+      "kb_official_domain": "bham.ac.uk",
+      "kb_extra_domains": [
+        "birmingham.ac.uk"
+      ],
+      "wikidata_item": "Q223429",
+      "wikidata_label": "University of Birmingham",
+      "p856": [
+        "https://birmingham.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "birmingham.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Birmingham' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-070",
+      "name": "Duke University",
+      "kb_official_domain": "duke.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q168751",
+      "wikidata_label": "Duke University",
+      "p856": [
+        "https://duke.edu"
+      ],
+      "wikidata_domains": [
+        "duke.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Duke University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-071",
+      "name": "Lund University",
+      "kb_official_domain": "lu.se",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q218506",
+      "wikidata_label": "Lund University",
+      "p856": [
+        "https://www.lu.se"
+      ],
+      "wikidata_domains": [
+        "lu.se"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Lund University' (name tier 0); country Sweden"
+    },
+    {
+      "seed_id": "qs2027-072",
+      "name": "University of Texas at Austin",
+      "kb_official_domain": "utexas.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q49213",
+      "wikidata_label": "University of Texas at Austin",
+      "p856": [
+        "https://www.utexas.edu/"
+      ],
+      "wikidata_domains": [
+        "utexas.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Texas at Austin' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-073",
+      "name": "Sorbonne University",
+      "kb_official_domain": "sorbonne-universite.fr",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q41497113",
+      "wikidata_label": "Sorbonne University",
+      "p856": [
+        "https://www.sorbonne-universite.fr/"
+      ],
+      "wikidata_domains": [
+        "sorbonne-universite.fr"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Sorbonne University' (name tier 0); country France"
+    },
+    {
+      "seed_id": "qs2027-074",
+      "name": "University of Illinois Urbana-Champaign",
+      "kb_official_domain": "uiuc.edu",
+      "kb_extra_domains": [
+        "illinois.edu"
+      ],
+      "wikidata_item": "Q457281",
+      "wikidata_label": "University of Illinois Urbana-Champaign",
+      "p856": [
+        "https://illinois.edu"
+      ],
+      "wikidata_domains": [
+        "illinois.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Illinois Urbana-Champaign' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-075",
+      "name": "Trinity College Dublin, The University of Dublin",
+      "kb_official_domain": "tcd.ie",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q2496094",
+      "wikidata_label": "University of Dublin",
+      "p856": [
+        "https://www.tcd.ie/"
+      ],
+      "wikidata_domains": [
+        "tcd.ie"
+      ],
+      "match_confidence": "low",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Dublin', 'University of Dublin' (name tier 2); country Ireland; matched only a piece of a split name"
+    },
+    {
+      "seed_id": "qs2027-076",
+      "name": "Université Paris-Saclay",
+      "kb_official_domain": "universite-paris-saclay.fr",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q109409389",
+      "wikidata_label": "Paris-Saclay University",
+      "p856": [
+        "https://www.universite-paris-saclay.fr"
+      ],
+      "wikidata_domains": [
+        "universite-paris-saclay.fr"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Université Paris-Saclay' (name tier 0); country France"
+    },
+    {
+      "seed_id": "qs2027-077",
+      "name": "The University of Western Australia",
+      "kb_official_domain": "uwa.edu.au",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q1517021",
+      "wikidata_label": "University of Western Australia",
+      "p856": [
+        "https://www.uwa.edu.au/"
+      ],
+      "wikidata_domains": [
+        "uwa.edu.au"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Western Australia', 'University of Western Australia' (name tier 0); country Australia"
+    },
+    {
+      "seed_id": "qs2027-078",
+      "name": "University of Leeds",
+      "kb_official_domain": "leeds.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q503424",
+      "wikidata_label": "University of Leeds",
+      "p856": [
+        "https://leeds.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "leeds.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Leeds' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-079",
+      "name": "Adelaide University",
+      "kb_official_domain": "adelaide.edu.au",
+      "kb_extra_domains": [
+        "adelaideuni.edu.au"
+      ],
+      "wikidata_item": "Q123125135",
+      "wikidata_label": "Adelaide University",
+      "p856": [
+        "https://adelaide.edu.au/"
+      ],
+      "wikidata_domains": [
+        "adelaide.edu.au"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Adelaide University' (name tier 0); country Australia"
+    },
+    {
+      "seed_id": "qs2027-080",
+      "name": "University of Glasgow",
+      "kb_official_domain": "gla.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q192775",
+      "wikidata_label": "University of Glasgow",
+      "p856": [
+        "https://gla.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "gla.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Glasgow' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-081",
+      "name": "University of California, San Diego (UCSD)",
+      "kb_official_domain": "ucsd.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q622664",
+      "wikidata_label": "University of California, San Diego",
+      "p856": [
+        "https://ucsd.edu"
+      ],
+      "wikidata_domains": [
+        "ucsd.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'UCSD', 'University of California', 'University of California, San Diego' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-082",
+      "name": "KTH Royal Institute of Technology",
+      "kb_official_domain": "kth.se",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q854280",
+      "wikidata_label": "Royal Institute of Technology",
+      "p856": [
+        "https://www.kth.se",
+        "https://www.kth.se/en"
+      ],
+      "wikidata_domains": [
+        "kth.se"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "alias match on 'KTH Royal Institute of Technology' (name tier 0); country Sweden"
+    },
+    {
+      "seed_id": "qs2027-083",
+      "name": "The University of Sheffield",
+      "kb_official_domain": "shef.ac.uk",
+      "kb_extra_domains": [
+        "sheffield.ac.uk"
+      ],
+      "wikidata_item": "Q823917",
+      "wikidata_label": "University of Sheffield",
+      "p856": [
+        "https://sheffield.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "sheffield.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Sheffield', 'University of Sheffield' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-084",
+      "name": "Universidad de Buenos Aires (UBA)",
+      "kb_official_domain": "uba.ar",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q194223",
+      "wikidata_label": "University of Buenos Aires",
+      "p856": [
+        "https://uba.ar"
+      ],
+      "wikidata_domains": [
+        "uba.ar"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "alias match on 'UBA', 'Universidad de Buenos Aires' (name tier 0); country Argentina"
+    },
+    {
+      "seed_id": "qs2027-085",
+      "name": "Durham University",
+      "kb_official_domain": "dur.ac.uk",
+      "kb_extra_domains": [
+        "durham.ac.uk"
+      ],
+      "wikidata_item": "Q458393",
+      "wikidata_label": "Durham University",
+      "p856": [
+        "https://durham.ac.uk"
+      ],
+      "wikidata_domains": [
+        "durham.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Durham University' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-086",
+      "name": "Universität Heidelberg",
+      "kb_official_domain": "uni-heidelberg.de",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q151510",
+      "wikidata_label": "Heidelberg University",
+      "p856": [
+        "https://www.uni-heidelberg.de/"
+      ],
+      "wikidata_domains": [
+        "uni-heidelberg.de"
+      ],
+      "match_confidence": "medium",
+      "verdict": "agree",
+      "reason": "entity search rank 0, label 'Heidelberg University' (differs from the catalogue name); country Germany"
+    },
+    {
+      "seed_id": "qs2027-088",
+      "name": "University of Technology Sydney",
+      "kb_official_domain": "uts.edu.au",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q1145731",
+      "wikidata_label": "University of Technology Sydney",
+      "p856": [
+        "https://www.uts.edu.au/"
+      ],
+      "wikidata_domains": [
+        "uts.edu.au"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Technology Sydney' (name tier 0); country Australia"
+    },
+    {
+      "seed_id": "qs2027-089",
+      "name": "Uppsala University",
+      "kb_official_domain": "uu.se",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q185246",
+      "wikidata_label": "Uppsala University",
+      "p856": [
+        "https://www.uu.se"
+      ],
+      "wikidata_domains": [
+        "uu.se"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Uppsala University' (name tier 0); country Sweden"
+    },
+    {
+      "seed_id": "qs2027-090",
+      "name": "Nanjing University",
+      "kb_official_domain": "nju.edu.cn",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q683580",
+      "wikidata_label": "Nanjing University",
+      "p856": [
+        "https://www.nju.edu.cn/main.htm"
+      ],
+      "wikidata_domains": [
+        "nju.edu.cn"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Nanjing University' (name tier 0); country People's Republic of China"
+    },
+    {
+      "seed_id": "qs2027-091",
+      "name": "University of Copenhagen",
+      "kb_official_domain": "ku.dk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q186285",
+      "wikidata_label": "University of Copenhagen",
+      "p856": [
+        "https://www.ku.dk/"
+      ],
+      "wikidata_domains": [
+        "ku.dk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Copenhagen' (name tier 0); country Denmark"
+    },
+    {
+      "seed_id": "qs2027-092",
+      "name": "Pennsylvania State University",
+      "kb_official_domain": "psu.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q739627",
+      "wikidata_label": "Pennsylvania State University",
+      "p856": [],
+      "wikidata_domains": [],
+      "match_confidence": "none",
+      "verdict": "unresolved",
+      "reason": "Q739627 (Pennsylvania State University) matches name and country but has no P856"
+    },
+    {
+      "seed_id": "qs2027-093",
+      "name": "University of Washington",
+      "kb_official_domain": "uw.edu",
+      "kb_extra_domains": [
+        "washington.edu"
+      ],
+      "wikidata_item": "Q219563",
+      "wikidata_label": "University of Washington",
+      "p856": [
+        "https://washington.edu"
+      ],
+      "wikidata_domains": [
+        "washington.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Washington' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-094",
+      "name": "Boston University",
+      "kb_official_domain": "bu.edu",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q49110",
+      "wikidata_label": "Boston University",
+      "p856": [
+        "https://bu.edu/"
+      ],
+      "wikidata_domains": [
+        "bu.edu"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Boston University' (name tier 0); country United States"
+    },
+    {
+      "seed_id": "qs2027-095",
+      "name": "The University of Osaka",
+      "kb_official_domain": "osaka-u.ac.jp",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q651233",
+      "wikidata_label": "University of Osaka",
+      "p856": [
+        "https://www.osaka-u.ac.jp/ja"
+      ],
+      "wikidata_domains": [
+        "osaka-u.ac.jp"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'The University of Osaka', 'University of Osaka' (name tier 0); country Japan"
+    },
+    {
+      "seed_id": "qs2027-096",
+      "name": "University of Alberta",
+      "kb_official_domain": "ualberta.ca",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q640694",
+      "wikidata_label": "University of Alberta",
+      "p856": [
+        "https://www.ualberta.ca"
+      ],
+      "wikidata_domains": [
+        "ualberta.ca"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Alberta' (name tier 0); country Canada"
+    },
+    {
+      "seed_id": "qs2027-097",
+      "name": "Institute of Science Tokyo",
+      "kb_official_domain": "isct.ac.jp",
+      "kb_extra_domains": [
+        "titech.ac.jp"
+      ],
+      "wikidata_item": "Q116264906",
+      "wikidata_label": "Institute of Science Tokyo",
+      "p856": [
+        "https://www.isct.ac.jp/"
+      ],
+      "wikidata_domains": [
+        "isct.ac.jp"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Institute of Science Tokyo' (name tier 0); country Japan"
+    },
+    {
+      "seed_id": "qs2027-098",
+      "name": "University of Nottingham",
+      "kb_official_domain": "nottingham.ac.uk",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q472316",
+      "wikidata_label": "University of Nottingham",
+      "p856": [
+        "https://www.nottingham.ac.uk/"
+      ],
+      "wikidata_domains": [
+        "nottingham.ac.uk"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Nottingham' (name tier 0); country United Kingdom"
+    },
+    {
+      "seed_id": "qs2027-099",
+      "name": "Freie Universitaet Berlin",
+      "kb_official_domain": "fu-berlin.de",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q153006",
+      "wikidata_label": "Freie Universität Berlin",
+      "p856": [
+        "https://www.fu-berlin.de/"
+      ],
+      "wikidata_domains": [
+        "fu-berlin.de"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'Freie Universität Berlin' (name tier 0); country Germany"
+    },
+    {
+      "seed_id": "qs2027-100",
+      "name": "University of Zurich",
+      "kb_official_domain": "uzh.ch",
+      "kb_extra_domains": [],
+      "wikidata_item": "Q206702",
+      "wikidata_label": "University of Zurich",
+      "p856": [
+        "https://www.uzh.ch/"
+      ],
+      "wikidata_domains": [
+        "uzh.ch"
+      ],
+      "match_confidence": "high",
+      "verdict": "agree",
+      "reason": "label match on 'University of Zurich' (name tier 0); country Switzerland"
+    }
+  ]
+}

@@ -9,11 +9,13 @@ from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
+from pydantic import JsonValue
+
 from app.adapters.search.ontology import titles_name_same_programme
 from app.domain.claim_verifier import registrable_domain
 from app.domain.programme_identity import Verdict
 
-from .schema import Capture, Dataset, Label, Observation, Prediction, Scope
+from .schema import Capture, Case, Dataset, Label, Observation, Prediction, Scope
 
 
 def canonical_url(url: object) -> str:
@@ -66,6 +68,33 @@ def _plain(text: object) -> str:
     return folded[4:] if folded.startswith("the ") else folded
 
 
+def _name_parts(text: object) -> set[str]:
+    """The whole name and each part a comma, bracket, " - " or " | " separates."""
+    whole = _plain(text)
+    parts = {whole}
+    for piece in re.split(r",|\(|\)| - | – | \| ", whole):
+        piece = _plain(piece)
+        if piece:
+            parts.add(piece)
+    return parts
+
+
+_ACRONYM_SKIPPED = frozenset({"of", "and", "&"})
+
+
+def _acronym_names(full: object, short: object) -> bool:
+    """Whether ``short`` carries, as a whole word, the acronym of ``full``.
+
+    The acronym is the initials of every word of ``full`` except "of"/"and"
+    ("University of New South Wales" -> "unsw"), and must be at least three
+    letters: two initials ("UT", "UO") name too many universities to be read
+    as one.
+    """
+    words = [w for w in re.findall(r"[^\W\d_]+|&", _plain(full)) if w not in _ACRONYM_SKIPPED]
+    acronym = "".join(w[0] for w in words)
+    return len(acronym) >= 3 and acronym in re.findall(r"[^\W\d_]+", _plain(short))
+
+
 def dimension_matches(key: str, value: object, recorded: object) -> bool:
     """One scope dimension: whether ``recorded`` answers the label's ``value``.
 
@@ -86,6 +115,21 @@ def dimension_matches(key: str, value: object, recorded: object) -> bool:
         # recorded controlled population ("transfer") is a stated group the
         # note cannot be compared with, so it still does not match.
         return recorded is None or str(recorded).casefold() not in CONTROLLED_POPULATIONS
+    if key == "university":
+        # A page names its institution with its acronym or campus beside it
+        # ("KIT, Karlsruhe Institute of Technology"; dev4 run 39134956132):
+        # the same name as one comma/bracket/dash-separated part is the same
+        # institution. A longer different name is not ("Oslo Metropolitan
+        # University" never matches "University of Oslo").
+        # A brand name built on the acronym is the same institution too:
+        # the corpus reads "UNSW Sydney", the catalogue "The University of
+        # New South Wales" (dev3 run evb, SC-2) — every UNSW claim scored
+        # wrong-scope on the name alone.
+        return recorded is not None and (
+            bool(_name_parts(value) & _name_parts(recorded))
+            or _acronym_names(value, recorded)
+            or _acronym_names(recorded, value)
+        )
     if key == "academic_year":
         # Spelling is not meaning (D3, owner 2026-10-05): the corpus quotes
         # "2027-2028" as the page writes it, the pipeline writes "2027/28".
@@ -194,11 +238,81 @@ class PredictionVerdict:
         return self.adjudicated and self.value_matches and self.valid_scope and self.supported
 
 
+#: ID-1 / D2 (core-gap analysis 2026-10-18 change 3): a key the corpus files a
+#: fact under for some cases only. NTU's SAT is an English-proficiency
+#: alternative, and its signed label is ``english_evidence.sat.minimum`` (its
+#: ``sat.minimum`` is ``unknown``); every other case uses ``sat.minimum``. A
+#: prediction is scored under the alias only when the case knows the alias
+#: and does not know the key itself.
+#: On by default since the owner signed it (corpus corrections round, 02-Q2,
+#: 2026-10-18); ``False`` keeps every key as filed.
+ID1_SCORER_ALIASES = True
+GOLD_KEY_ALIASES: dict[str, str] = (
+    {"sat.minimum": "english_evidence.sat.minimum"} if ID1_SCORER_ALIASES else {}
+)
+
+
+def scored_key(key: str, labels: dict[str, Label]) -> str:
+    """The key a prediction is scored under for this case's labels."""
+    alias = GOLD_KEY_ALIASES.get(key)
+    if alias is None:
+        return key
+    own, other = labels.get(key), labels.get(alias)
+    if other is not None and other.status == "known" and (own is None or own.status != "known"):
+        return alias
+    return key
+
+
+def scored_predictions(predictions: list[Prediction], labels: dict[str, Label]) -> list[Prediction]:
+    """``predictions`` with each key replaced by :func:`scored_key`."""
+    return [
+        p if (key := scored_key(p.key, labels)) == p.key else p.model_copy(update={"key": key})
+        for p in predictions
+    ]
+
+
+#: Money keys whose value is an amount for a stated period (02-Q4, owner
+#: 2026-10-18). A fee is labelled **as published**: a page that states a
+#: semester fee is labelled with ``period: semester`` and the pipeline never
+#: multiplies it into a year. A value with no ``period`` is a fee for the
+#: academic year, the corpus convention since draft1.
+_PERIOD_KEYS = frozenset({"tuition", "mandatory_fees"})
+_YEAR = "academic_year"
+_PERIOD_SPELLINGS = {
+    "academic_year": _YEAR,
+    "annual": _YEAR,
+    "per_year": _YEAR,
+    "year": _YEAR,
+    "semester": "semester",
+    "per_semester": "semester",
+    "term": "term",
+}
+
+
+def _with_period(value: JsonValue) -> JsonValue:
+    if not isinstance(value, dict):
+        return value
+    period = value.get("period")
+    spelled = _PERIOD_SPELLINGS.get(str(period).casefold()) if period is not None else _YEAR
+    return {**value, "period": spelled or period}
+
+
+def values_match(key: str, ours: JsonValue, label: JsonValue) -> bool:
+    """Whether a prediction's value is the label's.
+
+    Exact JSON equality, except that a fee (``_PERIOD_KEYS``) compares its
+    amount, currency **and period**, a missing period meaning the academic
+    year: a semester fee read as a semester fee is a hit, the same amount
+    claimed for a year is a wrong value, and so is an amount someone doubled.
+    """
+    if key in _PERIOD_KEYS:
+        ours, label = _with_period(ours), _with_period(label)
+    return json.dumps(ours, sort_keys=True) == json.dumps(label, sort_keys=True)
+
+
 def adjudicate(p: Prediction, label: Label | None) -> PredictionVerdict:
     """Judge one prediction against the label for its key, or against none."""
-    value_matches = label is not None and json.dumps(p.value, sort_keys=True) == json.dumps(
-        label.value, sort_keys=True
-    )
+    value_matches = label is not None and values_match(p.key, p.value, label.value)
     evidence = p.evidence
     provenance = bool(evidence and evidence.source_type in {"official", "government"})
     exact_evidence = bool(
@@ -272,6 +386,192 @@ def adjudicate(p: Prediction, label: Label | None) -> PredictionVerdict:
     )
 
 
+#: A path segment that is an intake year ("/2027/computing-beng").
+_INTAKE_YEAR = re.compile(r"20\d{2}")
+#: A trailing ``.htm`` / ``.html`` on a URL's last segment (not ``index.html``,
+#: which names the directory and is removed whole).
+_HTML_EXTENSION = re.compile(r"(?<=[^/])\.html?$", re.IGNORECASE)
+
+
+def _bare_host(netloc: str) -> str:
+    """The host without one leading ``www.`` label (owner, 2026-10-26, Track B §1.3).
+
+    ``www.icmc.usp.br`` and ``icmc.usp.br`` serve one page, so a URL that
+    differs from the gold only by that label is the gold. Nothing else is
+    folded: another subdomain (``cs.``, ``www2.``), another registrable domain
+    or a host that would be left without a dot stays another host.
+    """
+    rest = netloc[4:]
+    return rest if netloc.startswith("www.") and "." in rest.split(":", 1)[0] else netloc
+
+
+def _page_forms(url: object, language: str | None) -> tuple[set[str], set[str]]:
+    """One URL's canonical forms, as written and with its intake year removed.
+
+    Ticket 03 Q2 (owner, 2026-10-18): a trailing ``index.html``, a trailing
+    ``.htm`` / ``.html`` extension (loss stages v3 §7) and a trailing slash are
+    not part of the page; a ``lang`` query parameter is not either, but only
+    when ``language`` (the page's own ``<html lang>``, as read) confirms it.
+    Any other query parameter stays: it can identify a programme
+    (``?p7_code=``). A leading ``www.`` on the host is not part of the page
+    either (``_bare_host``, owner 2026-10-26): every form is written with the
+    bare host, so both sides of a comparison fold it.
+    """
+    parts = urlsplit(canonical_url(url))
+    path = parts.path
+    if path.endswith("/index.html"):
+        path = path[: -len("/index.html")]
+    # v3 loss stages 2026-10-18 §7: a trailing ``.htm`` / ``.html`` is not part
+    # of the page either (KU Leuven's gold ``…/SC_51016742.htm`` is the page
+    # search returned as ``…/SC_51016742``).
+    path = _HTML_EXTENSION.sub("", path)
+    queries = {parts.query}
+    if language and parts.query:
+        primary = language.casefold().split("-")[0]
+        kept = [
+            piece
+            for piece in parts.query.split("&")
+            if not (
+                piece.partition("=")[0] == "lang"
+                and piece.partition("=")[2].casefold().split("-")[0] == primary
+            )
+        ]
+        queries.add("&".join(kept))
+    segments = path.split("/")
+    yearless = "/".join(s for s in segments if not _INTAKE_YEAR.fullmatch(s))
+
+    def form(path_: str, query: str) -> str:
+        return urlunsplit((parts.scheme, _bare_host(parts.netloc), path_.rstrip("/"), query, ""))
+
+    written = {form(path, q) for q in queries}
+    without_year = {form(yearless, q) for q in queries} if yearless != path else set()
+    return written, without_year
+
+
+def same_programme_page(returned: object, gold: object, language: str | None = None) -> bool:
+    """Whether a returned URL and a gold URL are canonical variants of one page.
+
+    Ticket 03 Q2: the same path with or without an intake-year segment, a
+    trailing slash, ``index.html``, a ``.htm`` / ``.html`` extension or a
+    leading ``www.`` on the host (owner, 2026-10-26);
+    ``?lang=`` only when the returned page's ``<html lang>`` (``language``)
+    names that language. "With or without" is one side holding the year: two
+    different years are two intakes' pages.
+    """
+    ours, ours_yearless = _page_forms(returned, language)
+    theirs, theirs_yearless = _page_forms(gold, language)
+    return bool(ours & theirs or ours & theirs_yearless or ours_yearless & theirs)
+
+
+def _language_of(observation: Observation, url: str) -> str | None:
+    for recorded, language in observation.programme_page_languages.items():
+        if canonical_url(recorded) == url:
+            return language
+    return None
+
+
+def returned_matching_gold(observation: Observation, expected: set[str]) -> set[str]:
+    """The returned programme pages (canonical) that are a gold page or its twin.
+
+    WF-17 (ticket 03 Q1, recommended answer): a page the returned page
+    declares as its own ``hreflang`` alternate *is* the same programme page,
+    so a returned page counts when it or any recorded twin is in the gold.
+    v3-M2 (ticket 03 Q2): "in the gold" is up to a canonical variant
+    (``same_programme_page``). A capture that records no twins, and returns no
+    variant of a gold URL, scores exactly as before.
+    """
+    twins: dict[str, set[str]] = defaultdict(set)
+    for url, aliases in observation.programme_url_aliases.items():
+        twins[canonical_url(url)].update(canonical_url(a) for a in aliases)
+    matched = set()
+    for url in map(canonical_url, observation.programme_urls):
+        # The recorded language is the returned page's own; a twin is read
+        # as written (it is, by declaration, another language's page).
+        language = _language_of(observation, url)
+        forms = [(url, language), *((twin, None) for twin in twins.get(url, set()))]
+        if any(same_programme_page(form, gold, lang) for form, lang in forms for gold in expected):
+            matched.add(url)
+    return matched
+
+
+#: How one case's programme-page outcome reads, best first (ticket 03 Q3).
+PROGRAMME_OUTCOMES = ("hit", "wrong", "related", "missed", "unadjudicated")
+
+
+@dataclass(frozen=True)
+class ProgrammePageVerdict:
+    """How the scorer judged one case's returned programme pages (v3-M2).
+
+    ``matched`` are a gold page, its twin or a canonical variant; ``related``
+    are a related programme (ticket 03 Q3: a sibling specialisation, a major
+    page, the field's bachelor in another faculty), neither a hit nor wrong;
+    ``wrong`` are every other returned page, the wrong-page count. A related
+    programme is either labelled in the corpus (``Case.related_programme_urls``)
+    or one discovery read and recorded as related instead of returning it
+    (``Observation.related_programme_urls``, ticket 16 Q6).
+    """
+
+    outcome: str
+    matched: frozenset[str]
+    related: frozenset[str]
+    wrong: frozenset[str]
+
+
+def adjudicate_programme_pages(case: Case, observation: Observation) -> ProgrammePageVerdict:
+    """Judge one case's programme pages: hit, wrong, related, missed or unadjudicated.
+
+    ``hit`` when any returned page matches the gold; else ``wrong`` when a
+    returned page is neither gold nor related; else ``related`` when a related
+    programme was returned or recorded; else ``missed``. A case whose
+    programme is ``unknown`` to the corpus is ``unadjudicated`` - unless the
+    corpus labels a related programme for it (owner, dev4 2026-10-18: the
+    closest equivalent counts as related when the exact programme does not
+    exist). Then a returned or recorded labelled related page reads
+    ``related`` and returning nothing at all reads ``missed``; any other
+    returned page stays ``unadjudicated``, since no gold says it is wrong.
+    """
+    expected = {canonical_url(url) for url in case.programme_urls}
+    returned = set(map(canonical_url, observation.programme_urls))
+    matched = returned_matching_gold(observation, expected)
+    labelled_related = {canonical_url(url) for url in case.related_programme_urls}
+    related = {
+        url
+        for url in returned - matched
+        if any(
+            same_programme_page(url, other, _language_of(observation, url))
+            for other in labelled_related
+        )
+    }
+    wrong = returned - matched - related
+    recorded_related = {canonical_url(url) for url in observation.related_programme_urls}
+    if case.programme_status == "unknown":
+        recorded_labelled = {
+            url
+            for url in recorded_related
+            if any(same_programme_page(url, other) for other in labelled_related)
+        }
+        if related or recorded_labelled:
+            outcome = "related"
+        elif labelled_related and not returned and not recorded_related:
+            outcome = "missed"
+        else:
+            outcome = "unadjudicated"
+    elif matched:
+        outcome = "hit"
+    elif wrong:
+        outcome = "wrong"
+    elif related or recorded_related:
+        outcome = "related"
+    else:
+        outcome = "missed"
+    return ProgrammePageVerdict(
+        outcome=outcome,
+        matched=frozenset(matched),
+        related=frozenset(related | (recorded_related - matched)),
+        wrong=frozenset(wrong),
+    )
+
+
 def ratio(numerator: int, denominator: int) -> dict[str, Any]:
     return {
         "numerator": numerator,
@@ -302,22 +602,34 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
             case.id, Observation(case_id=case.id, error="MISSING_OBSERVATION")
         )
         expected = {canonical_url(url) for url in case.programme_urls}
-        returned = set(map(canonical_url, observation.programme_urls))
-        hit = bool(expected & returned)
+        pages = adjudicate_programme_pages(case, observation)
+        hit = bool(pages.matched)
         if case.programme_status == "known":
             add("programme_page_recall", int(hit), 1)
         if case.programme_status != "unknown":
-            add("programme_page_precision", len(expected & returned), len(returned))
+            # v3-M2: a related programme is neither a hit nor a wrong page,
+            # so it leaves the precision denominator.
+            add("programme_page_precision", len(pages.matched), len(pages.matched | pages.wrong))
         for k in (5, 10, 20):
             if case.programme_status == "known" and observation.ranked_urls is not None:
                 ranked = list(dict.fromkeys(map(canonical_url, observation.ranked_urls)))
-                add(f"recall_at_{k}", int(bool(expected & set(ranked[:k]))), 1)
+                add(
+                    f"recall_at_{k}",
+                    int(
+                        any(
+                            same_programme_page(url, gold)
+                            for url in ranked[:k]
+                            for gold in expected
+                        )
+                    ),
+                    1,
+                )
+        labels = {label.key: label for label in case.labels}
         predictions = {}
         # Exact repeats cannot increase credit or denominator; conflicting values remain distinct.
-        for prediction in observation.predictions:
+        for prediction in scored_predictions(observation.predictions, labels):
             if prediction.value is not None and prediction.value != "UNKNOWN":
                 predictions[prediction.model_dump_json()] = prediction
-        labels = {label.key: label for label in case.labels}
         correct_keys: set[str] = set()
         correct_same_page_keys: set[str] = set()
         answered = {p.key for p in predictions.values()}

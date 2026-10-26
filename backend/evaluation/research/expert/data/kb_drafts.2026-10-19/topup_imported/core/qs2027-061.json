@@ -1,0 +1,52 @@
+{
+ "case": "qs2027-061",
+ "university": "Ludwig-Maximilians-Universität München",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "lmu"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.lmu.de/de/studium/studienangebot/alle-studienfaecher-und-studiengaenge/informatik-bachelor-mit-nebenfach-30-ects-bachelor-hauptfach-2911.html",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/voraussetzungen/nachweis-der-deutschkenntnisse/",
+   "quote": "Das Studium an der LMU setzt ausreichende Deutschkenntnisse voraus (Ausnahme: englischsprachige Master- und Promotionsprogramme).",
+   "notes": "Informatik (Bachelor) is German-taught ('Studiensprache Deutsch' on the programme page). No English test; German proof required: DSH 2, TestDaF 4 in all four parts, telc Deutsch C1 Hochschule, DSD II, Goethe C2, ÖSD C2, etc. For a locally restricted (zulassungsbeschränkt) subject such as Informatik, non-EU applicants must submit the certificate by the application deadline (15 July / 15 January); 'Nachreichungen sind nicht möglich!'",
+   "date": "2026-10-19",
+   "page_language": "de"
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade minimum published. Informatik is 'Örtliche Zulassungsbeschränkung' (local numerus clausus) for the 1st semester; selection by grade ranking, cut-offs not published on the pages read."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-07-15",
+   "url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+   "quote": "Bewerbungsfristen 15. Januar für das Sommersemester 15. Juli für das Wintersemester (Ausschlussfrist)",
+   "population": "international",
+   "notes": "International Office applications (non-EU applicants with foreign school-leaving certificates). Informatik starts only in the winter semester ('Studienbeginn nur im Wintersemester'), so 15 July 2027 for WS 2027/28 (year not printed). From summer semester 2027 LMU works with uni-assist: a VPD must be obtained first (processing up to 8 weeks); 'Die LMU gestaltet den Bewerbungs- und Immatrikulationsprozess ab dem Sommersemester 2027 neu.'",
+   "date": "2026-10-19",
+   "page_language": "de"
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "No tuition-fee statement found. The programme page lists only 'Beiträge: Die Universität erhebt für das Studentenwerk München den Grundbeitrag ...'; https://www.lmu.de/de/workspace-fuer-studierende/1x1-des-studiums/studierendenwerksbeitraege/ gives 'Sommersemester 2026: Grundbeitrag 97,00 €' per semester. No page read states explicitly that LMU charges no tuition to non-EU students, so not recorded as known."
+  }
+ }
+}

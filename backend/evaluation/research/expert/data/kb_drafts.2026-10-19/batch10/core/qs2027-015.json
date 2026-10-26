@@ -1,0 +1,69 @@
+{
+ "case": "qs2027-015",
+ "university": "University of Pennsylvania",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "English",
+  "title": "Bachelor of Science in Engineering, Computer Science",
+  "page_url": "https://www.cis.upenn.edu/computer-science-bse/",
+  "language_twins": [],
+  "degree": "Bachelor of Science in Engineering (BSE) in Computer Science, School of Engineering and Applied Science (Penn Engineering)",
+  "how_found": "upenn.edu -> Department of Computer and Information Science (www.cis.upenn.edu) -> Undergraduate -> 'BSE in Computer Science' link -> /computer-science-bse/.",
+  "notes": "CIS also offers a BAS in Computer Science (Bachelor of Applied Science, /computer-science-bas/), recorded as a related variant; BSE is Penn's 'flagship Computer Science degree'. No language-of-instruction quote (US university, English). Owner ruling: US university without a CS-specific admissions page; the university-wide undergraduate admissions page is the source, scoped to the university."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "No minimum published. https://admissions.upenn.edu/how-to-apply/international-applicants: 'We accept TOEFL, IELTS Academic, and the Duolingo English Test.' and guidance only: 'Competitive applicants tend to have an overall band score of 7 or above' (IELTS), 'a composite score of 100 or above' (TOEFL 0-120), 'a composite score of 5 or above' (TOEFL 1-6), 'an overall score of 130 or above' (Duolingo). 'Competitive' ranges, not minimums."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Prose only: 'we do not have explicit course requirements or minimum test score requirements for admittance' (https://admissions.upenn.edu/how-to-apply/international-applicants). No GPA minimum."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-01-05",
+   "url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants",
+   "quote": "Regular Decision Deadline: January 5, 2027",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "population": "international",
+   "notes": "Fall 2027 first-year entry; Early Decision November 1, 2026 (binding). International applicants use the same process: 'Our application process is the same for domestic and international applicants.' (international-applicants page). No time of day or timezone. Owner ruling: US university without a CS-specific admissions page; the university-wide undergraduate admissions page is the source, scoped to the university."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 65670,
+    "currency": "USD",
+    "period": "year",
+    "academic_year": "2026/2027",
+    "population": "all undergraduates (no separate international rate)"
+   },
+   "url": "https://srfs.upenn.edu/costs-budgeting/undergraduate-cost-attendance",
+   "quote": "Tuition $65,670",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Table under '2026-2027 Academic Year' (cost of attendance); fees $8,308 extra; total on-campus budget $99,082. The 2025-2026 table below it lists Tuition $63,204. 2027/28 not yet published. University-wide undergraduate figure."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Penn need-based grant aid"
+   },
+   "url": "https://admissions.upenn.edu/affording-penn/international-aid",
+   "quote": "International students admitted as financial aid recipients will receive need-based aid that covers 100% of their demonstrated need, just like domestic students.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Need-based (grant + work-study), not merit; Penn is need-aware for international applicants ('a family's ability to pay does factor into admissions decisions'). Size depends on a need assessment: NEED_BASED_POSSIBLE."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://admissions.upenn.edu/affording-penn/international-aid",
+   "quote": "International students are eligible for financial aid, but must apply for financial aid at the same time as they apply for admissions in order to be considered.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "'Requests for financial aid after being admitted as an international student cannot be considered.'"
+  }
+ }
+}

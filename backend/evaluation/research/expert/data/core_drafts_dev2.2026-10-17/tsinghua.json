@@ -1,0 +1,103 @@
+{
+  "case": "tsinghua",
+  "university": "Tsinghua University",
+  "researched_on": "2026-10-17",
+  "programme": {
+    "url": "https://international.join-tsinghua.edu.cn/Divisions1.htm",
+    "title": "Computer Science and Technology (Computer Science Division, Department of Computer Science and Technology) - Chinese and English Programs",
+    "teaching_language": "Chinese-English taught (listed under 'Divisions (Chinese and English Programs)'; HSK 5 required plus English proficiency)",
+    "campus": "Main campus, Haidian District, Beijing",
+    "quote": "Computer Science Department of Computer Science and Technology Computer Science and Technology Physics",
+    "how_found": "Search led to international.join-tsinghua.edu.cn (Tsinghua Undergraduate Admissions, international applicants); Divisions page lists Computer Science division -> Department of Computer Science and Technology -> major Computer Science and Technology (official equivalent of 计算机科学与技术). Campus taken from the admissions office address 'Haidian District, Beijing, 100084'."
+  },
+  "answers": {
+    "english": {
+      "status": "known",
+      "value": {
+        "hsk_level": "HSK 5 or above, scores above 60 in each of Listening, Reading and Writing",
+        "english_test": "official English test (e.g. TOEFL/IELTS) required for non-native speakers, no minimum score published"
+      },
+      "url": "https://international.join-tsinghua.edu.cn/Admission1/Eligibility.htm",
+      "quote": "Applicants must demonstrate Chinese language proficiency at HSK Level 5 or above, with scores above 60 in each of the following categories: Listening, Reading, and Writing.",
+      "date": "2026-10-17",
+      "how_found": "Admission > Eligibility page, section 4.2 For Chinese-English-Taught Programs.",
+      "notes": "The binding language requirement is Chinese (HSK), recorded here per instructions. Section 4.2.3 also says: 'Those whose native language is not English must provide official English language proficiency test results (e.g. TOEFL/IELTS/others)' but no minimum TOEFL/IELTS score is published. HSK waiver possible only for native Chinese speakers or graduates of Chinese-medium high schools (not the case for NIS)."
+    },
+    "gpa": {
+      "status": "not_applicable",
+      "value": {
+        "description": "No published grade/GPA minimum or test cut-off; holistic evaluation (document screening + Comprehensive Assessment). Academic performance shown via transcripts, national graduation exam certificates, optional international tests (CSCA/SAT/ACT/A-Level/AP/IB), Olympiad awards.",
+        "value": null
+      },
+      "url": "https://international.join-tsinghua.edu.cn/Admission1/Application_Procedures.htm",
+      "quote": "Admission decisions are made based on a holistic evaluation of academic performance, language proficiency, supporting materials, and the results of the Comprehensive Assessment.",
+      "date": "2026-10-17",
+      "how_found": "Admission > Application Procedures, section 3 Admission Decision and Offer; Eligibility page section 3 lists academic evidence without thresholds.",
+      "notes": "Eligibility only asks for 'outstanding academic performance'. FAQ says CSCA scores are not required (stated for the 2026 intake). Divisions page: Computer Science requires high school Physics plus a strong foundation in mathematics and English."
+    },
+    "deadline": {
+      "status": "known",
+      "value": "2027-02-28",
+      "url": "https://international.join-tsinghua.edu.cn/Admission1/Schedule.htm",
+      "quote": "Online application (Beijing Time): 8:00 AM November 21, 2026—5:00 PM February 28, 2027 The Second Round result will be issued by: Early May , 2027",
+      "date": "2026-10-17",
+      "how_found": "Admission > Schedule page (2027 cycle published).",
+      "notes": "Final deadline (second round) 2027-02-28 17:00 Beijing time. Earlier first round: 8:00 AM September 30, 2026 - 5:00 PM November 20, 2026 (results January 2027). Chinese-English programmes may apply in either round. Comprehensive Assessment dates announced later."
+    },
+    "tuition": {
+      "status": "known",
+      "value": {
+        "amount": 30000,
+        "currency": "CNY",
+        "period": "year",
+        "academic_year": "not stated on page (published on the 2027-intake admissions site; assumed applicable to 2027/28 entry)",
+        "population": "international"
+      },
+      "url": "https://international.join-tsinghua.edu.cn/Admission1/Fees.htm",
+      "quote": "4. Computer Science 5. Automation",
+      "date": "2026-10-17",
+      "how_found": "Admission > Fees page, Chinese-English Taught Programs group whose tuition is listed as '30,000.00 / Per Year'.",
+      "notes": "The fees table groups items 1-14 (incl. '4. Computer Science') followed by '30,000.00 / Per Year' (RMB). The page does not name an academic year; it sits alongside 2027-dated Schedule/Eligibility pages. Other costs: application fee RMB 800 (non-refundable), insurance RMB 800/year, accommodation separate."
+    },
+    "scholarship_exists": {
+      "status": "known",
+      "value": {
+        "name": "Tsinghua University International Undergraduate Freshmen Scholarship"
+      },
+      "url": "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm",
+      "quote": "Outstanding international freshmen who apply for and are awarded the scholarship through the application system will receive financial support for their first academic year, including full-tuition, half-tuition, and partial-tuition scholarships.",
+      "date": "2026-10-17",
+      "how_found": "Admission > Freshmen Scholarships page, section 2.",
+      "notes": "Covers first academic year only (full/half/partial tuition). Page states 'In 2026, approximately 45% of international undergraduate freshmen were awarded this scholarship.' Applied for via the application system. Chinese Government Scholarship (CSC, via embassy, Type A) also listed but is not university-run."
+    },
+    "scholarship_international": {
+      "status": "known",
+      "value": true,
+      "url": "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm",
+      "quote": "In 2026, approximately 45% of international undergraduate freshmen were awarded this scholarship.",
+      "date": "2026-10-17",
+      "how_found": "Same Freshmen Scholarships page.",
+      "notes": "The scholarship is specifically for international undergraduate freshmen."
+    }
+  },
+  "access_notes": [
+    "Admissions site is international.join-tsinghua.edu.cn (Tsinghua Undergraduate Admissions; join-tsinghua.edu.cn is Tsinghua's official admissions domain, linked to www.tsinghua.edu.cn) - pages are static HTML, fetched without issue.",
+    "Fees page contains no academic-year label; tuition year inferred only from site context.",
+    "Raw HTML splits some words with spans (e.g. 'Freshm e n'), so quotes were chosen from contiguous text and verified against tag-stripped page text.",
+    "Not read: PDFs (List.pdf, nationality eligibility PDFs), cs.tsinghua.edu.cn department page, apply.join-tsinghua.edu.cn application system (login)."
+  ],
+  "pages_read": [
+    "https://international.join-tsinghua.edu.cn/Admission1/Schedule.htm",
+    "https://international.join-tsinghua.edu.cn/index.htm",
+    "https://international.join-tsinghua.edu.cn/Admission1/Eligibility.htm",
+    "https://international.join-tsinghua.edu.cn/Admission1/Fees.htm",
+    "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm",
+    "https://international.join-tsinghua.edu.cn/Admission1/Undergraduate_Programs_Overview.htm",
+    "https://international.join-tsinghua.edu.cn/Admission1/Application_Procedures.htm",
+    "https://international.join-tsinghua.edu.cn/Admission1/FAQ.htm",
+    "https://international.join-tsinghua.edu.cn/Divisions1.htm"
+  ],
+  "searches": [
+    "Tsinghua University international undergraduate admission 2026 application deadline site:tsinghua.edu.cn"
+  ]
+}

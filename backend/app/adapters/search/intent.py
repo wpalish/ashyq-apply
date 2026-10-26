@@ -44,6 +44,86 @@ DEFAULT_QUERY_BUDGET = 6
 SHARED_QUERY_BUDGET = True
 #: Queries topic search leaves for the scholarship search that runs after it.
 SCHOLARSHIP_QUERY_RESERVE = 1
+#: Plan rule QB-1 (evidence analysis 2026-10-17 §0 #1, §4 rank 1), on since
+#: paired runs 39080847253 / 39080850234 / 39080851464 (QB-1 + QB-1b + FS-1:
+#: Uppsala IELTS overall and subscores, Auckland IELTS overall stable gains,
+#: 0 stable losses on cohort, dev2 and dev3); owner delegation 2026-10-17.
+#: False turns it off. Programme discovery sent all six query families and
+#: stopped only on HTTP 429, so under BL-1 topic search was left ``6 − 6 − 1``
+#: queries and never ran, and the scholarship search was refused the same way:
+#: on a site with no seeds nothing else can reach a university-level
+#: admissions, fee or award page (every dev2 trace: ``search_calls == 6``; NTU,
+#: whose slots were full before search, ran three topic queries and read the
+#: general admission requirements). On: single-field discovery sends the first
+#: DISCOVERY_FIRST_PASS_QUERIES families, reads and confirms their candidates,
+#: and sends the remaining families only when no programme page is confirmed
+#: by then. A confirmed page leaves the unsent queries in the shared budget for
+#: topic search and the award search. Never more than DEFAULT_QUERY_BUDGET in
+#: all; the confirm predicate is unchanged. The trace records
+#: ``discovery_query_passes``. The benchmark harness flips it per capture
+#: (``--discovery-query-reserve``).
+DISCOVERY_QUERY_RESERVE = True
+#: QB-1: query families the first discovery pass sends.
+DISCOVERY_FIRST_PASS_QUERIES = 3
+#: Plan rule QA-1 (discovery analysis 2026-10-17 §0 #3, §1.2), off until a paired
+#: run passes. The operator families quoted the applicant's own words, which a
+#: neural index reads for meaning but a keyword engine matches literally: an
+#: English programme page titled "Informatics" that never says "computer
+#: science" was missed by Serper 4/4 where Exa found it 4/4. On: the
+#: field_and_degree, programmes and undergraduate families name the field as
+#: an OR-group of the ontology's *strong* aliases — ``("computer science" OR
+#: "computing science" OR computing OR informatics)`` — never a related
+#: concept, so the page-subject confirm (which accepts the same aliases) still
+#: decides. natural_language stays unquoted and in the applicant's words; the
+#: number of queries and the shared budget (BL-1) are unchanged. Serper also
+#: stops appending a second, identical ``site:``. The benchmark harness flips
+#: it per capture (``--alias-queries``).
+ALIAS_QUERIES = False
+#: Plan v3 rule R5 (LQ-1, stage 3; ``discovery-v3-plan.md``), off until its
+#: paired runs and a dev4 run pass (16-Q7). Every discovery query was English,
+#: and Serper was never told a language, so six development programme pages
+#: published only in the institution's language were never returned (ticket
+#: 07). M5's probe (run 39126325681): ``site:{domain} "{alias}" {bachelor
+#: word}`` with Serper ``hl``/``gl`` put the gold page in the top 10 on 5 of 6
+#: local-language cases, today's ``field_and_degree`` on 1. On: for an
+#: institution whose country (``DiscoveryIntent.institution_country``, the
+#: institution's catalogue row — never the applicant) publishes in a language
+#: other than English, and when the ontology has the field's alias in that
+#: language and R1's table a bachelor's word for it, a ``local_language``
+#: family takes the third first-pass slot and is sent with ``hl``/``gl`` of
+#: that language and country; ``programmes`` moves to the reserve ahead of
+#: ``courses`` and ``admissions`` is dropped, so six families stay six (07 Q3).
+#: The first language of ``languages.json`` that has both words is used, one
+#: family per institution. An institution in an English-speaking country, or
+#: with no alias or degree word, keeps today's plan byte for byte. The
+#: benchmark harness flips it per capture (``--local-language-queries``).
+LOCAL_LANGUAGE_QUERIES = (
+    True  # on: runs 39127583646 / 585479 / 587124 / 588639 (uba, iitd programme pages; 0 losses)
+)
+#: Plan rule LQ-2 (LQ-2a; ``LOCAL_LANGUAGE_LOCO_2026-10-20.md`` §5), off until a
+#: search key makes it measurable (regime C: a new query text is a recorded-store
+#: miss). R5 sends one alias per language, the first in the ontology, and that
+#: alias reaches the title shape it was written from and misses its neighbours:
+#: Spanish carries uba's plural «ciencias de la computación», puc's own title is
+#: singular and tec's names neither. On, the one ``local_language`` query takes
+#: its subject words from the site before the bundled lexicon:
+#: (1) :attr:`DiscoveryIntent.local_phrase`, the text of a homepage or
+#: catalogue link the navigation read classified as a programme listing or page,
+#: in the page's ``<html lang>``, naming a localized alias's head — rendered as
+#: one quoted phrase in place of the alias (the bachelor word follows unless the
+#: phrase already holds it);
+#: (2) else :attr:`DiscoveryIntent.native_name`, the seed row's native name, as
+#: a second quoted phrase beside today's alias;
+#: (3) else today's words, byte for byte.
+#: Every phrase passes :func:`local_query_phrase` (at most
+#: LOCAL_PHRASE_MAX_WORDS words, no digit, no personal name, nothing
+#: :func:`_reject_applicant_data` refuses). Still one query of six, the same
+#: first-pass slot and the same ``hl``/``gl``. The benchmark harness flips it
+#: per capture (``--local-query-from-evidence``). False changes nothing.
+LOCAL_QUERY_FROM_PAGE_EVIDENCE = False
+#: LQ-2: the most words a page phrase may carry; a longer link text is refused,
+#: not cut (a card's run-on description is not a programme's name).
+LOCAL_PHRASE_MAX_WORDS = 8
 
 #: Population markers that may appear in a query, and only for a country's
 #: public requirements page. They describe a published policy audience, not
@@ -109,6 +189,18 @@ class DiscoveryIntent:
     #: ``international`` or a country name, and only for a public
     #: requirements page. See :data:`ALLOWED_POPULATION_MARKERS`.
     population_marker: str = ""
+    #: R5: the country the *institution* is in, from its catalogue or registry
+    #: row — never the applicant's citizenship, residence or school country.
+    #: Read only by :data:`LOCAL_LANGUAGE_QUERIES`, through :attr:`languages`.
+    institution_country: str = ""
+    #: LQ-2 (:data:`LOCAL_QUERY_FROM_PAGE_EVIDENCE`): the institution's own link
+    #: text naming the field (a programme or listing link on its homepage or
+    #: catalogue), already passed through :func:`local_query_phrase`. Never the
+    #: applicant's words; empty while the rule is off.
+    local_phrase: str = ""
+    #: LQ-2: the seed row's native name of the institution, checked the same
+    #: way; empty while the rule is off or the row carries none.
+    native_name: str = ""
 
     def __post_init__(self) -> None:
         if not self.institution.strip():
@@ -117,7 +209,15 @@ class DiscoveryIntent:
             raise ValueError("A discovery intent needs the institution's domain")
         if not self.field.strip():
             raise ValueError("A discovery intent needs a field of study")
-        for name in ("institution", "domain", "field", "population_marker"):
+        for name in (
+            "institution",
+            "domain",
+            "field",
+            "population_marker",
+            "institution_country",
+            "local_phrase",
+            "native_name",
+        ):
             _reject_applicant_data(name, getattr(self, name))
         if self.population_marker and self.population_marker not in ALLOWED_POPULATION_MARKERS:
             raise QueryPrivacyError(
@@ -168,6 +268,13 @@ class DiscoveryIntent:
     def without_intake(self) -> DiscoveryIntent:
         return replace(self, intake_year=None)
 
+    @property
+    def languages(self) -> tuple[str, ...]:
+        """R5: the non-English languages the institution's country publishes in."""
+        from app.adapters.search.ontology import country_languages
+
+        return tuple(code for code in country_languages(self.institution_country) if code != "en")
+
 
 @dataclass(frozen=True, slots=True)
 class DiscoveryQuery:
@@ -175,10 +282,166 @@ class DiscoveryQuery:
 
     The family travels with the text so telemetry can say *which kind* of
     query finds programme pages, which is the question V2-13 has to answer.
+    ``hl``/``gl`` (R5 only) are the language and country a provider that takes
+    them is told; empty for every other family.
     """
 
     text: str
     family: str
+    hl: str = ""
+    gl: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class LocalQueryTerms:
+    """R5: the institution's own-language words for one ``local_language`` query.
+
+    Every value is institution data or bundled vocabulary: ``language`` from
+    ``languages.json`` for the institution's country, ``alias`` from the
+    ontology's ``localized_aliases``, ``degree_word`` from R1's table
+    (``page_classifier.local_bachelor_word``), ``hl``/``gl`` derived from the
+    language and the country.
+    """
+
+    language: str
+    alias: str
+    degree_word: str
+    hl: str
+    gl: str
+    #: LQ-2 only: the site's own words, sent as one quoted phrase.
+    phrase: str | None = None
+    #: LQ-2 only: where :attr:`phrase` came from, ``"link"`` (it replaces the
+    #: alias) or ``"native_name"`` (it is sent beside the alias).
+    phrase_source: str = ""
+
+
+#: Google's ``hl`` for a language whose primary subtag it does not take as is.
+_TRADITIONAL_CHINESE_REGIONS = frozenset({"tw", "hk", "mo"})
+
+
+def _google_hl(language: str, region: str) -> str:
+    if language == "zh":
+        return "zh-tw" if region in _TRADITIONAL_CHINESE_REGIONS else "zh-cn"
+    if language in {"nb", "nn"}:
+        return "no"
+    return language
+
+
+def local_language_terms(intent: DiscoveryIntent) -> LocalQueryTerms | None:
+    """R5: the local-language query words for ``intent``, or ``None`` for no family.
+
+    ``None`` when the intent is not for a bachelor's (R1's table gives the
+    family a bachelor's word only), when the institution's country publishes
+    in English only or is unknown, or when no language of that country has
+    both an ontology alias of the field and a degree word. The first language
+    of ``languages.json`` (most common first) that has both is used.
+    """
+    if intent.degree is not DegreeLevel.BACHELOR:
+        return None
+    languages = intent.languages
+    if not languages:
+        return None
+    from app.adapters import page_classifier
+    from app.adapters.search.ontology import country_region, localized_aliases_in
+
+    region = country_region(intent.institution_country)
+    if not region:
+        return None
+    flags = page_classifier.localized_alias_flags()
+    for language in languages:
+        aliases = localized_aliases_in(intent.field, language, flags=flags)
+        word = page_classifier.local_bachelor_word(language)
+        if aliases and word:
+            terms = LocalQueryTerms(
+                language, aliases[0], word, _google_hl(language, region), region
+            )
+            return _with_page_phrase(terms, intent) if LOCAL_QUERY_FROM_PAGE_EVIDENCE else terms
+    return None
+
+
+def _with_page_phrase(terms: LocalQueryTerms, intent: DiscoveryIntent) -> LocalQueryTerms:
+    """LQ-2: the site's link phrase, else the native name, else today's terms."""
+    link = local_query_phrase(intent.local_phrase)
+    if link is not None:
+        return replace(terms, phrase=link, phrase_source="link")
+    native = local_query_phrase(intent.native_name)
+    if native is not None:
+        return replace(terms, phrase=native, phrase_source="native_name")
+    return terms
+
+
+#: LQ-2: titles that put a person's name in a link text. A link naming a
+#: professor or a dean is a staff page, and a query never carries a name.
+_PERSONAL_TITLES = frozenset(
+    {
+        "prof",
+        "professor",
+        "profesor",
+        "profesora",
+        "professeur",
+        "dr",
+        "dra",
+        "mr",
+        "mrs",
+        "ms",
+        "mme",
+        "sr",
+        "sra",
+        "herr",
+        "frau",
+        "dott",
+        "dottssa",
+        "doc",
+        "проф",
+        "профессор",
+        "академик",
+        "教授",
+        "교수",
+    }
+)
+#: LQ-2: quote marks a phrase loses before it is quoted again. Every double
+#: quote a search engine may fold to ``"`` (fullwidth ＂, the reversed and low
+#: ‟ „, the CJK 〝〞〟, the double primes ″ ‶), not only the common ones: one left
+#: in a link text would close the phrase early and put the rest of the text,
+#: operators included, outside it (security review 2026-10-22, SR2-04).
+_PHRASE_QUOTES = re.compile('["“”„‟«»＂〝〞〟″‶]')
+#: LQ-2: separators a link text may carry around its name. Brackets and full
+#: stops stay: «Informatik (B.Sc.)» is the name as the site writes it.
+_PHRASE_EDGE = " \t-–—|·•:;,"
+
+
+def local_query_phrase(text: str) -> str | None:
+    """LQ-2: ``text`` as a query phrase, or ``None`` when it may not be one.
+
+    Refused: an empty text, more than LOCAL_PHRASE_MAX_WORDS words, any digit
+    (a code, a year or a score), a personal title (a name follows it), an
+    address or a URL, and anything :func:`_reject_applicant_data` refuses. The
+    text is the institution's own; the checks keep it a programme's name and
+    nothing that could be a person's.
+    """
+    phrase = re.sub(r"\s+", " ", _PHRASE_QUOTES.sub(" ", text or "")).strip(_PHRASE_EDGE)
+    if not phrase:
+        return None
+    words = phrase.split(" ")
+    if len(words) > LOCAL_PHRASE_MAX_WORDS:
+        return None
+    if any(ch.isdigit() for ch in phrase):
+        return None
+    folded = phrase.casefold()
+    if "@" in folded or "http" in folded or "www." in folded:
+        return None
+    if any(re.sub(r"[.\-]", "", word.casefold()) in _PERSONAL_TITLES for word in words):
+        return None
+    try:
+        _reject_applicant_data("local_phrase", phrase)
+    except QueryPrivacyError:
+        return None
+    return phrase
+
+
+def _quoted(term: str) -> str:
+    """A multi-word term as a phrase; one word as it is (M5's shape)."""
+    return f'"{term}"' if " " in term else term
 
 
 def _degree_in_words(degree: DegreeLevel) -> str:
@@ -202,6 +465,29 @@ def _degree_aliases(degree: DegreeLevel) -> str:
         DegreeLevel.MASTER: "master",
         DegreeLevel.PHD: "phd",
     }[degree]
+
+
+def _field_terms(field: str) -> str:
+    """The field as a query term: quoted, or (QA-1) an OR-group of its strong aliases.
+
+    Aliases come from the bundled ontology, never from the applicant, so the
+    group carries nothing the intent did not already validate.
+    """
+    quoted = f'"{field}"'
+    if not ALIAS_QUERIES:
+        return quoted
+    from app.adapters.search.ontology import canonical_field, load_ontology
+
+    key = canonical_field(field)
+    if key is None:
+        return quoted
+    names = [field]
+    for alias in load_ontology().fields[key]["strong_aliases"]:
+        if alias.casefold() not in (name.casefold() for name in names):
+            names.append(alias)
+    if len(names) == 1:
+        return quoted
+    return "(" + " OR ".join(f'"{n}"' if " " in n else n for n in names) + ")"
 
 
 def queries_for(
@@ -229,8 +515,10 @@ def queries_for(
     site = f"site:{intent.domain}" if site_prefix else intent.institution
     degree = _degree_aliases(intent.degree)
     year = f" {intent.intake_year}" if intent.intake_year else ""
+    terms = _field_terms(intent.field)
+    local = local_language_terms(intent) if LOCAL_LANGUAGE_QUERIES else None
     candidates: list[DiscoveryQuery] = [
-        DiscoveryQuery(f'{site} "{intent.field}" "{degree}"{year}', "field_and_degree"),
+        DiscoveryQuery(f'{site} {terms} "{degree}"{year}', "field_and_degree"),
         # Phrased the way a person would ask, with no search operators and no
         # quoting. The other families are five variations of one shape —
         # ``site:`` plus quoted terms — which is keyword syntax; a neural index
@@ -242,11 +530,30 @@ def queries_for(
             f"{intent.field} programme{year}",
             "natural_language",
         ),
-        DiscoveryQuery(f'{site} programmes "{intent.field}"{year}', "programmes"),
-        DiscoveryQuery(f'{site} courses "{intent.field}"{year}', "courses"),
-        DiscoveryQuery(f'{site} undergraduate "{intent.field}"', "undergraduate"),
-        DiscoveryQuery(f"{site} admissions {degree}", "admissions"),
     ]
+    if local is not None:
+        # R5 (07 Q3): the third first-pass slot, in the site's language. No
+        # intake year: M5 measured the shape without one.
+        text = f"{site} {_quoted(local.alias)} {_quoted(local.degree_word)}"
+        if local.phrase and local.phrase_source == "link":
+            # LQ-2: the site's own name for the programme replaces the alias.
+            text = f'{site} "{local.phrase}"'
+            if local.degree_word.casefold() not in local.phrase.casefold():
+                text += f" {_quoted(local.degree_word)}"
+        elif local.phrase:
+            # LQ-2: the institution's native name, beside today's words.
+            text = f'{site} "{local.phrase}" {_quoted(local.alias)} {_quoted(local.degree_word)}'
+        _reject_applicant_data("local_language", text)
+        candidates.append(DiscoveryQuery(text, "local_language", hl=local.hl, gl=local.gl))
+    candidates += [
+        DiscoveryQuery(f"{site} programmes {terms}{year}", "programmes"),
+        DiscoveryQuery(f'{site} courses "{intent.field}"{year}', "courses"),
+        DiscoveryQuery(f"{site} undergraduate {terms}", "undergraduate"),
+    ]
+    if local is None:
+        # R5 drops it for a local-language site: it never confirmed a page in
+        # the development captures, and topic search does its job better.
+        candidates.append(DiscoveryQuery(f"{site} admissions {degree}", "admissions"))
     if intent.population_marker:
         candidates.append(
             DiscoveryQuery(

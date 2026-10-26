@@ -1,0 +1,63 @@
+{
+ "case": "qs2027-042",
+ "university": "Yonsei University",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "Korean (not stated on the programme page; inferred from the international track's Korean-language programme and the TOPIK 3 requirement to declare a major)",
+  "title": "Computer Science and Engineering (컴퓨터과학과), College of Computing",
+  "page_url": "https://cs.yonsei.ac.kr/csai/faculty/computerScience.do",
+  "language_twins": [
+   {
+    "lang": "en",
+    "url": "https://cs.yonsei.ac.kr/csai_en/faculty/computerScience.do",
+    "title": "Computer Science and Engineering"
+   }
+  ],
+  "degree": "Bachelor's (Department of Computer Science and Engineering, College of Computing, Seoul campus); from the 2027 academic year admitted separately by department (until 2026 via the School of Computing)",
+  "how_found": "Search on yonsei.ac.kr -> cs.yonsei.ac.kr (첨단컴퓨팅학부 / School of Computing) -> 학과소개 -> 컴퓨터과학과; English twin via the site's 'ENGLISH' link. International admission guide for the 2027 academic year (spring): www2.yonsei.ac.kr/entrance/2027/intl/2027_3_docu/2027_3_intl_plan_eng.pdf ('Restructuring of Departments in the College of Computing - Separate Admission by Department in the School of computing': 'Computer Science & Engineering' from 2027 AY).",
+  "notes": "DOMAIN: list row has official_domain null; official domain is yonsei.ac.kr. The 2027 international guide PDF is AES-encrypted: the app's pdf_to_text (pypdf without the cryptography package) returns empty text, so quotes from it cannot be verified by verify_evidence; read in the container with PyMuPDF. International freshmen spend the first year in the Global Basic Education Division (GLC) at the International Campus; 'Global Basic Education Division students must achieve TOPIK level 3 or higher to declare one's major'. www.yonsei.ac.kr/en_sc/ returned 404; admission.yonsei.ac.kr main page loads (Korean)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "No test minimum published. 2027 AY guide (international track, all majors except medicine/dentistry/nursing/pharmacy), language requirement 'Choose One': 'Official documentation proving completion of high school courses conducted in Korean or English', KLI certificate, 'Standardized test result indicating proficiency in Korean or English', 'Korean or English language proficiency test score' - no score stated. Korean (TOPIK 3) is required later to declare a major."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade threshold published in the international guide; document-based evaluation."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-09-17",
+   "url": "https://www2.yonsei.ac.kr/entrance/2027/intl/2027_3_docu/2027_3_intl_plan_eng.pdf",
+   "quote": "2026. 9. 1.(Tue) 10:00 ~ 9. 17.(Thu) 17:00",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "population": "international",
+   "notes": "International Student Track, 2027 academic year, SPRING (March 2027) entry; 'All dates and times listed in this guideline are based on Korea Standard Time (KST)'. Already past on the research date. The Fall 2027 round is not yet published (the Fall 2026 round ran '2026. 3. 10.(Tue) 10:00 ~ 3. 26.(Thu) 17:00'). Quote is from an AES-encrypted PDF the app extractor cannot read: expect quote_found false."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 6218000,
+    "currency": "KRW",
+    "period": "semester (1st semester; semesters 2-8: 6,004,000)",
+    "academic_year": "2026",
+    "population": "international undergraduates, College of Computing / School of Computing"
+   },
+   "url": "https://www.yonsei.ac.kr/sites/en_sc/down/2026_fee1.pdf",
+   "quote": "School of Computing 1 6,218,000",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Title '2026 Undergraduate Tuition Fee for International Students (KRW)'; per-semester figures (semester 1 / semesters 2-8), not multiplied. Caveat on the same sheet: '* International freshmen entering Yonsei University will study at the Global Basic Education Division affiliated with Global Leaders College(GLC) for 1 year' (GLC: 1 7,388,000; 2 - 8 7,174,000), and the 2027 guide says GBED students 'pay the division's tuition fees' before declaring a major. 2027 fees not published."
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "No award named for incoming international bachelor students in the pages read; the guides only list 'Scholarships Office of Student Affairs & Services +82-2-2123-8191 ~2'. The 2027 guide's scholarship list ('Academic Excellence Scholarships ...') belongs to a newly established department (Advanced Pharmaceutical Sciences), not CS."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "Not established (see scholarship_exists)."
+  }
+ }
+}

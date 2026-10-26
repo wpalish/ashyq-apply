@@ -1,0 +1,63 @@
+{
+ "case": "qs2027-008",
+ "university": "ETH Zurich",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "ethz"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/language-requirements.html",
+   "quote": "The German C1 language certificate must be submitted by the application deadline (=31 March) at the latest.",
+   "notes": "University-wide for all Bachelor's programmes: 'The main teaching language during Bachelor's degree studies is German.' No English test applies; German C1 certificate (list of recognised certificates and waivers on the same page) by 31 March.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade minimum published by ETH: admission with a non-Swiss certificate is country- and certificate-specific (without exam, reduced or comprehensive entrance examination), per swissuniversities and the ETH country list PDF (https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere-qual/ETH-ZulassungsbedingungenHS2026_EN.pdf, autumn 2026). Admission-prerequisites page: 'We can only ascertain whether you need to sit an ETH entrance examination (reduced or comprehensive) after receiving your complete application'."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-03-31",
+   "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+   "quote": "Application period for applicants with non-Swiss upper secondary school-leaving certificates: from 1 December to 31 March, 23:59 Central European Time",
+   "population": "international",
+   "notes": "Year not printed; Bachelor studies start only in the Autumn Semester, so the 1 December 2026 - 31 March 2027 window is for autumn 2027 entry. German language certificate also due 31 March. One Bachelor programme per application.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 2190,
+    "currency": "CHF",
+    "period": "semester",
+    "academic_year": null,
+    "population": "foreign students who do not meet the simple-fee criteria (fee group 2)"
+   },
+   "url": "https://ethz.ch/students/en/studies/financial/tuition-fees.html",
+   "quote": "Threefold tuition fee: CHF 2190 / semester",
+   "notes": "Regulation in effect since autumn semester 2025: simple fee CHF 730/semester for Swiss/Liechtenstein citizens and those resident in CH/FL when obtaining their entrance qualification, and certain EU/EFTA permit holders; all others pay the threefold fee. Study fees 'include the tuition and the semester fees'. Not multiplied to a year.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

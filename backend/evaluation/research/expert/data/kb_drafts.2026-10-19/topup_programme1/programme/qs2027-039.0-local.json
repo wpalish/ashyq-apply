@@ -1,0 +1,21 @@
+{
+ "case": "qs2027-039",
+ "seed_id": "qs2027-039",
+ "note": "kb topup_programme1 qs2027-039.0-local: programme-page item only (dev5 format); the quote stands in the 'title' slot so verify_evidence checks it word for word. Re-read on 2026-10-19 with the production Fetcher (normal user agent, robots.txt honoured, sandbox HTTPS proxy, TLS verified); no UA spoofing, no WAF bypass, no robots override. FOUND (flag for owner): UTokyo has no undergraduate department named 'Computer Science'. The Faculty of Science's Department of Information Science (情報科学科) is the university's undergraduate computer science programme: its own English site is titled 'Department of Computer Science, The University of Tokyo' (HTML <title> of every /en/ page) and its curriculum 'focuses on basic courses in computer science'. 'Information Science' is not literally in the owner's CS list (Computer Science / Informatics / Informatik / CSE); recorded as the programme because the department names itself Computer Science in English. If the owner rules otherwise, change the role to 'related'. Entry is not direct: students are admitted to the College of Arts and Sciences (Komaba, e.g. Natural Sciences I) and choose the department in the second year (late specialisation); the English-taught PEAK programme has no computer science course. Japanese-taught. ",
+ "programme": {
+  "url": "https://www.is.s.u-tokyo.ac.jp/en/about/",
+  "title": "The curriculum in the Department of Information Science focuses on basic courses in computer science"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "known",
+ "programme_urls": [
+  "https://www.is.s.u-tokyo.ac.jp/en/about/"
+ ],
+ "degree": "Bachelor of Science (Faculty of Science), 4 years; department courses from the 4th semester (Komaba) to year 4, graduation research in year 4",
+ "teaching_language": "Japanese (department pages primarily Japanese; English pages are summaries) - not separately evidenced",
+ "population_scope": "international (entry via the College of Arts and Sciences, then department allocation in year 2)",
+ "twins": null,
+ "twin_mechanism": "Japanese site https://www.is.s.u-tokyo.ac.jp/ (top page, Japanese only); no one-to-one twin of /en/about/ established",
+ "how_found": "Web search restricted to u-tokyo.ac.jp -> is.s.u-tokyo.ac.jp/en/about/ ('About Dept. of IS'); confirmed via the Faculty of Science's Undergraduate Departments list (s.u-tokyo.ac.jp/en/applicants/) and its RIGAKU-RU department page."
+}

@@ -1,0 +1,100 @@
+{
+  "case": "ucph",
+  "university": "University of Copenhagen (Københavns Universitet, UCPH)",
+  "researched_on": "2026-10-17",
+  "programme": {
+    "url": "https://www.ku.dk/studier/bachelor/datalogi",
+    "title": "Bachelor i datalogi (English page: Bachelor of Science (BSc) in Computer Science)",
+    "teaching_language": "Danish only. UCPH says all of its bachelor's programmes are taught in Danish; there is no English-taught version.",
+    "campus": "Nørre Campus, Universitetsparken 5, 2100 København Ø",
+    "how_found": "A site:ku.dk search returned the English stub page ku.dk/studies/bachelor/computer-science. That page links to the Danish programme page ku.dk/studier/bachelor/datalogi, which has the requirements, the campus and the 2026 admission figures.",
+    "teaching_language_quote": "As all bachelor's degree programmes at UCPH are taught in Danish, the programme information is in Danish only.",
+    "teaching_language_url": "https://www.ku.dk/studies/bachelor/computer-science",
+    "campus_quote": "Her ligger uddannelsen Nørre Campus, Universitetsparken 5, 2100 København Ø.",
+    "campus_url": "https://www.ku.dk/studier/bachelor/datalogi"
+  },
+  "answers": {
+    "english": {
+      "status": "known",
+      "value": {
+        "danish_level": "Studieprøven i dansk som andetsprog, at least grade 02 in each of the 3 examination disciplines (or Danish A by a supplementary course)"
+      },
+      "url": "https://www.ku.dk/studies/admission/bachelor",
+      "quote": "The test consists of an oral examination, a listening, reading and a written examination and must be passed with at least grade 02 in each of all the 3 examination disciplines.",
+      "how_found": "Found in the 'How to obtain Danish language qualifications' section of the UCPH bachelor admission requirements page, linked from the programme page.",
+      "notes": "There is NO English test route. The language requirement is Danish: the 'highest level in Danish or documentation for academic language skills in Danish', normally shown by passing Studieprøven i dansk som andetsprog. UCPH says the Studieprøven route is only open if 'during your secondary education [you] have studied your native language at the highest level'. Datalogi also has the specific subject requirements Dansk A, Engelsk B and Matematik A ('Desuden skal du have bestået disse fag: Dansk A Engelsk B Matematik A', on the Danish programme page). UCPH converts a foreign diploma's subjects to Danish levels. No minimum IELTS/TOEFL score is published; English counts only as the Engelsk B subject level."
+    },
+    "gpa": {
+      "status": "known",
+      "value": {
+        "description": "Applicants with a non-EU/EEA diploma (Kazakhstan) can only apply in quota 2. UCPH does not convert their grades, so no GPA threshold applies. They must pass the KU quota 2-test (written, in Danish: language and mathematical-logical tasks, April). The best scorers are invited to an interview (Danish, Norwegian or Swedish). Admission is an overall assessment of the test and the interview. The 6.0 GPA threshold on the programme page applies to quota 1 only.",
+        "value": "Pass the KU quota 2-test, then be selected at interview; no numeric cut-off published"
+      },
+      "url": "https://www.ku.dk/studies/admission/bachelor/quota-2",
+      "quote": "Applicants that have not participated and passed the quota exam will not be considered for admission.",
+      "how_found": "Found on the non-EU/EEA bachelor admission page (no GPA conversion, quota 2 only), then the quota 2 page, which is linked from it.",
+      "notes": "Supporting quotes. Non-EU page: 'For exams from outside EU/EEA countries and others, it is not possible to calculate the grade point average.' Quota 2 page: 'Then we will make an overall assessment based on your test and interview.' Datalogi page (Danish): 'En adgangsgivende eksamen med mindst 6,0 i gennemsnit eller En adgangsgivende eksamen med en bestået KU kvote 2-prøve'. 2026 figures on the datalogi page: 140 admitted, 465 applications (213 in quota 2), 90%/10% quota 1/quota 2 split. General eligibility of a Kazakh NIS grade-12 diploma is decided by individual assessment under the rules of the Danish Agency for Science and Higher Education. For comparable countries (e.g. Russia), UCPH's examples list the school certificate plus 1 year of higher education or supplementary A/B-level courses. Kazakhstan is not listed on the UCPH page, so its status is unverified here."
+    },
+    "deadline": {
+      "status": "known",
+      "value": "2027-03-15",
+      "url": "https://www.ku.dk/studier/optagelse/bachelor-frister-og-vigtige-datoer",
+      "quote": "15. marts kl. 12 Ansøgningsfrist for kvote 2 Frist for at sende din ansøgning i kvote 2 på optagelse.dk .",
+      "how_found": "Found on the UCPH bachelor deadlines page (Danish), linked from 'Frister og vigtige datoer'. Cross-checked with the English non-EU/EEA page: 'The application deadline is 15 March at 12:00 Midday CET.'",
+      "notes": "The deadline is 12:00 noon CET. The page gives no year, but the same page refers to 'Vi vurderer ansøgninger med henblik på optagelse i 2027' (preliminary assessment, 2 September to 22 October). It is therefore read as the 2027 cycle; the date 2027-03-15 is inferred from a recurring date with no year printed. The quota 2-test enrolment deadline is 'marts (dato følger)' and the test is in April (date to follow). Requirements must be documented by 5 July at 12:00, and results come on 28 July. Applicants without MitID must email a signed signature page to optagelse@ku.dk by 15 March at 12:00."
+    },
+    "tuition": {
+      "status": "known",
+      "value": {
+        "amount": 130000,
+        "currency": "DKK",
+        "period": "per year (annual; charged per semester)",
+        "academic_year": "Not stated on the page; this is the current published fee as read on 2026-10-17. No 2027/28 figure is published.",
+        "population": "citizens outside the EU, EEA or Switzerland (non-EU/EEA)"
+      },
+      "url": "https://www.ku.dk/studies/admission/application-deposit-fee-and-tuition-fees",
+      "quote": "The annual tuition fee for citizens outside the EU, EEA or Switzerland is: DKK 130,000",
+      "how_found": "Found on the UCPH 'Application deposit fee and tuition fees' page (reached by redirect from /studies/masters/application-and-admission/tuition-fees). Its fee selector has Bachelor and then Computer Science. The figure sits in the page's inline script data (the BA array, entry 'Computer Science').",
+      "notes": "The fee is displayed by a JavaScript dropdown, and the quote comes from the inline script data. In the raw HTML the sentence and 'DKK 130,000' are separated by <strong><br/> tags. Exemption applies with a permanent residence permit or certain temporary residence permits in Denmark. The application deposit fee (DKK 1,120) on the same page applies to master's applications."
+    },
+    "scholarship_exists": {
+      "status": "not_applicable",
+      "value": null,
+      "url": "https://www.ku.dk/studies/admission/bachelor",
+      "quote": "The University of Copenhagen does not offer financial support or scholarships to foreign students.",
+      "how_found": "Found in the 'Tuition fee, scholarships and code of conduct' section of the bachelor admission requirements page. Also checked the 'Scholarships for full degree students' page, which lists only external, country-specific (mostly postgraduate) schemes and no UCPH-run award.",
+      "notes": "The admission page refers applicants to the Danish Agency for Science and Higher Education for scholarships. Danish government scholarships, where listed, are external and not university-run."
+    },
+    "scholarship_international": {
+      "status": "known",
+      "value": false,
+      "url": "https://www.ku.dk/studies/admission/bachelor",
+      "quote": "The University of Copenhagen does not offer financial support or scholarships to foreign students.",
+      "how_found": "Same section as scholarship_exists.",
+      "notes": "There is no university-run scholarship or tuition waiver for international bachelor applicants."
+    }
+  },
+  "access_notes": [
+    "All ku.dk pages were fetched directly over HTTPS (HTTP 200). No logins or blocks.",
+    "studies.ku.dk/bachelor/admission-requirements redirects to www.ku.dk/studies/admission/bachelor; the non-EU page redirects to /studies/admission/bachelor/non-eu-eea-and-non-nordic-countries; /studies/masters/application-and-admission/tuition-fees redirects to /studies/admission/application-deposit-fee-and-tuition-fees.",
+    "The tuition fee is rendered by JavaScript from inline data in the page source (no extra request); it was read from the raw HTML.",
+    "Quota 2-test dates for the 2027 cycle are still 'date to follow'.",
+    "Kazakhstan-specific general admission rules sit on the Danish Agency for Science and Higher Education site (ufm.dk), which is not a university domain, so they were not consulted."
+  ],
+  "pages_read": [
+    "https://www.ku.dk/studies/bachelor/computer-science",
+    "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+    "https://www.ku.dk/studies/admission/bachelor",
+    "https://www.ku.dk/studier/bachelor/datalogi",
+    "https://www.ku.dk/studies/admission/important-dates-and-deadlines",
+    "https://www.ku.dk/studies/admission/application-deposit-fee-and-tuition-fees",
+    "https://www.ku.dk/studies/admission/bachelor/quota-2",
+    "https://www.ku.dk/studier/optagelse/frister-og-vigtige-datoer",
+    "https://www.ku.dk/studier/optagelse/bachelor/kvote-2/kvote-2-proeven",
+    "https://www.ku.dk/studier/optagelse/bachelor-frister-og-vigtige-datoer",
+    "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+  ],
+  "searches": [
+    "WebSearch (allowed_domains ku.dk): University of Copenhagen BSc Computer Science Datalogi bachelor admission international"
+  ]
+}

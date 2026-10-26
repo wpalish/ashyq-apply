@@ -84,6 +84,110 @@ def load_ontology() -> Ontology:
     return Ontology(version=raw["version"], fields=raw["fields"], degrees=raw["degrees"])
 
 
+def _settled(entries) -> list[dict]:
+    """Localized aliases every reader uses: those that carry no ``flag``.
+
+    An entry with ``"flag": "<NAME>"`` was added for one off-by-default plan
+    rule and is read only through :func:`localized_aliases` with
+    ``include_flagged=True`` while that rule is measured. Keeping it out of the
+    index, the retrieval terms and the title matcher is what makes the flag's
+    off position byte-identical; promoting the rule removes the marker.
+    """
+    return [entry for entry in entries if not entry.get("flag")]
+
+
+def localized_aliases(
+    term: str, *, include_flagged: bool = False, flags: frozenset[str] | None = None
+) -> tuple[str, ...]:
+    """The localized aliases of the concept ``term`` names, as written.
+
+    ``flags`` narrows ``include_flagged`` to the entries carrying one of those
+    flags (beside every settled entry); ``None`` keeps every flagged entry.
+    """
+    key = canonical_field(term)
+    if key is None:
+        return ()
+    entries = load_ontology().fields[key].get("localized_aliases", ())
+    if not include_flagged:
+        chosen = _settled(entries)
+    elif flags is None:
+        chosen = list(entries)
+    else:
+        chosen = [entry for entry in entries if not entry.get("flag") or entry["flag"] in flags]
+    return tuple(dict.fromkeys(entry["alias"] for entry in chosen))
+
+
+def localized_related_terms(term: str, *, flags: frozenset[str]) -> tuple[str, ...]:
+    """Local-language neighbours of the concept ``term`` names (plan v3 R1).
+
+    ``localized_related_not_equivalent`` holds the ``related_not_equivalent``
+    forms in other languages ("ingeniería informática", "bilgisayar
+    mühendisliği"): a title naming one is a neighbour, never the field. Every
+    entry carries the flag of the rule that reads it, and only entries whose
+    flag is in ``flags`` are returned, so the file can hold them while the rule
+    is off.
+    """
+    key = canonical_field(term)
+    if key is None:
+        return ()
+    entries = load_ontology().fields[key].get("localized_related_not_equivalent", ())
+    return tuple(dict.fromkeys(e["term"] for e in entries if e.get("flag") in flags))
+
+
+LANGUAGES_PATH = Path(__file__).resolve().parent / "languages.json"
+
+
+@lru_cache(maxsize=1)
+def _country_languages() -> dict[str, tuple[str, ...]]:
+    raw = json.loads(LANGUAGES_PATH.read_text(encoding="utf-8"))
+    return {_normalize(country): tuple(codes) for country, codes in raw["countries"].items()}
+
+
+def country_languages(country: str) -> tuple[str, ...]:
+    """The languages an institution in ``country`` publishes in (ISO 639-1).
+
+    Institution data only (``entry["country"]``), never an applicant
+    attribute. An unknown or English-only country gives ``()``.
+    """
+    return _country_languages().get(_normalize(country or ""), ())
+
+
+@lru_cache(maxsize=1)
+def _country_regions() -> dict[str, str]:
+    raw = json.loads(LANGUAGES_PATH.read_text(encoding="utf-8"))
+    return {_normalize(country): code for country, code in raw.get("regions", {}).items()}
+
+
+def country_region(country: str) -> str:
+    """R5: the ISO 3166-1 alpha-2 code (lowercase) of an institution's ``country``.
+
+    What Serper's ``gl`` takes. Institution data only, like
+    :func:`country_languages`; an unknown or English-only country gives ``""``.
+    """
+    return _country_regions().get(_normalize(country or ""), "")
+
+
+def localized_aliases_in(term: str, language: str, *, flags: frozenset[str]) -> tuple[str, ...]:
+    """R5: the localized aliases of ``term``'s concept in ``language``, ontology order.
+
+    Settled entries and those carrying one of ``flags`` — the set discovery's
+    identity accepts (``page_classifier.localized_alias_flags``), so a query
+    never names an alias the confirm step would refuse.
+    """
+    key = canonical_field(term)
+    if key is None:
+        return ()
+    entries = load_ontology().fields[key].get("localized_aliases", ())
+    return tuple(
+        dict.fromkeys(
+            entry["alias"]
+            for entry in entries
+            if entry.get("language") == language
+            and (not entry.get("flag") or entry["flag"] in flags)
+        )
+    )
+
+
 @lru_cache(maxsize=1)
 def _alias_index() -> dict[str, str]:
     """Every strong and localized alias to its concept key.
@@ -95,7 +199,7 @@ def _alias_index() -> dict[str, str]:
     index: dict[str, str] = {}
     for key, concept in load_ontology().fields.items():
         terms = [key.replace("_", " "), *concept["strong_aliases"]]
-        terms += [entry["alias"] for entry in concept.get("localized_aliases", ())]
+        terms += [entry["alias"] for entry in _settled(concept.get("localized_aliases", ()))]
         for term in terms:
             normalized = _normalize(term)
             first = index.setdefault(normalized, key)
@@ -200,7 +304,7 @@ def retrieval_candidates(
                 relation=Relation.LOCALIZED_ALIAS,
                 language=entry["language"],
             )
-            for entry in concept.get("localized_aliases", ())
+            for entry in _settled(concept.get("localized_aliases", ()))
         ]
     candidates += [
         RetrievalCandidate(term=related, relation=Relation.RELATED)

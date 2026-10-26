@@ -76,10 +76,36 @@ class SearchUnavailable(SearchError):
         *,
         http_status: int | None = None,
         reason: SearchFailureReason | None = None,
+        body_excerpt: str | None = None,
     ) -> None:
         super().__init__(message)
         self.http_status = http_status
         self.reason = reason
+        #: The first characters of the provider's error body, for an operator's
+        #: log only: one line, capped, with the API key masked. Never part of
+        #: ``str(self)`` or :func:`search_failure_diagnostic`, so nothing a
+        #: product page or a trace shows can carry vendor text.
+        self.body_excerpt = body_excerpt
+
+
+#: How much of a provider's error body an operator's log keeps.
+BODY_EXCERPT_CHARS = 200
+
+
+def error_body_excerpt(body: bytes | str, *, secrets: Sequence[str] = ()) -> str:
+    """A provider's error body as one capped line, every secret in it masked.
+
+    Masking happens before truncation, so a key cut in half by the cap cannot
+    leak its first half.
+    """
+    text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
+    for secret in secrets:
+        if secret:
+            text = text.replace(secret, "[redacted]")
+    text = " ".join(text.split())
+    if len(text) > BODY_EXCERPT_CHARS:
+        text = text[:BODY_EXCERPT_CHARS] + "…"
+    return text
 
 
 def search_failure_diagnostic(provider: str, error: Exception) -> str:
@@ -90,7 +116,7 @@ def search_failure_diagnostic(provider: str, error: Exception) -> str:
     """
     name = (
         provider
-        if provider in {"exa", "exa_mcp", "tavily", "brave", "serper", "fake"}
+        if provider in {"exa", "exa_mcp", "tavily", "brave", "serper", "fake", "recorded"}
         else "configured search provider"
     )
     status = error.http_status if isinstance(error, SearchUnavailable) else None
@@ -128,6 +154,55 @@ class SearchResult:
             raise ValueError(f"Rank is 1-based, got {self.rank}")
 
 
+def _check_ranked(results: tuple[SearchResult, ...], provider: str) -> None:
+    ranks = [r.rank for r in results]
+    if ranks != sorted(ranks):
+        raise ValueError("Results must be ordered by the provider's own rank")
+    if len(set(ranks)) != len(ranks):
+        raise ValueError("Two results share a rank; the provider's order is ambiguous")
+    foreign = {r.provider for r in results} - {provider}
+    if foreign:
+        raise ValueError(
+            f"Results attributed to {sorted(foreign)} in a {provider!r} response. "
+            "Fusing several providers is a separate step with its own provenance."
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class ProviderPage:
+    """SR-WIDE, the record path only: the whole page one paid request returned.
+
+    "Record wide, rank narrow": a record run asks the provider for every
+    result one request is billed for (Exa 25, Tavily 20) so the recorded-search
+    store can hold them all, while the caller still ranks only the head it
+    asked for (``SearchResponse.results``). Nothing in the pipeline reads this:
+    the capture harness writes it to the case's search log. Every result here
+    is a discovery hint like any other — never evidence, never cited.
+    """
+
+    #: Every result the provider returned, in its own rank order; the caller's
+    #: ``SearchResponse.results`` is a prefix of it.
+    results: tuple[SearchResult, ...]
+    #: How many results the request asked the provider for (its paid page).
+    requested: int
+    #: What reached the provider besides the query and domain filter, e.g.
+    #: ``(("numResults", 25), ("highlights.maxCharacters", 1000))``.
+    parameters: tuple[tuple[str, str | int | bool], ...] = ()
+    #: The request's own cost as the provider reported it, in ``cost_unit``
+    #: (Exa ``costDollars.total`` in "usd", Tavily ``usage.credits`` in
+    #: "credits"); None when the response did not say.
+    cost: float | None = None
+    cost_unit: str = ""
+
+
+def reported_cost(block: object, field: str) -> float | None:
+    """A provider's own per-request cost figure from its response, or None when it gave none."""
+    value = block.get(field) if isinstance(block, dict) else None
+    if isinstance(value, bool) or not isinstance(value, int | float) or value < 0:
+        return None
+    return float(value)
+
+
 @dataclass(frozen=True, slots=True)
 class SearchResponse:
     """What one provider returned for one query."""
@@ -136,19 +211,19 @@ class SearchResponse:
     provider: str
     retrieved_at: datetime
     results: tuple[SearchResult, ...] = field(default_factory=tuple)
+    #: SR-WIDE: the full paid page behind ``results`` when the adapter was
+    #: built to record wide; None otherwise (every product request).
+    page: ProviderPage | None = None
 
     def __post_init__(self) -> None:
-        ranks = [r.rank for r in self.results]
-        if ranks != sorted(ranks):
-            raise ValueError("Results must be ordered by the provider's own rank")
-        if len(set(ranks)) != len(ranks):
-            raise ValueError("Two results share a rank; the provider's order is ambiguous")
-        foreign = {r.provider for r in self.results} - {self.provider}
-        if foreign:
-            raise ValueError(
-                f"Results attributed to {sorted(foreign)} in a {self.provider!r} response. "
-                "Fusing several providers is a separate step with its own provenance."
-            )
+        _check_ranked(self.results, self.provider)
+        if self.page is not None:
+            _check_ranked(self.page.results, self.provider)
+            if self.page.results[: len(self.results)] != self.results:
+                raise ValueError(
+                    "A response's results must be the head of its recorded page: the caller "
+                    "ranks exactly what the provider ranked first"
+                )
 
     def __len__(self) -> int:
         return len(self.results)

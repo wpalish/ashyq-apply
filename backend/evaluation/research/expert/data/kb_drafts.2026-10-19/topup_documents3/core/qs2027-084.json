@@ -1,0 +1,48 @@
+{
+ "case": "qs2027-084",
+ "seed_id": "qs2027-084",
+ "university": "Universidad de Buenos Aires (UBA)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-084",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Ingresantes (new entrants) to UBA degree programmes through the Ciclo Básico Común (CBC), including foreign applicants",
+   "academic_year": null,
+   "notes": "UBA news item 'Del 26 de junio al 13 de julio: inscripción a la UBA' (entry for the second four-month term of 2026; foreigners without an Argentine DNI pre-register through the CBC), plus the Dirección de Legalizaciones rules for foreign secondary diplomas. Foreign applicants take no admission exam (uba.ar/estudiantesextranjeros). Not drafted (no vocabulary kind): Spanish language certificate (SIELE Global C1 or the UBA Filosofía y Letras advanced Spanish certificate) for diplomas from non-Spanish-speaking countries; the 'constancia de estudios secundarios completos en trámite' accepted before the diploma is issued. The cbc.uba.ar inscription page returns no readable text.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "cycle_stated": "segundo cuatrimestre 2026",
+     "cycle_is_intake": false,
+     "url": "https://www.uba.ar/ubanoticias/noticias/1228",
+     "quote": "Se solicitará certificado de estudios medios completos (título-analítico secundario) legalizado por la Dirección de Legalizaciones de la UBA."
+    },
+    {
+     "kind": "credential_evaluation",
+     "requirement": "conditional",
+     "url": "https://www.legalizaciones.rec.uba.ar",
+     "quote": "Convalidación de título secundario extranjero (Digital, 2010 en Adelante) * Leé Normas generales para todos los trámites de legalización. * Subí a TAD-UBA la convalidación emitida por la Dirección de Validez Nacional de Títulos y Estudios del Ministerio de Educación.",
+     "condition": "foreign secondary diploma (validation by the Argentine Ministry of Education)",
+     "notes": "Convalidación of a foreign secondary diploma by the Dirección de Validez Nacional de Títulos y Estudios."
+    },
+    {
+     "kind": "apostille",
+     "requirement": "conditional",
+     "url": "https://www.legalizaciones.rec.uba.ar",
+     "quote": "Subí a TAD-UBA el título secundario definitivo. Incluí la apostilla de La Haya o el visado del consulado argentino en el país de origen",
+     "condition": "foreign secondary diploma validated before 2010 (Hague apostille or Argentine consular visa)"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,50 @@
+{
+ "case": "qs2027-048",
+ "university": "Delft University of Technology",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "delft"
+ },
+ "questions_researched": [
+  "gpa",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "deadline",
+  "tuition"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "not_applicable",
+   "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+   "quote": "You may be admitted with an international diploma if it is equivalent to a Dutch VWO diploma with the correct subjects.",
+   "notes": "No grade minimum: diploma equivalence with VWO (Maths B) plus a numerus fixus 'Matching & Selection procedure' ('A numerus fixus has been set for the Computer Science & Engineering programme. This means that there are a limited number of spots.'). Numerus-fixus registration deadline 15 January (already in the KB as deadline).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_exists": {
+   "status": "not_applicable",
+   "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/faq",
+   "quote": "There are no scholarships or financial aid available for students applying to our Bachelor programmes. TU Delft scholarships are only available for students applying to a Master programme.",
+   "notes": "TU Delft's own scholarships (Justus & Louise van Effen etc.) are for MSc only. External providers are listed separately (scholarships-from-other-providers page), not TU Delft awards.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_international": {
+   "status": "not_applicable",
+   "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/faq",
+   "quote": "There are no scholarships or financial aid available for students applying to our Bachelor programmes. TU Delft scholarships are only available for students applying to a Master programme.",
+   "notes": "No TU Delft bachelor scholarship exists, so there is none for international bachelor applicants.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

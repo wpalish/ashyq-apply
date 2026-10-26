@@ -1,0 +1,65 @@
+{
+ "case": "qs2027-024",
+ "university": "University of Chicago",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "English",
+  "title": "Computer Science | Academic Catalog | The University of Chicago",
+  "page_url": "http://collegecatalog.uchicago.edu/thecollege/computerscience/",
+  "language_twins": [],
+  "degree": "BA or BS in Computer Science (The College, 4 years)",
+  "how_found": "collegecatalog.uchicago.edu -> The College -> Computer Science; College Admissions (collegeadmissions.uchicago.edu) for the six questions (university-wide)",
+  "notes": "collegeadmissions.uchicago.edu is a Gatsby site: the HTML carries no readable body (readable_text 45 chars), so admissions quotes cite the page's own Gatsby data file (/page-data/<path>/page-data.json, same host, application/json, robots allowed); the human page is the same path without /page-data/."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "value": {
+    "english_test_required": false
+   },
+   "url": "https://collegeadmissions.uchicago.edu/page-data/apply/international-applicants/page-data.json",
+   "quote": "If you feel as though mastery of the English language is already represented throughout your application, you are not required to submit formal exam scores.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "No minimum published: 'Students are invited to submit scores from any English proficiency examination they believe represents their English language ability.' Human page: https://collegeadmissions.uchicago.edu/apply/international-applicants/. collegeadmissions.uchicago.edu is a Gatsby site: the HTML carries no readable body (readable_text 45 chars), so admissions quotes cite the page's own Gatsby data file (/page-data/<path>/page-data.json, same host, application/json, robots allowed); the human page is the same path without /page-data/."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Prose only, no threshold: 'Please do not convert your grades into a 4.0 scaled grade-point average. We evaluate all transcripts based upon the system of where you attend school.' (https://collegeadmissions.uchicago.edu/page-data/apply/international-applicants/page-data.json)."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-01-04",
+   "url": "https://collegeadmissions.uchicago.edu/page-data/apply/application/page-data.json",
+   "quote": "Jan 4, 2027",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "population": "international (all first-year applicants; same deadline)",
+   "notes": "Early Decision II and Regular Decision deadline for the Class of 2031 (autumn 2027 entry): 'Early Decision II and Regular Decision Deadline: Jan 4, 2027, 11:59 p.m. applicant's local time' (the data file joins a newline to 'Jan', so the longer sentence does not match word for word; the quote is the Regular Decision card's 'Application Deadline' value). Early Action / ED I: Nov 2, 2026. Same deadlines for all first-year applicants, international included (university-wide)."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "Not readable: the tuition schedule is on bursar.uchicago.edu (tuition-and-fees), which answers HTTP 403 to this client (robots.txt also 403). College Admissions pages give aid policy but no tuition figure. Access failure, not absence."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "UChicago merit scholarships for international students"
+   },
+   "url": "https://collegeadmissions.uchicago.edu/page-data/financial-support/international-financial-aid/page-data.json",
+   "quote": "Merit scholarships are partial-tuition scholarships that may be a single lump-sum award, or a renewable annual award.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Section 'Merit Scholarships for International Students'; considered independently of need; competitive. Need-based aid is also available to first-year internationals who apply at admission. Partial tuition: not a full ride."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://collegeadmissions.uchicago.edu/page-data/financial-support/international-financial-aid/page-data.json",
+   "quote": "to international applicants. Merit scholarships are partial-tuition scholarships",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "'...we offer merit scholarships to international applicants.' Also: 'First year international citizens are eligible for need-based and merit-based financial aid.' (https://collegeadmissions.uchicago.edu/page-data/apply/international-applicants/page-data.json)."
+  }
+ }
+}

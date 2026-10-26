@@ -1,0 +1,64 @@
+{
+ "case": "qs2027-076",
+ "university": "Université Paris-Saclay",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "psaclay"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.universite-paris-saclay.fr/formation/licence/informatique",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "url": "https://www.universite-paris-saclay.fr/formation/licence/informatique/l1-portail-mathematiques-informatique-mi",
+   "quote": "Langue d'enseignement Français Enseignement à distance non",
+   "notes": "The Licence Informatique starts with the L1 'Portail Mathématiques, Informatique (MI)', taught in French (every course unit on the L1 page lists 'Langue d'enseignement Français'). No English test is required; no French-level minimum is published on the programme or university admission pages (non-EU applicants go through the national DAP / Études en France procedures, whose language rules are on non-university sites).",
+   "date": "2026-10-19",
+   "page_language": "fr"
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade minimum. L1 MI page: 'Public visé et prérequis Bachelier.ère.s avec un bon niveau en mathématiques.' (prose, kept as notes). Capacity 90 places."
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "No exact international deadline on official university pages. Non-EU applicants without a French/European bac apply via Études en France (country-dependent, Campus France site) or via the DAP; the university page says only: 'This request must be made between the November and January preceding the academic year in which you wish to start your studies in France. Please go to the Ministry website to find the exact dates.' (https://www.universite-paris-saclay.fr/en/admissions/applying-undergraduate-programmes). The L1 MI page gives the Parcoursup window 'Du 19 janvier au 12 mars 2026' - that is the 2026 round for French/EU-bac holders, not the international route."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 178,
+    "currency": "EUR",
+    "period": "year",
+    "academic_year": "2025/2026",
+    "population": "national rate; non-EU students subject to differentiated fees are brought to this rate by partial exemption"
+   },
+   "url": "https://www.universite-paris-saclay.fr/en/admission/tuition-fees",
+   "quote": "For the 2025–2026 academic year, tuition fees are set as follows (2026-2027 fees coming soon): Bachelor level Master level Doctoral level €178 €254 €397",
+   "notes": "Same page: 'non-EU students who are subject to differentiated fees are eligible for a partial exemption, which brings the differentiated registration fees in line with the fees applicable to domestic students' (Board of Governors Resolution CA-2026-013 of 3 February 2026). The differentiated amount itself is not printed. 2026-2027 fees 'coming soon'; 2027/28 not published.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "Only a generic statement on https://www.universite-paris-saclay.fr/en/admission/scholarships-and-financial-support: 'Full or partial scholarships ... are available through several scholarship schemes ... offered by Université Paris-Saclay and its constituent institutions to support students (both French and international)'; the linked scheme pages are the International Master's Scholarships and general social aid (CROUS, Klaro). No named scholarship for Licence (bachelor) students found."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "See scholarship_exists; no bachelor-level scheme identified."
+  }
+ }
+}

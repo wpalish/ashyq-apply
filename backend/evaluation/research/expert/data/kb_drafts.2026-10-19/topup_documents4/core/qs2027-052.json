@@ -1,0 +1,60 @@
+{
+ "case": "qs2027-052",
+ "seed_id": "qs2027-052",
+ "university": "City University of Hong Kong (CityUHK)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-052",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Non-JUPAS applicants with secondary qualifications from overseas school curricula (GCE, IB, national curricula; the 'Others' row for curricula not listed), applying to CityUHK undergraduate programmes including Computer Science",
+   "academic_year": null,
+   "notes": "CityUHK Admissions Office 'List of Supporting Documents for Application Review' (PDF on cityu.edu.hk). The list is per qualification (GCE, IB, Hong Kong, and per country, e.g. Kazakhstan UNT/NIS); the items below are those the table names across the overseas rows, with the row-dependence in each condition. No year or cycle is printed on the list. Scanned copies are uploaded via the application account before the application is submitted; IB and TOEFL/IELTS/SAT/ACT/AP results must also be sent to CityUHK by the testing body. Not drafted (no vocabulary kind): 'an explanation of the transcript grading system' (most overseas rows), predicted national examination results from school, the written explanation with documentary proof for non-matching names, award/attendance certificates for achievements (if applicable). The www.cityu.edu.hk/admo Non-JUPAS web page returns no readable text to the fetcher (rendered client-side); this PDF is CityUHK's own document.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+     "quote": "Others • predicted national examination results from school, if applicable • latest official high school transcript in original language with English translation • an explanation of the transcript grading system",
+     "condition": "as listed for the applicant's qualification: the latest official high school transcript is in nearly every overseas row (e.g. GCE, IB, USA, Kazakhstan UNT and NIS, 'Others'), but not in some (e.g. Hong Kong public examinations, India SSC/HSC/ISC)"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "conditional",
+     "url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+     "quote": "USA • High School Diploma, if awarded • latest official high school transcript",
+     "condition": "if awarded (the qualification's diploma or school-leaving certificate, as named in the applicant's row)"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+     "quote": "2. Documents that are not in English must be accompanied by an officially certified English translation provided by the awarding body or your school or university.",
+     "condition": "documents that are not in English"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+     "quote": "other examination results (e.g. GCSE, SAT, ACT, AP), if available • TOEFL/IELTS results or other acceptable English results, if available",
+     "condition": "if available"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "conditional",
+     "url": "https://cityu.edu.hk/admo/nonlocal/Supporting_Documents.pdf",
+     "quote": "an explanation of the transcript grading system and school profile • SAT/ACT/AP result sheets, if available",
+     "condition": "if available (SAT/ACT/AP result sheets, named in rows such as USA, Korea, Thailand and 'Others'; Kazakhstan UNT/NIS: SAT result sheet if available)"
+    }
+   ]
+  }
+ }
+}

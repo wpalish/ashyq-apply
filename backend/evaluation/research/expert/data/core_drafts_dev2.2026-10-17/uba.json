@@ -1,0 +1,122 @@
+{
+  "case": "uba",
+  "university": "Universidad de Buenos Aires (UBA)",
+  "researched_on": "2026-10-17",
+  "programme": {
+    "url": "https://ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/",
+    "title": "Licenciatura en Ciencias de la Computación (plan 2023)",
+    "teaching_language": "Spanish",
+    "campus": "Facultad de Ciencias Exactas y Naturales, Ciudad Universitaria (Intendente Güiraldes 2160, C1428EGA, Buenos Aires). The first year (CBC) is taken at CBC sites or online via UBA XXI.",
+    "how_found": "Web search (site uba.ar) for the plan de estudios. The FCEN Ingresantes programme page describes the 3-year ciclo básico (Bachiller Universitario en Ciencias de la Computación) plus a 2-year ciclo superior with a thesis, after the CBC. The department page is computacion.dc.uba.ar/plan-de-estudios-2023/. Teaching language is inferred from the Spanish-only programme pages and UBA's C1 Spanish requirement; no page states the language explicitly."
+  },
+  "answers": {
+    "english": {
+      "status": "known",
+      "value": {
+        "spanish_level": "Spanish C1 (CEFR/MCER) - SIELE GLOBAL C1 or Certificado de Español Avanzado (Facultad de Filosofía y Letras, UBA); no English test required"
+      },
+      "url": "https://www.cbc.uba.ar/resoluciones/RESCS-2023-1924-UBA.pdf",
+      "quote": "Todos los estudiantes cuyo título de nivel secundario provenga de una institución sita en un país no hispanohablante deberán poseer un nivel mínimo de conocimiento y uso del español equivalente al nivel C1 del Marco de Referencia Común Europeo (MRCE)",
+      "how_found": "cbc.uba.ar/inscripciones (Requisitos y documentación > 'Si naciste y/o estudiaste en el extranjero') links 'Disposiciones vigentes' Resolución RESCS-2023-1924 (Art. 209 CODIGO.UBA I-18) and RAA-2023-36 (RS-2023-07691006); PDFs downloaded from cbc.uba.ar/resoluciones/.",
+      "notes": "No English test exists: the requirement is Spanish proficiency, recorded here under 'english'. It is C1, not CELU. Applies because a Kazakhstan (NIS) diploma comes from a non-Spanish-speaking country. RAA-2023-36 (https://www.cbc.uba.ar/resoluciones/RS-2023-07691006-UBA.pdf) accepts two certificates: 'Certificado SIELE GLOBAL - nivel C1' and the FFyL 'Certificado de Español Avanzado ... equivalente a nivel C1'. The level must be proven by the date registration closes. ubaxxi.uba.ar/inscripciones mentions a one-time B2 transition, but it covered only 1st semester 2024. CELU is not on the accepted list.",
+      "date": "2026-10-17"
+    },
+    "gpa": {
+      "status": "not_applicable",
+      "value": {
+        "description": "Open admission via the CBC: no entrance exam and no published minimum secondary-school grade",
+        "value": null
+      },
+      "url": "https://www.cbc.uba.ar/inscripciones",
+      "quote": "El ingreso a la UBA es irrestricto y sin examen de ingreso.",
+      "how_found": "CBC Inscripciones page (Vue SPA; text read from its official bundle https://www.cbc.uba.ar/js/group-alumnos.js).",
+      "notes": "Instead of a grade threshold, the applicant must pass the CBC's six subjects. Final exams are graded 0-10 and the pass mark is 4 ('se aprueban con una nota mínima de 4', same page). After the CBC, students register at FCEN (Exactas).",
+      "date": "2026-10-17"
+    },
+    "deadline": {
+      "status": "known",
+      "value": "2026-11-26",
+      "url": "https://ubaxxi.uba.ar/pre-ingreso-a-la-uba-2027/",
+      "quote": "Del 12 al 26 de noviembre estará habilitado el trámite de Pre-ingreso a la UBA para quienes quieran iniciar sus estudios universitarios en el 1° cuatrimestre 2027",
+      "how_found": "Web search restricted to uba.ar for CBC 2027 ingresantes dates, which led to the UBA XXI 'PRE-INGRESO A LA UBA 2027' page. The 2026-cycle news item at uba.ar/ubanoticias/noticias/995 was used to check the cycle structure.",
+      "notes": "This is the general pre-registration window (12-26 November 2026) for the 1st semester 2027. It is mandatory for anyone starting a UBA degree through UBA XXI and/or the CBC. The page does not mention foreign applicants specifically. In the 2026 cycle, UBA said foreigners without an Argentine DNI did pre-ingreso through the CBC rather than UBA XXI ('Si sos extranjero sin DNI argentino lo realizás a través de CBC'). It also opened a second window for students who had never registered: 2-18 Feb 2026 ('Del 2/02 al 18/02'). If that repeats, there may be a February 2027 window, but it is not yet published, so treat 26 Nov 2026 as the safe deadline. As of 2026-10-17, the CBC no-DNI registration system (www4.cbc.uba.ar) showed 'El sistema no está disponible en este momento.' The CBC's 'Calendario de Ingresantes' API shows only 'Ciclo lectivo 2026' with no registration dates. Documents can follow registration: the convalidation or recognition of the secondary diploma, legalised by UBA, must be done 'Antes de terminar el CBC'. Kazakhstan is presumably a country without an agreement with Argentina; this was not verified on a UBA page. If so, the applicant needs the 'Reconocimiento de estudios' from the Argentine Ministry of Education.",
+      "date": "2026-10-17"
+    },
+    "tuition": {
+      "status": "known",
+      "value": {
+        "amount": 0,
+        "currency": "ARS",
+        "period": "year",
+        "academic_year": "2027",
+        "population": "all undergraduate (grado) students, Argentine and foreign"
+      },
+      "url": "https://www.cbc.uba.ar/inscripciones",
+      "quote": "Los estudios de grado en la UBA son gratuitos para los ciudadanos argentinos y extranjeros.",
+      "how_found": "CBC Inscripciones page, intro box (text read from the official SPA bundle https://www.cbc.uba.ar/js/group-alumnos.js).",
+      "notes": "The page has no year label. The statement is general and current, so it was applied to 2027. Some administrative fees are separate from tuition: UBA legalisation of the secondary diploma is marked 'REQUIERE PAGO EN CONCEPTO DE LEGALIZACIÓN' (exactas.uba.ar/inscripcion-ingresantes).",
+      "date": "2026-10-17"
+    },
+    "scholarship_exists": {
+      "status": "known",
+      "value": {
+        "name": "Beca de Ayuda Económica Sarmiento (UBA, carreras de grado; call for ingresantes)"
+      },
+      "url": "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/",
+      "quote": "Beca de Ayuda Económica Sarmiento para carrera de grado",
+      "how_found": "Web search restricted to uba.ar for UBA undergraduate scholarships and Beca Sarmiento eligibility for foreigners. Read the 'BECAS SARMIENTO -INGRESANTES 2026-' notice on extension.uba.ar and the CODIGO.UBA chapter on codigo.rec.uba.ar.",
+      "notes": "This is a UBA-run, means-tested monthly stipend; the application is online at becasbienestar.rec.uba.ar. Applicants must be a regular student at a UBA faculty, have an average of at least 5 and be 30 or younger. Foreigners must hold permanent residence (see scholarship_international), so a new international applicant from abroad without residence is not eligible. No other UBA-run undergraduate award for incoming international students was found in this budget.",
+      "date": "2026-10-17"
+    },
+    "scholarship_international": {
+      "status": "known",
+      "value": false,
+      "url": "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/",
+      "quote": "Ser argentino/a nativo/a o por opción, o extranjero/a con residencia permanente.",
+      "how_found": "Requisitos list in the Sarmiento ingresantes notice, cross-checked against the regulation at https://codigo.rec.uba.ar/codigo_uba/libro-i-normas-generales-de-la-universidad-de-buenos-aires-1/titulo-45-becas/capitulo-a-becas-de-ayuda-economica-sarmiento/ (Art. 2 inc. 3).",
+      "notes": "False for an international applicant without Argentine permanent residence. The regulation (Art. 2 inc. 3) says: 'Sean argentinos/as nativos/as o por opción, o extranjeros/as con residencia permanente.'",
+      "date": "2026-10-17"
+    }
+  },
+  "access_notes": [
+    "www.cbc.uba.ar is a JavaScript (Vue) single-page app: the raw HTML contains no content. The text of /inscripciones was read from the site's own public bundle https://www.cbc.uba.ar/js/group-alumnos.js, and calendar data from its public JSON endpoints /api/categorias/periodo and /api/institucional/periodos/categoria/{id}. No login was used.",
+    "https://www4.cbc.uba.ar/inscripciones/2025/extranjeros/... (registration for students without an Argentine DNI) redirected to a maintenance page: 'El sistema no está disponible en este momento.'",
+    "https://www.uba.ar/internacionales/contenidos.php?id=124 timed out (30 s). It was a guessed URL and was not retried.",
+    "http://formularios.cbc.uba.ar/Aspirantes+Extranjeros+3 failed TLS: its certificate does not match the host name. Not bypassed.",
+    "Guessed URLs https://www.dc.uba.ar/carreras/licenciatura/ and https://exactas.uba.ar/ensenanza/carrera.php?C=3 returned 404.",
+    "Quotes were checked against raw text with whitespace normalised. PDF text was extracted with PyMuPDF."
+  ],
+  "pages_read": [
+    "https://www.dc.uba.ar/carreras/licenciatura/ (404)",
+    "https://exactas.uba.ar/ensenanza/carrera.php?C=3 (404)",
+    "https://www.uba.ar/internacionales/contenidos.php?id=124 (timeout)",
+    "https://www.cbc.uba.ar/",
+    "https://www.cbc.uba.ar/js/app.js",
+    "https://www.cbc.uba.ar/js/group-alumnos.js (content of https://www.cbc.uba.ar/inscripciones)",
+    "https://ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/",
+    "https://www.cbc.uba.ar/inscripciones",
+    "https://www4.cbc.uba.ar/inscripciones/2025/extranjeros/landing.php (maintenance)",
+    "http://formularios.cbc.uba.ar/Aspirantes+Extranjeros+3 (TLS error)",
+    "https://exactas.uba.ar/inscripcion-ingresantes/",
+    "https://computacion.dc.uba.ar/plan-de-estudios-2023/",
+    "https://www.cbc.uba.ar/resoluciones/RESCS-2023-1924-UBA.pdf",
+    "https://www.cbc.uba.ar/resoluciones/RS-2023-07691006-UBA.pdf",
+    "https://www.cbc.uba.ar/api/institucional/periodos/categoria/23",
+    "https://www.cbc.uba.ar/api/institucional/periodos/categoria/6",
+    "https://www.cbc.uba.ar/api/categorias/periodo",
+    "https://www.cbc.uba.ar/api/institucional/periodos/categoria/5",
+    "https://www.cbc.uba.ar/api/institucional/periodos/categoria/22",
+    "https://ubaxxi.uba.ar/pre-ingreso-a-la-uba-2027/",
+    "https://www.uba.ar/ubanoticias/noticias/995",
+    "https://codigo.rec.uba.ar/codigo_uba/libro-i-normas-generales-de-la-universidad-de-buenos-aires-1/titulo-45-becas/capitulo-a-becas-de-ayuda-economica-sarmiento/",
+    "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/",
+    "https://academica.rec.uba.ar/fechas-importantes-uba-xxi-y-cbc/",
+    "https://ubaxxi.uba.ar/inscripciones/"
+  ],
+  "searches": [
+    "Licenciatura en Ciencias de la Computación UBA Exactas plan de estudios (site: uba.ar subdomains)",
+    "UBA estudiantes extranjeros inscripción CBC título secundario convalidación (site: uba.ar, cbc.uba.ar)",
+    "CBC UBA inscripción ingresantes 2027 primer cuatrimestre fechas extranjeros (site: uba.ar)",
+    "UBA becas estudiantes de grado Becas Sarmiento extranjeros requisitos (site: uba.ar)"
+  ]
+}

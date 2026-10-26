@@ -7,7 +7,7 @@ import type { AuthPrincipal, AuthStatus } from '@/types';
 const principal: AuthPrincipal = {
   user_id: 'user-1', email: 'applicant@example.test', display_name: 'Applicant',
   organization_id: 'org-1', organization_name: 'My workspace', role: 'owner',
-  local_development: false,
+  local_development: false, is_moderator: false,
 };
 const signedOut: AuthStatus = {
   enabled: true, registration_enabled: true, authenticated: false, principal: null,

@@ -1,0 +1,46 @@
+{
+ "case": "qs2027-081",
+ "seed_id": "qs2027-081",
+ "university": "University of California, San Diego (UCSD)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-081",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year international students (secondary education outside the U.S.) applying to UC San Diego, including Computer Science",
+   "academic_year": null,
+   "notes": "UC San Diego Undergraduate Admissions 'International Students' page. A standing page; no year is printed on the list. The required records are country-specific ('Required Documents' per country in the page's U.S. High School Diploma Equivalents selector, e.g. China: grade 9-12 records and the graduation certificate (Red Book); India: attested Statement of Marks for STD X and XII) and are sent after admission, directly from the school or an approved e-transcript vendor (Digitary, Parchment, CHESICC), by July 1 (IB scores by July 15). Applicants self-report all completed coursework in the application. 'UC San Diego will not consider SAT or ACT test scores as a factor in admissions decisions.' The UC application and Personal Insight Questions are not named on this page and are not drafted.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://admissions.ucsd.edu/international/index.html",
+     "quote": "To be considered for admission to UC San Diego, international students must meet specific English proficiency requirements. Applying as a First-Year International Student The tests listed below are all accepted to showcase English proficiency.",
+     "notes": "Accepted: TOEFL iBT, IELTS Academic (7), AP English Language/Literature (3-5), IB English A, Duolingo (115)."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://admissions.ucsd.edu/international/index.html",
+     "quote": "Your admission to UC San Diego is provisional pending the receipt and review of your official transcripts, records and exam results.",
+     "condition": "newly admitted first-year students who attended a school outside the United States: official records from grade 9 onward, sent directly by the school or an approved e-transcript vendor by July 1, as listed for the applicant's country"
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "conditional",
+     "url": "https://admissions.ucsd.edu/international/index.html",
+     "quote": "To be granted a visa, international students must prove sufficient funds to meet all expenses for studying in the U.S.",
+     "condition": "international students who need a student visa"
+    }
+   ]
+  }
+ }
+}

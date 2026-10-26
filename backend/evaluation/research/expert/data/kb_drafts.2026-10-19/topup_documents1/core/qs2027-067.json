@@ -1,0 +1,59 @@
+{
+ "case": "qs2027-067",
+ "seed_id": "qs2027-067",
+ "university": "The University of Auckland",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-067",
+  "round": "topup_documents1"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Applicants with overseas secondary schooling (international)",
+   "academic_year": null,
+   "notes": "'Documents to support your application'. After applying, an email lists the documents required.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "passport",
+     "requirement": "conditional",
+     "url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+     "quote": "Evidence of your name, date of birth, name changes, citizenship or residency Birth certificate, or Relevant pages of your passport, or Citizenship certificate",
+     "condition": "one of a birth certificate, the relevant passport pages or a citizenship certificate is accepted as evidence of identity; it must be certified"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+     "quote": "Overseas secondary school You can submit your secondary school transcript if you have completed your studies overseas."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+     "quote": "If your documents are in a language other than English, you must provide the original language version and the English translation.",
+     "condition": "your documents are in a language other than English"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+     "quote": "Evidence of English language proficiency (4) IELTS or TOEFL or equivalent.",
+     "notes": "Footnote 4: 'International applicants or domestic applicants whose first language is not English need to meet English language requirements.'"
+    },
+    {
+     "kind": "portfolio",
+     "requirement": "conditional",
+     "url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/how-to-apply/supporting-documents.html",
+     "quote": "Additional documents Supplementary forms, interviews, portfolios or auditions. After you apply, we will email you with any additional requirements and how to complete them.",
+     "condition": "the programme asks for it after you apply"
+    }
+   ]
+  }
+ }
+}

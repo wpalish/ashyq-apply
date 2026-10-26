@@ -1,0 +1,16 @@
+{
+ "case": "qs2027-020",
+ "note": "kb batch4 qs2027-020.0-local: programme-page item only (dev5 format); the quote stands in the 'title' slot so verify_evidence checks it word for word. Academic catalogue page of the B.S. (Whiting School of Engineering, 120 credits, ABET-accredited). A B.A. page also exists (…/computer-science-ba/), but per the department page only students who entered JHU prior to 2025 could choose the BA. Official-domain note: kb_top100_list.json gives official_domain \"jh.edu\"; every JHU page read lives under jhu.edu (official_site http://www.jhu.edu/). A checker keyed on jh.edu alone will mark these hosts unofficial.",
+ "programme": {
+  "url": "https://e-catalogue.jhu.edu/engineering/full-time-residential-programs/degree-programs/computer-science/computer-science-bs/",
+  "title": "Computer Science, Bachelor of Science"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "known",
+ "degree": "Bachelor of Science (B.S.) in Computer Science, 120 credits",
+ "teaching_language": "English (not stated; JHU teaches in English)",
+ "twins": null,
+ "twin_mechanism": "none: English only",
+ "how_found": "www.cs.jhu.edu/undergraduate-studies (redirects to /academic-programs/undergraduate-studies/) -> e-catalogue computer-science department page -> \"Computer Science, Bachelor of Science\"."
+}

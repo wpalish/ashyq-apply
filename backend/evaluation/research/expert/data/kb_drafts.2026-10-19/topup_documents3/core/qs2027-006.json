@@ -1,0 +1,50 @@
+{
+ "case": "qs2027-006",
+ "seed_id": "qs2027-006",
+ "university": "University of Cambridge",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-006",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Undergraduate applicants (UCAS), 2027 entry",
+   "academic_year": "2027/2028 (2027 entry)",
+   "notes": "'Completing your UCAS application' (URL /apply/how redirects here): deadline for 2027 entry 15 October 2026; My Cambridge Application by 22 October 2026. The page states the documents rule 'For 2027 entry'. Not drafted: My Cambridge Application (a second online form completed after UCAS; no separate vocabulary kind besides the UCAS application), extenuating-circumstances information. Course-specific admission assessments (e.g. for Computer Science) are on the course page, which was not read for this question.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.undergraduate.study.cam.ac.uk/apply/how/ucas-application",
+     "quote": "You must apply to Cambridge through UCAS ."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://www.undergraduate.study.cam.ac.uk/apply/how/ucas-application",
+     "quote": "You will need to write a personal statement as part of your UCAS application."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://www.undergraduate.study.cam.ac.uk/apply/how/ucas-application",
+     "quote": "You may need to provide documents as part of your application, such as a transcript (a certified record of your academic achievements).",
+     "condition": "when Cambridge requires it; for 2027 entry such documents are provided via My Cambridge Application or the College, not UCAS"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.undergraduate.study.cam.ac.uk/apply/how/ucas-application",
+     "quote": "Your school or college will need to submit a reference for you."
+    }
+   ]
+  }
+ }
+}

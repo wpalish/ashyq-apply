@@ -1,0 +1,132 @@
+{
+ "case": "kaznu",
+ "university": "Al-Farabi Kazakh National University (КазНУ им. аль-Фараби), Almaty",
+ "researched_on": "2026-10-17",
+ "programme": {
+  "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1730",
+  "title": "6B06104 Компьютерные науки (EN: Computer Science), Faculty of Information Technology and Artificial Intelligence",
+  "teaching_language": "unknown — programme page returns a backend error (adapi GetSpecialityById HTTP 500) in ru/en/kz; Kazakh/Russian/English tracks could not be verified",
+  "campus": "Almaty, al-Farabi Ave 71 (main campus)",
+  "how_found": "site-restricted web search on kaznu.kz; programme listed on the official bachelor programme catalogue https://welcome.kaznu.kz/ru/27304/page (and /en/27304/page). Quote: '6B06104 Компьютерные науки Информационных технологий и искусственного интеллекта Действующая ОП'; EN: '6B06104 Computer Science Information Technology and Artificial Intelligence Acting EP'. NOTE: the hint code 6B06102 is 'Информационные системы' (Information Systems) at KazNU, not Computer Science; same faculty, same UNT group B057 and same tuition row."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "value": null,
+   "url": "https://welcome.kaznu.kz/ru/admissions/bachelor/docs-list/",
+   "quote": "Перечень необходимых документов: Аттестат / диплом + приложения (оригинал и копия) Удостоверение личности (оригинал и 2 копии) Сертификат ЕНТ в распечатанном виде",
+   "how_found": "welcome.kaznu.kz > Бакалавриат > Перечень документов",
+   "notes": "Domestic bachelor admission document list requires the UNT (ЕНТ) certificate and no English test certificate; status inferred from the official list (absence of an English requirement), not from an explicit 'no English test' sentence. International applicants differ: they take a KazNU language-of-instruction test; for the English track: '- Для успешного прохождения тестирования с английским языком обучения, необходимо правильно ответить не менее чем на 21 вопрос из 30, что составляет 70%.' (https://welcome.kaznu.kz/ru/admissions/foreign/foreign_criteria/). No IELTS/TOEFL minimum is published for bachelor."
+  },
+  "gpa": {
+   "status": "known",
+   "value": {
+    "description": "Minimum UNT (ЕНТ) score for UNT group B057 Information technologies (which contains 6B06104 Computer Science and 6B06102 Information Systems), 2026-27 admission: 100 to compete for an educational grant, 90 for fee-paying admission",
+    "value": {
+     "grant_competition_min_unt": 100,
+     "fee_paying_min_unt": 90,
+     "max_unt": 140
+    }
+   },
+   "url": "https://welcome.kaznu.kz/media/admissions/bachelor/editor/2026-2027-porog-bally_3yzxkra_BVh4KIx.pdf",
+   "quote": "в057 Акпараттык технологиялар 100 90",
+   "how_found": "welcome.kaznu.kz > Бакалавриат > Пороговые баллы > PDF 'Пороговые баллы 2026-2027'",
+   "notes": "Quote is from the PDF's OCR text layer (Kazakh, OCR-garbled: 'Ақпараттық технологиялар'); column headers in the same layer: 'Гранттыц конкурсца цатысу ушiн шектi балл Ацылы негiзде Tycy ушiн шектi балл' (threshold for grant competition / threshold for paid admission). Approved by KazNU Academic Council, May 2026, for the 2026-2027 academic year; 2027/28 thresholds not yet published. max_unt=140 is general UNT knowledge, not from this page. The catalogue page /ru/27304/page shows unlabeled '85 85 85' next to 6B06104 — meaning unclear, not used."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-08-25",
+   "url": "https://welcome.kaznu.kz/ru/admissions/bachelor/docs-list/",
+   "quote": "Срок - 25 августа",
+   "how_found": "welcome.kaznu.kz > Бакалавриат > Перечень документов (Поступающим 2026 section)",
+   "notes": "Only the 2026 cycle is published; no 2027 date found. This is the deadline for submitting documents to the KazNU admissions office (offline) in the 2026 cycle; the year is inferred from the 'Поступающим 2026' section. State-grant competition applications are filed via the national testing/ministry system with their own (earlier, typically July) dates not stated on this page. International applicants: 'Прием документов на обучение для иностранных абитуриентов осуществляется с 15 мая по 30 июля (осенний набор)' (https://welcome.kaznu.kz/ru/admissions/foreign/foreign_rules/)."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 1100000,
+    "currency": "KZT",
+    "period": "year",
+    "academic_year": "2026/27",
+    "population": "domestic fee-paying (after school)"
+   },
+   "url": "https://welcome.kaznu.kz/media/admissions/bachelor/editor/stoimost-bak-2026-2027-_14072026094138.pdf",
+   "quote": "Информационных технологий и искусственного интеллекта 1 100 000 18 333",
+   "how_found": "welcome.kaznu.kz > Бакалавриат > Стоимость обучения 2026-2027 > PDF",
+   "notes": "PDF is a scanned image with no text layer; the quote is a manual transcription of row 6 ('После школы' columns: Стоимость, тенге в год / 1 ECTS), not machine-verifiable. Exceptions in the same faculty: Системы информационной безопасности, Криптология 1 400 000; Программная инженерия, Вычислительная инженерия 1 500 000. Computer Science and Information Systems fall under the faculty default 1 100 000. 2027/28 price not yet published. State grant holders pay no tuition. International students pay a separate price list (2025-2026 PDF on /ru/19388/page); 'Лица казахской национальности, не являющиеся гражданами Республики Казахстан принимаются по казахстанским ценам.' Discounts (e.g. 20% first year for Altyn Belgi holders) in 'Льготы и скидки 2026-2027' PDF (image)."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Государственный образовательный грант (state educational grant, awarded via UNT-based competition by the Ministry of Education)"
+   },
+   "url": "https://welcome.kaznu.kz/ru/admissions/foreign/foreign_rules/",
+   "quote": "Данные контакты указаны только для подачи на платной основе. Образовательные гранты выдаются Министерством образования.",
+   "how_found": "welcome.kaznu.kz > Иностранным гражданам > Правила приема; corroborated by the threshold PDF title ('...ақылы және білім беру гранты негізінде оқуға түсушілер үшін ҰБТ шекті балдары') and the grant-competition threshold column",
+   "notes": "Grant covers tuition; grant students also receive a monthly stipend — welcome.kaznu.kz/ru/welcome/bachelor: 'бакалавриат 52 372 тг сумма стипендии'. The grant is awarded by the Ministry, not the university; KazNU-run grant administration pages (government site) were not opened."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": false,
+   "url": "https://welcome.kaznu.kz/ru/19388/page",
+   "quote": "Иностранные студенты принимаются на обучение в КазНУ им. аль-Фараби на платной основе за исключением студентов, поступающих на основании межправительственных соглашений.",
+   "how_found": "welcome.kaznu.kz > Стоимость обучения (international applicants page), found via site search",
+   "notes": "Foreign nationals study on a fee-paying basis except under intergovernmental agreements; the KazNU pages do not state whether ethnic Kazakhs without citizenship (kandas) may compete for state grants. Irrelevant for this applicant (Kazakhstani citizen, domestic)."
+  }
+ },
+ "access_notes": [
+  "www.kaznu.kz: TLS certificate expired (curl verification fails) and WebFetch returned HTTP 503 — not bypassed.",
+  "welcome.kaznu.kz programme pages (/education_programs/bachelor/speciality/1728, 1729, 1730; ru/en/kz) render 'adapi GetSpecialityById returned HTTP 500' — programme detail (languages, UNT subjects) unavailable.",
+  "welcome.kaznu.kz news pages and files with Cyrillic filenames (e.g. faculty booklet PDF, /content/files/pages/folder17997/...) enter an infinite 302 redirect loop.",
+  "Tuition and discounts PDFs are scanned images without text layer; values transcribed visually.",
+  "Threshold-score PDF has a garbled OCR text layer (Kazakh); quote taken verbatim from that layer."
+ ],
+ "pages_read": [
+  "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1728",
+  "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1729",
+  "https://welcome.kaznu.kz/ru/education_programs/bachelor",
+  "https://welcome.kaznu.kz/ru/admissions/bachelor/",
+  "https://welcome.kaznu.kz/ru/21750/page",
+  "https://welcome.kaznu.kz/ru/21752/page",
+  "https://welcome.kaznu.kz/ru/18776/page",
+  "https://welcome.kaznu.kz/ru/admissions/bachelor/porog/",
+  "https://welcome.kaznu.kz/ru/admissions/bachelor/stoimost/",
+  "https://welcome.kaznu.kz/ru/admissions/bachelor/skidki/",
+  "https://welcome.kaznu.kz/ru/admissions/bachelor/docs-list/",
+  "https://welcome.kaznu.kz/media/admissions/bachelor/editor/2026-2027-porog-bally_3yzxkra_BVh4KIx.pdf",
+  "https://welcome.kaznu.kz/media/admissions/bachelor/editor/stoimost-bak-2026-2027-_14072026094138.pdf",
+  "https://welcome.kaznu.kz/media/admissions/bachelor/editor/skidki-i-lgoty-2026-2027-_14072026095359.pdf",
+  "https://welcome.kaznu.kz/en/admissions/bachelor/stoimost/",
+  "https://welcome.kaznu.kz/en/admissions/bachelor/porog/",
+  "https://welcome.kaznu.kz/kz/admissions/bachelor/stoimost/",
+  "https://welcome.kaznu.kz/kz/admissions/bachelor/porog/",
+  "https://www.kaznu.kz/ru/education_programs/bachelor/speciality/1729 (503)",
+  "https://www.kaznu.kz/ru/21067/page/ (503)",
+  "https://welcome.kaznu.kz/content/booklet/new/Буклет_фит_ru.pdf (redirect loop)",
+  "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1730",
+  "https://welcome.kaznu.kz/en/education_programs/bachelor/speciality/1730",
+  "https://welcome.kaznu.kz/kz/education_programs/bachelor/speciality/1730",
+  "https://welcome.kaznu.kz/ru/21792/page (404)",
+  "https://welcome.kaznu.kz/ru/admissions/foreign/",
+  "https://welcome.kaznu.kz/ru/3/news/one/28683/ (redirect loop)",
+  "https://welcome.kaznu.kz/ru/3/news/one/35275/ (redirect loop)",
+  "https://welcome.kaznu.kz/ru/admissions/foreign/foreign_info/",
+  "https://welcome.kaznu.kz/ru/admissions/foreign/foreign_rules/",
+  "https://welcome.kaznu.kz/ru/admissions/foreign/foreign_criteria/",
+  "https://welcome.kaznu.kz/ru/welcome/bachelor",
+  "https://welcome.kaznu.kz/ru/17999/page",
+  "https://welcome.kaznu.kz/ru/24371/page",
+  "https://welcome.kaznu.kz/ru/26849/page",
+  "https://welcome.kaznu.kz/ru/27304/page",
+  "https://welcome.kaznu.kz/ru/21836/page",
+  "https://welcome.kaznu.kz/en/27304/page",
+  "https://welcome.kaznu.kz/ru/19388/page"
+ ],
+ "searches": [
+  "6B06102 Информатика КазНУ аль-Фараби бакалавриат (kaznu.kz)",
+  "КазНУ Computer Science бакалавриат 6B061 факультет информационных технологий образовательная программа (kaznu.kz)",
+  "\"Компьютерные науки\" 6B06104 КазНУ язык обучения казахский русский английский (kaznu.kz)",
+  "КазНУ государственный образовательный грант бакалавриат прием документов 2026 сроки ЕНТ иностранцы казахской национальности (kaznu.kz)",
+  "КазНУ иностранные граждане обучение на платной основе грант бакалавриат квота (welcome.kaznu.kz)"
+ ]
+}

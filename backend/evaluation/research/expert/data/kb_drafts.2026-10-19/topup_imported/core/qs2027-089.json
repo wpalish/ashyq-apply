@@ -1,0 +1,50 @@
+{
+ "case": "qs2027-089",
+ "university": "Uppsala University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "uppsala"
+ },
+ "questions_researched": [
+  "gpa",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "not_applicable",
+   "url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+   "quote": "Entry requirements General entry requirements and Mathematics Further level 2, or Mathematics 4/Mathematics D Selection Final school grades (66%) - Swedish Scholastic Aptitude Test (34%)",
+   "notes": "No minimum grade: general entry requirements + Mathematics 4/D; selection ranks final school grades (66% of places) and the Swedish Scholastic Aptitude Test (34%). Same text in the Autumn 2026 and Autumn 2027 blocks. Note: 'This programme requires knowledge of Swedish' / 'Language of instruction Swedish'.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 75000,
+    "currency": "SEK",
+    "period": "semester (first instalment)",
+    "academic_year": "2027/2028",
+    "population": "citizens of non-EU/EEA countries and non-Switzerland",
+    "total_programme": 450000
+   },
+   "url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+   "quote": "First tuition fee instalment: SEK 75,000 Total tuition fee: SEK 450,000",
+   "notes": "Autumn 2027 block (identical to Autumn 2026): 'If you are not a citizen of a European Union (EU) or European Economic Area (EEA) country, or Switzerland, you are required to pay application and tuition fees.' Total SEK 450,000 for the 3-year (180 credit) programme; instalments per semester. Not multiplied. Also note for the KB owner: the Autumn 2027 block on this page gives 'Application deadline 15 April 2027' (Swedish-taught programme, national round), while kb_imported_dev.json holds 2027-01-15.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

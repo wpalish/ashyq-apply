@@ -30,9 +30,10 @@ import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import StrEnum
-from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from app.adapters.discovery.live_discovery import same_institution
+from app.adapters.url_canonical import page_link
 
 #: Most bytes worth reading from a search response. A catalogue JSON that
 #: exceeds this is a paginated feed being served whole, and reading it all is
@@ -107,9 +108,27 @@ _DEFAULT_QUERY_PARAM = {
     SiteSearchKind.HTML_FORM: "q",
 }
 
-_FORM = re.compile(r"<form\b[^>]*>", re.IGNORECASE)
-_ATTR = re.compile(r"""(\w[\w:-]*)\s*=\s*["']([^"']*)["']""")
-_SEARCH_INPUT = re.compile(r"""<input\b[^>]*\bname\s*=\s*["']([^"']+)["'][^>]*>""", re.IGNORECASE)
+# These read attacker-written markup, so each scan is linear in its input
+# (security review 2026-10-22, SR2-09; the SR2-01/02 fix, as in
+# ``live_discovery._link_tags`` / ``_attributes``). The plain forms
+# (``<form\b[^>]*>``; ``(\w[\w:-]*)\s*=…``; ``<input\b[^>]*\bname…[^>]*>``)
+# restarted a scan at every ``<form`` with no ``>`` after it, at every
+# character of a long name with no ``=``, and at every ``<input`` and every
+# ``name`` inside one: quadratic. What they match is unchanged, and
+# ``tests/test_site_search.py`` keeps them as the oracle.
+#
+# A form tag is consumed possessively up to its ``>`` or, when there is none,
+# to the end of the text; a match that reached the end without ``>`` is
+# dropped (with no ``>`` left, no later ``<form`` could match either).
+_FORM = re.compile(r"<form\b[^>]*+>?", re.IGNORECASE)
+# A name is tried once per run of name characters ``[\w:-]``, from the run's
+# start (its leading ``:`` / ``-`` skipped), and taken to the run's end: a
+# later start in the same run meets the same end, and a shorter name is
+# followed by a name character, never ``=``.
+_ATTR = re.compile(r"""(?<![\w:-])[:-]*+(\w[\w:-]*+)\s*+=\s*+["']([^"']*+)["']""")
+_INPUT_OPEN = re.compile(r"<input\b", re.IGNORECASE)
+_NAME_WORD = re.compile(r"\bname", re.IGNORECASE)
+_NAME_VALUE = re.compile(r"""name\s*+=\s*+["']([^"']++)["']""", re.IGNORECASE)
 _SCRIPT_URL = re.compile(r"""["'](https?://[^"'\s]+|/[^"'\s]+)["']""")
 
 
@@ -149,20 +168,55 @@ def _classify(url: str) -> SiteSearchKind | None:
     return None
 
 
+def _form_tags(html: str) -> list[re.Match[str]]:
+    """Every complete ``<form …>`` tag, in order: ``_FORM``'s matches that end in ``>``."""
+    return [match for match in _FORM.finditer(html) if match.group(0).endswith(">")]
+
+
+def _search_input_names(text: str) -> list[str]:
+    """The names the old ``<input\\b[^>]*\\bname\\s*=…[^>]*>`` ``findall`` returned.
+
+    For each ``<input``, the old pattern took the *last* ``name="…"`` before
+    the tag's first ``>`` that had any ``>`` after its closing quote (the value
+    itself may hold a ``>``), and went on after the first ``>`` that follows.
+    Whether a ``name`` works does not depend on the ``<input`` it is read for,
+    so when one ``<input`` finds none, no later one before the same ``>`` can:
+    the scan jumps past that ``>``. Each character is looked at a bounded
+    number of times.
+    """
+    names: list[str] = []
+    last_close = text.rfind(">")
+    pos = 0
+    while (found := _INPUT_OPEN.search(text, pos)) is not None:
+        close = text.find(">", found.end())
+        if close < 0:
+            break  # no ">" left: no later tag can close either
+        starts = [m.start() for m in _NAME_WORD.finditer(text, found.end(), close)]
+        for start in reversed(starts):
+            value = _NAME_VALUE.match(text, start)
+            if value is not None and value.end() <= last_close:
+                names.append(value.group(1))
+                pos = text.index(">", value.end()) + 1
+                break
+        else:
+            pos = close + 1
+    return names
+
+
 def _form_surfaces(html: str, base_url: str, domain: str, now: datetime) -> list[SiteSearchSurface]:
     surfaces: list[SiteSearchSurface] = []
-    for match in _FORM.finditer(html):
+    for match in _form_tags(html):
         tag = match.group(0)
         attrs = {k.lower(): v for k, v in _ATTR.findall(tag)}
         action = attrs.get("action", "")
         if not action:
             continue
-        url = urljoin(base_url, action)
-        if not _is_public(url, domain):
+        url = page_link(base_url, action)
+        if url is None or not _is_public(url, domain):
             continue
 
         tail = html[match.end() : match.end() + 2000]
-        names = _SEARCH_INPUT.findall(tail)
+        names = _search_input_names(tail)
         param = next(
             (n for n in names if n.lower() in ("q", "query", "s", "search", "keywords", "term")),
             None,
@@ -229,14 +283,16 @@ def detect_surfaces(
     surfaces += _form_surfaces(html, base_url, domain, now)
 
     for match in _SCRIPT_URL.finditer(html):
-        url = urljoin(base_url, match.group(1))
-        kind = _classify(url)
-        if kind is None or not _is_public(url, domain):
+        link = page_link(base_url, match.group(1))
+        if link is None:
+            continue
+        kind = _classify(link)
+        if kind is None or not _is_public(link, domain):
             continue
         surfaces.append(
             SiteSearchSurface(
                 kind=kind,
-                endpoint=url,
+                endpoint=link,
                 query_param=_DEFAULT_QUERY_PARAM[kind],
                 provenance=Provenance.MARKUP,
                 detected_at=now,

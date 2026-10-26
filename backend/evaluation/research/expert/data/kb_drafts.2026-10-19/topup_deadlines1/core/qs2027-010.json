@@ -1,0 +1,41 @@
+{
+ "case": "qs2027-010",
+ "seed_id": "qs2027-010",
+ "university": "National University of Singapore (NUS)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-010",
+  "round": "topup_deadlines1"
+ },
+ "questions_researched": [
+  "gpa"
+ ],
+ "questions_researched_not_filled": [
+  "deadline"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.comp.nus.edu.sg/programmes/ug/cs/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "not_applicable",
+   "value": {
+    "description": "No fixed minimum grade: admission is an open competition on academic merit, and the criteria vary each year with the applicant pool."
+   },
+   "url": "https://www.comp.nus.edu.sg/admissions/faq/",
+   "quote": "Admission to the university is based on academic merit and an open competition among all applicants. Admission criteria vary each year depending on the competitiveness of the applicant pool. Thus, there is no fixed minimum grade required for admission.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "School of Computing admissions FAQ, answer to 'Is there any record for grades or basis on which international students from different countries got admission in past years?'. NUS publishes indicative grade profiles (past 10th/90th percentiles) on nus.edu.sg/oam, which is behind an Incapsula challenge (HTTP 200, empty body) for the production user agent; those are indicative, not a minimum. Deadline (researched, not filled): the same FAQ still lists only the AY2026/2027 window ('International Qualifications (All Nationalities): 3 December 2025 to 23 February 2026'); the AY2027/2028 dates are not on any readable official page."
+  }
+ }
+}

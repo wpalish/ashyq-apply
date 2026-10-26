@@ -15,7 +15,12 @@
  * removed, so an old build's pointer is not lost across the upgrade.
  */
 
-/** Keys were `unimatch.*` before the product was named. */
+/**
+ * Keys were `unimatch.*` before an earlier rename and are `ashyq.*` now. The
+ * product is called Unimatch again (owner, 2026-10-19), but storage keys are
+ * internal and nobody reads them, so they are deliberately not churned back:
+ * the `unimatch.*` keys are still read once and adopted for old browsers.
+ */
 export function legacyKey(key: string): string {
   return key.replace(/^ashyq\./, 'unimatch.');
 }

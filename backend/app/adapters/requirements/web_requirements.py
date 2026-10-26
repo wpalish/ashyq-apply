@@ -14,26 +14,56 @@ page and a live university page, so demo mode rehearses the real path.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from collections.abc import Sequence
+from dataclasses import dataclass, replace
+from urllib.parse import urlparse
 
-from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
-from app.adapters.discovery.live_discovery import matches_field_text
+from app.adapters import extraction as _extraction
+from app.adapters import matching as _matching
+from app.adapters import pdf_evidence
+from app.adapters.base import (
+    AdapterResult,
+    Candidate,
+    CandidateProgram,
+    PageOutcome,
+    RequirementsLead,
+)
+from app.adapters.discovery import live_discovery as _discovery
+from app.adapters.discovery.live_discovery import (
+    degree_level_named,
+    matches_field_text,
+    names_other_degree_level,
+    strip_url_extension,
+)
 from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
+    EnglishHint,
+    english_programme_hint,
     excerpt_around,
     extract_admission_route,
     extract_costs,
     extract_programme_faculty,
     extract_requirements,
+    faculty_blocks,
     for_matching,
     html_title,
     is_official_domain,
+    page_faculty,
     pdf_to_text,
+    programme_faculty,
     readable_text,
+    request_fee_population,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, same_source_site
+from app.adapters.fetching import (
+    QUERY_MIN_SECONDS,
+    Fetcher,
+    case_seconds_left,
+    reading_as,
+    same_source_site,
+)
+from app.adapters.html_parse import parse_html
 from app.adapters.matching import degree_matches, program_matches
 from app.adapters.page_classifier import (
     PageType,
@@ -44,10 +74,12 @@ from app.adapters.page_classifier import (
 from app.adapters.scope_reader import read_scope
 from app.adapters.search.ontology import titles_name_same_programme
 from app.adapters.structured_extraction import extract_table_requirements
+from app.adapters.url_canonical import canonical_link  # PD-2
+from app.domain.claim_scope import ClaimScope
 from app.domain.claim_verifier import is_verbatim_excerpt
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 from app.domain.programme_identity import Verdict
-from app.schemas.claim import MAX_EXCERPT_CHARS
+from app.schemas.claim import MAX_EXCERPT_CHARS, Claim
 
 #: An intake is open only when a page says so. Each pattern must capture the
 #: sentence it matched, which becomes the claim's excerpt.
@@ -123,6 +155,83 @@ TOPIC_SEARCH = True
 #: institution; the next topic is still asked (NTU, run claude-sr1-paired-1:
 #: two of four repetitions lost all three topics to one failed query).
 TOPIC_SEARCH_CONTINUE = False
+#: Plan rule FS-1: a page reached by topic search, or by a lead from one, is a
+#: university-level source and may speak for another faculty (Groningen,
+#: QB-1 run: the Faculty of Economics and Business "Apply for a Bachelor" page
+#: gave IELTS 6.0 to Computing Science, a Faculty of Science and Engineering
+#: programme at 6.5). When the page's breadcrumb, title or H1 names a faculty
+#: and the programme page named another, the page yields no requirement
+#: claims; on a page with one section per faculty, IELTS is read only from the
+#: section that names the programme or its faculty. Unknown faculty → as before.
+#: On with QB-1 since the same paired runs (no wrong claim from another
+#: faculty's page in any arm); owner delegation 2026-10-17. False turns it off.
+TOPIC_FACULTY_SCOPE = True
+#: Plan rule FS-2, on since paired runs 39096181406 / 39096182669 / 39096183785
+#: (narrowed form: removes UM's Linguistics IELTS 6.0 / TOEFL 78 that the
+#: defaults claimed, warsaw programme labels a stable gain, 0 losses; owner
+#: delegation 2026-10-17; False turns it off): a page reached by topic
+#: search, or by a lead from one, that is another programme's own page yields
+#: no requirement claims. UM, dev3 runs of 2026-10-18: the English-requirements
+#: query returned the "Bachelor of English Language and Linguistics" page, and
+#: its conditional-admission IELTS 6 was claimed for Computer Science (5.5).
+#: The benchmark harness flips it per capture (``--topic-programme-scope``).
+#: Narrowed after the fs2 runs: the classifier calls university pages such as
+#: Auckland's "Undergraduate English language requirements", Delft's "Admission
+#: Requirements" / "BSc International" and Imperial's "Deadlines" programme
+#: pages, so the cut fires only when the subject is a degree title of another
+#: field with no requirement-topic word (``_names_another_programme``).
+TOPIC_PROGRAMME_SCOPE = True
+#: Claim types FS-1 reads from one faculty's section of a per-faculty page.
+_FACULTY_SCOPED_CLAIMS = frozenset({ClaimType.IELTS_MIN_OVERALL, ClaimType.IELTS_MIN_SUBSCORE})
+_DEGREE_PREFIX = re.compile(
+    r"^(?:b\.?sc\.?|b\.?a\.?|b\.?eng\.?|bachelor(?:'s)?(?:\s+of\s+\w+)?(?:\s+in)?)\s+", re.I
+)
+_TRAILING_NOTE = re.compile(r"\s*\([^)]*\)\s*$")
+#: FS-2: words that make a "programme" subject a requirements topic page.
+_REQUIREMENT_TOPIC = re.compile(
+    r"\b(?:requirements?|prerequisites?|deadlines?|dates?|fees?|tuition|finances?|"
+    r"admissions?|entry|applications?|apply|international|scholarships?|"
+    r"english\s+(?:language\s+)?(?:requirements?|proficiency|tests?))\b",
+    re.I,
+)
+
+
+def _names_another_programme(subject: str, field: str) -> bool:
+    """FS-2: the subject is a degree title ("Bachelor of English Language and
+    Linguistics") of a field other than ``field``, not a requirements topic."""
+    return (
+        _DEGREE_PREFIX.match(subject) is not None
+        and not matches_field_text(subject, [field])
+        and _REQUIREMENT_TOPIC.search(subject) is None
+    )
+
+
+def _programme_line_key(line: str) -> str:
+    """A list line or programme name reduced for comparison ("BSc Computing Science")."""
+    line = _TRAILING_NOTE.sub("", " ".join(line.split()))
+    return _DEGREE_PREFIX.sub("", line).lower()
+
+
+def _faculty_section(text: str, programme: str, faculty: str | None) -> tuple[bool, list[str]]:
+    """FS-1: (is a per-faculty page, the sections that name the programme or its faculty).
+
+    Sections that list the programme by name win over sections headed by its
+    faculty; a page that is not per-faculty gives (False, []).
+    """
+    blocks = faculty_blocks(text)
+    if not blocks:
+        return False, []
+    wanted = _programme_line_key(programme)
+    naming = [
+        block
+        for _, block in blocks
+        if wanted and any(_programme_line_key(line) == wanted for line in block.splitlines())
+    ]
+    if naming:
+        return True, naming
+    return True, [block for key, block in blocks if faculty and key == faculty]
+
+
 _TOPIC_QUERIES = (
     ("english", "{name} undergraduate English language requirements international applicants"),
     ("fees", "{name} undergraduate tuition fees international students"),
@@ -140,6 +249,39 @@ class _Target:
     topic: str | None = None
     #: Reached by following a route or deadline link (plan rule RL-1).
     route_follow: bool = False
+    #: FE-2b: the route link was a deadline link ("Dates & deadlines").
+    deadline_lead: bool = False
+    #: Reached by following a fee link from any official page (plan rule HL-1).
+    fee_follow: bool = False
+    #: FS-1: a lead from a page reached by topic search.
+    from_topic: bool = False
+    #: QR-1: the question ("english" or "deadline") this page was reached for.
+    question: str | None = None
+    #: QR-1: a page whose official links are scanned for the questions
+    #: (programme, admissions and, without a programme page, home page).
+    link_source: bool = False
+    #: QR-1: read for its links only; nothing on it is claimed (home page).
+    links_only: bool = False
+    #: QR-1b: reached by a question, language or route link on the confirmed
+    #: programme page; a page silent on its degree takes the programme's.
+    #: QR-1c: also on the admissions page read beside a confirmed programme
+    #: page, when the admissions page is silent on its degree or states the
+    #: programme's.
+    via_programme: bool = False
+    #: QR-1c: the admissions page the link was on, when it was not the
+    #: programme page (for the scope note).
+    via_admissions: str | None = None
+    #: QR-2: the parent degree page the programme page links to, read as a
+    #: source for the deadline and English questions (and fees, by the cost
+    #: adapter); ``question`` is "deadline".
+    parent_degree: bool = False
+    #: DL-6: the degree level's application page, read for an international
+    #: applicant's admission round deadline only.
+    intl_round: bool = False
+    #: SP-2: the process sub-page discovery refused (``requirements_leads``),
+    #: read as QR-2's parent degree page is: for the deadline and, while no
+    #: IELTS minimum is read, English; ``question`` is "deadline".
+    subpage_lead: bool = False
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -151,8 +293,19 @@ _LANGUAGE_LINK = re.compile(
 )
 
 
-def _language_links(html: str, base: str, domain: str | None) -> list[str]:
-    """Official links on a page whose text or URL names an English requirement."""
+def _language_links(
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    degree: object = None,
+) -> list[str]:
+    """Official links on a page whose text or URL names an English requirement.
+
+    ``extra_domains`` are the candidate's DI-1 admissions domains. With
+    ``degree`` (HL-1), a link naming another degree level is dropped.
+    """
     if not domain:
         return []
     out: list[str] = []
@@ -160,7 +313,9 @@ def _language_links(html: str, base: str, domain: str | None) -> list[str]:
         url = link.url.split("#")[0]
         if not url.startswith(("https://", "http://", "fixture://")):
             continue
-        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
+            continue
+        if degree is not None and _names_other_level(" ".join(link.text.split()), url, degree):
             continue
         named = _LANGUAGE_LINK.search(link.text) or _LANGUAGE_LINK.search(url.replace("/", " "))
         if named and url not in out and url.rstrip("/") != base.rstrip("/"):
@@ -194,48 +349,487 @@ _GRADUATE_LEAD = re.compile(r"\b(?:msc|master'?s?|phd|doctoral|postgraduate|grad
 
 
 def _route_links(
-    html: str, base: str, domain: str | None, *, deadline: bool, requirements: bool
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    deadline: bool,
+    requirements: bool,
 ) -> list[tuple[str, bool]]:
     """Same-site links to the deadline or the foreign-diploma route (RL-1).
 
     Each item is ``(url, is_requirements_page)``. Link text decides; a link
     that names a graduate route is never followed.
     """
+    return [
+        (url, is_requirements)
+        for url, is_requirements, _ in _route_link_items(
+            html, base, domain, extra_domains, deadline=deadline, requirements=requirements
+        )
+    ]
+
+
+def _route_link_items(
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    deadline: bool,
+    requirements: bool,
+) -> list[tuple[str, bool, bool]]:
+    """``_route_links`` with, per link, whether its text named the deadline."""
     if not domain:
         return []
     on_route = bool(_ON_ROUTE.search(base))
-    out: list[tuple[str, bool]] = []
+    out: list[tuple[str, bool, bool]] = []
     seen: set[str] = set()
     for link in build_document_ir(html, base).links:
         url = link.url.split("#")[0]
         text = " ".join(link.text.split())
         if not url.startswith(("https://", "http://", "fixture://")) or url in seen:
             continue
-        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
             continue
         if url.rstrip("/") == base.rstrip("/") or _GRADUATE_LEAD.search(text):
             continue
-        if (deadline and _DEADLINE_LEAD.search(text)) or (
-            requirements and _ROUTE_LEAD.search(text)
-        ):
-            out.append((url, False))
+        is_deadline = bool(deadline and _DEADLINE_LEAD.search(text))
+        if is_deadline or (requirements and _ROUTE_LEAD.search(text)):
+            out.append((url, False, is_deadline))
         elif requirements and on_route and _REQUIREMENTS_LEAD.search(text):
-            out.append((url, True))
+            out.append((url, True, False))
         else:
             continue
         seen.add(url)
     return out
 
 
+#: Plan rule HL-1 (evidence analysis 2026-10-17, §0 cause 3, §4 rank 2):
+#: leads were followed only from pages the classifier accepted, so a
+#: programme page it rejected (TCD's course page reads as a catalogue) or an
+#: admissions hub (UCT's international-applicants page reads as unknown) never
+#: had its "English language requirements", route, fee or scholarship links
+#: followed, though both carry the exact link an expert used. With HL-1 on,
+#: every official HTML page read here, accepted or rejected, is scanned for
+#: language, route and deadline links (``_language_links``, ``_route_links``)
+#: and for fee and scholarship links (``_service_links``), under the same
+#: follow caps; no lead whose text or URL names another degree level than the
+#: request is followed. A fee link becomes ``candidate.costs_url`` and a
+#: scholarship link ``candidate.scholarships_url`` when discovery left them
+#: None, so the cost and funding adapters read them; a fee link on a candidate
+#: that already has a cost page is read here as a fee page. A rejected page's
+#: own text is still never claimed from. Off by default; the benchmark harness
+#: flips it per capture (``--hub-leads``).
+HUB_LEADS = False
+_FEES_LEAD = re.compile(r"\b(?:tuition|fees?)\b", re.I)
+_FEES_LEAD_PATH = re.compile(r"(?:^|[/_-])(?:fees?|tuition)(?:[/_.-]|$)", re.I)
+#: An application fee or a fee waiver is not what a year of study costs.
+_NOT_FEES_LEAD = re.compile(r"\bapplication[\s_-]+fees?\b|\bwaivers?\b", re.I)
+_SCHOLARSHIP_LEAD = re.compile(
+    r"\bscholarships?\b|\bfinancial[\s-]+(?:aid|support)\b|\bbursar(?:y|ies)\b|\bfunding\b",
+    re.I,
+)
+_SCHOLARSHIP_LEAD_PATH = re.compile(
+    r"(?:^|[/_-])(?:scholarships?|financial[_-]aid|funding|bursar(?:y|ies))(?:[/_.-]|$)", re.I
+)
+#: Link text that names a level other than the requested one (HL-1 guard).
+_OTHER_LEVEL_TEXT: dict[str, re.Pattern[str]] = {
+    "bachelor": _GRADUATE_LEAD,
+    "master": re.compile(r"\b(?:undergraduate|bachelor'?s?|bsc|phd|doctoral|doctorate)\b", re.I),
+    "phd": re.compile(r"\b(?:undergraduate|bachelor'?s?|bsc|msc|master'?s?)\b", re.I),
+}
+
+
+def _level_scope(degree: object) -> bool:
+    """SL-1 (``web_scholarships.SCHOLARSHIP_LEVEL_SCOPE``): route links get a URL level guard."""
+    from app.adapters.scholarship import web_scholarships
+
+    return web_scholarships.SCHOLARSHIP_LEVEL_SCOPE and degree is not None
+
+
+def _names_other_level(text: str, url: str, degree: object) -> bool:
+    """HL-1: whether a lead's text or URL names a level the applicant did not ask for."""
+    if not degree:
+        return False
+    level = str(degree)
+    pattern = _OTHER_LEVEL_TEXT.get(level)
+    return bool(pattern and pattern.search(text)) or names_other_degree_level(url, level)
+
+
+def _service_links(
+    html: str, base: str, domain: str | None, degree: object, extra_domains: Sequence[str] = ()
+) -> tuple[list[str], list[str]]:
+    """HL-1: official ``(fee, scholarship)`` links on a page.
+
+    Link text or URL path decides; a link naming another degree level is
+    dropped, and one naming the requested level comes before a neutral one.
+    """
+    if not domain:
+        return [], []
+    level = str(degree) if degree else None
+    fees: list[tuple[bool, str]] = []
+    awards: list[tuple[bool, str]] = []
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0]
+        text = " ".join(link.text.split())
+        if not url.startswith(("https://", "http://", "fixture://")):
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
+            continue
+        if url.rstrip("/") == base.rstrip("/") or _names_other_level(text, url, degree):
+            continue
+        path = url[len("fixture://") :] if url.startswith("fixture://") else urlparse(url).path
+        own_level = level is not None and degree_level_named(url) == level
+        if (_FEES_LEAD.search(text) or _FEES_LEAD_PATH.search(path)) and not (
+            _NOT_FEES_LEAD.search(text) or _NOT_FEES_LEAD.search(path)
+        ):
+            if url not in {u for _, u in fees}:
+                fees.append((own_level, url))
+        elif (
+            _SCHOLARSHIP_LEAD.search(text) or _SCHOLARSHIP_LEAD_PATH.search(path)
+        ) and url not in {u for _, u in awards}:
+            awards.append((own_level, url))
+
+    def ordered(items: list[tuple[bool, str]]) -> list[str]:
+        return [u for own, u in items if own] + [u for own, u in items if not own]
+
+    return ordered(fees), ordered(awards)
+
+
+#: Plan rule QR-1 (structural analysis 2026-10-18, §2 F1/F2, §3 change 2),
+#: off until a paired run passes. The evidence stage routed a page by the type
+#: the classifier gave it, not by the question it was fetched for: every fee
+#: page the fees query returned (12 of 16 cases) was rejected "classified as
+#: costs", and TCD's and UCT's English pages were fetched and rejected as
+#: ``unknown``; the programme page's own "Fees", "Selection procedure" and
+#: "English language requirements" links were not followed unless their text
+#: matched RL-1's two patterns. On:
+#:
+#: * targets per question, in order: (a) official links on the programme page
+#:   and the admissions page (and, with no programme page, the home page)
+#:   whose text or URL names English/language requirements, fees/tuition, or
+#:   deadlines/dates/selection procedure/how to apply, under the URL and
+#:   link-text degree-level guards, at most ``_MAX_QUESTION_LINKS`` each;
+#:   (b) after those are read, one topic query per question still unanswered
+#:   among english, fees and deadline, within the shared query budget;
+#: * a page reached for English is read by the table and prose English
+#:   readers, and one reached for the deadline by the deadline reader,
+#:   whatever the classifier calls it (the ``language_follow`` exemption,
+#:   generalised); only that question's claim types are kept from such a page;
+#: * a page reached for fees is not read here: it is recorded in
+#:   ``candidate.question_fee_urls`` and read by ``WebCostAdapter`` with the
+#:   structured fee reader (TY-1 year selection) after ``costs_url``;
+#: * a claim whose read scope names another degree level than the request is
+#:   withheld (UCPH: IELTS from the master's language page for a bachelor);
+#: * all of this runs when no programme page is confirmed, from the
+#:   admissions and home pages, at university-admissions specificity.
+#: * QR-1b (wrong-claims analysis 2026-10-18, R-A): a page reached by a
+#:   question, language or route link on the confirmed programme page, and
+#:   silent on its degree, is read in the programme's degree (and name) —
+#:   the programme page's own degree, else the request's — with a scope note
+#:   on each claim; a topic-search page inherits nothing, and a page naming
+#:   another degree keeps it and is withheld below;
+#: * QR-1b: a question page is read once per institution per run, and a
+#:   second programme reuses its claims; every question page is read by the
+#:   question's reader, whatever the classifier calls it.
+#: * QR-1c (bundle4 dev2, UCT rep 2): UCT's programme page links no English
+#:   page; the admissions page read beside it ("International applicants",
+#:   itself degree-silent) does, so the language page came without the
+#:   programme's degree and scored wrong-scope on the right value. A question,
+#:   language or route link on the admissions page read beside a confirmed
+#:   programme page carries the programme's degree as QR-1b's do, unless the
+#:   admissions page states another degree; reused claims of a question page
+#:   reached that way, or from the programme page, take it too when silent.
+#:
+#: FS-1 still applies to topic pages. The benchmark harness flips it per
+#: capture (``--question-routing``).
+QUESTION_ROUTED_EVIDENCE = True
+#: QR-1: question links followed per question, beyond the topic query's page.
+_MAX_QUESTION_LINKS = 2
+#: QR-1: the deadline question's link text and URL path.
+_DEADLINE_QUESTION_TEXT = re.compile(
+    r"\bdeadlines?\b|\b(?:key|important)\s+dates\b|\bselection\s+procedure\b"
+    r"|\bhow\s+to\s+apply\b|\bapplication\s+(?:procedure|process)\b",
+    re.I,
+)
+_DEADLINE_QUESTION_PATH = re.compile(
+    r"(?:^|[/_-])(?:deadlines?|key-dates|important-dates|dates-and-deadlines|how-to-apply"
+    r"|selection-procedure|application-(?:procedure|process))(?:[/_.-]|$)",
+    re.I,
+)
+#: Claim types a page reached for one question may yield when the classifier
+#: would not admit it as a requirements page.
+_QUESTION_CLAIMS: dict[str, frozenset[ClaimType]] = {
+    "english": frozenset(
+        {
+            ClaimType.IELTS_MIN_OVERALL,
+            ClaimType.IELTS_MIN_SUBSCORE,
+            ClaimType.IELTS_ACCEPTED_TYPES,
+            ClaimType.TOEFL_MIN_TOTAL,
+            ClaimType.DUOLINGO_MIN,
+            ClaimType.ENGLISH_EVIDENCE_MINIMUM,
+            ClaimType.ENGLISH_TEST_WAIVER,
+        }
+    ),
+    "deadline": frozenset({ClaimType.ADMISSION_DEADLINE}),
+}
+#: R2b: the claim types withheld from a degree-silent topic-search page
+#: (``SUBJECT_TITLE_SHAPES``): the English and deadline questions' own.
+_TOPIC_SCOPED_CLAIMS: frozenset[ClaimType] = (
+    _QUESTION_CLAIMS["english"] | _QUESTION_CLAIMS["deadline"]
+)
+#: The claim that answers each question (QR-1's "still unanswered").
+_QUESTION_ANSWER = {
+    "english": ClaimType.IELTS_MIN_OVERALL,
+    "fees": ClaimType.TUITION,
+    "deadline": ClaimType.ADMISSION_DEADLINE,
+}
+#: FE-2b: the questions whose further pages may spend the reserve kept for the
+#: cost and award reads (``fetching.OPEN_QUESTION_CORE_READS``) while they are
+#: unanswered. Fees is not one: the reserve is the fee read's own.
+_OPEN_QUESTIONS = frozenset({"english", "deadline"})
+#: ``read_scope`` degree words to the request's ``DegreeLevel`` values.
+_SCOPE_LEVEL = {"bachelor": "bachelor", "master": "master", "doctorate": "phd"}
+
+
+def _question_links(
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    degree: object = None,
+) -> list[tuple[str, str]]:
+    """QR-1: official ``(question, url)`` links on a page, in link order.
+
+    The question is the first of english, fees, deadline that the link's text
+    or URL path names; a link naming another degree level is dropped, and so
+    is an application fee or waiver link and a scholarship deadline link.
+    """
+    if not domain:
+        return []
+    out: list[tuple[str, str]] = []
+    seen: set[str] = {base.rstrip("/")}
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0]
+        text = " ".join(link.text.split())
+        if not url.startswith(("https://", "http://", "fixture://")) or url.rstrip("/") in seen:
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
+            continue
+        if _names_other_level(text, url, degree):
+            continue
+        path = url[len("fixture://") :] if url.startswith("fixture://") else urlparse(url).path
+        question: str | None = None
+        if _LANGUAGE_LINK.search(text) or _LANGUAGE_LINK.search(path.replace("/", " ")):
+            question = "english"
+        elif (_FEES_LEAD.search(text) or _FEES_LEAD_PATH.search(path)) and not (
+            _NOT_FEES_LEAD.search(text) or _NOT_FEES_LEAD.search(path)
+        ):
+            question = "fees"
+        elif (
+            _DEADLINE_QUESTION_TEXT.search(text) or _DEADLINE_QUESTION_PATH.search(path)
+        ) and not _SCHOLARSHIP_LEAD.search(text):
+            question = "deadline"
+        if question:
+            seen.add(url.rstrip("/"))
+            out.append((question, url))
+    return out
+
+
+#: Plan rule QP-1 (core-gap analysis 2026-10-18 §3 change 5, item 3), off until
+#: a paired run passes; ``--question-page-order`` flips it. The question pages
+#: were read in the order their links were queued: on UBC the programme and
+#: admissions pages queue two English pages, a "How to apply" deadline link, a
+#: route lead and only then ``/applying-ubc/dates-deadlines/``, and TB-1
+#: refused that read in 2 of 4 repetitions with the English question long
+#: answered. On, the next page read is, after the link sources, a page for the
+#: unanswered question with the fewest pages read so far (one page per
+#: unanswered core question first, round robin after that); pages for answered
+#: questions and leads that name no question keep their order after those.
+QUESTION_PAGE_ORDER = (
+    True  # on: runs 39145855313 / 857030 / 858769 (uppsala, auckland deadlines; 0 losses)
+)
+#: Plan rule QR-2 (core-gap analysis 2026-10-18 §3 change 6, part 1), off until
+#: a paired run passes; ``--parent-degree-link`` flips it. Auckland confirms the
+#: Computer Science major's pages, which say "You can study Computer Science as
+#: a major in the Bachelor of Science (BSc)" and link that degree page; the
+#: application closing dates live on the degree page, which no QR-1 link
+#: reaches. On, one link on the confirmed programme page whose text is a bare
+#: degree title of the requested level ("Bachelor of Science (BSc)", not
+#: "Bachelor of Science in Computer Science"), and that the programme page
+#: names as the degree its programme is a major (specialisation, pathway, ...)
+#: of, or that its title or h1 contains, is read as a question page for the
+#: deadline and, while no IELTS minimum is read, English, and is handed to
+#: the cost adapter as a fees page. It keeps its own read scope: a degree page
+#: takes no programme name from the linking page.
+PARENT_DEGREE_LINK = True  # on: same runs
+_PARENT_DEGREE_TITLE = re.compile(
+    r"^(?i:bachelor|master)\s+of\s+(?:[A-Z][\w'&-]*\s*){1,4}(?:\(\s*[A-Za-z.]{2,8}\s*\))?$"
+)
+_MAJOR_OF = (
+    r"\b(?:major|minor|specialisation|specialization|subject|pathway|concentration|stream)s?"
+    r"\b[^.\n]{0,40}?\b(?:in|of|within|through|as\s+part\s+of)\s+(?:the\s+|a\s+|our\s+)?"
+)
+
+
+def _parent_degree_link(
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    degree: object = None,
+) -> str | None:
+    """QR-2: the parent degree page the programme page links to, or ``None``.
+
+    The link's text is a bare degree title of the requested level, on an
+    official host; the page names it as the degree its programme belongs to
+    ("a major in the Bachelor of Science (BSc)") or carries it in its title
+    or h1. The first such link only.
+    """
+    if not domain:
+        return None
+    doc = build_document_ir(html, base)
+    text = for_matching(readable_text(html))
+    headings = " ".join(h.get_text(" ") for h in parse_html(html).find_all("h1"))
+    own = " ".join(f"{html_title(html)} {headings}".split()).lower()
+    for link in doc.links:
+        url = link.url.split("#")[0]
+        title = " ".join(link.text.split())
+        if not _PARENT_DEGREE_TITLE.match(title) or url.rstrip("/") == base.rstrip("/"):
+            continue
+        if not url.startswith(("https://", "http://")) or not is_official_domain(
+            url, [domain, *extra_domains]
+        ):
+            continue
+        if degree is not None and degree_level_of(title) != str(degree):
+            continue
+        # The degree named whole: "the Bachelor of Science in Computer Science"
+        # names a programme, not "Bachelor of Science".
+        spelled = r"\s+".join(re.escape(word) for word in title.split()) + r"(?!\s+(?:in|of)\b)"
+        if re.search(_MAJOR_OF + spelled, text, re.I) or title.lower() in own:
+            return url
+    return None
+
+
+def _home_url(candidate: Candidate) -> str | None:
+    """QR-1: the institution's home page, a link source when no programme page is known."""
+    return f"https://{candidate.domain}/" if candidate.domain else None
+
+
+#: DL-6 (``extraction.INTERNATIONAL_ROUND_DEADLINE``): the bare navigation
+#: label of a degree level's application page, and the last path segment it
+#: must end in ("Application" -> ``/bachelors-studies/application``).
+_APPLICATION_PAGE_TEXT = re.compile(
+    r"^(?:applications?|applying|apply|how\s+to\s+apply)$", re.IGNORECASE
+)
+_APPLICATION_PAGE_PATH = re.compile(
+    r"(?:^|/)(?:applications?|applying|apply|how-to-apply)/?$", re.IGNORECASE
+)
+#: DL-6: an application page for something other than admission to study
+#: (a housing or childcare application, a job, an award, an exchange).
+_NOT_ADMISSION_PATH = re.compile(
+    r"accommodation|housing|residen|child|educare|careers?|jobs?|staff|employ|vacanc"
+    r"|scholarship|bursar|award|grant|exchange|visit|support",
+    re.IGNORECASE,
+)
+
+
+def _application_page_link(
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    degree: object = None,
+) -> str | None:
+    """DL-6: the first official link whose text is a bare "Application" /
+    "How to apply" label and whose URL path ends in that word, not naming
+    another degree level than the request's; ``None`` when there is none."""
+    if not domain:
+        return None
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0].split("?")[0]
+        text = " ".join(link.text.split())
+        if not url.startswith(("https://", "http://", "fixture://")) or url.rstrip("/") == (
+            base.rstrip("/")
+        ):
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
+            continue
+        path = url[len("fixture://") :] if url.startswith("fixture://") else urlparse(url).path
+        if (
+            _APPLICATION_PAGE_TEXT.match(text)
+            and _APPLICATION_PAGE_PATH.search(path)
+            and not _NOT_ADMISSION_PATH.search(path)
+            and not _names_other_level(text, url, degree)
+        ):
+            return url
+    return None
+
+
+#: QR-1b: the request's ``DegreeLevel`` values to ``read_scope`` degree words.
+_LEVEL_SCOPE = {level: word for word, level in _SCOPE_LEVEL.items()}
+#: QR-1b: the scope note a claim carries when its degree came by route.
+_ROUTE_SCOPE_NOTE = "Scope: degree from the linking programme page ({url})."
+#: QR-1c: the note when the link was on the admissions page read beside it.
+_ADMISSIONS_ROUTE_SCOPE_NOTE = (
+    "Scope: degree from the confirmed programme page ({url}), "
+    "linked through the admissions page ({admissions})."
+)
+
+
+def _route_scope(scope: ClaimScope, degree: str | None, programme: str) -> ClaimScope | None:
+    """QR-1b: a linked page's read scope with the linking programme's degree.
+
+    Only a page silent on its degree inherits one: a page that names a degree
+    keeps it (and a degree other than the request's is then withheld).
+    """
+    if scope.degree or not degree:
+        return None
+    return replace(scope, degree=degree, programme=scope.programme or programme)
+
+
+def _names_other_scope_level(claim: Claim, degree: object) -> bool:
+    """QR-1: whether a claim's read scope names a degree level the request did not."""
+    if claim.scope is None or not claim.scope.degree or not degree:
+        return False
+    level = _SCOPE_LEVEL.get(str(claim.scope.degree))
+    return level is not None and str(degree) in _SCOPE_LEVEL.values() and level != str(degree)
+
+
+#: SC-2, off until a paired run passes; ``--coordinated-degree-scope`` flips it.
+#: A requirements page's read scope missed a degree word coordinated with the
+#: one it read: UNSW's English page says "If you are applying for an
+#: undergraduate and postgraduate course", only "postgraduate course" was
+#: read, the page scoped itself to master's, and QR-1 withheld the bachelor's
+#: row EN-2 had read for the programme (dev3 base2, every repetition). On, a
+#: requirements page names every level of such a list, so a page naming two
+#: is silent on its degree (and a linked one takes the programme page's, as
+#: QR-1b says); a page naming one level reads as before. Requirements pages
+#: only: scholarship, cost and document scopes are unchanged.
+# on: runs 39164239686 + 39170160596 (unsw ielts overall+subscores, 4 reps; 0 wrong after the scorer acronym fix)
+COORDINATED_DEGREE_SCOPE = True
+
+
 class WebRequirementsAdapter:
     name = "web-requirements"
 
-    def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
+    def __init__(
+        self, fetcher: Fetcher, academic_year: str, citizenships: Sequence[str | None] = ()
+    ) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        #: FE-2b: the applicant's citizenships, for the fee row that is theirs.
+        self.citizenships = tuple(citizenships)
         #: Topic pages found per institution: programmes of one university
         #: share them, so each query is sent once per run.
         self._topic_pages: dict[str, tuple[tuple[str, str], ...]] = {}
+        #: QR-1b: question pages read per institution, with the claims each
+        #: yielded; a second programme of the university reuses them unread.
+        self._question_pages: dict[str, dict[str, tuple[Claim, ...]]] = {}
 
     async def verify(
         self, candidate: Candidate, program: CandidateProgram, intake: str
@@ -251,17 +845,447 @@ class WebRequirementsAdapter:
             else None,
         ]
         queue = [t for t in targets if t]
+        #: QR-1: questions are routed, and topic search waits for the links.
+        routed_questions = QUESTION_ROUTED_EVIDENCE
+        if routed_questions:
+            queue = [replace(t, link_source=True) for t in queue]
+            home = _home_url(candidate) if not program.url else None
+            if home and home not in {t.url for t in queue}:
+                queue.append(
+                    _Target(
+                        home,
+                        SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                        link_source=True,
+                        links_only=True,
+                    )
+                )
         visited = {t.url for t in queue}
-        if TOPIC_SEARCH and program.url:
+        if TOPIC_SEARCH and program.url and not routed_questions:
             for topic, url in await self._find_topic_pages(candidate, program, out):
                 if url not in visited:
                     visited.add(url)
                     queue.append(_Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, topic=topic))
         followed = 0
         routed = 0
-        while queue:
-            target = queue.pop(0)
-            res = await self.fetcher.get(target.url)
+        #: FS-1: the faculty the programme page named, once it has been read.
+        programme_unit: str | None = None
+        #: EN-2: which English row the programme page says is its own.
+        programme_english: EnglishHint | None = None
+        #: QR-1: question links queued per question; whether topic search ran;
+        #: the programme page's final URLs (its claims keep their own guard).
+        question_links: dict[str, int] = {}
+        topics_asked = not (routed_questions and TOPIC_SEARCH)
+        programme_pages: set[str] = set()
+        #: QR-1b: the degree the programme page states (else the request's),
+        #: the pages that took it by route, and this institution's question
+        #: pages already read (url -> claims), with the one being read now.
+        programme_degree: str | None = None
+        route_scoped: dict[str, str] = {}
+        #: QR-1c: the admissions page(s) whose links carry the programme's degree.
+        admissions_pages: set[str] = set()
+        question_pages = self._question_pages.setdefault(candidate.domain or candidate.name, {})
+        reading_question: tuple[str, int] | None = None
+        #: RL-1: the questions that already had their one "core" read.
+        core_questions: set[str] = set()
+        #: R2b: question pages this programme reached by topic search (or a
+        #: lead from one), which by QR-1b inherit no degree.
+        topic_reached: set[str] = set()
+        #: QP-1: pages read so far per question.
+        pages_read: dict[str, int] = {}
+        #: DL-6: on for an international applicant only; whether the degree
+        #: level's application page is queued, and whether a page read here
+        #: names both an international and a national/EU admission round.
+        dl6 = (
+            _extraction.INTERNATIONAL_ROUND_DEADLINE
+            and request_fee_population(candidate.country, self.citizenships) == "international"
+        )
+        round_page_queued = False
+        two_rounds_site = False
+        #: SP-2: the process sub-page discovery handed on, queued once the link
+        #: sources are read (behind QR-1's question links, before topic search).
+        pending_lead = (
+            candidate.requirements_leads[0]
+            if routed_questions and candidate.requirements_leads
+            else None
+        )
+
+        def read_kind(target: _Target) -> str:
+            """RL-1: the programme and admissions pages (and, with no programme
+            page, the home page) and the first page read for each question are
+            core reads; every other page here is an extra question page."""
+            if target.links_only or target.url in (program.url, candidate.admissions_url):
+                return "core"
+            question = target.question or target.topic
+            if target.fee_follow:
+                question = "fees"
+            elif question is None and target.language_follow:
+                question = "english"
+            if question and question not in core_questions:
+                core_questions.add(question)
+                return "core"
+            if _extraction.FEE_READERS_V2:
+                # FE-2b: a further page for a core question still unanswered
+                # leaves the cost and award index reads their time, not the
+                # whole reserve: the fee read must not cost the deadline.
+                if question is None and target.deadline_lead:
+                    question = "deadline"
+                answer = _QUESTION_ANSWER.get(question or "")
+                if (
+                    question in _OPEN_QUESTIONS
+                    and answer is not None
+                    and all(c.claim_type is not answer for c in out.claims)
+                ):
+                    return "question_open"
+            return "question_extra"
+
+        def file_question_page() -> None:
+            """QR-1b: remember the question page just read, with its claims."""
+            nonlocal reading_question
+            if reading_question is not None:
+                url, start = reading_question
+                question_pages[url] = tuple(out.claims[start:])
+                reading_question = None
+
+        def route_note(target: _Target) -> str:
+            """QR-1b/c: the scope note for a page that took the programme's degree."""
+            if target.via_admissions:
+                return _ADMISSIONS_ROUTE_SCOPE_NOTE.format(
+                    url=program.url, admissions=target.via_admissions
+                )
+            return _ROUTE_SCOPE_NOTE.format(url=program.url)
+
+        def rescope(claim: Claim, target: _Target) -> Claim:
+            """QR-1c: a reused claim, silent on its degree, in the programme's."""
+            if claim.scope is None:
+                return claim
+            inherited = _route_scope(claim.scope, programme_degree, program.name)
+            if inherited is None:
+                return claim
+            route_scoped[claim.source_url] = route_note(target)
+            return claim.model_copy(update={"scope": inherited})
+
+        def note_fee_page(url: str) -> None:
+            """QR-1: a page reached for fees goes to the cost adapter."""
+            if (
+                url == candidate.costs_url
+                or url in candidate.question_fee_urls
+                or len(candidate.question_fee_urls) >= _MAX_QUESTION_LINKS
+            ):
+                return
+            candidate.question_fee_urls.append(url)
+
+        def queue_questions(
+            html: str, page_url: str, from_programme: bool = False, via: str | None = None
+        ) -> None:
+            """QR-1 (a): the official links on a link source that name a question."""
+            for question, url in _question_links(
+                html, page_url, candidate.domain, candidate.extra_domains, degree=program.degree
+            ):
+                if question == "fees":
+                    note_fee_page(url)
+                    continue
+                if url in visited or question_links.get(question, 0) >= _MAX_QUESTION_LINKS:
+                    continue
+                visited.add(url)
+                question_links[question] = question_links.get(question, 0) + 1
+                queue.append(
+                    _Target(
+                        url,
+                        SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                        question=question,
+                        via_programme=from_programme,
+                        via_admissions=via if from_programme else None,
+                    )
+                )
+            parent = (
+                _parent_degree_link(
+                    html,
+                    page_url,
+                    candidate.domain,
+                    candidate.extra_domains,
+                    degree=program.degree,
+                )
+                if PARENT_DEGREE_LINK and from_programme and via is None
+                else None
+            )
+            if parent and parent not in visited:
+                # QR-2: a deadline/English source here; a fees page for costs.
+                visited.add(parent)
+                note_fee_page(parent)
+                queue.append(
+                    _Target(
+                        parent,
+                        SourceSpecificity.PROGRAM,
+                        question="deadline",
+                        parent_degree=True,
+                    )
+                )
+
+        def queue_requirements_lead(lead: RequirementsLead) -> None:
+            """SP-2: the sub-page takes a free question-link slot, or is not read.
+
+            English is charged first while no IELTS minimum is read, else the
+            deadline; with both answered, or both questions' slots taken, the
+            page is not queued, so it adds no read beyond QR-1's caps.
+            """
+            if lead.url in visited:
+                return
+            have = {c.claim_type for c in out.claims}
+            slot = next(
+                (
+                    question
+                    for question in ("english", "deadline")
+                    if _QUESTION_ANSWER[question] not in have
+                    and question_links.get(question, 0) < _MAX_QUESTION_LINKS
+                ),
+                None,
+            )
+            if slot is None:
+                out.errors.append(f"SP-2: {lead.url} not read: its questions are answered or full")
+                return
+            visited.add(lead.url)
+            question_links[slot] = question_links.get(slot, 0) + 1
+            scoped = lead.names_programme and bool(program.url)
+            queue.append(
+                _Target(
+                    lead.url,
+                    SourceSpecificity.PROGRAM
+                    if scoped
+                    else SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                    question="deadline",
+                    subpage_lead=True,
+                    via_programme=scoped,
+                )
+            )
+
+        def question_of(target: _Target) -> str | None:
+            """The question a queued page is read for, as RL-1 counts it."""
+            if target.fee_follow:
+                return "fees"
+            question = target.question or target.topic
+            if question is None and target.language_follow:
+                return "english"
+            return question
+
+        def next_target() -> _Target:
+            """QP-1: a page for the unanswered question with the fewest reads
+            first, after the link sources; otherwise the queue's own order.
+            The programme and admissions pages count as link sources with QR-1
+            off too: FS-1 takes the programme's faculty from them, so no
+            question page is read before them."""
+
+            def first(target: _Target) -> bool:
+                return target.link_source or target.url in (program.url, candidate.admissions_url)
+
+            if not QUESTION_PAGE_ORDER or first(queue[0]):
+                return queue.pop(0)
+            have = {c.claim_type for c in out.claims}
+            best: tuple[int, int] | None = None
+            for index, target in enumerate(queue):
+                if first(target):
+                    return queue.pop(index)
+                question = question_of(target)
+                answered = question is None or _QUESTION_ANSWER.get(question) in have
+                if target.parent_degree or target.subpage_lead:
+                    answered = answered and ClaimType.IELTS_MIN_OVERALL in have
+                if answered or question is None:
+                    continue
+                rank = (pages_read.get(question, 0), index)
+                if best is None or rank < best:
+                    best = rank
+            return queue.pop(best[1] if best is not None else 0)
+
+        async def queue_topic_questions() -> None:
+            """QR-1 (b): one topic query per question the links left unanswered."""
+            have = {c.claim_type for c in out.claims}
+            wanted = [
+                question
+                for question, answer in _QUESTION_ANSWER.items()
+                if answer not in have and not (question == "fees" and candidate.question_fee_urls)
+            ]
+            if not wanted:
+                return
+            for topic, url in await self._find_topic_pages(candidate, program, out, topics=wanted):
+                if topic not in wanted:
+                    continue
+                if topic == "fees":
+                    note_fee_page(url)
+                    continue
+                if url in visited:
+                    continue
+                visited.add(url)
+                queue.append(
+                    _Target(
+                        url, SourceSpecificity.UNIVERSITY_ADMISSIONS, topic=topic, question=topic
+                    )
+                )
+
+        def queue_leads(html: str, page_url: str, from_topic: bool = False) -> None:
+            """Queue the official links below one read HTML page, within the caps."""
+            nonlocal followed, routed
+            from_topic = TOPIC_FACULTY_SCOPE and from_topic
+            # QR-1b: a lead on the confirmed programme page carries its degree;
+            # QR-1c: so does one on the admissions page read beside it.
+            via_programme = routed_questions and (
+                page_url in programme_pages or page_url in admissions_pages
+            )
+            via_admissions = page_url if page_url in admissions_pages else None
+            # HL-1: no lead naming another degree level than the request.
+            guard = HUB_LEADS and program.degree is not None
+            # The English requirement often lives on its own page that the
+            # programme or admissions page links to (UBC's English Language
+            # Admission Standard, Groningen's faculty language page). When no
+            # IELTS minimum has been read yet, follow at most
+            # _MAX_LANGUAGE_FOLLOWS such official links, once.
+            if followed < _MAX_LANGUAGE_FOLLOWS and not any(
+                c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims
+            ):
+                for url in _language_links(
+                    html,
+                    page_url,
+                    candidate.domain,
+                    candidate.extra_domains,
+                    degree=program.degree if guard else None,
+                ):
+                    if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
+                        continue
+                    visited.add(url)
+                    followed += 1
+                    queue.append(
+                        _Target(
+                            url,
+                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                            language_follow=True,
+                            from_topic=from_topic,
+                            via_programme=via_programme,
+                            via_admissions=via_admissions,
+                        )
+                    )
+            if (ROUTE_LEADS or HUB_LEADS) and routed < _MAX_ROUTE_FOLLOWS:
+                have = {c.claim_type for c in out.claims}
+                want_deadline = ClaimType.ADMISSION_DEADLINE not in have
+                want_english = ClaimType.IELTS_MIN_OVERALL not in have
+                for url, is_requirements, is_deadline in _route_link_items(
+                    html,
+                    page_url,
+                    candidate.domain,
+                    candidate.extra_domains,
+                    deadline=want_deadline,
+                    requirements=want_english,
+                ):
+                    if url in visited or routed >= _MAX_ROUTE_FOLLOWS:
+                        continue
+                    # SL-1: deadline and route links get HL-1's URL level guard.
+                    if (guard or _level_scope(program.degree)) and names_other_degree_level(
+                        url, str(program.degree)
+                    ):
+                        continue
+                    visited.add(url)
+                    routed += 1
+                    queue.append(
+                        _Target(
+                            url,
+                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                            language_follow=is_requirements,
+                            route_follow=True,
+                            deadline_lead=is_deadline,
+                            from_topic=from_topic,
+                            via_programme=via_programme,
+                            via_admissions=via_admissions,
+                        )
+                    )
+            if not HUB_LEADS:
+                return
+            fees, awards = _service_links(
+                html, page_url, candidate.domain, program.degree, candidate.extra_domains
+            )
+            if fees and not candidate.costs_url:
+                # Read by the cost adapter, which runs after this one on the
+                # same candidate (runner._stage_verify).
+                candidate.costs_url = fees[0]
+                visited.add(fees[0])
+            elif not any(c.claim_type is ClaimType.TUITION for c in out.claims):
+                for url in fees:
+                    if url in visited or url == candidate.costs_url:
+                        continue
+                    if routed >= _MAX_ROUTE_FOLLOWS:
+                        break
+                    visited.add(url)
+                    routed += 1
+                    queue.append(
+                        _Target(
+                            url,
+                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                            topic="fees",
+                            fee_follow=True,
+                            from_topic=from_topic,
+                        )
+                    )
+                    break
+            if awards and not candidate.scholarships_url:
+                # Read by the funding stage, which walks it as the award index.
+                candidate.scholarships_url = awards[0]
+
+        while queue or not topics_asked or pending_lead is not None:
+            file_question_page()
+            if pending_lead is not None and not any(t.link_source for t in queue):
+                queue_requirements_lead(pending_lead)
+                pending_lead = None
+            if not queue:
+                if topics_asked:
+                    # SP-2: the lead was not queued and the topics were asked.
+                    continue
+                topics_asked = True
+                await queue_topic_questions()
+                continue
+            target = next_target()
+            if (
+                target.question
+                and _QUESTION_ANSWER[target.question] in {c.claim_type for c in out.claims}
+                and not (
+                    # QR-2: a parent degree page also answers English (SP-2's
+                    # sub-page too).
+                    (target.parent_degree or target.subpage_lead)
+                    and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
+                )
+            ):
+                # QR-1: answered by an earlier page; not read.
+                continue
+            if target.intl_round and any(
+                c.claim_type is ClaimType.ADMISSION_DEADLINE and c.scope and c.scope.population
+                for c in out.claims
+            ):
+                # DL-6: a deadline that names its population is already read.
+                continue
+            if target.topic is not None or target.from_topic:
+                topic_reached.add(target.url)
+            if target.question and target.url in question_pages:
+                # QR-1b: read for another programme of this university in this
+                # run; its claims are reused, the page is not read again.
+                reused = question_pages[target.url]
+                if target.via_programme:
+                    # QR-1c: the route this programme reached the page by
+                    # gives its degree to claims the first read left silent.
+                    reused = tuple(rescope(claim, target) for claim in reused)
+                elif target.url in topic_reached:
+                    topic_reached.update(claim.source_url for claim in reused)
+                out.claims.extend(reused)
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="fetched-ok" if reused else "no-pattern-match",
+                        detail=(
+                            f"QR-1b: {target.question} page already read for this "
+                            f"institution; {len(reused)} claims reused, not read again"
+                        ),
+                    )
+                )
+                continue
+            asked = question_of(target)
+            if asked is not None:
+                pages_read[asked] = pages_read.get(asked, 0) + 1
+            with reading_as(read_kind(target)):
+                res = await self.fetcher.get(canonical_link(target.url, candidate.official_domains))
             out.pages_checked += 1
             if not res.ok:
                 out.pages_failed += 1
@@ -294,14 +1318,25 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
+            pdf = pdf_evidence.open_pdf(res)  # PD-1; None while the flag is off
+            text = (
+                pdf.text
+                if pdf
+                else pdf_to_text(res.content)
+                if res.is_pdf
+                else readable_text(res.text)
+            )
+            if routed_questions and target.question:
+                # QR-1b: read once per institution, whatever it yields.
+                reading_question = (target.url, len(out.claims))
             if not text.strip():
                 out.pages_failed += 1
                 out.errors.append(
                     f"{target.url}: page fetched but no readable text could be extracted"
                 )
                 out.page_outcomes.append(
-                    PageOutcome(
+                    (pdf and pdf_evidence.pdf_page_outcome(pdf, target.url))
+                    or PageOutcome(
                         url=target.url,
                         category="unreadable",
                         detail="page fetched but no readable text could be extracted",
@@ -310,7 +1345,15 @@ class WebRequirementsAdapter:
                 continue
 
             page_url = res.final_url or target.url
-            page = classify_page(url=page_url, html="" if res.is_pdf else res.text, text=text)
+            if target.url in topic_reached:
+                topic_reached.add(page_url)
+            if dl6 and _extraction.names_two_rounds(text):
+                two_rounds_site = True
+            page = (
+                pdf_evidence.classify_pdf(pdf, page_url)
+                if pdf
+                else classify_page(url=page_url, html="" if res.is_pdf else res.text, text=text)
+            )
             out.page_types.append((target.url, page.page_type.value))
 
             if (
@@ -335,8 +1378,94 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            page_title = html_title(res.text) if not res.is_pdf else page_url.rsplit("/", 1)[-1]
-            builder = ClaimBuilder(
+            if (
+                routed_questions
+                and programme_pages
+                and programme_degree
+                and target.link_source
+                and not target.links_only
+                and target.url == candidate.admissions_url
+                and target.url != program.url
+                and not res.is_pdf
+                and read_scope(text, title=html_title(res.text)).degree in (None, programme_degree)
+            ):
+                # QR-1c: the admissions page read beside a confirmed programme
+                # page; silent on its degree (or stating the programme's), its
+                # links carry the programme's degree.
+                admissions_pages.add(page_url)
+            if (
+                routed_questions
+                and target.link_source
+                and not res.is_pdf
+                and (
+                    page_url.startswith("fixture://")
+                    or is_official_domain(page_url, candidate.official_domains)
+                )
+            ):
+                queue_questions(
+                    res.text,
+                    page_url,
+                    from_programme=target.url == program.url or page_url in admissions_pages,
+                    via=page_url if page_url in admissions_pages else None,
+                )
+            if (
+                dl6
+                and not round_page_queued
+                and not res.is_pdf
+                and (
+                    page_url.startswith("fixture://")
+                    or is_official_domain(page_url, candidate.official_domains)
+                )
+            ):
+                round_page = _application_page_link(
+                    res.text,
+                    page_url,
+                    candidate.domain,
+                    candidate.extra_domains,
+                    degree=program.degree,
+                )
+                if round_page and round_page not in visited:
+                    # DL-6: read for the international admission round only.
+                    visited.add(round_page)
+                    round_page_queued = True
+                    queue.append(
+                        _Target(
+                            round_page, SourceSpecificity.UNIVERSITY_ADMISSIONS, intl_round=True
+                        )
+                    )
+            if target.links_only:
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="no-pattern-match",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail="QR-1: read for its question links only; nothing on it is claimed",
+                    )
+                )
+                continue
+            if routed_questions and target.url == program.url:
+                programme_pages.add(page_url)
+
+            page_title = (
+                pdf.title
+                if pdf
+                else html_title(res.text)
+                if not res.is_pdf
+                else page_url.rsplit("/", 1)[-1]
+            )
+            scope = read_scope(text, title=page_title, coordinated_degrees=COORDINATED_DEGREE_SCOPE)
+            if routed_questions and target.url == program.url:
+                programme_degree = scope.degree or _LEVEL_SCOPE.get(str(program.degree or ""))
+            elif routed_questions and target.via_programme:
+                # QR-1b (owner, 2026-10-18): a page the programme page links to
+                # for a question, and silent on its degree, is read in the
+                # programme's degree; the evidence says so in a scope note.
+                inherited = _route_scope(scope, programme_degree, program.name)
+                if inherited is not None:
+                    scope = inherited
+                    route_scoped[page_url] = route_note(target)
+            builder = pdf_evidence.claim_builder(pdf)(
                 source_url=page_url,
                 page_title=page_title,
                 specificity=(
@@ -348,26 +1477,163 @@ class WebRequirementsAdapter:
                 intake=intake,
                 academic_year=page.academic_year or self.academic_year,
                 official_domain=page_url.startswith("fixture://")
-                or is_official_domain(page_url, [candidate.domain]),
+                or is_official_domain(page_url, candidate.official_domains),
                 extraction_method="fixture" if target.url.startswith("fixture://") else "html_rule",
                 accessed_at=res.fetched_at,
                 # Read from the page's own words only. The programme, intake
                 # and year above are what we asked for; this is what the page
                 # answered, and recording the second as if it were the first
                 # is the whole of the wrong-scope failure.
-                scope=read_scope(text, title=page_title),
+                scope=scope,
                 # The verifier's context: without it the verbatim, domain and
                 # page-type checks were silently skipped for every requirement
                 # claim (found in the owner's adversarial review, 2026-09-25).
                 page_text=text,
                 page_type=page.page_type.value,
-                allowed_domains=verification_domains(page_url, candidate.domain),
+                allowed_domains=verification_domains(
+                    page_url, candidate.domain, candidate.extra_domains
+                ),
             )
             # TY-1: the year the applicant asked for, kept apart from the year
             # the page states first, so a fee table picks the applicant's row.
             builder.requested_academic_year = self.academic_year
+            builder.requested_population = request_fee_population(
+                candidate.country, self.citizenships
+            )
+            if _extraction.ENGLISH_READERS_V2:
+                # EN-2: the programme page says which English row is its own
+                # (faculty, band, level); every later page of this programme
+                # is read with that, and without it a table of rows abstains.
+                if target.url == program.url and not res.is_pdf:
+                    programme_english = english_programme_hint(
+                        text, res.text, str(program.degree or "") or None
+                    )
+                builder.english_hint = programme_english or EnglishHint(
+                    degree=str(program.degree or "") or None
+                )
+            # HL-1: a page the classifier rejects is still scanned for leads;
+            # its own text stays unclaimed.
+            hub_scan = HUB_LEADS and not res.is_pdf and bool(builder.meta.get("official_domain"))
+            topic_scoped = TOPIC_FACULTY_SCOPE and (target.topic is not None or target.from_topic)
+            if TOPIC_FACULTY_SCOPE and target.url == program.url and not res.is_pdf:
+                programme_unit = programme_faculty(text, res.text)
+            if topic_scoped and programme_unit and not res.is_pdf:
+                page_unit = page_faculty(res.text)
+                if page_unit and page_unit != programme_unit:
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=target.url,
+                            category="no-pattern-match",
+                            page_type=page.page_type.value,
+                            readable_chars=len(text),
+                            detail=(
+                                f"FS-1: the page names the faculty of {page_unit!r}; the "
+                                f"programme is in {programme_unit!r}; nothing on it is claimed"
+                            ),
+                        )
+                    )
+                    continue
 
+            if (
+                TOPIC_PROGRAMME_SCOPE
+                and (target.topic is not None or target.from_topic)
+                and page.page_type is PageType.PROGRAM_DETAIL
+                and page.subject
+                and program.field
+                and _names_another_programme(page.subject, program.field)
+            ):
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="no-pattern-match",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail=(
+                            f"FS-2: the page is the programme page of {page.subject!r}, "
+                            f"not of {program.field!r}; nothing on it is claimed"
+                        ),
+                    )
+                )
+                continue
+
+            if target.intl_round:
+                # DL-6: the application page answers the international round's
+                # deadline only, whatever its page type; nothing else is read.
+                builder.page_type = None
+                round_claim = _extraction.read_international_round(text, builder)
+                if round_claim is not None:
+                    out.claims.append(round_claim)
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="fetched-ok" if round_claim else "no-pattern-match",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail=(
+                            "DL-6: application page read for the international admission "
+                            f"round's deadline; {'read' if round_claim else 'none stated'}"
+                        ),
+                    )
+                )
+                continue
+            if target.question in _QUESTION_CLAIMS:
+                # QR-1: the question this page was reached for decides who
+                # reads it, not its page type; verbatim and domain checks
+                # still apply, and only that question's claims are kept.
+                # QR-1b: an accepted page too (Imperial's "Deadlines" page
+                # classifies as program_detail and leaked an intake claim).
+                accepted = page.accepts("requirements")
+                if target.parent_degree or target.subpage_lead:
+                    # QR-2: English too, unless the programme's own band is read.
+                    self._read_for_question(
+                        target.question,
+                        res,
+                        page_url,
+                        text,
+                        builder,
+                        also_english=not any(
+                            c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims
+                        ),
+                    )
+                else:
+                    self._read_for_question(target.question, res, page_url, text, builder)
+                if builder.claims and topic_scoped:
+                    self._scope_to_faculty(text, program, programme_unit, builder)
+                if builder.claims or (routed_questions and accepted):
+                    out.claims.extend(builder.claims)
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=target.url,
+                            category="fetched-ok" if builder.claims else "no-pattern-match",
+                            page_type=page.page_type.value,
+                            readable_chars=len(text),
+                            detail=(
+                                f"{target.question} page: {len(builder.claims)} claims read "
+                                "for the question it was reached for"
+                            ),
+                        )
+                    )
+                    if (hub_scan or accepted) and not res.is_pdf:
+                        queue_leads(res.text, page_url, topic_scoped)
+                    continue
+                builder.claims.clear()
             if not page.accepts("requirements"):
+                if target.fee_follow and not res.is_pdf and page.accepts("costs"):
+                    # HL-1: a fee page reached by a fee link is read for its
+                    # costs only, under the verifier's page-type table.
+                    extract_costs(text, builder)
+                    if builder.claims:
+                        out.claims.extend(builder.claims)
+                        out.page_outcomes.append(
+                            PageOutcome(
+                                url=target.url,
+                                category="fetched-ok",
+                                page_type=page.page_type.value,
+                                readable_chars=len(text),
+                                detail=f"fee page: {len(builder.claims)} cost claims read",
+                            )
+                        )
+                        continue
                 # A catalogue listing confirms existence by the T29 contract
                 # (the university's own list); the verifier's page-type table
                 # admits existence only on programme pages, so that one check
@@ -390,6 +1656,8 @@ class WebRequirementsAdapter:
                             detail="listing page: only the programme's existence was read",
                         )
                     )
+                    if hub_scan:
+                        queue_leads(res.text, page_url)
                     continue
                 if target.language_follow and not res.is_pdf:
                     # The classifier's page type is a routing hint, not a permission
@@ -400,7 +1668,9 @@ class WebRequirementsAdapter:
                     tabled = extract_table_requirements(
                         build_document_ir(res.text, page_url), builder
                     )
-                    if tabled:
+                    if tabled and topic_scoped:
+                        self._scope_to_faculty(text, program, programme_unit, builder)
+                    if tabled and builder.claims:
                         out.claims.extend(builder.claims)
                         out.page_outcomes.append(
                             PageOutcome(
@@ -411,6 +1681,8 @@ class WebRequirementsAdapter:
                                 detail=f"language page: {len(tabled)} claims read from its tables",
                             )
                         )
+                        if hub_scan:
+                            queue_leads(res.text, page_url, topic_scoped)
                         continue
                 # An admission-route statement names admission itself ("admitted
                 # without a declared major"), so it is read from any official page;
@@ -428,6 +1700,8 @@ class WebRequirementsAdapter:
                             detail="only the undergraduate admission route was read",
                         )
                     )
+                    if hub_scan:
+                        queue_leads(res.text, page_url)
                     continue
                 out.errors.append(
                     f"{target.url}: classified as {page.page_type.value}; no requirement can be "
@@ -449,6 +1723,8 @@ class WebRequirementsAdapter:
                         ),
                     )
                 )
+                if hub_scan:
+                    queue_leads(res.text, page_url)
                 continue
 
             self._claim_program_exists(page, program, builder, out, text, identity_text=page_title)
@@ -475,7 +1751,7 @@ class WebRequirementsAdapter:
             self._claim_english_waiver(text, builder)
             self._claim_fees(text, builder)
             if (
-                TOPIC_SEARCH
+                (TOPIC_SEARCH or (HUB_LEADS and target.topic is not None))
                 and page.accepts("costs")
                 and (target.topic is not None or target.url == program.url)
             ):
@@ -483,6 +1759,8 @@ class WebRequirementsAdapter:
                 # (Groningen: non-EU/EEA per academic year on the programme
                 # page), which the university-level cost adapter never reads.
                 extract_costs(text, builder)
+            if topic_scoped:
+                self._scope_to_faculty(text, program, programme_unit, builder)
 
             out.claims.extend(builder.claims)
             out.page_outcomes.append(
@@ -499,46 +1777,83 @@ class WebRequirementsAdapter:
                     ),
                 )
             )
-            # The English requirement often lives on its own page that the
-            # programme or admissions page links to (UBC's English Language
-            # Admission Standard, Groningen's faculty language page). When no
-            # IELTS minimum has been read yet, follow at most
-            # _MAX_LANGUAGE_FOLLOWS such official links, once.
-            if (
-                followed < _MAX_LANGUAGE_FOLLOWS
-                and not res.is_pdf
-                and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
-            ):
-                for url in _language_links(res.text, page_url, candidate.domain):
-                    if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
-                        continue
-                    visited.add(url)
-                    followed += 1
-                    queue.append(
-                        _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, language_follow=True)
-                    )
-            if ROUTE_LEADS and routed < _MAX_ROUTE_FOLLOWS and not res.is_pdf:
-                have = {c.claim_type for c in out.claims}
-                want_deadline = ClaimType.ADMISSION_DEADLINE not in have
-                want_english = ClaimType.IELTS_MIN_OVERALL not in have
-                for url, is_requirements in _route_links(
-                    res.text,
-                    page_url,
-                    candidate.domain,
-                    deadline=want_deadline,
-                    requirements=want_english,
+            if not res.is_pdf:
+                queue_leads(res.text, page_url, topic_scoped)
+
+        file_question_page()
+        if route_scoped:
+            # QR-1b: the evidence says where its degree came from.
+            for claim in out.claims:
+                note = route_scoped.get(claim.source_url)
+                if (
+                    note
+                    and claim.scope is not None
+                    and claim.scope.degree == programme_degree
+                    and note not in claim.notes
                 ):
-                    if url in visited or routed >= _MAX_ROUTE_FOLLOWS:
-                        continue
-                    visited.add(url)
-                    routed += 1
-                    queue.append(
-                        _Target(
-                            url,
-                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
-                            language_follow=is_requirements,
-                            route_follow=True,
-                        )
+                    claim.notes = f"{claim.notes} {note}" if claim.notes else note
+        if routed_questions and program.degree:
+            # QR-1: a page whose own words scope it to another degree level
+            # does not answer for this one (UCPH's master's language page).
+            withheld = [
+                c
+                for c in out.claims
+                if c.source_url not in programme_pages
+                and _names_other_scope_level(c, program.degree)
+            ]
+            if withheld:
+                dropped = {id(c) for c in withheld}
+                out.claims = [c for c in out.claims if id(c) not in dropped]
+                for url in dict.fromkeys(c.source_url for c in withheld):
+                    out.errors.append(
+                        f"{url}: QR-1: the page scopes itself to another degree level than "
+                        f"the requested {program.degree}; its claims are withheld"
+                    )
+
+        if routed_questions and program.degree and _discovery.SUBJECT_TITLE_SHAPES:
+            # R2b: an English or deadline answer from a page only topic search
+            # reached, and silent on its degree, is not claimed for a request
+            # that names one. QR-1b gives such a page no degree, and no route
+            # ties it to the programme: UCT's language page, found by the
+            # English query on a slow-host run that selected no admissions
+            # page, was claimed for every degree and scored wrong-scope on the
+            # right value. A page the programme or admissions page links is
+            # unaffected; so is one whose own words state a degree.
+            silent = [
+                c
+                for c in out.claims
+                if c.source_url in topic_reached
+                and c.source_url not in programme_pages
+                and c.claim_type in _TOPIC_SCOPED_CLAIMS
+                and (c.scope is None or not c.scope.degree)
+            ]
+            if silent:
+                dropped = {id(c) for c in silent}
+                out.claims = [c for c in out.claims if id(c) not in dropped]
+                for url in dict.fromkeys(c.source_url for c in silent):
+                    out.errors.append(
+                        f"{url}: R2b: reached only by topic search and silent on its degree; "
+                        f"its claims are not made for the requested {program.degree}"
+                    )
+
+        if dl6 and two_rounds_site:
+            # DL-6 (c): the site admits in an international and a national/EU
+            # round; a deadline that names no population may be either, so it
+            # is not claimed for an international applicant.
+            unlabelled = [
+                c
+                for c in out.claims
+                if c.claim_type is ClaimType.ADMISSION_DEADLINE
+                and (c.scope is None or not c.scope.population)
+            ]
+            if unlabelled:
+                dropped = {id(c) for c in unlabelled}
+                out.claims = [c for c in out.claims if id(c) not in dropped]
+                for url in dict.fromkeys(c.source_url for c in unlabelled):
+                    out.errors.append(
+                        f"{url}: DL-6: the site names an international and a national/EU "
+                        "admission round; a deadline naming no population is not claimed "
+                        "for an international applicant"
                     )
 
         if not out.claims and out.pages_checked == 0:
@@ -548,8 +1863,52 @@ class WebRequirementsAdapter:
             )
         return out
 
+    def _read_for_question(
+        self,
+        question: str,
+        res,
+        page_url: str,
+        text: str,
+        builder: ClaimBuilder,
+        *,
+        also_english: bool = False,
+    ) -> None:
+        """QR-1: read a page for one question only, whatever its page type.
+
+        English: the structural table reader, then prose (a type the table
+        answered is not read twice), then the accepted-test and waiver
+        sentences. Deadline: the deadline reader. Every other claim type is
+        dropped, so a page reached for one question answers only that one.
+        QR-2: a parent degree page is read for the deadline and, with
+        ``also_english``, for English as well.
+        """
+        builder.page_type = None
+        english = question == "english" or also_english
+        tabled = (
+            extract_table_requirements(build_document_ir(res.text, page_url), builder)
+            if english and not res.is_pdf
+            else []
+        )
+        before = len(builder.claims)
+        extract_requirements(text, builder)
+        answered = {c.claim_type for c in tabled}
+        builder.claims[before:] = [
+            c for c in builder.claims[before:] if c.claim_type not in answered
+        ]
+        if english:
+            self._claim_english_test_types(text, builder)
+            self._claim_english_waiver(text, builder)
+        keep = _QUESTION_CLAIMS[question] | (
+            _QUESTION_CLAIMS["english"] if english else frozenset()
+        )
+        builder.claims[:] = [c for c in builder.claims if c.claim_type in keep]
+
     async def _find_topic_pages(
-        self, candidate: Candidate, program: CandidateProgram, out: AdapterResult
+        self,
+        candidate: Candidate,
+        program: CandidateProgram,
+        out: AdapterResult,
+        topics: Sequence[str] | None = None,
     ) -> tuple[tuple[str, str], ...]:
         """One official page per topic, from one public query each, or nothing.
 
@@ -590,13 +1949,25 @@ class WebRequirementsAdapter:
         except SearchError:
             return ()
         found: list[tuple[str, str]] = []
-        for topic, template in _TOPIC_QUERIES[:remaining]:
+        # QR-1: only the questions still unanswered are asked.
+        queries = [q for q in _TOPIC_QUERIES if topics is None or q[0] in topics]
+        for topic, template in queries[:remaining]:
+            left = case_seconds_left()
+            if left is not None and left < QUERY_MIN_SECONDS:
+                # TB-1: no query whose page could not be read in time.
+                out.errors.append(
+                    f"Topic search ({topic}) not run: {left:.0f} s of the case time budget left"
+                )
+                break
             if intent_module.SHARED_QUERY_BUDGET:
                 candidate.search_queries_used += 1
             try:
                 response = await provider.search(
                     query=template.format(name=candidate.name),
-                    domains=[registrable_domain(candidate.domain) or candidate.domain],
+                    domains=[
+                        registrable_domain(candidate.domain) or candidate.domain,
+                        *candidate.extra_domains,
+                    ],
                     max_results=5,
                 )
             except SearchError as exc:
@@ -612,7 +1983,7 @@ class WebRequirementsAdapter:
             for result in response.results:
                 url = result.url
                 if (
-                    same_institution(url, candidate.domain)
+                    any(same_institution(url, d) for d in candidate.official_domains)
                     and not is_excluded_path(url)
                     and not names_other_degree_level(url, str(program.degree))
                     and url not in taken
@@ -621,6 +1992,34 @@ class WebRequirementsAdapter:
                     break
         self._topic_pages[key] = tuple(found)
         return self._topic_pages[key]
+
+    @staticmethod
+    def _scope_to_faculty(
+        text: str, program: CandidateProgram, faculty: str | None, builder: ClaimBuilder
+    ) -> None:
+        """FS-1: on a per-faculty page, IELTS only from the programme's own section.
+
+        Every IELTS claim read from the whole page is dropped and the sections
+        that name the programme (else its faculty) are read again; the claims
+        stand only when exactly one section yields them. Otherwise the page
+        states no IELTS minimum for this programme.
+        """
+        per_faculty, sections = _faculty_section(text, program.name, faculty)
+        if not per_faculty:
+            return
+        builder.claims[:] = [
+            c for c in builder.claims if c.claim_type not in _FACULTY_SCOPED_CLAIMS
+        ]
+        yielded: list[list[Claim]] = []
+        for section in sections:
+            before = len(builder.claims)
+            extract_requirements(section, builder)
+            read = [c for c in builder.claims[before:] if c.claim_type in _FACULTY_SCOPED_CLAIMS]
+            del builder.claims[before:]
+            if read:
+                yielded.append(read)
+        if len(yielded) == 1:
+            builder.claims.extend(yielded[0])
 
     # --- individual claims ------------------------------------------------
 
@@ -645,6 +2044,7 @@ class WebRequirementsAdapter:
             page_subject=page.subject,
             requested_degree=program.degree,
             page_degree=page.degree_level,
+            subject_names_field=_subject_names_field(page, program),
         )
         if (
             matched
@@ -882,9 +2282,27 @@ def _named_after_its_url(program: CandidateProgram) -> bool:
     if not program.url:
         return False
     slug = program.url.rstrip("/").rsplit("/", 1)[-1]
-    slug_words = [w for w in re.split(r"[-_]+", slug.lower().replace(".html", "")) if w]
+    # Any page extension, as ``_program_name_from_url`` strips it (KIT's .php).
+    slug = strip_url_extension(slug.lower().replace(".html", ""))
+    slug_words = [w for w in re.split(r"[-_]+", slug) if w]
     name_words = [w for w in re.split(r"[^a-z0-9]+", program.name.lower()) if w]
     return bool(slug_words) and slug_words == name_words
+
+
+def _subject_names_field(page, program: CandidateProgram) -> bool:
+    """ALIAS_AWARE_PROGRAM_MATCH: the page subject names the requested field.
+
+    By discovery's shared field predicate (``matches_field_text``: the field or
+    a strong / localized alias, its filler and subject-head rules), and only
+    when the requested name is the field's own — discovery's URL placeholder
+    or a name that itself names the field — so a registry programme called
+    something else is never matched through its field's aliases.
+    """
+    if not _matching.ALIAS_AWARE_PROGRAM_MATCH or not program.field or not page.subject:
+        return False
+    if not matches_field_text(page.subject, [program.field]):
+        return False
+    return _named_after_its_url(program) or matches_field_text(program.name, [program.field])
 
 
 def _target_year(intake: str) -> int | None:

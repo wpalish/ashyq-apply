@@ -1,0 +1,91 @@
+{
+ "case": "qs2027-042",
+ "seed_id": "qs2027-042",
+ "university": "Yonsei University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-042",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International Student Track (applicant and both parents of foreign nationality), Yonsei University Office of Admissions, all majors and departments including the College of Computing",
+   "academic_year": null,
+   "cycle_stated": "Fall Semester 2026",
+   "cycle_is_intake": false,
+   "notes": "Yonsei Office of Admissions 'Fall Semester 2026 Application Guide for International Students' (PDF on www2.yonsei.ac.kr), section IV 'Application Materials'. Fall 2026 is the latest guide found on an official host on 2026-10-19: a Spring 2027 international admission ran in September 2026 but its guide's URL was not found, and no Fall 2027 guide exists yet. The guide says the Korean text takes precedence. Not drafted (no vocabulary kind): Academic History Record sheet (essential, completed online); High School Course Completion Certificate (only relevant applicants); parents' passports and the official document of the applicant-parent relationship (birth certificate; for Chinese nationals proof of kinship and household register; for Japanese nationals the family register); documents for foreigners with a history of Korean nationality; nationality documents for foreign residents in Korea; COA (D-2 visa) documents after admission; Chinese HUIKAO certificate. Admitted students expected to graduate must send the graduation certificate and final transcripts by mail after admission. Translations made by the applicant are not accepted. TOEFL/SAT/AP/ACT/IELTS scores must be reported officially (ETS/College Board 9893, ACT 7879). Underwood International College (uic.yonsei.ac.kr) is a separate track and its pages were not read (robots.txt disallows the site except a few top pages, and the allowed /admission.php returns an error page). In round 2 robots.txt refused uic.yonsei.ac.kr; this guide is on www2.yonsei.ac.kr, read with robots.txt honoured.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "Documents Essential /Optional Details Application Form Essential One printed copy of the application"
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "Personal Statement Essential One printed copy of the application"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "High School Diploma or Certificate of (Expected) Graduation Graduates from high schools except P.R.China Essential Original document with an Apostille or Consulate"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "Official Transcripts of All Attended High School (G10, G11 and G12) Graduates from high schools except P.R.China Essential"
+    },
+    {
+     "kind": "apostille",
+     "requirement": "required",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "Original Yearly transcripts by each semester(term, quarter, etc.) with an Apostille or Consulate Authentication",
+     "notes": "Apostille or consulate authentication on the diploma and transcripts; not required for (expected) graduates from high school in Korea."
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "Documents verifying foreign nationality of applicant and his/her parents Essential A Copy of the applicant's and his/her parents'"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "Documents written in languages other than Korean or English must be accompanied by a notarized translation.",
+     "condition": "documents written in languages other than Korean or English (notarized translation; translations by the applicant are not accepted)"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "Certificate of Language proficiency [Choose ONE] Essential - Korean or English language proficiency test",
+     "condition": "a certificate of language proficiency is essential, choosing ONE of: a Korean or English language proficiency test score, a standardized test result indicating proficiency in Korean or English, a certificate of completion from a Korean language institution, or official documents proving Korean- or English-taught high school courses"
+    },
+    {
+     "kind": "credential_evaluation",
+     "requirement": "conditional",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "2. Verification Report of China Secondary Education Qualification Certificate (in English)",
+     "condition": "graduates from high schools in P.R. China (expected graduates submit it after acceptance)"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "optional",
+     "url": "https://www2.yonsei.ac.kr/entrance/2026/intl/2026_9_docu/Fall 2026 Application Guide for International Students(Eng).pdf",
+     "quote": "Supplementary Documents Optional Middle school transcripts, awards, reports of standardized test scores,"
+    }
+   ]
+  }
+ }
+}

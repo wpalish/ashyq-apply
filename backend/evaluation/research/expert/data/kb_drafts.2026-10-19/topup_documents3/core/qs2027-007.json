@@ -1,0 +1,75 @@
+{
+ "case": "qs2027-007",
+ "seed_id": "qs2027-007",
+ "university": "California Institute of Technology (Caltech)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-007",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+   "academic_year": null,
+   "notes": "Caltech First-Year Application Requirements. Not drafted: the USD 85 application fee or fee waiver, mid-year report, International Financial Aid Statement of Intent (questions in the application), other optional supplemental materials (research paper). Unofficial transcripts may be uploaded; official ones are needed if admitted and enrolled.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+     "quote": "Application Common App or QuestBridge Application"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+     "quote": "Letters of Recommendation 1 STEM: Calculus (or beyond), Chemistry, Physics, or Biology 1 Humanities or Social Sciences"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+     "quote": "School Report: This is a document that your high school college counselor will send to Caltech that provides context about your school."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+     "quote": "Official transcripts from your secondary school (grades 9-11, or the international curriculum equivalent)."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+     "quote": "We require either the SAT or ACT test scores."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+     "quote": "Required of all international applicants unless 1) your native language is English or 2) English is the primary language of instruction in your secondary school.",
+     "condition": "international applicant whose native language is not English and whose secondary school does not teach primarily in English"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+     "quote": "If they were originally printed in a language other than English, we require the original document and an English translation.",
+     "condition": "application materials originally in a language other than English"
+    },
+    {
+     "kind": "portfolio",
+     "requirement": "optional",
+     "url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+     "quote": "Portfolio (STEM and/or Non-STEM)"
+    }
+   ]
+  }
+ }
+}

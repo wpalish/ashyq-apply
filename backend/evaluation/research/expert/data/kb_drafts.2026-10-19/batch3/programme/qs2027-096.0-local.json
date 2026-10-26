@@ -1,0 +1,22 @@
+{
+ "case": "qs2027-096",
+ "note": "kb batch3 qs2027-096.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. NOT OPENED: calendar.ualberta.ca content pages answer HTTP 202 with an empty body and 'x-amzn-waf-action: challenge' (AWS WAF JavaScript challenge) to the normal user agent; only the calendar home page loaded. www.ualberta.ca answers HTTP 403 (CloudFront 'Request blocked') to every URL tried, robots.txt included. Not bypassed. URL and title come from the search engine's index (discovery only, never evidence); if verify_evidence cannot open it, the item stays unknown.",
+ "programme": {
+  "url": "https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=110935",
+  "title": "Program: Bachelor of Science Computing Science Subject Area"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "unknown",
+ "programme_urls": [],
+ "related_programme_urls": [],
+ "related_programmes": [
+  "Bachelor of Science in Computer Engineering (calendar poid=110564) - related"
+ ],
+ "degree": "Bachelor of Science (Major or Honors) with Computing Science as subject area, 2026-2027 calendar - from the search index, not read",
+ "teaching_language": "English - not read",
+ "population_scope": "international",
+ "twins": null,
+ "twin_mechanism": "not established: pages could not be opened",
+ "how_found": "www.ualberta.ca (all 403) -> calendar.ualberta.ca (home loads: 'University of Alberta Calendar 2026-2027'); search on ualberta.ca -> 'Program: Bachelor of Science Computing Science Subject Area' (catoid=69 = 2026-2027 calendar). The older 'BSc Specialization in Computing Science' appears to belong to programs in effect before Fall 2024 (search snippet only)."
+}

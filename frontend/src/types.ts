@@ -112,6 +112,9 @@ export interface RequirementCheck {
    *  when the page did not say — which is not the same as "everyone", and is
    *  why this is shown as a quiet line rather than a badge. */
   published_scope: string;
+  /** Keys for `requirement` and `explanation` (I18N-2); served, never stored. */
+  requirement_message?: MessageRef | null;
+  explanation_message?: MessageRef | null;
 }
 
 export interface CoverageBreakdown {
@@ -127,6 +130,8 @@ export interface Scholarship {
   scholarship_type: ScholarshipType;
   classification: FundingClassification;
   classification_reason: string;
+  /** `classification_reason` sentence by sentence, keyed; only when every sentence is (I18N-2). */
+  classification_messages?: MessageRef[] | null;
   amount: Money | null;
   amount_is_percentage_of_tuition: number | null;
   coverage: CoverageBreakdown[];
@@ -199,6 +204,9 @@ export interface FundingGap {
   /** Core categories the cost table omits; non-empty only for itemised_partial. */
   missing_categories: CostCategory[];
   warnings: string[];
+  /** Keys for `reason` and each warning (gap B6); absent from older servers. */
+  reason_message?: MessageRef | null;
+  warning_messages?: (MessageRef | null)[] | null;
 }
 
 export interface ScoreComponent {
@@ -243,6 +251,7 @@ export interface AxisScore {
   weight: number;
   reason: string;
   evidence_claim_ids: string[];
+  reason_message?: MessageRef | null;
 }
 
 export interface RankingV2 {
@@ -261,6 +270,10 @@ export interface RankingV2 {
   weights_source: 'priorities_roc' | 'weights_override';
   version: '2';
   disclaimer: string;
+  /** Keys for `bucket_reason`, `knocked_out_by` (index for index) and `disclaimer` (I18N-2). */
+  bucket_reason_message?: MessageRef | null;
+  knocked_out_messages?: (MessageRef | null)[] | null;
+  disclaimer_message?: MessageRef | null;
 }
 
 export interface ClaimOut {
@@ -284,6 +297,10 @@ export interface ClaimOut {
   id: string;
   is_stale: boolean;
   age_days: number;
+  /** One key per reason in the notes' "Stale, not current:" sentence (gap B6). */
+  stale_messages?: (MessageRef | null)[] | null;
+  /** The key of the notes' "Caveat: …" sentence: current, but not fully verified. */
+  caveat_message?: MessageRef | null;
 }
 
 export interface Conflict {
@@ -296,6 +313,20 @@ export interface Conflict {
   resolution_rule: string;
   question_for_admissions: string;
   unresolved: boolean;
+  /** Keys for `subject` and `resolution_rule` (I18N-2). The drafted email stays English on purpose. */
+  subject_message?: MessageRef | null;
+  resolution_message?: MessageRef | null;
+}
+
+/**
+ * A stable key for one English sentence the backend wrote, with its
+ * parameters (gap B6). The English is still served beside it; see
+ * `lib/messages.ts`.
+ */
+export interface MessageRef {
+  key: string;
+  params: Record<string, string>;
+  parts?: Record<string, (MessageRef | null)[]>;
 }
 
 export interface UnresolvedQuestion {
@@ -306,6 +337,8 @@ export interface UnresolvedQuestion {
   program: string | null;
   suggested_contact: string | null;
   blocking: boolean;
+  question_message?: MessageRef | null;
+  why_message?: MessageRef | null;
 }
 
 export interface DocumentItem {
@@ -330,6 +363,10 @@ export interface DocumentItem {
   lead_time_days: number | null;
   source_url: string | null;
   claim_ids: string[];
+  /** Served only (I18N-3): the key of `name` when it is one of the 18 document kinds. */
+  name_message?: MessageRef | null;
+  /** Served only (I18N-3): one key per sentence of `format_notes`, null where none matched. */
+  notes_messages?: (MessageRef | null)[] | null;
 }
 
 export interface DocumentChecklist {
@@ -346,6 +383,23 @@ export interface DocumentChecklist {
   unresolved: UnresolvedQuestion[];
   generated_at: string | null;
   completeness: 'official' | 'partial' | 'unavailable';
+}
+
+/** Why a KB value is unknown (WHY-1); mirrors `app.schemas.result.KbUnknownKind`. */
+export type KbUnknownKind =
+  | 'not_published'
+  | 'access'
+  | 'unverified_quote'
+  | 'undated'
+  | 'other_year'
+  | 'not_researched'
+  | 'unspecified';
+
+/** One unanswered KB question and why (kb mode only). */
+export interface KbUnknown {
+  question: string;
+  kind: KbUnknownKind;
+  checked_on: string | null;
 }
 
 export interface ProgramResult {
@@ -398,6 +452,8 @@ export interface ProgramResult {
   user_notes: string;
   decided_at: string | null;
   checklist: DocumentChecklist | null;
+  /** WHY-1: absent outside kb mode and when every question is answered. */
+  kb_unknown?: KbUnknown[];
 }
 
 export interface StageView {
@@ -479,10 +535,50 @@ export interface ShortlistSummary {
   demo_data: boolean;
 }
 
+/** What the knowledge base says about the CS programme page (`routes_universities.PROGRAMME_PAGES`). */
+export type KbProgrammePage = 'known' | 'related_only' | 'not_offered' | 'unknown';
+
+/** A KB fee as published, judged by the run's stale and caveat rules. */
+export interface CatalogueKbTuition {
+  amount: number;
+  currency: string;
+  range_low: number | null;
+  range_high: number | null;
+  /** As published ("semester", "year"); null when the page gave none. */
+  period: string | null;
+  academic_year: string | null;
+  stale: boolean;
+  stale_reasons: string[];
+  /** `stale_reasons` keyed, one per reason (null for an unknown shape), for ru and kk. */
+  stale_messages: (MessageRef | null)[];
+  caveat: string | null;
+  caveat_message: MessageRef | null;
+  source_url: string;
+}
+
+/**
+ * A catalogue card's verified-data coverage (kb mode only; null in live and
+ * demo mode). Checked against the backend by `test_frontend_contract.py`.
+ */
+export interface CatalogueKnowledge {
+  in_kb: boolean;
+  programme_page: KbProgrammePage;
+  /** The six core questions answered: known, or verified as not applicable. */
+  core_answered: number;
+  documents: number;
+  verified_on: string | null;
+  stale_count: number;
+  review_label: string | null;
+  tuition: CatalogueKbTuition | null;
+}
+
 export interface Capabilities {
   demo_mode: boolean;
+  /** Where answers come from; optional so an older API still type-checks. */
+  knowledge_mode?: 'demo' | 'kb' | 'live';
   data_origin: string;
-  adapters: { name: string; role: string; live: boolean }[];
+  /** `active` appears in kb mode only: false for the web adapters a kb-mode run never uses. */
+  adapters: { name: string; role: string; live: boolean; active?: boolean }[];
   fetch_tiers: string[];
   currency: {
     supported: string[];
@@ -491,17 +587,40 @@ export interface Capabilities {
     rate_age_days?: number;
     //: Empty while the snapshot is fresh; a sentence to show verbatim once it is not.
     stale_warning?: string;
+    //: Its key (I18N-2); absent while the snapshot is fresh.
+    stale_warning_message?: MessageRef;
   };
   guarantees: string[];
   limits: string[];
   //: What live mode can actually reach. Someone switching demo mode off
   //: pictures the open web; the truth is a curated registry, and the
   //: difference has to be on screen before they choose, not after.
+  //: RM-1: in kb mode the block names the knowledge base's reach instead
+  //: (`mode: 'kb'`, `institutions` = KB entries with verified data); demo
+  //: mode serves no `mode`, which reads as live. `recall_message` localises
+  //: `recall_note` (`msg.coverage.kb` / `msg.coverage.live`).
   live_coverage: {
     institutions: number;
     countries: string[];
     recall_note: string;
+    mode?: 'kb' | 'live';
+    catalogue_total?: number;
+    recall_message?: MessageRef;
+    //: MODE-1: a demo server whose knowledge mode is kb adds the kb block,
+    //: because unticking demo there starts a kb run, not a live one.
+    kb_coverage?: KbCoverage;
   };
+}
+
+//: The kb-mode coverage block (RM-1), as `live_coverage` serves it on a kb
+//: server and as `live_coverage.kb_coverage` on a kb-configured demo server.
+export interface KbCoverage {
+  mode: 'kb';
+  institutions: number;
+  countries: string[];
+  catalogue_total: number;
+  recall_note: string;
+  recall_message: MessageRef;
 }
 
 export interface StoredProfile {
@@ -520,6 +639,12 @@ export interface AuthPrincipal {
   organization_name: string;
   role: string;
   local_development: boolean;
+  /**
+   * Named in the deployment's moderator list (`Settings.is_moderator`), which
+   * is not a workspace role. It only decides whether the queue's nav entry is
+   * shown; the queue routes answer 403 to anyone else regardless.
+   */
+  is_moderator: boolean;
 }
 
 export interface AuthStatus {

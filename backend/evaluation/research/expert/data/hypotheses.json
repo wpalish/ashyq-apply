@@ -204,6 +204,223 @@
       ],
       "policy_guard": "Fewer reads, no new sources; nothing is read that the walker would not have read.",
       "validation_artifact": "backend/tests/test_catalog_walker_subject_cap.py"
+    },
+    {
+      "id": "CO-1-V1",
+      "status": "rejected",
+      "case_ids": [
+        "groningen",
+        "delft",
+        "aalto",
+        "vienna",
+        "warsaw",
+        "ubc",
+        "toronto",
+        "hku",
+        "ntu",
+        "kaist"
+      ],
+      "observation": "Not built. CO-1 step 1 (docs/process/NO_SEARCH_FLOOR_2026-10-21.md §7, research only, no app/ change): on the no-search captures the confirm queue re-sorts programme-page candidates by (score, url) descending, a reverse-alphabetical tie, and dev3 auckland's gold sits at rank 26 of 40, beyond the 8 confirm reads (§7.3 table). V1 (the selection loop's own order) moves it to rank 4; 0 new non-gold pages would be confirmed on any of the six cases whose queue exceeds 8 reads. dev2 khalifa's gold is not in sitemap_urls_seen at all, so no order reaches it; under the two-set bar ('a stable gain on both dev2 and dev3') step 2 cannot pass. One set by measurement (auckland). Planner (docs/process/NEXT_CYCLES_2026-10-23.md §7): FRH reaches the same case on a two-set bar, and two rules on one case make the attribution unreadable. No cohort case's queue exceeds 8 reads (§7.3), so the cohort is a no-change guard. Closed 2026-10-25 as superseded, never built: FRH (on by default 2026-10-25) reached both cases this variant was for - dev3 auckland missed -> hit and dev2 khalifa related -> hit in both on columns with 0 wrong pages (LOOP_REPORT 2026-10-25 19:00) - so the one-set re-open trigger (FRH failing auckland in 2 of 4 columns) cannot fire (docs/process/NEXT_CYCLES_2026-10-26.md §2.6, §8). The status is 'rejected' because the registry has no 'superseded' status; validation_artifact names FRH's test, the rule that decided it. case_ids lists the ten-case pilot cohort only because this registry validates case ids against that cohort's diagnosis; the development cases are named in this observation.",
+      "proposed_rule": "CONFIRM_QUEUE_SELECTION_ORDER: _confirm_programs continues its queue in the selection loop's order (score descending, then shorter URL, then _prefer_exact_field) instead of re-sorting by (score, url) descending.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py LiveDiscoveryAdapter._confirm_programs (flag CONFIRM_QUEUE_SELECTION_ORDER beside CONFIRM_REJECTS_SUBPAGE_HEAD; harness --confirm-queue-selection-order); spec in docs/process/NO_SEARCH_FLOOR_2026-10-21.md §7.4, not built",
+      "counterexample": "khalifa (dev2): its gold is never queued, so no queue order can reach it; it is lost in the catalogue walker, which refuses two hub pages that link the gold and never follows their links (docs/process/NO_SEARCH_FLOOR_2026-10-21.md §7, §7.5).",
+      "falsification": "Re-opens only if FRH's frh-dev3 arms fail auckland in at least 2 of 4 columns while frh-dev2 passes khalifa; then V1 is built under a one-set bar (docs/process/NO_SEARCH_FLOOR_2026-10-21.md §7.4 (a); docs/process/NEXT_CYCLES_2026-10-23.md §7) with the §7.4 pre-registration: dev3 auckland missed -> hit in 4/4 columns, dev2 unchanged, no new wrong page in normal or knockout arms. Closed 2026-10-25: re-opens only if a new development case loses a gold to the confirm-queue tie (docs/process/NEXT_CYCLES_2026-10-26.md §8).",
+      "evidence_artifacts": [
+        "docs/process/NO_SEARCH_FLOOR_2026-10-21.md §7 (CO-1 step 1), §7.3 (variants table), §7.4 (worker-ready spec)",
+        "GitHub Actions runs 39350477901 (ns-floor-dev2), 39350480488 (ns-floor-dev3), 39379523420 (ns1-dev2), 39379525547 (ns1-dev3), 39350475181 (ns-floor-cohort), 39350483178 (ns-floor-dev4)",
+        "docs/process/NEXT_CYCLES_2026-10-23.md §0 (CO-1 step 1 row), §7 (CO-1 V1 row)",
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-25 19:00 - FRH amended (§8.6) re-run' and '2026-10-25 19:50 - NS-RES-1'"
+      ],
+      "policy_guard": "One sort key: no word, no read and no budget added; the reads cap, the ledger, keep() and the selection loop are unchanged, and off is byte-identical.",
+      "validation_artifact": "backend/tests/test_follow_refused_hub_link.py"
+    },
+    {
+      "id": "CO-1-V2",
+      "status": "rejected",
+      "case_ids": [
+        "groningen",
+        "delft",
+        "aalto",
+        "vienna",
+        "warsaw",
+        "ubc",
+        "toronto",
+        "hku",
+        "ntu",
+        "kaist"
+      ],
+      "observation": "Not built. CO-1 step 1 variant V2 (docs/process/NO_SEARCH_FLOOR_2026-10-21.md §7.3): keep() reads the degree level on the URL with its trailing file extension (.html, .htm, .php, .asp(x), .jsp) removed, using the existing names_other_degree_level / matches_degree before ranking; offline it moves dev3 auckland's gold from rank 26 of 40 to rank 1 (V3 = V1 + V2 also 1), with 0 new non-gold pages confirmed on the six cases whose queue exceeds 8 reads. Kept out of CO-1 step 2 (§7.4): it changes which URLs keep() refuses, so it needs its own knockout look; no case needs it once V1 or FRH lands (docs/process/NEXT_CYCLES_2026-10-23.md §7). No cohort case's queue exceeds 8 reads, so the cohort is a no-change guard. Closed 2026-10-25 as superseded, never built: FRH (on by default 2026-10-25) reached both cases this variant was for - dev3 auckland missed -> hit and dev2 khalifa related -> hit in both on columns with 0 wrong pages (LOOP_REPORT 2026-10-25 19:00) - so the one-set re-open trigger (FRH failing auckland in 2 of 4 columns) cannot fire (docs/process/NEXT_CYCLES_2026-10-26.md §2.6, §8). The status is 'rejected' because the registry has no 'superseded' status; validation_artifact names FRH's test, the rule that decided it. case_ids lists the ten-case pilot cohort only because this registry validates case ids against that cohort's diagnosis; the development cases are named in this observation.",
+      "proposed_rule": "LEVEL_SLUG_IGNORES_EXTENSION: keep() applies the existing names_other_degree_level / matches_degree test to the URL with its trailing file extension removed, before ranking.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py keep() in _confirm_programs' candidate filter (flag LEVEL_SLUG_IGNORES_EXTENSION); not built",
+      "counterexample": "A refusal widened to extension-bearing URLs changes which URLs keep() refuses and could refuse a page the base run keeps; that is why it needs a knockout look of its own (docs/process/NO_SEARCH_FLOOR_2026-10-21.md §7.4).",
+      "falsification": "Re-opens only if V1 opens and fails (docs/process/NEXT_CYCLES_2026-10-23.md §7); then paired no-search runs on the four development sets, normal and knockout, where a new wrong page or a stable claim loss rejects it. Closed 2026-10-25: re-opens only if a new development case loses a gold to the confirm-queue tie (docs/process/NEXT_CYCLES_2026-10-26.md §8).",
+      "evidence_artifacts": [
+        "docs/process/NO_SEARCH_FLOOR_2026-10-21.md §7.3 (variants V1-V4 and the gold-rank table), §7.4 ('V2 stays out of this ticket')",
+        "docs/process/NEXT_CYCLES_2026-10-23.md §7 (CO-1 V2 row)",
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-25 19:00 - FRH amended (§8.6) re-run' and '2026-10-25 19:50 - NS-RES-1'"
+      ],
+      "policy_guard": "Uses the existing degree-level words only; no word, read or budget added.",
+      "validation_artifact": "backend/tests/test_follow_refused_hub_link.py"
+    },
+    {
+      "id": "FR-3",
+      "status": "rejected",
+      "case_ids": [
+        "groningen",
+        "delft",
+        "aalto",
+        "vienna",
+        "warsaw",
+        "ubc",
+        "toronto",
+        "hku",
+        "ntu",
+        "kaist"
+      ],
+      "observation": "Not built. FR-3 sizing (docs/process/EVIDENCE_GENERALISATION_2026-10-21.md, 'Item 3, follow-up: why a costs-stage read extracts no figure (FR-3 sizing)'): the 34 costs-stage reads that extracted no figure on the four development sets were classified one cause each; 24 (71%) are (a), correct behaviour (mostly fee hubs whose amount is one link further on, the rest pages that are not fee pages); 9 are (b), the fee is on the page in a shape the reader does not parse (cohort 1, dev2 3, dev3 4, dev4 1); the fee table with population or level columns recurs on three sets. All 9 (b) pages sit on cases whose tuition label is unknown, so a (b) cause costs a labelled tuition claim on 0 of 4 sets against the pre-set bar of at least 2. FEE_READERS_V3 does not exist. CX-1 step 2 closed on this (docs/process/NEXT_CYCLES_2026-10-23.md §0, §7). case_ids lists the ten-case pilot cohort only because this registry validates case ids against that cohort's diagnosis; the development cases are named in this observation.",
+      "proposed_rule": "A generic fee reader for the (b) shapes the costs stage does not parse today (population/level column tables, per-semester sentences under a bare heading, currencies missing from the money pattern).",
+      "integration_seam": "backend/app/adapters/cost (the costs-stage fee reader); not built",
+      "counterexample": "Three of the (b) pages print only an earlier year, so parsing every (b) shape would add wrong-year tuition claims as well as unlabelled ones (docs/process/EVIDENCE_GENERALISATION_2026-10-21.md, item 3 follow-up).",
+      "falsification": "Re-opens when a labelled tuition claim on at least 2 development sets is lost to an unparsed fee shape (docs/process/NEXT_CYCLES_2026-10-23.md §7, CX-1 step 2 / FR-3 row).",
+      "evidence_artifacts": [
+        "docs/process/EVIDENCE_GENERALISATION_2026-10-21.md 'Item 3, follow-up' (the (b) shape table and 'The bar is not met')",
+        "docs/process/NEXT_CYCLES_2026-10-23.md §0 (G-16a item 3 row), §7"
+      ],
+      "policy_guard": "A reader rule only: no new page read; every figure would still need its quoted official excerpt and year.",
+      "validation_artifact": "docs/process/EVIDENCE_GENERALISATION_2026-10-21.md"
+    },
+    {
+      "id": "SH-1",
+      "status": "tested",
+      "case_ids": [
+        "groningen",
+        "delft",
+        "aalto",
+        "vienna",
+        "warsaw",
+        "ubc",
+        "toronto",
+        "hku",
+        "ntu",
+        "kaist"
+      ],
+      "observation": "Built, off. REACH_ROWS_2026-10-20 shape S5 (sibling-host half): award-shaped links an index walk drops for their host sat on another host of the index's own registrable domain on cohort and dev3. Replay 2026-10-20 04:40 (backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md, --same-site-award-links, 4 sets, normal + knockout, $0): the rule fired (on arms kept 18 sibling-host award links on cohort, 10 on dev3), but no stable gain and no stable loss on any set, normal or knockout, and wrong pages unchanged; the followed sibling pages hold no labelled award. Verdict: stays off (13-Q2 needs a stable gain). Fired with no gain; listed among the rules with gain 0 on every bench (docs/process/NEXT_CYCLES_2026-10-23.md §7). case_ids lists the ten-case pilot cohort only because this registry validates case ids against that cohort's diagnosis; the development cases are named in this observation.",
+      "proposed_rule": "_award_links keeps an award link on another host of the index's own registrable domain (public-suffix-aware hosts_share_site, never a site list) like a same-host link, inside the one shared award budget and its ranking.",
+      "integration_seam": "backend/app/adapters/scholarship/web_scholarships.py SAME_SITE_AWARD_LINKS, _award_links; evaluation/research/live.py --same-site-award-links",
+      "counterexample": "A sibling official host can carry award pages that no scholarships label cites; following its links spends the shared award budget with nothing labelled to gain (the 2026-10-20 replay).",
+      "falsification": "Re-opens on a development set where a scholarships label sits on a sibling host (backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md 2026-10-20 04:40: 'ready for a set where a label sits on a sibling host'); default-on needs a stable gain with no new wrong page and no stable claim loss (REACH_ROWS_2026-10-20 note 2).",
+      "evidence_artifacts": [
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-20 04:40 - SH-1 --same-site-award-links replay'",
+        "docs/process/REACH_ROWS_2026-10-20.md (S5 row and note 2)"
+      ],
+      "policy_guard": "Same registrable domain only; a mail redirector on the site and every other registrable domain stay dropped; reads stay inside the shared award budget.",
+      "validation_artifact": "backend/tests/test_same_site_award_links.py"
+    },
+    {
+      "id": "LL-1",
+      "status": "tested",
+      "case_ids": [
+        "groningen",
+        "delft",
+        "aalto",
+        "vienna",
+        "warsaw",
+        "ubc",
+        "toronto",
+        "hku",
+        "ntu",
+        "kaist"
+      ],
+      "observation": "Built, off. docs/process/MISS_STAGES_2026-10-19.md §3 candidate 6: kaznu (dev2, excluded), msu (dev3) and vut (dev4, related-only) read a listing whose links were not followed (kaznu's card anchors run code, name and description together; msu's 'Бакалавриат' listing refused on subject); expected +0-1 (msu, only if its listing links the gold; unverified). Replay D-A 2026-10-20 01:15 (backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md, --listing-follows-local-aliases, 4 sets): normal stable gains 0, losses 0 on all four sets, wrong pages unchanged; knockout wrong pages unchanged (cohort 0, dev2 1, dev3 1-2, dev4 1), no stable change; msu unchanged. Verdict: stays off. Fired with no gain; listed among the rules with gain 0 on every bench (docs/process/NEXT_CYCLES_2026-10-23.md §7). case_ids lists the ten-case pilot cohort only because this registry validates case ids against that cohort's diagnosis; the development cases are named in this observation.",
+      "proposed_rule": "For a refused read in recovery's listing follow-up: (a) follow a link whose label misses the field when the first heading inside its anchor matches it through matches_field_text; (b) follow the links of a page whose head names only the requested level as a listing's are.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py LISTING_FOLLOWS_LOCAL_ALIASES; catalog_walker.WalkerLink.heading; page_classifier.head_names_only_a_level; evaluation/research/live.py --listing-follows-local-aliases",
+      "counterexample": "msu's listing may not link the gold page at all (docs/process/MISS_STAGES_2026-10-19.md, msu row: 'if the listing links the gold; unverified'), in which case following it spends reads for nothing.",
+      "falsification": "Default-on needs a stable gain on cohort or dev2 (docs/process/NEXT_CYCLES_2026-10-20.md §1 row 3, the D-A bar) with knockout wrong pages not up; re-opens on the triggers written in REACH_ROWS_2026-10-20 and LOOP_REPORT (docs/process/NEXT_CYCLES_2026-10-21.md §7).",
+      "evidence_artifacts": [
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-20 01:15 - cycle 14 dispatches' (D-A LL-1 normal and knockout rows)",
+        "docs/process/MISS_STAGES_2026-10-19.md §3 (candidate 6)",
+        "docs/process/HANDOFF.md §8 (2026-10-19 [LL-1] contract line)"
+      ],
+      "policy_guard": "Same read cap and the same score_link hard rejects; the applicant's words and the ontology's existing aliases only, nothing new.",
+      "validation_artifact": "backend/tests/test_listing_local_aliases.py"
+    },
+    {
+      "id": "NS-1b+PC-1",
+      "status": "tested",
+      "case_ids": [
+        "groningen",
+        "delft",
+        "aalto",
+        "vienna",
+        "warsaw",
+        "ubc",
+        "toronto",
+        "hku",
+        "ntu",
+        "kaist"
+      ],
+      "observation": "On by default since 2026-10-20 (HOMEPAGE_HOP_READS = True, SITEMAP_STAGE_CAP = True) under the 13-Q2 default rule; the registry status stays 'tested' because it never self-promotes. NS-1b alone (backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md 2026-10-20 06:45) was first read as 'stays off'; the 09:15 entry corrects it (the scorecard columns are off#1, off#2, on#1, on#2, not ABBA). 2026-10-20 09:15 no-search bench, 13 runs, hit/wrong/related/missed off -> on: cohort 4/0/0/6 -> 4/0/0/6, dev2 2/0/1/7 -> 2/0/1/7, dev3 3/0/0/11 -> 5/0/0/9 in both on columns (puc, iitd), dev4 0/0/0/9 -> 1/0/0/8 in both on columns (kit); knockout identical on all four sets, wrong pages not up; recorded guard dev3/dev4 identical; PC-1 alone on dev3/dev4 identical (as pre-registered); R4 + PC-1 dev3 3 -> 4 (puc only). No-search floor 9/39 -> 12/39, 0 wrong pages. The cohort is unchanged. case_ids lists the ten-case pilot cohort only because this registry validates case ids against that cohort's diagnosis; the development cases are named in this observation.",
+      "proposed_rule": "NS-1b: when the homepage was read, the queue is empty and no programme page is selected, read the best HOMEPAGE_HOP_READ_CAP homepage links on the institution's registrable domain as section pages, ranked by the product's link score. PC-1: with no search provider, start no sitemap document after SITEMAP_STAGE_MAX_SECONDS, and let a sitemap document whose exchange overruns the fetcher deadline skip itself alone (Fetcher.mark_stall_local) instead of closing its host.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py HOMEPAGE_HOP_READS, HOMEPAGE_HOP_READ_CAP, SITEMAP_STAGE_CAP; backend/app/adapters/fetching.py Fetcher.mark_stall_local; evaluation/research/live.py --homepage-hop-reads, --sitemap-stage-cap",
+      "counterexample": "With a search provider configured PC-1 changes nothing, and the recorded-search guard shows no change from NS-1b either; the gains are the no-provider regime's only.",
+      "falsification": "A no-search or recorded-guard run where either flag loses a hit or a stable claim, or adds a wrong page, normal or knockout, turns it back off (the 13-Q2 bar the 09:15 verdict was read against).",
+      "evidence_artifacts": [
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-20 06:45 - NS-1b --homepage-hop-reads on the no-search bench'",
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-20 09:15 - NS-1b + PC-1 on the no-search bench (13 runs) - and a correction'",
+        "docs/process/NEXT_CYCLES_2026-10-23.md §0 (no-search row, 12/39)"
+      ],
+      "policy_guard": "Structural only, no word added: the hop reads have their own cap and stay inside the SB-1 budget, the 60-read ledger and the 120 s case clock; no read is interrupted and robots, pacing and the privacy guard apply as before.",
+      "validation_artifact": "backend/tests/test_homepage_hop_reads.py"
+    },
+    {
+      "id": "SG-1",
+      "status": "rejected",
+      "case_ids": [
+        "ubc",
+        "ntu",
+        "kaist"
+      ],
+      "observation": "Built, off (SITEMAP_GUESS_RULE = False). Runs sg1-cohort/dev2/dev3/dev4 (no search, --sitemap-guess-cap) and the recorded guard rp-sg1-dev4, backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md 2026-10-20 11:00. Hit/wrong/related/missed unchanged on every set (cohort 4/0/0/6, dev2 2/0/1/7, dev3 5/0/0/9, dev4 1/0/0/8; guard 5/0/1/3 in both on columns); no wrong page, no hit lost; most hosts 2-8 s faster (cohort ubc -22 s, ntu -15 s, kaist -5 s). But the pre-registered ctu saving did not appear (-6 s against -20 to -30 s), there is no stable gain, and dev3 shows a stable claim loss (unsw ielts.overall, ielts.subscores): unsw finishes at 116/118 s off and 119/119 s on, and both on captures end CAPTURE_IN_PROGRESS under the 120 s case clock, so their claims are dropped whole; the pages read are the same. Verdict: SG-1 stays off (13-Q2 gate). The clock-edge loss is a harness fragility rather than a rule effect, left to the planner as a follow-up. case_ids lists the cohort cases whose seconds moved most; the development cases are named in this observation. Final re-run under HC-1 (LOOP_REPORT 2026-10-25 19:00; runs 40218613027 sg1b-dev3, 40218614971 sg1b-dev4, no search, --sitemap-guess-cap): labels identical in every column (dev3 5/0/0/9, dev4 0/0/0/9 - kit missed, off included), no stable change; reads dev3 353/342 -> 335/347, dev4 200/189 -> 202/208, so not down on dev4. Verdict: off for good.",
+      "proposed_rule": "When robots.txt names no sitemap and the host asks a crawl delay of at least SLOW_HOST_SECONDS, guess only /sitemap.xml; on any host, stop guessing after SITEMAP_GUESS_MAX_404 consecutive guesses answered 404.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py SITEMAP_GUESS_RULE, SITEMAP_GUESS_CAP; evaluation/research/live.py --sitemap-guess-cap",
+      "counterexample": "unsw (dev3): a case running at 116-119 s crosses the 120 s clock by a second and loses every claim it had extracted, so a time-saving rule can still show a claim loss.",
+      "falsification": "Pre-registered (docs/process/NEXT_CYCLES_2026-10-23.md §4, SG-1 verdict row): ctu case_time -20 to -30 s; kit, itu, msu, um, ethz, utokyo -3 to -6 s; hits unchanged everywhere, 0 wrong, guard identical -> on by default; a hit lost or a wrong page -> stays off. Not met (no ctu saving, a stable claim loss on dev3). Re-run once HC-1 stopped a clock-crossing capture from dropping its claims (sg1b-dev3, sg1b-dev4, 2026-10-25): the bar (fewer reads and seconds on both sets) not met; final, no further re-open (docs/process/NEXT_CYCLES_2026-10-23.md §7).",
+      "evidence_artifacts": [
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-20 11:00 - SG-1 sitemap guesses on a crawl-delay host (5 runs)'",
+        "GitHub Actions runs 39407237273 (sg1-cohort), 39407239955 (sg1-dev2), 39407243537 (sg1-dev3), 39407246813 (sg1-dev4), 39407250150 (rp-sg1-dev4)",
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-25 19:00 - FRH amended (§8.6) re-run (6 runs) and the SG-1 re-run under HC-1 (2 runs)'; GitHub Actions runs 40218613027 (sg1b-dev3), 40218614971 (sg1b-dev4)"
+      ],
+      "policy_guard": "Structural only: no path and no word added; a declared sitemap and the children of a guess that answered are read as before; the trace records an SG-1 line when a guess is skipped.",
+      "validation_artifact": "backend/tests/test_sitemap_guess_cap.py"
+    },
+    {
+      "id": "FRH",
+      "status": "tested",
+      "case_ids": [
+        "groningen",
+        "delft",
+        "aalto",
+        "vienna",
+        "warsaw",
+        "ubc",
+        "toronto",
+        "hku",
+        "ntu",
+        "kaist"
+      ],
+      "observation": "On by default since 2026-10-25 (FOLLOW_REFUSED_HUB_LINK = True, commit 2156b46c) under the 13-Q2 default rule; the registry status stays 'tested' because it never self-promotes. Step 2 as first built (c8c7b727, docs/process/NO_SEARCH_FLOOR_2026-10-21.md §8.5) replayed in 12 runs (LOOP_REPORT 2026-10-25 18:00): both predicted gains (dev2 khalifa related -> hit, dev3 auckland missed -> hit) with 0 wrong pages and knockout identical, but two hits lost - cohort groningen without search and dev4 unibo with recorded search - so it stayed off. Diagnosis (§8.6): groningen was the follow - two non-hubs passed the trigger on the single word 'science' and one hub was followed twice, spending the walker's 55 s deadline one read before the gold (§8.6.2); unibo was the host - corsi.unibo.it timed out in both on columns, one of which made no follow (§8.6.3). Amended (8ecf06df, §8.6.4): (A) a hub's URL must name the field as whole consecutive slug words (SR-1's phrase test), (B) one follow per hub; offline, no-search follows fall 27 -> 4, all four confirming a gold. Re-run (6 runs, LOOP_REPORT 2026-10-25 19:00): frh2-cohort 4/0/0/6 unchanged with groningen kept; frh2-dev2 2/0/1/7 -> 3/0/0/7 (khalifa); frh2-dev3 5/0/0/9 -> 6/0/0/8 (auckland; stable gains deadline, ielts.overall, ielts.subscores); frh2-dev4 1/0/0/8 unchanged, no follow; rp-frh2-cohort identical; rp-frh2-dev4's unibo loss again with no unibo follow (the host). No-search floor 12/39 -> 14/39, 0 wrong. case_ids lists the ten-case pilot cohort only because this registry validates case ids against that cohort's diagnosis; the development cases are named in this observation.",
+      "proposed_rule": "A page the confirm stage or the walker reads as a programme candidate is a hub when profile_rejects refuses it, it reads as a listing (PROGRAM_CATALOG or UNKNOWN), and its URL names the requested field as whole consecutive slug words or its classified head names the field; for a hub, its single best field link (refused_hub_lead) is read next, one hop, judged by profile_rejects like any candidate; a hub is followed once per institution, at most FOLLOW_REFUSED_HUB_LINK_CAP follows.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py FOLLOW_REFUSED_HUB_LINK, FOLLOW_REFUSED_HUB_LINK_CAP, LiveDiscoveryAdapter._hubs_followed_from; backend/app/adapters/discovery/catalog_walker.py refused_hub_lead; evaluation/research/live.py --follow-refused-hub-link (NEGATABLE_RULES['follow-refused-hub-link'])",
+      "counterexample": "groningen (cohort, no search) under the first trigger: a field word inside an unrelated slug ('openscience', 'schools-for-science-society') made two non-hubs pass, and the follows cost the walker its deadline before the gold (docs/process/NO_SEARCH_FLOOR_2026-10-21.md §8.6.2).",
+      "falsification": "A no-search, knockout or recorded-guard run where FRH-on loses a hit or a stable claim, or adds a wrong page, on a case where a follow ran, turns it back off (the 13-Q2 bar); a loss on a case with no follow is read as the host first (§8.6.3).",
+      "evidence_artifacts": [
+        "docs/process/NO_SEARCH_FLOOR_2026-10-21.md §8 (step 1), §8.5 (spec), §8.6 (replay diagnosis and amendment)",
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-25 18:00 - FRH step 2 (12 runs)' and '2026-10-25 19:00 - FRH amended (§8.6) re-run (6 runs)'",
+        "GitHub Actions runs 40215236690 (frh-cohort), 40215253209 (rp-frh-dev4), 40220878232 (frh2-cohort), 40220885464 (frh2-dev2), 40220887559 (frh2-dev3), 40220880000 (frh2-dev4), 40220881831 (rp-frh2-cohort), 40220883489 (rp-frh2-dev4)",
+        "backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md '2026-10-25 19:50 - NS-RES-1: the no-search bench at its $0 ceiling'"
+      ],
+      "policy_guard": "Structural only, no word added: a page class, an order and a read cap; follows stay inside the 60-read ledger, the SB-1 stage deadlines and the 120 s case clock; robots, pacing and the privacy guard apply to the followed link as to any read.",
+      "validation_artifact": "backend/tests/test_follow_refused_hub_link.py"
     }
   ]
 }

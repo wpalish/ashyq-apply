@@ -1,0 +1,81 @@
+{
+ "case": "qs2027-015",
+ "seed_id": "qs2027-015",
+ "university": "University of Pennsylvania",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-015",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants; international applicants follow the same process",
+   "academic_year": null,
+   "notes": "'Application Requirements' (first-year) and 'International Applicants' FAQ. The final transcript is due in June if accepted and enrolling. The first-year page announces the application for fall 2027 entry, but the requirements page states no academic year for the list; it is recorded as standing policy.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+     "quote": "Penn accepts applications from the Common App and Coalition Application."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+     "quote": "your personal statement, which is sent to most schools"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+     "quote": "You will need to request that an official transcript is sent by a school counselor or another school official for all high schools you have attended."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+     "quote": "Your counselor or another school official will need to send a Counselor Recommendation on your behalf."
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+     "quote": "You will also need to request a recommendation letter from a teacher."
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+     "quote": "Penn-Specific Essays and Short Answers Who Submits This: You! Due: November 1 for Early Decision, January 5 for Regular Decision When answering these prompts, be precise when explaining both why you are applying to Penn and why you have chosen to apply to a specific undergraduate school."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+     "quote": "Penn applicants are required to submit the SAT or ACT."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admissions.upenn.edu/how-to-apply/international-applicants",
+     "quote": "You are exempt from submitting an English proficiency test score if either of the following is true: English is your native language, or English was your primary language of instruction for at least three years (in high school, college, or a combination of both) by the time you enroll at Penn. If neither applies to you, you must submit scores from one of the following tests: TOEFL IELTS Academic Duolingo English Test",
+     "condition": "English is not your native language and was not your primary language of instruction for at least three years by enrolment"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admissions.upenn.edu/how-to-apply/international-applicants",
+     "quote": "Yes, please ensure that we receive a certified translations of any of your application materials which are not originally printed in English.",
+     "condition": "application materials are not originally printed in English"
+    }
+   ]
+  }
+ }
+}

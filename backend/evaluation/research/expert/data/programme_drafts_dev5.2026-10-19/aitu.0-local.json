@@ -1,0 +1,27 @@
+{
+ "case": "aitu",
+ "note": "dev5 aitu.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. Primary page: the site root redirects to /en (307) and this page declares itself canonical, so the English page is the main one; /ru and /kz are its twins.",
+ "programme": {
+  "url": "https://astanait.edu.kz/en/Computer-Science-bachelor",
+  "title": "Bachelor in Information and Communication Technologies in the educational program \"6B06101-Computer Science\""
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "known",
+ "page_title": "Astana IT University",
+ "heading": "Computer Science",
+ "degree": "Bachelor in Information and Communication Technologies (6B06101, group B057 Information technology), 3 years",
+ "teaching_language": "English",
+ "population_scope": "international (the /en/inc-academ page 'Admission for foreign applicants' is the international route; a Kazakh national is a domestic applicant and is admitted through UNT/AET and state grants instead)",
+ "twins": {
+  "ru": "https://astanait.edu.kz/ru/Computer-Science-bachelor",
+  "kz": "https://astanait.edu.kz/kz/Computer-Science-bachelor"
+ },
+ "twin_mechanism": "language switch in the header (links to /ru/ and /kz/ with the same slug); no hreflang links in the HTML",
+ "how_found": "robots.txt (200, Allow: / except /api/, /_next/, /admin/, /_dev/) -> sitemap.xml -> /en/bachelor ('Educational Programs' list: School of Artificial Intelligence and Data Science -> 'Computer Science 6B06101') -> /en/Computer-Science-bachelor. Cross-checked on /en/inc-academ (For International Applicants), which lists 'Computer Science 6B06101' among the bachelor programmes.",
+ "related_programme_urls": [
+  "https://astanait.edu.kz/en/Software-Engineering-bachelor",
+  "https://astanait.edu.kz/en/mathematicalcomputational-science-bachelor",
+  "https://astanait.edu.kz/en/BigDataAnalysis-bachelor"
+ ]
+}

@@ -1,0 +1,63 @@
+{
+ "case": "qs2027-059",
+ "university": "KU Leuven",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "kuleuven"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [],
+ "programme": {
+  "title": null,
+  "page_url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+   "quote": "De minimumvereiste voor Nederlandse taalvaardigheid is B2 van het ERK (Europees referentiekader).",
+   "notes": "Bachelor in de informatica (Leuven) is Dutch-taught ('Academische bachelor 180 studiepunten Nederlands'); the language requirement is Dutch B2 (CEFR), not an English test. Page shows the 2026-2027 and 2027-2028 tabs with the same text.",
+   "date": "2026-10-19",
+   "page_language": "nl"
+  },
+  "gpa": {
+   "status": "not_applicable",
+   "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+   "quote": "Kandidaten met een niet-Vlaamse vooropleiding (uitzondering VWO*) kunnen toegelaten worden op basis van een diploma of certificaat dat krachtens een wettelijke norm, een Europese richtlijn of een internationale overeenkomst als gelijkwaardig met het Vlaams secundair diploma wordt beschouwd.",
+   "notes": "Open-access Flemish bachelor: admission by diploma equivalence, no grade minimum. Other diplomas 'kunnen ook toelating krijgen mits hun diploma voldoende overeenstemt met een Vlaams secundair diploma'; extra tests may be requested. The university-wide country list (https://www.kuleuven.be/english/apply/requested-documents/eligibility-bachelor) gives minimum eligibility per country (e.g. '3 A-levels ... with a minimum grade of C for each A-level'), not a programme GPA.",
+   "date": "2026-10-19",
+   "page_language": "nl"
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-02-01",
+   "url": "https://www.kuleuven.be/english/apply/application-instructions/apply-to-kuleuven",
+   "quote": "For Dutch-taught programmes, the deadline for non-EEA applicants is 1 February .",
+   "population": "international",
+   "notes": "University-wide rule for Dutch-taught programmes (the CS bachelor is Dutch-taught); year not printed next to the date, but the same paragraph refers to the 2027-2028 registration deadline (22/09/2027), so 1 February 2027 for the 2027-28 intake. EEA applicants and non-EEA holders of a Belgian residence permit may apply until 22/09/2027.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "Not determinable from official pages. The tuition tool (https://icts.kuleuven.be/apps/tuitionfees/) lists only English-taught programmes (no 'Bachelor in de informatica'); it states 'If a non-EEA student wishes to register for a Dutch-taught programme, and there is an English-taught eguivalent with an increased tuition fee, then this fee applies' - there is no English-taught CS bachelor. The breakdown page (https://www.kuleuven.be/english/education/student/fees/tuition-fee-breakdown) gives 2026-2027 tiers EUR 1181,40 / 3093,12 / 5613,12 / 9493,92 for 60 credits without saying which applies to this programme. www.kuleuven.be connections were intermittently reset (curl 35); fetched with retries."
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "KU Leuven scholarship database (https://www.kuleuven.be/scholarships/year) filters only English-taught bachelor programmes (Business Administration, Business Engineering, Engineering Technology, European Studies, Philosophy, Theology); Bachelor in de informatica is not in its programme list. No CS-bachelor scholarship found."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "See scholarship_exists."
+  }
+ }
+}

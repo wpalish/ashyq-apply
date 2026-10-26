@@ -24,7 +24,7 @@ on:
         required: false
         default: 'ubuntu-latest'
       case:
-        description: 'One cohort id (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), or blank for all ten'
+        description: 'One case id, or blank for the ten cohort cases: cohort (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), heldout (nu, metu, sabanci, charles, masaryk, tum, tartu, polimi, vilnius) or dev2, which have no registry entry (ethz, psaclay, uppsala, tcd, tsinghua, tec, uba, kaznu, uct, khalifa), or dev4 (ctu, vut, rwth, kit, unibo, taltech, ktu, boun, itu), or dev5 (kbtu, satbayev, aitu, hacettepe, bilkent, ytu, upol, zcu, tud, lmu, unipd, sapienza, vilniustech). expert_paired takes a space-separated list'
         required: false
         default: ''
       seconds_per_case:
@@ -36,7 +36,7 @@ on:
         required: false
         default: '60'
       mode:
-        description: 'benchmark (default), expert_baseline (capture + blinded packet, no scoring) or expert_actions (execute an expert plan)'
+        description: 'benchmark (default), expert_baseline, expert_actions, expert_paired, verify_evidence (check expert draft quotes with the production fetcher; extra_args = drafts path), read_pages (read a committed list of official URLs with the production fetcher for KB drafting; extra_args = evaluation/research/expert/data/<list>.json or .txt, optionally followed by --robots-override-kb), or query_probe (v3-M5 Serper query-shape probe, at most 300 queries; extra_args = probe flags, e.g. --cases uba puc), or index_ceiling (free-search 04: dev gold and KB evidence URLs in sitemaps / two hops; no search provider; extra_args = tool flags, e.g. --refused-from <report.json>), or identity_gate (IG-2: the R6 identity gate on every development homepage, no fallback query, no provider; dev5 as counts only; extra_args empty or --fold-letters and/or --native-names evaluation/research/data/catalogue_native_names.proposed.json), or preflight (SM-1: the 1-query smoke of a named provider before a record run; search_provider must be exa, exa_mcp, tavily or brave, max_search_queries >= 1; one query with max_results=1, nothing captured)'
         required: false
         default: 'benchmark'
       plan:
@@ -59,12 +59,28 @@ on:
         description: 'expert_paired: flags applied to BOTH arms, so only extra_args differs'
         required: false
         default: ''
+      case_parallelism:
+        description: 'expert_paired: universities captured at once (1 = the old serial two-pass order). Each university keeps its own off/on/on/off order; different universities are different sites, so no site sees more requests. 5 since run 39076880836: same labels as serial, 12 min instead of 45, no wall-clock timeouts'
+        required: false
+        default: '5'
+      columns:
+        description: 'expert_paired: captures per case. 4 = the ABBA pair (off/on/on/off); 1 = a single-column record run, one "on" capture per case (base_args + extra_args; leave extra_args empty for the default pipeline), so a list of N cases plans 6 x N queries. A record run on a keyed provider also builds out/recorded_search.<run_tag or record>.json (recorded-search/2)'
+        type: choice
+        required: false
+        default: '4'
+        options:
+          - '4'
+          - '1'
       search_first:
         description: 'Experiment: search before the navigation fallback (false matches the measured default)'
         required: false
         default: 'false'
+      max_search_queries:
+        description: 'The run''s hard cap on provider queries (free-search ticket 02). Required for every search layer but none and recorded: the run refuses to start when it plans more (6 per case per capture, x4 for expert_paired, +1 for the Serper pre-flight), and the query after the cap is refused with no request sent'
+        required: false
+        default: ''
       search_provider:
-        description: 'Search layer: auto preserves historic secret precedence; explicit exa requires its API key'
+        description: 'Search layer: auto preserves historic secret precedence; explicit exa, tavily or brave requires its UNIMATCH_<PROVIDER>_API_KEY secret (the job stops before any capture without it); recorded (expert modes) replays the recorded result lists of the dev sets, no provider called and no key read (store: --recorded-store PATH in base_args, else evaluation/research/data/recorded_search.fused1.json, Exa r1 + Serper base3 fused, the default since 2026-10-26). "--search-provider recorded" in base_args or extra_args selects it too, for both arms'
         type: choice
         required: false
         default: 'auto'
@@ -72,7 +88,10 @@ on:
           - auto
           - exa
           - exa_mcp
+          - tavily
+          - brave
           - none
+          - recorded
 
 permissions:
   contents: read
@@ -140,6 +159,20 @@ jobs:
               fi
               provider=exa; decided_by="explicit input and UNIMATCH_EXA_API_KEY"
               ;;
+            tavily)
+              if [ -z "$UNIMATCH_TAVILY_API_KEY" ]; then
+                echo "::error::tavily requires UNIMATCH_TAVILY_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=tavily; decided_by="explicit input and UNIMATCH_TAVILY_API_KEY"
+              ;;
+            brave)
+              if [ -z "$UNIMATCH_BRAVE_API_KEY" ]; then
+                echo "::error::brave requires UNIMATCH_BRAVE_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=brave; decided_by="explicit input and UNIMATCH_BRAVE_API_KEY"
+              ;;
             exa_mcp|none) provider="$requested" ;;
             *) echo "::error::unknown search_provider; no capture started"; exit 1 ;;
           esac
@@ -148,6 +181,82 @@ jobs:
           mkdir -p out
           echo "provider=$provider" > out/config.txt
           echo "decided_by=$decided_by" >> out/config.txt
+
+      - name: Search query cap (refuse a provider run without one)
+        # Free-search ticket 02. Every query a keyed or keyless provider
+        # answers can spend an allowance or a paid key, and the 2026-10-19
+        # outage spent eight runs before anyone read the logs. So a run on any
+        # provider but none/recorded names its cap, its plan must fit under it,
+        # and every capture of the run charges one shared ledger.
+        env:
+          REQUESTED_CAP: ${{ inputs.max_search_queries }}
+          REQUESTED_CASE: ${{ inputs.case }}
+          REQUESTED_MODE: benchmark
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          # none/recorded send nothing, so they need no cap; given one anyway,
+          # the plan is still checked against it (a dry run of a record run's
+          # guard) and no ledger is passed on.
+          dry=""
+          if [ "$REQUESTED_MODE" = preflight ]; then
+            # SM-1: the smoke exists to test one provider's key; a layer that sends nothing has none.
+            case "$UNIMATCH_SEARCH_PROVIDER" in
+              none|recorded)
+                echo "::error::preflight needs a provider that answers queries, not $UNIMATCH_SEARCH_PROVIDER. Nothing was sent."
+                exit 1
+                ;;
+            esac
+          fi
+          case "$UNIMATCH_SEARCH_PROVIDER" in
+            none|recorded)
+              if [ -z "$REQUESTED_CAP" ]; then
+                echo "search query cap: not needed ($UNIMATCH_SEARCH_PROVIDER sends no provider query)"
+                echo "SEARCH_CAP_ARGS=" >> "$GITHUB_ENV"
+                echo "max_search_queries=uncapped ($UNIMATCH_SEARCH_PROVIDER)" >> out/config.txt
+                exit 0
+              fi
+              dry=yes
+              ;;
+          esac
+          if ! [[ "$REQUESTED_CAP" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::search provider $UNIMATCH_SEARCH_PROVIDER needs the max_search_queries input (a positive integer): the run's hard cap on provider queries. No capture started, nothing was sent."
+            exit 1
+          fi
+          read -r -a cases <<< "$REQUESTED_CASE"
+          count=${#cases[@]}
+          if [ "$count" -eq 0 ]; then
+            read -r -a cases <<< "$(.venv/bin/python -c 'from evaluation.research.live import COHORT; print(" ".join(COHORT))')"
+            count=${#cases[@]}
+          fi
+          columns=1; extra=0
+          if [ "$REQUESTED_MODE" = expert_paired ]; then
+            # W4: a single-column record run captures each case once.
+            columns="${REQUESTED_COLUMNS:-4}"
+            case "$columns" in
+              1|4) ;;
+              *) echo "::error::columns must be 4 (ABBA pair) or 1 (record run), got '$columns'. No capture started, nothing was sent."; exit 1 ;;
+            esac
+            [ "$UNIMATCH_SEARCH_PROVIDER" = serper ] && extra=1
+          fi
+          planned=$(( 6 * count * columns + extra ))
+          if [ "$REQUESTED_MODE" = preflight ]; then
+            # SM-1: the smoke sends one query and captures nothing.
+            planned=1
+          fi
+          if [ "$planned" -gt "$REQUESTED_CAP" ]; then
+            echo "::error::the run plans $planned provider queries ($count case(s) x $columns capture(s) x 6 + $extra pre-flight) but max_search_queries is $REQUESTED_CAP. No capture started, nothing was sent."
+            exit 1
+          fi
+          if [ -n "$dry" ]; then
+            echo "search query cap: $REQUESTED_CAP covers the plan of $planned ($UNIMATCH_SEARCH_PROVIDER sends nothing; no ledger)"
+            echo "SEARCH_CAP_ARGS=" >> "$GITHUB_ENV"
+            echo "max_search_queries=$REQUESTED_CAP planned=$planned provider=$UNIMATCH_SEARCH_PROVIDER dry=yes" >> out/config.txt
+            exit 0
+          fi
+          echo "SEARCH_CAP_ARGS=--max-search-queries $REQUESTED_CAP --search-ledger $PWD/out/search_ledger.json" >> "$GITHUB_ENV"
+          echo "search query cap: $REQUESTED_CAP for $UNIMATCH_SEARCH_PROVIDER (planned $planned)"
+          echo "max_search_queries=$REQUESTED_CAP planned=$planned provider=$UNIMATCH_SEARCH_PROVIDER" >> out/config.txt
 
       - name: Say which pipeline is being measured
         run: |
@@ -158,9 +267,33 @@ jobs:
         # The bounds are printed, not assumed: a capture taken under different
         # budgets is a different measurement, and the frozen baseline's are 60
         # Fetcher calls and 90 seconds per university.
+        #
+        # SR-05: inputs reach the shell only through env and are validated
+        # before use, never expanded into the script text.
+        env:
+          REQUESTED_CASE: ${{ inputs.case }}
+          MAX_PAGES: ${{ inputs.max_pages }}
+          SECONDS_PER_CASE: ${{ inputs.seconds_per_case }}
+          SEARCH_FIRST: ${{ inputs.search_first }}
         run: |
           set -o pipefail
-          echo "budgets: ${{ inputs.max_pages }} page reads / ${{ inputs.seconds_per_case }}s per case"
+          case_re='^[a-z0-9 ]*$'
+          if ! [[ "$REQUESTED_CASE" =~ $case_re ]]; then
+            echo "::error::case must match $case_re"
+            exit 1
+          fi
+          if ! [[ "$MAX_PAGES" =~ ^[0-9]+$ && "$SECONDS_PER_CASE" =~ ^[0-9]+$ ]]; then
+            echo "::error::max_pages and seconds_per_case must be whole numbers"
+            exit 1
+          fi
+          run_flags=()
+          # Expressions compare strings case-insensitively; so does this.
+          if [ "${SEARCH_FIRST,,}" = true ]; then run_flags+=(--search-first); fi
+          if [ -n "$REQUESTED_CASE" ]; then
+            read -r -a case_words <<< "$REQUESTED_CASE"
+            run_flags+=(--case ${case_words[@]+"${case_words[@]}"})
+          fi
+          echo "budgets: $MAX_PAGES page reads / ${SECONDS_PER_CASE}s per case"
           echo "The page budget bounds Fetcher.get calls, not HTTP requests: one read can"
           echo "issue several (redirects, the browser tier, a PDF). Run 35697105238 made 98"
           echo "requests for one case under a budget of 60, so the 'http' column below is"
@@ -168,11 +301,10 @@ jobs:
           .venv/bin/python -m evaluation.research.live \
             --live \
             --out evaluation/research/baseline/capture.${{ github.run_id }} \
-            --seconds-per-case ${{ inputs.seconds_per_case }} \
-            --max-pages ${{ inputs.max_pages }} \
-            ${{ inputs.search_first == 'true' && '--search-first' || '' }} \
-            ${{ inputs.case && format('--case {0}', inputs.case) || '' }} \
-            --search-provider "$UNIMATCH_SEARCH_PROVIDER" \
+            --seconds-per-case "$SECONDS_PER_CASE" \
+            --max-pages "$MAX_PAGES" \
+            ${run_flags[@]+"${run_flags[@]}"} \
+            --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} \
             | tee capture.log
           # The capture writes into a timestamped subdirectory and prints that
           # path as its last line. Reading it back is the only way to name the
@@ -417,6 +549,7 @@ jobs:
             backend/capture-metrics.txt
             backend/capture.log
             backend/out/config.txt
+            backend/out/search_ledger.json
             backend/scope-mismatches.json
             backend/scope-mismatches.txt
             backend/support-shapes.txt
@@ -446,6 +579,20 @@ jobs:
       UNIMATCH_ENABLE_BROWSER_TIER: 'false'
       UNIMATCH_FETCH_CONTACT: 'https://github.com/wpalish/ashyq-apply'
       PLAN_JSON: ${{ inputs.plan }}
+      # Measurement M-1: map award claims with the unsigned draft bindings too
+      # (cohort/heldout awards in draft2, dev2 awards in dev2-draft1; dev4 awards in
+      # dev4-draft3, signed by the owner 2026-10-18, ticket 09; dev5 awards in
+      # dev5-draft1, unsigned), loaded
+      # after the reviewed file and never overriding it. Passed identically to
+      # every capture of this job (baseline, and both paired arms), so a paired
+      # comparison stays fair; capture.json records the files under
+      # config.identity_bindings.
+      MEASUREMENT_BINDINGS: >-
+        --extra-bindings evaluation/research/data/identity_bindings.draft2.json
+        --extra-bindings evaluation/research/data/identity_bindings.dev2-draft1.json
+        --extra-bindings evaluation/research/data/identity_bindings.dev3-draft1.json
+        --extra-bindings evaluation/research/data/identity_bindings.dev4-draft3.json
+        --extra-bindings evaluation/research/data/identity_bindings.dev5-draft1.json
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -458,10 +605,44 @@ jobs:
       - name: Select the search layer
         env:
           REQUESTED_SEARCH_PROVIDER: ${{ inputs.search_provider || 'auto' }}
+          REQUESTED_BASE_ARGS: ${{ inputs.base_args }}
+          REQUESTED_EXTRA_ARGS: ${{ inputs.extra_args }}
         run: |
           set -euo pipefail
           requested="$REQUESTED_SEARCH_PROVIDER"
           decided_by="explicit input"
+          # Recorded-search replay (owner, 2026-10-19: paid search frozen). Named
+          # in base_args or extra_args, it is the search layer of BOTH arms: a
+          # pair whose arms searched differently would measure the provider.
+          read -r -a named <<< "$REQUESTED_BASE_ARGS $REQUESTED_EXTRA_ARGS"
+          store=""
+          for i in "${!named[@]}"; do
+            case "${named[$i]}" in
+              --search-provider=recorded) requested=recorded; decided_by="--search-provider recorded" ;;
+              --search-provider) [ "${named[$((i+1))]:-}" = recorded ] && { requested=recorded; decided_by="--search-provider recorded"; } ;;
+              --recorded-store=*) store="${named[$i]#--recorded-store=}" ;;
+              --recorded-store) store="${named[$((i+1))]:-}" ;;
+            esac
+          done
+          if [ "$requested" = recorded ]; then
+            store="${store:-evaluation/research/data/recorded_search.fused1.json}"
+            if [ ! -f "$store" ]; then
+              echo "::error::recorded search store not found: $store; no capture started"
+              exit 1
+            fi
+            # Both arms replay the same store; no paid key reaches any later step.
+            echo "UNIMATCH_SEARCH_PROVIDER=recorded" >> "$GITHUB_ENV"
+            echo "UNIMATCH_RECORDED_SEARCH_STORE=$store" >> "$GITHUB_ENV"
+            for key in UNIMATCH_EXA_API_KEY UNIMATCH_TAVILY_API_KEY UNIMATCH_BRAVE_API_KEY UNIMATCH_SERPER_API_KEY; do
+              echo "$key=" >> "$GITHUB_ENV"
+            done
+            echo "search provider: recorded (decided by $decided_by; store $store; no provider is called)"
+            mkdir -p out
+            echo "provider=recorded" > out/config.txt
+            echo "decided_by=$decided_by" >> out/config.txt
+            echo "recorded_store=$store sha256=$(sha256sum "$store" | cut -d' ' -f1)" >> out/config.txt
+            exit 0
+          fi
           case "$requested" in
             auto)
               if [ -n "$UNIMATCH_SERPER_API_KEY" ]; then
@@ -483,6 +664,20 @@ jobs:
               fi
               provider=exa; decided_by="explicit input and UNIMATCH_EXA_API_KEY"
               ;;
+            tavily)
+              if [ -z "$UNIMATCH_TAVILY_API_KEY" ]; then
+                echo "::error::tavily requires UNIMATCH_TAVILY_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=tavily; decided_by="explicit input and UNIMATCH_TAVILY_API_KEY"
+              ;;
+            brave)
+              if [ -z "$UNIMATCH_BRAVE_API_KEY" ]; then
+                echo "::error::brave requires UNIMATCH_BRAVE_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=brave; decided_by="explicit input and UNIMATCH_BRAVE_API_KEY"
+              ;;
             exa_mcp|none) provider="$requested" ;;
             *) echo "::error::unknown search_provider; no capture started"; exit 1 ;;
           esac
@@ -491,6 +686,84 @@ jobs:
           mkdir -p out
           echo "provider=$provider" > out/config.txt
           echo "decided_by=$decided_by" >> out/config.txt
+
+      - name: Search query cap (refuse a provider run without one)
+        if: inputs.mode != 'expert_actions'
+        # Free-search ticket 02. Every query a keyed or keyless provider
+        # answers can spend an allowance or a paid key, and the 2026-10-19
+        # outage spent eight runs before anyone read the logs. So a run on any
+        # provider but none/recorded names its cap, its plan must fit under it,
+        # and every capture of the run charges one shared ledger.
+        env:
+          REQUESTED_CAP: ${{ inputs.max_search_queries }}
+          REQUESTED_CASE: ${{ inputs.case }}
+          REQUESTED_MODE: ${{ inputs.mode }}
+          REQUESTED_COLUMNS: ${{ inputs.columns || '4' }}
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          # none/recorded send nothing, so they need no cap; given one anyway,
+          # the plan is still checked against it (a dry run of a record run's
+          # guard) and no ledger is passed on.
+          dry=""
+          if [ "$REQUESTED_MODE" = preflight ]; then
+            # SM-1: the smoke exists to test one provider's key; a layer that sends nothing has none.
+            case "$UNIMATCH_SEARCH_PROVIDER" in
+              none|recorded)
+                echo "::error::preflight needs a provider that answers queries, not $UNIMATCH_SEARCH_PROVIDER. Nothing was sent."
+                exit 1
+                ;;
+            esac
+          fi
+          case "$UNIMATCH_SEARCH_PROVIDER" in
+            none|recorded)
+              if [ -z "$REQUESTED_CAP" ]; then
+                echo "search query cap: not needed ($UNIMATCH_SEARCH_PROVIDER sends no provider query)"
+                echo "SEARCH_CAP_ARGS=" >> "$GITHUB_ENV"
+                echo "max_search_queries=uncapped ($UNIMATCH_SEARCH_PROVIDER)" >> out/config.txt
+                exit 0
+              fi
+              dry=yes
+              ;;
+          esac
+          if ! [[ "$REQUESTED_CAP" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::search provider $UNIMATCH_SEARCH_PROVIDER needs the max_search_queries input (a positive integer): the run's hard cap on provider queries. No capture started, nothing was sent."
+            exit 1
+          fi
+          read -r -a cases <<< "$REQUESTED_CASE"
+          count=${#cases[@]}
+          if [ "$count" -eq 0 ]; then
+            read -r -a cases <<< "$(.venv/bin/python -c 'from evaluation.research.live import COHORT; print(" ".join(COHORT))')"
+            count=${#cases[@]}
+          fi
+          columns=1; extra=0
+          if [ "$REQUESTED_MODE" = expert_paired ]; then
+            # W4: a single-column record run captures each case once.
+            columns="${REQUESTED_COLUMNS:-4}"
+            case "$columns" in
+              1|4) ;;
+              *) echo "::error::columns must be 4 (ABBA pair) or 1 (record run), got '$columns'. No capture started, nothing was sent."; exit 1 ;;
+            esac
+            [ "$UNIMATCH_SEARCH_PROVIDER" = serper ] && extra=1
+          fi
+          planned=$(( 6 * count * columns + extra ))
+          if [ "$REQUESTED_MODE" = preflight ]; then
+            # SM-1: the smoke sends one query and captures nothing.
+            planned=1
+          fi
+          if [ "$planned" -gt "$REQUESTED_CAP" ]; then
+            echo "::error::the run plans $planned provider queries ($count case(s) x $columns capture(s) x 6 + $extra pre-flight) but max_search_queries is $REQUESTED_CAP. No capture started, nothing was sent."
+            exit 1
+          fi
+          if [ -n "$dry" ]; then
+            echo "search query cap: $REQUESTED_CAP covers the plan of $planned ($UNIMATCH_SEARCH_PROVIDER sends nothing; no ledger)"
+            echo "SEARCH_CAP_ARGS=" >> "$GITHUB_ENV"
+            echo "max_search_queries=$REQUESTED_CAP planned=$planned provider=$UNIMATCH_SEARCH_PROVIDER dry=yes" >> out/config.txt
+            exit 0
+          fi
+          echo "SEARCH_CAP_ARGS=--max-search-queries $REQUESTED_CAP --search-ledger $PWD/out/search_ledger.json" >> "$GITHUB_ENV"
+          echo "search query cap: $REQUESTED_CAP for $UNIMATCH_SEARCH_PROVIDER (planned $planned)"
+          echo "max_search_queries=$REQUESTED_CAP planned=$planned provider=$UNIMATCH_SEARCH_PROVIDER" >> out/config.txt
 
       - name: Provider
         # Which machine read the sites is part of the measurement: a cloud
@@ -504,8 +777,22 @@ jobs:
         if: inputs.mode == 'expert_baseline'
         env:
           REQUESTED_CASE: ${{ inputs.case }}
+          EXTRA_ARGS: ${{ inputs.extra_args }}
+          MAX_PAGES: ${{ inputs.max_pages }}
+          SECONDS_PER_CASE: ${{ inputs.seconds_per_case }}
         run: |
           set -euo pipefail
+          case_re='^[a-z0-9 ]*$'
+          if ! [[ "$REQUESTED_CASE" =~ $case_re ]]; then
+            echo "::error::case must match $case_re"
+            exit 1
+          fi
+          if ! [[ "$MAX_PAGES" =~ ^[0-9]+$ && "$SECONDS_PER_CASE" =~ ^[0-9]+$ ]]; then
+            echo "::error::max_pages and seconds_per_case must be whole numbers"
+            exit 1
+          fi
+          # Split on whitespace into words; never eval'd, so no shell syntax runs.
+          read -r -a extra_flags <<< "$EXTRA_ARGS"
           mkdir -p out
           case_flags=()
           packet_flags=()
@@ -520,19 +807,49 @@ jobs:
           fi
           .venv/bin/python -m evaluation.research.live --live --out out/capture \
             ${case_flags[@]+"${case_flags[@]}"} \
-            --seconds-per-case "${{ inputs.seconds_per_case }}" \
-            --max-pages "${{ inputs.max_pages }}" ${{ inputs.extra_args }} \
-            --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tee out/capture.log
+            --seconds-per-case "$SECONDS_PER_CASE" \
+            --max-pages "$MAX_PAGES" $MEASUREMENT_BINDINGS ${extra_flags[@]+"${extra_flags[@]}"} \
+            --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} | tee out/capture.log
           CAPTURE="$(tail -n 1 out/capture.log)"
           test -f "$CAPTURE"
           .venv/bin/python -m evaluation.research.expert prepare \
             --dataset evaluation/research/data/ground_truth.reviewed.json \
             --capture "$CAPTURE" "${packet_flags[@]}" \
             --out out/packet.json
-          echo "extra_args=${{ inputs.extra_args }}" >> out/config.txt
+          echo "extra_args=$EXTRA_ARGS bindings=$MEASUREMENT_BINDINGS" >> out/config.txt
+
+      - name: Search pre-flight (one Serper call before any capture)
+        if: inputs.mode == 'expert_paired'
+        # 2026-10-19: every Serper call answered HTTP 400 for hours and eight
+        # paired runs measured the outage as a pipeline result. One query
+        # through the product client first; on failure the job stops here with
+        # the provider's status and capped error body (the key is masked by
+        # the adapter and never printed), before any budget is spent.
+        run: |
+          set -o pipefail
+          if [ "$UNIMATCH_SEARCH_PROVIDER" = recorded ]; then
+            echo "search pre-flight skipped: recorded-search replay, no provider is called"
+            exit 0
+          fi
+          if [ "$UNIMATCH_SEARCH_PROVIDER" != serper ]; then
+            echo "search pre-flight skipped: provider is $UNIMATCH_SEARCH_PROVIDER"
+            exit 0
+          fi
+          if ! .venv/bin/python -m evaluation.research.search_preflight ${SEARCH_CAP_ARGS:-} 2> out/preflight.err; then
+            echo "::error::$(cat out/preflight.err)"
+            exit 1
+          fi
 
       - name: Paired rule experiment (same runner, ABBA order)
         if: inputs.mode == 'expert_paired'
+        env:
+          PAIRED_COLUMNS: ${{ inputs.columns || '4' }}
+          REQUESTED_CASE: ${{ inputs.case }}
+          BASE_ARGS: ${{ inputs.base_args }}
+          EXTRA_ARGS: ${{ inputs.extra_args }}
+          MAX_PAGES: ${{ inputs.max_pages }}
+          SECONDS_PER_CASE: ${{ inputs.seconds_per_case }}
+          CASE_PARALLELISM: ${{ inputs.case_parallelism }}
         # inputs.case is a space-separated list; inputs.extra_args is the rule
         # switch under test. Each case still runs off/on/on/off so a drift in
         # the site or provider hits both arms alike, but in two passes: the
@@ -540,20 +857,92 @@ jobs:
         # quota runs out late in a job, and with case-major order the last
         # cases (NTU, KAIST) met it in every repetition (runs of 2026-10-06);
         # now every case has one early and one late pass.
+        #
+        # columns=1 (W4, the record run): one "on" capture per case and no
+        # "off" arm, so a list of N cases costs at most 6 x N queries. The
+        # captures keep <case>.search.json, which the next step turns into a
+        # recorded-search/2 store.
         run: |
           set -o pipefail
+          # SR-05: inputs arrive through env (exported, so the xargs children
+          # see them too), are validated, and the flag strings are split into
+          # words with read -a: never eval'd, never expanded into the script.
+          case_re='^[a-z0-9 ]*$'
+          if ! [[ "$REQUESTED_CASE" =~ $case_re ]]; then
+            echo "::error::case must match $case_re"
+            exit 1
+          fi
+          if ! [[ "$MAX_PAGES" =~ ^[0-9]+$ && "$SECONDS_PER_CASE" =~ ^[0-9]+$ && "$CASE_PARALLELISM" =~ ^[0-9]*$ ]]; then
+            echo "::error::max_pages, seconds_per_case and case_parallelism must be whole numbers"
+            exit 1
+          fi
           mkdir -p out
           capture() {
-            flags="${{ inputs.base_args }}"; [ "$2" = on ] && flags="$flags ${{ inputs.extra_args }}"
+            local -a flags=() on_flags=()
+            read -r -a flags <<< "$BASE_ARGS"
+            if [ "$2" = on ]; then
+              read -r -a on_flags <<< "$EXTRA_ARGS"
+              flags+=(${on_flags[@]+"${on_flags[@]}"})
+            fi
             .venv/bin/python -m evaluation.research.live --live --out "out/$1-$2" \
-              --case "$1" --seconds-per-case "${{ inputs.seconds_per_case }}" \
-              --max-pages "${{ inputs.max_pages }}" $flags \
-              --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tail -n 2
+              --case "$1" --seconds-per-case "$SECONDS_PER_CASE" \
+              --max-pages "$MAX_PAGES" $MEASUREMENT_BINDINGS ${flags[@]+"${flags[@]}"} \
+              --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} | tail -n 2
           }
-          cases="${{ inputs.case }}"
-          for c in $cases; do capture "$c" off; capture "$c" on; done
-          for c in $(printf '%s\n' $cases | tac); do capture "$c" on; capture "$c" off; done
-          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }} order=two-pass" >> out/config.txt
+          cases="$REQUESTED_CASE"
+          jobs="$CASE_PARALLELISM"
+          if [ "${PAIRED_COLUMNS:-4}" = 1 ]; then
+            # The record run: one capture per case, the "on" arm only.
+            single() { capture "$1" on; }
+            export -f capture single
+            export MEASUREMENT_BINDINGS UNIMATCH_SEARCH_PROVIDER SEARCH_CAP_ARGS
+            printf '%s\n' $cases | xargs -P "${jobs:-1}" -I{} bash -c 'single "$1" > "out/log-$1.txt" 2>&1; echo "== $1"; cat "out/log-$1.txt"' _ {}
+            order="single-on-${jobs:-1}"
+          elif [ "${jobs:-1}" -le 1 ]; then
+            for c in $cases; do capture "$c" off; capture "$c" on; done
+            for c in $(printf '%s\n' $cases | tac); do capture "$c" on; capture "$c" off; done
+            order=two-pass
+          else
+            # Universities in parallel, each one ABBA on its own. As in the
+            # serial order, a failed capture does not stop the others: the
+            # observation records the error and the scorecard counts it.
+            abba() { capture "$1" off; capture "$1" on; capture "$1" on; capture "$1" off; }
+            export -f capture abba
+            export MEASUREMENT_BINDINGS UNIMATCH_SEARCH_PROVIDER SEARCH_CAP_ARGS
+            printf '%s\n' $cases | xargs -P "$jobs" -I{} bash -c 'abba "$1" > "out/log-$1.txt" 2>&1; echo "== $1"; cat "out/log-$1.txt"' _ {}
+            order="abba-parallel-$jobs"
+          fi
+          echo "extra_args=$EXTRA_ARGS base_args=$BASE_ARGS bindings=$MEASUREMENT_BINDINGS order=$order" >> out/config.txt
+          if [ -f out/search_ledger.json ]; then
+            echo "search_ledger=$(tr -d ' \n' < out/search_ledger.json)" >> out/config.txt
+          fi
+
+      - name: Build the recorded-search v2 store (make_v2_store)
+        # W4: after a single-column record run on a keyed provider, turn the
+        # captures' <case>.search.json logs into recorded-search/2 (titles and
+        # snippets) beside them. Development sets only: the builder globs the
+        # cohort/dev2/dev3/dev4 ids and never lists another case's files. A
+        # failed build does not lose the captures; rebuild locally from the
+        # artifact (docs/process/RECORD_RUN_2026-10-19.md).
+        if: inputs.mode == 'expert_paired' && inputs.columns == '1'
+        continue-on-error: true
+        env:
+          REQUESTED_CASE: ${{ inputs.case }}
+          STORE_TAG: ${{ inputs.run_tag || 'record' }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          case "$UNIMATCH_SEARCH_PROVIDER" in
+            none|recorded) echo "make_v2_store skipped: $UNIMATCH_SEARCH_PROVIDER returned no result list"; exit 0 ;;
+          esac
+          if ! [[ "$STORE_TAG" =~ ^[A-Za-z0-9_.-]+$ ]]; then
+            echo "::error::run_tag '$STORE_TAG' is not a file-name token; store not built"
+            exit 1
+          fi
+          read -r -a cases <<< "$REQUESTED_CASE"
+          .venv/bin/python -m evaluation.research.recorded_search \
+            --record-run "$RUN_ID" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$(git rev-parse HEAD)" out \
+            --cases "${cases[@]}" --out "out/recorded_search.$STORE_TAG.json"
 
       - name: Validate the resume request
         if: inputs.mode == 'expert_actions' && inputs.resume_run_id != ''
@@ -613,5 +1002,512 @@ jobs:
         with:
           name: expert-recovery-${{ github.run_id }}
           path: backend/out
+          if-no-files-found: warn
+          retention-days: 14
+
+  # Finish plan v2, track A: experts draft the core answers with a URL and a
+  # verbatim quote; before the owner signs, the production Fetcher must open
+  # every page and find every quote word for word. The agent's container
+  # cannot do this (Fetcher refuses the proxy by design), so it runs here.
+  # mode=verify_evidence; extra_args carries the drafts directory or file,
+  # relative to backend/ (default: the 2026-10-17 core drafts).
+  verify:
+    if: inputs.mode == 'verify_evidence'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+      - name: Check every quote with the production fetcher
+        env:
+          DRAFTS: ${{ inputs.extra_args || 'evaluation/research/expert/data/core_drafts.2026-10-17' }}
+          PYTHONPATH: .
+        run: |
+          set -euo pipefail
+          mkdir -p ../artifacts/evidence-check
+          .venv/bin/python scripts/verify_evidence.py "$DRAFTS" \
+            --out ../artifacts/evidence-check/report.json \
+            | tee ../artifacts/evidence-check/report.tsv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidence-check-${{ github.run_id }}
+          path: artifacts/evidence-check/
+          if-no-files-found: error
+
+  # KB expert drafting: the agent container's egress is refused by many
+  # university sites that this runner reads fine. A drafting worker commits a
+  # list of official URLs (seed_id + url) under
+  # backend/evaluation/research/expert/data/ and dispatches mode=read_pages
+  # with extra_args = that path, optionally followed by --robots-override-kb
+  # (the owner's KB exception, same code path as verify_evidence). The
+  # production Fetcher reads each official URL (our user agent, robots.txt,
+  # its size and time limits); a non-official or heldout URL is never read.
+  # The artifact holds one record per URL with the extracted text (capped).
+  # No secret reaches this job; the input arrives through env and is checked
+  # against a fixed pattern before anything runs (SR-05).
+  read_pages:
+    if: inputs.mode == 'read_pages'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+      - name: Read the listed pages with the production fetcher
+        env:
+          READ_ARGS: ${{ inputs.extra_args }}
+          PYTHONPATH: .
+        run: |
+          set -euo pipefail
+          # Same pattern as scripts/read_pages.py LIST_PATH: a .json or .txt
+          # under evaluation/research/expert/data/, no segment starting with a dot.
+          pattern='^evaluation/research/expert/data/([A-Za-z0-9_-][A-Za-z0-9_.-]*/)*[A-Za-z0-9_-][A-Za-z0-9_.-]*\.(json|txt)$'
+          read -r -a words <<< "$READ_ARGS"
+          if [ "${#words[@]}" -lt 1 ] || [ "${#words[@]}" -gt 2 ]; then
+            echo "extra_args must be a list path, optionally followed by --robots-override-kb"
+            exit 1
+          fi
+          list="${words[0]}"
+          if ! [[ "$list" =~ $pattern ]]; then
+            echo "list must match $pattern"
+            exit 1
+          fi
+          flags=()
+          if [ "${#words[@]}" -eq 2 ]; then
+            if [ "${words[1]}" != "--robots-override-kb" ]; then
+              echo "the only flag read_pages takes is --robots-override-kb"
+              exit 1
+            fi
+            flags=(--robots-override-kb)
+          fi
+          mkdir -p ../artifacts/read-pages
+          .venv/bin/python scripts/read_pages.py "$list" --out ../artifacts/read-pages \
+            ${flags[@]+"${flags[@]}"} | tee ../artifacts/read-pages/run.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: read-pages-${{ github.run_id }}
+          path: artifacts/read-pages/
+          if-no-files-found: error
+          retention-days: 14
+
+  # Plan v3 M5 (ticket 07): five query shapes x six local-language development
+  # cases through the Serper adapter, at most 300 queries (the script refuses
+  # more before sending any). mode=query_probe; extra_args are extra probe
+  # flags (e.g. --cases uba puc uio kuleuven psaclay ucph). The key is a
+  # secret, read by the adapter from the environment and never printed.
+  query_probe:
+    if: inputs.mode == 'query_probe'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      UNIMATCH_SEARCH_PROVIDER: serper
+      UNIMATCH_SERPER_API_KEY: ${{ secrets.UNIMATCH_SERPER_API_KEY }}
+      UNIMATCH_DEMO_MODE: 'false'
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+      - name: Require the Serper key
+        run: |
+          if [ -z "$UNIMATCH_SERPER_API_KEY" ]; then
+            echo "::error::query_probe needs the UNIMATCH_SERPER_API_KEY secret; nothing was sent"
+            exit 1
+          fi
+          echo "search provider: serper (key present)"
+      - name: Probe the query shapes
+        env:
+          PROBE_ARGS: ${{ inputs.extra_args }}
+        run: |
+          set -euo pipefail
+          mkdir -p ../artifacts/query-probe
+          # PROBE_ARGS is split on spaces on purpose: it carries flags.
+          # shellcheck disable=SC2086
+          .venv/bin/python scripts/probe_query_shapes.py --live \
+            --out ../artifacts/query-probe $PROBE_ARGS \
+            | tee ../artifacts/query-probe/probe.log
+          cat ../artifacts/query-probe/probe.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: query-probe-${{ github.run_id }}
+          path: artifacts/query-probe/
+          if-no-files-found: error
+          retention-days: 14
+
+  # Free-search map ticket 04: the ceiling of an own index. Reads public
+  # robots.txt, sitemaps and pages of the development gold and the knowledge
+  # base's evidence URLs through the production Fetcher (our user agent,
+  # robots.txt, Crawl-delay; nothing retried around a refusal). No search
+  # provider and no secret. mode=index_ceiling; extra_args are tool flags (the
+  # self-hosted re-run: --refused-from <report.json committed or downloaded>).
+  index_ceiling:
+    if: inputs.mode == 'index_ceiling'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 150
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      UNIMATCH_DEMO_MODE: 'false'
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+      - name: Measure the sitemap / two-hop ceiling
+        env:
+          CEILING_ARGS: ${{ inputs.extra_args }}
+        run: |
+          set -euo pipefail
+          mkdir -p ../artifacts/index-ceiling
+          # CEILING_ARGS is split on spaces on purpose: it carries flags.
+          # shellcheck disable=SC2086
+          .venv/bin/python -m evaluation.research.index_ceiling \
+            --out ../artifacts/index-ceiling/report.json \
+            --markdown ../artifacts/index-ceiling/tables.md $CEILING_ARGS \
+            | tee ../artifacts/index-ceiling/run.log
+          cat ../artifacts/index-ceiling/tables.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: index-ceiling-${{ github.run_id }}
+          path: artifacts/index-ceiling/
+          if-no-files-found: error
+          retention-days: 14
+
+  # IG bundle, IG-2 (NEXT_CYCLES_2026-10-20 §6): production's identity gate
+  # (R6) on every development homepage, read through the production Fetcher
+  # (our user agent, robots.txt; nothing retried around a refusal). The
+  # identity fallback query is never sent: no search provider and no secret.
+  # The cohort and dev2-dev4 are written per case, dev5 as counts only.
+  # mode=identity_gate; extra_args is empty, or --fold-letters and/or
+  # --native-names <a catalogue_native_names.{proposed,signed}.json path>. The
+  # input arrives through env and is checked word by word before anything
+  # runs (SR-05).
+  identity_gate:
+    if: inputs.mode == 'identity_gate'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      UNIMATCH_DEMO_MODE: 'false'
+      UNIMATCH_SEARCH_PROVIDER: none
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+      - name: Probe the identity gate
+        env:
+          GATE_ARGS: ${{ inputs.extra_args }}
+        run: |
+          set -euo pipefail
+          pattern='^(evaluation/research/data|app/catalogue)/catalogue_native_names\.(proposed|signed)\.json$'
+          read -r -a words <<< "$GATE_ARGS"
+          flags=()
+          i=0
+          while [ "$i" -lt "${#words[@]}" ]; do
+            word="${words[$i]}"
+            if [ "$word" = "--fold-letters" ]; then
+              flags+=(--fold-letters)
+            elif [ "$word" = "--native-names" ]; then
+              i=$((i + 1))
+              path="${words[$i]:-}"
+              if ! [[ "$path" =~ $pattern ]]; then
+                echo "--native-names takes a file matching $pattern"
+                exit 1
+              fi
+              flags+=(--native-names "$path")
+            else
+              echo "identity_gate takes only --fold-letters and --native-names <file>"
+              exit 1
+            fi
+            i=$((i + 1))
+          done
+          mkdir -p ../artifacts/identity-gate
+          .venv/bin/python -m evaluation.research.identity_gate_probe \
+            --out ../artifacts/identity-gate/report.json \
+            --markdown ../artifacts/identity-gate/tables.md ${flags[@]+"${flags[@]}"} \
+            | tee ../artifacts/identity-gate/run.log
+          cat ../artifacts/identity-gate/tables.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: identity-gate-${{ github.run_id }}
+          path: artifacts/identity-gate/
+          if-no-files-found: error
+          retention-days: 14
+
+  # SM-1: the key track's first step (NEXT_CYCLES_2026-10-26 §4.2 B1). One query
+  # through the product client on an explicitly named provider, so the
+  # dashboard's per-query cost can be read before a record run spends 264. The
+  # expert job's own pre-flight stays Serper-only (RECORD_RUN §2 plans 264).
+  # Nothing is captured; the key is read by the adapter, masked in any error
+  # excerpt and never printed.
+  preflight:
+    if: inputs.mode == 'preflight'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      UNIMATCH_EXA_API_KEY: ${{ secrets.UNIMATCH_EXA_API_KEY }}
+      UNIMATCH_TAVILY_API_KEY: ${{ secrets.UNIMATCH_TAVILY_API_KEY }}
+      UNIMATCH_BRAVE_API_KEY: ${{ secrets.UNIMATCH_BRAVE_API_KEY }}
+      UNIMATCH_SERPER_API_KEY: ${{ secrets.UNIMATCH_SERPER_API_KEY }}
+      UNIMATCH_DEMO_MODE: 'false'
+      UNIMATCH_ENABLE_BROWSER_TIER: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -q -r requirements-dev.txt
+      - name: Refuse a search layer that is not named
+        env:
+          REQUESTED_SEARCH_PROVIDER: ${{ inputs.search_provider || 'auto' }}
+        run: |
+          set -euo pipefail
+          # The smoke tests THAT provider's key: auto would pick whichever key
+          # is set, and none/recorded send nothing.
+          case "$REQUESTED_SEARCH_PROVIDER" in
+            auto|none|recorded)
+              echo "::error::preflight needs an explicit search_provider (exa, exa_mcp, tavily or brave), not $REQUESTED_SEARCH_PROVIDER. Nothing was sent."
+              exit 1
+              ;;
+          esac
+      - name: Select the search layer
+        env:
+          REQUESTED_SEARCH_PROVIDER: ${{ inputs.search_provider || 'auto' }}
+          REQUESTED_BASE_ARGS: ${{ inputs.base_args }}
+          REQUESTED_EXTRA_ARGS: ${{ inputs.extra_args }}
+        run: |
+          set -euo pipefail
+          requested="$REQUESTED_SEARCH_PROVIDER"
+          decided_by="explicit input"
+          # Recorded-search replay (owner, 2026-10-19: paid search frozen). Named
+          # in base_args or extra_args, it is the search layer of BOTH arms: a
+          # pair whose arms searched differently would measure the provider.
+          read -r -a named <<< "$REQUESTED_BASE_ARGS $REQUESTED_EXTRA_ARGS"
+          store=""
+          for i in "${!named[@]}"; do
+            case "${named[$i]}" in
+              --search-provider=recorded) requested=recorded; decided_by="--search-provider recorded" ;;
+              --search-provider) [ "${named[$((i+1))]:-}" = recorded ] && { requested=recorded; decided_by="--search-provider recorded"; } ;;
+              --recorded-store=*) store="${named[$i]#--recorded-store=}" ;;
+              --recorded-store) store="${named[$((i+1))]:-}" ;;
+            esac
+          done
+          if [ "$requested" = recorded ]; then
+            store="${store:-evaluation/research/data/recorded_search.fused1.json}"
+            if [ ! -f "$store" ]; then
+              echo "::error::recorded search store not found: $store; no capture started"
+              exit 1
+            fi
+            # Both arms replay the same store; no paid key reaches any later step.
+            echo "UNIMATCH_SEARCH_PROVIDER=recorded" >> "$GITHUB_ENV"
+            echo "UNIMATCH_RECORDED_SEARCH_STORE=$store" >> "$GITHUB_ENV"
+            for key in UNIMATCH_EXA_API_KEY UNIMATCH_TAVILY_API_KEY UNIMATCH_BRAVE_API_KEY UNIMATCH_SERPER_API_KEY; do
+              echo "$key=" >> "$GITHUB_ENV"
+            done
+            echo "search provider: recorded (decided by $decided_by; store $store; no provider is called)"
+            mkdir -p out
+            echo "provider=recorded" > out/config.txt
+            echo "decided_by=$decided_by" >> out/config.txt
+            echo "recorded_store=$store sha256=$(sha256sum "$store" | cut -d' ' -f1)" >> out/config.txt
+            exit 0
+          fi
+          case "$requested" in
+            auto)
+              if [ -n "$UNIMATCH_SERPER_API_KEY" ]; then
+                provider=serper; decided_by=UNIMATCH_SERPER_API_KEY
+              elif [ -n "$UNIMATCH_BRAVE_API_KEY" ]; then
+                provider=brave; decided_by=UNIMATCH_BRAVE_API_KEY
+              elif [ -n "$UNIMATCH_TAVILY_API_KEY" ]; then
+                provider=tavily; decided_by=UNIMATCH_TAVILY_API_KEY
+              elif [ -n "$UNIMATCH_EXA_API_KEY" ]; then
+                provider=exa; decided_by=UNIMATCH_EXA_API_KEY
+              else
+                provider=none; decided_by="no configured search key"
+              fi
+              ;;
+            exa)
+              if [ -z "$UNIMATCH_EXA_API_KEY" ]; then
+                echo "::error::exa requires UNIMATCH_EXA_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=exa; decided_by="explicit input and UNIMATCH_EXA_API_KEY"
+              ;;
+            tavily)
+              if [ -z "$UNIMATCH_TAVILY_API_KEY" ]; then
+                echo "::error::tavily requires UNIMATCH_TAVILY_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=tavily; decided_by="explicit input and UNIMATCH_TAVILY_API_KEY"
+              ;;
+            brave)
+              if [ -z "$UNIMATCH_BRAVE_API_KEY" ]; then
+                echo "::error::brave requires UNIMATCH_BRAVE_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=brave; decided_by="explicit input and UNIMATCH_BRAVE_API_KEY"
+              ;;
+            exa_mcp|none) provider="$requested" ;;
+            *) echo "::error::unknown search_provider; no capture started"; exit 1 ;;
+          esac
+          echo "UNIMATCH_SEARCH_PROVIDER=$provider" >> "$GITHUB_ENV"
+          echo "search provider: $provider (decided by $decided_by)"
+          mkdir -p out
+          echo "provider=$provider" > out/config.txt
+          echo "decided_by=$decided_by" >> out/config.txt
+
+      - name: Search query cap (refuse a provider run without one)
+        # Free-search ticket 02. Every query a keyed or keyless provider
+        # answers can spend an allowance or a paid key, and the 2026-10-19
+        # outage spent eight runs before anyone read the logs. So a run on any
+        # provider but none/recorded names its cap, its plan must fit under it,
+        # and every capture of the run charges one shared ledger.
+        env:
+          REQUESTED_CAP: ${{ inputs.max_search_queries }}
+          REQUESTED_CASE: ${{ inputs.case }}
+          REQUESTED_MODE: ${{ inputs.mode }}
+          REQUESTED_COLUMNS: ${{ inputs.columns || '4' }}
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          # none/recorded send nothing, so they need no cap; given one anyway,
+          # the plan is still checked against it (a dry run of a record run's
+          # guard) and no ledger is passed on.
+          dry=""
+          if [ "$REQUESTED_MODE" = preflight ]; then
+            # SM-1: the smoke exists to test one provider's key; a layer that sends nothing has none.
+            case "$UNIMATCH_SEARCH_PROVIDER" in
+              none|recorded)
+                echo "::error::preflight needs a provider that answers queries, not $UNIMATCH_SEARCH_PROVIDER. Nothing was sent."
+                exit 1
+                ;;
+            esac
+          fi
+          case "$UNIMATCH_SEARCH_PROVIDER" in
+            none|recorded)
+              if [ -z "$REQUESTED_CAP" ]; then
+                echo "search query cap: not needed ($UNIMATCH_SEARCH_PROVIDER sends no provider query)"
+                echo "SEARCH_CAP_ARGS=" >> "$GITHUB_ENV"
+                echo "max_search_queries=uncapped ($UNIMATCH_SEARCH_PROVIDER)" >> out/config.txt
+                exit 0
+              fi
+              dry=yes
+              ;;
+          esac
+          if ! [[ "$REQUESTED_CAP" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::search provider $UNIMATCH_SEARCH_PROVIDER needs the max_search_queries input (a positive integer): the run's hard cap on provider queries. No capture started, nothing was sent."
+            exit 1
+          fi
+          read -r -a cases <<< "$REQUESTED_CASE"
+          count=${#cases[@]}
+          if [ "$count" -eq 0 ]; then
+            read -r -a cases <<< "$(.venv/bin/python -c 'from evaluation.research.live import COHORT; print(" ".join(COHORT))')"
+            count=${#cases[@]}
+          fi
+          columns=1; extra=0
+          if [ "$REQUESTED_MODE" = expert_paired ]; then
+            # W4: a single-column record run captures each case once.
+            columns="${REQUESTED_COLUMNS:-4}"
+            case "$columns" in
+              1|4) ;;
+              *) echo "::error::columns must be 4 (ABBA pair) or 1 (record run), got '$columns'. No capture started, nothing was sent."; exit 1 ;;
+            esac
+            [ "$UNIMATCH_SEARCH_PROVIDER" = serper ] && extra=1
+          fi
+          planned=$(( 6 * count * columns + extra ))
+          if [ "$REQUESTED_MODE" = preflight ]; then
+            # SM-1: the smoke sends one query and captures nothing.
+            planned=1
+          fi
+          if [ "$planned" -gt "$REQUESTED_CAP" ]; then
+            echo "::error::the run plans $planned provider queries ($count case(s) x $columns capture(s) x 6 + $extra pre-flight) but max_search_queries is $REQUESTED_CAP. No capture started, nothing was sent."
+            exit 1
+          fi
+          if [ -n "$dry" ]; then
+            echo "search query cap: $REQUESTED_CAP covers the plan of $planned ($UNIMATCH_SEARCH_PROVIDER sends nothing; no ledger)"
+            echo "SEARCH_CAP_ARGS=" >> "$GITHUB_ENV"
+            echo "max_search_queries=$REQUESTED_CAP planned=$planned provider=$UNIMATCH_SEARCH_PROVIDER dry=yes" >> out/config.txt
+            exit 0
+          fi
+          echo "SEARCH_CAP_ARGS=--max-search-queries $REQUESTED_CAP --search-ledger $PWD/out/search_ledger.json" >> "$GITHUB_ENV"
+          echo "search query cap: $REQUESTED_CAP for $UNIMATCH_SEARCH_PROVIDER (planned $planned)"
+          echo "max_search_queries=$REQUESTED_CAP planned=$planned provider=$UNIMATCH_SEARCH_PROVIDER" >> out/config.txt
+
+      - name: One query through the product client
+        env:
+          CAP: ${{ inputs.max_search_queries }}
+        run: |
+          set -uo pipefail
+          if .venv/bin/python -m evaluation.research.search_preflight --max-search-queries "$CAP" --search-ledger out/search_ledger.json \
+            > out/preflight.out 2> out/preflight.err; then
+            status=0
+          else
+            status=1
+          fi
+          cat out/preflight.out
+          echo "search_ledger=out/search_ledger.json $(cat out/search_ledger.json 2>/dev/null || echo missing)" >> out/config.txt
+          cat out/config.txt
+          if [ "$status" -ne 0 ]; then
+            echo "::error::$(cat out/preflight.err)"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: preflight-${{ github.run_id }}
+          path: |
+            backend/out/config.txt
+            backend/out/search_ledger.json
+            backend/out/preflight.out
+            backend/out/preflight.err
           if-no-files-found: warn
           retention-days: 14

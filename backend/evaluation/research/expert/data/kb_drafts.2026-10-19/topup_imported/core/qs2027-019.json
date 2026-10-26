@@ -1,0 +1,59 @@
+{
+ "case": "qs2027-019",
+ "university": "The University of New South Wales (UNSW Sydney)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "unsw"
+ },
+ "questions_researched": [
+  "gpa",
+  "deadline",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "not_applicable",
+   "url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science?studentType=International",
+   "quote": "2026 Lowest Selection Rank 93.0 2026 A levels 15.0 2026 IB Diploma 37.0 2026 Lowest ATAR 85.0",
+   "notes": "Not a GPA: 2026 entry indicators. 'The 2026 IB Diploma is an indication of the IB you would have needed to gain entry to this degree in 2026. It is to be used as a guide only.' A levels 15.0 = aggregate of best four A2 subjects (A*=6 ... E=1). Other international qualifications are converted to an international ATAR; the 2027 undergraduate entry requirements table is referenced from https://www.unsw.edu.au/study/international-students/admissions-info. Assumed knowledge: Mathematics Extension 1.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-09-24",
+   "url": "https://www.unsw.edu.au/study/international-students/admissions-info",
+   "quote": "Term 1 2027 Both Thursday, 24 September 2026 Thursday, 19 November 2026 Thursday, 24 December 2026",
+   "population": "international",
+   "notes": "Undergraduate offer round schedule for applicants from non-International Student Award (ISA) eligible countries, Term 1 2027 intake, onshore and offshore: columns are completed application deadline / offer release / acceptance deadline. This is the last of four rounds (earlier: 14 May, 16 July, 20 August 2026). 'Additional offers ... may be released after the final round for a given term, subject to available capacity'. Already passed on 2026-10-19; Term 2/3 2027 rounds are not listed on the page. ISA-eligible-country applicants follow a different schedule not captured here.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 61000,
+    "currency": "AUD",
+    "period": "year",
+    "academic_year": "2026",
+    "population": "international students"
+   },
+   "url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science?studentType=International",
+   "quote": "Fees 2026 Indicative first year full fee $61,000*",
+   "notes": "The page shows two fee blocks: domestic (Commonwealth supported) 'Indicative first year full fee $8,500*' then international 'Indicative first year full fee $61,000*' with 'Indicative full fee to complete degree $192,500*'. The quote matches the international block (the domestic one has $8,500). Calendar year 2026; 2027 fees not shown.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

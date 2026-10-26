@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-004",
+ "seed_id": "qs2027-004",
+ "university": "University of Oxford",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-004",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "All applicants to Oxford's undergraduate Computer Science degrees (Computer Science, Mathematics and Computer Science, Computer Science and Philosophy)",
+   "academic_year": null,
+   "notes": "Department of Computer Science 'How to apply' page (cs.ox.ac.uk), steps 1-8. The University's central undergraduate pages on www.ox.ac.uk answer HTTP 403 to the fetcher (Cloudflare challenge), so only what the department page names is drafted: it does not name the personal statement or an English test, and those are not inferred. The page notes: 'From 2007 to 2025, the department organised a different test called the Mathematics Admissions Test (MAT). For the 2026 admissions round, the MAT will not take place, and all applicants will take the TMUA instead.' No year is printed on the steps themselves (UCAS deadline 6pm UK time on 15 October; interviews in December; decisions in January). Registration for the TMUA is via the UAT-UK website.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.cs.ox.ac.uk/admissions/undergraduate/how_to_apply/home.html",
+     "quote": "5. Submit a UCAS application All applicants apply through UCAS by the mid October deadline."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.cs.ox.ac.uk/admissions/undergraduate/how_to_apply/home.html",
+     "quote": "As part of the process you will be asked to nominate a referree, this will be someone that knows you academically and can comment on your suitability for higher education."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://www.cs.ox.ac.uk/admissions/undergraduate/how_to_apply/home.html",
+     "quote": "we will use scores on the Test of Mathematics for University Admission (TMUA) which all applicants for Maths, Computer Science, or joint honours courses must take."
+    }
+   ]
+  }
+ }
+}

@@ -1,12 +1,12 @@
-# ASHYQ Apply
+# Unimatch
 
-*Internal package, database and module names remain `unimatch` — including the
-`UNIMATCH_` environment prefix, the SQLite filename and the logger names.
-Renaming them would be churn without benefit, and every one of them is
-invisible to the user. Everything a person reads says ASHYQ Apply: the page
-title, the sidebar, the disclaimers, the export header and filename, the bot's
-User-Agent and the browser storage keys (migrated from `unimatch.*` on first
-load).*
+*The product is called Unimatch everywhere a person reads it (owner decision,
+2026-10-19): the page title, the sidebar, the disclaimers, the export header and
+filename, the calendar name, e-mails and the bot's User-Agent. The repository
+(`ashyq-apply`), the Python packages, the `UNIMATCH_` environment prefix, database
+names, metric names (`ashyq_*`) and the browser storage keys (`ashyq.*`, migrated
+from `unimatch.*` earlier and kept to avoid churning users' saved drafts) are
+internal and are not renamed.*
 
 University and scholarship shortlisting for international applicants, where every
 material value on screen traces back to the page it was read from.
@@ -91,7 +91,7 @@ API docs are at <http://127.0.0.1:8099/docs>.
 
 ### The judgements it is careful about
 
-| Situation | What UniMatch does |
+| Situation | What Unimatch does |
 |---|---|
 | A page says "a full ride" but its table shows tuition and fees only | Classifies **FULL_TUITION**, flags the promotional wording |
 | Your IELTS overall clears 6.5 but writing is below a 6.5 per-band rule | **GAP** on IELTS writing, not a pass |
@@ -102,6 +102,7 @@ API docs are at <http://127.0.0.1:8099/docs>.
 | The site is unreachable | **NEEDS_OFFICIAL_CLARIFICATION**, listed under pages that could not be read |
 | Your GPA is on a 5-point scale and the programme publishes 4.0 | Refuses to decide until you accept a documented conversion |
 | A programme is test-optional and you have no SAT | Not a barrier — **MET** |
+| kb mode: the university or programme is outside the verified knowledge base | **No verified data yet**, a blocking question, nothing searched or guessed |
 
 ### What it will not do
 
@@ -271,13 +272,64 @@ cd backend && ./.venv/bin/python -m app.corpus.build
 
 ---
 
-## Live mode
+## Modes
 
-Toggle **Demo mode** off on the preferences screen, or set
-`UNIMATCH_DEMO_MODE=false`. Live mode crawls the institutions listed in
+Where a run's answers come from is set per deployment by
+`UNIMATCH_KNOWLEDGE_MODE` (`kb` or `live`; anything else refuses to start,
+`backend/app/config.py`) and, for demo, per run by the **Demo mode** toggle on
+the preferences screen or `UNIMATCH_DEMO_MODE`. `GET /api/capabilities` reports
+the deployment's mode as `knowledge_mode` (`demo`, `kb` or `live`), with its
+`data_origin` and the adapters it reads with. A run records its mode when it
+first starts and keeps it on every resume and recheck, even if the deployment's
+setting changes later (`run_knowledge_mode` in `app/pipeline/runner.py`).
+
+### kb — the verified knowledge base (default)
+
+With demo mode off and `UNIMATCH_KNOWLEDGE_MODE=kb` (the default), research
+answers from the verified knowledge base in `backend/app/knowledge/`: the
+bachelor's in Computer Science at the top-100 catalogue universities, every fact
+carrying its official quote, source URL and verification date. **No page is
+read during a run**: there is no discovery crawl and no search, the fetcher is
+offline and the browser tier is off. A university or programme outside the
+knowledge base gets "No verified data yet" and a blocking question, never a
+guess. `UNIMATCH_SEARCH_PROVIDER` stays `none` (its default); kb mode does not
+use it.
+
+How the knowledge base is built, checked and used is in
+[`docs/process/KNOWLEDGE_BASE.md`](docs/process/KNOWLEDGE_BASE.md); the release
+gates that hold it are 97–100 in [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md).
+`npm run e2e:kb` (in `frontend/`) walks the kb journey in a browser on every
+push.
+
+**Refreshing the knowledge base.** `.github/workflows/kb-refresh.yml`
+re-verifies every URL the knowledge base cites through the production `Fetcher`
+(robots.txt honoured, no search provider), monthly on every item and weekly on
+deadlines from September to January. It never commits: the re-draft queue and
+re-stamped copies come back as an artifact and a person decides. GitHub reads
+both the schedule and the manual dispatch from the default branch, so the
+workflow runs only once this branch is on `main`. One exception to the
+robots.txt rule exists, and it is the owner's (AGENTS.md §6, 2026-10-19,
+**expires at product launch**): the KB evidence check may read the specific KB
+evidence URLs robots.txt refuses, once per check, via
+`scripts/verify_evidence.py --robots-override-kb` — never in the product,
+discovery, the live pipeline, benchmarks or crawls.
+
+### live — the web pipeline
+
+Set `UNIMATCH_KNOWLEDGE_MODE=live` with demo mode off. Live mode crawls the
+institutions listed in
 `backend/app/adapters/discovery/institution_registry.json`, starting from each
-homepage rather than a search engine — a search query would carry applicant
-context off the machine.
+homepage and its sitemaps. With `UNIMATCH_SEARCH_PROVIDER=none` (the default)
+that is all it does, and it is a supported configuration. A configured provider
+(`exa`, `tavily`, `brave` or `serper`, each refusing to start without its
+`UNIMATCH_*_API_KEY`, or `exa_mcp`, the keyless, rate-limited hosted Exa
+endpoint) adds web search behind `app/adapters/search`. A query carries no
+applicant data, and every page a provider returns is still read through
+`Fetcher`; a provider's quota shows as a visible `SearchUnavailable` rather than
+an empty result. The evaluation
+budget per university is 6 search queries, 60 HTTP requests and 120 s
+([`docs/process/LOOP_PROTOCOL.md`](docs/process/LOOP_PROTOCOL.md); the 120 s
+clock bounds the benchmark harness, not the product).
 
 Live mode is slower, and it finds less. That is honest: it reports what it could
 read and marks the rest as not found.
@@ -288,6 +340,14 @@ discovery reaches 26 of 30 admissions/cost/scholarship categories and produces
 zero audited material false positives, but confirms an individual programme
 page on only one institution in ten. That limitation is visible here because
 finding a category page is not the same as building a useful shortlist.
+
+### demo — the fixture corpus
+
+`UNIMATCH_DEMO_MODE=true` (the default) runs on the bundled synthetic corpus
+described under [Demo mode](#demo-mode), entirely offline. Demo mode ignores
+`UNIMATCH_KNOWLEDGE_MODE` and keeps its own fixtures, so the golden demo stays
+byte-identical. A run over universities picked from the catalogue is never a
+demo run.
 
 ---
 
@@ -317,6 +377,7 @@ npm run typecheck      # tsc --noEmit
 npm run lint           # eslint
 npm test               # 47 Vitest unit tests
 npm run e2e            # 50 Playwright tests, desktop + mobile (starts both servers itself)
+npm run e2e:kb         # the kb-mode journey against the knowledge base (starts its own API)
 npm run e2e:report     # open the last Playwright report
 ```
 
@@ -358,6 +419,8 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 | Variable | Default | Purpose |
 |---|---|---|
 | `UNIMATCH_DEMO_MODE` | `true` | Use the bundled corpus, no network |
+| `UNIMATCH_KNOWLEDGE_MODE` | `kb` | `kb`: answer from the verified knowledge base, no page read; `live`: the web pipeline. Ignored in demo mode. See [Modes](#modes) |
+| `UNIMATCH_SEARCH_PROVIDER` | `none` | Web search for live discovery: `none`, `exa`, `exa_mcp`, `tavily`, `brave` or `serper` (a keyed provider refuses to start without its key) |
 | `UNIMATCH_RESPECT_ROBOTS` | `true` | Honour robots.txt — leave this on |
 | `UNIMATCH_FETCH_DELAY_SECONDS` | `1.5` | Minimum spacing between requests to one host |
 | `UNIMATCH_FETCH_CONTACT` | *(empty)* | Contact address in the User-Agent; set it for live crawling |
@@ -451,7 +514,7 @@ These are real, and the UI states them rather than hiding them.
    deployment definitions are implemented and tested, but the container stack
    has not been run on this Mac and no public deployment has had an operational
    security review.
-1. **No outcome prediction.** ASHYQ Apply reports published criteria. Selection is
+1. **No outcome prediction.** Unimatch reports published criteria. Selection is
    competitive and depends on factors no public page states.
 2. **Extraction is rule-based and conservative.** It finds what its patterns
    match and reports nothing where they do not. On live pages it will miss

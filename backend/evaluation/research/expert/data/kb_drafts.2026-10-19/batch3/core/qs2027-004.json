@@ -1,0 +1,46 @@
+{
+ "case": "qs2027-004",
+ "university": "University of Oxford",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "English",
+  "title": "Computer Science (BA / MCompSci)",
+  "page_url": "https://www.cs.ox.ac.uk/admissions/undergraduate/courses/cs.html",
+  "language_twins": [],
+  "degree": "BA after three years or MCompSci after four; all students apply for the four-year course ('nobody gets a BSc at Oxford')",
+  "how_found": "www.cs.ox.ac.uk/admissions/undergraduate/ -> Undergraduate Degrees (courses/home.html: 'BA or Masters in Computer Science (three or four years)') -> Computer Science (courses/cs.html). The central course page www.ox.ac.uk/admissions/undergraduate/courses/course-listing/computer-science could not be read (403).",
+  "notes": "DOMAIN WARNING: kb_top100_list.json row 4 has official_domain 'oxford.ac.uk'; the University's domain is ox.ac.uk (www.ox.ac.uk, www.cs.ox.ac.uk). A checker reading official domains from the list marks every Oxford URL unofficial until the row is corrected. ACCESS: every www.ox.ac.uk URL tried (course page, english-language-requirements, fees rates, robots.txt) returns HTTP 403 with a Cloudflare challenge ('Just a moment...') to the normal user agent; not bypassed. English, fees and funding live only on www.ox.ac.uk, so they stay unknown. Joint degrees Mathematics and Computer Science and Computer Science and Philosophy are related, not the programme."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Access failure: the University's English language requirements page (www.ox.ac.uk/admissions/undergraduate/applying-to-oxford/english-language-requirements) returns HTTP 403 (Cloudflare challenge) to the normal user agent; not bypassed. The department pages state no English test minimum."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Offers are qualification-specific (A-level/IB) on the central course page, which returned 403. Department prose: 'Our standard conditional offer is based on 3 A-levels' (FAQ); shortlisting uses the TMUA with 'no \"pass\" mark' (how_to_apply). No GPA threshold."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-10-15",
+   "url": "https://www.cs.ox.ac.uk/admissions/undergraduate/how_to_apply/home.html",
+   "quote": "The strict submission deadline for submitted your completed UCAS application is 6pm (UK time) on 15 October",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "population": "international",
+   "notes": "Year not printed; for October 2027 entry the UCAS deadline is 15 October 2026 at 6pm UK time, already past on the research date. One UCAS round for all applicants including international ('All applicants apply through UCAS by the mid October deadline'). 'Late applications cannot be accepted.' TMUA registration and sitting also required."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "Access failure: course fees are published on www.ox.ac.uk (course page 'Fees' section and /students/fees-funding/fees/rates), which returns HTTP 403 (Cloudflare challenge) to the normal user agent; not bypassed."
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "Access failure: funding pages are on www.ox.ac.uk (HTTP 403, Cloudflare challenge); not bypassed. The department pages mention TMUA 'bursary requests' (a test-fee bursary run by UAT-UK), not a study scholarship."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "Access failure: www.ox.ac.uk funding pages return HTTP 403; not bypassed."
+  }
+ }
+}

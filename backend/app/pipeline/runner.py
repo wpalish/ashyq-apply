@@ -16,7 +16,8 @@ from datetime import UTC, date, datetime, timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.adapters.base import Candidate, CandidateProgram, PageOutcome
+from app.adapters import fetching
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
@@ -35,7 +36,7 @@ from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.catalogue.discovery import CatalogueDiscoveryAdapter
-from app.config import Settings
+from app.config import KNOWLEDGE_MODES, Settings
 from app.domain import dedupe, diagnostics
 from app.domain.campus import withhold_other_campuses
 from app.domain.citizenship import CitizenshipMatch, match_citizenship
@@ -66,6 +67,22 @@ from app.domain.funding import (
 from app.domain.ranking_v2 import rank_result
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
+from app.knowledge import MAX_AGE_DAYS as KB_MAX_AGE_DAYS
+from app.knowledge import KnowledgeBase, load_knowledge_base
+from app.knowledge.claims import (
+    KB_DISCOVERY_SOURCE,
+    KnowledgeDiscovery,
+    covers,
+    requirement_statement_questions,
+)
+from app.knowledge.claims import answer as kb_answer
+from app.knowledge.documents import kb_checklist
+from app.knowledge.funding import (
+    explain_unused_tuition,
+    kb_funding_outcome,
+    kb_scholarships,
+    no_award_question,
+)
 from app.models import (
     AuditEvent,
     ClaimRow,
@@ -79,7 +96,7 @@ from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import CostBreakdown, ProgramResult, Tristate
+from app.schemas.result import CostBreakdown, KbUnknown, ProgramResult, Scholarship, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
 
@@ -114,6 +131,25 @@ class LeaseLost(RuntimeError):
     """
 
 
+def run_knowledge_mode(run: ResearchRun, settings: Settings) -> str:
+    """The knowledge mode ("kb" or "live") this run answers in.
+
+    Recorded in ``settings_snapshot["knowledge_mode"]`` at the run's first
+    start and honoured on every resume and recheck afterwards, so a run that
+    verified live is never finished, or rechecked, from the KB (review P1). A
+    run that started before live runs recorded their mode (a snapshot without
+    the key, or a start time) ran live: its claims came from live reads. Only
+    a run that has never started takes the deployment's setting.
+    """
+    snapshot = run.settings_snapshot or {}
+    recorded = snapshot.get("knowledge_mode")
+    if recorded in KNOWLEDGE_MODES:
+        return str(recorded)
+    if snapshot or run.started_at is not None:
+        return "live"
+    return settings.knowledge_mode
+
+
 class ResearchRunner:
     """Executes the pipeline for one run."""
 
@@ -134,6 +170,13 @@ class ResearchRunner:
         self.settings = settings
         self.state = RunState.load(run.stage_state)
         self.demo = run.demo_mode
+        #: Owner, 2026-10-19: research answers from the verified knowledge base.
+        #: No discovery, no search and no page read; demo mode keeps its fixtures.
+        #: The mode is the run's, recorded at its first start: a resumed or
+        #: rechecked run keeps it when the deployment's setting changes later.
+        self.knowledge_mode = run_knowledge_mode(run, settings)
+        self.kb_mode = not self.demo and self.knowledge_mode == "kb"
+        self._kb: KnowledgeBase | None = None
         # The worker passes its own identity so the fencing check compares
         # against the id that actually claimed the job, not a lookalike.
         self.worker_id = worker_id or f"{socket.gethostname()}:{os.getpid()}"
@@ -160,7 +203,7 @@ class ResearchRunner:
             self.settings.cache_dir,
             delay_seconds=self.settings.fetch_delay_seconds,
             respect_robots=self.settings.respect_robots,
-            offline=self.demo,
+            offline=self.demo or self.kb_mode,
             cache_ttl_seconds=self.settings.cache_ttl_seconds,
             timeout=self.settings.fetch_timeout_seconds,
             contact=self.settings.fetch_contact,
@@ -171,15 +214,26 @@ class ResearchRunner:
         """The hardened browser tier with T29 catalogue JSON interception."""
         return CatalogRenderer(
             fetcher,
-            enabled=self.settings.enable_browser_tier and not self.demo,
+            enabled=self.settings.enable_browser_tier and not self.demo and not self.kb_mode,
         )
+
+    @property
+    def knowledge(self) -> KnowledgeBase:
+        """The verified knowledge base, read once per runner (a file, never the web)."""
+        if self._kb is None:
+            self._kb = load_knowledge_base(
+                self.settings.knowledge_base_path, self.settings.knowledge_imported_path
+            )
+        return self._kb
 
     def _make_discovery_adapter(
         self, fetcher: Fetcher
-    ) -> FixtureDiscoveryAdapter | LiveDiscoveryAdapter:
+    ) -> FixtureDiscoveryAdapter | LiveDiscoveryAdapter | KnowledgeDiscovery:
         """Build discovery with source-page recording only on the live path."""
         if self.demo:
             return FixtureDiscoveryAdapter(fetcher)
+        if self.kb_mode:
+            return KnowledgeDiscovery(self.session, self.knowledge, self.run.university_ids)
         return CatalogueDiscoveryAdapter(
             fetcher,
             session=self.session,
@@ -271,7 +325,7 @@ class ResearchRunner:
         the recheck chain.
         """
         rows = (
-            self.session.query(ClaimRow.claim_type, ClaimRow.accessed_at)
+            self.session.query(ClaimRow.claim_type, ClaimRow.accessed_at, ClaimRow.status)
             .filter(
                 ClaimRow.run_id == self.run.id,
                 ClaimRow.status != ClaimStatus.SUPERSEDED.value,
@@ -279,9 +333,18 @@ class ResearchRunner:
             .all()
         )
         moments = []
-        for claim_type, accessed_at in rows:
+        for claim_type, accessed_at, status in rows:
             accessed = ensure_utc(accessed_at)
             if accessed is None:
+                continue
+            if self.kb_mode:
+                # A KB fact is re-read from the KB file, on the KB's own clock.
+                # One the run already shows as stale has nothing to wait for:
+                # its accessed_at is the KB's verification date, which a
+                # re-read does not move, so its moment would stay in the past
+                # and re-arm a recheck every minute.
+                if status == ClaimStatus.VERIFIED_CURRENT.value:
+                    moments.append(accessed + KB_RECHECK_AGE)
                 continue
             try:
                 moments.append(next_recheck_at(ClaimType(claim_type), accessed))
@@ -336,7 +399,7 @@ class ResearchRunner:
         stale_claims = [
             row
             for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id).all()
-            if _claim_is_stale(row, now)
+            if (_kb_claim_is_stale(row, now) if self.kb_mode else _claim_is_stale(row, now))
         ]
         if not stale_claims:
             self._arm_recheck(self._noop_recheck_moment(now))
@@ -371,6 +434,17 @@ class ResearchRunner:
             "respect_robots": self.settings.respect_robots,
             "university_ids": self.run.university_ids or [],
         }
+        if not self.demo:
+            # The run's mode, read back on every resume and recheck.
+            self.run.settings_snapshot = {
+                **self.run.settings_snapshot,
+                "knowledge_mode": self.knowledge_mode,
+            }
+        if self.kb_mode:
+            self.run.settings_snapshot = {
+                **self.run.settings_snapshot,
+                "knowledge_base": self.knowledge.version,
+            }
         fetcher = self._make_fetcher()
         browser = self._make_browser(fetcher)
         if browser.enabled:
@@ -516,8 +590,10 @@ class ResearchRunner:
         self._transition(PipelineStage.PROGRAM_VERIFICATION)
         self._save()
 
-        req = WebRequirementsAdapter(fetcher, self._academic_year())
-        cost = WebCostAdapter(fetcher, self._academic_year())
+        # FE-2b: the fee readers file the Home row only for a domestic applicant.
+        held = (self.profile.context.citizenship, self.profile.context.second_citizenship)
+        req = WebRequirementsAdapter(fetcher, self._academic_year(), held)
+        cost = WebCostAdapter(fetcher, self._academic_year(), held)
         gov = WebGovernmentAdapter(fetcher)
         # Both the value *and* the claims behind it. Caching only the string
         # meant the second candidate in a country showed a post-study-work
@@ -573,44 +649,51 @@ class ResearchRunner:
                     career_notes="",
                 )
 
-                ar = await req.verify(cand, prog, self.intake)
-                errors.extend(ar.errors)
-                retry.extend(ar.retry_urls)
-                # Filed as they arrive, not only at the end of the stage. A
-                # live capture showed five of ten cases reporting *no* page
-                # outcomes at all: the run died inside this loop — a budget,
-                # a wall clock — and the whole local list went with it. The
-                # case that dies is exactly the case whose zero needs
-                # explaining, so its diagnosis must already be on the run.
-                self._record_page_outcomes(ar.page_outcomes)
-                self.run.pages_checked += ar.pages_checked
-                self.run.pages_failed += ar.pages_failed
+                if self.kb_mode:
+                    all_claims, _stale = self._kb_claims(cand, prog, result)
+                else:
+                    # RL-1: verify reads are charged to this institution's ledger.
+                    with fetching.charging(fetcher, cand.domain, "verify"):
+                        ar = await req.verify(cand, prog, self.intake)
+                    errors.extend(ar.errors)
+                    retry.extend(ar.retry_urls)
+                    # Filed as they arrive, not only at the end of the stage. A
+                    # live capture showed five of ten cases reporting *no* page
+                    # outcomes at all: the run died inside this loop — a budget,
+                    # a wall clock — and the whole local list went with it. The
+                    # case that dies is exactly the case whose zero needs
+                    # explaining, so its diagnosis must already be on the run.
+                    self._record_page_outcomes(ar.page_outcomes)
+                    self.run.pages_checked += ar.pages_checked
+                    self.run.pages_failed += ar.pages_failed
 
-                cb, cr = await cost.fetch(cand)
-                errors.extend(cr.errors)
-                retry.extend(cr.retry_urls)
-                self._record_page_outcomes(cr.page_outcomes)
-                self.run.pages_checked += cr.pages_checked
-                self.run.pages_failed += cr.pages_failed
-                result.costs = cb
+                    with fetching.charging(fetcher, cand.domain, "verify"):
+                        cb, cr = await cost.fetch(cand)
+                    errors.extend(cr.errors)
+                    retry.extend(cr.retry_urls)
+                    self._record_page_outcomes(cr.page_outcomes)
+                    self.run.pages_checked += cr.pages_checked
+                    self.run.pages_failed += cr.pages_failed
+                    result.costs = cb
 
-                if cand.country not in gov_cache:
-                    gr = await gov.post_study_work(cand.country)
-                    errors.extend(gr.errors)
-                    self._record_page_outcomes(gr.page_outcomes)
-                    self.run.pages_checked += gr.pages_checked
-                    self.run.pages_failed += gr.pages_failed
-                    gov_cache[cand.country] = (
-                        str(gr.claims[0].normalized_value) if gr.claims else "",
-                        list(gr.claims),
-                    )
-                government_value, government_claims = gov_cache[cand.country]
-                # Every row of that country gets the government page as its own
-                # evidence, not just the first one to trigger the fetch.
-                ar.claims.extend(government_claims)
-                result.post_study_work = government_value
+                    if cand.country not in gov_cache:
+                        with fetching.charging(fetcher, cand.domain, "verify"):
+                            gr = await gov.post_study_work(cand.country)
+                        errors.extend(gr.errors)
+                        self._record_page_outcomes(gr.page_outcomes)
+                        self.run.pages_checked += gr.pages_checked
+                        self.run.pages_failed += gr.pages_failed
+                        gov_cache[cand.country] = (
+                            str(gr.claims[0].normalized_value) if gr.claims else "",
+                            list(gr.claims),
+                        )
+                    government_value, government_claims = gov_cache[cand.country]
+                    # Every row of that country gets the government page as its own
+                    # evidence, not just the first one to trigger the fetch.
+                    ar.claims.extend(government_claims)
+                    result.post_study_work = government_value
 
-                all_claims = ar.claims + cr.claims
+                    all_claims = ar.claims + cr.claims
                 # ER-02 (owner 2026-09-28): the applicant named no campus, so a
                 # page that belongs to one campus answers another question.
                 campuses = registry_campuses(cand.domain) if cand.domain else {}
@@ -637,19 +720,28 @@ class ResearchRunner:
                             )
                         )
                 all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
-                all_claims = [
-                    c.model_copy(
-                        update={"status": apply_freshness(c.status, c.claim_type, c.accessed_at)}
-                    )
-                    for c in all_claims
-                ]
+                if not self.kb_mode:
+                    # KB claims already carry the KB's own staleness (365 days,
+                    # a past academic year, a passed deadline).
+                    all_claims = [
+                        c.model_copy(
+                            update={
+                                "status": apply_freshness(c.status, c.claim_type, c.accessed_at)
+                            }
+                        )
+                        for c in all_claims
+                    ]
                 conflicts, all_claims = find_conflicts(
                     all_claims, context=f"{prog.name} at {cand.name}"
                 )
                 result.conflicts = conflicts
                 result.unresolved.extend(demotion_qs)
 
-                if not cand.verifiable:
+                if self.kb_mode and not cand.discovery_source.startswith(KB_DISCOVERY_SOURCE):
+                    result.unresolved.append(self._no_verified_data(cand, prog))
+                elif self.kb_mode and not cand.verifiable:
+                    result.unresolved.append(self._no_verified_programme_page(cand, prog))
+                elif not cand.verifiable:
                     result.unresolved.append(
                         UnresolvedQuestion(
                             topic="official source",
@@ -665,6 +757,12 @@ class ResearchRunner:
                     )
 
                 result.claims = [_to_out(c, f"{result.id}-c{j}") for j, c in enumerate(all_claims)]
+                if self.kb_mode:
+                    # Stale is the KB's verdict, not the live per-type window.
+                    result.claims = [
+                        c.model_copy(update={"is_stale": c.status is ClaimStatus.POSSIBLY_STALE})
+                        for c in result.claims
+                    ]
                 result.source_urls = sorted({c.source_url for c in all_claims})
                 result.last_verified = max((c.accessed_at for c in all_claims), default=None)
                 self._persist_result(result, all_claims, conflicts)
@@ -700,7 +798,11 @@ class ResearchRunner:
         self._transition(PipelineStage.FUNDING_DISCOVERY)
         self._save()
 
-        adapter = WebScholarshipAdapter(fetcher, self._academic_year())
+        # The same UTC day _stage_assess judges deadlines by: an award's
+        # "window open" must not be read off a different clock.
+        adapter = WebScholarshipAdapter(
+            fetcher, self._academic_year(), today=datetime.now(UTC).date()
+        )
         # Keyed on the normalized university key, not the display name: a
         # trailing comma or a renamed institution used to drop the row.
         by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
@@ -736,12 +838,28 @@ class ResearchRunner:
             prog = CandidateProgram(
                 name=result.program, field="", degree=result.degree, url=result.program_url
             )
-            scholarships, ar = await adapter.find(
-                cand,
-                prog,
-                self.profile,
-                allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
-            )
+            if self.kb_mode:
+                # The KB's scholarship facts are already claims on this row;
+                # no scholarship page is read and nothing is searched. They
+                # become the same Scholarship objects a live read builds, so
+                # the checks and classification below run unchanged.
+                scholarships: list[Scholarship]
+                scholarships, kb_questions = kb_scholarships(result)
+                result.unresolved.extend(kb_questions)
+                no_award = no_award_question(result, scholarships)
+                if no_award is not None:
+                    result.unresolved.append(no_award)
+                ar = AdapterResult()
+            else:
+                with fetching.charging(fetcher, cand.domain, "funding"):
+                    scholarships, ar = await adapter.find(
+                        cand,
+                        prog,
+                        self.profile,
+                        allow_search=any(
+                            c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims
+                        ),
+                    )
             errors.extend(ar.errors)
             self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked
@@ -1051,7 +1169,9 @@ class ResearchRunner:
                     )
                 )
 
-            fit, best, reason = funding_fit_for(result.scholarships)
+            # A verified "no institutional scholarship" is an outcome, not silence.
+            kb_outcome = kb_funding_outcome(result) if self.kb_mode else None
+            fit, best, reason = kb_outcome or funding_fit_for(result.scholarships)
             result.funding_fit = fit
             result.best_funding_classification = best
             result.funding_gap = compute_funding_gap(
@@ -1059,6 +1179,15 @@ class ResearchRunner:
             )
             if reason:
                 result.funding_gap.warnings.append(reason)
+            if self.kb_mode:
+                # A verified fee for another year is "found, not current", not "not found".
+                explain_unused_tuition(result)
+                # "Needs clarification" must never stand with nothing saying why;
+                # a funding question does not explain an eligibility verdict.
+                if result.eligibility is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION and all(
+                    q.topic == "funding" for q in result.unresolved
+                ):
+                    result.unresolved.append(_kb_clarification_question(result))
 
             result.admissions_fit, fit_reason = admissions_fit_for(result, self.profile)
             # Recomputed from the stored attributes on every assessment, so the
@@ -1134,6 +1263,34 @@ class ResearchRunner:
                     )
                     st.items_done = i + 1
                     continue
+                if self.kb_mode and self._kb_checklist(row, result, cand):
+                    built += 1
+                    st.items_done = i + 1
+                    self._save()
+                    continue
+                if self.kb_mode:
+                    # No verified document list, and in kb mode no page is
+                    # read to find one. A university the KB does not hold (or
+                    # a programme outside its scope) is told so, as on its
+                    # "No verified data yet" question; an entry is told the
+                    # KB has no list for it yet.
+                    in_kb = cand.discovery_source.startswith(KB_DISCOVERY_SOURCE)
+                    self._add_unresolved(
+                        row,
+                        result,
+                        topic="documents",
+                        question=(
+                            f"What documents does {result.university} require for {result.program}?"
+                        ),
+                        why=(
+                            f"{KB_NO_DOCUMENTS}, and live research is switched off, so nothing "
+                            "was read or assumed."
+                            if in_kb and covers(self.profile)
+                            else kb_absence_why(self.profile)
+                        ),
+                    )
+                    st.items_done = i + 1
+                    continue
                 prog = CandidateProgram(
                     name=result.program, field="", degree=result.degree, url=result.program_url
                 )
@@ -1192,6 +1349,165 @@ class ResearchRunner:
         self.run.finished_at = datetime.now(UTC)
         self._save()
         return built
+
+    def _kb_checklist(self, row: ProgramResultRow, result: ProgramResult, cand: Candidate) -> bool:
+        """The approved row's checklist from the KB's document facts; False when it has none.
+
+        The same objects a live read stores: the checklist on the row, one
+        ``REQUIRED_DOCUMENT`` claim per item merged as live document claims
+        are, and the KB's own staleness on each claim. No page is read.
+        """
+        if not cand.discovery_source.startswith(KB_DISCOVERY_SOURCE) or not covers(self.profile):
+            return False
+        entry = self.knowledge.get(cand.discovery_source.removeprefix(f"{KB_DISCOVERY_SOURCE}:"))
+        found = (
+            kb_checklist(
+                entry, university=result.university, programme=result.program, intake=self.intake
+            )
+            if entry is not None
+            else None
+        )
+        if found is None:
+            return False
+        checklist, claims = found
+        checklist.result_id = result.id
+        result.checklist = checklist
+        row.checklist = checklist.model_dump(mode="json")
+        added = self._merge_document_claims(row.id, result, claims, {c.source_url for c in claims})
+        # Stale is the KB's verdict, not the live per-type window.
+        result.claims = [
+            c.model_copy(update={"is_stale": c.status is ClaimStatus.POSSIBLY_STALE})
+            if c.claim_type in DOCUMENT_CLAIM_TYPES
+            else c
+            for c in result.claims
+        ]
+        # An earlier collection, before the KB held this list, asked for it.
+        result.unresolved = [
+            q
+            for q in result.unresolved
+            if not (q.topic == "documents" and KB_NO_DOCUMENTS in q.why_it_matters)
+        ]
+        self.run.claims_recorded += added
+        result.source_urls = sorted(set(result.source_urls) | {c.source_url for c in claims})
+        self._update_result(row, result)
+        self._audit("checklist_built", "result", row.id, documents=len(claims), added_claims=added)
+        return True
+
+    def _kb_claims(
+        self, cand: Candidate, prog: CandidateProgram, result: ProgramResult
+    ) -> tuple[list[Claim], dict[int, list[str]]]:
+        """The KB's claims for one row (no network); the cost table goes on the result."""
+        if not cand.discovery_source.startswith(KB_DISCOVERY_SOURCE) or not covers(self.profile):
+            return [], {}
+        entry = self.knowledge.get(cand.discovery_source.removeprefix(f"{KB_DISCOVERY_SOURCE}:"))
+        if entry is None:
+            return [], {}
+        found = kb_answer(
+            entry,
+            programme=prog.name,
+            intake=self.intake,
+            academic_year=self._academic_year(),
+        )
+        result.costs = found.costs
+        # WHY-1: an empty cell says why (not published, not readable, not yet verified).
+        result.kb_unknown = [KbUnknown.model_validate(u) for u in entry.unknown_reasons()]
+        # A verified "does not apply" requirement (no English test; German
+        # DSH 2 instead) has no claim type: it is said on the row, quoted.
+        result.unresolved.extend(
+            requirement_statement_questions(entry, university=cand.name, programme=prog.name)
+        )
+        return found.claims, found.stale
+
+    def _no_verified_programme_page(
+        self, cand: Candidate, prog: CandidateProgram
+    ) -> UnresolvedQuestion:
+        """A KB university whose facts are verified but whose programme page is not.
+
+        The live wording ("found through a catalogue only, nothing verified")
+        would contradict the verified claims shown on the same row.
+
+        REL-1: when the KB knows *why* there is no page, it says so instead of
+        asking. ``not_offered``: a statement, no question. ``related_only``: a
+        non-blocking question that names the closest official route. Only an
+        unsettled entry (the page could not be read) keeps the blocking
+        question.
+        """
+        entry = self.knowledge.get(cand.discovery_source.removeprefix(f"{KB_DISCOVERY_SOURCE}:"))
+        route = entry.programme_route if entry is not None else "unknown"
+        related = entry.programme.get("related_reason") if entry is not None else None
+        if route in ("not_offered", "related_only") and entry is not None:
+            related = related if isinstance(related, dict) else {}
+            checked = str(related.get("checked_on") or entry.verified_on or "date not recorded")
+            # Named as an "official page" only with a URL on the entry's
+            # official domains (``related_route``; security review SR2-05).
+            route_named = entry.related_route is not None
+            name, url = (related.get("name"), related.get("url")) if route_named else (None, None)
+            if route == "not_offered":
+                return UnresolvedQuestion(
+                    topic="official source",
+                    question=(
+                        f"{cand.name} publishes no bachelor's in Computer Science "
+                        f"(checked {checked})."
+                    ),
+                    why_it_matters=(
+                        f"The closest official programme is {name} (official page: {url})."
+                        if name and url
+                        else "The verified knowledge base records that no such programme is "
+                        "offered, so nothing is shown as this programme's."
+                    ),
+                    university=cand.name,
+                    program=prog.name,
+                    suggested_contact=str(url) if url else "admissions office",
+                    blocking=False,
+                )
+            return UnresolvedQuestion(
+                topic="official source",
+                question=(
+                    "No standalone bachelor's in Computer Science is published; the closest "
+                    f"official route is {name} (official page: {url}). Does that route suit you?"
+                ),
+                why_it_matters=(
+                    "The verified knowledge base records no standalone bachelor's in Computer "
+                    f"Science at {cand.name} (expert check {checked}). Whether the closest "
+                    "route suits you is your decision."
+                ),
+                university=cand.name,
+                program=prog.name,
+                suggested_contact=str(url),
+                blocking=False,
+            )
+        return UnresolvedQuestion(
+            topic="official source",
+            question=f"Which official page publishes the {prog.name} programme?",
+            why_it_matters=(
+                "The facts shown for this university were verified on its official site, but "
+                "the verified knowledge base has no verified page for this programme yet, so "
+                "that the programme is offered for this intake is not confirmed."
+            ),
+            university=cand.name,
+            program=prog.name,
+            suggested_contact="admissions office",
+            blocking=True,
+        )
+
+    def _no_verified_data(self, cand: Candidate, prog: CandidateProgram) -> UnresolvedQuestion:
+        """The honest outcome for a university the verified knowledge base does not hold."""
+        in_scope = covers(self.profile)
+        scope = (
+            "the bachelor's in Computer Science"
+            if in_scope
+            else "this programme (the knowledge base covers only the bachelor's in Computer "
+            "Science)"
+        )
+        return UnresolvedQuestion(
+            topic="verified data",
+            question=f"No verified data yet for {cand.name}: {scope}.",
+            why_it_matters=kb_absence_why(self.profile),
+            university=cand.name,
+            program=prog.name,
+            suggested_contact="admissions office",
+            blocking=True,
+        )
 
     def _record_diagnostics(self, messages: list[str]) -> None:
         """File each diagnostic as a failure or an honest unknown.
@@ -1618,6 +1934,35 @@ def _applicant_eligible(scholarship) -> Tristate:
     return "unknown"
 
 
+def _kb_clarification_question(result: ProgramResult) -> UnresolvedQuestion:
+    """Why a KB row "needs clarification" when nothing else on it says so (kb mode)."""
+    unclear = [
+        c.requirement
+        for c in result.requirement_checks
+        if c.status is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+    ]
+    held = (
+        "its " + ", ".join(dict.fromkeys(unclear)) + " could not be settled from them"
+        if unclear
+        else "none of them is an entry requirement this profile can be compared against"
+    )
+    return UnresolvedQuestion(
+        topic="entry requirements",
+        question=(
+            f"Which entry requirements does {result.university} publish for {result.program}, "
+            "and does your profile meet them?"
+        ),
+        why_it_matters=(
+            f"The verified knowledge base holds facts for this programme, but {held}, so "
+            "eligibility is shown as needing clarification rather than as met."
+        ),
+        university=result.university,
+        program=result.program,
+        suggested_contact="admissions office",
+        blocking=False,
+    )
+
+
 def _explanation_component(text: str):
     from app.schemas.result import ScoreComponent
 
@@ -1652,6 +1997,33 @@ def applicant_academic_year(term: str, year: int) -> str:
     """
     start = year if term in ("fall", "winter") else year - 1
     return f"{start}/{str(start + 1)[-2:]}"
+
+
+#: The opening of the kb-mode question for an entry with no document list.
+KB_NO_DOCUMENTS = "The verified knowledge base does not hold document lists yet"
+
+#: Why nothing is shown for a university with no entry in the verified knowledge base.
+KB_NO_ENTRY = (
+    "Live research is switched off and this university has no entry in the verified "
+    "knowledge base, so nothing about it is shown or guessed. Its official site or "
+    "admissions office is the source until it is added."
+)
+
+#: Why nothing is shown for a programme outside the verified knowledge base's scope.
+KB_OUT_OF_SCOPE = (
+    "Live research is switched off and the verified knowledge base answers only "
+    "for the bachelor's in Computer Science, so nothing about this programme is shown "
+    "or guessed. Its official site or admissions office is the source until it is added."
+)
+
+
+def kb_absence_why(profile: ApplicantProfileIn) -> str:
+    """Why nothing is shown for a row the verified knowledge base does not answer.
+
+    Out of scope, the university may well be in the KB - for Computer Science.
+    Saying it has no entry would be false.
+    """
+    return KB_NO_ENTRY if covers(profile) else KB_OUT_OF_SCOPE
 
 
 CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
@@ -1812,6 +2184,29 @@ def _previous_cycle(dates, intake_term: str, intake_year: int) -> bool:
 def _as_date(v):
     """Shared with eligibility: an ambiguous d/m vs m/d string reads as None."""
     return parse_published_date(v)
+
+
+#: When a current KB claim turns stale: ``app.knowledge.stale_reasons`` calls a
+#: fact stale once *more than* MAX_AGE_DAYS whole days have passed since its
+#: verification day, i.e. from midnight UTC of day MAX_AGE_DAYS + 1. A recheck
+#: armed at day MAX_AGE_DAYS re-read the same verdict and re-armed itself in
+#: the past, every minute, for a day.
+KB_RECHECK_AGE = timedelta(days=KB_MAX_AGE_DAYS + 1)
+
+
+def _kb_claim_is_stale(row: ClaimRow, now: datetime) -> bool:
+    """Whether re-reading the KB would change this claim: current, and now past its year.
+
+    A claim the run already shows as stale is not due: its ``accessed_at`` is
+    the KB's verification date, which a re-read of the same KB does not move,
+    so counting it re-ran the whole run at every recheck, forever.
+    """
+    accessed = ensure_utc(row.accessed_at)
+    return (
+        accessed is not None
+        and row.status == ClaimStatus.VERIFIED_CURRENT.value
+        and now - accessed >= KB_RECHECK_AGE
+    )
 
 
 def _claim_is_stale(row: ClaimRow, now: datetime) -> bool:

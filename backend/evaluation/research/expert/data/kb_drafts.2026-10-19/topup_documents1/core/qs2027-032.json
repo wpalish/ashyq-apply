@@ -1,0 +1,52 @@
+{
+ "case": "qs2027-032",
+ "seed_id": "qs2027-032",
+ "university": "University of Toronto",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-032",
+  "round": "topup_documents1"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Undergraduate applicants; high schools outside Canada and the U.S. upload transcripts after applying",
+   "academic_year": null,
+   "notes": "'After you apply: Required Documents' page. The personalised list is on the Join U of T portal; this page lists what may be asked. Supplemental applications are programme-specific ('The applicant portals will indicate if you need to submit a supplemental application'); none is drafted.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://future.utoronto.ca/required-documents",
+     "quote": "You must provide full documentation (transcripts) for all secondary and post-secondary studies attempted."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://future.utoronto.ca/required-documents",
+     "quote": "Depending on your academic background and the areas you've applied to, you may also need to submit: Self-reported grades form (if applicable) Proof of English language proficiency",
+     "condition": "depending on your academic background and the areas you've applied to"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "conditional",
+     "url": "https://future.utoronto.ca/required-documents",
+     "quote": "Proof of English language proficiency Standardized test results (e.g., SAT, ACT, IB, AP)",
+     "condition": "depending on your academic background and the areas you've applied to"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://future.utoronto.ca/required-documents",
+     "quote": "If your documents are in a language other than English or French, you will also need to provide notarized translations.",
+     "condition": "your documents are in a language other than English or French"
+    }
+   ]
+  }
+ }
+}

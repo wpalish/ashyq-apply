@@ -1,0 +1,40 @@
+{
+ "case": "qs2027-096",
+ "university": "University of Alberta",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "English (not read)",
+  "title": "Program: Bachelor of Science Computing Science Subject Area",
+  "page_url": "https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=110935",
+  "language_twins": [],
+  "degree": "Bachelor of Science (Major/Honors), Computing Science - from the search index, not read",
+  "how_found": "Search on ualberta.ca (official domain only) -> 2026-2027 calendar program page. Not opened.",
+  "notes": "ACCESS case. www.ualberta.ca: HTTP 403 'The request could not be satisfied. Request blocked.' (CloudFront) for the home page, the admissions pages and robots.txt. calendar.ualberta.ca: content pages answer HTTP 202 with an empty body and header 'x-amzn-waf-action: challenge' (AWS WAF JavaScript challenge), retried once after 20 s with the same result; only the calendar home page loaded. Not bypassed. All six answers unknown for access reasons."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Access failure: the calendar's 'General Undergraduate Admission Requirements' (content.php?catoid=69&navoid=21510) returns an AWS WAF challenge (HTTP 202, empty); www.ualberta.ca admissions pages return HTTP 403 (CloudFront). Not bypassed."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Access failure: 'Faculty of Science Admission Requirements' (calendar navoid=20823) returns an AWS WAF challenge; not read."
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Access failure: www.ualberta.ca admissions deadlines pages return HTTP 403 (CloudFront); not bypassed."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "Access failure: www.ualberta.ca tuition pages return HTTP 403 (CloudFront); not bypassed."
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "Access failure: www.ualberta.ca awards and scholarships pages return HTTP 403 (CloudFront); not bypassed."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "Access failure: as scholarship_exists."
+  }
+ }
+}

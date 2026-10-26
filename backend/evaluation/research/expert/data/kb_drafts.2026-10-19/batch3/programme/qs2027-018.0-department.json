@@ -1,0 +1,20 @@
+{
+ "case": "qs2027-018",
+ "note": "kb batch3 qs2027-018.0-department: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. DOMAIN WARNING: kb_top100_list.json gives this row official_domain 'cuhk.edu.cn' (that is CUHK-Shenzhen, a different university); The Chinese University of Hong Kong's domain is cuhk.edu.hk. This page is on www.cse.cuhk.edu.hk, so a checker reading official domains from the list will mark it unofficial until the row is corrected. The central programme page (admission.cuhk.edu.hk/programme/cscin/) was NOT OPENED: TLS verification fails (the server sends only its leaf certificate, without the Sectigo Public Server Authentication CA DV R36 intermediate; robots.txt unreadable, so the site is treated as closed).",
+ "programme": {
+  "url": "https://www.cse.cuhk.edu.hk/admission/cscin/",
+  "title": "B.Sc. in Computer Science (CSCIN)"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_urls": [
+  "https://www.cse.cuhk.edu.hk/admission/cscin/",
+  "https://admission.cuhk.edu.hk/programme/cscin/"
+ ],
+ "degree": "B.Sc. in Computer Science (CSCIN), Faculty of Engineering; first-year entry through department-based admission JS4412 / BCSEN (Computer Science and Engineering), major declared after year 1",
+ "teaching_language": "not quoted (University core includes 'Language English 8' and 'Chinese 5' units)",
+ "population_scope": "international (non-local, student visa): 'International Students Admissions Scheme'",
+ "twins": null,
+ "twin_mechanism": "not checked (the department site is English; admission.cuhk.edu.hk has /sc/ Chinese pages but could not be opened)",
+ "how_found": "Search on cuhk.edu.hk -> Department of Computer Science and Engineering 'B.Sc. in Computer Science (CSCIN)' admission page; Office of Admissions programme pages /programme/cscin/ and /programme/bcsen/ fail TLS."
+}

@@ -1,0 +1,126 @@
+{
+  "case": "kuleuven",
+  "university": "KU Leuven (Katholieke Universiteit Leuven)",
+  "researched_on": "2026-10-17",
+  "programme": {
+    "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm",
+    "title": "Bachelor in de informatica (Leuven) (Bachelor of Science, 180 sp.)",
+    "teaching_language": "Dutch",
+    "campus": "Leuven (a separate variant starts at Kortrijk/Kulak and continues in Leuven from year 3)",
+    "how_found": "site:kuleuven.be-restricted search for 'Bachelor in de informatica' -> official onderwijsaanbod (course catalogue) page SC_51016742; English-taught list checked in official brochure PDF.",
+    "quote": "Leuven , Kortrijk Academische bachelor 180 studiepunten Nederlands Faculteit Wetenschappen",
+    "date": "2026-10-17",
+    "english_taught_cs_bachelor_exists": false,
+    "english_taught_check": {
+      "url": "https://www.kuleuven.be/brochures/files/PDF/International_programmes_at_KU_Leuven.pdf",
+      "quote": "KU Leuven offers 8 bachelor’s programmes taught in English: → Bachelor of Business Administration → Bachelor of Philosophy → Bachelor of Business Engineering → Bachelor of Theology and Religious Studies → Bachelor of Engineering Technology → Bachelor of Biomedical Sciences",
+      "date": "2026-10-17",
+      "notes": "Full list continues: Bachelor of European Studies, Joint Bachelor in Sustainability. No English-taught computer science/informatics bachelor exists, so the Dutch-taught Bachelor in de informatica is recorded. (Quote whitespace normalised from PDF text extraction; the PDF uses tabs between list items.) Bachelor of Engineering Technology is English-taught but is not a computer-science degree."
+    }
+  },
+  "answers": {
+    "english": {
+      "status": "known",
+      "value": {
+        "dutch_level": "B2",
+        "description": "Dutch-taught programme: Dutch proficiency at CEFR (ERK) B2 is required, proven by 1 year of successful full-time Dutch-medium secondary/higher education or an accepted Dutch-language certificate. No English test requirement is published for this programme."
+      },
+      "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+      "quote": "De minimumvereiste voor Nederlandse taalvaardigheid is B2 van het ERK (Europees referentiekader).",
+      "date": "2026-10-17",
+      "how_found": "Toelatingsvoorwaarden tab of the onderwijsaanbod programme page; page offers 2026-2027 and 2027-2028 tabs with identical text.",
+      "notes": "This is a DUTCH requirement recorded under 'english' as instructed; there is no English-language minimum score because the programme is taught in Dutch. Accepted Dutch certificates are listed at www.kuleuven.be/english/admissions/lang/dutch-proficiency (not read)."
+    },
+    "gpa": {
+      "status": "not_applicable",
+      "value": {
+        "description": "No published minimum grade/average. Non-Flemish diplomas are admitted if sufficiently equivalent to a Flemish secondary diploma and giving access to similar studies in the issuing country (Kazakhstan); additional tests may be requested to establish equivalence. No test thresholds published.",
+        "value": null
+      },
+      "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+      "quote": "kunnen ook toelating krijgen mits hun diploma voldoende overeenstemt met een Vlaams secundair diploma en in het land van behalen toelating geeft tot gelijkaardige studies. Om deze overeenstemming vast te leggen kunnen extra testen worden opgevraagd.",
+      "date": "2026-10-17",
+      "how_found": "Toelatingsvoorwaarden tab, section 'Studenten met een diploma behaald aan een instelling buiten de Vlaamse Gemeenschap'.",
+      "notes": "Admission is decided via an online application to the Admissions Office with required documents; evaluation is diploma-equivalence based, not a GPA cut-off. Whether the NIS grade-12 certificate is accepted is decided case by case (not stated on the page)."
+    },
+    "deadline": {
+      "status": "known",
+      "value": "2027-02-01",
+      "url": "https://www.kuleuven.be/aanvraag-indienen/aanvraaginstructies",
+      "quote": "Voor Nederlandstalige programma's is er een strikte deadline van 1 februari voor niet-EER kandidaten.",
+      "date": "2026-10-17",
+      "how_found": "Programme admission page links to the Dutch application instructions (kuleuven.be/application/instructiesnederlands, redirects to aanvraaginstructies), step 2 'Check de deadline'.",
+      "notes": "Year inferred: the same paragraph refers to the next academic year's registration deadline '(22/09/2027)', and the application-window tool states 'The academic year 2027-2028 starts on 22 September 2027.' so the 1 February deadline is 1 February 2027 for the 2027-2028 intake. Applications for 2027-2028 open 8 October 2026 (official brochure). Non-EEA applicants with a valid Belgian residence permit may apply until 22/09/2027. The application-window tool (JS-based) lists only English-taught programmes."
+    },
+    "tuition": {
+      "status": "known",
+      "value": {
+        "amount": 1181.4,
+        "currency": "EUR",
+        "period": "per academic year (initial invoice based on 60 credits; 305.40 fixed + 14.60 per credit)",
+        "academic_year": "2026-2027",
+        "population": "non-EEA"
+      },
+      "url": "https://www.kuleuven.be/onderwijs/student/studiegelden/tarieven/tarieven26-27",
+      "quote": "Voor niet-EER studenten in een Nederlandstalige opleiding, waarbij de anderstalige equivalente opleiding een verhoogd studiegeld hanteert, geldt ook het verhoogd studiegeld. Bedrag bij inschrijving Bedrag na herberekening: Niet-beurstariefstudent 1181,40 euro",
+      "date": "2026-10-17",
+      "how_found": "English fee pages point to a JS tuition tool (icts.kuleuven.be/apps/tuitionfees) whose embedded data lists only English-taught programmes; Dutch 'Tarieven 2026-2027' page gives the regular diploma-contract tariff and the non-EEA rule.",
+      "notes": "Latest published is 2026-2027; no 2027-2028 tariff page exists yet (tarieven27-28 returns 404; the tool's 2027-2028 entries cover English programmes only). The non-EEA amount is derived: non-EEA students in a Dutch-taught programme pay the increased fee only if an English-taught equivalent has one; there is no English-taught CS bachelor, so the regular non-scholarship tariff (1181,40 euro) should apply. The page also says 'Indien jouw programma niet voorkomt op ons overzicht , dan geldt het reguliere tarief van 1181,40 euro.' Confirm with KU Leuven Student Accounting. Amounts are indexed yearly. Separate EUR 50 Toledo fee mentioned in search snippet, not verified."
+    },
+    "scholarship_exists": {
+      "status": "not_applicable",
+      "value": null,
+      "url": "https://www.kuleuven.be/scholarships/year/2027-2028/general-tuition-fee-waiver",
+      "quote": "According to Flemish legislation, KU Leuven can grant a partial tuition fee waiver to a number of non-EEA students who meet specific requirements relating to their residence status in Belgium.",
+      "date": "2026-10-17",
+      "how_found": "Walked all pages of the official scholarship database (kuleuven.be/scholarships faceted listing, 2026-2027 and 2027-2028 entries).",
+      "notes": "No university-run scholarship found that an applicant applying from abroad to the Dutch-taught Bachelor in de informatica can be considered for. The only KU Leuven-funded bachelor-eligible award covering all programmes (incl. Kazakhstan nationals) is the 'General tuition fee waiver', which requires Belgian residence status (permanent residence, refugee status, family reunification, 12+ months non-study residence, etc.) and only reduces fees to the domestic rate, which this programme already charges. Other bachelor-eligible items are programme-specific (HIW Philosophy, Theology) or externally funded (Women scholarship for international students, funded by Keystone; Bolashak, Kazakh government). Inspiring the Outstanding, Science@Leuven, Master Mind and regional KU Leuven scholarships are master's-level."
+    },
+    "scholarship_international": {
+      "status": "known",
+      "value": false,
+      "url": "https://www.kuleuven.be/scholarships/year/2027-2028/general-tuition-fee-waiver",
+      "quote": "According to Flemish legislation, KU Leuven can grant a partial tuition fee waiver to a number of non-EEA students who meet specific requirements relating to their residence status in Belgium.",
+      "date": "2026-10-17",
+      "how_found": "Same page as scholarship_exists (closest candidate: General tuition fee waiver 2027-2028).",
+      "notes": "Refers to the General tuition fee waiver: open to non-EEA nationalities (Kazakhstan listed) but only with Belgian residence status, so false for an international student applying from abroad. Treat as not_applicable if no scholarship is required to be named."
+    }
+  },
+  "access_notes": [
+    "www.kuleuven.be intermittently resets connections (curl error 35 / proxy tunnel closed); retries succeeded. WebFetch returned HTTP 503 for www.kuleuven.be/opleidingen/nieuwe-opleidingen (not read).",
+    "Application-window and tuition-fee tools (icts.kuleuven.be/apps/tuitionfees) are JavaScript (Vue) apps; their data is embedded in the page HTML as JSON props and was read from there. Both cover only English-taught programmes; Dutch-taught informatica is not listed.",
+    "Scholarship database listing is JS-faceted; results read via the public @@faceted_query endpoint with b_start paging.",
+    "Fees page for 2027-2028 (english/education/student/fees/2027-2028 and Dutch tarieven27-28) returned 404.",
+    "PDF text extracted with PyMuPDF; brochure quote whitespace normalised."
+  ],
+  "pages_read": [
+    "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm",
+    "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+    "https://www.kuleuven.be/brochures/files/PDF/BACHELORSPROGRAMMES_TAUGHT_IN_ENGLISH.pdf (older 2023 brochure, 6 English bachelors)",
+    "https://www.kuleuven.be/brochures/files/PDF/International_programmes_at_KU_Leuven.pdf",
+    "https://icts.kuleuven.be/apps/tuitionfees/application-windows (via www.kuleuven.be/application-windows)",
+    "https://www.kuleuven.be/english/education/student/fees (via www.kuleuven.be/tuitionfees)",
+    "https://www.kuleuven.be/aanvraag-indienen/aanvraaginstructies (via www.kuleuven.be/application/instructiesnederlands)",
+    "https://www.kuleuven.be/english/education/student/fees/2027-2028 (404)",
+    "https://www.kuleuven.be/english/education/student/fees/2026-2027",
+    "https://www.kuleuven.be/english/education/student/fees/tuition-fee-breakdown",
+    "https://www.kuleuven.be/scholarships/year/2026-2027/science-fee-waiver",
+    "https://icts.kuleuven.be/apps/tuitionfees/",
+    "https://icts.kuleuven.be/apps/tuitionfees/js/app.js",
+    "https://www.kuleuven.be/english/education/student/fees/principles.html",
+    "https://www.kuleuven.be/onderwijs/student/studiegelden/tarieven/tarieven26-27",
+    "https://www.kuleuven.be/onderwijs/student/studiegelden/tarieven/tarieven27-28 (404)",
+    "https://www.kuleuven.be/scholarships/year/facetednav (via scholarships/year/2027-2028)",
+    "https://www.kuleuven.be/scholarships/year/2027-2028/general-tuition-fee-waiver",
+    "https://www.kuleuven.be/scholarships/year/facetednav/@@faceted_query (b_start 0,10,20,30,40,50,60)",
+    "https://www.kuleuven.be/scholarships/year/2027-2028/women-scholarship-for-international-students"
+  ],
+  "searches": [
+    "KU Leuven bachelor computer science English-taught site:kuleuven.be",
+    "\"Bachelor in de informatica\" KU Leuven onderwijsaanbod toelatingsvoorwaarden (kuleuven.be)",
+    "KU Leuven English-taught bachelor programmes list \"Bachelor of\" 2027-2028 (kuleuven.be)",
+    "KU Leuven tuition fee non-EEA students bachelor Dutch-taught \"2026-2027\" amount (kuleuven.be)",
+    "KU Leuven studiegeld niet-EER studenten Nederlandstalige opleiding bachelor tarief (kuleuven.be)",
+    "KU Leuven scholarships 2027-2028 \"bachelor\" international students non-EEA scholarship degree type bachelor (kuleuven.be)"
+  ]
+}

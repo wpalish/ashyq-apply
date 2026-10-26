@@ -1,0 +1,982 @@
+{
+  "schema_version": "1",
+  "version": "2026-10-18.dev4-draft1",
+  "split": "development",
+  "cases": [
+    {
+      "id": "ctu",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "Czech Technical University in Prague",
+      "domain": "cvut.cz",
+      "country": "Czechia",
+      "site_types": [],
+      "request": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://fit.cvut.cz/cs/studijni-programy/bakalarske-studium/informatika",
+        "https://fit.cvut.cz/en/study-programs/bachelor-study/informatics"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://fit.cvut.cz/cs/studijni-programy/bakalarske-studium/informatika",
+          "excerpt": "Začínáte v programu Informatika, specializaci volíte až v průběhu studia",
+          "scope": {
+            "university": "Czech Technical University in Prague",
+            "programme": "Bakalářský studijní program Informatika - FIT ČVUT",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://fit.cvut.cz/en/study-programs/bachelor-study/informatics",
+          "excerpt": "You study in the Informatics program and choose your specialization during your studies",
+          "scope": {
+            "university": "Czech Technical University in Prague",
+            "programme": "Informatics - FIT CTU",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://fit.cvut.cz/cs/studijni-programy/bakalarske-studium/informatika",
+              "excerpt": "Začínáte v programu Informatika, specializaci volíte až v průběhu studia",
+              "scope": {
+                "university": "Czech Technical University in Prague",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://fit.cvut.cz/en/study-programs/bachelor-study/informatics",
+              "excerpt": "You study in the Informatics program and choose your specialization during your studies",
+              "scope": {
+                "university": "Czech Technical University in Prague",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatika (FIT's only bachelor programme; specialisations chosen later) = computer science; FEL's 'Otevřená informatika' is another CS-type bachelor (related, not labelled). Degree: Bc. (bakalářský studijní program; h1 of the admission page: 'Bakalářský studijní program Informatika'). Language of instruction: Czech (local page; non-Czech/Slovak applicants prove Czech B2); the EN page is the English-taught version (English proficiency required); quoted: 'Doklad o úspěšně vykonané zkoušce z českého jazyka úrovně nejméně B2 SERR' (https://fit.cvut.cz/bc_prijimaci-rizeni); 'If you are not a native English speaker, this requirement can be satisfied by submiting documents' (https://fit.cvut.cz/en/applicants/admissions-procedure/bachelor-study-program). Twin: no hreflang; language switch 'EN' on the local page. How found: www.cvut.cz -> 'Bakalářské studium' (/akreditovane-bakalarske-studijni-programy-a-obory) -> 'Fakulta informačních technologií (FIT)' (fit.cvut.cz/bc_prijimaci-rizeni) -> nav 'Informatika'. Caveat: EN page lists 6 specialisations vs 10 on the Czech page: it describes the English-taught version of the same programme."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://fit.cvut.cz/en/study-programs/bachelor-study/informatics. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls."
+      },
+      "related_programme_urls": [
+        "https://intranet.fel.cvut.cz/en/education/bk/obory/obor1014257275005.B.B.P.993374192905.html"
+      ]
+    },
+    {
+      "id": "vut",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "Brno University of Technology",
+      "domain": "vut.cz",
+      "country": "Czechia",
+      "site_types": [],
+      "request": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [
+        {
+          "url": "https://www.vut.cz/studenti/programy/program/10326",
+          "excerpt": "Typ studijního programu: bakalářský Kód studijního programu: B0613A140016 Udělovaný titul: Bc. Jazyk výuky: čeština",
+          "scope": {
+            "university": "Brno University of Technology",
+            "programme": "Studijní program - Informační technologie (10326) – VUT",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.vut.cz/en/students/programmes/programme/10326",
+          "excerpt": "Type of study programme: Bachelor's Study programme code: B0613A140016 Degree awarded: Bc. Language of instruction: Czech",
+          "scope": {
+            "university": "Brno University of Technology",
+            "programme": "Study programme - Information Technology (10326) – BUT",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.vut.cz/studenti/programy/program/10326",
+              "excerpt": "Typ studijního programu: bakalářský Kód studijního programu: B0613A140016 Udělovaný titul: Bc. Jazyk výuky: čeština",
+              "scope": {
+                "university": "Brno University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://www.vut.cz/en/students/programmes/programme/10326",
+              "excerpt": "Type of study programme: Bachelor's Study programme code: B0613A140016 Degree awarded: Bc. Language of instruction: Czech",
+              "scope": {
+                "university": "Brno University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: closest official equivalent: BUT has no bachelor titled Informatika/Computer Science; 'Informační technologie' (FIT, education area 'Informatika' 100 %) is FIT's only bachelor. Not one of ticket 19's listed shapes - owner to confirm it counts as the field. Degree: Bc. (bakalářský), academic year 2027/2028 on the page. Language of instruction: Czech (both pages: 'Jazyk výuky: čeština' / 'Language of instruction: Czech'). Twin: no hreflang; language switch 'EN' (same programme id 10326). How found: www.vut.cz -> 'Studijní programy' (/studenti/programy?data[rok]=2027) -> 'Informační technologie (BIT)' -> /studenti/programy/program/10326. Caveat: opaque admission-system URL (numeric id); not in the top-500 seed, so production never reaches it."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://www.vut.cz/en/students/programmes/programme/10326. Owner 2026-10-18: the closest equivalent counts, scored as a related programme (not the exact CS programme)."
+      },
+      "related_programme_urls": [
+        "https://www.vut.cz/studenti/programy/program/10326",
+        "https://www.vut.cz/en/students/programmes/programme/10326"
+      ]
+    },
+    {
+      "id": "rwth",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "RWTH Aachen University",
+      "domain": "rwth-aachen.de",
+      "country": "Germany",
+      "site_types": [],
+      "request": {
+        "university": "RWTH Aachen University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/",
+        "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1",
+        "https://sc.informatik.rwth-aachen.de/en/studium/bachelor/informatik"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/",
+          "excerpt": "Informatik B.Sc. Steckbrief Eckdaten Abschluss Bachelor of Science",
+          "scope": {
+            "university": "RWTH Aachen University",
+            "programme": "Informatik B.Sc. | RWTH Aachen University | DE",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1",
+          "excerpt": "Computer Science B.Sc. Key Info Basic Information Degree Bachelor of Science",
+          "scope": {
+            "university": "RWTH Aachen University",
+            "programme": "Computer Science B.Sc. | RWTH Aachen University | EN",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/",
+              "excerpt": "Informatik B.Sc. Steckbrief Eckdaten Abschluss Bachelor of Science",
+              "scope": {
+                "university": "RWTH Aachen University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1",
+              "excerpt": "Computer Science B.Sc. Key Info Basic Information Degree Bachelor of Science",
+              "scope": {
+                "university": "RWTH Aachen University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatik B.Sc. = Computer Science B.Sc. (the page's own English twin title). Degree: Bachelor of Science (B.Sc.), 6 semesters, winter start. Language of instruction: German and English; quoted: 'Sprache Deutsch und Englisch' (https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/). Twin: hreflang de/en on both pages (en = same path + ?lidx=1). How found: www.rwth-aachen.de -> 'Degree Programs' (/cms/root/studium/Vor-dem-Studium/~efv/Studiengaenge/) -> 'Bachelor's Degree Programs' list -> 'Informatik B.Sc.'; the list link redirects to /go/id/bnzs, the page declares the canonical used here. Caveat: the list link lands on https://www.rwth-aachen.de/go/id/bnzs (short URL); the labelled URLs are the page's declared canonical and its hreflang en."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls."
+      }
+    },
+    {
+      "id": "kit",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "Karlsruhe Institute of Technology",
+      "domain": "kit.edu",
+      "country": "Germany",
+      "site_types": [],
+      "request": {
+        "university": "Karlsruhe Institute of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.sle.kit.edu/vorstudium/bachelor-informatik.php",
+        "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.sle.kit.edu/vorstudium/bachelor-informatik.php",
+          "excerpt": "Informatik Bachelor of Science (B.Sc.) KIT Abschlussart: Bachelor of Science (B.Sc.)",
+          "scope": {
+            "university": "Karlsruhe Institute of Technology",
+            "programme": "KIT - Studiengänge - Informatik Bachelor of Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php",
+          "excerpt": "Informatics Bachelor of Science (B.Sc.) KIT Degree: Bachelor of Science (B.Sc.)",
+          "scope": {
+            "university": "Karlsruhe Institute of Technology",
+            "programme": "KIT - Study programs - Informatics Bachelor of Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.sle.kit.edu/vorstudium/bachelor-informatik.php",
+              "excerpt": "Informatik Bachelor of Science (B.Sc.) KIT Abschlussart: Bachelor of Science (B.Sc.)",
+              "scope": {
+                "university": "Karlsruhe Institute of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php",
+              "excerpt": "Informatics Bachelor of Science (B.Sc.) KIT Degree: Bachelor of Science (B.Sc.)",
+              "scope": {
+                "university": "Karlsruhe Institute of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatik B.Sc. = computer science (English twin: 'Informatics'). Degree: Bachelor of Science (B.Sc.), 6 semesters. Language of instruction: German; quoted: 'Unterrichtssprache: Deutsch' (https://www.sle.kit.edu/vorstudium/bachelor-informatik.php); 'Language of instruction: German' (https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php). Twin: hreflang de-DE/en-US on both pages (also an 'en' switch). How found: www.kit.edu -> 'Studiengänge' (www.sle.kit.edu/vorstudium/studiengaenge.php) -> 'Informatik B.Sc.'. Caveat: programme pages live on the service host sle.kit.edu, not www.kit.edu."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php."
+      }
+    },
+    {
+      "id": "unibo",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "University of Bologna",
+      "domain": "unibo.it",
+      "country": "Italy",
+      "site_types": [],
+      "request": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://corsi.unibo.it/laurea/informatica",
+        "https://corsi.unibo.it/1cycle/ComputerScience"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://corsi.unibo.it/laurea/informatica",
+          "excerpt": "Lingua Italiano Classe di corso L-31 R - SCIENZE E TECNOLOGIE INFORMATICHE",
+          "scope": {
+            "university": "University of Bologna",
+            "programme": "Informatica - Laurea - Bologna",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+          "excerpt": "Language Italian Degree Programme Class L-31 R - Computer Science",
+          "scope": {
+            "university": "University of Bologna",
+            "programme": "Computer Science - Laurea - Bologna",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://corsi.unibo.it/laurea/informatica",
+              "excerpt": "Lingua Italiano Classe di corso L-31 R - SCIENZE E TECNOLOGIE INFORMATICHE",
+              "scope": {
+                "university": "University of Bologna",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+              "excerpt": "Language Italian Degree Programme Class L-31 R - Computer Science",
+              "scope": {
+                "university": "University of Bologna",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatica (L-31) = computer science; 'Ingegneria informatica' is computer engineering (related, not labelled). Degree: Laurea (first cycle, 3 years), class L-31. Language of instruction: Italian. Twin: no hreflang; language switch 'en' on the local page. How found: the www.unibo.it degree list (/it/studiare/lauree-e-lauree-magistrali-a-ciclo-unico) is filled by JavaScript, so it lists no course without it; found by web search (unibo.it only), then confirmed the static path www.unibo.it/it/studiare/lauree-e-lauree-magistrali-a-ciclo-unico/corso/2026/6640 ('Laurea in Informatica') -> 'Sito web del corso'. Caveat: the course sheet on www.unibo.it (/corso/2026/6640, a.a. 2026/27) is a catalogue entry of the same programme, not labelled; no 2027 sheet yet."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://corsi.unibo.it/1cycle/ComputerScience. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls."
+      },
+      "related_programme_urls": [
+        "https://corsi.unibo.it/1cycle/ComputerScienceEngineering"
+      ]
+    },
+    {
+      "id": "taltech",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "Tallinn University of Technology",
+      "domain": "taltech.ee",
+      "country": "Estonia",
+      "site_types": [],
+      "request": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [
+        {
+          "url": "https://taltech.ee/informaatika",
+          "excerpt": "Informaatika ja tehisintellekt (IAIB) Bakalaureuseõpe",
+          "scope": {
+            "university": "Tallinn University of Technology",
+            "programme": "Informaatika ja tehisintellekt | Kõrge ja kindel lend IT maailmas | TalTech",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://taltech.ee/informaatika",
+              "excerpt": "Informaatika ja tehisintellekt (IAIB) Bakalaureuseõpe",
+              "scope": {
+                "university": "Tallinn University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: closest official equivalent: the former 'Informaatika' bachelor (same code IAIB) renamed 'Informaatika ja tehisintellekt' (Informatics and Artificial Intelligence). The '... ja tehisintellekt' tail is not one of ticket 19's listed shapes - owner to confirm it counts as the field, not as related. Degree: bakalaureuseõpe (bachelor), curriculum code IAIB. Language of instruction: Estonian (inferred: the bachelor list marks only English-taught programmes '(õpe toimub inglise keeles)' and IAIB is unmarked; the faculty page requires the thesis in Estonian); quoted: 'NB! Informaatika õppekaval tuleb lõputöö kirjutada eesti keeles.' (https://taltech.ee/infotehnoloogia-teaduskond/bakalaureuseope/informaatika); 'Küberturbe tehnoloogiad (õpe toimub inglise keeles)' (https://taltech.ee/sisseastuja/bakalaureuseoppe-erialad). Twin: none: no hreflang, and the page's 'ENG' switch points back to the same URL. How found: homepage menu is rendered by JavaScript; found by web search (taltech.ee only), then confirmed the static path taltech.ee/sisseastuja/bakalaureuseoppe-erialad -> 'Informaatika ja tehisintellekt'. Caveat: no English twin; not in the top-500 seed, so production never reaches it."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. No twin declared. Owner 2026-10-18: the closest equivalent counts, scored as a related programme (not the exact CS programme)."
+      },
+      "related_programme_urls": [
+        "https://taltech.ee/informaatika"
+      ]
+    },
+    {
+      "id": "ktu",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "Kaunas University of Technology",
+      "domain": "ktu.edu",
+      "country": "Lithuania",
+      "site_types": [],
+      "request": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://stojantiesiems.ktu.edu/programme/b-informatika/",
+        "https://admissions.ktu.edu/programme/b-informatics/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://stojantiesiems.ktu.edu/programme/b-informatika/",
+          "excerpt": "Studijų kalba – anglų kalba, lietuvių kalba Laipsnis – informatikos mokslų bakalauras",
+          "scope": {
+            "university": "Kaunas University of Technology",
+            "programme": "Informatika | Bakalauro studijos | KTU",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://admissions.ktu.edu/programme/b-informatics/",
+          "excerpt": "Language – English, Lithuanian Degree awarded – Bachelor of Computing",
+          "scope": {
+            "university": "Kaunas University of Technology",
+            "programme": "Informatics | BSc | KTU",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://stojantiesiems.ktu.edu/programme/b-informatika/",
+              "excerpt": "Studijų kalba – anglų kalba, lietuvių kalba Laipsnis – informatikos mokslų bakalauras",
+              "scope": {
+                "university": "Kaunas University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://admissions.ktu.edu/programme/b-informatics/",
+              "excerpt": "Language – English, Lithuanian Degree awarded – Bachelor of Computing",
+              "scope": {
+                "university": "Kaunas University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatika = computer science (KTU also has 'Informatikos inžinerija' = informatics engineering, related, not labelled). Degree: informatikos mokslų bakalauras / Bachelor of Computing, 4 years full-time. Language of instruction: English and Lithuanian. Twin: hreflang lt/en on both pages (on two hosts: stojantiesiems.ktu.edu and admissions.ktu.edu). How found: ktu.edu -> 'stojantiesiems' (stojantiesiems.ktu.edu) -> 'bakalauras' (/programmes/b/) -> 'Informatika'. Caveat: the first read of /programmes/b/ from the container was a connection reset, the retry opened; not in the top-500 seed, so production never reaches it."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://admissions.ktu.edu/programme/b-informatics/."
+      }
+    },
+    {
+      "id": "boun",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "Boğaziçi University",
+      "domain": "bogazici.edu.tr",
+      "country": "Türkiye",
+      "site_types": [],
+      "request": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [
+        {
+          "url": "https://cmpe.bogazici.edu.tr/tr/undergraduate/overview/",
+          "excerpt": "Bilgisayar Mühendisliği lisans programı, öğrencilere bilgisayar donanımı, yazılımı ve bilgisayar uygulamaları alanlarında dengeli bir altyapı",
+          "scope": {
+            "university": "Boğaziçi University",
+            "programme": "Genel Bakış – Bilgisayar Mühendisliği",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://cmpe.bogazici.edu.tr/undergraduate/overview/",
+          "excerpt": "The undergraduate program in Computer Engineering is designed so that students have a balanced background in computer hardware, software",
+          "scope": {
+            "university": "Boğaziçi University",
+            "programme": "Overview – Computer Engineering",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://cmpe.bogazici.edu.tr/tr/undergraduate/overview/",
+              "excerpt": "Bilgisayar Mühendisliği lisans programı, öğrencilere bilgisayar donanımı, yazılımı ve bilgisayar uygulamaları alanlarında dengeli bir altyapı",
+              "scope": {
+                "university": "Boğaziçi University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://cmpe.bogazici.edu.tr/undergraduate/overview/",
+              "excerpt": "The undergraduate program in Computer Engineering is designed so that students have a balanced background in computer hardware, software",
+              "scope": {
+                "university": "Boğaziçi University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: closest official equivalent: Boğaziçi has no bachelor titled computer science; Computer Engineering is a related field under tickets 03/19 - owner to decide whether dev4 keeps it as the programme (the heldout Turkish shape) or as related. Degree: lisans (BSc) in Computer Engineering. Language of instruction: English (university-wide); quoted: 'The language of instruction at BU is English.' (https://bogazici.edu.tr/en/pages/the-university/567). Twin: no hreflang; language switch 'EN' / 'TR' on the department site. How found: bogazici.edu.tr -> 'Lisans Programları' (/tr/pages/lisans-programlari/301) -> 'Bilgisayar Mühendisliği Bölümü' (/tr/pages/lisans-programlari/55) -> 'Bölüm Web Sitesi' (cmpe.bogazici.edu.tr/tr) -> 'Genel Bakış'. Caveat: the central catalogue page /tr/pages/lisans-programlari/55 also describes the programme (its EN counterpart /en/pages/lisans-programlari/630 carries Turkish body text); not labelled."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://cmpe.bogazici.edu.tr/undergraduate/overview/. Owner 2026-10-18: the closest equivalent counts, scored as a related programme (not the exact CS programme)."
+      },
+      "related_programme_urls": [
+        "https://cmpe.bogazici.edu.tr/tr/undergraduate/overview/",
+        "https://cmpe.bogazici.edu.tr/undergraduate/overview/"
+      ]
+    },
+    {
+      "id": "itu",
+      "dataset_version": "2026-10-18.dev4-draft1",
+      "university": "Istanbul Technical University",
+      "domain": "itu.edu.tr",
+      "country": "Türkiye",
+      "site_types": [],
+      "request": {
+        "university": "Istanbul Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [
+        {
+          "url": "https://bm.itu.edu.tr/egitim/lisans/bilgisayar-muhendisligi/genel-bilgiler",
+          "excerpt": "İTÜ Bilgisayar Mühendisliği Lisans Programı",
+          "scope": {
+            "university": "Istanbul Technical University",
+            "programme": "Genel Bilgiler",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://bm.itu.edu.tr/en/education/undergraduate/computer-engineering/general-information",
+          "excerpt": "Computer Engineering (100% English) Program Curriculum",
+          "scope": {
+            "university": "Istanbul Technical University",
+            "programme": "General Information",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://bm.itu.edu.tr/egitim/lisans/bilgisayar-muhendisligi/genel-bilgiler",
+              "excerpt": "İTÜ Bilgisayar Mühendisliği Lisans Programı",
+              "scope": {
+                "university": "Istanbul Technical University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://bm.itu.edu.tr/en/education/undergraduate/computer-engineering/general-information",
+              "excerpt": "Computer Engineering (100% English) Program Curriculum",
+              "scope": {
+                "university": "Istanbul Technical University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-18",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme page only (ticket 04 Q2). Equivalence: closest official equivalent: computer engineering (related field under tickets 03/19) - owner to decide, as for Boğaziçi. Degree: lisans (bachelor) in Computer Engineering. Language of instruction: English (the 100 % English programme; the 30 % English one admits no new students since 2017-2018); quoted: 'Bilgisayar Mühendisliği (%100 İngilizce) Ders Planı' (https://bm.itu.edu.tr/egitim/lisans/bilgisayar-muhendisligi/genel-bilgiler). Twin: no hreflang; language switch 'English' / 'Türkçe'. How found: www.itu.edu.tr -> 'Eğitim Programları' (/egitim-programlari) -> Lisans 'Bilgisayar Mühendisliği' (bm.itu.edu.tr) -> 'Lisans Programları' > 'Bilgisayar Mühendisliği' (/egitim/lisans/bilgisayar-muhendisligi, canonical genel-bilgiler). Caveat: robots.txt is 404 on www and bm (treated as allow-all); the Turkish page declares <html lang=en>."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://bm.itu.edu.tr/en/education/undergraduate/computer-engineering/general-information. Owner 2026-10-18: the closest equivalent counts, scored as a related programme (not the exact CS programme)."
+      },
+      "related_programme_urls": [
+        "https://bm.itu.edu.tr/egitim/lisans/bilgisayar-muhendisligi/genel-bilgiler",
+        "https://bm.itu.edu.tr/en/education/undergraduate/computer-engineering/general-information"
+      ]
+    }
+  ]
+}

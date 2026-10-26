@@ -1,0 +1,31 @@
+{
+ "case": "qs2027-044",
+ "note": "kb batch5 qs2027-044.0-related: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word.",
+ "programme": {
+  "url": "https://programmes.polytechnique.edu/en/bachelor/program-details/double-major-in-mathematics-computer-science",
+  "title": "Double major in Mathematics & Computer Science"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "unknown",
+ "programme_urls": [],
+ "related_programme_urls": [
+  "https://programmes.polytechnique.edu/en/bachelor/program-details/double-major-in-mathematics-computer-science",
+  "https://programmes.polytechnique.edu/bachelor/detail-du-programme/double-majeure-mathematiques-informatique",
+  "https://www.ip-paris.fr/en/education/bachelor-science"
+ ],
+ "related_programmes": [
+  "Bachelor of Science, École Polytechnique / IP Paris - double major Mathematics and Computer Science"
+ ],
+ "degree": "Bachelor of Science (3 years, 180 ECTS), double major; year 1 common, majors in years 2-3",
+ "teaching_language": "English",
+ "population_scope": "international (non-EU/EEA fee status)",
+ "twins": [
+  {
+   "lang": "fr",
+   "url": "https://programmes.polytechnique.edu/bachelor/detail-du-programme/double-majeure-mathematiques-informatique"
+  }
+ ],
+ "twin_mechanism": "hreflang fr/en on the page",
+ "how_found": "Web search (discovery only) restricted to ip-paris.fr/polytechnique.edu -> ip-paris.fr Bachelor of Science page -> École Polytechnique bachelor site, Program details. RELATED, not the programme: IP Paris has no bachelor titled Computer Science/Informatics. Its only Bachelor of Science (delivered by École Polytechnique, 3 years, English) leads to one of three double majors; the closest is the joined shape 'Mathematics and Computer Science' -> programme_status unknown per the owner ruling on joined shapes. DOMAIN: kb_top100_list.json has official_domain null for this row. Used: ip-paris.fr (the institute) and polytechnique.edu (École Polytechnique, a founding school of IP Paris that delivers the institute's Bachelor of Science, as ip-paris.fr itself states). Both must be in the checker's official list for this case."
+}

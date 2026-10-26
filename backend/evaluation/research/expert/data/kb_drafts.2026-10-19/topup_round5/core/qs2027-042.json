@@ -1,0 +1,54 @@
+{
+ "case": "qs2027-042",
+ "seed_id": "qs2027-042",
+ "university": "Yonsei University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-042",
+  "round": "topup_round5"
+ },
+ "questions_researched": [
+  "scholarship_exists",
+  "scholarship_international",
+  "deadline"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://cs.yonsei.ac.kr/csai_en/faculty/computerScience.do",
+  "notes": "Programme page as recorded in the merged KB (Computer Science and Engineering, Korean-taught, international track; not re-researched in this top-up)."
+ },
+ "answers": {
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Global Korea Scholarship (GKS)"
+   },
+   "url": "https://www.yonsei.ac.kr/en_sc/2245/subview.do",
+   "quote": "International students have the opportunity to study at Yonsei University through the Global Korea Scholarship (GKS), a scholarship program funded by the Korean government and administered by the National Institute for International Education (NIIED) under the Ministry of Education. GKS scholars may pursue undergraduate or graduate studies at Yonsei University",
+   "page_language": "en",
+   "notes": "Government-funded (NIIED), not a Yonsei-funded award; it is the only award on Yonsei's scholarship overview that the page ties to the regular (Korean-taught) undergraduate degree route. Same page: 'Financial aid includes tuition, monthly living stipend, medical insurance, and airfare' and GKS scholars 'may be required to complete a Korean language training program before beginning their degree studies'. Separate NIIED application; country quotas, cycle and deadline are not on this page (no year printed). The page's college-specific awards (Underwood International College, Global Leaders College) are for other colleges, not CS; for the regular undergraduate programme it says only 'Korean proficiency is required'.",
+   "date": "2026-10-19"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://www.yonsei.ac.kr/en_sc/2245/subview.do",
+   "quote": "International students have the opportunity to study at Yonsei University through the Global Korea Scholarship (GKS), a scholarship program funded by the Korean government and administered by the National Institute for International Education (NIIED) under the Ministry of Education. GKS scholars may pursue undergraduate or graduate studies at Yonsei University",
+   "page_language": "en",
+   "notes": "The page names international students as the eligible group. Nationality quotas (set by NIIED) are not stated on this page.",
+   "date": "2026-10-19"
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Not filled. The 2027 academic-year guide (https://www2.yonsei.ac.kr/entrance/2027/intl/2027_3_docu/2027_3_intl_plan_eng.pdf, readable on 2026-10-19) is for Spring (March 2027) entry: 'Online Application 2026. 9. 1.(Tue) 10:00 ~ 9. 17.(Thu) 17:00' (KST), already past and already recorded by the base draft. No Fall (September) 2027 guide is published: the successor URL .../2027/intl/2027_9_docu/2027_9_intl_plan_eng.pdf answers 404, and none was found by search (the Fall 2026 round ran in March 2026)."
+  }
+ },
+ "questions_not_researched": [
+  "english",
+  "gpa"
+ ]
+}

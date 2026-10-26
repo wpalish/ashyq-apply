@@ -1,0 +1,31 @@
+{
+ "case": "qs2027-095",
+ "seed_id": "qs2027-095",
+ "university": "The University of Osaka",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-095",
+  "round": "topup_round7"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.es.osaka-u.ac.jp/en/faculty-research/school-of-engineering-science/department-of-information-and-computer-sciences/index.html",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Not readable. Japanese-taught; the privately-funded special screening is for April 2027 admission. The FAQ (https://www.osaka-u.ac.jp/ja/admissions/faculty/expense/files/2027tokubetsunyushi_faq.pdf/@@download/file) says some faculties set a TOEFL score as an application condition ('学部によっては、大阪大学に出願する条件としての基準点があります') and refers to the guidelines. The AY2027 guidelines PDF (.../expense/files/2027shihi_guideline.pdf/@@download/file) is 5,341,139 bytes, over the Fetcher's 5 MB limit (too_large); the 令和9年度 入学者選抜要項 PDF reads but its text layer is font-garbled. No threshold for Engineering Science was read.",
+   "date": "2026-10-20"
+  }
+ }
+}

@@ -1,0 +1,52 @@
+{
+ "case": "qs2027-091",
+ "seed_id": "qs2027-091",
+ "university": "University of Copenhagen",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-091",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Applicants with foreign or international examinations to bachelor programmes (all taught in Danish)",
+   "academic_year": null,
+   "notes": "University of Copenhagen bachelor admission pages; applications through optagelse.dk by 15 March 12:00, admission requirements fulfilled by 5 July 12:00 (the checklist names 'if you graduate in 2026', an application-cycle label). All bachelor programmes are taught in Danish. Not drafted (no vocabulary kind): documentation of Danish language qualifications (Studieprøven i dansk som andetsprog or Dansk A), documentation of supplementary courses, taught hours per subject (if necessary), residence permit (non-EU/EEA citizens), power of attorney, school letter for certificates issued after 5 July.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.ku.dk/studies/admission/bachelor",
+     "quote": "you must start filling in the application form and uploading all your documents in due time before the deadline."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "cycle_stated": "if you graduate in 2026",
+     "cycle_is_intake": false,
+     "url": "https://www.ku.dk/studies/admission/bachelor",
+     "quote": "a copy of your original Diploma and a transcript of records (all the courses that you have had at school) issued by the school"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+     "quote": "Please include information and transcripts of levels obtained in the relevant subjects (for example A/O level, AP-level)."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.ku.dk/studies/admission/bachelor",
+     "quote": "If the documents are not in one of the major European languages or in Norwegian or Swedish, they must be accompanied, not substituted, by officially translated and certified copies.",
+     "condition": "documents not in a major European language, Norwegian or Swedish"
+    }
+   ]
+  }
+ }
+}

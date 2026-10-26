@@ -1,0 +1,82 @@
+{
+  "case": "qs2027-059",
+  "seed_id": "qs2027-059",
+  "university": "KU Leuven",
+  "researched_on": "2026-10-20",
+  "topup_of": {
+    "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+    "source_case": "qs2027-059",
+    "round": "topup_round8"
+  },
+  "questions_researched": [
+    "tuition",
+    "scholarship_exists",
+    "scholarship_international",
+    "documents"
+  ],
+  "questions_already_known_not_researched": [
+    "english",
+    "gpa",
+    "deadline"
+  ],
+  "programme": {
+    "title": null,
+    "page_url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm",
+    "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+  },
+  "answers": {
+    "documents": {
+      "status": "known",
+      "population": "Applicants for a Bachelor's programme at KU Leuven (university-wide 'Requested documents' list, section 'I want to apply for a Bachelor's programme'); the CS bachelor (Bachelor in de informatica) is Dutch-taught",
+      "academic_year": null,
+      "notes": "kuleuven.be 'Requested documents' page (and, for the English item, the 'Language requirements' page), read on the GitHub Actions runner with the production Fetcher on 2026-10-20 (mode=read_pages). No academic year or cycle is printed on either page. The Bachelor's section says 'It is not possible to submit your online application without the following core documents' and lists: diploma and transcripts of secondary education, translation, English Proficiency Certificate, the identity page of the passport, motivation letter (recommended length one A4 page), CV and proof of payment of the application fee; then 'Additional documents' (programme-specific documents, a grading table, SAT/ACT/AP Calculus/SOWISO OMPT results if the programme requires one). Only the diploma/transcript and translation sentences are unique to the Bachelor's section; the passport, motivation-letter and CV lines are worded identically in the Master's and other sections. Not drafted (no vocabulary kind): proof of payment of the EUR 120 application fee (https://www.kuleuven.be/english/apply/requested-documents/application-fee), the grading table, the official AP certificate (for a high school diploma including AP courses), programme-specific additional documents, a Belgian residence permit scan. Successful applicants must present their original diploma(s) to the Admissions Office prior to enrolment; mainland Chinese citizens need no APS certificate at application. CONFLICT FOR REVIEW: the merged KB holds english not_applicable for this programme (Dutch-taught; Dutch B2 required, onderwijsaanbod toelatingsvoorwaarden page), while this list names an English Proficiency Certificate as a core document for every Bachelor's applicant and the Language requirements page requires one of its tests from all applicants without an English-taught diploma from the listed countries. Both are reported; the item is drafted as conditional with that page's condition. No Dutch proficiency certificate is named on these pages for this route (the Language requirements page only says KU Leuven accepts the listed certificates as proof of Dutch proficiency, minimum B2), and it has no vocabulary kind. Main session 2026-10-20: the English test item was dropped — the KB records English as not applicable for this Dutch-taught bachelor (Dutch B2 required); the general international page's English certificate is for English-taught programmes.",
+      "date": "2026-10-20",
+      "items": [
+        {
+          "kind": "secondary_diploma",
+          "requirement": "required",
+          "url": "https://www.kuleuven.be/english/apply/requested-documents",
+          "quote": "Diploma and transcripts of academic records of your secondary education If you still need to graduate at the time of your application, you can upload your official intermediate transcripts."
+        },
+        {
+          "kind": "transcript",
+          "requirement": "required",
+          "url": "https://www.kuleuven.be/english/apply/requested-documents",
+          "quote": "Diploma and transcripts of academic records of your secondary education"
+        },
+        {
+          "kind": "translation",
+          "requirement": "conditional",
+          "condition": "documents not officially issued in English, Dutch, French, German, Spanish, Italian, Portuguese, Bulgarian, Polish, or Ukrainian (translation into English, Dutch, French or German, by the institution or a sworn translator)",
+          "url": "https://www.kuleuven.be/english/apply/requested-documents",
+          "quote": "If your documents were not officially issued in English, Dutch, French, German, Spanish, Italian, Portuguese, Bulgarian, Polish, or Ukrainian, you must provide a translation into English, Dutch, French, or German, either issued by your institution or by a sworn translator."
+        },
+        {
+          "kind": "passport",
+          "requirement": "required",
+          "url": "https://www.kuleuven.be/english/apply/requested-documents",
+          "quote": "The identity page of your passport If you do not have a passport, your national ID card will also suffice (front and back side)."
+        },
+        {
+          "kind": "motivation_letter",
+          "requirement": "required",
+          "url": "https://www.kuleuven.be/english/apply/requested-documents",
+          "quote": "Motivation letter (recommended length: one A4-page)"
+        },
+        {
+          "kind": "cv",
+          "requirement": "required",
+          "url": "https://www.kuleuven.be/english/apply/requested-documents",
+          "quote": "Curriculum Vitae (CV) Proof of payment of the application fee"
+        },
+        {
+          "kind": "entrance_test",
+          "requirement": "conditional",
+          "condition": "if the programme applied for requires one of these tests",
+          "url": "https://www.kuleuven.be/english/apply/requested-documents",
+          "quote": "SAT, ACT, AP Calculus or SOWISO OMPT test results If the programme you are applying for requires one of these tests, please upload your official score report"
+        }
+      ]
+    }
+  }
+}

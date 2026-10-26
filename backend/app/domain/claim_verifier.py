@@ -166,11 +166,20 @@ def _money_check(value: object, today: date) -> bool:
     return cast("dict[str, float]", value)["amount"] > 0
 
 
+#: An ISO deadline further in the past than this belongs to an old cycle. PUC's
+#: exchange-students calendar gave 2024-10-01 for a fall-2027 request.
+_STALE_DEADLINE_DAYS: Final = 365
+
+
 def _deadline_check(value: object, today: date) -> bool:
-    """ISO date format only, or a bare year that is not already past."""
+    """ISO date format only, not more than a year past, or a bare year that is
+    not already past."""
     text = cast("str", value)
     if _ISO_DATE.fullmatch(text):
-        return True
+        try:
+            return (today - date.fromisoformat(text)).days <= _STALE_DEADLINE_DAYS
+        except ValueError:
+            return False
     if _BARE_YEAR.fullmatch(text):
         return int(text) >= today.year
     return False

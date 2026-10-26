@@ -1,0 +1,56 @@
+{
+ "case": "qs2027-041",
+ "seed_id": "qs2027-041",
+ "university": "The University of Queensland",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-041",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International students whose senior schooling is from outside Australia, applying directly to UQ for undergraduate programs (including the Bachelor of Computer Science)",
+   "academic_year": null,
+   "notes": "UQ 'Submit your application' page (undergraduate admissions), the section 'Your senior schooling is from outside Australia' (Steps 1-4 of a direct application). The page also shows the QTAC dates for Semester 1, 2027 for applicants completing Australian Year 12 or IB in Australia; the document list itself prints no year. Applicants from certain countries must apply through an agent. A$150 application fee. Transcripts must be certified copies (by an approved UQ agent or other appropriate parties). Not drafted: a letter of enrolment as interim evidence when studies are not complete. Round 2's guessed URL (study.uq.edu.au/admissions/undergraduate/international) answers HTTP 403; this page on the same host is readable.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+     "quote": "Step 3: Complete your application Complete all details on the application form and include all required documents."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+     "quote": "You will need to provide: evidence of your previous study, such as certified copies of complete academic transcripts and/or testamurs for any non-UQ studies"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+     "quote": "a copy of your passport or national ID card"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+     "quote": "a copy of your passport or national ID card evidence that you meet our English language requirements"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "conditional",
+     "url": "https://study.uq.edu.au/admissions/undergraduate/submit-your-application",
+     "quote": "If you have completed your studies and the transcript does not state your degree or diploma and the date it was awarded, you must also provide an award certificate or testamur.",
+     "condition": "studies completed and the transcript does not state the degree or diploma and the date it was awarded"
+    }
+   ]
+  }
+ }
+}

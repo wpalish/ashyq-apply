@@ -564,12 +564,17 @@ def test_live_provider_selection_reaches_child_and_capture(tmp_path, monkeypatch
             "_validate_search",
             lambda self: pytest.fail("implicit provider must not add a new validation gate"),
         )
+    expected = override or "serper"
+    capped = expected not in {"none", "fake"}
+    if capped:
+        # Free-search ticket 02: a provider that sends queries needs the run's cap.
+        command.extend(["--max-search-queries", "6"])
     monkeypatch.setattr(sys, "argv", command)
     monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
-    expected = override or "serper"
 
     def child(command, **kwargs):
         assert kwargs["env"]["UNIMATCH_SEARCH_PROVIDER"] == expected
+        assert ("--max-search-queries" in command) == capped
         assert ("--search-provider" in command) == bool(override)
         if override:
             assert command[command.index("--search-provider") + 1] == expected
@@ -642,7 +647,8 @@ def test_live_child_provider_override_replaces_cached_settings(tmp_path, monkeyp
     assert get_settings().search_provider == "serper"
     calls = []
 
-    async def capture(case_id, output, max_pages, seconds):
+    async def capture(case_id, output, max_pages, seconds, *, search_ledger):
+        assert search_ledger.cap == 6
         calls.append(case_id)
         assert Settings().search_provider == "tavily"
         assert get_settings().search_provider == "tavily"
@@ -661,6 +667,10 @@ def test_live_child_provider_override_replaces_cached_settings(tmp_path, monkeyp
             str(tmp_path),
             "--search-provider",
             "tavily",
+            "--max-search-queries",
+            "6",
+            "--search-ledger",
+            str(tmp_path / "search_ledger.json"),
         ],
     )
     try:
@@ -701,6 +711,9 @@ def test_live_provider_choices_follow_factory_allowlist(tmp_path, monkeypatch):
             str(tmp_path),
             "--search-provider",
             provider,
+            # A provider the harness has never seen is capped like any other.
+            "--max-search-queries",
+            "6",
         ],
     )
     monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
@@ -741,6 +754,297 @@ async def test_capture_reads_canary_output_without_loading_ground_truth(tmp_path
     assert canary.CanaryRunner is original
 
 
+def test_live_accepts_a_dev2_case_and_passes_it_to_the_child(tmp_path, monkeypatch):
+    """Rule 0: a university with no registry entry can be captured."""
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ethz", "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    started = []
+
+    def child(command, **kwargs):
+        started.append(command[command.index("--case") + 1])
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="ethz").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    assert started == ["ethz"]
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    assert [o.case_id for o in capture.observations] == ["ethz"]
+
+
+def test_every_dev2_case_has_a_seed_row_and_an_official_domain():
+    import json
+
+    from app.adapters.discovery.live_discovery import REGISTRY_PATH, registrable_domain
+    from evaluation.research import live
+
+    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry_hosts = {registrable_domain(entry["homepage"]) for entry in registry}
+    assert set(live.DEV2) == set(live.DEV2_DOMAINS)
+    assert not set(live.DEV2) & (set(live.COHORT) | set(live.HELDOUT))
+    for case_id, domain in live.DEV2_DOMAINS.items():
+        assert live.CASE_DOMAINS[case_id] == domain
+        entry = live.dev2_entry(case_id)
+        assert set(entry) == {"name", "country", "city", "homepage"}
+        assert entry["homepage"] in {f"https://www.{domain}/", f"https://{domain}/"}
+        assert domain not in registry_hosts
+    assert live.dev2_entry("khalifa")["homepage"] == "https://www.ku.ac.ae/"
+
+
+def test_every_dev4_case_has_an_identity_and_shares_no_domain_with_the_heldout_nine():
+    import json
+
+    from app.adapters.discovery.live_discovery import REGISTRY_PATH, registrable_domain
+    from app.catalogue.importer import SEED_PATH
+    from evaluation.research import live
+
+    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry_hosts = {registrable_domain(entry["homepage"]) for entry in registry}
+    seed_names = {
+        row["name"] for row in json.loads(SEED_PATH.read_text(encoding="utf-8"))["universities"]
+    }
+    assert set(live.DEV4_DOMAINS) == set(live.DEV4_SEEDS) | set(live.DEV4_OFF_SEED)
+    assert not set(live.DEV4_SEEDS) & set(live.DEV4_OFF_SEED)
+    assert not set(live.DEV4_DOMAINS) & (set(live.COHORT) | set(live.HELDOUT) | set(live.DEV2))
+    # Ticket 04 Q4: no registrable domain in common with any heldout university.
+    assert not set(live.DEV4_DOMAINS.values()) & set(live.HELDOUT.values())
+    for case_id, domain in live.DEV4_DOMAINS.items():
+        assert live.CASE_DOMAINS[case_id] == domain
+        entry = live.dev2_entry(case_id)
+        assert set(entry) == {"name", "country", "city", "homepage"}
+        assert entry["homepage"] in {f"https://www.{domain}/", f"https://{domain}/"}
+        assert registrable_domain(entry["homepage"]) == domain
+        assert domain not in registry_hosts
+    for case_id, (name, _, _) in live.DEV4_OFF_SEED.items():
+        assert name not in seed_names, case_id
+    assert live.dev2_entry("vut") == {
+        "name": "Brno University of Technology",
+        "country": "Czechia",
+        "city": "Brno",
+        "homepage": "https://www.vut.cz/",
+    }
+
+
+def test_an_off_seed_dev4_university_gets_a_row_only_in_the_canary_database():
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    from app.catalogue.importer import identity_key, import_catalogue, stable_id
+    from app.models.base import Base
+    from app.models.university import University
+    from evaluation.research import live
+    from scripts import canary_discovery as canary
+
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    import_catalogue(session)
+    entry = live.dev2_entry("taltech")
+    with pytest.raises(SystemExit):
+        canary._install_identified_sites(session, [entry])
+    session.rollback()
+    import_catalogue(session)
+    install = live.with_off_seed_rows(canary._install_identified_sites)
+    install(session, [entry, live.dev2_entry("ctu")])
+    uni = session.get(University, stable_id(identity_key(entry["name"], entry["country"])))
+    assert uni is not None and uni.registry_entry == entry and uni.domain == "taltech.ee"
+    # A name the canary cannot match is still refused for every other entry.
+    with pytest.raises(SystemExit):
+        install(session, [{**live.dev2_entry("ctu"), "name": "Not A University"}])
+
+
+def test_live_accepts_a_dev4_case(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ktu", "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    started = []
+
+    def child(command, **kwargs):
+        started.append(command[command.index("--case") + 1])
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="ktu").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    assert started == ["ktu"]
+
+
+def test_every_dev5_case_has_an_identity_and_shares_no_domain_with_the_heldout_nine():
+    import json
+
+    from app.adapters.discovery.live_discovery import REGISTRY_PATH, registrable_domain
+    from app.catalogue.importer import SEED_PATH
+    from evaluation.research import live
+
+    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry_hosts = {registrable_domain(entry["homepage"]) for entry in registry}
+    seed = json.loads(SEED_PATH.read_text(encoding="utf-8"))["universities"]
+    seed_names = {row["name"] for row in seed}
+    assert set(live.DEV5_DOMAINS) == set(live.DEV5_SEEDS) | set(live.DEV5_OFF_SEED)
+    assert not set(live.DEV5_SEEDS) & set(live.DEV5_OFF_SEED)
+    assert not set(live.DEV5_DOMAINS) & (
+        set(live.COHORT) | set(live.HELDOUT) | set(live.DEV2) | set(live.DEV4_DOMAINS)
+    )
+    assert not set(live.DEV5_DOMAINS.values()) & set(live.HELDOUT.values())
+    assert set(live.DEV5_DOMAINS) <= live.NO_REGISTRY_CASES
+    for case_id, domain in live.DEV5_DOMAINS.items():
+        assert live.CASE_DOMAINS[case_id] == domain
+        entry = live.dev2_entry(case_id)
+        assert set(entry) == {"name", "country", "city", "homepage"}
+        assert entry["homepage"] in {f"https://www.{domain}/", f"https://{domain}/"}
+        assert registrable_domain(entry["homepage"]) == domain
+        assert domain not in registry_hosts
+    for case_id, (name, _, _) in live.DEV5_OFF_SEED.items():
+        assert name not in seed_names, case_id
+    seed_ids = {row.get("seed_id") for row in seed}
+    assert set(live.DEV5_SEEDS.values()) <= seed_ids
+    assert live.dev2_entry("tud")["homepage"] == "https://tu-dresden.de/"
+    assert live.dev2_entry("upol") == {
+        "name": "Palacký University Olomouc",
+        "country": "Czechia",
+        "city": "Olomouc",
+        "homepage": "https://www.upol.cz/",
+    }
+
+
+def test_an_off_seed_dev5_university_gets_a_row_only_in_the_canary_database():
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    from app.catalogue.importer import identity_key, import_catalogue, stable_id
+    from app.models.base import Base
+    from app.models.university import University
+    from evaluation.research import live
+    from scripts import canary_discovery as canary
+
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    import_catalogue(session)
+    install = live.with_off_seed_rows(canary._install_identified_sites)
+    entries = [live.dev2_entry("aitu"), live.dev2_entry("lmu")]
+    install(session, entries)
+    uni = session.get(
+        University, stable_id(identity_key(entries[0]["name"], entries[0]["country"]))
+    )
+    assert uni is not None and uni.domain == "astanait.edu.kz"
+
+
+@pytest.mark.parametrize(
+    "case_id",
+    "kbtu satbayev aitu hacettepe bilkent ytu upol zcu tud lmu unipd sapienza vilniustech".split(),
+)
+def test_live_accepts_a_dev5_case(tmp_path, monkeypatch, case_id):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", case_id, "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    started = []
+
+    def child(command, **kwargs):
+        started.append(command[command.index("--case") + 1])
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id=case_id).model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    assert started == [case_id]
+
+
+def test_the_dev4_draft_labels_the_programme_page_and_nothing_else():
+    from app.adapters.discovery.live_discovery import registrable_domain
+    from evaluation.research import live
+    from evaluation.research.identities import IdentityMap
+
+    data = Path(live.__file__).parent / "data"
+    dev4 = Dataset.model_validate_json((data / "dev4.draft1.json").read_text(encoding="utf-8"))
+    assert dev4.version == "2026-10-18.dev4-draft1" and dev4.split == "development"
+    assert {case.id for case in dev4.cases} == set(live.DEV4_DOMAINS)
+    for case in dev4.cases:
+        assert case.domain == live.DEV4_DOMAINS[case.id]
+        assert case.review.status == "draft"
+        assert [label.key for label in case.labels] == ["programme.exists"]
+        # Owner 2026-10-18: vut, taltech, boun, itu are the closest equivalents,
+        # scored as a related programme (their pages are related_programme_urls).
+        if case.id in {"vut", "taltech", "boun", "itu"}:
+            assert case.programme_status == "unknown" and not case.programme_urls
+            assert 1 <= len(case.related_programme_urls) <= 2
+        else:
+            # Up to 3: local page, its twin, and (owner 2026-10-18) a department-site page.
+            assert case.programme_status == "known" and 1 <= len(case.programme_urls) <= 3
+        for url in [
+            *case.programme_urls,
+            *case.related_programme_urls,
+            *(e.url for e in case.programme_evidence),
+        ]:
+            assert registrable_domain(str(url)) == case.domain
+            assert registrable_domain(str(url)) not in set(live.HELDOUT.values())
+    bindings = IdentityMap.model_validate_json(
+        (data / "identity_bindings.dev4-draft1.json").read_text(encoding="utf-8")
+    )
+    assert bindings.version == dev4.version and bindings.bindings == []
+
+
+@pytest.mark.asyncio
+async def test_a_dev2_capture_hands_the_canary_a_homepage_not_a_selector(tmp_path, monkeypatch):
+    from evaluation.research.live import capture_one
+    from scripts import canary_discovery as canary
+
+    calls = []
+
+    async def fake_canary(selector, verbose, batch=None, *, entries=None):
+        calls.append((selector, batch, entries))
+        return {"institutions": [{"programs": []}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    await capture_one("ethz", tmp_path / "ethz.json", 4)
+    await capture_one("khalifa", tmp_path / "khalifa.json", 4)
+    assert calls == [
+        (
+            None,
+            None,
+            [
+                {
+                    "name": "ETH Zurich",
+                    "country": "Switzerland",
+                    "city": "Zurich",
+                    "homepage": "https://ethz.ch/",
+                }
+            ],
+        ),
+        (
+            None,
+            None,
+            [
+                {
+                    "name": "Khalifa University",
+                    "country": "United Arab Emirates",
+                    "city": "Abu Dhabi",
+                    "homepage": "https://www.ku.ac.ae/",
+                }
+            ],
+        ),
+    ]
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize("provider_name", ["exa", "exa_mcp"])
 async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(
@@ -775,6 +1079,84 @@ async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(
     assert observation.telemetry.search_calls == 2
     assert wrapped[0] is not quiet_search
     assert provider_class.search is quiet_search
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("provider_name", ["serper", "recorded"])
+async def test_capture_counts_localized_searches_against_the_query_budget(
+    tmp_path, monkeypatch, provider_name
+):
+    """R5's local-language family reaches Serper and the recorded replay through
+    ``search_localized``, which calls the provider's private request path, not
+    ``search``. Wrapping ``search`` alone reported every such case one query
+    short of what it sent, against the 6-query budget."""
+    from datetime import UTC, datetime
+
+    from app.adapters.search.base import SearchResponse
+    from app.adapters.search.recorded import RecordedSearchProvider, RecordedSearchStore
+    from app.adapters.search.serper import SerperSearchProvider
+    from evaluation.research.live import capture_one
+    from evaluation.research.schema import Observation
+    from scripts import canary_discovery as canary
+
+    if provider_name == "serper":
+
+        async def no_wire(self, *, query, **kwargs):
+            # Offline: the adapter's own request path answers nothing.
+            return SearchResponse(query=query, provider="serper", retrieved_at=datetime.now(UTC))
+
+        monkeypatch.setattr(SerperSearchProvider, "_search", no_wire)
+        provider = SerperSearchProvider("test-key-not-real")
+        provider_class = SerperSearchProvider
+    else:
+        provider = RecordedSearchProvider(RecordedSearchStore(entries={}))
+        provider_class = RecordedSearchProvider
+    original_search = provider_class.search
+    original_localized = provider_class.search_localized
+
+    async def fake_canary(selector, verbose):
+        await provider.search(query="computer science bachelor", domains=["rug.nl"])
+        await provider.search(query="admissions", domains=["rug.nl"])
+        await provider.search_localized(
+            query="informatica bachelor site:rug.nl", hl="nl", gl="nl", domains=()
+        )
+        return {"institutions": [{"programs": []}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    output = tmp_path / "observation.json"
+    await capture_one("groningen", output, 4)
+
+    observation = Observation.model_validate_json(output.read_text())
+    assert observation.telemetry.search_calls == 3
+    assert observation.telemetry.search_localized_calls == 1
+    assert provider_class.search is original_search
+    assert provider_class.search_localized is original_localized
+
+
+@pytest.mark.asyncio
+async def test_capture_without_a_localized_search_keeps_its_bytes(tmp_path, monkeypatch):
+    """``search_localized_calls`` is omitted, not written as 0, when none was sent."""
+    import json
+
+    from app.adapters.search.exa import ExaSearchProvider
+    from evaluation.research.live import capture_one
+    from scripts import canary_discovery as canary
+
+    async def quiet_search(provider, *args, **kwargs):
+        return []
+
+    monkeypatch.setattr(ExaSearchProvider, "search", quiet_search)
+
+    async def fake_canary(selector, verbose):
+        await ExaSearchProvider.search(None, query="computer science")
+        return {"institutions": [{"programs": []}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    output = tmp_path / "observation.json"
+    await capture_one("groningen", output, 4)
+    telemetry = json.loads(output.read_text())["telemetry"]
+    assert telemetry["search_calls"] == 1
+    assert "search_localized_calls" not in telemetry
 
 
 class TestWhichWayAQuoteSupports:
@@ -902,3 +1284,178 @@ def test_a_leading_the_is_not_part_of_a_university_name():
 
     assert dimension_matches("university", "University of Hong Kong", "The University of Hong Kong")
     assert not dimension_matches("university", "University of Hong Kong", "Hong Kong University")
+
+
+NTU_GLOBAL = (
+    "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/"
+    "scholarship-opportunities/detail/nanyang-scholarship"
+)
+
+
+def _extra_bindings_file(tmp_path, bindings):
+    import json
+
+    path = tmp_path / "identity_bindings.extra.json"
+    path.write_text(json.dumps({"version": "test-extra", "bindings": bindings}), encoding="utf-8")
+    return path
+
+
+def test_extra_bindings_merge_after_the_reviewed_ones_and_never_override_them(tmp_path):
+    """M-1: a draft binding file adds identities; a reviewed binding wins a clash."""
+    from evaluation.research.live import load_identities
+    from evaluation.research.mapping import normalize_subject_claims
+
+    extra = _extra_bindings_file(
+        tmp_path,
+        [
+            {
+                "kind": "award",
+                "source_url": "https://ethz.ch/en/studies/financial/scholarships/excellence.html",
+                "subject": "Excellence Scholarship & Opportunity Programme",
+                "key": "scholarships.ethz_esop",
+                "notes": "synthetic draft binding",
+            },
+            {
+                # Same (kind, source_url, subject) as a reviewed binding, other key.
+                "kind": "award",
+                "source_url": NTU_GLOBAL,
+                "subject": "Nanyang Global Scholarship",
+                "key": "scholarships.hijacked",
+                "notes": "synthetic clash",
+            },
+        ],
+    )
+    reviewed = load_identities()
+    merged = load_identities([extra])
+    assert len(merged.bindings) == len(reviewed.bindings) + 1
+    assert merged.version.endswith("+test-extra")
+
+    def key(identities, url, subject):
+        raw = {
+            "claim_type": "scholarship_exists",
+            "normalized_value": subject,
+            "subject_key": subject,
+            "source_url": url,
+        }
+        [(mapped, _, _, _)] = normalize_subject_claims("scholarship_exists", raw, identities)
+        return mapped
+
+    eth = ("https://ethz.ch/en/studies/financial/scholarships/excellence.html",)
+    eth_subject = "Excellence Scholarship & Opportunity Programme"
+    assert key(reviewed, *eth, eth_subject).startswith("unmapped.")
+    assert key(merged, *eth, eth_subject) == "scholarships.ethz_esop.exists"
+    assert (
+        key(merged, NTU_GLOBAL, "Nanyang Global Scholarship")
+        == "scholarships.nanyang_global.exists"
+    )
+
+
+def test_the_shipped_draft_binding_files_merge_cleanly():
+    from evaluation.research.live import REVIEWED_BINDINGS, load_identities
+
+    data = REVIEWED_BINDINGS.parent
+    merged = load_identities(
+        [data / "identity_bindings.draft2.json", data / "identity_bindings.dev2-draft1.json"]
+    )
+    assert len(merged.bindings) > len(load_identities().bindings)
+
+
+def test_extra_bindings_reach_the_child_and_the_capture_config(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    extra = _extra_bindings_file(tmp_path, [])
+    second = tmp_path / "second.json"
+    second.write_text(extra.read_text(encoding="utf-8"), encoding="utf-8")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "live",
+            "--live",
+            "--case",
+            "groningen",
+            "--out",
+            str(tmp_path / "out"),
+            "--extra-bindings",
+            str(extra),
+            "--extra-bindings",
+            str(second),
+        ],
+    )
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    commands = []
+
+    def child(command, **kwargs):
+        commands.append(command)
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="groningen").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    [command] = commands
+    passed = [command[i + 1] for i, value in enumerate(command) if value == "--extra-bindings"]
+    assert passed == [str(extra), str(second)]
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    assert capture.config["identity_bindings"] == [
+        "evaluation/research/data/identity_bindings.reviewed.json",
+        str(extra),
+        str(second),
+    ]
+
+
+def test_the_child_maps_with_the_extra_bindings(tmp_path, monkeypatch):
+    import sys
+
+    from evaluation.research import live
+
+    extra = _extra_bindings_file(tmp_path, [])
+    received = []
+
+    async def capture(case_id, output, max_pages, seconds, **kwargs):
+        received.append(kwargs.get("extra_bindings"))
+
+    monkeypatch.setattr(live, "capture_one", capture)
+    monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "none")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "live",
+            "--live",
+            "--child",
+            "--case",
+            "groningen",
+            "--out",
+            str(tmp_path / "o.json"),
+            "--extra-bindings",
+            str(extra),
+        ],
+    )
+    live.main()
+    assert received == [[extra]]
+
+
+def test_a_missing_extra_bindings_file_fails_before_capture(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            *("live", "--live", "--case", "groningen", "--out", str(tmp_path)),
+            *("--extra-bindings", str(tmp_path / "missing.json")),
+        ],
+    )
+    monkeypatch.setattr(
+        subprocess, "run", lambda *args, **kwargs: pytest.fail("must not start capture")
+    )
+    with pytest.raises(SystemExit):
+        live.main()

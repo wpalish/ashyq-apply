@@ -92,6 +92,77 @@ class TestMeta:
         assert any("robots.txt" in g for g in body["guarantees"])
         assert any("never" in g and "outbound URL" in g for g in body["guarantees"])
         assert any("cannot predict" in limit for limit in body["limits"])
+        # The test client runs in demo mode: the adapters read as before, with
+        # no knowledge-base row and no ``active`` flag (CAT-1 is kb mode only).
+        names = [a["name"] for a in body["adapters"]]
+        assert "verified-knowledge-base" not in names and "web-costs" in names
+        assert all("active" not in a for a in body["adapters"])
+
+    def test_live_coverage_reads_as_before_in_demo_and_live_mode(self, client, monkeypatch):
+        """RM-1: kb mode gained its own coverage; demo and live did not move.
+
+        Demo serves the registry's block exactly; live serves the same block
+        plus ``mode`` and the note's key (additive, the English unchanged).
+        """
+        import app.api.routes_meta as routes_meta
+        from app.config import get_settings
+
+        before = routes_meta.registry_coverage()
+        assert set(before) == {"institutions", "countries", "recall_note"}
+        assert before["recall_note"].startswith(f"Live mode searches {before['institutions']} ")
+        assert client.get("/api/capabilities").json()["live_coverage"] == before
+
+        live = get_settings().model_copy(update={"demo_mode": False, "knowledge_mode": "live"})
+        monkeypatch.setattr(routes_meta, "get_settings", lambda: live)
+        coverage = client.get("/api/capabilities").json()["live_coverage"]
+        assert {k: coverage[k] for k in before} == before
+        assert coverage["mode"] == "live"
+        assert coverage["recall_message"] == {
+            "key": "coverage.live",
+            "params": {
+                "institutions": str(before["institutions"]),
+                "countries": str(len(before["countries"])),
+            },
+            "parts": {},
+        }
+        assert set(coverage) == {*before, "mode", "recall_message"}
+
+    def test_a_demo_server_with_kb_adds_kb_coverage_and_moves_nothing(self, client, monkeypatch):
+        """MODE-1: unticking demo on a kb-configured demo server starts a kb run.
+
+        The demo body keeps every key and value; ``kb_coverage`` is added only
+        when ``knowledge_mode`` is kb, and it is the kb-mode block itself.
+        """
+        import app.api.routes_meta as routes_meta
+        from app.config import get_settings
+
+        before = routes_meta.registry_coverage()
+        demo_live = get_settings().model_copy(update={"demo_mode": True, "knowledge_mode": "live"})
+        monkeypatch.setattr(routes_meta, "get_settings", lambda: demo_live)
+        assert client.get("/api/capabilities").json()["live_coverage"] == before
+
+        demo_kb = demo_live.model_copy(update={"knowledge_mode": "kb"})
+        monkeypatch.setattr(routes_meta, "get_settings", lambda: demo_kb)
+        body = client.get("/api/capabilities").json()
+        assert body["knowledge_mode"] == "demo"
+        coverage = body["live_coverage"]
+        assert set(coverage) == {*before, "kb_coverage"}
+        assert {k: coverage[k] for k in before} == before
+        kb = coverage["kb_coverage"]
+        assert kb["mode"] == "kb"
+        assert kb["recall_message"]["key"] == "coverage.kb"
+        assert set(kb) == {
+            "mode",
+            "institutions",
+            "countries",
+            "catalogue_total",
+            "recall_note",
+            "recall_message",
+        }
+        # The same numbers a kb server serves (the catalogue is read in both).
+        kb_server = demo_kb.model_copy(update={"demo_mode": False})
+        monkeypatch.setattr(routes_meta, "get_settings", lambda: kb_server)
+        assert client.get("/api/capabilities").json()["live_coverage"] == kb
 
     def test_the_vocabulary_endpoint_exposes_every_controlled_list(self, client):
         vocab = client.get("/api/vocabulary").json()

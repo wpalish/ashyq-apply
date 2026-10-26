@@ -1,0 +1,2338 @@
+{
+ "dataset_version": "2026-10-17.dev2-draft1",
+ "arms": {
+  "off": {
+   "repetitions": [
+    {
+     "pipeline_sha": "c30697da91cfd4bab4d01b1ecc8512247aeb270c",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "programme_page_precision": {
+       "numerator": 0,
+       "denominator": 2,
+       "value": 0.0
+      },
+      "recall_at_5": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "recall_at_10": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "recall_at_20": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "claim_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "claim_recall": {
+       "numerator": 0,
+       "denominator": 27,
+       "value": 0.0
+      },
+      "claim_recall_same_page": {
+       "numerator": 0,
+       "denominator": 27,
+       "value": 0.0
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "other_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "critical_field_coverage": {
+       "numerator": 0,
+       "denominator": 54,
+       "value": 0.0
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 14,
+       "denominator": 14,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 14,
+       "value": 0.0
+      },
+      "claim_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 14,
+       "value": 0.0
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "ethz",
+        "key": "scholarships.eth.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ethz",
+        "key": "scholarships.eth.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 5.5
+        },
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 90,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-04-15",
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "scholarships.anders_wall_studies_at.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "scholarships.anders_wall_studies_at.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 90,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "english_evidence.duolingo.minimum",
+        "outcome": "missed",
+        "expected": 120,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 30450.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "scholarships.e3_balanced_solutions_better.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "scholarships.e3_balanced_solutions_better.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-02-28",
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "scholarships.tsinghua_freshmen.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "scholarships.tsinghua_freshmen.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 72,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "scholarships.beca_al_talento_academico.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "scholarships.beca_al_talento_academico.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uba",
+        "key": "scholarships.beca_de_ayuda_economica.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uba",
+        "key": "scholarships.beca_de_ayuda_economica.applicability.international",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "kaznu",
+        "key": "scholarships.award.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaznu",
+        "key": "scholarships.award.applicability.international",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "uct",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "uct",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       }
+      ],
+      "wrong_claims": [],
+      "unlabelled": [
+       {
+        "case": "ethz",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+        "label_status": null
+       },
+       {
+        "case": "psaclay",
+        "key": "unmapped.scholarship_exists",
+        "value": "CSC - Joint Doctoral Programme of Université Paris-Saclay and the Chinese Scholarship Council",
+        "url": "https://www.universite-paris-saclay.fr/en/csc-joint-doctoral-program-universite-paris-saclay-and-china-scholarship-council",
+        "label_status": null
+       },
+       {
+        "case": "psaclay",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.universite-paris-saclay.fr/en/csc-joint-doctoral-program-universite-paris-saclay-and-china-scholarship-council",
+        "label_status": null
+       },
+       {
+        "case": "uppsala",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.uu.se/en/study/outline?query=864",
+        "label_status": null
+       },
+       {
+        "case": "uppsala",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.uu.se/en/study/programme-syllabus?query=2332",
+        "label_status": null
+       },
+       {
+        "case": "tec",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://research.tec.mx/vivo-tec/display/PID_501619",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/bachelor-business-science-specialising-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/department-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/bachelor-commerce-specialising-information-systems-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/zmu",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "intake",
+        "value": "spring 2025",
+        "url": "https://www.ku.ac.ae/zmu",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "intake",
+        "value": "fall 2023",
+        "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/department/department-of-computer-science",
+        "label_status": null
+       }
+      ],
+      "other_scope": [],
+      "partial": []
+     },
+     "core": {
+      "ethz": [],
+      "kaznu": [],
+      "khalifa": [],
+      "psaclay": [
+       "scholarship"
+      ],
+      "tcd": [],
+      "tec": [],
+      "tsinghua": [],
+      "uba": [],
+      "uct": [],
+      "uppsala": []
+     },
+     "core_known": {
+      "ethz": {
+       "answered": 0,
+       "known": 2
+      },
+      "psaclay": {
+       "answered": 0,
+       "known": 0
+      },
+      "uppsala": {
+       "answered": 0,
+       "known": 4
+      },
+      "tcd": {
+       "answered": 0,
+       "known": 4
+      },
+      "tsinghua": {
+       "answered": 0,
+       "known": 3
+      },
+      "tec": {
+       "answered": 0,
+       "known": 3
+      },
+      "uba": {
+       "answered": 0,
+       "known": 2
+      },
+      "kaznu": {
+       "answered": 0,
+       "known": 2
+      },
+      "uct": {
+       "answered": 0,
+       "known": 1
+      },
+      "khalifa": {
+       "answered": 0,
+       "known": 0
+      }
+     },
+     "cost": {
+      "ethz": {
+       "search_calls": 6,
+       "http_fetches": 20,
+       "latency_seconds": 30.0,
+       "over_budget": 0
+      },
+      "kaznu": {
+       "search_calls": 6,
+       "http_fetches": 46,
+       "latency_seconds": 79.0,
+       "over_budget": 0
+      },
+      "khalifa": {
+       "search_calls": 6,
+       "http_fetches": 30,
+       "latency_seconds": 116.0,
+       "over_budget": 0
+      },
+      "psaclay": {
+       "search_calls": 6,
+       "http_fetches": 58,
+       "latency_seconds": 97.4,
+       "over_budget": 0
+      },
+      "tcd": {
+       "search_calls": 6,
+       "http_fetches": 46,
+       "latency_seconds": 91.8,
+       "over_budget": 0
+      },
+      "tec": {
+       "search_calls": 6,
+       "http_fetches": 36,
+       "latency_seconds": 54.5,
+       "over_budget": 0
+      },
+      "tsinghua": {
+       "search_calls": 6,
+       "http_fetches": 23,
+       "latency_seconds": 36.2,
+       "over_budget": 0
+      },
+      "uba": {
+       "search_calls": 6,
+       "http_fetches": 41,
+       "latency_seconds": 68.8,
+       "over_budget": 0
+      },
+      "uct": {
+       "search_calls": 6,
+       "http_fetches": 48,
+       "latency_seconds": 79.7,
+       "over_budget": 0
+      },
+      "uppsala": {
+       "search_calls": 6,
+       "http_fetches": 20,
+       "latency_seconds": 39.4,
+       "over_budget": 0
+      }
+     }
+    },
+    {
+     "pipeline_sha": "c30697da91cfd4bab4d01b1ecc8512247aeb270c",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "programme_page_precision": {
+       "numerator": 0,
+       "denominator": 2,
+       "value": 0.0
+      },
+      "recall_at_5": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "recall_at_10": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "recall_at_20": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "claim_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "claim_recall": {
+       "numerator": 0,
+       "denominator": 27,
+       "value": 0.0
+      },
+      "claim_recall_same_page": {
+       "numerator": 0,
+       "denominator": 27,
+       "value": 0.0
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "other_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "critical_field_coverage": {
+       "numerator": 0,
+       "denominator": 54,
+       "value": 0.0
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 14,
+       "denominator": 14,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 14,
+       "value": 0.0
+      },
+      "claim_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 14,
+       "value": 0.0
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "ethz",
+        "key": "scholarships.eth.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ethz",
+        "key": "scholarships.eth.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 5.5
+        },
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 90,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-04-15",
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "scholarships.anders_wall_studies_at.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "scholarships.anders_wall_studies_at.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 90,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "english_evidence.duolingo.minimum",
+        "outcome": "missed",
+        "expected": 120,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 30450.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "scholarships.e3_balanced_solutions_better.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "scholarships.e3_balanced_solutions_better.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-02-28",
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "scholarships.tsinghua_freshmen.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "scholarships.tsinghua_freshmen.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 72,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "scholarships.beca_al_talento_academico.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "scholarships.beca_al_talento_academico.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uba",
+        "key": "scholarships.beca_de_ayuda_economica.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uba",
+        "key": "scholarships.beca_de_ayuda_economica.applicability.international",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "kaznu",
+        "key": "scholarships.award.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaznu",
+        "key": "scholarships.award.applicability.international",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "uct",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "uct",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       }
+      ],
+      "wrong_claims": [],
+      "unlabelled": [
+       {
+        "case": "ethz",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+        "label_status": null
+       },
+       {
+        "case": "psaclay",
+        "key": "unmapped.scholarship_exists",
+        "value": "CSC - Joint Doctoral Programme of Université Paris-Saclay and the Chinese Scholarship Council",
+        "url": "https://www.universite-paris-saclay.fr/en/csc-joint-doctoral-program-universite-paris-saclay-and-china-scholarship-council",
+        "label_status": null
+       },
+       {
+        "case": "psaclay",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.universite-paris-saclay.fr/en/csc-joint-doctoral-program-universite-paris-saclay-and-china-scholarship-council",
+        "label_status": null
+       },
+       {
+        "case": "uppsala",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.uu.se/en/study/outline?query=864",
+        "label_status": null
+       },
+       {
+        "case": "uppsala",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.uu.se/en/study/programme-syllabus?query=2332",
+        "label_status": null
+       },
+       {
+        "case": "tec",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://research.tec.mx/vivo-tec/display/PID_501619",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/bachelor-business-science-specialising-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/department-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/bachelor-commerce-specialising-information-systems-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/zmu",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "intake",
+        "value": "spring 2025",
+        "url": "https://www.ku.ac.ae/zmu",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "intake",
+        "value": "fall 2023",
+        "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/department/department-of-computer-science",
+        "label_status": null
+       }
+      ],
+      "other_scope": [],
+      "partial": []
+     },
+     "core": {
+      "ethz": [],
+      "kaznu": [],
+      "khalifa": [],
+      "psaclay": [
+       "scholarship"
+      ],
+      "tcd": [],
+      "tec": [],
+      "tsinghua": [],
+      "uba": [],
+      "uct": [],
+      "uppsala": []
+     },
+     "core_known": {
+      "ethz": {
+       "answered": 0,
+       "known": 2
+      },
+      "psaclay": {
+       "answered": 0,
+       "known": 0
+      },
+      "uppsala": {
+       "answered": 0,
+       "known": 4
+      },
+      "tcd": {
+       "answered": 0,
+       "known": 4
+      },
+      "tsinghua": {
+       "answered": 0,
+       "known": 3
+      },
+      "tec": {
+       "answered": 0,
+       "known": 3
+      },
+      "uba": {
+       "answered": 0,
+       "known": 2
+      },
+      "kaznu": {
+       "answered": 0,
+       "known": 2
+      },
+      "uct": {
+       "answered": 0,
+       "known": 1
+      },
+      "khalifa": {
+       "answered": 0,
+       "known": 0
+      }
+     },
+     "cost": {
+      "ethz": {
+       "search_calls": 6,
+       "http_fetches": 20,
+       "latency_seconds": 27.9,
+       "over_budget": 0
+      },
+      "kaznu": {
+       "search_calls": 6,
+       "http_fetches": 43,
+       "latency_seconds": 72.6,
+       "over_budget": 0
+      },
+      "khalifa": {
+       "search_calls": 6,
+       "http_fetches": 29,
+       "latency_seconds": 115.0,
+       "over_budget": 0
+      },
+      "psaclay": {
+       "search_calls": 6,
+       "http_fetches": 59,
+       "latency_seconds": 93.8,
+       "over_budget": 0
+      },
+      "tcd": {
+       "search_calls": 6,
+       "http_fetches": 46,
+       "latency_seconds": 92.2,
+       "over_budget": 0
+      },
+      "tec": {
+       "search_calls": 6,
+       "http_fetches": 39,
+       "latency_seconds": 56.6,
+       "over_budget": 0
+      },
+      "tsinghua": {
+       "search_calls": 6,
+       "http_fetches": 23,
+       "latency_seconds": 32.0,
+       "over_budget": 0
+      },
+      "uba": {
+       "search_calls": 6,
+       "http_fetches": 42,
+       "latency_seconds": 66.8,
+       "over_budget": 0
+      },
+      "uct": {
+       "search_calls": 6,
+       "http_fetches": 47,
+       "latency_seconds": 72.3,
+       "over_budget": 0
+      },
+      "uppsala": {
+       "search_calls": 6,
+       "http_fetches": 26,
+       "latency_seconds": 44.9,
+       "over_budget": 0
+      }
+     }
+    }
+   ],
+   "access": {
+    "ethz": [
+     "REACHED",
+     20,
+     5
+    ],
+    "kaznu": [
+     "PARTIALLY_BLOCKED",
+     20,
+     11
+    ],
+    "khalifa": [
+     "REACHED",
+     34,
+     1
+    ],
+    "psaclay": [
+     "REACHED",
+     57,
+     4
+    ],
+    "tcd": [
+     "REACHED",
+     56,
+     9
+    ],
+    "tec": [
+     "REACHED",
+     28,
+     0
+    ],
+    "tsinghua": [
+     "REACHED",
+     19,
+     5
+    ],
+    "uba": [
+     "REACHED",
+     22,
+     7
+    ],
+    "uct": [
+     "REACHED",
+     56,
+     3
+    ],
+    "uppsala": [
+     "REACHED",
+     14,
+     1
+    ]
+   }
+  },
+  "on": {
+   "repetitions": [
+    {
+     "pipeline_sha": "c30697da91cfd4bab4d01b1ecc8512247aeb270c",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "programme_page_precision": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "recall_at_5": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "recall_at_10": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "recall_at_20": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "claim_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "claim_recall": {
+       "numerator": 0,
+       "denominator": 27,
+       "value": 0.0
+      },
+      "claim_recall_same_page": {
+       "numerator": 0,
+       "denominator": 27,
+       "value": 0.0
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "other_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "critical_field_coverage": {
+       "numerator": 0,
+       "denominator": 54,
+       "value": 0.0
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 13,
+       "denominator": 13,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 13,
+       "value": 0.0
+      },
+      "claim_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 13,
+       "value": 0.0
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "ethz",
+        "key": "scholarships.eth.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ethz",
+        "key": "scholarships.eth.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 5.5
+        },
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 90,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-04-15",
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "scholarships.anders_wall_studies_at.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "scholarships.anders_wall_studies_at.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 90,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "english_evidence.duolingo.minimum",
+        "outcome": "missed",
+        "expected": 120,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 30450.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "scholarships.e3_balanced_solutions_better.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "scholarships.e3_balanced_solutions_better.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-02-28",
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "scholarships.tsinghua_freshmen.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "scholarships.tsinghua_freshmen.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 72,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "scholarships.beca_al_talento_academico.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "scholarships.beca_al_talento_academico.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uba",
+        "key": "scholarships.beca_de_ayuda_economica.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uba",
+        "key": "scholarships.beca_de_ayuda_economica.applicability.international",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "kaznu",
+        "key": "scholarships.award.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaznu",
+        "key": "scholarships.award.applicability.international",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "uct",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "uct",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       }
+      ],
+      "wrong_claims": [],
+      "unlabelled": [
+       {
+        "case": "ethz",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+        "label_status": null
+       },
+       {
+        "case": "psaclay",
+        "key": "unmapped.scholarship_exists",
+        "value": "CSC - Joint Doctoral Programme of Université Paris-Saclay and the Chinese Scholarship Council",
+        "url": "https://www.universite-paris-saclay.fr/en/csc-joint-doctoral-program-universite-paris-saclay-and-china-scholarship-council",
+        "label_status": null
+       },
+       {
+        "case": "psaclay",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.universite-paris-saclay.fr/en/csc-joint-doctoral-program-universite-paris-saclay-and-china-scholarship-council",
+        "label_status": null
+       },
+       {
+        "case": "uppsala",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.uu.se/en/study/outline?query=166",
+        "label_status": null
+       },
+       {
+        "case": "tec",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://research.tec.mx/vivo-tec/display/AcademicDegree_119",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/ba-informatics",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/bachelor-business-science-specialising-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/department-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/zmu",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "intake",
+        "value": "spring 2025",
+        "url": "https://www.ku.ac.ae/zmu",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "intake",
+        "value": "fall 2023",
+        "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/department/department-of-computer-science",
+        "label_status": null
+       }
+      ],
+      "other_scope": [],
+      "partial": []
+     },
+     "core": {
+      "ethz": [],
+      "kaznu": [],
+      "khalifa": [],
+      "psaclay": [
+       "scholarship"
+      ],
+      "tcd": [],
+      "tec": [],
+      "tsinghua": [],
+      "uba": [],
+      "uct": [],
+      "uppsala": []
+     },
+     "core_known": {
+      "ethz": {
+       "answered": 0,
+       "known": 2
+      },
+      "psaclay": {
+       "answered": 0,
+       "known": 0
+      },
+      "uppsala": {
+       "answered": 0,
+       "known": 4
+      },
+      "tcd": {
+       "answered": 0,
+       "known": 4
+      },
+      "tsinghua": {
+       "answered": 0,
+       "known": 3
+      },
+      "tec": {
+       "answered": 0,
+       "known": 3
+      },
+      "uba": {
+       "answered": 0,
+       "known": 2
+      },
+      "kaznu": {
+       "answered": 0,
+       "known": 2
+      },
+      "uct": {
+       "answered": 0,
+       "known": 1
+      },
+      "khalifa": {
+       "answered": 0,
+       "known": 0
+      }
+     },
+     "cost": {
+      "ethz": {
+       "search_calls": 6,
+       "http_fetches": 21,
+       "latency_seconds": 25.9,
+       "over_budget": 0
+      },
+      "kaznu": {
+       "search_calls": 6,
+       "http_fetches": 24,
+       "latency_seconds": 42.2,
+       "over_budget": 0
+      },
+      "khalifa": {
+       "search_calls": 6,
+       "http_fetches": 31,
+       "latency_seconds": 115.0,
+       "over_budget": 0
+      },
+      "psaclay": {
+       "search_calls": 6,
+       "http_fetches": 59,
+       "latency_seconds": 91.1,
+       "over_budget": 0
+      },
+      "tcd": {
+       "search_calls": 6,
+       "http_fetches": 44,
+       "latency_seconds": 102.5,
+       "over_budget": 0
+      },
+      "tec": {
+       "search_calls": 6,
+       "http_fetches": 40,
+       "latency_seconds": 55.2,
+       "over_budget": 0
+      },
+      "tsinghua": {
+       "search_calls": 6,
+       "http_fetches": 22,
+       "latency_seconds": 39.3,
+       "over_budget": 0
+      },
+      "uba": {
+       "search_calls": 6,
+       "http_fetches": 37,
+       "latency_seconds": 57.0,
+       "over_budget": 0
+      },
+      "uct": {
+       "search_calls": 6,
+       "http_fetches": 50,
+       "latency_seconds": 81.1,
+       "over_budget": 0
+      },
+      "uppsala": {
+       "search_calls": 6,
+       "http_fetches": 30,
+       "latency_seconds": 53.7,
+       "over_budget": 0
+      }
+     }
+    },
+    {
+     "pipeline_sha": "c30697da91cfd4bab4d01b1ecc8512247aeb270c",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "programme_page_precision": {
+       "numerator": 0,
+       "denominator": 2,
+       "value": 0.0
+      },
+      "recall_at_5": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "recall_at_10": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "recall_at_20": {
+       "numerator": 0,
+       "denominator": 1,
+       "value": 0.0
+      },
+      "claim_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "claim_recall": {
+       "numerator": 0,
+       "denominator": 27,
+       "value": 0.0
+      },
+      "claim_recall_same_page": {
+       "numerator": 0,
+       "denominator": 27,
+       "value": 0.0
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "other_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "critical_field_coverage": {
+       "numerator": 0,
+       "denominator": 54,
+       "value": 0.0
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 10,
+       "denominator": 10,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 10,
+       "value": 0.0
+      },
+      "claim_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 10,
+       "value": 0.0
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "ethz",
+        "key": "scholarships.eth.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "ethz",
+        "key": "scholarships.eth.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 5.5
+        },
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 90,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-04-15",
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "scholarships.anders_wall_studies_at.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uppsala",
+        "key": "scholarships.anders_wall_studies_at.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 90,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "english_evidence.duolingo.minimum",
+        "outcome": "missed",
+        "expected": 120,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "tuition",
+        "outcome": "missed",
+        "expected": {
+         "amount": 30450.0,
+         "currency": "EUR"
+        },
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "scholarships.e3_balanced_solutions_better.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tcd",
+        "key": "scholarships.e3_balanced_solutions_better.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-02-28",
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "scholarships.tsinghua_freshmen.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tsinghua",
+        "key": "scholarships.tsinghua_freshmen.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 72,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "scholarships.beca_al_talento_academico.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tec",
+        "key": "scholarships.beca_al_talento_academico.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uba",
+        "key": "scholarships.beca_de_ayuda_economica.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "uba",
+        "key": "scholarships.beca_de_ayuda_economica.applicability.international",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "kaznu",
+        "key": "scholarships.award.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "kaznu",
+        "key": "scholarships.award.applicability.international",
+        "outcome": "missed",
+        "expected": false,
+        "ours": []
+       },
+       {
+        "case": "uct",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 6.5,
+        "ours": []
+       },
+       {
+        "case": "uct",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 6.0,
+         "reading": 6.0,
+         "speaking": 6.0,
+         "writing": 6.0
+        },
+        "ours": []
+       }
+      ],
+      "wrong_claims": [],
+      "unlabelled": [
+       {
+        "case": "ethz",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+        "label_status": null
+       },
+       {
+        "case": "psaclay",
+        "key": "unmapped.scholarship_exists",
+        "value": "CSC - Joint Doctoral Programme of Université Paris-Saclay and the Chinese Scholarship Council",
+        "url": "https://www.universite-paris-saclay.fr/en/csc-joint-doctoral-program-universite-paris-saclay-and-china-scholarship-council",
+        "label_status": null
+       },
+       {
+        "case": "psaclay",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "no"
+        },
+        "url": "https://www.universite-paris-saclay.fr/en/csc-joint-doctoral-program-universite-paris-saclay-and-china-scholarship-council",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/ba-informatics",
+        "label_status": null
+       },
+       {
+        "case": "uct",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://sit.uct.ac.za/bachelor-business-science-specialising-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/zmu",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "intake",
+        "value": "spring 2025",
+        "url": "https://www.ku.ac.ae/zmu",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "intake",
+        "value": "fall 2023",
+        "url": "https://www.ku.ac.ae/program/bsc-in-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "khalifa",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.ku.ac.ae/department/department-of-computer-science",
+        "label_status": null
+       }
+      ],
+      "other_scope": [],
+      "partial": []
+     },
+     "core": {
+      "ethz": [],
+      "kaznu": [],
+      "khalifa": [],
+      "psaclay": [
+       "scholarship"
+      ],
+      "tcd": [],
+      "tec": [],
+      "tsinghua": [],
+      "uba": [],
+      "uct": [],
+      "uppsala": []
+     },
+     "core_known": {
+      "ethz": {
+       "answered": 0,
+       "known": 2
+      },
+      "psaclay": {
+       "answered": 0,
+       "known": 0
+      },
+      "uppsala": {
+       "answered": 0,
+       "known": 4
+      },
+      "tcd": {
+       "answered": 0,
+       "known": 4
+      },
+      "tsinghua": {
+       "answered": 0,
+       "known": 3
+      },
+      "tec": {
+       "answered": 0,
+       "known": 3
+      },
+      "uba": {
+       "answered": 0,
+       "known": 2
+      },
+      "kaznu": {
+       "answered": 0,
+       "known": 2
+      },
+      "uct": {
+       "answered": 0,
+       "known": 1
+      },
+      "khalifa": {
+       "answered": 0,
+       "known": 0
+      }
+     },
+     "cost": {
+      "ethz": {
+       "search_calls": 6,
+       "http_fetches": 21,
+       "latency_seconds": 26.0,
+       "over_budget": 0
+      },
+      "kaznu": {
+       "search_calls": 6,
+       "http_fetches": 25,
+       "latency_seconds": 46.9,
+       "over_budget": 0
+      },
+      "khalifa": {
+       "search_calls": 6,
+       "http_fetches": 30,
+       "latency_seconds": 93.9,
+       "over_budget": 0
+      },
+      "psaclay": {
+       "search_calls": 6,
+       "http_fetches": 61,
+       "latency_seconds": 94.9,
+       "over_budget": 1
+      },
+      "tcd": {
+       "search_calls": 6,
+       "http_fetches": 44,
+       "latency_seconds": 91.0,
+       "over_budget": 0
+      },
+      "tec": {
+       "search_calls": 6,
+       "http_fetches": 42,
+       "latency_seconds": 57.6,
+       "over_budget": 0
+      },
+      "tsinghua": {
+       "search_calls": 6,
+       "http_fetches": 22,
+       "latency_seconds": 40.2,
+       "over_budget": 0
+      },
+      "uba": {
+       "search_calls": 6,
+       "http_fetches": 39,
+       "latency_seconds": 60.1,
+       "over_budget": 0
+      },
+      "uct": {
+       "search_calls": 6,
+       "http_fetches": 51,
+       "latency_seconds": 88.3,
+       "over_budget": 0
+      },
+      "uppsala": {
+       "search_calls": 6,
+       "http_fetches": 30,
+       "latency_seconds": 59.7,
+       "over_budget": 0
+      }
+     }
+    }
+   ],
+   "access": {
+    "ethz": [
+     "REACHED",
+     20,
+     5
+    ],
+    "kaznu": [
+     "PARTIALLY_BLOCKED",
+     18,
+     7
+    ],
+    "psaclay": [
+     "REACHED",
+     57,
+     4
+    ],
+    "tcd": [
+     "REACHED",
+     56,
+     10
+    ],
+    "tec": [
+     "REACHED",
+     29,
+     2
+    ],
+    "tsinghua": [
+     "REACHED",
+     19,
+     5
+    ],
+    "uba": [
+     "REACHED",
+     22,
+     8
+    ],
+    "uct": [
+     "REACHED",
+     58,
+     3
+    ],
+    "uppsala": [
+     "REACHED",
+     17,
+     1
+    ]
+   }
+  }
+ },
+ "changes": {
+  "gained": [],
+  "lost": [],
+  "unstable": []
+ },
+ "targets": [
+  {
+   "arm": "off",
+   "metric": "cases_over_budget",
+   "worst": 0,
+   "target": "== 0",
+   "met": true
+  },
+  {
+   "arm": "on",
+   "metric": "cases_over_budget",
+   "worst": 1,
+   "target": "== 0",
+   "met": false
+  }
+ ]
+}

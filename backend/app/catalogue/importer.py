@@ -19,6 +19,11 @@ from app.models import University, UniversityObservation
 
 SEED_PATH = Path(__file__).with_name("unimatch_top500_seed.json")
 REGISTRY_PATH = Path(__file__).parents[1] / "adapters/discovery/institution_registry.json"
+#: NN-1a (IG bundle): the reviewer-signed native names. Absent today, so every
+#: seed record is imported exactly as before. Built by hand from the rows of
+#: ``evaluation/research/data/catalogue_native_names.proposed.json`` a reviewer
+#: marked ``review.decision = "accept"``; the proposals file is never read here.
+NATIVE_NAMES_PATH = Path(__file__).with_name("catalogue_native_names.signed.json")
 COUNTRY_ALIASES = {
     "united states of america": "United States",
     "usa": "United States",
@@ -136,6 +141,41 @@ def validate_snapshot(document: dict) -> list[dict]:
     return rows
 
 
+def signed_native_names(path: Path | None = None) -> dict[str, tuple[str, list[str]]]:
+    """NN-1a: seed id -> (the seed name the row was signed for, its native names).
+
+    Only rows whose ``review.decision`` is ``"accept"`` and that carry a seed id,
+    a name and at least one non-empty native name (each at most 300 characters)
+    count; a missing file is no overlay at all.
+    """
+    path = path or NATIVE_NAMES_PATH
+    if not path.exists():
+        return {}
+    document = json.loads(path.read_text(encoding="utf-8"))
+    signed: dict[str, tuple[str, list[str]]] = {}
+    for row in document.get("proposals") or []:
+        review = row.get("review") or {}
+        seed_id, name = row.get("seed_id"), row.get("name")
+        names = [
+            n.strip()
+            for n in row.get("proposed_native_names") or []
+            if isinstance(n, str) and n.strip() and len(n) <= 300
+        ]
+        if review.get("decision") != "accept" or not names:
+            continue
+        if isinstance(seed_id, str) and isinstance(name, str):
+            signed[seed_id] = (name, names)
+    return signed
+
+
+def with_native_names(row: dict, signed: dict[str, tuple[str, list[str]]]) -> dict:
+    """The seed row with its signed ``native_name`` list, when signed for this very row."""
+    entry = signed.get(row["seed_id"])
+    if entry is None or entry[0] != row["name"]:
+        return row
+    return {**row, "native_name": list(entry[1])}
+
+
 def seed_domain(row: dict) -> str | None:
     domain = public_domain(row.get("official_domain"))
     site = public_domain(urlsplit(row.get("official_site") or "").hostname)
@@ -147,6 +187,9 @@ def seed_domain(row: dict) -> str | None:
 def import_catalogue(session: Session, document: dict | None = None) -> dict[str, int]:
     document = document if document is not None else json.loads(SEED_PATH.read_text())
     rows = validate_snapshot(document)  # Validate everything before touching the database.
+    signed = signed_native_names()
+    if signed:
+        rows = [with_native_names(row, signed) for row in rows]
     version = f"{document['generated_on']}/{document['schema_version']}"
     if session.get_bind().dialect.name == "postgresql":
         session.execute(text("SELECT pg_advisory_xact_lock(829004500)"))

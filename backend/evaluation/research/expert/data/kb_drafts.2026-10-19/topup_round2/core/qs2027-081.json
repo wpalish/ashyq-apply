@@ -1,0 +1,40 @@
+{
+ "case": "qs2027-081",
+ "seed_id": "qs2027-081",
+ "university": "University of California, San Diego (UCSD)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-081",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "gpa",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://catalog.ucsd.edu/curric/CSE-ug.html",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 7,
+    "toefl_ibt": 83,
+    "duolingo": 115
+   },
+   "url": "https://admissions.ucsd.edu/international/",
+   "quote": "TOEFL minimum scores Internet-based: 4.5 (Effective January 2026) 83 (Exams completed prior to January 2026) IELTS minimum score of 7 (Academic module) AP Exam accepted scores English Language and Composition: 3, 4, 5 English Literature and Composition: 3, 4, 5 IB Exam accepted scores English (Lang. A) higher level: 5, 6, 7 English (Lang. A) standard level: 6, 7 Duolingo English Test (DET): Minimum score of 115",
+   "notes": "First-year international applicants: 'The scores shown here are the minimum necessary to be considered for admission'. TOEFL iBT 83 (exams before January 2026) or 4.5 (from January 2026); IELTS Academic 7; DET 115; AP/IB English scores also accepted. No per-section minimums.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

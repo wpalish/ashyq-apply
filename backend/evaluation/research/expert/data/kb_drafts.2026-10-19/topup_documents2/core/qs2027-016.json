@@ -1,0 +1,68 @@
+{
+ "case": "qs2027-016",
+ "seed_id": "qs2027-016",
+ "university": "Cornell University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-016",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants; international applicants included",
+   "academic_year": null,
+   "notes": "'First-Year Applicants' (the first-year international URL redirects here), Step 3 'Review and Submit Required Application Materials'. The School Report is submitted by the counselor with the transcript. Need-aware for international students; the CSS Profile is a financial-aid form, not drafted. The page states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+     "quote": "Submit your Common Application online."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+     "quote": "Your high school should submit an official high school transcript that includes grades for all completed courses and lists in-progress courses."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+     "quote": "The counselor recommendation highlights your accomplishments within the context of your high school."
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+     "quote": "You're required to submit two teacher recommendations, which should highlight your academic strengths and contributions in the classroom."
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+     "quote": "As part of your Common Application, you'll be asked to fill out the Cornell University supplement, which includes the college- or school-specific essay(s) you'll need to answer."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+     "quote": "You're required to submit SAT or ACT scores when applying to Cornell."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+     "quote": "If you're an international applicant, you must also demonstrate English language proficiency and may be required to submit scores from an approved English language proficiency exam as part of your application.",
+     "condition": "international applicant whose English proficiency is not demonstrated by the other accepted criteria"
+    }
+   ]
+  }
+ }
+}

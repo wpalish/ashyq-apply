@@ -41,6 +41,41 @@ def normalize(text: str) -> str:
     return _WS.sub(" ", text).strip()
 
 
+#: NN-1b: the Latin letters NFKD leaves whole (they carry no combining mark),
+#: written as their usual ASCII spelling: Turkish dotless ``ı``, Polish ``ł``,
+#: Danish/Norwegian ``ø`` and ``æ``, Croatian ``đ``, German ``ß``, French
+#: ``œ``. Every other accented Latin letter (``ü``, ``č``, ``ą``, ``ė``, ``å``)
+#: already decomposes, so :func:`normalize` folds it. Upper case is listed so
+#: the fold also works before lower-casing.
+_LETTER_FOLDS = str.maketrans(
+    {
+        "ı": "i",
+        "ł": "l",
+        "Ł": "L",
+        "ø": "o",
+        "Ø": "O",
+        "đ": "d",
+        "Đ": "D",
+        "ß": "ss",
+        "ẞ": "SS",
+        "æ": "ae",
+        "Æ": "AE",
+        "œ": "oe",
+        "Œ": "OE",
+    }
+)
+
+
+def fold_letters(text: str) -> str:
+    """NN-1b: spell the letters NFKD cannot decompose in ASCII (``Yıldız`` -> ``Yildiz``).
+
+    Applied on top of :func:`normalize` by the identity gate when
+    ``catalogue.discovery.IDENTITY_FOLD_MARKS`` is on; ``normalize`` itself is
+    unchanged, so every key built from it stays byte-identical.
+    """
+    return (text or "").translate(_LETTER_FOLDS)
+
+
 def university_key(name: str, country: str = "") -> str:
     tokens = [t for t in normalize(name).split() if t not in _NOISE]
     if not tokens:

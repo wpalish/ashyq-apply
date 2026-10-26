@@ -14,8 +14,10 @@ from pathlib import Path
 
 import pytest
 
+from app.adapters import page_classifier
 from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.fetching import Fetcher
+from app.adapters.scholarship import web_scholarships
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.domain.enums import DegreeLevel
 
@@ -83,9 +85,17 @@ async def _run(site: Path, settings, candidate: Candidate, program: CandidatePro
         return await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
 
 
+@pytest.fixture
+def level_scope_off(monkeypatch: pytest.MonkeyPatch) -> None:
+    """SL-1 (on by default) refuses a flat ``grant``/``award``/``funding`` URL
+    outside every study path, which this file's fixture site is made of; the
+    walk's own rules are pinned without it, and with it where it matters."""
+    monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_LEVEL_SCOPE", False)
+
+
 class TestAnIndexBehindAnIndex:
     @pytest.mark.asyncio
-    async def test_the_awards_it_links_are_read(self, settings, site):
+    async def test_the_awards_it_links_are_read(self, settings, site, level_scope_off):
         candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
         program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
 
@@ -96,6 +106,22 @@ class TestAnIndexBehindAnIndex:
             "Global Scholarship",
             "Merit Scholarship",
         ], result.errors
+
+    @pytest.mark.asyncio
+    async def test_with_level_scope_the_inner_index_is_still_walked(
+        self, settings, site, monkeypatch
+    ):
+        monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_LEVEL_SCOPE", True)
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        awards, result = await _run(site, settings, candidate, program)
+
+        # The international index behind the main one is read and followed;
+        # only the bare-path grant is refused, unread, with its reason kept.
+        assert sorted(a.name for a in awards) == ["Global Scholarship", "Merit Scholarship"]
+        refused = [o.url for o in result.page_outcomes if o.detail.startswith("SL-1")]
+        assert refused == ["fixture://uni/country-grant.html"]
 
     @pytest.mark.asyncio
     async def test_the_index_itself_never_becomes_a_scholarship(self, settings, site):
@@ -182,15 +208,22 @@ class TestTheProgrammePageIsAFallbackOnly:
         assert "Never Read" not in {a.name for a in awards}
 
 
+def _index_chain(tmp_path: Path) -> Path:
+    root = tmp_path / "chain"
+    for i in range(6):
+        nxt = f'<li><a href="level{i + 1}.html">More funding</a></li>'
+        _write(root, f"uni/level{i}.html", _INDEX.format(title="Scholarships", items=nxt))
+    _write(root, "uni/level6.html", _AWARD.format(name="Deep Award"))
+    return root
+
+
 class TestTheBudgetIsShared:
     @pytest.mark.asyncio
-    async def test_three_index_pages_is_the_limit(self, settings, tmp_path):
+    async def test_three_index_pages_is_the_limit(self, settings, tmp_path, monkeypatch):
         """A chain of indexes is a site map, not a funding route."""
-        root = tmp_path / "chain"
-        for i in range(6):
-            nxt = f'<li><a href="level{i + 1}.html">More funding</a></li>'
-            _write(root, f"uni/level{i}.html", _INDEX.format(title="Scholarships", items=nxt))
-        _write(root, "uni/level6.html", _AWARD.format(name="Deep Award"))
+        # The pre-AP-1 budget: the depth-0 index is charged too.
+        monkeypatch.setattr(page_classifier, "AWARD_PAGE_EVIDENCE", False)
+        root = _index_chain(tmp_path)
         candidate = _candidate(scholarships_url="fixture://uni/level0.html")
         program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
 
@@ -198,6 +231,26 @@ class TestTheBudgetIsShared:
 
         assert awards == []
         assert result.pages_checked <= 4
+
+    @pytest.mark.asyncio
+    async def test_on_by_default_the_depth0_index_is_free_and_the_chain_still_ends(
+        self, settings, tmp_path
+    ):
+        """AP-1 (on by default) does not charge the depth-0 index: three more
+        index pages are followed, a fourth is read for its own sections and not
+        followed, and the chain's award is still never reached."""
+        assert page_classifier.AWARD_PAGE_EVIDENCE is True
+        root = _index_chain(tmp_path)
+        candidate = _candidate(scholarships_url="fixture://uni/level0.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        awards, result = await _run(root, settings, candidate, program)
+
+        assert awards == []
+        assert result.pages_checked == 5
+        outcomes = {o.url.rsplit("/", 1)[1]: o.detail for o in result.page_outcomes}
+        assert outcomes["level4.html"] == "index page beyond the index budget; not followed"
+        assert "level5.html" not in outcomes and "level6.html" not in outcomes
 
 
 class TestAPageIsReadOncePerRun:
@@ -316,7 +369,11 @@ class TestEveryPageLeavesAnOutcome:
     """A funding stage that read pages must be able to explain its zero."""
 
     @pytest.mark.asyncio
-    async def test_indexes_awards_and_failures_are_all_recorded(self, settings, site):
+    @pytest.mark.parametrize("level_scope", [False, True], ids=["sl1-off", "sl1-on"])
+    async def test_indexes_awards_and_failures_are_all_recorded(
+        self, settings, site, monkeypatch, level_scope
+    ):
+        monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_LEVEL_SCOPE", level_scope)
         _write(
             site,
             "uni/scholarships.html",
@@ -336,8 +393,15 @@ class TestEveryPageLeavesAnOutcome:
         by_url = {o.url.rsplit("/", 1)[-1]: o for o in result.page_outcomes}
         assert "funding index" in by_url["scholarships.html"].detail
         assert by_url["merit-scholarship.html"].page_type == "scholarship_award"
-        assert by_url["missing-award.html"].category == "fetch-failed"
-        assert len(result.page_outcomes) == result.pages_checked
+        refused = [o for o in result.page_outcomes if o.detail.startswith("SL-1")]
+        if level_scope:
+            # Refused unread: an outcome that explains it, and no read counted.
+            assert by_url["missing-award.html"].category == "classifier-rejected"
+            assert [o.url.rsplit("/", 1)[-1] for o in refused] == ["missing-award.html"]
+        else:
+            assert by_url["missing-award.html"].category == "fetch-failed"
+            assert refused == []
+        assert len(result.page_outcomes) == result.pages_checked + len(refused)
 
 
 class TestOneAwardBudgetRankedAcrossIndexes:
@@ -345,14 +409,25 @@ class TestOneAwardBudgetRankedAcrossIndexes:
     index was read, and its Nanyang Scholarship link was never queued."""
 
     @pytest.mark.asyncio
-    async def test_a_named_scholarship_beats_a_page_of_bursaries(self, settings, tmp_path):
+    @pytest.mark.parametrize(
+        ("level_scope", "folder"),
+        [(False, "uni"), (True, "uni/admissions/undergraduate")],
+        ids=["sl1-off-flat", "sl1-on-admissions-path"],
+    )
+    async def test_a_named_scholarship_beats_a_page_of_bursaries(
+        self, settings, tmp_path, monkeypatch, level_scope, folder
+    ):
+        # With SL-1 on (the default) a flat ``/funding`` or ``/awards-list``
+        # URL is refused unread, so the on case puts the pages on an
+        # admissions path, where NTU's real pages sit.
+        monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_LEVEL_SCOPE", level_scope)
         root = tmp_path / "site"
         bursaries = "".join(
             f'<li><a href="bursary-{i}.html">Community Bursary {i}</a></li>' for i in range(14)
         )
         _write(
             root,
-            "uni/funding.html",
+            f"{folder}/funding.html",
             _INDEX.format(
                 title="Scholarships and financial aid",
                 items=bursaries + '<li><a href="awards-list.html">Awards for new students</a></li>',
@@ -360,22 +435,25 @@ class TestOneAwardBudgetRankedAcrossIndexes:
         )
         _write(
             root,
-            "uni/awards-list.html",
+            f"{folder}/awards-list.html",
             _INDEX.format(
                 title="Scholarships for new students",
                 items='<li><a href="nanyang-scholarship.html">Nanyang Scholarship</a></li>',
             ),
         )
         for i in range(14):
-            _write(root, f"uni/bursary-{i}.html", _AWARD.format(name=f"Community Bursary {i}"))
-        _write(root, "uni/nanyang-scholarship.html", _AWARD.format(name="Nanyang Scholarship"))
+            _write(root, f"{folder}/bursary-{i}.html", _AWARD.format(name=f"Community Bursary {i}"))
+        _write(
+            root, f"{folder}/nanyang-scholarship.html", _AWARD.format(name="Nanyang Scholarship")
+        )
 
-        candidate = _candidate(scholarships_url="fixture://uni/funding.html")
+        candidate = _candidate(scholarships_url=f"fixture://{folder}/funding.html")
         program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
         awards, result = await _run(root, settings, candidate, program)
 
         assert "Nanyang Scholarship" in {a.name for a in awards}, result.page_outcomes
         assert len(awards) <= 12
+        assert not any(o.detail.startswith("SL-1") for o in result.page_outcomes)
 
 
 class TestAwardPriorityPrefersIncomingApplicantPages:

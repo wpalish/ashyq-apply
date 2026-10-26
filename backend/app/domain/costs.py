@@ -125,6 +125,11 @@ def _award_amount(s: Scholarship, tuition: Money | None, target_currency: str) -
     return None
 
 
+#: The gap's refusal when the cost table is empty, and its warning.
+NO_COST_REASON = "No official cost of attendance was found for this programme and intake."
+NO_COST_WARNING = "Cost pages could not be verified; the gap cannot be estimated."
+
+
 def compute_funding_gap(
     costs: CostBreakdown,
     scholarships: list[Scholarship],
@@ -152,8 +157,8 @@ def compute_funding_gap(
             )
         return FundingGap(
             computable=False,
-            reason="No official cost of attendance was found for this programme and intake.",
-            warnings=["Cost pages could not be verified; the gap cannot be estimated."],
+            reason=NO_COST_REASON,
+            warnings=[NO_COST_WARNING],
         )
 
     eligible = [

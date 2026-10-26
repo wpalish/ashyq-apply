@@ -15,6 +15,9 @@ primary_region = "ams"
   UNIMATCH_COOKIE_SECURE = "true"
   UNIMATCH_AUTO_MIGRATE = "false"
   UNIMATCH_DEMO_MODE = "false"
+  # The code default, written down so the deployed mode is on record: answers
+  # come from the verified knowledge base, and no page is read during a run.
+  UNIMATCH_KNOWLEDGE_MODE = "kb"
   UNIMATCH_SEARCH_PROVIDER = "exa_mcp"
   UNIMATCH_PUBLIC_BASE_URL = "https://ashyq-apply-alisher.fly.dev"
   # Search and password login work without mail. Recovery stays visibly

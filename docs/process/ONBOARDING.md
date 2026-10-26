@@ -12,6 +12,15 @@
 - `backend/evaluation/research/expert/data/hypotheses.json` — реестр гипотез ER-01…ER-07 со статусами и
   доказательствами.
 - `backend/evaluation/research/README.md` — как устроена оценка.
+- `docs/process/KNOWLEDGE_BASE.md` — режим `kb`, в котором продукт работает по умолчанию (решение владельца
+  2026-10-19: живой поиск заморожен). Исследование отвечает из проверенной базы знаний
+  (`backend/app/knowledge/`), во время прогона не читается ни одна страница; университет вне базы получает
+  «No verified data yet». Две переменные окружения (`backend/app/config.py`):
+  - `UNIMATCH_KNOWLEDGE_MODE` — по умолчанию `kb`; `live` включает веб-пайплайн; демо-режим её игнорирует;
+  - `UNIMATCH_SEARCH_PROVIDER` — по умолчанию `none`; в режиме `kb` не используется.
+- Браузерный прогон режима `kb`: `npm run e2e:kb` в `frontend/` (`playwright.kb.config.ts`; API поднимает
+  `frontend/e2e/kb-env/serve-api.sh` с `UNIMATCH_DEMO_MODE=false`, `UNIMATCH_KNOWLEDGE_MODE=kb`,
+  `UNIMATCH_SEARCH_PROVIDER=none`). Он же идёт в CI на каждый push.
 
 ## 2. Что уже есть
 - **Пайплайн** `backend/app/pipeline/runner.py`, по этапам:
@@ -51,6 +60,19 @@
   Полный набор тестов идёт около 15 минут. Фронтенд проверяется в `frontend/` командами `npm run typecheck`,
   `npm run lint`, `npm test`. E2E-тесты в `frontend/e2e` проверяют пользовательский путь, и изменения в выдаче
   могут их ломать.
+- **Перед каждым push — одна команда:** `scripts/pre_merge.sh` (из любого worktree). Она запускает ровно те
+  проверки из `.github/workflows/ci.yml`, которые задевает ветка относительно `origin/claude/greeting-16wj2z`:
+  `backend/` → ruff, ruff format, mypy (`app tests evaluation`), полный набор через `scripts/run_suite.sh` с
+  покрытием 92 и золотое демо (Groningen первым, UBC в `OUT_OF_BUDGET`); `frontend/` → typecheck, lint, vitest,
+  build и все три Playwright-набора по очереди (порты 5173/8099 должны быть свободны); workflow и скрипты →
+  разбор YAML, `bash -n` и тесты workflow; в конце — трейлер `Agent:` у каждого коммита и ни одного `wip:`.
+  Останавливается на первой красной проверке, после себя убирает скриншоты и отчёты Playwright. `--dry-run`
+  печатает команды, `--scope all` запускает всё, `--pg` добавляет PostgreSQL-прогон CI, `--e2e never` — для
+  воркера, у которого заняты порты (тогда фронтенд-ветка красная). Тест `tests/test_pre_merge_script.py`
+  держит скрипт в точности равным `ci.yml`. Контейнерные задания CI скрипт тоже повторяет: с работающим Docker —
+  настоящие `docker compose build` и `scripts/verify_compose.sh`, без него — собирает каждый образ в копии его
+  build context после `.dockerignore` (`scripts/image_context.py`), так что файл, которого нет в образе, роняет
+  проверку здесь, а не в CI.
 - **Живое чтение сайтов — только через GitHub Actions**, workflow `.github/workflows/benchmark-capture.yml`
   (ручной запуск):
   - `mode=benchmark` — полный прогон, метрики и оракул;

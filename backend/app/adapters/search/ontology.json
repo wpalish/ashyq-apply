@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-30.1",
+  "version": "2026-10-20.1",
   "notes": "Vocabulary for retrieval only. A strong alias is the same field under another name; a related concept is a candidate worth fetching and never an automatic match. Non-English aliases are limited to ones that are not in doubt: a guessed alias silently matches the wrong programme.",
   "fields": {
     "computer_science": {
@@ -25,7 +25,50 @@
         {"language": "nl", "alias": "informatica"},
         {"language": "pl", "alias": "informatyka"},
         {"language": "fr", "alias": "informatique"},
-        {"language": "ru", "alias": "информатика"}
+        {"language": "ru", "alias": "информатика"},
+        {"language": "it", "alias": "informatica", "flag": "LOCALIZED_IDENTITY", "source": "Vocabolario Treccani s.v. informatica; DM 16 marzo 2007, classe L-31 (Scienze e tecnologie informatiche)"},
+        {"language": "cs", "alias": "informatika", "flag": "LOCALIZED_IDENTITY", "source": "Slovník spisovného jazyka českého (ÚJČ AV ČR) s.v. informatika"},
+        {"language": "sv", "alias": "datavetenskap", "flag": "LOCALIZED_IDENTITY", "source": "Svensk ordbok (Svenska Akademien) s.v. datavetenskap"},
+        {"language": "es", "alias": "ciencias de la computación", "flag": "LOCALIZED_IDENTITY", "source": "RAE, DLE s.v. computación (= informática); the phrase is the field name, not a DLE lemma"},
+        {"language": "pt", "alias": "ciência da computação", "flag": "LOCALIZED_IDENTITY", "source": "Resolução CNE/CES nº 5/2016 (Diretrizes Curriculares Nacionais, bacharelado em Ciência da Computação)"},
+        {"language": "no", "alias": "informatikk", "flag": "LEXICON_V2"},
+        {"language": "da", "alias": "datalogi", "flag": "LEXICON_V2"},
+        {"language": "ca", "alias": "informàtica", "flag": "LEXICON_V2"},
+        {"language": "es", "alias": "ciencia de la computación", "flag": "LEXICON_V2"},
+        {"language": "es", "alias": "ingeniería en ciencia de la computación", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "es", "alias": "ingeniería en ciencias de la computación", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "pt", "alias": "ciências da computação", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "pt", "alias": "ciência de computadores", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "fi", "alias": "tietojenkäsittelytiede", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "tr", "alias": "bilgisayar bilimleri", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "TDK Güncel Türkçe Sözlük s.v. bilgisayar, bilim; YÖK programme-name list (Bilgisayar Bilimleri)"},
+        {"language": "et", "alias": "informaatika", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "Eesti keele seletav sõnaraamat (EKI) s.v. informaatika"},
+        {"language": "lt", "alias": "informatika", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "Dabartinės lietuvių kalbos žodynas s.v. informatika; Studijų krypčių sąrašas (study field Informatika)"},
+        {"language": "sk", "alias": "informatika", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "kk", "alias": "информатика", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "Қазақ әдеби тілінің сөздігі (2011) s.v. информатика"},
+        {"language": "ru", "alias": "компьютерные науки", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "Order of the Ministry of Education and Science of Russia No. 1061 (2013), direction 02.03.01 «Математика и компьютерные науки»"},
+        {"language": "ja", "alias": "情報科学", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "ja", "alias": "計算機科学", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "zh", "alias": "计算机科学与技术", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "zh", "alias": "计算机科学", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "zh", "alias": "計算機科學", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "ko", "alias": "컴퓨터과학", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "ko", "alias": "전산학", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "th", "alias": "วิทยาการคอมพิวเตอร์", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "nb", "alias": "informatikk", "flag": "LEXICON_LANGUAGE_COVERAGE", "source": "Bokmålsordboka (Språkrådet and UiB), s.v. informatikk"},
+        {"language": "nn", "alias": "informatikk", "flag": "LEXICON_LANGUAGE_COVERAGE", "source": "Nynorskordboka (Språkrådet and UiB), s.v. informatikk"}
+      ],
+      "localized_related_not_equivalent": [
+        {"language": "es", "term": "ingeniería informática", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "ca", "term": "enginyeria informàtica", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "it", "term": "ingegneria informatica", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "Vocabolario Treccani s.v. ingegneria (ingegneria informatica); DM 16 marzo 2007, classe L-8"},
+        {"language": "pt", "term": "engenharia informática", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "pt", "term": "engenharia de computação", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "de", "term": "technische informatik", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "Duden s.v. Informatik (technische Informatik as a branch)"},
+        {"language": "fr", "term": "informatique industrielle", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "tr", "term": "bilgisayar mühendisliği", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "TDK Güncel Türkçe Sözlük s.v. mühendislik; YÖK programme-name list (Bilgisayar Mühendisliği)"},
+        {"language": "lt", "term": "informatikos inžinerija", "flag": "LOCALIZED_PAGE_IDENTITY", "source": "Studijų krypčių sąrašas (study field Informatikos inžinerija)"},
+        {"language": "zh", "term": "计算机工程", "flag": "LOCALIZED_PAGE_IDENTITY"},
+        {"language": "ko", "term": "컴퓨터공학", "flag": "LOCALIZED_PAGE_IDENTITY"}
       ]
     },
     "data_science": {

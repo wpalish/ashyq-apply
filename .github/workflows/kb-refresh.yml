@@ -1,0 +1,128 @@
+# Scheduled, free re-verification of the knowledge base (free-search ticket 07).
+#
+# Re-reads every URL the KB cites — programme evidence, facts, not_applicable
+# statements in backend/app/knowledge/kb_cs_bachelor.json and
+# kb_imported_dev.json — through the production Fetcher (our user agent,
+# robots.txt honoured, no search provider, zero credits), then:
+#   * kb_refresh_diff classifies each row against the previous checks
+#     (verified / quote_gone / moved / http_404 / not_official / http_403 /
+#     robots_refused / timeout / fetch_error) and writes the re-draft queue
+#     KB_REFRESH_<date>.md;
+#   * kb_build --refresh writes re-stamped copies of both KB files
+#     (verified_on moved forward where the quote still verifies; the rest
+#     marked review.needed — no value is dropped or changed).
+# Everything comes back as an artifact. It never commits: a person reads the
+# queue and decides (KNOWLEDGE_BASE.md "Refresh cadence").
+#
+# Free on a public repository; one full run is about 15 minutes. GitHub
+# disables a scheduled workflow on a public repository after 60 days without
+# a commit (HANDOFF §9).
+name: kb-refresh
+run-name: kb-refresh ${{ inputs.only || (github.event.schedule == '47 4 * 1,9-12 1' && 'deadline') || 'all' }}
+
+on:
+  schedule:
+    # Monthly, every item.
+    - cron: '23 4 3 * *'
+    # Weekly (Mondays) in the September–January application season: deadlines only.
+    - cron: '47 4 * 1,9-12 1'
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Comma-separated items to re-verify (programme, english, gpa, deadline, tuition, scholarship_exists, scholarship_international); blank = all'
+        required: false
+        default: ''
+      runner:
+        # TODO(ticket 07, owner question 01-Q4): add `self-hosted` (the owner's
+        # computer as a vantage point for hosts that refuse datacenter IPs)
+        # once the owner confirms that reading. Until then only GitHub's runner.
+        description: 'Where the reads happen. Only ubuntu-latest until 01-Q4 is answered.'
+        type: choice
+        required: false
+        default: 'ubuntu-latest'
+        options:
+          - ubuntu-latest
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      PYTHONPATH: .
+      OUT: ../artifacts/kb-refresh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+
+      - name: Scope
+        id: scope
+        env:
+          ONLY_INPUT: ${{ inputs.only }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          set -euo pipefail
+          only="$ONLY_INPUT"
+          if [ "$SCHEDULE" = '47 4 * 1,9-12 1' ]; then only=deadline; fi
+          # Item names and commas only: anything else (a newline above all)
+          # could write a second line into GITHUB_OUTPUT.
+          if ! [[ "$only" =~ ^[a-z_,\ ]*$ ]]; then
+            echo "::error::only must be comma-separated item names; nothing was read"
+            exit 1
+          fi
+          echo "only=$only" >> "$GITHUB_OUTPUT"
+          echo "day=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Re-verify the KB with the production fetcher
+        env:
+          ONLY: ${{ steps.scope.outputs.only }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT"
+          .venv/bin/python scripts/verify_evidence.py \
+            --from-kb app/knowledge/kb_cs_bachelor.json app/knowledge/kb_imported_dev.json \
+            ${ONLY:+--only "$ONLY"} \
+            --out "$OUT/report.json" | tee "$OUT/report.tsv"
+
+      - name: Diff against the previous checks; write the re-draft queue
+        env:
+          DAY: ${{ steps.scope.outputs.day }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          previous=(evaluation/research/expert/data/kb_drafts.*/*/evidence_check.*.json
+                    evaluation/research/expert/data/kb_refresh/*.json)
+          .venv/bin/python -m evaluation.research.expert.kb_refresh_diff "$OUT/report.json" \
+            --previous "${previous[@]}" \
+            --kb app/knowledge/kb_cs_bachelor.json app/knowledge/kb_imported_dev.json \
+            --queue "$OUT/KB_REFRESH_$DAY.md" --summary "$OUT/counts.json" --summary-md \
+            >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Re-stamped KB copies (artifact only, never committed)
+        env:
+          DAY: ${{ steps.scope.outputs.day }}
+        run: |
+          set -euo pipefail
+          for kb in kb_cs_bachelor kb_imported_dev; do
+            .venv/bin/python -m evaluation.research.expert.kb_build \
+              --refresh "app/knowledge/$kb.json" --evidence "$OUT/report.json" \
+              --built-at "$DAY" --out "$OUT/$kb.refreshed.json"
+          done
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kb-refresh-${{ github.run_id }}
+          path: artifacts/kb-refresh/
+          if-no-files-found: error

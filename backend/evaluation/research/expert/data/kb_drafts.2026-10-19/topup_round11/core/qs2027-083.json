@@ -1,0 +1,44 @@
+{
+ "case": "qs2027-083",
+ "seed_id": "qs2027-083",
+ "university": "The University of Sheffield",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-083",
+  "round": "topup_round11"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.sheffield.ac.uk/undergraduate/courses/2027/computer-science-bsc",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "min": 27650,
+    "max": 34670,
+    "currency": "GBP",
+    "period": "year",
+    "academic_year": "2027/28",
+    "population": "new full-time overseas undergraduates, every course except Medicine and Dentistry (university-wide range; no Computer Science figure printed)"
+   },
+   "url": "https://www.sheffield.ac.uk/new-students/tuition-fees/undergraduate-overseas",
+   "quote": "For the 2027/28 academic year, the University of Sheffield will charge new full-time overseas undergraduates, tuition fees between £27,650 and £34,670 (except for Medicine and Dentistry courses, see below).",
+   "notes": "'Tuition fees for undergraduate overseas students', section 'Your tuition fee'. A university-wide range for the 2027/28 academic year, not a Computer Science figure: the course page's fee block is a JavaScript look-up and the look-up tool's host (tools.sheffield.ac.uk) has an unreachable robots.txt, so the CS amount was not read (topup_round10). Kept as a printed range ({min, max}); no figure inside it is chosen. The same page: 'The tuition fee you pay in your first year will be the same for each year of your course.' The page also prints the 2026/27 range (£25,000 and £32,100), not used.",
+   "date": "2026-10-20",
+   "page_language": "en"
+  }
+ }
+}

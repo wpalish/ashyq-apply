@@ -1,0 +1,48 @@
+{
+ "case": "qs2027-019",
+ "seed_id": "qs2027-019",
+ "university": "The University of New South Wales (UNSW Sydney)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-019",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "International Scientia Coursework Scholarship"
+   },
+   "url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+   "quote": "International Scientia Coursework Scholarship (PUCA1025) Offer 1: Full tuition fee scholarship paid directly towards tuition fees for the minimum duration of program",
+   "notes": "Applied for through 'UNSW Scholarships for International Students Commencing Term 1, 2027' (PUCA1029), open 6 July 2026, closes AEST 11:59PM on 30 October 2026. Offer 1: full tuition for the minimum program duration; Offer 2: $20,000 per annum towards tuition. Eligibility: commencing full-time study in a UNSW undergraduate or postgraduate coursework program (excluding UNSW online and UNSW Canberra) in Term 1, 2027. Competitive; merit-based (selection details not read).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+   "quote": "UNSW offers a wide range of scholarships and awards to support international undergraduate and postgraduate coursework students commencing full-time study at UNSW.",
+   "notes": "The application round is for international students ('Residency International'; 'This page and application process is for international students commencing their first term of studies at UNSW in Term 1 2027').",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

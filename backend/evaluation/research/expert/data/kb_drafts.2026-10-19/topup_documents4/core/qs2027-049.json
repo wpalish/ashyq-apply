@@ -1,0 +1,59 @@
+{
+ "case": "qs2027-049",
+ "seed_id": "qs2027-049",
+ "university": "University of California, Los Angeles (UCLA)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-049",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year international applicants (students who require an F-1 visa) to UCLA, including Computer Science (Samueli School of Engineering)",
+   "academic_year": null,
+   "notes": "UCLA Undergraduate Admission 'International Applicants' and 'First-Year Requirements' pages. Standing pages; no year is printed on the list (the financial example names 'students admitted to Fall Quarter 2026'). FAQ: 'We do not require or accept letters of recommendation in our process and we do not collect transcripts at the point of application'; 'UCLA does not consider SAT or ACT scores for admission or scholarship purposes.' External exam results are self-reported in the UC Application ('International External Exams'). Documents of all college or university coursework must be sent in the original language with English translations, after admission (not drafted: it concerns college coursework). Admitted students whose native language is not English may have to take UCLA's ESL Placement Examination. Not drafted: medical insurance (after admission). Some majors in the specialty schools need a supplemental application; none is named for Computer Science.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admission.ucla.edu/apply/first-year/first-year-requirements",
+     "quote": "In addition to your UC application, we take both your academic record and your personal experiences into consideration during the review process."
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://admission.ucla.edu/apply/first-year/first-year-requirements",
+     "quote": "Personal Insight Questions These personal questions are just that — personal.",
+     "notes": "'As a first-year applicant, you may respond to four of eight questions. Each response is limited to a maximum of 350 words.'"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admission.ucla.edu/apply/international-applicants",
+     "quote": "To demonstrate English language proficiency, students are required to take the Test of English as a Foreign Language (TOEFL), the International English Language Testing Service (IELTS), or the Duolingo English Test.",
+     "condition": "all or some high school or secondary school completed in a country where English was not the language of instruction, with less than 3 years of instruction in English; scores are self-reported on the UC application (no later than January)"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://admission.ucla.edu/apply/international-applicants",
+     "quote": "We require records from the secondary schools you have attended that show subjects taken and grades received, as well as any national or government certificates earned.",
+     "condition": "if admitted: 'Please do not send these documents now. If you apply and are admitted, your admission packet will have instructions.'"
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "conditional",
+     "url": "https://admission.ucla.edu/apply/international-applicants",
+     "quote": "International students must prove that they have sufficient funds available to them to pay for their educational and living expenses.",
+     "condition": "international students (F-1 visa), after admission"
+    }
+   ]
+  }
+ }
+}

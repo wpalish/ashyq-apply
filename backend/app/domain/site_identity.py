@@ -28,7 +28,9 @@ def canonical_host(host_or_url: str) -> str:
         raw = f"https://{raw}"
     try:
         return httpx.URL(raw).raw_host.decode("ascii").lower().rstrip(".")
-    except (ValueError, UnicodeError):
+    except (httpx.InvalidURL, ValueError, UnicodeError):
+        # ``InvalidURL`` is not a ``ValueError``: a host ending in a zero-width
+        # space (usp, 2026-10-19) escaped this guard and ended a discovery run.
         return ""
 
 

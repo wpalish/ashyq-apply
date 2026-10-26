@@ -1,0 +1,44 @@
+{
+ "case": "qs2027-071",
+ "seed_id": "qs2027-071",
+ "university": "Lund University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-071",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Applicants to Bachelor's studies (international application via University Admissions in Sweden)",
+   "academic_year": null,
+   "notes": "Lund University 'Documentation' page; the application checklist is for studies 'starting in autumn 2027' (application by 15 January, documents by 1 February). Documents go to University Admissions in Sweden (universityadmissions.se, not a Lund domain), which publishes the country-specific document instructions; those were not read. The page states there are no programme-specific documents for Bachelor's studies. Lund's computer-science bachelor (Datateknik) is taught in Swedish. Not drafted: application fee or proof of fee exemption, proof of EU citizenship (fee exemption).",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/applying-studies-when-apply/documentation",
+     "quote": "You submit all official certificates and transcripts required for your application to University Admissions in Sweden."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/applying-studies-when-apply/documentation",
+     "quote": "when you are applying to Bachelor's studies you must submit your final upper secondary school documents by the document deadline."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/applying-studies-when-apply/documentation",
+     "quote": "All students need to prove that they meet the English requirements. You will in most cases need to demonstrate language proficiency through an internationally recognised test (e.g. IELTS/TOEFL).",
+     "condition": "English proficiency not proved through previous studies in one of the ways universityadmissions.se accepts"
+    }
+   ]
+  }
+ }
+}

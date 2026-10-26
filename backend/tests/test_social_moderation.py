@@ -346,6 +346,52 @@ class TestTheQueue:
         sign_in_as_moderator(client)
         assert client.get("/api/social/moderation/reports").status_code == 200
 
+    def test_the_app_is_told_only_a_named_moderator_moderates(self, client):
+        # A workspace owner who is not named is not a moderator, on every
+        # route that describes the signed-in account.
+        registered = client.post(
+            "/api/auth/register",
+            json={
+                "email": "owner-only@example.test",
+                "password": "correct horse battery owner-only",
+                "display_name": "Owner",
+                "organization_name": "Owner Workspace",
+            },
+        )
+        assert registered.status_code == 201, registered.text
+        assert registered.json()["role"] == "owner"
+        assert registered.json()["is_moderator"] is False
+        assert client.get("/api/auth/status").json()["principal"]["is_moderator"] is False
+        assert client.get("/api/auth/me").json()["is_moderator"] is False
+        client.post("/api/auth/logout")
+
+        sign_in_as_moderator(client)
+        assert client.get("/api/auth/status").json()["principal"]["is_moderator"] is True
+        assert client.get("/api/auth/me").json()["is_moderator"] is True
+        client.post("/api/auth/logout")
+        # The listed address in another case is the same account.
+        login = client.post(
+            "/api/auth/login",
+            json={"email": "KEEPER@Example.Test", "password": "correct horse battery keeper"},
+        )
+        assert login.status_code == 200, login.text
+        assert login.json()["is_moderator"] is True
+
+    def test_the_queue_routes_still_refuse_everyone_else(self, client):
+        self._one_open_report(client)
+        sign_in_as_moderator(client)
+        report_id = client.get("/api/social/moderation/reports").json()["items"][0]["id"]
+        client.post("/api/auth/logout")
+
+        sign_in(client, "reporter2")
+        assert client.get("/api/auth/status").json()["principal"]["is_moderator"] is False
+        assert client.get("/api/social/moderation/reports").status_code == 403
+        refused = client.post(
+            f"/api/social/moderation/reports/{report_id}",
+            json={"action": "dismiss", "note": ""},
+        )
+        assert refused.status_code == 403
+
     def test_removing_content_deletes_it_and_closes_the_report(self, client):
         post_id, _ = self._one_open_report(client)
         sign_in_as_moderator(client)

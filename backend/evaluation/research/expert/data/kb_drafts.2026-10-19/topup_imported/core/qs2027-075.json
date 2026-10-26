@@ -1,0 +1,44 @@
+{
+ "case": "qs2027-075",
+ "university": "Trinity College Dublin, The University of Dublin",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "tcd"
+ },
+ "questions_researched": [
+  "gpa",
+  "deadline"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.tcd.ie/courses/undergraduate/courses/computer-science/",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "not_applicable",
+   "url": "https://www.tcd.ie/courses/undergraduate/courses/computer-science/",
+   "quote": "Admission Requirements Leaving Certificate: H4 Mathematics Advanced GCE (A-Level): Grade C Mathematics International Baccalaureate: HL Grade 5 Mathematics",
+   "notes": "Subject requirements only, not a GPA. 'CAO Points 533 (2025)' is the previous year's EU cut-off (CAO route), not a minimum for non-EU applicants. Non-EU country-specific general entry requirements are on the university's international pages (not read).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-05-01",
+   "url": "https://www.tcd.ie/courses/undergraduate/courses/computer-science/",
+   "quote": "Non-EU Applicants Computer Science - 4 Years - Full-Time 01/MAY/2026",
+   "population": "international",
+   "notes": "Non-EU direct-application deadline as shown on the course page on 2026-10-19; it is the 2026-entry date (already passed) and the 2027 date is not yet posted. 'Places on the course may fill before the application deadline, so early application is encouraged.' Advanced entry: 30/Jun/2026. EU applicants apply via CAO.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

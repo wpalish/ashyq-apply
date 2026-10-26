@@ -1,0 +1,97 @@
+{
+ "case": "qs2027-053",
+ "seed_id": "qs2027-053",
+ "university": "Korea University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-053",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+   "academic_year": null,
+   "cycle_stated": "Spring 2027",
+   "cycle_is_intake": false,
+   "notes": "Korea University's Office of International Affairs application guide for the Spring 2027 intake (online application 3-31 August 2026; the guide's 'Key Changes for the 2027 Academic Year' is an application-cycle label, kept here and not as the list's academic year). No Fall 2027 guide was published on 2026-10-19. Not drafted (no vocabulary kind): Consent of Collection and Use of Personal Information & Citizenship Statement; parents' passport copies; Family Register / Relationship Certificate (translated and notarized); documents for applicants with Korean ethnicity or special family situations; optional documents (language tests other than English/Korean, national qualifications, prizes); Art & Design portfolio (not relevant to Computer Science). Applicants must also meet a Korean or English language proficiency requirement.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "1. Required Documents for All Applicants Documents Notes Copy of Online Application"
+    },
+    {
+     "kind": "motivation_letter",
+     "requirement": "required",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "Documents 1 - 3 must be completed, and be printed from the online application system for submission. Statement of Purpose"
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "Photographs (3x4cm / max. 24KB) must have been taken within the last three months."
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "Photocopy of the Passport Information (photo) Page of the Applicant and Parent(s)"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "Authorized language proficiency test score of English or Korean (TOPIK, TOPIK iBT, TOEFL iBT, TOEFL iBT Enhancement, IELTS Academic) within the validity period.",
+     "condition": "language proficiency shown with an English test (TOEFL iBT / IELTS Academic) rather than Korean (TOPIK) or a Korean/English-medium school confirmation; International Studies applicants must submit English"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "Official Transcript of High/Secon dary School Must obtain apostille stamps or consular authentication"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "2) Official Graduation Certificate of High/Secon dary School"
+    },
+    {
+     "kind": "apostille",
+     "requirement": "required",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "Apostille stamps or Korean consular authentication must be on the original academic documents.",
+     "notes": "Apostille or Korean consular authentication; not required for certificates issued by schools in Korea."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "All documents must be translated in English or Korean with notarization.",
+     "condition": "family register / relationship documents not in English or Korean (notarized translation)"
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "conditional",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "An applicant's admission may be denied or revoked if the required final academic documents and proof of bank balance are not submitted by the designated deadline",
+     "condition": "after admission (proof of bank balance, with the final academic documents)"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "optional",
+     "url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+     "quote": "Standardized international admissions qualifications tests (ACT, A-level, AP, IB, SAT, 高考, HKDSE, ATAR, NCEA, STPM, etc.)"
+    }
+   ]
+  }
+ }
+}

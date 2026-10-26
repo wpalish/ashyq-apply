@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
+from datetime import date
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
@@ -382,3 +383,202 @@ async def test_acronym_identity_needs_matching_host_and_university_heading(catal
     assert (await adapter._probe_site(uni, "https://ucl.ac.uk/"))[
         "homepage"
     ] == "https://ucl.ac.uk/"
+
+
+# ------------------------------------------------- verified-data coverage (CAT-1)
+
+KB_URL = "https://www.mit.edu/admissions/synthetic"
+
+
+def _kb_fact(key: str, value, quote: str, **extra) -> dict:
+    return {
+        "key": key,
+        "value": value,
+        "period": None,
+        "academic_year": None,
+        "population": None,
+        "source_url": KB_URL,
+        "quote": quote,
+        "source_type": "official",
+        "accessed_on": "2026-10-19",
+        "verified_on": "2026-10-19",
+        **extra,
+    }
+
+
+def _kb_entries() -> dict:
+    """MIT with facts, Stanford with a related route only, Imperial with nothing verified."""
+    programme = {
+        "status": "known",
+        "urls": [KB_URL],
+        "evidence": [{"url": KB_URL, "quote": "Bachelor of Science in Computer Science"}],
+    }
+    return {
+        "qs2027-001": {
+            "seed_id": "qs2027-001",
+            "review_status": "expert_checked",
+            "verified_on": "2026-10-19",
+            "university": "Massachusetts Institute of Technology (MIT)",
+            "official_domain": "mit.edu",
+            "programme": programme,
+            "facts": {
+                "english": [_kb_fact("ielts.overall", 7.0, "IELTS 7.0 overall")],
+                "deadline": [_kb_fact("deadline", "2027-01-05", "Apply by 5 January 2027")],
+                "tuition": [
+                    _kb_fact(
+                        "tuition",
+                        {"amount": 2190.0, "currency": "CHF"},
+                        "CHF 2,190 per semester",
+                        period="semester",
+                        caveat="fee policy page; no academic year printed",
+                    )
+                ],
+                "documents": [
+                    _kb_fact("documents.passport", {"kind": "passport"}, "a passport copy"),
+                    _kb_fact("documents.transcript", {"kind": "transcript"}, "transcripts"),
+                ],
+            },
+            "not_applicable": [
+                {"question": "gpa", "key": "gpa", "reason": "no minimum", "quote": "none"}
+            ],
+        },
+        "qs2027-003": {
+            "seed_id": "qs2027-003",
+            "review_status": "draft",
+            "verified_on": "2026-10-19",
+            "university": "Stanford University",
+            "official_domain": "stanford.edu",
+            "programme": {
+                "status": "unknown",
+                "related_programme_urls": ["https://cs.stanford.edu/related"],
+            },
+            "facts": {
+                "tuition": [
+                    _kb_fact(
+                        "tuition",
+                        {"amount": 60000.0, "currency": "USD"},
+                        "Tuition 2026/27: USD 60,000",
+                        period="year",
+                        academic_year="2026/27",
+                    )
+                ]
+            },
+        },
+        "qs2027-002": {
+            "seed_id": "qs2027-002",
+            "review_status": "draft",
+            "university": "Imperial College London",
+            "official_domain": "imperial.ac.uk",
+            "programme": {"status": "unknown"},
+            "facts": {},
+        },
+    }
+
+
+@pytest.fixture
+def kb_mode(monkeypatch, tmp_path):
+    """The catalogue route in kb mode on a three-entry KB, judged on 2026-10-19."""
+    import app.api.routes_universities as routes
+    from app.config import get_settings
+
+    kb = tmp_path / "kb.json"
+    kb.write_text(json.dumps({"version": "test.kb", "entries": _kb_entries()}), encoding="utf-8")
+    settings = get_settings().model_copy(
+        update={
+            "demo_mode": False,
+            "knowledge_mode": "kb",
+            "knowledge_base_path": kb,
+            "knowledge_imported_path": tmp_path / "no-import.json",
+        }
+    )
+    monkeypatch.setattr(routes, "get_settings", lambda: settings)
+    monkeypatch.setattr("app.knowledge.claims.kb_today", lambda: date(2026, 10, 19))
+    return settings
+
+
+def _card(client, query: str, extra: str = "") -> dict:
+    return client.get(f"/api/universities?q={query}{extra}").json()["items"][0]
+
+
+def test_kb_mode_cards_carry_the_verified_coverage(paid_client, kb_mode):
+    mit = _card(paid_client, "MIT")["knowledge"]
+    assert mit == {
+        "in_kb": True,
+        "programme_page": "known",
+        # English, deadline and tuition known; GPA verified as not applicable.
+        "core_answered": 4,
+        "documents": 2,
+        "verified_on": "2026-10-19",
+        "stale_count": 0,
+        "review_label": "expert-checked, quote verified",
+        "tuition": {
+            "amount": 2190.0,
+            "currency": "CHF",
+            "range_low": None,
+            "range_high": None,
+            "period": "semester",
+            "academic_year": None,
+            "stale": False,
+            "stale_reasons": [],
+            "stale_messages": [],
+            "caveat": "fee policy page; no academic year printed",
+            "caveat_message": {"key": "caveat.feePolicy", "params": {}, "parts": {}},
+            "source_url": KB_URL,
+        },
+    }
+    stanford = _card(paid_client, "Stanford")["knowledge"]
+    assert stanford["in_kb"] and stanford["programme_page"] == "related_only"
+    assert stanford["core_answered"] == 1
+    # No profile, no intake: a 2026/27 fee is current until its year is over.
+    assert stanford["tuition"]["stale"] is False and stanford["stale_count"] == 0
+    # In the KB with nothing verified, or not in it at all: no verified data.
+    for query in ("Imperial", "Oxford"):
+        card = _card(paid_client, query)
+        assert card["knowledge"]["in_kb"] is False and card["knowledge"]["tuition"] is None
+        assert card["tuition_status"] == "needs_verification"
+
+
+def test_kb_mode_filters_to_verified_rows_and_counts_them(paid_client, kb_mode, case_id):
+    body = paid_client.get("/api/universities").json()
+    assert body["kb_total"] == 2 and body["catalogue_total"] == 501
+    verified = paid_client.get("/api/universities?verified=true").json()
+    assert verified["total"] == 2
+    assert {u["name"] for u in verified["items"]} == {
+        "Massachusetts Institute of Technology",
+        "Stanford University",
+    }
+    assert paid_client.get("/api/universities?verified=true&q=Oxford").json()["total"] == 0
+    # A fall 2027 CS bachelor's profile: the run's rule makes the 2026/27 fee stale.
+    mine = _card(paid_client, "Stanford", f"&profile_id={case_id}")["knowledge"]
+    assert mine["stale_count"] == 1 and mine["tuition"]["stale"] is True
+    assert mine["tuition"]["stale_reasons"] == [
+        "academic year 2026/27 is before the fall 2027 intake's 2027/28"
+    ]
+    # Keyed beside the English, so the card can say it in ru and kk.
+    assert [m["key"] for m in mine["tuition"]["stale_messages"]] == ["stale.yearBeforeIntake"]
+
+
+def test_kb_mode_shows_no_kb_data_for_a_request_the_kb_does_not_answer(paid_client, kb_mode):
+    from app.corpus.demo_profile import DEMO_PROFILE
+
+    other = DEMO_PROFILE.model_copy(deep=True)
+    other.context.intended_fields = ["medicine"]
+    created = paid_client.post("/api/profiles", json=other.model_dump(mode="json"))
+    body = paid_client.get(f"/api/universities?profile_id={created.json()['id']}&q=MIT").json()
+    assert body["kb_total"] == 0 and body["items"][0]["knowledge"]["in_kb"] is False
+
+
+@pytest.mark.parametrize("update", [{"knowledge_mode": "live"}, {"demo_mode": True}])
+def test_live_and_demo_cards_have_no_knowledge_block(paid_client, monkeypatch, update):
+    import app.api.routes_universities as routes
+    from app.config import get_settings
+
+    settings = get_settings().model_copy(
+        update={"demo_mode": False, "knowledge_mode": "kb", **update}
+    )
+    monkeypatch.setattr(routes, "get_settings", lambda: settings)
+    body = paid_client.get("/api/universities?verified=true").json()
+    assert body["kb_total"] is None
+    # ``verified`` means nothing without a knowledge base: nothing is filtered.
+    assert body["total"] == 501
+    assert all(u["knowledge"] is None for u in body["items"])

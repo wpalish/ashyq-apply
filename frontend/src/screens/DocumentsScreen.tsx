@@ -4,20 +4,29 @@
  * Grouped by who has to act, and ordered by lead time rather than by deadline.
  * A reference letter with a thirty-day lead time is the thing that actually
  * sinks an application, not the form you can fill in on the last evening.
+ *
+ * Every fixed label goes through `t()` (I18N-2). A document name from our
+ * 18-kind vocabulary and the sentences the backend writes into `format_notes`
+ * (optional, conditional, possibly outdated) come with keys and are said in
+ * the reader's language (I18N-3); anything unkeyed — a prompt, a name a live
+ * page used, a condition as the university wrote it — stays as published.
  */
 
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
 import { date, dateTime } from '@/lib/format';
+import type { MessageKey } from '@/lib/i18n';
+import { localize } from '@/lib/messages';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
+import { rich, useTranslation } from '@/lib/useTranslation';
 import type { DocumentItem, ProgramResult } from '@/types';
 
-const OWNER_LABEL: Record<string, string> = {
-  applicant: 'You',
-  school: 'Your school',
-  recommender: 'Your referee',
-  third_party: 'A third party (translator, WES/ECE, notary)',
+const OWNER_LABEL: Record<string, MessageKey> = {
+  applicant: 'detail.docs.step.applicant',
+  school: 'detail.docs.owner.school',
+  recommender: 'detail.docs.owner.recommender',
+  third_party: 'documents.owner.thirdParty',
 };
 
 const DONE_KEY = 'ashyq.docsDone';
@@ -31,7 +40,8 @@ function loadDone(): Record<string, boolean> {
 }
 
 export function DocumentsScreen() {
-  const { results, run } = useStore();
+  const { t, tf } = useTranslation();
+  const { results, run, capabilities } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
   const [done, setDone] = useState<Record<string, boolean>>(loadDone);
@@ -49,7 +59,7 @@ export function DocumentsScreen() {
   };
 
   const deadlines = useMemo(() => {
-    const items: { when: string; what: string; where: string; past: boolean }[] = [];
+    const items: { when: string; what: string; where: string; past: boolean; admission: boolean }[] = [];
     const today = new Date().toISOString().slice(0, 10);
     // Every row on the shortlist, not only the ones with a checklist: the
     // panel says "across your shortlist" and a deadline matters whether or not
@@ -58,9 +68,10 @@ export function DocumentsScreen() {
       if (r.admission_deadline) {
         items.push({
           when: r.admission_deadline,
-          what: `Admission application${r.admission_deadline_timezone ? ` (${r.admission_deadline_timezone})` : ''}`,
+          what: r.admission_deadline_timezone ? ` (${r.admission_deadline_timezone})` : '',
           where: `${r.university} — ${r.program}`,
           past: r.admission_deadline < today,
+          admission: true,
         });
       }
       for (const s of r.scholarships) {
@@ -70,6 +81,7 @@ export function DocumentsScreen() {
             what: `${s.name}${s.deadline_timezone ? ` (${s.deadline_timezone})` : ''}`,
             where: r.university,
             past: s.deadline < today,
+            admission: false,
           });
         }
       }
@@ -77,11 +89,19 @@ export function DocumentsScreen() {
     return items.sort((a, b) => a.when.localeCompare(b.when));
   }, [results]);
 
+  const title = rich(t('documents.title'), {
+    accent: <span className="find-yellow">{t('documents.titleAccent')}</span>,
+  });
+
   if (withChecklists.length === 0) {
     return (
       <div className="find-page">
-        <div className="screen__head"><p className="screen__eyebrow">DOCUMENTS & DEADLINES</p><h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1><p className="screen__lede">Your document checklist appears after you save programmes in Plan and collect their official requirements.</p></div>
-        <div className="find-empty"><Empty title="No checklists yet">Choose a programme in Find, then collect documents from Plan.</Empty></div>
+        <div className="screen__head">
+          <p className="screen__eyebrow">{t('documents.eyebrow').toLocaleUpperCase()}</p>
+          <h1 className="screen__title">{title}</h1>
+          <p className="screen__lede">{t('documents.emptyLede')}</p>
+        </div>
+        <div className="find-empty"><Empty title={t('documents.emptyTitle')}>{t('documents.emptyBody')}</Empty></div>
       </div>
     );
   }
@@ -91,19 +111,16 @@ export function DocumentsScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Documents & deadlines</p>
-        <h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1>
-        <p className="screen__lede">
-          Ordered by lead time, not by deadline. The items at the top depend on other people, so
-          they are the ones that need starting first.
-        </p>
+        <p className="screen__eyebrow">{t('documents.eyebrow')}</p>
+        <h1 className="screen__title">{title}</h1>
+        <p className="screen__lede">{t('documents.lede')}</p>
       </div>
 
       <div className="stack stack--loose">
         <details className="documents-deadlines">
-          <summary>Calendar and deadlines across your shortlist ({deadlines.length})</summary>
+          <summary>{tf('documents.calendarSummary', { n: deadlines.length })}</summary>
         <Panel
-          title="Every deadline across your shortlist"
+          title={t('documents.calendarTitle')}
           sunken
           actions={
             run && deadlines.length > 0 ? (
@@ -113,7 +130,7 @@ export function DocumentsScreen() {
                 download
                 data-testid="download-ics"
               >
-                Add to calendar (.ics)
+                {t('documents.addToCalendar')}
               </a>
             ) : undefined
           }
@@ -123,13 +140,15 @@ export function DocumentsScreen() {
               <div key={i} className={`timeline__item ${d.past ? 'timeline__item--past' : ''}`}>
                 <span className="timeline__date">{date(d.when)}</span>
                 <div>
-                  <div className="small"><strong>{d.what}</strong></div>
+                  <div className="small">
+                    <strong>{d.admission ? `${t('documents.admissionApplication')}${d.what}` : d.what}</strong>
+                  </div>
                   <div className="xs muted">{d.where}</div>
                 </div>
-                {d.past && <Chip tone="risk">passed</Chip>}
+                {d.past && <Chip tone="risk">{t('documents.passed')}</Chip>}
               </div>
             ))}
-            {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}
+            {deadlines.length === 0 && <p className="muted small">{t('documents.noDeadlines')}</p>}
           </div>
         </Panel>
         </details>
@@ -139,7 +158,10 @@ export function DocumentsScreen() {
             <button
               key={r.id}
               className="btn btn--sm"
-              style={r.id === current.id ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
+              aria-pressed={r.id === current.id}
+              // The border may be the brand yellow; the text may not. `--accent`
+              // on white is 1.56:1, `--accent-text` is 6.3:1 (WCAG AA is 4.5:1).
+              style={r.id === current.id ? { borderColor: 'var(--accent)', color: 'var(--accent-text)', fontWeight: 600 } : undefined}
               onClick={() => setSelected(r.id)}
               data-testid={`doc-tab-${r.id}`}
             >
@@ -148,15 +170,55 @@ export function DocumentsScreen() {
           ))}
         </div>
 
-        <ChecklistFor result={current} done={done} toggle={toggle} />
+        <ChecklistFor result={current} done={done} toggle={toggle} kb={capabilities?.knowledge_mode === 'kb'} />
       </div>
     </>
   );
 }
 
+/** What a document asks for beyond its name, in the reader's language. */
+type Say = Pick<ReturnType<typeof useTranslation>, 't' | 'tf' | 'tn'>;
+
+/**
+ * `format_notes` sentence by sentence, each in the reader's language when the
+ * backend keyed it. The cut is the backend's (`message_keys._NOTE_END`: a full
+ * stop, spaces, a capital), so the n-th sentence meets the n-th key; when the
+ * counts differ the served English is shown whole.
+ */
+function localNotes(d: Pick<DocumentItem, 'format_notes' | 'notes_messages'>): string {
+  const notes = d.format_notes.trim();
+  const keyed = d.notes_messages;
+  if (!notes || !keyed) return notes;
+  const sentences = notes.split(/(?<=\.) +(?=[A-Z])/);
+  if (sentences.length !== keyed.length) return notes;
+  return sentences.map((sentence, i) => localize(keyed[i], sentence)).join(' ');
+}
+
+function documentMeta(d: DocumentItem, { t, tf, tn }: Say): string {
+  return [
+    d.purpose === 'scholarship' ? t('documents.forScholarship') : t('documents.forAdmission'),
+    d.lead_time_days ? tn('detail.docs.leadTime', d.lead_time_days) : null,
+    d.word_limit ? tf('documents.maxWords', { n: d.word_limit }) : null,
+    d.max_pages ? tf('documents.maxPages', { n: d.max_pages }) : null,
+    d.max_file_size_mb ? tf('documents.maxSize', { n: d.max_file_size_mb }) : null,
+    localNotes(d) || null,
+    d.needs_translation ? t('documents.translation') : null,
+    d.needs_notarization ? t('documents.notarisation') : null,
+    d.needs_apostille ? t('documents.apostille') : null,
+    d.needs_credential_evaluation ? t('documents.credentialEvaluation') : null,
+    d.deadline ? tf('documents.due', { date: date(d.deadline) }) : null,
+  ].filter(Boolean).join(' · ');
+}
+
+function completenessKey(kb: boolean, completeness: string): MessageKey {
+  if (kb) return `detail.docs.kb.${completeness}` as MessageKey;
+  return `documents.completeness.${completeness}` as MessageKey;
+}
+
 function ChecklistFor({
-  result, done, toggle,
-}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void }) {
+  result, done, toggle, kb,
+}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void; kb: boolean }) {
+  const { t, tf, tn } = useTranslation();
   const c = result.checklist!;
 
   // Longest lead time first, both between groups and inside them. What the
@@ -184,11 +246,10 @@ function ChecklistFor({
     <div className="stack">
       <Panel
         title={`${result.university} — ${result.program}`}
-        hint={`${completed} of ${total} items ticked off. Generated ${dateTime(c.generated_at)}.`}
+        hint={tf('documents.ticked', { done: completed, total, when: dateTime(c.generated_at) })}
         actions={
           <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
-            {c.completeness === 'official' ? 'from official pages'
-              : c.completeness === 'partial' ? 'partially read' : 'no official list found'}
+            {t(completenessKey(kb, c.completeness))}
           </Chip>
         }
       >
@@ -199,29 +260,15 @@ function ChecklistFor({
         {groups.map(([owner, items]) =>
           items.length === 0 ? null : (
             <div key={owner} className="stack stack--tight" style={{ marginBottom: 'var(--space-5)' }}>
-              <h3 style={{ fontSize: 'var(--text-base)' }}>{OWNER_LABEL[owner]}</h3>
+              <h3 style={{ fontSize: 'var(--text-base)' }}>{OWNER_LABEL[owner] ? t(OWNER_LABEL[owner]) : owner}</h3>
               {items.map((d) => {
                 const key = `${result.id}::${d.name}`;
                 return (
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
                     <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
                     <div>
-                      <div className="doc__name">{d.name}</div>
-                      <div className="doc__meta">
-                        {[
-                          d.purpose === 'scholarship' ? 'for a scholarship' : 'for admission',
-                          d.lead_time_days ? `allow ~${d.lead_time_days} day${d.lead_time_days === 1 ? '' : 's'}` : null,
-                          d.word_limit ? `max ${d.word_limit} words` : null,
-                          d.max_pages ? `max ${d.max_pages} pages` : null,
-                          d.max_file_size_mb ? `max ${d.max_file_size_mb} MB` : null,
-                          d.format_notes || null,
-                          d.needs_translation ? 'certified translation required' : null,
-                          d.needs_notarization ? 'notarisation required' : null,
-                          d.needs_apostille ? 'apostille required' : null,
-                          d.needs_credential_evaluation ? 'credential evaluation required' : null,
-                          d.deadline ? `due ${date(d.deadline)}` : null,
-                        ].filter(Boolean).join(' · ')}
-                      </div>
+                      <div className="doc__name">{localize(d.name_message, d.name)}</div>
+                      <div className="doc__meta">{documentMeta(d, { t, tf, tn })}</div>
                       {d.prompt_text && (
                         <p className="xs faint" style={{ margin: '4px 0 0' }}>{d.prompt_text}</p>
                       )}
@@ -235,13 +282,15 @@ function ChecklistFor({
 
         {c.unresolved.length > 0 && (
           <div className="stack stack--tight">
-            <h3 style={{ fontSize: 'var(--text-base)' }}>Still to confirm</h3>
+            <h3 style={{ fontSize: 'var(--text-base)' }}>{t('documents.stillToConfirm')}</h3>
             {c.unresolved.map((q, i) => (
               <Notice key={i} kind={q.blocking ? 'risk' : 'warn'}>
                 <div>
-                  <strong>{q.question}</strong>
-                  <div className="xs" style={{ marginTop: 3 }}>{q.why_it_matters}</div>
-                  {q.suggested_contact && <div className="xs">Ask: {q.suggested_contact}</div>}
+                  <strong>{localize(q.question_message, q.question)}</strong>
+                  <div className="xs" style={{ marginTop: 3 }}>{localize(q.why_message, q.why_it_matters)}</div>
+                  {q.suggested_contact && (
+                    <div className="xs">{tf('documents.ask', { contact: q.suggested_contact })}</div>
+                  )}
                 </div>
               </Notice>
             ))}
@@ -250,10 +299,7 @@ function ChecklistFor({
       </Panel>
 
       <Notice kind="info">
-        <div>
-          Unimatch prepares this list. It does not upload documents, submit an application, sign
-          anything on your behalf, or pay a fee. Those steps stay with you.
-        </div>
+        <div>{t('documents.notice')}</div>
       </Notice>
     </div>
   );

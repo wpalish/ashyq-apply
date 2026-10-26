@@ -1,0 +1,44 @@
+{
+ "case": "qs2027-072",
+ "seed_id": "qs2027-072",
+ "university": "University of Texas at Austin",
+ "researched_on": "2026-10-20",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-072",
+  "round": "topup_round11"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.cs.utexas.edu/undergraduate/core-degrees",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "min": 42554,
+    "max": 51106,
+    "currency": "USD",
+    "period": "year",
+    "academic_year": "2026-27",
+    "population": "non-resident full-time undergraduate, Fall & Spring semesters, based on 12-hour enrollment (university-wide range; no Computer Science figure printed)"
+   },
+   "url": "https://onestop.utexas.edu/managing-costs/cost-tuition-rates/cost-of-attendance/",
+   "quote": "Non-Resident Tuition $42,554-$51,106",
+   "notes": "Texas One Stop, Cost of Attendance, '2026-27 Estimated Costs': 'The figures below outline the estimated cost of attendance for undergraduate and graduate students to attend UT during Summer 2026 and the 2026-27 academic year.' Table 'Fall & Spring Semesters for Full-Time Undergraduate', column 'Non-Resident', row 'Tuition': $42,554-$51,106, 'Based on 12-hour enrollment'. Fall and Spring together are the academic year, so the period is a year. A range for all programmes, kept as printed; no figure inside it is chosen. No 2027-28 figure is published, so the build keeps it stale for a fall 2027 intake. The page does not say which rate international students pay; that they pay the non-resident rate is the expert's reading (batch5), not this page's text.",
+   "date": "2026-10-20",
+   "page_language": "en"
+  }
+ }
+}

@@ -51,13 +51,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.adapters.base import PageOutcome
 from app.adapters.discovery.live_discovery import (
     REGISTRY_PATH,
     LiveDiscoveryAdapter,
     registrable_domain,
 )
 from app.adapters.fetching import Fetcher
-from app.catalogue.importer import identity_key, import_catalogue, stable_id
+from app.catalogue.importer import identity_key, import_catalogue, seed_domain, stable_id
 from app.config import Settings
 from app.domain.enums import (
     ClaimStatus,
@@ -77,6 +78,7 @@ from app.models.research import (
     ResearchRun,
 )
 from app.models.source_page import SourcePage
+from app.models.university import University
 from app.pipeline.runner import ResearchRunner
 from app.pipeline.state import RunState
 from app.schemas.profile import (
@@ -173,6 +175,16 @@ class CanaryRunner(ResearchRunner):
         super().__init__(*args, **kwargs)
         self.audit = FetchAudit()
         self.discovery_instances: list[LiveDiscoveryAdapter] = []
+        #: ES-2: the structured fields an outcome line does not print, by
+        #: (category, url, detail); read back by the benchmark capture.
+        self.outcome_signals: dict[tuple[str, str, str], tuple[str, str]] = {}
+
+    def _record_page_outcomes(self, outcomes: list[PageOutcome]) -> None:
+        super()._record_page_outcomes(outcomes)
+        # A runner a test builds without ``__init__`` has no table yet.
+        if not hasattr(self, "outcome_signals"):
+            self.outcome_signals = {}
+        self.outcome_signals.update(outcome_signals(outcomes))
 
     def _make_fetcher(self) -> Fetcher:
         return self.audit.install(super()._make_fetcher())
@@ -196,6 +208,19 @@ _PAGE_OUTCOME_RE = re.compile(
 )
 
 
+def outcome_signals(outcomes: list[PageOutcome]) -> dict[tuple[str, str, str], tuple[str, str]]:
+    """ES-2: each recorded outcome's (html_lang, classifier_signal), by its line's fields.
+
+    Only outcomes that carry both (the funding stage's classified pages) are
+    kept; the key is what ``page_outcomes`` parses back out of the line.
+    """
+    return {
+        (o.category, o.url, o.detail): (o.html_lang, o.classifier_signal)
+        for o in outcomes
+        if o.html_lang is not None and o.classifier_signal is not None
+    }
+
+
 def page_outcomes(run: ResearchRun) -> list[dict[str, str]]:
     """The run's per-page outcome records, parsed back out of its diagnostics.
 
@@ -209,6 +234,24 @@ def page_outcomes(run: ResearchRun) -> list[dict[str, str]]:
         if match:
             found.append(match.groupdict())
     return found
+
+
+def run_diagnostics(run: ResearchRun, domain: str) -> list[str]:
+    """ES-1: the run's prose diagnostics about ``domain``'s pages, page records excluded.
+
+    A stage's ``errors`` line that starts with a page URL (``"<url>: ..."``)
+    is kept for the institution that owns the URL, so ``stage_summary`` can
+    count it as a fixed category. Lines naming no page are not kept.
+    """
+    kept = []
+    for line in list(run.errors or []) + list(run.unknowns or []):
+        text = str(line)
+        if _PAGE_OUTCOME_RE.match(text):
+            continue
+        head = text.split(" ", 1)[0].rstrip(":")
+        if head.startswith(("http://", "https://")) and registrable_domain(head) == domain:
+            kept.append(text)
+    return kept[:200]
 
 
 # --- the four zero-tolerance checks --------------------------------------
@@ -348,6 +391,40 @@ def select_registry_entries(registry: list[dict], selectors: list[str] | None) -
     return selected
 
 
+def _install_identified_sites(
+    session, entries: list[dict], *, establish: bool = True, drop_registry_entry: bool = False
+) -> None:
+    """Record each entry as its seed row's established site identity.
+
+    This is the state ``_identify_site`` leaves behind on success (domain
+    checked, entry in hand), so discovery goes straight to ``_discover_one``
+    with the given homepage. Only the canary's throwaway database is touched.
+    With ``establish=False`` (the benchmark's identity-gate arm, v3-M3) each
+    row is only checked to exist: production's ``_identify_site`` then
+    establishes the site, or fails to, from the seed row alone.
+
+    ``drop_registry_entry`` (G-06, the cohort's no-seed and identity-gate arms)
+    first forgets the curated entry ``import_catalogue`` attached - its seeds
+    and its curated domain - so a registry university is left as a seed-only
+    row whose domain is the seed record's, as the importer gives every row
+    without a registry entry.
+    """
+    for entry in entries:
+        uni = session.get(University, stable_id(identity_key(entry["name"], entry["country"])))
+        if uni is None:
+            raise SystemExit(f"no catalogue university matches {entry['name']!r}")
+        if drop_registry_entry and uni.registry_entry is not None:
+            record = (uni.seed_snapshot or {}).get("record") or {}
+            uni.registry_entry = None
+            uni.domain = seed_domain(record) if record else None
+            uni.domain_status = "seed" if uni.domain else "unknown"
+        if establish and uni.registry_entry is None:
+            uni.registry_entry = dict(entry)
+            uni.domain = registrable_domain(entry["homepage"])
+            uni.domain_status = "site_identity_checked"
+    session.flush()
+
+
 def recall_metrics(rows: list[dict]) -> dict[str, dict[str, float | int]]:
     """Publish recall as honest numerators and denominators, never a slogan."""
     program_numerator = sum(bool(row.get("program_page_found")) for row in rows)
@@ -374,10 +451,35 @@ async def run_canary(
     only: str | None,
     verbose: bool,
     batch: list[str] | None = None,
+    *,
+    entries: list[dict] | None = None,
+    through_identity_gate: bool = False,
+    drop_registry_entry: bool = False,
 ) -> dict:
-    registry = json.loads(REGISTRY_PATH.read_text())
-    selectors = batch or ([only] if only else None)
-    registry = select_registry_entries(registry, selectors)
+    """Run the real pipeline on a registry batch, or on explicit ``entries``.
+
+    ``entries`` are ``{"name","country","city","homepage"}`` dicts - the shape
+    ``CatalogueDiscoveryAdapter._identify_site`` returns for a seed-only
+    university. They replace the registry selector, so a university with no
+    curated entry runs the production no-seed path: discovery from the
+    homepage with empty seeds.
+
+    ``through_identity_gate`` (v3-M3) leaves the entries' identity unset, so
+    the production path runs ``_identify_site`` on each seed row first; an
+    entry then only names its row, and its homepage only labels the fetch
+    audit until the gate establishes the site's own domain.
+
+    ``drop_registry_entry`` (G-06) lets an entry name a registry university:
+    its curated entry and seeds are forgotten first, so it takes the no-seed
+    path (or, with ``through_identity_gate``, the gate path) like a seed-only
+    university.
+    """
+    if entries is not None:
+        registry = [dict(entry) for entry in entries]
+    else:
+        registry = json.loads(REGISTRY_PATH.read_text())
+        selectors = batch or ([only] if only else None)
+        registry = select_registry_entries(registry, selectors)
 
     profile = canary_profile()
     workdir = Path(tempfile.mkdtemp(prefix="canary-"))
@@ -387,6 +489,13 @@ async def run_canary(
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
     import_catalogue(session)
+    if entries is not None:
+        _install_identified_sites(
+            session,
+            registry,
+            establish=not through_identity_gate,
+            drop_registry_entry=drop_registry_entry,
+        )
 
     settings = Settings(
         cache_dir=workdir / "cache",
@@ -472,6 +581,11 @@ async def run_canary(
     for entry in registry:
         name = entry["name"]
         domain = registrable_domain(entry["homepage"])
+        if through_identity_gate:
+            # The domain the gate established, when it did (v3-M3).
+            gated = session.get(University, stable_id(identity_key(name, entry["country"])))
+            if gated is not None and gated.domain_status == "site_identity_checked":
+                domain = registrable_domain(gated.domain or "") or domain
         outcomes = runner.audit.by_domain.get(domain, Counter())
         blocked = outcomes.get(FetchOutcome.ROBOTS_DISALLOWED.value, 0)
         checked = sum(outcomes.values())
@@ -486,6 +600,7 @@ async def run_canary(
         result = results.get(name)
         claims = claims_by_result.get(result_ids.get(name, ""), [])
         page_records = records_by_domain.get(domain, [])
+        notes = run_diagnostics(run, domain)
         outcome_counts = Counter(record["category"] for record in page_records)
         type_counts = Counter(
             record["page_type"] for record in page_records if record["page_type"] != "unclassified"
@@ -510,7 +625,11 @@ async def run_canary(
             "failures": runner.audit.failures.get(domain, [])[:8],
             "outcomes": dict(outcomes),
             "discovered": trace.selected if trace else {},
-            "discovery_trace": trace.as_dict() if trace else None,
+            "discovery_trace": (
+                {**trace.as_dict(), **({"run_diagnostics": notes} if notes else {})}
+                if trace
+                else None
+            ),
             "programs": [p.url for p in candidate.programs] if candidate else [],
             "program_page_found": bool(candidate and candidate.programs),
             "scholarship_page_found": bool(candidate and candidate.scholarships_url),

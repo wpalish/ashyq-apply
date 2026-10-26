@@ -11,13 +11,16 @@
 import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { ComparePanel } from '@/components/ComparePanel';
+import { Deadline } from '@/components/Deadline';
 import { UniversityCatalogue } from '@/components/UniversityCatalogue';
-import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
+import { Chip, Empty, Field, Notice, Panel, StatusChip, statusLabel } from '@/components/primitives';
 import {
-  FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
-  fundingClassTone, humanize, money, percent, ratio,
+  FIT_DISCLAIMER, admissionsFitTone, bucketTone, date, eligibilityTone,
+  fundingClassTone, money, openQuestionCount, percent, ratio,
 } from '@/lib/format';
+import type { MessageKey } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
+import { rich, useTranslation } from '@/lib/useTranslation';
 import type { Bucket, ProgramResult, UserDecision } from '@/types';
 
 type SortKey = 'key' | 'fit' | 'coverage' | 'gap' | 'university' | 'deadline';
@@ -28,10 +31,10 @@ type SortKey = 'key' | 'fit' | 'coverage' | 'gap' | 'university' | 'deadline';
 const RANKED: Bucket[] = ['WELL_PLACED', 'PLAUSIBLE', 'AMBITIOUS'];
 const SET_ASIDE: Bucket[] = ['OUT_OF_BUDGET', 'NEEDS_CLARIFICATION', 'EXCLUDED'];
 
-const SET_ASIDE_HINT: Record<string, string> = {
-  OUT_OF_BUDGET: 'Kept with the number, not hidden: you may know something about the money that we do not.',
-  NEEDS_CLARIFICATION: 'Too little could be verified to place these. Ask the admissions office the open questions on the row.',
-  EXCLUDED: 'A published requirement that is not met, or a country you excluded.',
+const SET_ASIDE_HINT: Record<string, MessageKey> = {
+  OUT_OF_BUDGET: 'shortlist.hint.OUT_OF_BUDGET',
+  NEEDS_CLARIFICATION: 'shortlist.hint.NEEDS_CLARIFICATION',
+  EXCLUDED: 'shortlist.hint.EXCLUDED',
 };
 
 //: The four reasons applicants actually give, as one-click chips. Free text
@@ -39,7 +42,9 @@ const SET_ASIDE_HINT: Record<string, string> = {
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
-  const { results, summary, shortlist, decide, saveNotes } = useStore();
+  const { results, summary, shortlist, decide, saveNotes, capabilities } = useStore();
+  const { t, tf, tn, tOr } = useTranslation();
+  const bucketLabel = (bucket: string) => statusLabel(bucket, tOr);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [cardExpanded, setCardExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
@@ -96,8 +101,8 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   if (results.length === 0) {
     return (
       <div className="find-page">
-        <div className="screen__head"><p className="screen__eyebrow">FIND YOUR PATH</p><h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1><p className="screen__lede">Research begins with your profile and preferences.</p></div>
-        <div className="find-empty"><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</div>
+        <div className="screen__head"><p className="screen__eyebrow">{t('shortlist.emptyEyebrow')}</p><h1 className="screen__title">{rich(t('shortlist.title'), { highlight: <span className="find-yellow">{t('shortlist.titleHighlight')}</span> })}</h1><p className="screen__lede">{t('shortlist.emptyLede')}</p></div>
+        <div className="find-empty"><Empty title={t('results.empty.title')}>{t('shortlist.emptyBody')}</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>{t('shortlist.start')}</button>}</div>
         <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
       </div>
     );
@@ -148,16 +153,16 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
               </colgroup>
               <thead>
                 <tr>
-                  <th scope="col">University &amp; programme</th>
-                  <th scope="col">Eligibility</th>
-                  <th scope="col">Admissions fit</th>
-                  <th scope="col">Funding</th>
-                  <th scope="col">Remaining / year</th>
-                  <th scope="col">Deadline</th>
-                  <th scope="col" title={FIT_DISCLAIMER}>Match</th>
-                  <th scope="col" title="How much of the weight rests on data we confirmed.">Confirmed</th>
-                  {showBucket && <th scope="col">Bucket</th>}
-                  <th scope="col">Decision</th>
+                  <th scope="col">{t('col.university')}</th>
+                  <th scope="col">{t('col.eligibility')}</th>
+                  <th scope="col">{t('col.admissionsFit')}</th>
+                  <th scope="col">{t('col.funding')}</th>
+                  <th scope="col">{t('col.remaining')}</th>
+                  <th scope="col">{t('col.deadline')}</th>
+                  <th scope="col" title={tOr('results.fitDisclaimer', FIT_DISCLAIMER)}>{t('col.match')}</th>
+                  <th scope="col" title={t('col.confirmedHint')}>{t('col.confirmed')}</th>
+                  {showBucket && <th scope="col">{t('col.bucket')}</th>}
+                  <th scope="col">{t('col.decision')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -172,7 +177,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                         className={`${open ? 'is-expanded' : ''} ${r.user_decision === 'rejected' ? 'is-rejected' : ''}`}
                         data-testid={`row-${r.id}`}
                       >
-                        <td data-label="University & programme">
+                        <td data-label={t('col.university')}>
                           <div className="uni-cell">
                             <button
                               className="uni-cell__name"
@@ -189,15 +194,15 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                             </span>
                           </div>
                         </td>
-                        <td data-label="Eligibility"><StatusChip status={r.eligibility} tone={eligibilityTone[r.eligibility]} /></td>
-                        <td data-label="Admissions fit"><StatusChip status={r.admissions_fit} tone={admissionsFitTone[r.admissions_fit]} /></td>
-                        <td data-label="Funding">
+                        <td data-label={t('col.eligibility')}><StatusChip status={r.eligibility} tone={eligibilityTone[r.eligibility]} /></td>
+                        <td data-label={t('col.admissionsFit')}><StatusChip status={r.admissions_fit} tone={admissionsFitTone[r.admissions_fit]} /></td>
+                        <td data-label={t('col.funding')}>
                           <StatusChip
                             status={r.best_funding_classification}
                             tone={fundingClassTone[r.best_funding_classification]}
                           />
                         </td>
-                        <td className="num" data-label="Remaining / year">
+                        <td className="num" data-label={t('col.remaining')}>
                           {gap?.computable && gap.gap ? (
                             <>
                               {money({ ...gap.gap, academic_year: null })}
@@ -209,52 +214,52 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                               )}
                             </>
                           ) : (
-                            <span className="xs muted" title={gap?.reason}>not computable</span>
+                            <span className="xs muted" title={gap?.reason}>{t('results.notComputable')}</span>
                           )}
                         </td>
-                        <td className="num" data-label="Deadline">
-                          {r.admission_deadline ? date(r.admission_deadline) : <span className="xs muted">not found</span>}
-                          {r.deadline_passed && <div><Chip tone="risk">passed</Chip></div>}
-                          {r.previous_cycle_deadline && <div className="xs muted">previous cycle: {date(r.previous_cycle_deadline)}</div>}
+                        <td className="num" data-label={t('col.deadline')}>
+                          {r.admission_deadline ? date(r.admission_deadline) : <span className="xs muted">{t('results.notFound')}</span>}
+                          {r.deadline_passed && <div><Chip tone="risk">{t('shortlist.passed')}</Chip></div>}
+                          {r.previous_cycle_deadline && <div className="xs muted">{tf('shortlist.previousCycle', { date: date(r.previous_cycle_deadline) })}</div>}
                         </td>
-                        <td className="num" data-label="Match" title={FIT_DISCLAIMER}>
+                        <td className="num" data-label={t('col.match')} title={tOr('results.fitDisclaimer', FIT_DISCLAIMER)}>
                           {ratio(r.ranking?.fit ?? null)}
                         </td>
-                        <td className="num" data-label="Confirmed" data-testid={`coverage-${r.id}`}>
+                        <td className="num" data-label={t('col.confirmed')} data-testid={`coverage-${r.id}`}>
                           {percent(r.ranking?.coverage ?? null)}
                         </td>
                         {showBucket && (
-                          <td data-label="Bucket">
+                          <td data-label={t('col.bucket')}>
                             {r.ranking ? (
                               <StatusChip
                                 status={r.ranking.bucket}
                                 tone={bucketTone[r.ranking.bucket]}
                               />
                             ) : (
-                              <span className="xs muted">not ranked</span>
+                              <span className="xs muted">{t('shortlist.notRanked')}</span>
                             )}
                           </td>
                         )}
-                        <td data-label="Decision">
-                          <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
+                        <td data-label={t('col.decision')}>
+                          <div className="decision-group" role="group" aria-label={tf('shortlist.decisionFor', { university: r.university })}>
                             <button
                               className="decision-btn decision-btn--approve"
                               aria-pressed={r.user_decision === 'approved'}
                               onClick={() => decideRow(r, 'approved')}
                               data-testid={`approve-${r.id}`}
-                            >Yes</button>
+                            >{t('results.yes')}</button>
                             <button
                               className="decision-btn decision-btn--maybe"
                               aria-pressed={r.user_decision === 'maybe'}
                               onClick={() => decideRow(r, 'maybe')}
                               data-testid={`maybe-${r.id}`}
-                            >Maybe</button>
+                            >{t('shortlist.maybe')}</button>
                             <button
                               className="decision-btn decision-btn--reject"
                               aria-pressed={r.user_decision === 'rejected'}
                               onClick={() => decideRow(r, 'rejected')}
                               data-testid={`reject-${r.id}`}
-                            >No</button>
+                            >{t('results.no')}</button>
                           </div>
                           {rejectFor === r.id && (
                             <div
@@ -263,7 +268,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                               data-testid={`reject-reason-${r.id}`}
                             >
                               <label className="xs muted" htmlFor={`reject-input-${r.id}`}>
-                                Why not this one? (optional — it is kept with the row)
+                                {t('shortlist.whyNot')}
                               </label>
                               <div className="row row--tight" style={{ flexWrap: 'wrap' }}>
                                 {REJECTION_REASONS.map((preset) => (
@@ -271,16 +276,16 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                                     key={preset}
                                     type="button"
                                     className="btn btn--sm btn--ghost xs"
-                                    onClick={() => setRejectReason(preset)}
+                                    onClick={() => setRejectReason(t(`shortlist.reason.${preset}` as MessageKey))}
                                     data-testid={`reject-chip-${preset.replace(/\s+/g, '-')}-${r.id}`}
-                                  >{preset}</button>
+                                  >{t(`shortlist.reason.${preset}` as MessageKey)}</button>
                                 ))}
                               </div>
                               <input
                                 id={`reject-input-${r.id}`}
                                 value={rejectReason}
                                 onChange={(e) => setRejectReason(e.target.value)}
-                                placeholder="cost, deadline, fit…"
+                                placeholder={t('shortlist.whyNotPlaceholder')}
                                 data-testid={`reject-input-${r.id}`}
                               />
                               <div className="row row--tight">
@@ -291,18 +296,18 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                                     setRejectFor(null);
                                   }}
                                   data-testid={`reject-save-${r.id}`}
-                                >Save rejection</button>
+                                >{t('shortlist.saveRejection')}</button>
                                 <button
                                   className="btn btn--sm btn--ghost"
                                   onClick={() => setRejectFor(null)}
                                   data-testid={`reject-cancel-${r.id}`}
-                                >Cancel</button>
+                                >{t('results.cancel')}</button>
                               </div>
                             </div>
                           )}
                           {r.user_decision === 'rejected' && r.user_decision_reason && rejectFor !== r.id && (
                             <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
-                              Rejected: {r.user_decision_reason}
+                              {tf('shortlist.rejected', { reason: r.user_decision_reason })}
                             </p>
                           )}
                           <div>
@@ -313,7 +318,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                                 setNoteText(r.user_notes);
                               }}
                             >
-                              {r.user_notes ? 'Edit note' : 'Add note'}
+                              {r.user_notes ? t('shortlist.editNote') : t('shortlist.addNote')}
                             </button>
                           </div>
                           {noteFor === r.id && (
@@ -322,7 +327,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                                 rows={2}
                                 value={noteText}
                                 onChange={(e) => setNoteText(e.target.value)}
-                                placeholder="Why this one?"
+                                placeholder={t('shortlist.notePlaceholder')}
                                 data-testid={`note-input-${r.id}`}
                               />
                               <button
@@ -332,7 +337,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                                   setNoteFor(null);
                                 }}
                                 data-testid={`note-save-${r.id}`}
-                              >Save note</button>
+                              >{t('shortlist.saveNote')}</button>
                             </div>
                           )}
                           {r.user_notes && noteFor !== r.id && (
@@ -344,7 +349,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                       </tr>
                       {open && (
                         <tr className="detail-row">
-                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} /></td>
+                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} knowledgeMode={capabilities?.knowledge_mode} /></td>
                         </tr>
                       )}
                     </Fragment>
@@ -357,85 +362,80 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
 
   return (
     <div className="find-page">
-      <details className="catalogue-expand"><summary>Explore more universities from the local catalogue</summary><UniversityCatalogue onStart={onStart} onProgress={onProgress} /></details>
+      <details className="catalogue-expand"><summary>{t('shortlist.exploreCatalogue')}</summary><UniversityCatalogue onStart={onStart} onProgress={onProgress} /></details>
       <div className="find-hero">
         <div className="screen__head">
-          <p className="screen__eyebrow">GLOBAL OPPORTUNITIES. REAL MATCHES.</p>
-          <h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1>
-          <p className="screen__lede">
-            Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
-          </p>
+          <p className="screen__eyebrow">{t('shortlist.eyebrow')}</p>
+          <h1 className="screen__title">{rich(t('shortlist.title'), { highlight: <span className="find-yellow">{t('shortlist.titleHighlight')}</span> })}</h1>
+          <p className="screen__lede">{t('shortlist.lede')}</p>
         </div>
-        <img src="/brand/unimatch-journey.png" alt="Unimatch mascot exploring a mountain landscape" />
+        <img src="/brand/unimatch-journey.png" alt={t('shortlist.mascotAlt')} />
       </div>
 
       <div className="stack stack--loose">
         {summary?.demo_data && (
           <Notice kind="demo">
             <div>
-              <strong>Demo data.</strong> These figures come from a bundled synthetic corpus, not
-              from real university pages. Every source below is a <code>fixture://</code> address.
+              <strong>{t('results.demoData')}</strong>{' '}
+              {rich(t('shortlist.demoBody'), { code: <code>fixture://</code> })}
             </div>
           </Notice>
         )}
 
         <div className="find-toolbar">
-          <label className="find-search"><span className="visually-hidden">Search universities, programmes or countries</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search universities, programmes or countries…" /></label>
-          <button type="button" className="btn" onClick={() => document.getElementById('find-filters')?.toggleAttribute('open')}>Filters</button>
-          <button type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => document.getElementById('find-compare')?.scrollIntoView({ behavior: 'smooth' })}>Compare ({compareIds.length})</button>
+          <label className="find-search"><span className="visually-hidden">{t('shortlist.search')}</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('shortlist.searchPlaceholder')} /></label>
+          <button type="button" className="btn" onClick={() => document.getElementById('find-filters')?.toggleAttribute('open')}>{t('shortlist.filters')}</button>
+          <button type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => document.getElementById('find-compare')?.scrollIntoView({ behavior: 'smooth' })}>{tf('shortlist.compareCount', { n: compareIds.length })}</button>
         </div>
-        <div className="find-tabs" role="tablist" aria-label="Match list">
-          {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{value.charAt(0).toUpperCase() + value.slice(1)}</button>)}
+        <div className="find-tabs" role="tablist" aria-label={t('shortlist.matchList')}>
+          {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{t(`shortlist.tab.${value}`)}</button>)}
         </div>
 
         <details id="find-filters" className="find-filters">
-          <summary>Filter and sort results</summary>
+          <summary>{t('shortlist.filterSort')}</summary>
         <Panel sunken>
           <div className="filters">
-            <Field label="Country" htmlFor="f-country">
+            <Field label={t('shortlist.country')} htmlFor="f-country">
               <select id="f-country" value={country} onChange={(e) => setCountry(e.target.value)}>
-                <option value="">All ({results.length})</option>
+                <option value="">{tf('shortlist.allCount', { n: results.length })}</option>
                 {countries.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </Field>
-            <Field label="Eligibility" htmlFor="f-elig">
+            <Field label={t('col.eligibility')} htmlFor="f-elig">
               <select id="f-elig" value={eligibility} onChange={(e) => setEligibility(e.target.value)}>
-                <option value="">Any</option>
+                <option value="">{t('shortlist.any')}</option>
                 {Object.entries(summary?.by_eligibility ?? {}).map(([k, v]) => (
                   // The value stays the enum; only the label is for humans.
-                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
+                  <option key={k} value={k}>{bucketLabel(k)} ({v})</option>
                 ))}
               </select>
             </Field>
-            <Field label="Funding" htmlFor="f-fund">
+            <Field label={t('col.funding')} htmlFor="f-fund">
               <select id="f-fund" value={funding} onChange={(e) => setFunding(e.target.value)}>
-                <option value="">Any</option>
+                <option value="">{t('shortlist.any')}</option>
                 {Object.entries(summary?.by_funding ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
+                  <option key={k} value={k}>{bucketLabel(k)} ({v})</option>
                 ))}
               </select>
             </Field>
-            <Field label="Sort by" htmlFor="f-sort">
+            <Field label={t('shortlist.sortBy')} htmlFor="f-sort">
               <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
-                <option value="key">Match, discounted by what is unverified</option>
-                <option value="fit">Match with your priorities</option>
-                <option value="coverage">Most confirmed</option>
-                <option value="gap">Smallest remaining cost</option>
-                <option value="deadline">Earliest deadline</option>
-                <option value="university">University name</option>
+                {(['key', 'fit', 'coverage', 'gap', 'deadline', 'university'] as const).map((value) => (
+                  <option key={value} value={value}>{t(`shortlist.sort.${value}`)}</option>
+                ))}
               </select>
             </Field>
             <label className="row row--tight small" style={{ paddingBottom: 6 }}>
               <input type="checkbox" checked={hideRejected} onChange={(e) => setHideRejected(e.target.checked)} />
-              Hide rejected
+              {t('shortlist.hideRejected')}
             </label>
           </div>
         </Panel>
         </details>
 
         <div className="find-results" aria-live="polite">
-          <p className="find-results__count">{rows.length} result{rows.length === 1 ? '' : 's'} from this research run</p>
-          {rows.length === 0 && <div className="find-empty"><Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty><button type="button" className="btn" onClick={() => { setQuery(''); setTab('all'); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}>Clear filters</button></div>}
+          <p className="find-results__count">{tn('shortlist.resultCount', rows.length)}</p>
+          {rows.length === 0 && <div className="find-empty"><Empty title={t('shortlist.noMatchTitle')}>{t('shortlist.noMatchBody')}</Empty><button type="button" className="btn" onClick={() => { setQuery(''); setTab('all'); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}>{t('shortlist.clearFilters')}</button></div>}
           {rows.map((result) => {
             const open = cardExpanded === result.id;
             const selected = compareIds.includes(result.id);
@@ -447,22 +447,22 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                   <h2>{result.university}</h2>
                   <p>{result.program}</p>
                   <div className="find-card__signals">
-                    {result.ranking && <Chip tone={bucketTone[result.ranking.bucket]}>{STATUS_LABEL[result.ranking.bucket] ?? humanize(result.ranking.bucket)}</Chip>}
+                    {result.ranking && <Chip tone={bucketTone[result.ranking.bucket]}>{bucketLabel(result.ranking.bucket)}</Chip>}
                     <StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} />
                     <StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} />
                   </div>
                   <div className="find-card__facts">
-                    <span><small>Remaining / year</small><strong>{gap?.computable && gap.gap ? money({ ...gap.gap, academic_year: null }) : 'Not enough comparable data'}</strong></span>
-                    <span><small>Deadline</small><strong>{result.admission_deadline ? date(result.admission_deadline) : 'Not confirmed'}</strong></span>
+                    <span><small>{t('col.remaining')}</small><strong>{gap?.computable && gap.gap ? money({ ...gap.gap, academic_year: null }) : t('results.notEnoughData')}</strong></span>
+                    <span><small>{t('col.deadline')}</small><strong><Deadline result={result} fallback={t('results.notConfirmed')} /></strong></span>
                   </div>
-                  {(result.conflicts.length > 0 || result.unresolved.length > 0) && <p className="find-card__caution">{result.conflicts.length} conflict{result.conflicts.length === 1 ? '' : 's'} · {result.unresolved.length} open question{result.unresolved.length === 1 ? '' : 's'}</p>}
+                  {(result.conflicts.length > 0 || openQuestionCount(result) > 0) && <p className="find-card__caution">{tn('results.conflictCount', result.conflicts.length)} · {tn('results.questionCount', openQuestionCount(result))}</p>}
                 </div>
                 <div className="find-card__actions">
-                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} data-testid={`card-expand-${result.id}`}>{open ? 'Hide details' : 'View details'}</button>
-                  <button type="button" className="btn" onClick={() => decideRow(result, 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'}>{result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Saved' : 'Save'}</button>
-                  <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{selected ? 'Remove' : 'Compare'}</button>
+                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} data-testid={`card-expand-${result.id}`}>{open ? t('shortlist.hideDetails') : t('shortlist.viewDetails')}</button>
+                  <button type="button" className="btn" onClick={() => decideRow(result, 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'}>{result.user_decision === 'maybe' || result.user_decision === 'approved' ? t('shortlist.saved') : t('shortlist.save')}</button>
+                  <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{selected ? t('results.remove') : t('results.compare')}</button>
                 </div>
-                {open && <div className="find-card__detail"><ResultDetail result={result} /></div>}
+                {open && <div className="find-card__detail"><ResultDetail result={result} knowledgeMode={capabilities?.knowledge_mode} /></div>}
               </article>
             );
           })}
@@ -477,11 +477,11 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
         )}
 
         <details className="find-advanced">
-          <summary>Detailed evidence table</summary>
+          <summary>{t('shortlist.evidenceTable')}</summary>
         {shortlist && shortlist.chosen.length > 0 && (
           <Panel
-            title="A balanced shortlist"
-            hint="Filled to quota before the ranking speaks: a top ten of ten ambitious options is a list nobody can act on."
+            title={t('shortlist.balancedTitle')}
+            hint={t('shortlist.balancedHint')}
           >
             <ol className="stack stack--tight" data-testid="balanced-shortlist">
               {shortlist.chosen.map((r) => (
@@ -489,7 +489,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                   <strong>{r.university}</strong> — {r.program}{' '}
                   {r.ranking && (
                     <Chip tone={bucketTone[r.ranking.bucket]}>
-                      {STATUS_LABEL[r.ranking.bucket] ?? humanize(r.ranking.bucket)}
+                      {bucketLabel(r.ranking.bucket)}
                     </Chip>
                   )}
                 </li>
@@ -505,23 +505,23 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
           renderTable(
             ranked,
             'shortlist-table',
-            'Shortlisted university programmes with eligibility, fit, funding and remaining cost',
+            t('shortlist.caption'),
           )
         ) : (
           // An empty table with headers reads as "nothing found". Something
           // was found; it is all in the sections below, with its reason.
           <Notice kind="info">
             <div>
-              Nothing here is both affordable and verified enough to rank. Every option is in a
-              section below, with the reason it is there.
+              {t('shortlist.nothingRanked')}
             </div>
           </Notice>
         )}
 
         <p className="xs faint">
-          Showing {ranked.length} of {results.length} ranked rows. <strong>Match</strong> is how well
-          a place fits the priorities you stated, on confirmed data — not a probability of admission.
-          The <strong>Confirmed</strong> percentage is how much of that judgement rests on data we could verify.
+          {rich(tf('shortlist.rankedFootnote', { shown: ranked.length, total: results.length }), {
+            match: <strong>{t('col.match')}</strong>,
+            confirmed: <strong>{t('col.confirmed')}</strong>,
+          })}
         </p>
 
         {SET_ASIDE.map((bucket) => {
@@ -530,14 +530,13 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
           return (
             <details key={bucket} className="stack" data-testid={`section-${bucket}`}>
               <summary className="small">
-                {STATUS_LABEL[bucket] ?? humanize(bucket)} ({setAside.length})
+                {bucketLabel(bucket)} ({setAside.length})
               </summary>
-              <p className="xs muted">{SET_ASIDE_HINT[bucket]}</p>
+              <p className="xs muted">{SET_ASIDE_HINT[bucket] && t(SET_ASIDE_HINT[bucket])}</p>
               {renderTable(
                 setAside,
                 `table-${bucket}`,
-                `Shortlisted university programmes set aside as ${(STATUS_LABEL[bucket] ?? humanize(bucket)).toLowerCase()}, `
-                + 'with eligibility, fit, funding and remaining cost',
+                tf('shortlist.captionSetAside', { bucket: bucketLabel(bucket).toLowerCase() }),
                 false,
               )}
             </details>
@@ -547,8 +546,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
 
 
         <p className="xs faint">
-          Showing {rows.length} of {results.length}. Rejected rows are kept with their reason so the
-          same programme is not proposed again without new information.
+          {tf('shortlist.footnote', { shown: rows.length, total: results.length })}
         </p>
       </div>
     </div>

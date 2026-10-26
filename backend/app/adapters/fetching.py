@@ -25,11 +25,17 @@ import asyncio
 import hashlib
 import json
 import logging
+import os
 import re
+import ssl
 import time
 import unicodedata
+import urllib.parse
 import urllib.robotparser
-from dataclasses import dataclass, field
+from collections.abc import Iterator, Mapping
+from contextlib import AbstractContextManager, contextmanager, nullcontext
+from contextvars import ContextVar
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -43,13 +49,14 @@ from app.adapters.network_policy import (
     ResolvedTarget,
     check_url,
 )
+from app.adapters.url_canonical import invalid_url_reason
 from app.domain.enums import FetchOutcome
-from app.domain.site_identity import hosts_share_site
+from app.domain.site_identity import hosts_share_site, registrable_domain
 
 log = logging.getLogger("unimatch.fetch")
 
 USER_AGENT = (
-    "ASHYQApplyBot/0.2 (+https://github.com/wpalish/ashyq-apply; "
+    "UnimatchBot/0.2 (+https://github.com/wpalish/ashyq-apply; "
     "university admissions research for a single applicant; contact: set FETCH_CONTACT)"
 )
 DEFAULT_TIMEOUT = 20.0
@@ -72,6 +79,456 @@ DNS_DEADLINE_SECONDS = 10.0
 #: each may take to accept a connection when there is another to fall back on.
 MAX_ADDRESSES_TRIED = 3
 PER_ADDRESS_CONNECT_SECONDS = 5.0
+#: Plan rule HS-1. A URL the pipeline guessed rather than found (a
+#: conventional sitemap location probed because robots.txt named none) says
+#: nothing about its host when it hangs: dev3, www.ub.edu let a guessed
+#: /sitemap/sitemap.xml run 21 s, the host was blacked out for the run, yet it
+#: answers its other pages in 0.5 s. With this on, a guessed URL's stall skips
+#: only that URL, and a guess may spend at most GUESSED_URL_TIMEOUT_SECONDS.
+#: A stall on a discovered URL still stalls the host. Off by default.
+GUESSED_URL_STALL_EXEMPT = False
+GUESSED_URL_TIMEOUT_SECONDS = 6.0
+#: Plan rule RS-1 (read budget analysis 2026-10-18, §4 step 1.1), off until a
+#: paired run passes. Imperial's course and fee URLs under ``/2027/`` answer 301
+#: and take two or three hops, and a page linked again under any URL of the
+#: chain paid the hops again: 30-49 of its 66-74 wire requests were redirect
+#: overhead. On: every URL of a redirect chain that ended in a readable page is
+#: remembered, for this fetcher's life (one run), as leading to that page; a
+#: later read of one of them starts at the final URL, and the page is also
+#: cached under its final URL, so a link straight to it is a cache hit. Every
+#: hop still goes through robots, pacing, the network policy and the PII guard.
+#: The benchmark harness flips it per capture (``--redirect-memory``).
+REDIRECT_MEMORY = True
+#: Plan rule RS-2 (same analysis, §4 step 1.2), off until a paired run passes.
+#: Chula's tuition page was read as ``http://`` and as ``https://``, Imperial's
+#: entry requirements with and without the trailing slash: two cold reads of
+#: one page. On: the cache key of a URL ignores its trailing slash and treats
+#: ``http`` as ``https`` on the same host, before the cache is asked. The URL
+#: requested on a miss is the caller's own. The benchmark harness flips it per
+#: capture (``--url-variant-dedupe``).
+URL_VARIANT_DEDUPE = True
+
+
+def variant_key(url: str) -> str:
+    """RS-2: one cache key for a URL's trailing-slash and http/https variants.
+
+    The host, port, path case and query are kept; only ``http`` becomes
+    ``https`` and a non-root path loses its trailing slashes. A URL that does
+    not parse as http(s) is its own key.
+    """
+    try:
+        parts = urlparse(url)
+    except ValueError:
+        return url
+    if parts.scheme not in ("http", "https") or not parts.netloc:
+        return url
+    path = parts.path.rstrip("/") or "/"
+    rebuilt = parts._replace(scheme="https", path=path, fragment="")
+    return rebuilt.geturl()
+
+
+# --- RL-1: the per-institution read ledger ----------------------------------
+
+#: Plan rule RL-1, the case read ledger (read budget analysis 2026-10-18 §4
+#: step 2; not the route-leads rule ``ROUTE_LEADS``, which also went by RL-1).
+#: Off until a paired run passes. DoD target 5 counts every HTTP request to a
+#: university site (owner decision 2026-10-18): the scorecard's
+#: ``http_fetches`` is one per ``_pinned_request`` — every redirect hop, retry,
+#: address tried and robots.txt load — while every cap in code counted
+#: ``Fetcher.get`` calls, so nothing could stop a case at 60. On: each
+#: institution has a ledger, opened by ``charging`` around its discovery,
+#: verify and funding work; every wire request is charged to it immediately
+#: before ``_pinned_request`` builds it, and none is built past
+#: ``CASE_READ_CAP``. A read is refused before it starts when fewer reads than
+#: its kind's floor (``read_floor``) would remain: sitemap documents first,
+#: then walker leads, the rest of discovery (which leaves
+#: ``VERIFY_RESERVE_READS`` for the six core questions), scholarship award
+#: pages, extra question pages; the confirmed programme page, the admissions
+#: page and one page per still-unanswered core question (kind ``"core"``) are
+#: refused only at the cap. Every refusal is recorded with its reason
+#: (``CaseReadLedger.refusals``, in the discovery trace). Per institution,
+#: because production shares one Fetcher across universities; a page two
+#: institutions share is charged to the first, and cache hits are free. The
+#: benchmark harness flips it per capture (``--case-read-ledger``).
+CASE_READ_LEDGER = True
+#: RL-1: wire requests one institution may make (DoD target 5).
+CASE_READ_CAP = 60
+#: RL-1: reads discovery leaves for the verify stage's six core questions.
+VERIFY_RESERVE_READS = 16
+#: RL-1: refusals kept per ledger, so a long run cannot bloat the trace.
+MAX_LEDGER_REFUSALS = 50
+#: RL-1: the kind a read is charged as when its caller named none, by phase.
+PHASE_DEFAULT_KIND = {"discovery": "discovery", "verify": "question_extra", "funding": "award"}
+
+_ACTIVE_LEDGER: ContextVar[CaseReadLedger | None] = ContextVar("case_read_ledger", default=None)
+_READ_KIND: ContextVar[str | None] = ContextVar("case_read_kind", default=None)
+
+
+def read_floor(kind: str, reserve: int) -> int:
+    """RL-1: reads that must remain after a read of ``kind`` for it to start.
+
+    The higher the floor, the sooner the kind is refused when reads run short.
+    """
+    floors = {
+        "sitemap": reserve + 8,
+        "walker": reserve + 4,
+        "discovery": reserve,
+        "award": 4,
+        "question_extra": 2,
+        "question_open": 2,
+        "core": 0,
+    }
+    return floors.get(kind, reserve)
+
+
+class CaseReadSpent(Exception):
+    """RL-1: the institution's ledger holds no read for this wire request."""
+
+
+@dataclass
+class CaseReadLedger:
+    """RL-1: one institution's wire requests, by phase and kind, and its refusals."""
+
+    institution: str
+    cap: int = field(default_factory=lambda: CASE_READ_CAP)
+    reserve: int = field(default_factory=lambda: VERIFY_RESERVE_READS)
+    phase: str = "discovery"
+    spent: int = 0
+    by_phase: dict[str, int] = field(default_factory=dict)
+    by_kind: dict[str, int] = field(default_factory=dict)
+    refusals: list[dict[str, str]] = field(default_factory=list)
+    refused: int = 0
+
+    @property
+    def remaining(self) -> int:
+        return max(self.cap - self.spent, 0)
+
+    def kind(self) -> str:
+        return _READ_KIND.get() or PHASE_DEFAULT_KIND.get(self.phase, "discovery")
+
+    def admit(self, needed: int, kind: str) -> str:
+        """Why a read needing ``needed`` requests is refused now, or ""."""
+        floor = read_floor(kind, self.reserve)
+        if self.remaining - needed >= floor:
+            return ""
+        if floor:
+            return (
+                f"{self.remaining} of {self.cap} reads left; a {kind} read needs "
+                f"{needed} and must leave {floor}"
+            )
+        return f"{self.remaining} of {self.cap} reads left; this read needs {needed}"
+
+    def charge(self, url: str) -> None:
+        """Spend one wire request, or raise ``CaseReadSpent`` at the cap."""
+        if self.spent >= self.cap:
+            raise CaseReadSpent(f"case read budget spent: {self.cap} requests to {url[:120]}")
+        kind = self.kind()
+        self.spent += 1
+        self.by_phase[self.phase] = self.by_phase.get(self.phase, 0) + 1
+        self.by_kind[kind] = self.by_kind.get(kind, 0) + 1
+
+    def refuse(self, url: str, kind: str, reason: str) -> None:
+        self.refused += 1
+        if len(self.refusals) < MAX_LEDGER_REFUSALS:
+            self.refusals.append(
+                {"url": url[:300], "phase": self.phase, "kind": kind, "reason": reason}
+            )
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "institution": self.institution,
+            "cap": self.cap,
+            "verify_reserve": self.reserve,
+            "spent": self.spent,
+            "remaining": self.remaining,
+            "by_phase": dict(self.by_phase),
+            "by_kind": dict(self.by_kind),
+            "refused": self.refused,
+            "refusals": list(self.refusals),
+        }
+
+
+def _charge_wire(url: str) -> None:
+    """RL-1: charge the active ledger one wire request, before it is built."""
+    ledger = _ACTIVE_LEDGER.get()
+    if ledger is not None:
+        ledger.charge(url)
+
+
+@contextmanager
+def reading_as(kind: str) -> Iterator[None]:
+    """RL-1: the reads inside are charged, and refused, as ``kind``."""
+    token = _READ_KIND.set(kind)
+    try:
+        yield
+    finally:
+        _READ_KIND.reset(token)
+
+
+def charging(fetcher: object, institution: str, phase: str) -> AbstractContextManager[Any]:
+    """RL-1: charge the reads inside to ``institution``'s ledger, as ``phase``.
+
+    A no-op while the rule is off, without an institution, or for a fetcher
+    that is not a ``Fetcher`` (a test's stub, a stage's wrapper). TB-1: the
+    same scope runs ``institution``'s case clock; with the ledger off and
+    TB-1 on it yields no ledger but still times the reads inside.
+    """
+    if not institution or not isinstance(fetcher, Fetcher):
+        return nullcontext()
+    if CASE_READ_LEDGER:
+        return fetcher.charging(institution, phase)
+    if CASE_TIME_BUDGET:
+        return fetcher.timing(institution, phase)
+    return nullcontext()
+
+
+# --- TB-1: the per-case time budget -------------------------------------------
+
+#: Plan rule TB-1, off until a paired run passes. DoD target 5 allows 120 s
+#: per university, and a case the harness's wall clock ends (115 s) counts as
+#: over budget (owner decision 2026-10-18). After RL-1 the only cases still
+#: over were clock kills with few requests: UBC (25-31 requests; you.ubc.ca
+#: answers in 5-17 s, no Crawl-delay), UNSW (22-26; ``Crawl-delay: 10``, so
+#: every www.unsw.edu.au read costs ~10 s of waiting), KU Leuven (hosts that
+#: fail after 21 s). Only discovery watched a clock (SB-1, 55 s), checked at
+#: read start, so its last read ran past it, and verify, costs and funding
+#: read until the kill, in the middle of the scholarship stage, which files
+#: nothing until it returns. On: each institution has a case clock, opened by
+#: ``charging`` with its read ledger and running while the institution is
+#: the fetcher's latest (so production's interleaved universities each get
+#: their own seconds). Before a read starts, the fetcher predicts its cost —
+#: the host's Crawl-delay or pacing wait, which is never shortened, plus the
+#: host's mean observed read time — and refuses it when it would leave less
+#: than its kind's floor (``time_floor``): sitemap documents first, then
+#: walker leads, the rest of discovery (which leaves VERIFY_RESERVE_SECONDS),
+#: extra question pages (which leave CORE_RESERVE_SECONDS for the cost and
+#: scholarship pages), scholarship award pages. Core reads (the confirmed
+#: programme page, the admissions page, the first page per unanswered core
+#: question) start whenever time remains after their crawl-delay wait. No
+#: read, hop, retry or wait runs past CASE_TIME_SECONDS: an exchange still
+#: running then is cut there, and the stage files what it has. A slow host
+#: therefore gets fewer reads, not shorter waits. Topic and award queries
+#: are not sent with less than QUERY_MIN_SECONDS left. Refusals and seconds
+#: per phase are in the discovery trace (``case_time``). The benchmark
+#: harness flips it per capture (``--case-time-budget``).
+CASE_TIME_BUDGET = (
+    True  # on: runs 39127473231 / 39127474664 / 39128704750 / 39128706390 (0 over budget, 0 losses)
+)
+#: TB-1: seconds of one institution's work by which every read has ended;
+#: the harness ends a case at 115 s, which leaves the last page's parsing,
+#: the assessment and the report five seconds.
+CASE_TIME_SECONDS = 110.0
+#: TB-1: seconds discovery leaves for verify, costs and funding (SB-1's own
+#: 55 s deadline stops it first; this bounds a read started just before it).
+VERIFY_RESERVE_SECONDS = 40.0
+#: TB-1: seconds an extra question page leaves for the core cost and
+#: scholarship reads after it.
+CORE_RESERVE_SECONDS = 20.0
+#: TB-1 / FE-2b (``extraction.FEE_READERS_V2``): a further page for a core
+#: question still unanswered (kind ``question_open``) leaves only what this
+#: many reads of its host take - the cost page and the award index, the core
+#: reads after it - not the whole CORE_RESERVE_SECONDS. Paired run
+#: 39146090779: UBC's "Dates & deadlines" page was refused in both flag-on
+#: repetitions with 25.2 s and 26.7 s left (a 7 s read that had to leave 20 s),
+#: so the reserve kept for the fee read cost the unanswered deadline.
+OPEN_QUESTION_CORE_READS = 2
+#: TB-1: what a read of a host with no observed read is expected to take
+#: (robots.txt still to load costs as much again).
+DEFAULT_READ_SECONDS = 2.0
+#: TB-1: the least time a core read needs left after its crawl-delay wait.
+MIN_CORE_READ_SECONDS = 1.0
+#: TB-1: the least time left for which a topic or award query is sent.
+QUERY_MIN_SECONDS = 5.0
+#: TB-1: an exchange that timed out with this little time left was cut by
+#: the case clock, not stalled by its host.
+TIME_CUT_SLACK_SECONDS = 0.25
+#: TB-1: refusals kept per clock, so a long run cannot bloat the trace.
+MAX_TIME_REFUSALS = 50
+
+
+def _clock() -> float:
+    """TB-1's clock; a module attribute a test can replace. The fetcher's pacing
+    uses it too, so a Crawl-delay is waited on the clock the budget reads."""
+    return time.monotonic()
+
+
+def _network_clock() -> float:
+    """The clock a redirect chain's network budget is charged on; a module
+    attribute a test can replace. Kept apart from ``_clock``: tests that move
+    TB-1's case clock by a host's latency must not also drain this budget."""
+    return time.monotonic()
+
+
+async def _sleep(seconds: float) -> None:
+    """The fetcher's pacing and backoff sleep; replaced with ``_clock`` in tests."""
+    await asyncio.sleep(seconds)
+
+
+_ACTIVE_TIMER: ContextVar[CaseTimeBudget | None] = ContextVar("case_time_budget", default=None)
+
+
+def time_floor(kind: str, verify_reserve: float, core_reserve: float) -> float:
+    """TB-1: seconds that must remain after a read of ``kind`` is expected to end.
+
+    The higher the floor, the sooner the kind is refused when time runs
+    short. ``core`` has none: it is refused only when no time remains.
+    ``discovery_extra`` (QT-1c) is an optional discovery read a caller asks
+    about before queueing it (``time_refusal_now``): it leaves the verify
+    reserve and the core reserve both, for the verify stage's core reads and
+    the cost and scholarship reads after them.
+    """
+    floors = {
+        "sitemap": verify_reserve + 20.0,
+        "walker": verify_reserve + 10.0,
+        "discovery": verify_reserve,
+        "discovery_extra": verify_reserve + core_reserve,
+        "question_extra": core_reserve,
+        "question_open": core_reserve,
+        "award": 0.0,
+        "core": 0.0,
+    }
+    return floors.get(kind, verify_reserve)
+
+
+@dataclass
+class _ReadTiming:
+    """TB-1: what one ``Fetcher.get`` spent waiting on pacing, and whether it read."""
+
+    waited: float = 0.0
+    network: bool = False
+
+
+_READ_TIMING: ContextVar[_ReadTiming | None] = ContextVar("case_read_timing", default=None)
+#: TB-1: how every refusal and cut the case clock makes begins.
+_TB_PREFIX = "case time budget (TB-1): "
+
+
+@dataclass
+class CaseTimeBudget:
+    """TB-1: one institution's case clock, its seconds by phase, and its refusals."""
+
+    institution: str
+    limit: float = field(default_factory=lambda: CASE_TIME_SECONDS)
+    verify_reserve: float = field(default_factory=lambda: VERIFY_RESERVE_SECONDS)
+    core_reserve: float = field(default_factory=lambda: CORE_RESERVE_SECONDS)
+    phase: str = "discovery"
+    #: Seconds run before the clock last paused.
+    accrued: float = 0.0
+    #: When the clock last started running; None while paused.
+    since: float | None = None
+    by_phase: dict[str, float] = field(default_factory=dict)
+    refusals: list[dict[str, str]] = field(default_factory=list)
+    refused: int = 0
+    cut: int = 0
+    #: Elapsed seconds at the first refusal: where the case started stopping.
+    first_refusal_at: float | None = None
+    _mark: float = 0.0
+
+    def elapsed(self, now: float | None = None) -> float:
+        if self.since is None:
+            return self.accrued
+        return self.accrued + ((_clock() if now is None else now) - self.since)
+
+    def left(self) -> float:
+        return max(self.limit - self.elapsed(), 0.0)
+
+    def resume(self, now: float) -> None:
+        if self.since is None:
+            self.since = self._mark = now
+
+    def pause(self, now: float) -> None:
+        if self.since is not None:
+            self._attribute(now)
+            self.accrued += now - self.since
+            self.since = None
+
+    def enter(self, phase: str, now: float) -> None:
+        """Charge the seconds so far to the current phase; ``phase`` runs next."""
+        self._attribute(now)
+        self.phase = phase
+
+    def _attribute(self, now: float) -> None:
+        if self.since is not None:
+            self.by_phase[self.phase] = self.by_phase.get(self.phase, 0.0) + now - self._mark
+            self._mark = now
+
+    def admit(self, kind: str, wait: float, expected: float) -> str:
+        """Why a read of ``kind`` is refused now, or "".
+
+        ``wait`` is the host's pacing wait (Crawl-delay), ``expected`` the
+        read's predicted seconds after it.
+        """
+        left = self.left()
+        if kind == "core":
+            if wait + MIN_CORE_READ_SECONDS <= left:
+                return ""
+            return (
+                f"{left:.1f} of {self.limit:.0f} s left; a core read would wait "
+                f"{wait:.1f} s for the host's crawl delay first"
+            )
+        floor = time_floor(kind, self.verify_reserve, self.core_reserve)
+        if kind == "question_open":
+            floor = min(floor, OPEN_QUESTION_CORE_READS * expected)
+        if wait + expected + floor <= left:
+            return ""
+        return (
+            f"{left:.1f} of {self.limit:.0f} s left; a {kind} read is expected to take "
+            f"{wait + expected:.1f} s ({wait:.1f} s crawl-delay wait) and must leave {floor:.0f} s"
+        )
+
+    def refuse(self, url: str, kind: str, reason: str) -> None:
+        self.refused += 1
+        if self.first_refusal_at is None:
+            self.first_refusal_at = round(self.elapsed(), 2)
+        if len(self.refusals) < MAX_TIME_REFUSALS:
+            self.refusals.append(
+                {"url": url[:300], "phase": self.phase, "kind": kind, "reason": reason}
+            )
+
+    def as_dict(self) -> dict[str, Any]:
+        now = _clock()
+        by_phase = dict(self.by_phase)
+        if self.since is not None:
+            by_phase[self.phase] = by_phase.get(self.phase, 0.0) + now - self._mark
+        return {
+            "institution": self.institution,
+            "limit_seconds": self.limit,
+            "verify_reserve_seconds": self.verify_reserve,
+            "core_reserve_seconds": self.core_reserve,
+            "elapsed_seconds": round(self.elapsed(now), 2),
+            "seconds_by_phase": {k: round(v, 2) for k, v in by_phase.items()},
+            "first_refusal_at": self.first_refusal_at,
+            "refused": self.refused,
+            "cut": self.cut,
+            "refusals": list(self.refusals),
+        }
+
+
+def case_seconds_left() -> float | None:
+    """TB-1: seconds left on the active institution's case clock; None when untimed."""
+    timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+    return None if timer is None else timer.left()
+
+
+async def time_refusal_now(fetcher: object, url: str, kind: str) -> str:
+    """TB-1: why the running case clock would refuse a read of ``url`` as ``kind``, or "".
+
+    For a caller deciding whether an optional read is worth asking for: no
+    read is made and no refusal recorded. "" while TB-1 is off, outside a
+    case clock's scope, or for a fetcher without the prediction (a test's stub).
+    """
+    timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+    admission = getattr(fetcher, "time_admission", None)
+    if timer is None or admission is None:
+        return ""
+    return str(await admission(timer, url, kind))
+
+
+def case_timer(fetcher: object, institution: str) -> CaseTimeBudget | None:
+    """TB-1: ``institution``'s case clock, if TB-1 is on and one was opened."""
+    if not CASE_TIME_BUDGET or not institution or not isinstance(fetcher, Fetcher):
+        return None
+    return fetcher.timers.get(registrable_domain(institution) or institution)
 
 
 async def _resolve_checked(url: str) -> ResolvedTarget:
@@ -101,8 +558,17 @@ def _pinned_request(
     timeout: float | httpx.Timeout | None = None,
     headers: dict[str, str] | None = None,
     address: str | None = None,
+    pin: bool = True,
 ) -> httpx.Request:
-    """Connect to the validated IP while preserving virtual-host TLS and HTTP."""
+    """Connect to the validated IP while preserving virtual-host TLS and HTTP.
+
+    ``pin=False`` (a fetcher opted into an explicit HTTPS proxy, see
+    ``Fetcher(trust_env_proxy=True)``) addresses the host by name: the proxy's
+    CONNECT names the host and TLS is verified against that name. The target
+    was still validated by the network policy before this request was built.
+    """
+    if not pin:
+        return client.build_request("GET", target.url, headers=headers, timeout=timeout)
     pinned_url = httpx.URL(target.url).copy_with(host=address or target.pinned_address)
     host = f"[{target.host}]" if ":" in target.host else target.host
     default_port = 443 if target.scheme == "https" else 80
@@ -303,9 +769,112 @@ class _FractionalCrawlDelayParser(urllib.robotparser.RobotFileParser):
                         entry.delay = group_delay
                         break
 
+    def disallows(self, useragent: str, url: str) -> bool:
+        """True when a Disallow rule of the group for ``useragent`` decides against ``url``.
+
+        Two gaps of the stdlib parser, closed in the strict direction only (it
+        can refuse what the stdlib allowed, never the reverse):
+
+        * it compares a rule's path as a plain prefix, so ``Disallow: /*?*tag=*``
+          or ``Disallow: /*.pdf$`` never matched anything and the page was read;
+        * it takes the first matching line, so ``Allow: /`` above
+          ``Disallow: /private/`` let the private path through.
+
+        A matching Disallow is final unless a matching Allow is strictly more
+        specific (longer), as in RFC 9309 §2.2.2, with a tie going to Disallow.
+        The group is the one the stdlib picks (the first naming this agent,
+        else ``*``).
+        """
+        entry = next((e for e in self.entries if e.applies_to(useragent)), self.default_entry)
+        if entry is None:
+            return False
+        parsed = urllib.parse.urlsplit(urllib.parse.unquote(url))
+        target = (parsed.path or "/") + (f"?{parsed.query}" if parsed.query else "")
+        longest = {True: -1, False: -1}
+        for rule in entry.rulelines:
+            path = urllib.parse.unquote(rule.path)
+            if not path:
+                continue
+            if robots_rule_matches(path, target):
+                longest[rule.allowance] = max(longest[rule.allowance], len(path))
+        return longest[False] >= 0 and longest[False] >= longest[True]
+
+
+def robots_rule_matches(path: str, target: str) -> bool:
+    """Whether a robots.txt rule ``path`` (``*`` wildcards, a trailing ``$``) matches ``target``.
+
+    RFC 9309 §2.2.3 matching without a regular expression: robots.txt is as
+    attacker-controlled as the site serving it, and a rule built of many
+    ``*`` (``Disallow: /*a*a*a*a*a*a*a*a*b``) compiled to ``.*a.*a…`` backtracks
+    exponentially, blocking the event loop for minutes on a single URL
+    (security review 2026-10-19, SR-01). Each literal segment between stars
+    is found left-most with ``str.find`` after the previous one, which is
+    exact for ``*``-only globs and linear in the number of segments.
+    """
+    anchored = path.endswith("$")
+    segments = path.rstrip("$").split("*")
+    first, last = segments[0], segments[-1]
+    if not target.startswith(first):
+        return False
+    if len(segments) == 1:
+        return target == first if anchored else True
+    position = len(first)
+    for segment in segments[1:-1]:
+        found = target.find(segment, position)
+        if found < 0:
+            return False
+        position = found + len(segment)
+    if anchored:
+        return target.endswith(last) and len(target) - len(last) >= position
+    return target.find(last, position) >= 0
+
 
 class _RobotsUnreachable(Exception):
     """robots.txt could not be fetched for a network or server reason."""
+
+
+@dataclass(frozen=True)
+class ProxySettings:
+    """An explicit HTTPS proxy and the CA bundle that verifies TLS through it.
+
+    Used only by ``Fetcher(trust_env_proxy=True)``. TLS verification is never
+    turned off: without a CA bundle in the environment the system store is used.
+    """
+
+    url: str
+    ca_bundle: str | None
+
+    #: Read in this order; the first that is set wins.
+    PROXY_VARS = ("HTTPS_PROXY", "https_proxy")
+    CA_VARS = ("SSL_CERT_FILE", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE")
+
+    #: The deployment flag, read with ``Settings.is_production``'s semantics.
+    ENVIRONMENT_VAR = "UNIMATCH_ENVIRONMENT"
+    PRODUCTION_NAMES = ("production", "prod")
+
+    @classmethod
+    def from_env(cls, environ: Mapping[str, str] | None = None) -> ProxySettings:
+        env = os.environ if environ is None else environ
+        if env.get(cls.ENVIRONMENT_VAR, "").strip().lower() in cls.PRODUCTION_NAMES:
+            # SR-04: through a proxy the connection is addressed by name and the
+            # proxy resolves it again, so the address the network policy checked
+            # is not the one connected to. Evaluation tooling only, never a deployment.
+            raise ValueError(
+                "trust_env_proxy is refused when UNIMATCH_ENVIRONMENT is production: "
+                "a proxy re-resolves the host, so address pinning is lost"
+            )
+        url = next((env[k] for k in cls.PROXY_VARS if env.get(k)), "")
+        if not url:
+            raise ValueError("trust_env_proxy was asked for, but HTTPS_PROXY is not set")
+        ca = next((env[k] for k in cls.CA_VARS if env.get(k)), None)
+        return cls(url=url, ca_bundle=ca)
+
+    def ssl_context(self) -> ssl.SSLContext:
+        context = ssl.create_default_context(cafile=self.ca_bundle)
+        # create_default_context already verifies; stated so no edit loosens it.
+        context.check_hostname = True
+        context.verify_mode = ssl.CERT_REQUIRED
+        return context
 
 
 class RobotsPolicy:
@@ -314,6 +883,8 @@ class RobotsPolicy:
     def __init__(self, user_agent: str = USER_AGENT, enabled: bool = True) -> None:
         self.user_agent = user_agent
         self.enabled = enabled
+        #: False when the fetcher sends through an explicit HTTPS proxy.
+        self.pin_addresses = True
         self._parsers: dict[str, urllib.robotparser.RobotFileParser | None] = {}
         #: Hosts whose robots.txt never finished arriving.
         self.stalled: set[str] = set()
@@ -355,7 +926,21 @@ class RobotsPolicy:
             # "no restrictions" reading.
             return True, "no robots.txt available"
         allowed = parser.can_fetch(self.user_agent, url)
+        if (
+            allowed
+            and isinstance(parser, _FractionalCrawlDelayParser)
+            and parser.disallows(self.user_agent, url)
+        ):
+            allowed = False
         return allowed, "robots.txt allows" if allowed else "robots.txt disallows this path"
+
+    def known(self, url: str) -> bool:
+        """RL-1: whether a read of ``url`` needs no robots.txt request first."""
+        if not self.enabled:
+            return True
+        parsed = urlparse(url)
+        host = f"{parsed.scheme}://{parsed.netloc}"
+        return host in self._parsers or host in self._unreachable
 
     async def crawl_delay(self, url: str) -> float | None:
         parsed = urlparse(url)
@@ -380,8 +965,10 @@ class RobotsPolicy:
         except BlockedRequest as exc:
             log.warning("refusing robots.txt for %s: %s", host, exc)
             return None
+        # RL-1: charged before the request exists; past the cap, never built.
+        _charge_wire(robots_url)
         try:
-            request = _pinned_request(client, target, timeout=10.0)
+            request = _pinned_request(client, target, timeout=10.0, pin=self.pin_addresses)
             resp = await client.send(request, stream=True)
         except (httpx.HTTPError, OSError) as exc:
             raise _RobotsUnreachable(exc.__class__.__name__) from exc
@@ -423,6 +1010,8 @@ _PII_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
 #: systems put numeric node ids in paths all the time
 #: (https://www.aalto.fi/en/node/1008496), and treating those as passport
 #: numbers made the guard fire on ordinary university URLs.
+#: PD-2: a numeric cache-buster (``?_t=1761184801``) is dropped before a stage
+#: requests the link (``app/adapters/url_canonical.py``); this guard is unchanged.
 _QUERY_DIGITS = re.compile(r"\b\d{9,}\b")
 
 
@@ -511,9 +1100,27 @@ class Fetcher:
         contact: str = "",
         corpus_dir: Path | None = None,
         max_crawl_delay: float | None = MAX_CRAWL_DELAY_SECONDS,
+        trust_env_proxy: bool = False,
+        kb_evidence_robots_override_urls: frozenset[str] = frozenset(),
     ) -> None:
         self.cache = ResponseCache(cache_dir, cache_ttl_seconds)
         self.robots = RobotsPolicy(enabled=respect_robots)
+        #: Owner exception (2026-10-19, expires at product launch; AGENTS.md §6):
+        #: ``scripts/verify_evidence.py --robots-override-kb`` only. These exact
+        #: KB evidence URLs are read although robots.txt refuses them (or could
+        #: not be read): once, with no retry, the same user agent, and the
+        #: host's Crawl-delay still honoured. A redirect to any other URL is
+        #: still refused. Empty (the default) changes nothing; the product,
+        #: discovery, the pipeline, benchmarks and crawls never pass it.
+        self._kb_robots_override = frozenset(kb_evidence_robots_override_urls)
+        #: URLs whose robots refusal the override actually set aside, and why
+        #: (the requested URL and the hop it applied to).
+        self.kb_robots_overridden: dict[str, str] = {}
+        #: Explicit opt-in (evidence checks run from an agent sandbox): send
+        #: through the HTTPS_PROXY of the environment and verify TLS against its
+        #: CA bundle. Off, nothing reads the proxy environment.
+        self.proxy: ProxySettings | None = ProxySettings.from_env() if trust_env_proxy else None
+        self.robots.pin_addresses = self.proxy is None
         self.delay = delay_seconds
         #: None waits out any Crawl-delay: for background work with no clock.
         self.max_crawl_delay = max_crawl_delay
@@ -527,6 +1134,10 @@ class Fetcher:
         #: this fetcher's life. Run 20: Aalto stalled robots.txt, then
         #: sitemap.xml, and each stall cost the case most of its clock.
         self._stalled_hosts: set[str] = set()
+        #: HS-1: URLs a caller declared as guesses (see mark_guessed).
+        self._guessed_urls: set[str] = set()
+        #: PC-1: URLs whose stall skips only themselves (see mark_stall_local).
+        self._stall_local_urls: set[str] = set()
         self._last_request: dict[str, float] = {}
         self._client: httpx.AsyncClient | None = None
         self.corpus_dir = corpus_dir
@@ -541,6 +1152,175 @@ class Fetcher:
         #: Discovery may use it to stop offering pages on a host that is
         #: known not to answer (expert trace, Toronto 2026-09-27).
         self.refused_hosts: dict[str, str] = {}
+        #: RS-1: URL -> the final URL its redirect chain reached, this run.
+        self._redirect_memory: dict[str, str] = {}
+        #: RL-1: one read ledger per institution, for this fetcher's life.
+        self.ledgers: dict[str, CaseReadLedger] = {}
+        #: TB-1: one case clock per institution, and the one running now.
+        self.timers: dict[str, CaseTimeBudget] = {}
+        self._running_timer: CaseTimeBudget | None = None
+        #: TB-1: seconds each host's reads took, pacing waits excluded.
+        self._host_seconds: dict[str, list[float]] = {}
+
+    def ledger_for(self, institution: str) -> CaseReadLedger:
+        """RL-1: ``institution``'s read ledger, opened on first use.
+
+        Keyed by registrable domain, so the host discovery starts from
+        (``www.imperial.ac.uk``) and the catalogue's domain (``imperial.ac.uk``)
+        share one ledger.
+        """
+        key = registrable_domain(institution) or institution
+        ledger = self.ledgers.get(key)
+        if ledger is None:
+            ledger = self.ledgers[key] = CaseReadLedger(key)
+        return ledger
+
+    @contextmanager
+    def charging(self, institution: str, phase: str) -> Iterator[CaseReadLedger]:
+        """RL-1: charge every wire request inside to ``institution``, as ``phase``."""
+        ledger = self.ledger_for(institution)
+        previous_phase = ledger.phase
+        ledger.phase = phase
+        token = _ACTIVE_LEDGER.set(ledger)
+        timed = self.timing(institution, phase) if CASE_TIME_BUDGET else nullcontext()
+        try:
+            with timed:
+                yield ledger
+        finally:
+            _ACTIVE_LEDGER.reset(token)
+            ledger.phase = previous_phase
+
+    def timer_for(self, institution: str) -> CaseTimeBudget:
+        """TB-1: ``institution``'s case clock, opened (not started) on first use.
+
+        Keyed like the read ledger, by registrable domain.
+        """
+        key = registrable_domain(institution) or institution
+        timer = self.timers.get(key)
+        if timer is None:
+            timer = self.timers[key] = CaseTimeBudget(key)
+        return timer
+
+    @contextmanager
+    def timing(self, institution: str, phase: str) -> Iterator[None]:
+        """TB-1: the reads inside run on ``institution``'s case clock, as ``phase``.
+
+        The clock keeps running after the scope ends, until another
+        institution's scope starts: the work between two stages (parsing,
+        filing claims) is still this institution's, and production's
+        interleaved universities each get their own seconds.
+        """
+        timer = self.timer_for(institution)
+        now = _clock()
+        if self._running_timer is not timer:
+            if self._running_timer is not None:
+                self._running_timer.pause(now)
+            timer.resume(now)
+            self._running_timer = timer
+        timer.enter(phase, now)
+        token = _ACTIVE_TIMER.set(timer)
+        try:
+            yield None
+        finally:
+            _ACTIVE_TIMER.reset(token)
+
+    def _pacing_wait(self, host: str, delay: float) -> float:
+        """TB-1: how long the next request to ``host`` would wait for its pacing."""
+        last = self._last_request.get(host)
+        if last is None:
+            return 0.0
+        return max(delay - (_clock() - last), 0.0)
+
+    def _expected_seconds(self, url: str) -> float:
+        """TB-1: a read's predicted seconds after its wait: the host's mean so far."""
+        samples = self._host_seconds.get(urlparse(url).hostname or "")
+        expected = sum(samples) / len(samples) if samples else DEFAULT_READ_SECONDS
+        if not self.robots.known(url):
+            expected += DEFAULT_READ_SECONDS
+        return expected
+
+    async def time_admission(self, timer: CaseTimeBudget, url: str, kind: str) -> str:
+        """TB-1: why ``timer`` would not start a read of ``url`` as ``kind`` now, or "".
+
+        Predicts as ``get`` does (the host's pacing wait, then its mean read
+        time); records nothing.
+        """
+        host = urlparse(url).hostname or ""
+        delay = await self.robots.crawl_delay(url) or self.delay
+        return timer.admit(kind, self._pacing_wait(host, delay), self._expected_seconds(url))
+
+    async def _time_refusal(self, timer: CaseTimeBudget, url: str, start: str) -> str:
+        """TB-1: why a read of ``url`` (starting at ``start``) is not started, or ""."""
+        kind = _READ_KIND.get() or PHASE_DEFAULT_KIND.get(timer.phase, "discovery")
+        reason = await self.time_admission(timer, start, kind)
+        if reason:
+            timer.refuse(url, kind, reason)
+        return reason
+
+    def _memory_key(self, url: str) -> str:
+        return variant_key(url) if URL_VARIANT_DEDUPE else url
+
+    def _cache_key(self, url: str) -> str:
+        """RS-2: the key the disk cache is asked under; the URL itself while off."""
+        return variant_key(url) if URL_VARIANT_DEDUPE else url
+
+    def _remembered_final(self, url: str) -> str:
+        """RS-1: where a URL is known to redirect to in this run, else itself."""
+        if not REDIRECT_MEMORY:
+            return url
+        return self._redirect_memory.get(self._memory_key(url), url)
+
+    def _cached(self, url: str) -> FetchResult | None:
+        """The disk cache's copy of ``url`` (RS-2 key; RS-1 final URL), labelled ``url``."""
+        keys = [self._cache_key(url)]
+        final = self._remembered_final(url)
+        if final != url:
+            keys.append(self._cache_key(final))
+        for key in dict.fromkeys(keys):
+            cached = self.cache.get(key)
+            if cached is not None:
+                cached.url = url
+                return cached
+        return None
+
+    def _store(self, result: FetchResult) -> None:
+        """Cache a read under its URL (RS-2 key) and, with RS-1, its final URL."""
+        key = self._cache_key(result.url)
+        if key == result.url:
+            self.cache.put(result)
+        else:
+            self.cache.put(replace(result, url=key))
+        final = result.final_url
+        if REDIRECT_MEMORY and final and self._cache_key(final) != key:
+            self.cache.put(replace(result, url=self._cache_key(final), final_url=final))
+
+    def _remember_chain(self, chain: list[str], final: str) -> None:
+        """RS-1: every URL of a chain that ended at a readable ``final`` leads there."""
+        if not REDIRECT_MEMORY:
+            return
+        for hop in chain:
+            if hop != final:
+                self._redirect_memory[self._memory_key(hop)] = final
+
+    def mark_guessed(self, url: str) -> None:
+        """Declare ``url`` a guess: probed by convention, not found on a page.
+
+        Only recorded; it changes nothing unless GUESSED_URL_STALL_EXEMPT is
+        on. Robots, pacing and the privacy guard apply to it as to any URL.
+        """
+        self._guessed_urls.add(url)
+
+    def _is_guessed(self, url: str) -> bool:
+        return GUESSED_URL_STALL_EXEMPT and url in self._guessed_urls
+
+    def mark_stall_local(self, url: str) -> None:
+        """PC-1: a stall of ``url`` skips that URL only; its host stays open.
+
+        Only the stall memory changes. The deadline, robots, pacing, the read
+        ledger, the case clock and the privacy guard apply as to any URL. Off
+        (nobody calls it), nothing changes.
+        """
+        self._stall_local_urls.add(url)
 
     def attach_renderer(self, renderer: object) -> None:
         """Give the fetcher a browser to escalate to.
@@ -565,6 +1345,12 @@ class Fetcher:
         if not isinstance(self._client, httpx.AsyncClient):
             request = self._client.build_request("GET", current, headers=headers)
             return await self._client.send(request, stream=True)
+        if self.proxy is not None:
+            # The proxy resolves the name and connects; there is no address
+            # of ours to pin or to fall back from.
+            _charge_wire(current)
+            request = _pinned_request(self._client, target, headers=headers, pin=False)
+            return await self._client.send(request, stream=True)
         addresses = list(dict.fromkeys(target.addresses))[:MAX_ADDRESSES_TRIED]
         timeout = (
             httpx.Timeout(self.timeout, connect=min(PER_ADDRESS_CONNECT_SECONDS, self.timeout))
@@ -572,6 +1358,7 @@ class Fetcher:
             else None
         )
         for index, address in enumerate(addresses):
+            _charge_wire(current)
             request = _pinned_request(
                 self._client, target, headers=headers, address=address, timeout=timeout
             )
@@ -584,7 +1371,12 @@ class Fetcher:
         raise AssertionError("unreachable")
 
     async def _request_with_redirects(
-        self, url: str, *, validators: dict[str, str] | None = None
+        self,
+        url: str,
+        *,
+        validators: dict[str, str] | None = None,
+        deadline: float | None = None,
+        start: str | None = None,
     ) -> FetchResult:
         """Follow redirects by hand, re-validating every hop.
 
@@ -592,16 +1384,23 @@ class Fetcher:
         public page cannot bounce the crawler onto a private address — and it
         goes through the privacy guard too, so a redirect cannot smuggle
         applicant data into another host's access log.
+
+        ``start`` (RS-1) is where the chain begins when it is not ``url``: the
+        final URL ``url`` is remembered to redirect to. The result is still
+        labelled ``url``.
         """
         if self._client is None:
             raise RuntimeError("Fetcher must be used as an async context manager")
-        current = url
+        current = start or url
+        chain = [url, current]
         validators = dict(validators) if validators else None
         network_budget = self.timeout * ATTEMPT_DEADLINE_FACTOR
+        if deadline is not None:
+            network_budget = min(network_budget, deadline)
         for _hop in range(MAX_REDIRECTS + 1):
-            resolve_started = time.monotonic()
+            resolve_started = _network_clock()
             target = await _resolve_checked(current)
-            network_budget -= time.monotonic() - resolve_started
+            network_budget -= _network_clock() - resolve_started
             if network_budget <= 0:
                 raise TimeoutError("redirect chain exhausted its network deadline")
             hop_result, network_used = await self._request_one_hop(
@@ -613,6 +1412,8 @@ class Fetcher:
             # replayed to another.
             validators = None
             if isinstance(hop_result, FetchResult):
+                if hop_result.outcome is FetchOutcome.OK and same_source_site(url, current):
+                    self._remember_chain(chain, current)
                 return hop_result
             status_code, location = hop_result
             if not location:
@@ -623,7 +1424,23 @@ class Fetcher:
                     error="redirect without a Location header",
                     final_url=current,
                 )
-            current = str(httpx.URL(current).join(location))
+            invalid: str | None
+            try:
+                joined = str(httpx.URL(current).join(location))
+            except (httpx.InvalidURL, ValueError, UnicodeError) as exc:
+                joined, invalid = location, str(exc)
+            else:
+                invalid = invalid_url_reason(joined)
+            if invalid is not None:
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.HTTP_ERROR,
+                    status_code=status_code,
+                    error=f"redirect to an invalid URL: {invalid}"[:300],
+                    final_url=current,
+                )
+            current = joined
+            chain.append(current)
             # Refuse unsafe URLs before DNS or the destination's robots lookup.
             leak = find_pii(current)
             if leak is not None:
@@ -670,6 +1487,12 @@ class Fetcher:
             refused = await self._redirect_policy(requested_url, current, target.host)
             if refused is not None:
                 return refused, 0.0
+            timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+            if timer is not None:
+                # TB-1: no exchange runs past the case deadline.
+                network_budget = min(network_budget, timer.left())
+                if network_budget <= 0:
+                    raise TimeoutError("case time budget (TB-1) spent before the exchange")
 
             async def exchange() -> FetchResult | tuple[int, str | None]:
                 # The whole network/body exchange is bounded, including a
@@ -684,9 +1507,9 @@ class Fetcher:
                 finally:
                     await response.aclose()
 
-            network_started = time.monotonic()
+            network_started = _network_clock()
             result = await asyncio.wait_for(exchange(), network_budget)
-            return result, time.monotonic() - network_started
+            return result, _network_clock() - network_started
 
     async def _redirect_policy(
         self, requested_url: str, redirect_url: str, host: str
@@ -708,6 +1531,12 @@ class Fetcher:
                 error="redirect host robots.txt never finished arriving",
                 final_url=redirect_url,
             )
+        if not allowed and redirect_url in self._kb_robots_override:
+            # KB evidence exception (see __init__): this exact URL only.
+            log.info("KB robots override for %s: %s", redirect_url, reason)
+            self.kb_robots_overridden[requested_url] = reason
+            self.kb_robots_overridden[redirect_url] = reason
+            allowed = True
         if not allowed:
             return FetchResult(
                 url=requested_url,
@@ -723,6 +1552,22 @@ class Fetcher:
                 error=f"robots.txt asks for a {asked:.0f}s crawl delay on redirect host",
                 final_url=redirect_url,
             )
+        timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+        if timer is not None:
+            # TB-1: the crawl delay is waited out in full or not at all.
+            wait = self._pacing_wait(host, asked or self.delay)
+            if wait >= timer.left():
+                reason = (
+                    f"{timer.left():.1f} s left; the host's crawl delay would end past the case "
+                    "deadline"
+                )
+                timer.refuse(requested_url, _READ_KIND.get() or "hop", reason)
+                return FetchResult(
+                    url=requested_url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=f"case time budget (TB-1): {reason}; not read",
+                    final_url=redirect_url,
+                )
         await self._space_requests(host, redirect_url)
         return None
 
@@ -851,8 +1696,20 @@ class Fetcher:
             return rendered
         return result
 
+    def _client_options(self) -> dict[str, Any]:
+        """Keyword arguments of the ``httpx.AsyncClient``; the proxy only when opted in."""
+        if self.proxy is None:
+            return {}
+        return {
+            "proxy": self.proxy.url,
+            "verify": self.proxy.ssl_context(),
+            # Only what was resolved explicitly above; no other env lookups.
+            "trust_env": False,
+        }
+
     async def __aenter__(self) -> Fetcher:
         self._client = httpx.AsyncClient(
+            **self._client_options(),
             headers={"User-Agent": self.user_agent, "Accept-Language": "en"},
             # Redirects are followed by hand so every hop is re-validated. With
             # httpx following them, a public URL could redirect straight to a
@@ -880,10 +1737,13 @@ class Fetcher:
         delay = await self.robots.crawl_delay(url) or self.delay
         last = self._last_request.get(host)
         if last is not None:
-            wait = delay - (time.monotonic() - last)
+            wait = delay - (_clock() - last)
             if wait > 0:
-                await asyncio.sleep(wait)
-        self._last_request[host] = time.monotonic()
+                await _sleep(wait)
+                timing = _READ_TIMING.get()
+                if timing is not None:
+                    timing.waited += wait
+        self._last_request[host] = _clock()
 
     def _fetch_fixture(self, url: str) -> FetchResult:
         """Serve a bundled page for a ``fixture://`` URL.
@@ -929,6 +1789,18 @@ class Fetcher:
             final_url=url,
         )
 
+    def _time_cut(self, timer: CaseTimeBudget, url: str, reason: str) -> FetchResult:
+        """TB-1: a read the case clock ended after it started; the host is not blamed."""
+        timer.cut += 1
+        timer.refuse(url, _READ_KIND.get() or "read", reason)
+        self.stats[FetchOutcome.BLOCKED.value] += 1
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.BLOCKED,
+            error=f"{_TB_PREFIX}{reason}",
+            final_url=url,
+        )
+
     async def get(
         self,
         url: str,
@@ -939,16 +1811,53 @@ class Fetcher:
     ) -> FetchResult:
         """Fetch a URL from the disk cache when possible, else politely.
 
-        See ``_get``; this wrapper only records a host that refused outright.
+        See ``_get``; this wrapper only records a host that refused outright
+        and, under TB-1, how long a read that went to the network took.
         """
-        result = await self._get(
-            url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
-        )
+        invalid = invalid_url_reason(url)
+        if invalid is not None:
+            # Before anything parses it: the PII guard, the host bookkeeping
+            # below and httpx would each raise on it.
+            return self._invalid_url(url, invalid)
+        timing = _ReadTiming() if CASE_TIME_BUDGET else None
+        token = _READ_TIMING.set(timing) if timing is not None else None
+        began = _clock()
+        try:
+            result = await self._get(
+                url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
+            )
+        except httpx.InvalidURL as exc:
+            # A URL that slipped past ``invalid_url_reason`` (or a redirect
+            # chain that built one) is a failed read, never an exception
+            # that ends the case.
+            result = self._invalid_url(url, str(exc))
+        finally:
+            if token is not None:
+                _READ_TIMING.reset(token)
+        if timing is not None and timing.network and not result.error.startswith(_TB_PREFIX):
+            # TB-1: the host's read time, pacing waits excluded, predicts its next read.
+            seconds = max(_clock() - began - timing.waited, 0.0)
+            self._host_seconds.setdefault(urlparse(url).hostname or "", []).append(seconds)
         reason = _refusal(result)
         host = urlparse(url).hostname or ""
         if reason and host:
             self.refused_hosts.setdefault(host, reason)
         return result
+
+    def _invalid_url(self, url: str, reason: str) -> FetchResult:
+        """A URL that cannot be requested as written: a failed read, not an exception.
+
+        Real pages link hosts ending in a zero-width space (usp) and phone
+        numbers where the port goes (rwth); see ``page_link``, the extraction rule.
+        """
+        log.warning("not fetching a malformed URL: %s", reason[:200])
+        self.stats[FetchOutcome.UNPARSEABLE.value] += 1
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.UNPARSEABLE,
+            error=f"invalid URL, not fetched: {reason}"[:300],
+            final_url=url,
+        )
 
     async def _get(
         self,
@@ -994,7 +1903,7 @@ class Fetcher:
             validators["If-Modified-Since"] = if_modified_since
 
         if use_cache and not validators:
-            cached = self.cache.get(url)
+            cached = self._cached(url)
             if cached is not None:
                 if same_source_site(url, cached.final_url or url):
                     self.stats[FetchOutcome.CACHED.value] += 1
@@ -1015,6 +1924,8 @@ class Fetcher:
         if self._client is None:
             raise RuntimeError("Fetcher must be used as an async context manager")
 
+        #: RS-1: a URL known to redirect starts its read at the final URL.
+        start = self._remembered_final(url)
         early = urlparse(url).hostname or ""
         if early in self._stalled_hosts or early in self.robots.stalled:
             self.stats[FetchOutcome.TIMEOUT.value] += 1
@@ -1023,6 +1934,37 @@ class Fetcher:
                 outcome=FetchOutcome.TIMEOUT,
                 error="host stopped responding earlier in this run; not waited on again",
             )
+        ledger = _ACTIVE_LEDGER.get()
+        if ledger is not None:
+            # RL-1: a read that would leave fewer reads than its kind's floor
+            # is not started; robots.txt still to load costs one more.
+            kind = ledger.kind()
+            reason = ledger.admit(1 if self.robots.known(start) else 2, kind)
+            if reason:
+                ledger.refuse(url, kind, reason)
+                self.stats[FetchOutcome.BLOCKED.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=f"case read budget (RL-1): {reason}; not read",
+                    final_url=url,
+                )
+        timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+        if timer is not None:
+            # TB-1: a read predicted to leave less than its kind's floor is
+            # not started; neither is one whose crawl delay outlasts the clock.
+            reason = await self._time_refusal(timer, url, start)
+            if reason:
+                self.stats[FetchOutcome.BLOCKED.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=f"{_TB_PREFIX}{reason}; not read",
+                    final_url=url,
+                )
+        timing = _READ_TIMING.get()
+        if timing is not None:
+            timing.network = True
         try:
             target = await _resolve_checked(url)
         except TimeoutError:
@@ -1039,17 +1981,51 @@ class Fetcher:
             return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
 
         host = target.host
-        for attempt in range(1, MAX_ATTEMPTS + 1):
+        guessed = self._is_guessed(url)
+        deadline = min(self.timeout, GUESSED_URL_TIMEOUT_SECONDS) if guessed else None
+        # A KB robots-override URL is requested once: no retry around a 403,
+        # a 429, a 5xx or a block.
+        attempts = 1 if url in self._kb_robots_override else MAX_ATTEMPTS
+        for attempt in range(1, attempts + 1):
+            attempt_deadline = deadline
+            if timer is not None:
+                # TB-1: every attempt ends by the case deadline.
+                left = timer.left()
+                if left <= 0:
+                    return self._time_cut(timer, url, "no time left for this attempt")
+                attempt_deadline = left if deadline is None else min(deadline, left)
             try:
-                result = await self._request_with_redirects(url, validators=validators)
+                result = await self._request_with_redirects(
+                    url,
+                    validators=validators,
+                    deadline=attempt_deadline,
+                    start=start if start != url else None,
+                )
             except BlockedRequest as exc:
                 log.warning("blocked mid-redirect: %s", exc)
                 self.stats[FetchOutcome.BLOCKED.value] += 1
                 return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+            except CaseReadSpent as exc:
+                # RL-1: the cap fell inside this read (a hop, a retry, robots).
+                if ledger is not None:
+                    ledger.refuse(url, ledger.kind(), "the cap was reached during the read")
+                self.stats[FetchOutcome.BLOCKED.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=f"{exc} (RL-1); the read stopped at the cap",
+                    final_url=url,
+                )
             except TimeoutError:
+                if timer is not None and timer.left() <= TIME_CUT_SLACK_SECONDS:
+                    # TB-1: the case clock ended the exchange, not the host.
+                    return self._time_cut(timer, url, "the read was cut at the case deadline")
                 # The whole exchange overran: a server that trickles will
                 # trickle again, so this is not retried, nor is the host.
-                self._stalled_hosts.add(host)
+                # HS-1: a guessed URL's stall skips only that URL; so does
+                # PC-1's (a sitemap document read with no search provider).
+                if not guessed and url not in self._stall_local_urls:
+                    self._stalled_hosts.add(host)
                 self.stats[FetchOutcome.TIMEOUT.value] += 1
                 return FetchResult(
                     url=url,
@@ -1057,11 +2033,12 @@ class Fetcher:
                     error="no complete response within the deadline",
                 )
             except httpx.TimeoutException as exc:
-                if attempt == MAX_ATTEMPTS:
+                # HS-1: a guess is not worth a second wait.
+                if attempt == attempts or guessed:
                     self.stats[FetchOutcome.TIMEOUT.value] += 1
                     return FetchResult(url=url, outcome=FetchOutcome.TIMEOUT, error=str(exc))
             except (httpx.HTTPError, OSError) as exc:
-                if attempt == MAX_ATTEMPTS:
+                if attempt == attempts:
                     self.stats[FetchOutcome.NETWORK_UNAVAILABLE.value] += 1
                     return FetchResult(
                         url=url, outcome=FetchOutcome.NETWORK_UNAVAILABLE, error=str(exc)
@@ -1076,7 +2053,7 @@ class Fetcher:
                             error="response left the requested site's domain",
                             final_url=result.final_url,
                         )
-                    self.cache.put(result)
+                    self._store(result)
                     self.stats[FetchOutcome.OK.value] += 1
                     self.tier_counts["pdf" if result.is_pdf else "http"] += 1
                     try:
@@ -1097,11 +2074,14 @@ class Fetcher:
                 retryable = result.status_code == 429 or (
                     result.status_code is not None and 500 <= result.status_code < 600
                 )
-                if not retryable or attempt == MAX_ATTEMPTS:
+                if not retryable or attempt == attempts:
                     self.stats[result.outcome.value] += 1
                     return result
+            if timer is not None and timer.left() <= 2**attempt + MIN_CORE_READ_SECONDS:
+                # TB-1: no retry whose backoff would leave no time to read.
+                return self._time_cut(timer, url, "no time left to retry")
             # Exponential backoff: 2s, 4s.
-            await asyncio.sleep(2**attempt)
+            await _sleep(2**attempt)
 
         self.stats[FetchOutcome.HTTP_ERROR.value] += 1
         return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, error="exhausted attempts")

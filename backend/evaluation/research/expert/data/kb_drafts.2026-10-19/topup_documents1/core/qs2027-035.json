@@ -1,0 +1,69 @@
+{
+ "case": "qs2027-035",
+ "seed_id": "qs2027-035",
+ "university": "The University of Edinburgh",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-035",
+  "round": "topup_documents1"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "UCAS applicants; certificates: international applicants after accepting an offer",
+   "academic_year": null,
+   "notes": "'What you need to apply' and 'Submitting your qualification certificates' (after an offer is accepted as firm choice). Grades and predicted grades are entered on the UCAS application, not sent as a transcript at application.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://study.ed.ac.uk/undergraduate/applying/making-application/what-you-need-apply",
+     "quote": "You must submit a fully completed UCAS application including a personal statement, reference and predicted grades by the relevant deadline to ensure that your application is considered."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://study.ed.ac.uk/undergraduate/applying/making-application/what-you-need-apply",
+     "quote": "To apply to Edinburgh you'll need qualifications, a personal statement and a reference."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://study.ed.ac.uk/undergraduate/applying/making-application/what-you-need-apply",
+     "quote": "If you are applying from a school, college or registered UCAS centre, a teacher or tutor who knows you – your referee – will write your reference before submitting your application."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://study.ed.ac.uk/undergraduate/applying/making-application/what-you-need-apply",
+     "quote": "You will also need to provide evidence of your English language skills."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "conditional",
+     "url": "https://study.ed.ac.uk/undergraduate/applying/after-you-apply/submitting-your-qualification-certificates",
+     "quote": "If you accept our offer as your firm choice, send us copies of any certificates of qualifications you have already achieved. Examples include: SQA National 5 GCSE and IGCSE certificates College Board or ACT transcripts (international applicants) high school diploma or school leaving certificate (international applicants)",
+     "condition": "you accept the offer as your firm choice"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://study.ed.ac.uk/undergraduate/applying/after-you-apply/submitting-your-qualification-certificates",
+     "quote": "Provide authorised translations of all certificates that are written in languages other than English.",
+     "condition": "certificates are written in languages other than English"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://study.ed.ac.uk/undergraduate/applying/after-you-apply/submitting-your-qualification-certificates",
+     "quote": "If you are an EU or international applicant, send us a scanned copy of your passport to help us process your visa application."
+    }
+   ]
+  }
+ }
+}

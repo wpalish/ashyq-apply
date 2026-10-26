@@ -52,7 +52,10 @@ def auth_client(tmp_path, monkeypatch, corpus_dir):
     # global settings (limits, TTL) instead of the test's.
     monkeypatch.setattr(routes_account, "get_settings", lambda: settings)
     monkeypatch.setattr(main_module, "settings", settings)
-    monkeypatch.setattr(main_module, "_limiter", main_module.FixedWindowLimiter())
+    # A held clock: every request lands in the same window however slowly the
+    # machine serves it. On the real clock, twenty logins under a loaded
+    # parallel suite outlasted the 60 s window and the 21st got a 401.
+    monkeypatch.setattr(main_module, "_limiter", main_module.FixedWindowLimiter(lambda: 0.0))
 
     engine = db_module.create_engine(
         settings.database_url, connect_args={"check_same_thread": False}
@@ -521,4 +524,6 @@ class TestErrorsAndHeaders:
         good = client.get(f"/api/runs/{run['id']}/export.csv", params={"decision": "approved"})
         assert good.status_code == 200
         disposition = good.headers["content-disposition"]
-        assert disposition == 'attachment; filename="ashyq-{}-approved.csv"'.format(run["id"][:8])
+        assert disposition == 'attachment; filename="unimatch-{}-approved.csv"'.format(
+            run["id"][:8]
+        )

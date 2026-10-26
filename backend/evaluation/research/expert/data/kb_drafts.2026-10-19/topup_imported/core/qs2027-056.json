@@ -1,0 +1,73 @@
+{
+ "case": "qs2027-056",
+ "university": "Universiti Malaya (UM)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "um"
+ },
+ "questions_researched": [
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [
+  "english"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "known",
+   "value": {
+    "value": "minimum average of 65% (Senior High School Certificate)",
+    "type": "grade",
+    "scale": "percent",
+    "description": "International column of the programme's entry requirements: SHSC pass with minimum average 65%, at least 60%/B- in Mathematics and in one of Physics, Computing, Chemistry, Biology. Same column: Matriculation/Foundation minimum CGPA 3.00."
+   },
+   "url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+   "quote": "Senior High School Certificate (SHSC) Pass with a minimum average of 65% Obtain a minimum of 60% / grade B- in Mathematics subjects.",
+   "notes": "Bachelor of Computer Science (Software Engineering) - the programme recorded in the KB. The page lists Local and International requirement columns; this row is in the International column (the local rows say 'Malaysian citizen'). Meeting the minimum does not guarantee admission.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-08-30",
+   "url": "https://study.um.edu.my/how-to-apply",
+   "quote": "UNDERGRADUATE - FOR INTERNATIONAL 09 Feb 2026 30 Aug 2026",
+   "population": "international",
+   "notes": "Semester I (October) intake, Academic Session 2026/2027, international applicants (exception: MBBS 9 June 2026). Already passed on 2026-10-19; the October 2027 window is not yet published. A Semester II (March) 2026/2027 international window '07 Sept 2026 30 Jan 2027' exists, but the CS (Software Engineering) page lists 'Intake Semester 1 (October)' only.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 89200,
+    "currency": "MYR",
+    "period": "programme (total)",
+    "academic_year": "2025/2026",
+    "population": "international students"
+   },
+   "url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+   "quote": "International RM 89,200 ( Note: Not inclusive of 6% Sales and Service Tax (SST))",
+   "notes": "Programme page 'Tuition Fee' block; same figure in the international fee structure PDF (https://study.um.edu.my/doc/tution-fee/Fee%20Structure%2C%20UG%2C%20International%20-%20Updated%2022%20Oct%202025.pdf?_t=1761184801, 'Academic session 2025/2026 TUITION FEE (RM) (INTERNATIONAL)', 'Bachelor of Computer Science (Software Engineering) 89,200.00'). UM lists the fee for the whole programme (e.g. MBBS 673,200), not per year - period recorded as programme total; not divided. SST 6% extra.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "https://aasd.um.edu.my/financial-aid-for-undergraduate lists external schemes (PTPTN loan, PMG pharmacy scholarship, etc.) aimed at Malaysian students; no UM scholarship for international CS undergraduates found."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "See scholarship_exists."
+  }
+ }
+}

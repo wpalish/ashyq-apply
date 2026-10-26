@@ -18,6 +18,7 @@ from app.config import get_settings
 from app.domain.enums import DegreeLevel, FetchOutcome
 from evaluation.research import live
 from evaluation.research.schema import Capture, Observation
+from evaluation.research.search_cap import SearchQueryLedger
 from scripts import canary_discovery as canary
 
 
@@ -135,6 +136,55 @@ async def test_legacy_cache_hits_keep_their_existing_free_page_accounting(
 
 
 @pytest.mark.asyncio
+async def test_strict_search_budget_charges_localized_queries(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A query sent through ``search_localized`` is one of the six, too: five
+    plain plus two localized is seven asked, and the seventh is refused."""
+    from app.adapters.search.exa_mcp import ExaMcpSearchProvider
+
+    sent: list[tuple[str, str | None]] = []
+    provider = ExaMcpSearchProvider()
+
+    async def search(self: Any, *, query: str, **kwargs: Any) -> SearchResponse:
+        sent.append((query, None))
+        return SearchResponse(query=query, provider="exa_mcp", retrieved_at=datetime.now(UTC))
+
+    async def search_localized(
+        self: Any, *, query: str, hl: str, gl: str, **kwargs: Any
+    ) -> SearchResponse:
+        sent.append((query, hl))
+        return SearchResponse(query=query, provider="exa_mcp", retrieved_at=datetime.now(UTC))
+
+    monkeypatch.setattr(ExaMcpSearchProvider, "search", search)
+    monkeypatch.setattr(ExaMcpSearchProvider, "search_localized", search_localized, raising=False)
+    refused: list[str] = []
+
+    async def run(*args: Any) -> dict[str, Any]:
+        for index in range(5):
+            await provider.search(query=f"q{index}")
+        for index in range(2):
+            try:
+                await provider.search_localized(  # type: ignore[attr-defined]
+                    query=f"local{index}", hl="nl", gl="nl"
+                )
+            except SearchUnavailable as exc:
+                refused.append(str(exc))
+        return _report()
+
+    monkeypatch.setattr(canary, "run_canary", run)
+    await live.capture_one("groningen", _output(tmp_path), 60, 120, strict_expert_budget=True)
+    assert sent == [*((f"q{i}", None) for i in range(5)), ("local0", "nl")]
+    assert len(refused) == 1
+    observation = Observation.model_validate_json(_output(tmp_path).read_text())
+    assert observation.telemetry.search_calls == 6
+    assert observation.telemetry.search_localized_calls == 1
+    budget = json.loads(_output(tmp_path).with_suffix(".budget.json").read_text())
+    assert budget["stop_reason"] == "search_budget_exhausted"
+    assert budget["blocked_search_queries"] == 1
+
+
+@pytest.mark.asyncio
 @pytest.mark.parametrize("rate_limited", [False, True])
 async def test_search_budget_wraps_cached_provider_across_discovery_and_funding(
     tmp_path: Path,
@@ -231,7 +281,17 @@ def test_strict_parent_forwards_budget_and_stops_cohort_after_recorded_429(
     first_429: bool,
 ) -> None:
     monkeypatch.setattr(
-        sys, "argv", ["live", "--live", "--out", str(tmp_path), "--strict-expert-budget"]
+        sys,
+        "argv",
+        [
+            "live",
+            "--live",
+            "--out",
+            str(tmp_path),
+            "--strict-expert-budget",
+            "--max-search-queries",
+            "60",
+        ],
     )
     monkeypatch.setattr(
         subprocess, "check_output", lambda *args, **kwargs: "app-and-harness-test-sha"
@@ -298,11 +358,18 @@ def test_strict_child_receives_full_active_budget_and_resets_cached_settings(
             "--out",
             str(tmp_path),
             "--strict-expert-budget",
+            "--max-search-queries",
+            "6",
+            "--search-ledger",
+            str(tmp_path / "search_ledger.json"),
         ],
     )
     live.main()
     assert called[0][0][2:] == (60, 120)
-    assert called[0][1] == {"strict_expert_budget": True}
+    assert called[0][1] == {
+        "strict_expert_budget": True,
+        "search_ledger": SearchQueryLedger(tmp_path / "search_ledger.json", 6),
+    }
 
 
 @pytest.mark.parametrize(
@@ -342,7 +409,17 @@ def test_strict_parent_hard_timeout_keeps_active_and_process_clocks_distinct(
     monkeypatch.setattr(
         sys,
         "argv",
-        ["live", "--live", "--case", "groningen", "--out", str(tmp_path), "--strict-expert-budget"],
+        [
+            "live",
+            "--live",
+            "--case",
+            "groningen",
+            "--out",
+            str(tmp_path),
+            "--strict-expert-budget",
+            "--max-search-queries",
+            "6",
+        ],
     )
     monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "test-sha")
 

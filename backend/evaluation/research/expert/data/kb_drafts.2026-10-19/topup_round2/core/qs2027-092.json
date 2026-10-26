@@ -1,0 +1,38 @@
+{
+ "case": "qs2027-092",
+ "seed_id": "qs2027-092",
+ "university": "Pennsylvania State University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-092",
+  "round": "topup_round2"
+ },
+ "questions_researched": [
+  "english"
+ ],
+ "questions_already_known_not_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://bulletins.psu.edu/undergraduate/colleges/engineering/computer-science-bs/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.5,
+    "toefl_ibt": 80,
+    "duolingo": 120
+   },
+   "url": "https://www.psu.edu/resources/international-students/admission-requirements",
+   "quote": "Duolingo English Test (DET) : A minimum score of 120 is required TOEFL and TOEFL iBT Home Edition : TOEFL exams taken after January 21, 2026: A minimum TOEFL score of 4.5 on the internet-based TOEFL (code #2660) TOEFL exams taken before January 21, 2026: A minimum TOEFL score of 80 on the internet-based TOEFL (code #2660) Penn State does not accept TOEFL MyBestTM Scores IELTS : A minimum IELTS score of 6.5 on the academic test",
+   "notes": "University-wide requirement for first-year international students whose native language is not English. DET 120; TOEFL iBT 80 (tests before 21 January 2026) or 4.5 (after); IELTS Academic 6.5; no per-section minimum published. Scores less than two years old. SAT EBRW 570 / ACT English 24 also accepted.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

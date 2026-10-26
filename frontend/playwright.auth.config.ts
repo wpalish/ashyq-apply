@@ -16,12 +16,15 @@
  */
 
 import { defineConfig, devices } from '@playwright/test';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { existsSync } from 'node:fs';
+import { AUTH_SCRATCH_DIR, SERVE_API } from './e2e/demo-env/paths';
 
 const PORT = 5173;
 const API_PORT = 8099;
-const here = path.dirname(fileURLToPath(import.meta.url));
+// The sandbox's preinstalled Chromium, when the installed Playwright's own
+// revision is not downloaded (as in the demo and kb configs). CI uses its own.
+const LOCAL_CHROMIUM = '/opt/pw-browsers/chromium';
+const launchOptions = !process.env.CI && existsSync(LOCAL_CHROMIUM) ? { executablePath: LOCAL_CHROMIUM } : {};
 
 export default defineConfig({
   testDir: './e2e',
@@ -37,6 +40,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    launchOptions,
   },
   // One project: an auth flow gains nothing from a second viewport, and the
   // servers it needs are expensive enough to boot once.
@@ -48,7 +52,10 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: 'bash ../backend/run.sh --with-worker',
+      // The API and its worker on a scratch database of its own, wiped on
+      // every start (E2E-DB-1): never the dev one, which would get real users
+      // written into it and be migrated under different settings.
+      command: `bash "${SERVE_API}"`,
       url: `http://127.0.0.1:${API_PORT}/api/health`,
       // The interlock. With `true`, a backend left running from `npm run e2e`
       // or a dev shell would be silently adopted — auth disabled — and every
@@ -59,9 +66,11 @@ export default defineConfig({
       stdout: 'ignore',
       env: {
         UNIMATCH_AUTH_ENABLED: 'true',
-        // Its own database: pointing at the dev one would write real users
-        // into it and migrate it under different settings.
-        UNIMATCH_DATABASE_URL: `sqlite:///${path.resolve(here, '../backend/data/e2e-auth.db')}`,
+        // The mode this suite asserts, stated rather than inherited, as in
+        // playwright.config.ts: a demo server whose knowledge mode is kb.
+        UNIMATCH_DEMO_MODE: 'true',
+        UNIMATCH_KNOWLEDGE_MODE: 'kb',
+        E2E_SCRATCH_DIR: AUTH_SCRATCH_DIR,
         // Production hashes at 2**17, about a second each. This suite pays
         // that four times over plus once at import for the dummy hash, and
         // proves nothing by it. Same value and reasoning as the API tests.

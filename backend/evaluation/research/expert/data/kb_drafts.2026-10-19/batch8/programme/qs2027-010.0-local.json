@@ -1,0 +1,22 @@
+{
+ "case": "qs2027-010",
+ "note": "kb batch8 qs2027-010.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. NUS School of Computing programme page (department site). Degree: Bachelor of Computing in Computer Science (with Honours), 4 years. Language: English (university-wide; no quote on the page). How found: www.comp.nus.edu.sg -> Programmes -> Undergraduate -> Computer Science. English-only site: no language twins (no hreflang). www.nus.edu.sg / nus.edu.sg (Office of Admissions, /oam/) answers every request with an Incapsula bot challenge (HTTP 200, empty body, script /_Incapsula_Resource); not bypassed. join.comp.nus.edu.sg: proxy 502 on robots.txt. Domain note: kb_top100_list.json gives official_domain 'nus.edu', but the university's web domain is nus.edu.sg (www.comp.nus.edu.sg does not end with '.nus.edu'): the list needs 'nus.edu.sg' or the official check will reject every NUS page.",
+ "programme": {
+  "url": "https://www.comp.nus.edu.sg/programmes/ug/cs/",
+  "title": "Bachelor of Computing in Computer Science (with Honours*)"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "known",
+ "programme_urls": [
+  "https://www.comp.nus.edu.sg/programmes/ug/cs/",
+  "https://www.comp.nus.edu.sg/admissions/comp-sci/"
+ ],
+ "related_programme_urls": [],
+ "degree": "Bachelor of Computing in Computer Science (with Honours), 4 years",
+ "teaching_language": "English (not quoted on the programme page)",
+ "population_scope": "international (not a Singapore citizen or PR)",
+ "twins": null,
+ "twin_mechanism": "none: the site is English-only, no hreflang",
+ "how_found": "www.comp.nus.edu.sg -> Programmes -> Undergraduate -> Computer Science; School admissions microsite /admissions/comp-sci/"
+}

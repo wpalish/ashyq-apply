@@ -1,0 +1,65 @@
+{
+ "case": "qs2027-037",
+ "seed_id": "qs2027-037",
+ "university": "King's College London",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-037",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Full-time undergraduate applicants (UCAS); international applicants included",
+   "academic_year": null,
+   "notes": "'How to apply' and 'Important information for applying' (FAQ 'What documents do I need to submit with my application?'). Additional documents are sent through King's Apply after applying. Offer holders later verify qualifications and English tests through Qualification Check; that verification stage is not drafted. The page states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply",
+     "quote": "All applicants for full-time undergraduate courses at King's should apply through UCAS."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+     "quote": "In your UCAS application you will be asked to provide: A personal statement"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+     "quote": "Full education history A reference",
+     "notes": "Independent applicants nominate 'an academic or professional contact (not a friend or family member)'."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+     "quote": "university/high school transcripts (where applicable)",
+     "condition": "where applicable; listed among the additional documents an applicant may need to send to King's via King's Apply"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+     "quote": "official English translations of any items not issued in English",
+     "condition": "an item is not issued in English"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+     "quote": "English Language test results (such as IELTS, TOEFL)",
+     "condition": "listed among the additional documents an applicant may need to send to King's via King's Apply"
+    }
+   ]
+  }
+ }
+}

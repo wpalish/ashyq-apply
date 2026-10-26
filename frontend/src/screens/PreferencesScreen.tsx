@@ -5,11 +5,13 @@
  * defensible if the user can see and change what produced it.
  */
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
+import { localize } from '@/lib/messages';
 import { useStore } from '@/lib/store';
+import { useTranslation } from '@/lib/useTranslation';
 import type { PriorityGroup } from '@/types';
 
 /**
@@ -54,7 +56,20 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   // silently switch their research back to the synthetic corpus.
   const demoMode = demoModeOverride ?? capabilities?.demo_mode;
   const [showAdvancedWeights, setShowAdvancedWeights] = useState(false);
+  // Subscribes to the locale so the coverage note re-renders on a switch.
+  const { t } = useTranslation();
+  const liveCoverage = capabilities?.live_coverage;
+  // RM-1: a kb deployment reads no page during a run; demo serves no `mode`.
+  // MODE-1: a demo server whose knowledge mode is kb runs kb once demo is
+  // unticked, so the kb notice and its numbers come from `kb_coverage`.
+  const kbMode = liveCoverage?.mode === 'kb'
+    || (demoMode === false && liveCoverage?.kb_coverage != null);
+  const coverage = liveCoverage?.mode !== 'kb' && kbMode
+    ? liveCoverage?.kb_coverage
+    : liveCoverage;
   const [recomputed, setRecomputed] = useState(false);
+  // The kb notice is a group named by its own title, in the reader's language.
+  const kbNoticeTitle = useId();
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -369,19 +384,31 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <p className="small muted" role="status">Loading research settings…</p>
             )}
 
-            {demoMode === false && (
+            {demoMode === false && kbMode && coverage && (
+              <Notice kind="info">
+                <div data-testid="kb-mode-notice" role="group" aria-labelledby={kbNoticeTitle}>
+                  <strong id={kbNoticeTitle}>{t('research.kbNotice.title')}</strong> {t('research.kbNotice.body')}
+                  {/* The numbers come from the loaded knowledge base and the catalogue. */}
+                  <div className="stack stack--tight" data-testid="kb-coverage">
+                    <div><strong>{localize(coverage.recall_message, coverage.recall_note)}</strong></div>
+                  </div>
+                </div>
+              </Notice>
+            )}
+
+            {demoMode === false && !kbMode && (
               <Notice kind="warn">
                 <div data-testid="live-mode-notice">
                   <strong>Live mode fetches real university websites.</strong> It honours robots.txt,
                   and limits requests to each website. Only non-personal search terms are sent to
                   search providers. Unreadable pages and missing evidence are reported in each run.
-                  {capabilities?.live_coverage && (
+                  {coverage && (
                     // Coverage comes from the server's current institution registry.
                     <div className="stack stack--tight" data-testid="live-coverage">
-                      <div><strong>{capabilities.live_coverage.recall_note}</strong></div>
-                      {capabilities.live_coverage.countries.length > 0 && (
+                      <div><strong>{localize(coverage.recall_message, coverage.recall_note)}</strong></div>
+                      {coverage.countries.length > 0 && (
                         <div className="row row--tight">
-                          {capabilities.live_coverage.countries.map((c) => (
+                          {coverage.countries.map((c) => (
                             <Chip key={c}>{c}</Chip>
                           ))}
                         </div>

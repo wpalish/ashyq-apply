@@ -188,6 +188,11 @@ async def test_unreadable_search_leads_cannot_become_multifield_programmes(
 
 @pytest.mark.asyncio
 async def test_official_listing_title_can_confirm_the_second_field(tmp_path, profile, monkeypatch):
+    # The listing basis as it stands with CH-1 off (--no-confirm-head-identity);
+    # with CH-1 on (the default since 2026-10-19) a "Degree programmes" head is refused.
+    from app.adapters.discovery import live_discovery
+
+    monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", False)
     profile.context.intended_fields = ["Computer Science", "Mathematics"]
     listing_url = "https://uni.edu/school"
     _provider, _site, selected, trace, candidate, claims = await _search(

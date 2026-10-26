@@ -1,0 +1,1735 @@
+{
+  "schema_version": "1",
+  "version": "2026-10-17.heldout-reviewed1",
+  "split": "validation",
+  "cases": [
+    {
+      "id": "nu",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "Nazarbayev University",
+      "domain": "nu.edu.kz",
+      "country": "Kazakhstan",
+      "site_types": [],
+      "request": {
+        "university": "Nazarbayev University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://scai.nu.edu.kz/bsc-cs"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://scai.nu.edu.kz/bsc-cs",
+          "excerpt": "Bachelor of Science in Computer Science",
+          "scope": {
+            "university": "Nazarbayev University",
+            "programme": "Bachelor of Science in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.0,
+          "evidence": [
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+              "excerpt": "IELTS – 6.0;* writing -6.0; reading & listening & speaking – 5.5 or the equivalent TOEFL score as posted on the ETS website;",
+              "scope": {
+                "university": "Nazarbayev University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Applies to all applicants (domestic and international) for direct admission to undergraduate programs; same thresholds appear on the Financial aid & Scholarships page and in the Admission Policy and Procedures (№ 38-н/қ, 11.03.2026, Appendix 1): 'UG IELTS results no less than 6.0 overall (writing -…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 5.5,
+            "reading": 5.5,
+            "speaking": 5.5,
+            "writing": 6.0
+          },
+          "evidence": [
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+              "excerpt": "IELTS – 6.0;* writing -6.0; reading & listening & speaking – 5.5 or the equivalent TOEFL score as posted on the ETS website;",
+              "scope": {
+                "university": "Nazarbayev University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Applies to all applicants (domestic and international) for direct admission to undergraduate programs; same thresholds appear on the Financial aid & Scholarships page and in the Admission Policy and Procedures (№ 38-н/қ, 11.03.2026, Appendix 1): 'UG IELTS results no less than 6.0 overall (writing -…"
+        },
+        {
+          "key": "gpa",
+          "status": "known",
+          "value": "NIS Grade 12: BBB (regular admission) / ABB (grant competition); NUET 120 (50 min per subject) for state grant",
+          "evidence": [
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+              "excerpt": "A-level/NIS 12 Grade Certificate results not less than BBB for any three subjects",
+              "scope": {
+                "university": "Nazarbayev University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Regular (fee-paying) admission requires ONE of: GPA 4.0 out of 5.0; UNT in English overall 85 with 8/10 mathematical literacy and 8/10 reading literacy; Digital SAT 1240 or ACT 26; IB Diploma 27 with 4,4,4 in three HL subjects; or A-level/NIS Grade 12 Certificate not less than BBB in any three subjects. For the grant competition (financial support…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2025-11-20). Expert (2026-10-17): THIS DATE IS FROM THE PREVIOUS (2026/27) CYCLE, NOT THE 2027/28 INTAKE. For the autumn 2027 intake the university has not published a deadline: the 12 Oct 2026 notice says 'Application Deadlines: TBA (To Be Announced)' and 'Exact dates will be published on the University website under the section “…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 15,000 USD per year). Expert (2026-10-17): No 2027/28 figure could be verified on a readable official page; a search-engine snippet of apply.nu.edu.kz/en/admissions reportedly gives $15,000 (7 665 000 KZT) for 2027/2028, but that page (Tilda, JS-rendered) returned 404/empty to fetchers, so it is NOT recorded. Fees and financial support page…"
+        },
+        {
+          "key": "scholarships.abay_kunanbayev.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://nu.edu.kz/other/frequently-asked-questions/",
+              "excerpt": "Nazarbayev University offers the “Abay Kunanbayev” scholarship for international candidates, who successfully go through the selection process and are recommended for admission by the Admissions Committee of the respective program.",
+              "scope": {
+                "university": "Nazarbayev University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "“Abay Kunanbayev” scholarship (also written 'Abai Scholarship'). Expert (2026-10-17): University-run, merit-based, no separate application: 'In order to be considered for the “Abay Kunanbayev” or the citizenship-based scholarships of the University, international candidates should apply to the program(s) of their interest, go through the selection process and be recommended for admi…"
+        },
+        {
+          "key": "scholarships.abay_kunanbayev.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission/international-admission_general/",
+              "excerpt": "There are merit-based Abay Kunanbayev scholarships available for top international candidates, as recommended by the admissions committee of each school.",
+              "scope": {
+                "university": "Nazarbayev University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Open to international (non-citizen) applicants only; it is not offered to citizens of Kazakhstan. FAQ adds: 'In addition to the “Abay Kunanbayev” scholarship, international candidates who are recommended for admission are also eligible for the partial scholarships of the University based on their c…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    },
+    {
+      "id": "metu",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "Middle East Technical University",
+      "domain": "metu.edu.tr",
+      "country": "Turkey",
+      "site_types": [],
+      "request": {
+        "university": "Middle East Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://catalog.metu.edu.tr/program.php?fac_prog=571"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://catalog.metu.edu.tr/program.php?fac_prog=571",
+          "excerpt": "Bachelor of Science degree in Computer Engineering (DEPARTMENT OF COMPUTER ENGINEERING, Faculty of Engineering)",
+          "scope": {
+            "university": "Middle East Technical University",
+            "programme": "Bachelor of Science degree in Computer Engineering (DEPARTMENT OF COMPUTER ENGINEERING, Faculty of Engineering)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://oidb.metu.edu.tr/index.php/en/equivalence-table-english-language-exams-recognized-metu-undergraduate-and-graduate-students",
+              "excerpt": "Undergraduate programs: Minimum score required for exemption from the Department of Basic English (Preparatory School) program",
+              "scope": {
+                "university": "Middle East Technical University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "IELTS is not accepted; English is shown by other tests. Expert (2026-10-17): The quoted explanation cell belongs to the table row whose cells read, in order: METU EPE 60 | TOEFL IBT 75 | PTE ACADEMIC 55 (exam taken before 12.11.2024) | PTE ACADEMIC 65 (taken after 12.11.2024). Page last updated 31/08/2026. Scores valid 2 years; TOEFL iBT evaluated on the 120-point scale; EP…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 75 is not in the quoted excerpt. Expert (2026-10-17): The quoted explanation cell belongs to the table row whose cells read, in order: METU EPE 60 | TOEFL IBT 75 | PTE ACADEMIC 55 (exam taken before 12.11.2024) | PTE ACADEMIC 65 (taken after 12.11.2024). Page last updated 31/08/2026. Scores valid 2 years; TOEFL iBT evaluated on the 120-point scale; EP…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://iso.metu.edu.tr/en/system/files/odtu_iso_requirements.pdf",
+              "excerpt": "Kazakhstan A minimum total score of 125 out of 140 in the Unified National Testing (UNT) in 5 subjects, including 2 optional subjects, related to the program applied for.",
+              "scope": {
+                "university": "Middle East Technical University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: METU publishes a list of minimum application requirements per exam/qualification (PDF 'METU ANKARA CAMPUS UNDERGRADUATE PROGRAMS - INTERNATIONAL STUDENT MINIMUM APPLICATION REQUIREMENTS', last update 05/01/2024). For Kazakhstan the national route is the Unified National Testing (UNT): minimum 125 out of 140. International routes usable by any appl…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-07-12). Expert (2026-10-17): This is the 2026-2027 cycle deadline (page last updated 26/02/2026); the autumn 2027 (2027/28) application dates were not published on iso.metu.edu.tr as of 2026-10-17. Pattern of recent cycles: 2 June-9 July 2025, 1 June-12 July 2026 (single annual window, early June to mid-July, for the autumn in…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 1,200 USD per semester). Expert (2026-10-17): PDF heading: '2026-2027 Academic Year Tuition Fees for International Students per semester (those who registered through international student quotas) (ODTÜ/METU Ankara and Erdemli Campuses)'. The 1200 USD column applies to 'For those who start their program in the 2023-2024 Fall semester or later…"
+        },
+        {
+          "key": "scholarships.tuition_fee_discount.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://oidb.metu.edu.tr/en/middle-east-technical-university-implementation-principles-regarding-ankara-campus-tuition",
+              "excerpt": "For the students who are newly admitted to their programs, documents such as exams and diplomas submitted during the application are taken into consideration in the evaluation for tuition fee discounts/exemptions.",
+              "scope": {
+                "university": "Middle East Technical University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Tuition Fee Discount / Exemption for international undergraduate students (METU Senate 'Implementation Principles Regarding Ankara Campus Tuition Discounts or Exemptions for International Undergraduate Students', Senate Decision 26 April 2022). Expert (2026-10-17): University-run tuition waiver, not an externally funded scholarship. Definitions on the page: 'A tuition fee discount refers to an exemption from the fifty percent of the tuition fee of the relevant semester, whereas a tuition fee exemption refers to a full exemption from the tuition fee of the rel…"
+        },
+        {
+          "key": "scholarships.tuition_fee_discount.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://oidb.metu.edu.tr/en/middle-east-technical-university-implementation-principles-regarding-ankara-campus-tuition",
+              "excerpt": "Ten percent of the total number of international students (those students who registered through international students quotas) registered in undergraduate programs can receive a tuition discount or exemption within the scope of these implementation principles.",
+              "scope": {
+                "university": "Middle East Technical University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The scheme is exclusively for international students admitted through the international student quotas; the iso page states 'Our University provides tuition discounts or exemptions for international students according to their academic success.' Excluded: students whose fees are paid by other insti…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    },
+    {
+      "id": "sabanci",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "Sabancı University",
+      "domain": "sabanciuniv.edu",
+      "country": "Turkey",
+      "site_types": [],
+      "request": {
+        "university": "Sabancı University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://iro.sabanciuniv.edu/en/computer-science-and-engineering"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://iro.sabanciuniv.edu/en/computer-science-and-engineering",
+          "excerpt": "Computer Science and Engineering Program",
+          "scope": {
+            "university": "Sabancı University",
+            "programme": "Computer Science and Engineering Program",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://sabanciuniv.edu/en/exemption-fdy",
+              "excerpt": "For students enrolled in the 2024–2025 Academic Year and thereafter, the minimum TOEFL iBT score required for external exam emption is: Examinations Taken Before January 21, 2026: 85 (old system) / 4.5 (new system) Examinations Taken After January 21, 2026: 4.5",
+              "scope": {
+                "university": "Sabancı University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "IELTS is not accepted; English is shown by other tests. Expert (2026-10-17): Direct entry = exemption from the Foundation Development Year (FDY, English preparatory programme). Table on the page (exam | validity | minimum): 'PTE Academic | 2 years | 71 (Minimum score should be 67 from each part)'; 'TOEFL IBT | 2 years | 85 - 4,5* (MyBest scores are not accepted)'; 'CAE | 3…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "known",
+          "value": 85,
+          "evidence": [
+            {
+              "url": "https://sabanciuniv.edu/en/exemption-fdy",
+              "excerpt": "For students enrolled in the 2024–2025 Academic Year and thereafter, the minimum TOEFL iBT score required for external exam emption is: Examinations Taken Before January 21, 2026: 85 (old system) / 4.5 (new system) Examinations Taken After January 21, 2026: 4.5",
+              "scope": {
+                "university": "Sabancı University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): Direct entry = exemption from the Foundation Development Year (FDY, English preparatory programme). Table on the page (exam | validity | minimum): 'PTE Academic | 2 years | 71 (Minimum score should be 67 from each part)'; 'TOEFL IBT | 2 years | 85 - 4,5* (MyBest scores are not accepted)'; 'CAE | 3…"
+        },
+        {
+          "key": "gpa",
+          "status": "known",
+          "value": "70 (percent, average diploma score (Attestat))",
+          "evidence": [
+            {
+              "url": "https://iro.sabanciuniv.edu/en/required-examdiploma-list",
+              "excerpt": "Attestat / General Secondary Education Certificate / Shahodatnoma (Azerbaijan, Ukraine, Moldova, Belarus, Kazakhstan, Kyrgyzstan, Georgia, Tajikistan, Uzbekistan, Turkmenistan, Mongolia, Russia) | A minimum average of 70% diploma score*",
+              "scope": {
+                "university": "Sabancı University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Published minimum for the applicant's credential type: the Attestat / General Secondary Education Certificate (Kazakhstan is listed) requires a minimum average of 70% diploma score; the alternative Kazakhstan entry is 'Kazakhstan National Test / Unified National Testing(ENT UNT) | A minimum score of 100 out of 140'. International exams also accept…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-08-28). Expert (2026-10-17): ONLY THE 2026 CYCLE (2026-2027 academic year, autumn 2026 entry) IS PUBLISHED as of 2026-10-17; no 2027-2028 undergraduate application conditions page exists yet (targeted search found none). Round name: 'Application Deadline' — the final closing date of the single rolling application period; the s…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 36,500 USD per year). Expert (2026-10-17): 2027/28 fees are not published as of 2026-10-17; the latest published is the 2026-2027 figure (quote joins the section heading and the two table cells). Dormitory fees are separate ('Dormitory fees are calculated as a 9-month total per person'). How-to-apply page: offer email includes 'A deadline a…"
+        },
+        {
+          "key": "scholarships.admission.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://iro.sabanciuniv.edu/en/scholarships",
+              "excerpt": "International students have the opportunity to receive admission scholarships at Sabancı University. All international applicants who meet the application requirements are automatically considered for a scholarship.",
+              "scope": {
+                "university": "Sabancı University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Admission scholarship for international students (Sabancı University tuition-waiver scholarship: 25%, 40%, 50%, 60% or 75% of tuition), listed under 'Scholarships for International Students at Sabancı University'. Expert (2026-10-17): The university does not give this award a proprietary brand name; it is referred to as the 'admission scholarship' (page heading: 'Scholarships for International Students at Sabancı University'). Award levels are on the Tuition Fee page: 'We offer scholarships to outstanding candidates who exceed o…"
+        },
+        {
+          "key": "scholarships.admission.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/tuition-fees-and-scholarships",
+              "excerpt": "Yes, Sabancı University offers a range of scholarships for international students based on academic merit.",
+              "scope": {
+                "university": "Sabancı University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The admission scholarship is designed for international (non-Turkish-quota) applicants: the Scholarships page states 'All international applicants who meet the application requirements are automatically considered for a scholarship.' and the main-domain Scholarships page states 'Every international…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    },
+    {
+      "id": "charles",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "Charles University",
+      "domain": "cuni.cz",
+      "country": "Czech Republic",
+      "site_types": [],
+      "request": {
+        "university": "Charles University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.mff.cuni.cz/en/admissions/programmes"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.mff.cuni.cz/en/admissions/programmes",
+          "excerpt": "Bachelor’s Degree Programme in Computer Science",
+          "scope": {
+            "university": "Charles University",
+            "programme": "Bachelor’s Degree Programme in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 7.0,
+          "evidence": [
+            {
+              "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11320",
+              "excerpt": "- TOEIC Listening and Reading: 945 - The International English Language Testing System (IELTS): 7 - Cambridge C1 Advanced: Pass - Cambridge C2 Proficiency: Pass",
+              "scope": {
+                "university": "Charles University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): These are the minimums in the SIS faculty admission text that carries 2027 dates (documents due 'preferably by June 30, 2027, and by September 30, 2027, at the latest'; test validity 'as of April 30, 2027'), i.e. the 2027/28 cycle, although the SIS page does not label the bachelor section with an a…"
+        },
+        {
+          "key": "english_evidence.duolingo.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 130 is not in the quoted excerpt. Expert (2026-10-17): These are the minimums in the SIS faculty admission text that carries 2027 dates (documents due 'preferably by June 30, 2027, and by September 30, 2027, at the latest'; test validity 'as of April 30, 2027'), i.e. the 2027/28 cycle, although the SIS page does not label the bachelor section with an a…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11320",
+              "excerpt": "### Minimum qualifications - AP Calculus AB: score 5 - AP Calculus BC: score 4 or 5 - SAT: total score 1250, including a score in Math of at least 720.",
+              "scope": {
+                "university": "Charles University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No GPA / school-grade minimum is published. There is no entrance exam; admission is decided by reviewing the application against three conditions: a secondary school leaving certificate (recognised/nostrified), the minimum 'Reasoning Requirements' (one qualifying test score from the list) and English proficiency. Qualifying Reasoning scores: SAT t…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-04-30). Expert (2026-10-17): This is the 2026/27-cycle date; the explicit application deadline for the autumn 2027 (2027/28) intake of the English-taught bachelor is NOT yet published as of 2026-10-17 (the faculty page is still headed 2026/2027 and the URL pattern .../admission-requirements-for-bachelor-s-programmes-in-english…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 7,100 EUR per year). Expert (2026-10-17): 2027/28 fee not yet published; 'from 2026/27' is the latest named year. The CSTF 2026 scholarship page states the same figures ('4 200 EUR per academic year for students from the EU, and 7 100 EUR per academic year for students outside the EU'). A Kazakhstan citizen is a non-EU student -> 7100 EUR/…"
+        },
+        {
+          "key": "scholarships.cstfs.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.mff.cuni.cz/en/admissions/scholarships/cstf-scholarships-2026",
+              "excerpt": "The Scholarship is open to candidates applying for the Bachelor’s or Master’s Programmes in Computer Science, at the Faculty of Mathematics and Physics, Charles University, language of instruction English, for the academic years beginning 2026/2027",
+              "scope": {
+                "university": "Charles University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Computer Science Tuition Fee Scholarship (CSTFS) — page title 'Computer Science Tuition Fee Scholarships 2026'. Expert (2026-10-17): Faculty-run, awarded by the Dean on academic excellence; tuition waiver of 4 200 EUR up to 21 600 EUR (full tuition for 3 bachelor years); '3) Up to six Scholarships will be awarded for students in the Bachelor's Programme in Computer Science'. Apply with the programme application plus CV, motivati…"
+        },
+        {
+          "key": "scholarships.cstfs.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.mff.cuni.cz/en/admissions/scholarships/cstf-scholarships-2026",
+              "excerpt": "which amounts to 4 200 EUR per academic year for students from the EU, and 7 100 EUR per academic year for students outside the EU.",
+              "scope": {
+                "university": "Charles University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The eligibility clause (regulation 2) restricts only by programme, language of instruction and prior study, not by nationality; regulation 4 expressly covers 'students outside the EU' at the non-EU fee rate, and the intro says the waiver depends on 'the applicant's chosen programme, academic perfor…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    },
+    {
+      "id": "masaryk",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "Masaryk University",
+      "domain": "muni.cz",
+      "country": "Czech Republic",
+      "site_types": [],
+      "request": {
+        "university": "Masaryk University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.muni.cz/en/bachelors-and-masters-study-programmes/22955-informatics"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.muni.cz/en/bachelors-and-masters-study-programmes/22955-informatics",
+          "excerpt": "Informatics",
+          "scope": {
+            "university": "Masaryk University",
+            "programme": "Informatics",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.muni.cz/en/admissions/bachelors-and-masters-studies/tuition-fees-and-financial-aid",
+              "excerpt": "Whereas students in programmes taught in English are charged very affordable fees, programmes taught in Czech are completely tuition free, but a serious working knowledge of Czech is required.",
+              "scope": {
+                "university": "Masaryk University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Czech (no English requirement published). Expert (2026-10-17): The requirement is Czech proficiency, not English, because the only FI bachelor programmes are Czech-taught. No minimum level is published anywhere found (checked FI info-bachelor 2027/28 page in English and Czech, FI admission guide, FI FAQ, MU how-to-apply, MU language-courses page). The FI 2027/…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.muni.cz/en/admissions/bachelors-and-masters-studies/tuition-fees-and-financial-aid",
+              "excerpt": "Whereas students in programmes taught in English are charged very affordable fees, programmes taught in Czech are completely tuition free, but a serious working knowledge of Czech is required.",
+              "scope": {
+                "university": "Masaryk University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Czech (no English requirement published)."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.fi.muni.cz/admission/info-bachelor.html.en",
+              "excerpt": "To pass the entrance examination, an applicant must achieve a result in the numerical and analytical reasoning subtest that places them amongst the top 30 per cent across the whole of Masaryk University.",
+              "scope": {
+                "university": "Masaryk University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No GPA/grade minimum. Admission is by the MU Study Aptitude Test (TSP, Test studijních předpokladů): pass threshold is a result in the numerical-analytical reasoning sub-test among the top 30 per cent MU-wide; ranking by the combined result of all three sub-tests. Exemption from the TSP can be requested for single-subject programmes (conditions pu…"
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-02-28",
+          "evidence": [
+            {
+              "url": "https://www.fi.muni.cz/admission/info-bachelor.html.en",
+              "excerpt": "Application deadlines: 1 November 2026 – 28 February 2027",
+              "scope": {
+                "university": "Masaryk University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): This is the published 2027/28 (autumn 2027) cycle, not a carry-over from 2026. Czech original: 'Termíny pro podávání přihlášek: 1. 11. 2026 – 28. 2. 2027'. Application fee 900 CZK (FI guide). TSP attempt windows: 29 Nov 2026 – 14 Feb 2027 and 15 Feb – 25 Apr 2027. Proof of secondary education mid-M…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the not year-specific (MU rule for all Czech-taught programmes, page read 2026-10-1… fee is published, not 2027/28 (expert value 0 CZK per year). Expert (2026-10-17): Czech-taught programme, so no tuition for any nationality. FI's own international page confirms: 'Tuition fee for Master´s degree programmes taught in English is 4,500 Eur per year, studying in the Czech language is free of charge.' (fi.muni.cz/students/international-studies/admission.html.en). For…"
+        },
+        {
+          "key": "scholarships.accommodation.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.muni.cz/en/students/everyday-study/scholarships/accommodation-support-scholarship",
+              "excerpt": "The purpose of this scholarship programme is to provide accommodation grants to students of Masaryk University. The scholarship program to support student accommodation is announced by MU Measure No. 7/2025.",
+              "scope": {
+                "university": "Masaryk University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Accommodation scholarship (MU scholarship programme to support student accommodation, MU Measure No. 7/2025; Czech: Stipendium na podporu ubytování / ubytovací stipendium). Expert (2026-10-17): University-run, paid each semester to enrolled students who confirm eligibility in IS MU (1–30 November for autumn, 15 March–15 April for spring); a first-year student can therefore be considered in November of the first semester. Published criteria (MU tuition page): full-time degree programme; fi…"
+        },
+        {
+          "key": "scholarships.accommodation.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.fi.muni.cz/students/international-studies/admission.html.en",
+              "excerpt": "Our faculty offers scholarships to full-time student during their studies, as accommodation scholarships, merit-based scholarship, scholarship to support the studies, scholarship for short-term study or internships abroad, etc.",
+              "scope": {
+                "university": "Masaryk University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Evidence is indirect but official: the FI page written for international applicants lists accommodation scholarships among what full-time students receive, and the MU eligibility criteria (full-time, first degree in CR, standard length, no permanent address in Brno-město) contain no nationality or…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): Czech. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    },
+    {
+      "id": "tum",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "Technical University of Munich",
+      "domain": "tum.de",
+      "country": "Germany",
+      "site_types": [],
+      "request": {
+        "university": "Technical University of Munich",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc",
+          "excerpt": "Informatics - Bachelor of Science (B.Sc.)",
+          "scope": {
+            "university": "Technical University of Munich",
+            "programme": "Informatics - Bachelor of Science (B.Sc.)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.tum.de/en/studies/application/application-info-portal/language-certificates",
+              "excerpt": "DSH-2 A DSH passed with an overall result of at least DSH-2 is considered proof of linguistic study ability for admission or enrollment to all degree programs and degrees.",
+              "scope": {
+                "university": "Technical University of Munich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is German (german_level=DSH-2 / TestDaF level 4 in all sections (4x4) / Goethe-Zertifikat C2 / ÖSD Zert…). Expert (2026-10-17): This is the GERMAN requirement, recorded here because the Bachelor Informatics is taught in German. Programme page: 'You need sufficient German language skills if you wish to apply for this program. Evidence of your language proficiency has to be submitted before the end of the application deadline…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.tum.de/en/studies/application/application-info-portal/language-certificates",
+              "excerpt": "DSH-2 A DSH passed with an overall result of at least DSH-2 is considered proof of linguistic study ability for admission or enrollment to all degree programs and degrees.",
+              "scope": {
+                "university": "Technical University of Munich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is German (german_level=DSH-2 / TestDaF level 4 in all sections (4x4) / Goethe-Zertifikat C2 / ÖSD Zert…)."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.cit.tum.de/cit/studium/studiengaenge/bachelor-informatik/",
+              "excerpt": "Sie werden entweder direkt als geeignet eingestuft und zum Studium zugelassen: 84 Punkte oder mehr, zu Stufe 2 eingeladen: 73-83 Punkte, oder direkt abgelehnt: 72 Punkte oder weniger.",
+              "scope": {
+                "university": "Technical University of Munich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No fixed GPA/grade minimum. Admission is by a two-stage aptitude assessment (Eignungsfeststellungsverfahren). Stage 1 converts the application into a points score: 84 points or more = direct admission; 73-83 points = invitation to the stage 2 written test; 72 points or fewer = rejection. Points are based on the average grade of the school-leaving…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-07-15). Expert (2026-10-17): TUM publishes the application window as a recurring annual period without a year; no separate 2027/28 (or 2026/27) cycle page exists, so 2027-07-15 is the 15.07. deadline applied to the winter semester 2027/28 intake. CIT timetable (German): 'Online-Bewerbung und Hochladen der erforderlichen Unterl…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the current rate as published on 2026-10-17 (in force for new enrolments since wint… fee is published, not 2027/28 (expert value 3,000 EUR per semester). Expert (2026-10-17): An increase for the applicant's intake has been announced on https://www.tum.de/en/studies/fees/tuition: 'Tuition fees for international students from non-EU/EEA countries at TUM will increase for the winter semester 2027/28. The tuition fees will then be for Bachelor's programs : 2,300 euros or 3,…"
+        },
+        {
+          "key": "scholarships.waiver_financial_need.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers",
+              "excerpt": "This waiver scholarship is intended for applicants who are beginning their studies at TUM and are unable to cover the tuition fees due to financial hardship",
+              "scope": {
+                "university": "Technical University of Munich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Waiver scholarship based on financial need (Bachelor's and Master's). Expert (2026-10-17): Section heading verbatim: 'For the 1st semester: Waiver scholarship based on financial need (Bachelor’s and Master’s)'. Run by TUM (Fees and Scholarships team, studium@tum.de), applied for online during the application period: 'Bachelor’s applicants 15 May 15 to 15 July for the following winter sem…"
+        },
+        {
+          "key": "scholarships.waiver_financial_need.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers",
+              "excerpt": "Successful applicants are granted a waiver of the tuition fees for international students from non-EU/EEA countries for the standard duration of their degree program. No funds are paid out directly.",
+              "scope": {
+                "university": "Technical University of Munich",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The waiver scholarship exists specifically for international students from non-EU/EEA countries (the only group charged tuition), and the financial-need variant is open to applicants 'beginning their studies at TUM', i.e. incoming first-semester bachelor applicants such as a Kazakhstani NIS graduat…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): German. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    },
+    {
+      "id": "tartu",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "University of Tartu",
+      "domain": "ut.ee",
+      "country": "Estonia",
+      "site_types": [],
+      "request": {
+        "university": "University of Tartu",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://ut.ee/en/curriculum/science-and-technology"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://ut.ee/en/curriculum/science-and-technology",
+          "excerpt": "Science and Technology",
+          "scope": {
+            "university": "University of Tartu",
+            "programme": "Science and Technology",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.0,
+          "evidence": [
+            {
+              "url": "https://ut.ee/en/english-language-requirements",
+              "excerpt": "IELTS Academic the minimum required score is 6.0 and no part can be below 5.5",
+              "scope": {
+                "university": "University of Tartu",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Same minimums apply to all English-taught bachelor's and master's programmes. TOEFL iBT: 'For the exams taken before 21 January 2026, the minimum required score is 75 (on the 0-120 scale) For exams taken on or after January 21, 2026: Minimum total score: 4 (on the 1-6 scale) Minimum section scores:…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 5.5,
+            "reading": 5.5,
+            "speaking": 5.5,
+            "writing": 5.5
+          },
+          "evidence": [
+            {
+              "url": "https://ut.ee/en/english-language-requirements",
+              "excerpt": "IELTS Academic the minimum required score is 6.0 and no part can be below 5.5",
+              "scope": {
+                "university": "University of Tartu",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Same minimums apply to all English-taught bachelor's and master's programmes. TOEFL iBT: 'For the exams taken before 21 January 2026, the minimum required score is 75 (on the 0-120 scale) For exams taken on or after January 21, 2026: Minimum total score: 4 (on the 1-6 scale) Minimum section scores:…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 75 is not in the quoted excerpt. Expert (2026-10-17): Same minimums apply to all English-taught bachelor's and master's programmes. TOEFL iBT: 'For the exams taken before 21 January 2026, the minimum required score is 75 (on the 0-120 scale) For exams taken on or after January 21, 2026: Minimum total score: 4 (on the 1-6 scale) Minimum section scores:…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://ut.ee/en/curriculum/science-and-technology",
+              "excerpt": "The application will be considered for the admissions ranking if a total score of 66 points or higher is achieved. The maximum total score is 100 points.",
+              "scope": {
+                "university": "University of Tartu",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No minimum secondary-school grade average is published. Admission is by a 100-point composite score: higher/senior secondary school result in Mathematics (20%), result in Biology, Chemistry or Physics (20%), motivation letter (20%), online entry test (20%), admission interview (20%). An application enters the admissions ranking only with a total o…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-04-15). Expert (2026-10-17): This is the 2026 cycle (autumn 2026 intake); the autumn 2027 deadline is not yet published. Programme page: 'Admission deadlines, admission requirements, and descriptions of the entrance examinations for the 2027 intake will be added to the website by the end of December.' Programme-page timeline (…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 6,000 EUR per year). Expert (2026-10-17): Confirmed on the main programme page https://ut.ee/en/curriculum/science-and-technology: 'Tuition fee €6,000 per year' (page states 'Curriculum version: 2026/2027'). 2027/28 fees are not yet published. ut.ee/en/content/cost-tuition: 'Starting from the academic year 2026/2027, the university will no…"
+        },
+        {
+          "key": "scholarships.tuition_fee_reduction.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://ut.ee/en/curriculum/science-and-technology",
+              "excerpt": "Tuition fee reduction In selected programmes, the university offers tuition fee reductions of 25%, 50%, or 100% for one semester at a time. For this programme, eight admitted students will receive a 50% tuition fee reduction for their second semester",
+              "scope": {
+                "university": "University of Tartu",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Tuition fee reduction. Expert (2026-10-17): This is the only university-run fee concession an incoming Science and Technology applicant can be considered for; it is not awarded at admission but after the first semester. cost-tuition page: 'Students do not apply for tuition fee reduction, it is granted automatically.' No tuition-waiver places…"
+        },
+        {
+          "key": "scholarships.tuition_fee_reduction.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://ut.ee/en/curriculum/science-and-technology",
+              "excerpt": "All students admitted in 2026 will be eligible to be considered for a tuition fee reduction based on their academic performance and the following criteria: they study full-time; are not on academic leave; have not exceeded the nominal duration of the curriculum;",
+              "scope": {
+                "university": "University of Tartu",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The tuition fee reduction is open to all admitted students with no citizenship condition; the ut.ee cost-tuition page introduces it precisely as the replacement for tuition waivers that non-EU/EEA newcomers lose from 2026/27 ('However, some study programmes will introduce tuition fee reductions.').…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    },
+    {
+      "id": "polimi",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "Politecnico di Milano",
+      "domain": "polimi.it",
+      "country": "Italy",
+      "site_types": [],
+      "request": {
+        "university": "Politecnico di Milano",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.polimi.it/formazione/corsi-di-laurea/dettaglio-corso/ingegneria-informatica"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.polimi.it/formazione/corsi-di-laurea/dettaglio-corso/ingegneria-informatica",
+          "excerpt": "Ingegneria Informatica",
+          "scope": {
+            "university": "Politecnico di Milano",
+            "programme": "Ingegneria Informatica",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.polimi.it/en/studenti/requisiti-di-lingua/students-of-an-italian-language-laurea-study-programme",
+              "excerpt": "an appropriate certification of Italian language proficiency at level B2 from the CLIQ",
+              "scope": {
+                "university": "Politecnico di Milano",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Italian (italian_level=B2; italian_proof=B2 certificate of Italian issued by a CLIQ body, required before enrolment (alt…). Expert (2026-10-17): Page is headed \"Equivalent to Bachelor of Science - Academic year 2026/2027\". Italian: \"you must demonstrate Knowledge of the Italian language before enrolment.\" English, verbatim from the same page: \"Knowledge of the English language is not a requirement for admission to courses taught in Italian\"…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.polimi.it/en/studenti/requisiti-di-lingua/students-of-an-italian-language-laurea-study-programme",
+              "excerpt": "an appropriate certification of Italian language proficiency at level B2 from the CLIQ",
+              "scope": {
+                "university": "Politecnico di Milano",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Italian (italian_level=B2; italian_proof=B2 certificate of Italian issued by a CLIQ body, required before enrolment (alt…)."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.polimi.it/en/prospective-students/how-to-apply/admission-to-laurea-programmes/engineering/scores-and-rankings",
+              "excerpt": "The minimum score obtained at the TOL taken in 2026, to be considered in the formulation of the ranking list, rounded to the nearest whole number, must be equal to or greater than 30/100.",
+              "scope": {
+                "university": "Politecnico di Milano",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No diploma-grade/GPA threshold is published. Admission to engineering Laurea programmes is by entrance test (TOL, or alternative TOLC-I / CEnT-S / SAT converted to TOL score) and a ranking against available places (735 for Ingegneria Informatica at Milano Leonardo, 125 at Cremona). Minimum TOL score to be considered in the ranking list (rounded):…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-08-31). Expert (2026-10-17): ONLY THE 2026/27 CYCLE IS PUBLISHED; the 2027/28 bachelor dates are not yet online (\"More information will be available around January 2027.\" on the test-dates page). The recorded date is the non-EU-specific deadline: Universitaly pre-enrolment/visa submission for \"Non-EU citizens living abroad who…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 3,943.04 EUR per year). Expert (2026-10-17): Page heading: \"You are a future student of the 2026/2027 academic year.\" 2027/28 fees are not published. Fee is income-banded: \"For a standard study plan of between 46 and 74 ECTS and an ISEE of up to € 22,000, the amount is € 157.04\" up to the maximum of € 3,943.04 for a 46-74 ECTS plan; paid as a…"
+        },
+        {
+          "key": "scholarships.dsu.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.polimi.it/en/prospective-students/how-much-does-it-cost/scholarships",
+              "excerpt": "Students admitted to a Bachelor of Science programme can apply for Diritto allo Studio (DSU) Scholarships",
+              "scope": {
+                "university": "Politecnico di Milano",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Diritto allo Studio Universitario (DSU) Scholarships - \"Call for the assignment of 'DSU' Benefits\" (Politecnico di Milano DSU Call a.y. 2026/2027). Expert (2026-10-17): DSU is the Politecnico-administered right-to-education scholarship (income- and merit-based; \"Every year, in June, PoliMi publishes a special Call for the assignment of 'DSU' Benefits.\" - https://www.polimi.it/en/students/tuition-fees-scholarships-and-financial-aid/university-financial-aid-diritto-…"
+        },
+        {
+          "key": "scholarships.dsu.applicability.international",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-17): EVIDENCE QUALITY: the HTML pages do not use the word 'international' for DSU; the quoted sentence (Academic Year 2026/2027) shows that first-year Laurea students whose household income/assets are abroad - the situation of a non-EU applicant from Kazakhstan - are granted DSU right-to-education bursa…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): Italian (page field: \"Italiano\"); the English programme page at https://www.polimi.it/en/education/laurea-programmes/pr…. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    },
+    {
+      "id": "vilnius",
+      "dataset_version": "2026-10-17.heldout-reviewed1",
+      "university": "Vilnius University",
+      "domain": "vu.lt",
+      "country": "Lithuania",
+      "site_types": [],
+      "request": {
+        "university": "Vilnius University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://mif.vu.lt/lt3/stojantiesiems/bakalauro-studijos/informatika"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://mif.vu.lt/lt3/stojantiesiems/bakalauro-studijos/informatika",
+          "excerpt": "Informatika",
+          "scope": {
+            "university": "Vilnius University",
+            "programme": "Informatika",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.vu.lt/en/language-skills",
+              "excerpt": "For admission to study programmes taught in Lithuanian, you need to demonstrate sufficient Lithuanian language proficiency.",
+              "scope": {
+                "university": "Vilnius University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Lithuanian (lithuanian_exemption_cefr=B2). Expert (2026-10-17): Recorded under 'english' because the programme is Lithuanian-taught (see programme notes). Exemption sentence on the same page: 'You are exempt from providing additional proof of Lithuanian language proficiency if you have passed the State Lithuanian language exam or you hold a B2 level certificate…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.vu.lt/en/language-skills",
+              "excerpt": "For admission to study programmes taught in Lithuanian, you need to demonstrate sufficient Lithuanian language proficiency.",
+              "scope": {
+                "university": "Vilnius University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Lithuanian (lithuanian_exemption_cefr=B2)."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.vu.lt/studijos/stojantiesiems/bakalauro-studiju-sarasas/informatika",
+              "excerpt": "Asmenims, vidurinį išsilavinimą įgijusiems 2025 ir 2026 metais, minimalus konkursinis balas yra 4;",
+              "scope": {
+                "university": "Vilnius University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: Minimum competitive score (minimalus konkursinis balas) of 4 for applicants who obtained secondary education in 2025 or 2026, in VU's general admission (LAMA BPO) for the 2026 intake; in addition, at least three state matura exams (Lithuanian language and literature, mathematics, one of the applicant's choice) each at or above the basic achievemen…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-07-23). Expert (2026-10-17): Only the 2026 cycle is published; the 2027 (autumn 2027 intake) dates are not yet available: https://www.vu.lt/stojantiesiems/priemimo-informacija says 'Priėmimas į bakalauro ir vientisąsias studijas 2026 m. yra pasibaigęs'. The recorded date is the end of the main stage of Lithuania's general admi…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2025/26 fee is published, not 2027/28 (expert value 4,201 EUR per year). Expert (2026-10-17): 2027/28 fees are not published. The MIF page names the year ('2025 m.'). VU's central 2026-admission page for the programme (https://www.vu.lt/studijos/stojantiesiems/bakalauro-studiju-sarasas/informatika) shows the same figure for 2026 entrants: 'Metinė studijų kaina įstojus į valstybės nefinansuo…"
+        },
+        {
+          "key": "scholarships.vilniaus_450_mecio.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.vu.lt/studentams/paslaugos-studentams/finansai/450-mecio-stipendija",
+              "excerpt": "Universiteto 450-mečio stipendija skirta pirmakursiams, siekiantiems studijuoti, net jei susiduriate su finansiniais ar socialiniais iššūkiais.",
+              "scope": {
+                "university": "Vilnius University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Vilniaus universiteto 450-mečio stipendija (Vilnius University 450th Anniversary Scholarship) — for incoming first-year students. Expert (2026-10-17): University-run (VU's own funds), EUR 3000 for the first year ('Stipendija yra 3000 eurų.' paid as 300 EUR/month from September to June). Applied for during the main stage of the general admission ('Paraiškų teikimas vyksta bendrojo priėmimo pagrindinio etapo metu.'; for 2026: 'iki 2026 m. liepos 23…"
+        },
+        {
+          "key": "scholarships.vilniaus_450_mecio.applicability.international",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): No published sentence states whether non-Lithuanian / non-EU applicants are eligible, so true/false cannot be recorded. The page's 'Kas gali gauti šią stipendiją?' section did not render (JavaScript accordion). The Scholarship Regulations contain no citizenship criterion: §4 'Every student of the U…"
+        }
+      ],
+      "review": {
+        "status": "human_verified",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": "Диас",
+        "verified_on": "2026-10-17",
+        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): Lithuanian (MIF lists the programme under 'Bachelor studies in Lithuanian'; 'Language(s) of instruction: Lithuanian/ En…. CERTIFIED 2026-10-17 by Диас, the repository owner (\"Подписываю\", choosing \"draft10 + heldout1 + 3 правки\"), after reviewing the docs/process/SIGN_CORE_2026-10-17.md worksheet and the three label changes in evaluation/research/runs/2026-10-17/LOOP_REPORT.md (Warsaw programmes-first twin, Groningen URL without ?lang=en, Groningen IELTS evidence on the university-wide page)."
+      }
+    }
+  ]
+}

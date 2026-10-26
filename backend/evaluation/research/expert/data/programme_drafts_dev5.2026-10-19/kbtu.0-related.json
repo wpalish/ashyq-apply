@@ -1,0 +1,26 @@
+{
+ "case": "kbtu",
+ "note": "dev5 kbtu.0-related: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. Related, not the programme: per the search index the School of IT and Engineering lists 6B06101 Information Systems and 6B06102 Computer Systems and Software (plus 6B06110 Data Science and Artificial Intelligence), English-taught, 4 years; no bachelor titled Computer Science or Computer Science and Engineering was found. NOT OPENED: from the expert container every request to this host fails TLS verification (the server sends only its leaf certificate, without the Sectigo Public Server Authentication CA DV R36 intermediate; the same failure dropped this site from dev4 on 2026-10-18, SIGN_DEV4_2026-10-18.md). URL and title come from the search engine's index (discovery only, never evidence). The production Fetcher (httpx/certifi) is expected to fail the same way on a runner; if verify_evidence cannot open it, the item stays unknown.",
+ "programme": {
+  "url": "https://kbtu.edu.kz/en/schools/school-of-information-technology-and-engineering/bachelor-s-educational-programs-of-the-school-of-information-technology-and-engineering",
+  "title": "Bachelor’s Educational programs of the School of Information Technology and Engineering"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "unknown",
+ "programme_urls": [],
+ "related_programme_urls": [
+  "https://kbtu.edu.kz/en/schools/school-of-information-technology-and-engineering/bachelor-s-educational-programs-of-the-school-of-information-technology-and-engineering"
+ ],
+ "related_programmes": [
+  "6B06101 Information Systems (IS)",
+  "6B06102 Computer Systems and Software (CSS)",
+  "6B06110 Data Science and Artificial Intelligence"
+ ],
+ "degree": "bachelor (4 years) - from the search index, not read",
+ "teaching_language": "English - from the search index, not read",
+ "population_scope": "international (a Kazakh national is a domestic applicant)",
+ "twins": null,
+ "twin_mechanism": "not established: the page could not be opened, so neither hreflang nor a language switch was seen (KBTU uses /en/ and probably /ru/, /kk/ prefixes - not checked)",
+ "how_found": "kbtu.edu.kz robots.txt and every page fail TLS in the expert container; site search (official domain only) -> SITE 'Bachelor’s Educational programs' page and 'Admission to a Bachelor's Degree' (/en/kbtu-admission-undergraduate)."
+}

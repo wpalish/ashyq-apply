@@ -1,0 +1,57 @@
+{
+ "case": "qs2027-029",
+ "seed_id": "qs2027-029",
+ "university": "Australian National University (ANU)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-029",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International applicants applying directly to ANU for undergraduate programs (including the Bachelor of Advanced Computing (Honours)); applicants with Australian Year 12, the IB Diploma or NCEA apply through UAC International instead",
+   "academic_year": null,
+   "notes": "ANU 'Documentation requirements' page (international undergraduate & postgraduate) and the international applications page. A standing policy page; no year is printed on the document list (the applications page lists Semester 1, 2027 key dates). Also on the page: 'Any other required documentation for your preferred program' (program-specific additional requirements, none named for computing); applicants admitted on predicted results (IB, HKDSE, GCE-A, Semester 2 only) must provide the official final academic transcript before enrolment; documents must be scanned in colour and not re-sized. The postgraduate-only items (CV, referees, degree certificate) are not drafted. In earlier rounds study.anu.edu.au's robots.txt was unreachable from the container; on this read it was reachable and allowed the pages.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://study.anu.edu.au/apply/international-applications",
+     "quote": "Submit your application through our online application portal. Simply search for your preferred program in the below list, and click on Apply."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://study.anu.edu.au/apply/international-applications/documentation-requirements",
+     "quote": "Documents you will need to apply to ANU Proof that you have met the University's minimum English language requirements."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://study.anu.edu.au/apply/international-applications/documentation-requirements",
+     "quote": "Your academic records, including a grading scale. If you are applying for an undergraduate program, you will need to provide an academic transcript that shows that you have completed your secondary studies."
+    },
+    {
+     "kind": "passport",
+     "requirement": "conditional",
+     "url": "https://study.anu.edu.au/apply/international-applications/documentation-requirements",
+     "quote": "You can choose to provide official ID when you apply (birth certificate, citizenship documents, passport). Official ID will be required if your application is successful and you are offered a place at ANU.",
+     "condition": "if the application is successful and the applicant is offered a place (optional at application); official ID may be a birth certificate, citizenship documents or a passport"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://study.anu.edu.au/apply/international-applications/documentation-requirements",
+     "quote": "Translating your documents into English ANU accepts translations from these organisations:",
+     "condition": "documents not in English: translations only from the accepted organisations listed; self-translated documents are not acceptable"
+    }
+   ]
+  }
+ }
+}

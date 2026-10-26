@@ -1,0 +1,39 @@
+{
+ "case": "qs2027-082",
+ "seed_id": "qs2027-082",
+ "university": "KTH Royal Institute of Technology",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-082",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Applicants to KTH's English-taught bachelor's programme (BSc Information and Communication Technology), via University Admissions in Sweden",
+   "academic_year": null,
+   "notes": "KTH offers one bachelor's programme taught in English (BSc Information and Communication Technology, the closest to Computer Science); its entry-requirements page. The page says 'All documents proving eligibility must reach University Admissions by the deadline' and 'applicants must have complete documentation from upper secondary school' (predicted grades not accepted), but names no further document; the country-specific document list is on universityadmissions.se, which is not a KTH domain and is not drafted. 'Recommendation letters, motivation letters or similar are not considered.' The programme page gives 2027 application deadlines; the document requirements state no year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.kth.se/en/studies/bachelor/information-communication-technology/entry-requirements-for-information-and-communication-technology-1.450313",
+     "quote": "You can meet the requirement with an English test, for example an IELTS total score of 6.5 with no section below 5.5",
+     "condition": "the English requirement is not met through completed upper secondary education or university studies in the country of previous studies"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://www.kth.se/en/studies/bachelor/information-communication-technology/entry-requirements-for-information-and-communication-technology-1.450313",
+     "quote": "You need to support this with transcripts and a course syllabus submitted to your University Admissions user account when you apply.",
+     "condition": "the Physics requirement is claimed through alternative credentials (classes covering the listed Physics topics)"
+    }
+   ]
+  }
+ }
+}

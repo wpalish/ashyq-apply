@@ -27,10 +27,13 @@ describe('looking a message up', () => {
   });
 
   it('falls back to English rather than showing a key or an invented word', () => {
+    // Any key Kazakh does not have yet: English is the correct answer until a
+    // person chooses the Kazakh words.
+    const gap = untranslated('kk')[0];
+    if (gap === undefined) throw new Error('Kazakh has no gap left to fall back on');
+    const english = t(gap);
     setLocale('kk');
-    // "University shortlist" holds a glossary term with no settled Kazakh
-    // equivalent. English is the correct answer until a person chooses one.
-    expect(t('nav.shortlist')).toBe('University shortlist');
+    expect(t(gap)).toBe(english);
   });
 
   it('never renders a raw key', () => {
@@ -64,13 +67,21 @@ describe('choosing a language', () => {
 });
 
 describe('the gaps are deliberate', () => {
-  it('leaves the product vocabulary untranslated in both locales', () => {
-    // Each of these strings contains a term listed as Open in the glossary.
-    const reserved = ['nav.shortlist', 'nav.funding', 'nav.sources', 'nav.export', 'nav.preferences'];
+  it('names every screen in the navigation with the provisional glossary words', () => {
+    // Navigation used to keep these in English (GLOSSARY.md, Open). Since
+    // 2026-10-25 it carries the provisional words the results screens already
+    // use ("Provisional — navigation"), so a menu is never half in English.
+    const words = {
+      ru: { 'nav.shortlist': 'короткий список', 'nav.sources': 'расхождения', 'nav.group.research': 'Исследование' },
+      kk: { 'nav.shortlist': 'қысқа тізім', 'nav.sources': 'сәйкессіздік', 'nav.group.research': 'Зерттеу' },
+    } as const;
+    const nav = ['nav.preferences', 'nav.shortlist', 'nav.funding', 'nav.sources', 'nav.export', 'nav.group.research'] as const;
     for (const locale of ['ru', 'kk'] as const) {
       const gaps = untranslated(locale);
-      for (const key of reserved) {
-        expect(gaps).toContain(key);
+      for (const key of nav) expect(gaps, `${locale} ${key}`).not.toContain(key);
+      setLocale(locale);
+      for (const [key, word] of Object.entries(words[locale])) {
+        expect(t(key as keyof typeof words.ru).toLowerCase()).toContain(word.toLowerCase());
       }
     }
   });
