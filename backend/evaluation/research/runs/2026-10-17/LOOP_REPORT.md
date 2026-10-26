@@ -1422,3 +1422,25 @@ what is being confirmed), `max_search_queries` empty, `case_parallelism=5`, `sec
 `search_first=false`, `runner=ubuntu-latest`, `case=` the set's ids (LOOP_PROTOCOL), `run_tag=base7-cohort` /
 `base7-dev2` / `base7-dev3` / `base7-dev4`. Score with reviewed12 / dev2.draft4 / dev3.draft4 / dev4.draft3. The bar:
 0 wrong pages and the per-set hits above.
+
+### 2026-10-26 16:35 — base7: the new default (fused1 store, DC-1 on) confirmed on the signed labels
+
+`base7-<set>`, `search_provider=recorded` (default store now fused1), `columns=4`, today's defaults (FRH, DC-1 on),
+labels reviewed12 / dev2.draft4 / dev3.draft4 / dev4.draft3 with the bare-host rule.
+
+| set | hit/wrong/related/missed (4 columns) | answered | claim precision | misses |
+|---|---|---|---|---|
+| cohort (10) | **7/0/0/3** ×4 (ubc now a hit on the signed Calendar twin) | **12/27** | 23/23 | 0 |
+| dev2 (10) | 6/0/1/3 ×4 | 7–8/21 | 13/13 | 0 |
+| dev3 (14) | 8–9/**1**/0/4–5 | 6–9/22 | 16/16 | 0 |
+| dev4 (9) | 3–4/0/1/4–5 | 2/8 | 9/10 | 0 |
+| **total (39)** | **24–26 found, 1 wrong** | **27–31** | 61/62 | **0** |
+
+Against Serper base3 on the same labels: 23–25 found, 0 wrong, 18–19 answered. Every request is in the store
+(`recorded_search_misses` 0 on all four sets).
+
+The one wrong page, in every dev3 column: auckland's
+`study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc%28Hons%29` — the BSc (Honours) plan, a separate
+postgraduate-year programme in New Zealand, the same page FRH step 1 flagged (§8). It comes from the Exa half of the
+store. No "(Hons)" rule is safe in general (a UK BSc (Hons) is the bachelor's itself); a fix has to read the plan's
+own level. Open as a worker ticket; the default stays fused1 (+2 found, +10 answered, 1 wrong vs 0).
