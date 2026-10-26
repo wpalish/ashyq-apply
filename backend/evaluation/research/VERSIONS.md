@@ -17,6 +17,16 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
 
+**Scorer definition changed 2026-10-26 (owner: «Подтверждаю», the bare-host rule of
+`docs/process/TRACK_B_2026-10-26.md` §1.3).** Programme-page matching only; claims are untouched. A URL that
+differs from a gold (or twin, or labelled related) URL only by a leading `www.` on the host is the same page:
+`metrics._page_forms` writes every canonical form with the bare host (`metrics._bare_host`), so both sides of
+`same_programme_page` fold it, and so do `gold_seen`, `gold_confirm_rank`, recall@k and the index ceiling's form
+index, which share it. One label only: `www2.`, `cs.`, a doubled `www.www.`, another registrable domain, another
+port or a host left without a dot are never merged. Effect on the Track B captures: Exa's usp
+`icmc.usp.br/en/…` (base5/base6f/rp-dc1 dev3, every column) and Tavily's delft `tudelft.nl/…` score hits instead
+of wrong. No committed baseline holds a bare-host variant of a gold URL.
+
 **reviewed12, dev2-draft4, dev3-draft4 (2026-10-26, owner: «Подтверждаю», twin signatures of
 `docs/process/TRACK_B_2026-10-26.md` §1).** Each is its predecessor (reviewed11, dev2-draft3, dev3-draft3) with signed
 twins appended to `programme_urls` and a dated line in the case's `review.notes`; no label, status, related page or

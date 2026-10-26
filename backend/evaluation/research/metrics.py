@@ -393,6 +393,18 @@ _INTAKE_YEAR = re.compile(r"20\d{2}")
 _HTML_EXTENSION = re.compile(r"(?<=[^/])\.html?$", re.IGNORECASE)
 
 
+def _bare_host(netloc: str) -> str:
+    """The host without one leading ``www.`` label (owner, 2026-10-26, Track B §1.3).
+
+    ``www.icmc.usp.br`` and ``icmc.usp.br`` serve one page, so a URL that
+    differs from the gold only by that label is the gold. Nothing else is
+    folded: another subdomain (``cs.``, ``www2.``), another registrable domain
+    or a host that would be left without a dot stays another host.
+    """
+    rest = netloc[4:]
+    return rest if netloc.startswith("www.") and "." in rest.split(":", 1)[0] else netloc
+
+
 def _page_forms(url: object, language: str | None) -> tuple[set[str], set[str]]:
     """One URL's canonical forms, as written and with its intake year removed.
 
@@ -401,7 +413,9 @@ def _page_forms(url: object, language: str | None) -> tuple[set[str], set[str]]:
     not part of the page; a ``lang`` query parameter is not either, but only
     when ``language`` (the page's own ``<html lang>``, as read) confirms it.
     Any other query parameter stays: it can identify a programme
-    (``?p7_code=``).
+    (``?p7_code=``). A leading ``www.`` on the host is not part of the page
+    either (``_bare_host``, owner 2026-10-26): every form is written with the
+    bare host, so both sides of a comparison fold it.
     """
     parts = urlsplit(canonical_url(url))
     path = parts.path
@@ -427,7 +441,7 @@ def _page_forms(url: object, language: str | None) -> tuple[set[str], set[str]]:
     yearless = "/".join(s for s in segments if not _INTAKE_YEAR.fullmatch(s))
 
     def form(path_: str, query: str) -> str:
-        return urlunsplit((parts.scheme, parts.netloc, path_.rstrip("/"), query, ""))
+        return urlunsplit((parts.scheme, _bare_host(parts.netloc), path_.rstrip("/"), query, ""))
 
     written = {form(path, q) for q in queries}
     without_year = {form(yearless, q) for q in queries} if yearless != path else set()
@@ -438,7 +452,8 @@ def same_programme_page(returned: object, gold: object, language: str | None = N
     """Whether a returned URL and a gold URL are canonical variants of one page.
 
     Ticket 03 Q2: the same path with or without an intake-year segment, a
-    trailing slash, ``index.html`` or a ``.htm`` / ``.html`` extension;
+    trailing slash, ``index.html``, a ``.htm`` / ``.html`` extension or a
+    leading ``www.`` on the host (owner, 2026-10-26);
     ``?lang=`` only when the returned page's ``<html lang>`` (``language``)
     names that language. "With or without" is one side holding the year: two
     different years are two intakes' pages.
