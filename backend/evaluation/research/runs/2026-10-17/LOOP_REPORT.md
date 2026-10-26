@@ -1364,3 +1364,61 @@ precision 100 % in every column.
 pages and keeps Exa's 27 answers; its remaining wrong pages are the hku and kuleuven twins (owner to sign) and,
 until this flip, ubc's Okanagan page. Recommendation (main session): the default recorded store becomes **fused1**
 once the twins are signed, with DC-1 on.
+
+### 2026-10-26 — twin signatures, the bare-host rule, and fused1 as the default recorded store ($0)
+
+The owner signed («Подтверждаю») TRACK_B_2026-10-26 §1: hku `www.cs.hku.hk/…/beng-in-computer-science`; kuleuven
+`…/SC_51016742/diploma_omschrijving`, `www.kuleuven.be/opleidingen/bachelor-informatica` and
+`www.kuleuven.be/programmes/opleidingen/bachelor-informatica`; uppsala `programme-syllabus?query=2332`; ubc's
+Vancouver Calendar CS page (WP-1); and the bare-host rule (a leading `www.` is not part of the page). Applied as
+`ground_truth.reviewed12.json`, `dev2.draft4.json`, `dev3.draft4.json` (VERSIONS.md) and `metrics._bare_host` in the
+scorer's page forms. No provider was called; the 16 artifacts below were re-scored offline (`scorecard.build`,
+`--allow-drafts`); development sets only.
+
+Before = reviewed11 / dev2-draft3 / dev3-draft3 / dev4-draft3, exact host. After = reviewed12 / dev2-draft4 /
+dev3-draft4 / dev4-draft3 with the bare-host rule. Columns off#1, off#2, on#1, on#2, hit/wrong/related/missed;
+"answered" = known core questions answered (unchanged by the signatures in every column).
+
+| store (runs) | set | before | after | answered |
+|---|---|---|---|---|
+| Serper base3 (`base4-*`) | cohort | 4/1/0/5 ×4 | **5/0/0/5** ×4 | 8/27 |
+| | dev2 | 6/0/1/3 ×4 | 6/0/1/3 ×4 | 2–3/21 |
+| | dev3 | 9/1/0/4, 9/0/0/5, 10/0/0/4, 10/0/0/4 | 10/0/0/4, 9/0/0/5, 10/0/0/4, 10/0/0/4 | 8/22 |
+| | dev4 | 4/0/1/4, 3/0/1/5 ×3 | same | 0/8 |
+| Exa r1 (`base5-*`) | cohort | 5/2/0/3, 5/2/0/3, 5/1/1/3, 5/2/0/3 | 6/1/0/3, 6/1/0/3, 6/0/1/3, 6/1/0/3 | 8–9/27 |
+| | dev2 | 5/0/1/4, 6/0/1/3 ×3 | same | 8/21 |
+| | dev3 | 8/2/0/4, 8/1/0/5, 8/2/0/4, 8/1/0/5 | 10/0/0/4, 9/0/0/5, 9/1/0/4, 9/0/0/5 | 9/22 |
+| | dev4 | 3/0/1/5 ×4 | same | 2/8 |
+| **fused1** (`base6f-*`, DC-1 off) | cohort | 5/2/0/3 ×4 | **6/1/0/3** ×4 | 8/27 |
+| | dev2 | 6/0/1/3 ×4 | same | 8, 8, 8, 5/21 |
+| | dev3 | 7/2/0/5, 8/1/0/5 ×3 | **9/0/0/5** ×4 | 9/22 |
+| | dev4 | 4/0/1/4 ×4 | same | 2/8 |
+| Exa r1 + DC-1 (`rp-dc1-*`, off off on on) | cohort | 5/2/0/3, 5/2/0/3, 5/1/0/4, 5/1/0/4 | 6/1/0/3, 6/1/0/3, **6/0/0/4**, **6/0/0/4** | 8–9/27 |
+| | dev2 | 4/0/1/5, 6/0/1/3 ×3 | same | 5–8/21 |
+| | dev3 | 8/2/0/4, 8/1/0/5 ×3 | 10/0/0/4, 9/0/0/5 ×3 | 9/22 |
+| | dev4 | 3/0/1/5 ×4 | same | 2/8 |
+
+Totals after, per column (39 known programmes): Serper 23–25 found, 0 wrong, 18–19 answered; Exa 24, 1–2 wrong
+(ubc's Okanagan page; uio's "digital økonomi og ledelse" in one column), 27–28; **fused1 25 in every column**, 1 wrong
+(ubc's Okanagan page in all four columns, DC-1 off), 24–27 answered; Exa + DC-1 on 24, **0 wrong**.
+
+What moved: the hku and ubc-Calendar twins (cohort, wrong → hit), kuleuven's sub-page and `/programmes/` page (dev3
+off#1, wrong → hit), usp's bare host (dev3, every Exa/fused column, wrong → hit). uppsala's syllabus and delft's bare
+host came only from Tavily (`base5t-*`, not re-scored here). What is left wrong after the signatures: ubc's
+`cs.ok.ubc.ca/undergraduate/computer-science` (Exa and fused, DC-1 off) — the page DC-1 refuses (rp-dc1 on columns,
+both; TRACK_B §1.2: its predicate fires on that page under all four stores, fused1 included) — and uio's
+`informatikk-ledelse` in one Exa column, which fused1 never returned.
+
+**Verdict: `DEFAULT_RECORDED_STORE` = `recorded_search.fused1.json`** (and the workflow's recorded default). The bar
+(fused1 with DC-1 on: 0 wrong pages, or only wrong pages DC-1 removes; hits ≥ Serper − 1 per set) holds: fused1's
+only wrong page is the one DC-1 removes, and per set fused1 finds cohort 6 vs Serper 5, dev2 6 vs 6, dev3 9 vs 9–10,
+dev4 4 vs 3–4, while answering 24–27 known core questions to Serper's 18–19. Expected on a DC-1-on fused1 run:
+cohort 6/0/0/4 (ubc wrong → missed, or a hit if pass 2's Serper lists reach the now-signed Calendar page). base3
+stays committed (`live.BASE3_RECORDED_STORE`).
+
+Confirming run (not dispatched; needs these commits on the branch): `benchmark-capture.yml`, `mode=expert_paired`,
+`columns=4`, `search_provider=recorded`, `base_args` and `extra_args` empty (the new default store and DC-1 on are
+what is being confirmed), `max_search_queries` empty, `case_parallelism=5`, `seconds_per_case=120`, `max_pages=60`,
+`search_first=false`, `runner=ubuntu-latest`, `case=` the set's ids (LOOP_PROTOCOL), `run_tag=base7-cohort` /
+`base7-dev2` / `base7-dev3` / `base7-dev4`. Score with reviewed12 / dev2.draft4 / dev3.draft4 / dev4.draft3. The bar:
+0 wrong pages and the per-set hits above.

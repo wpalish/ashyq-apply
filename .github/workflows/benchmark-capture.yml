@@ -80,7 +80,7 @@ on:
         required: false
         default: ''
       search_provider:
-        description: 'Search layer: auto preserves historic secret precedence; explicit exa, tavily or brave requires its UNIMATCH_<PROVIDER>_API_KEY secret (the job stops before any capture without it); recorded (expert modes) replays the recorded Serper lists of the dev sets, no provider called and no key read (store: --recorded-store PATH in base_args, else evaluation/research/data/recorded_search.base3.json). "--search-provider recorded" in base_args or extra_args selects it too, for both arms'
+        description: 'Search layer: auto preserves historic secret precedence; explicit exa, tavily or brave requires its UNIMATCH_<PROVIDER>_API_KEY secret (the job stops before any capture without it); recorded (expert modes) replays the recorded result lists of the dev sets, no provider called and no key read (store: --recorded-store PATH in base_args, else evaluation/research/data/recorded_search.fused1.json, Exa r1 + Serper base3 fused, the default since 2026-10-26). "--search-provider recorded" in base_args or extra_args selects it too, for both arms'
         type: choice
         required: false
         default: 'auto'
@@ -625,7 +625,7 @@ jobs:
             esac
           done
           if [ "$requested" = recorded ]; then
-            store="${store:-evaluation/research/data/recorded_search.base3.json}"
+            store="${store:-evaluation/research/data/recorded_search.fused1.json}"
             if [ ! -f "$store" ]; then
               echo "::error::recorded search store not found: $store; no capture started"
               exit 1
@@ -1343,7 +1343,7 @@ jobs:
             esac
           done
           if [ "$requested" = recorded ]; then
-            store="${store:-evaluation/research/data/recorded_search.base3.json}"
+            store="${store:-evaluation/research/data/recorded_search.fused1.json}"
             if [ ! -f "$store" ]; then
               echo "::error::recorded search store not found: $store; no capture started"
               exit 1

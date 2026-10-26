@@ -432,9 +432,14 @@ STRICT_PROVIDERS = frozenset({"exa", "exa_mcp"})
 
 #: Recorded-search replay (owner, 2026-10-19: paid search frozen): the store
 #: ``--search-provider recorded`` answers from when ``--recorded-store`` and
-#: ``UNIMATCH_RECORDED_SEARCH_STORE`` are both unset. Built by
-#: ``evaluation.research.recorded_search`` from the base3 captures.
-DEFAULT_RECORDED_STORE = Path(__file__).parent / "data" / "recorded_search.base3.json"
+#: ``UNIMATCH_RECORDED_SEARCH_STORE`` are both unset. Since 2026-10-26 the
+#: fused store (FUSE-1: Exa r1 and Serper base3 interleaved rank by rank):
+#: after the owner's twin signatures and the bare-host rule its only wrong page
+#: was ubc's other campus, which DC-1 (on) refuses, and it finds as many pages
+#: as base3 on every set (LOOP_REPORT 2026-10-26). base3 stays committed.
+DEFAULT_RECORDED_STORE = Path(__file__).parent / "data" / "recorded_search.fused1.json"
+#: The Serper store that was the default until 2026-10-26.
+BASE3_RECORDED_STORE = Path(__file__).parent / "data" / "recorded_search.base3.json"
 #: The paid providers' keys. A recorded capture's child gets every one of them
 #: empty (an environment value outranks a ``.env`` file), so nothing it runs
 #: could reach a paid provider even if the factory were changed to try.
@@ -2103,7 +2108,7 @@ def main() -> None:
         default=None,
         metavar="PATH",
         help="with --search-provider recorded: the recorded-search store to replay "
-        "(default: UNIMATCH_RECORDED_SEARCH_STORE, else data/recorded_search.base3.json); "
+        "(default: UNIMATCH_RECORDED_SEARCH_STORE, else data/recorded_search.fused1.json); "
         "a query it has no answer for returns nothing and is counted as a miss",
     )
     parser.add_argument(

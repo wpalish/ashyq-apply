@@ -106,7 +106,7 @@ def test_a_malformed_v2_store_is_refused(document: dict[str, Any], message: str)
 
 
 def test_the_committed_v1_store_still_loads_with_no_titles() -> None:
-    store = RecordedSearchStore.from_file(live.DEFAULT_RECORDED_STORE)
+    store = RecordedSearchStore.from_file(live.BASE3_RECORDED_STORE)
     assert len(store) > 100
     assert store.texts == {}
 

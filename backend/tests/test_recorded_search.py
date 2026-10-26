@@ -37,6 +37,8 @@ from evaluation.research.schema import Capture, Observation, Telemetry
 from tests import test_stage_summary as staged
 
 STORE = live.DEFAULT_RECORDED_STORE
+#: The Serper store built from the base3 captures (the default until 2026-10-26).
+BASE3 = live.BASE3_RECORDED_STORE
 
 
 def _document(*entries: dict[str, Any]) -> dict[str, Any]:
@@ -231,8 +233,8 @@ def test_a_store_file_is_read_once_until_it_changes(tmp_path: Path) -> None:
         RecordedSearchStore.from_file(tmp_path / "missing.json")
 
 
-def test_the_committed_store_holds_the_four_development_sets_only() -> None:
-    document = json.loads(STORE.read_text(encoding="utf-8"))
+def _development_only(path: Path) -> list[dict[str, Any]]:
+    document = json.loads(path.read_text(encoding="utf-8"))
     store = RecordedSearchStore.from_document(document)
     assert len(store) == len(document["entries"]) > 100
     entries = document["entries"]
@@ -245,7 +247,29 @@ def test_the_committed_store_holds_the_four_development_sets_only() -> None:
     assert not {h for h in hosts for d in forbidden if h == d or h.endswith("." + d)}
     sources = document["provenance"]["sources"]
     assert {s["set"] for s in sources} == set(recorded_search.DEV_SETS)
+    return list(sources)
+
+
+def test_the_committed_store_holds_the_four_development_sets_only() -> None:
+    sources = _development_only(BASE3)
     assert all(s["run_id"] and s["run_created_at"] < "2026-10-19T05:11" for s in sources)
+
+
+def test_the_default_store_is_the_fused_store_of_exa_r1_and_serper_base3() -> None:
+    """Owner flip 2026-10-26 (LOOP_REPORT): replay answers from fused1 by default."""
+    assert STORE.name == "recorded_search.fused1.json"
+    assert BASE3.name == "recorded_search.base3.json" and BASE3.is_file()
+    sources = _development_only(STORE)
+    assert {s["run_id"] for s in sources} == {
+        "40314322985",  # Exa R1 (record-wide), every set
+        "39172483236",
+        "39172484697",
+        "39172486984",
+        "39172488858",
+    }
+    document = json.loads(STORE.read_text(encoding="utf-8"))
+    assert document["schema"] == "recorded-search/2"
+    assert document["provenance"]["fused"]["order"] == "interleave"
 
 
 def test_the_committed_store_keys_are_todays_discovery_requests() -> None:
@@ -253,9 +277,10 @@ def test_the_committed_store_keys_are_todays_discovery_requests() -> None:
 
     Fails when the default discovery queries change: the store would then
     replay nothing for them. Rebuild it (``evaluation.research.recorded_search``)
-    or accept that the replay misses those queries.
+    or accept that the replay misses those queries. The base3 store holds
+    discovery's requests only (fused1 adds topic and scholarship ones).
     """
-    document = json.loads(STORE.read_text(encoding="utf-8"))
+    document = json.loads(BASE3.read_text(encoding="utf-8"))
     plans: dict[tuple[str, str, str], dict[str, recorded_search.Request]] = {}
     for entry in document["entries"]:
         identity = (entry["institution"], entry["host"], entry["country"])
@@ -378,6 +403,10 @@ def test_the_cli_replays_the_default_store_with_no_paid_key(
     assert isinstance(replayed, dict)
     assert replayed["file"] == STORE.name
     assert replayed["source_runs"] == [
+        "40314322985",
+        "40314322985",
+        "40314322985",
+        "40314322985",
         "39172483236",
         "39172484697",
         "39172486984",

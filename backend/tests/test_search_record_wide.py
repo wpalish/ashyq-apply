@@ -547,7 +547,7 @@ def test_a_malformed_wide_entry_is_refused(document: dict[str, Any], message: st
 
 
 def test_the_committed_base3_store_still_loads_unchanged() -> None:
-    store = RecordedSearchStore.from_file(live.DEFAULT_RECORDED_STORE)
+    store = RecordedSearchStore.from_file(live.BASE3_RECORDED_STORE)
     assert len(store) > 100 and store.texts == {}
 
 
