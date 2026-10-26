@@ -1307,3 +1307,31 @@ recorded arm's wrong page is ubc's Calendar page whenever you.ubc.ca's robots.tx
 
 TCD (`kb_drafts.2026-10-26/batch1`, run 40228499326): the GitHub runner finds both re-quoted facts (2/2 ok), so v24
 stands as built.
+
+### 2026-10-26 12:45 — Track B: R1 on Exa and Tavily (record-wide) and the re-baseline on both stores
+
+**Spend (each provider's own figure, summed from every request's `page.cost`):** Exa R1 (`r1`, run 40314322985):
+230 queries of the 264 cap, each asked 25 and logged all (5,716 results), **$5.03**, 0 errors, 0 refused. Tavily R1′
+(`r1t`, run 40314326661): 232 queries, each asked 20 (4,527 results), **232 credits**. Smokes: 1 query each. Stores
+committed as `recorded_search.r1.json` (5.7 MB) / `recorded_search.r1t.json` (4.3 MB), recorded-search/2 wide; they
+replay at $0 from now on.
+
+Re-baseline, `search_provider=recorded`, `columns=4` (identical arms), today's defaults; hit/wrong/related/missed
+per column; "answered" = known core questions answered (claims), claim precision in brackets.
+
+| set | Serper base3 (base4, 10-25) | **Exa r1 (base5)** | Tavily r1t (base5t) |
+|---|---|---|---|
+| cohort (10) | 4/1/0/5, answered 8/27 | **5**/2/0/3 (one column 5/1/1/3), answered 8/27 (18/18) | 4–5/2–3/0/3, 8/27 (18/18) |
+| dev2 (10) | 6/0/1/3, answered 2/21 | 5–6/0/1/3–4, **answered 8/21** (13/13) | 3/1/2/4, 3/21 (5/5) |
+| dev3 (14) | 9–10/0–1/0/4–5, answered 8/22 | 8/1–2/0/4–5, answered 9/22 (16/16) | **10**/0–1/0/3–4, 8/22 (11/11) |
+| dev4 (9) | 3–4/0/1/4–5, answered 0/8 | 3/0/1/5, answered 2/8 (9/9) | 3–4/0/1/4–5, 1/8 (6/7) |
+| **total** | **22–23 found, 1–2 wrong, 18 answered** | **21–22 found, 3–4 wrong, 27 answered, precision 56/56** | 20–22 found, 4–6 wrong, 20 answered |
+
+`recorded_search_misses` (requests the pipeline made that the store does not hold): Exa dev3 12; Tavily dev2 3,
+dev3 12; all others 0 — the B4 bar needs 0.
+
+**Verdict: no default flip yet.** Exa answers half again as many core questions (27 vs 18) at 100 % claim precision
+— the largest single gain since search went dark — but finds one page fewer on dev3, confirms 2–3 more wrong
+programme pages than Serper, and misses 12 dev3 requests, so B4's bar (hits ≥ Serper − 1 per set, 0 wrong,
+0 misses) is not met as stated. Next: name the wrong pages and the 12 misses (a worker), then decide between Exa
+alone, a fused Exa + Serper store, or Exa with a wrong-page fix.
