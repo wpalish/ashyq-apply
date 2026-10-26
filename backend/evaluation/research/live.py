@@ -1974,6 +1974,8 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "campus-qualifier-guard": (
         ("app.adapters.discovery.live_discovery", "CAMPUS_QUALIFIER_GUARD"),
     ),
+    # Default-off (LOOP_REPORT 2026-10-26 16:35, HONS-1).
+    "honours-year-guard": (("app.adapters.discovery.live_discovery", "HONOURS_YEAR_GUARD"),),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
@@ -1985,6 +1987,7 @@ DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
         "same-site-award-links",
         "local-query-from-evidence",
         "sitemap-guess-cap",
+        "honours-year-guard",
     }
 )
 
@@ -2570,6 +2573,13 @@ def main() -> None:
         "a place the site's own URLs use beside the institution's city as a one-token "
         "qualifier (…-vancouver-bsc / …-okanagan-bsc) - named in its host, URL or head, or in "
         "its text when the text never names the city",
+    )
+    parser.add_argument(
+        "--honours-year-guard",
+        action="store_true",
+        help="plan rule HONS-1: a bachelor's request refuses a page whose head names honours, "
+        "whose own content calls the study postgraduate and which never says undergraduate "
+        "(an honours year after a bachelor's, not an honours bachelor's)",
     )
     parser.add_argument(
         "--subpage-requirements-lead",
@@ -3222,6 +3232,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as dc1_module
 
             dc1_module.CAMPUS_QUALIFIER_GUARD = True
+        if args.honours_year_guard:
+            from app.adapters.discovery import live_discovery as hons1_module
+
+            hons1_module.HONOURS_YEAR_GUARD = True
         if args.subpage_requirements_lead:
             from app.adapters.discovery import live_discovery as sp2_module
 
@@ -3597,6 +3611,7 @@ def main() -> None:
                             else []
                         ),
                         *(["--campus-qualifier-guard"] if args.campus_qualifier_guard else []),
+                        *(["--honours-year-guard"] if args.honours_year_guard else []),
                         *(
                             ["--subpage-requirements-lead"]
                             if args.subpage_requirements_lead

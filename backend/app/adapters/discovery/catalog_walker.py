@@ -877,7 +877,12 @@ class CatalogWalker:
         # listing a programme says the programme exists, not that it is the
         # one this applicant asked about.
         reason = profile_rejects(
-            page, self.degree, self.fields, url=result.final_url or link.url, country=self.country
+            page,
+            self.degree,
+            self.fields,
+            url=result.final_url or link.url,
+            country=self.country,
+            html=result.text,
         )
         if reason is not None:
             if is_related_refusal(reason):
@@ -923,7 +928,12 @@ class CatalogWalker:
             walk.hub_links.append((hub, url, f"could not be read ({result.outcome.value})"))
             return
         reason = profile_rejects(
-            page, self.degree, self.fields, url=result.final_url or url, country=self.country
+            page,
+            self.degree,
+            self.fields,
+            url=result.final_url or url,
+            country=self.country,
+            html=result.text,
         )
         walk.outcomes.append((url, f"hub_link_{page.page_type.value}"))
         walk.hub_links.append((hub, url, reason or "confirmed"))

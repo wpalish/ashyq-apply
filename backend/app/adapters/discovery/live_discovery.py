@@ -3428,6 +3428,50 @@ def other_campus_named(
     return None
 
 
+#: Plan rule HONS-1 (LOOP_REPORT 2026-10-26 16:35), off until a paired run
+#: passes. "Honours" names two different things in the English-speaking
+#: systems: in the UK, Ireland and Hong Kong (and in many Australian and New
+#: Zealand four-year degrees) "BSc (Hons)" is the bachelor's itself, entered
+#: from school; in New Zealand and Australia it is also an honours *year*, a
+#: separate programme entered after a completed bachelor's that the site files
+#: as postgraduate study. The page classifier reads both as a bachelor page
+#: ("Bachelor of Science (Honours) …"), so on the base7 runs (fused1 store,
+#: DC-1 on) auckland confirmed its BSc (Honours) plan beside the gold in every
+#: dev3 column. A "(Hons)" word rule would refuse the UK bachelor's too. On:
+#: ``profile_rejects`` refuses a page every other check accepted when its head
+#: (title, subject or ``h1``) names honours, its own content (navigation
+#: removed, ``readable_text``) calls the study postgraduate, and nothing in the
+#: whole document or its URL says undergraduate - an honours bachelor's is an
+#: undergraduate programme and its site says so somewhere (route, breadcrumb,
+#: menu, admissions copy). Only a bachelor's request is affected. The
+#: benchmark harness flips it per capture (``--honours-year-guard``). False
+#: (the default) changes nothing.
+HONOURS_YEAR_GUARD = False
+#: HONS-1: the verdict, pinned by tests.
+HONOURS_YEAR_VERDICT = (
+    "page names an honours year that follows a bachelor's (postgraduate), not bachelor"
+)
+_HONOURS_WORD = re.compile(r"\b(?:hons|honours|honors)\b", re.IGNORECASE)
+_POSTGRADUATE_WORD = re.compile(r"\bpost-?\s?graduate\b", re.IGNORECASE)
+_UNDERGRADUATE_WORD = re.compile(r"\bunder-?\s?graduate\b", re.IGNORECASE)
+
+
+def honours_year_page(page: PageClassification, url: str, html: str) -> bool:
+    """HONS-1: whether a page is an honours year that follows a bachelor's.
+
+    The head names honours, the page's own content says postgraduate, and
+    neither the whole document nor the URL ever says undergraduate.
+    """
+    head = " ".join((page.title or "", page.subject or "", page.heading or ""))
+    if not html or not _HONOURS_WORD.search(head):
+        return False
+    if _UNDERGRADUATE_WORD.search(html) or _UNDERGRADUATE_WORD.search(unquote(url or "")):
+        return False
+    from app.adapters.extraction import readable_text
+
+    return bool(_POSTGRADUATE_WORD.search(readable_text(html)))
+
+
 def is_front_page(url: str) -> bool:
     """FP-1: whether ``url`` is a host's root (path ``/`` or empty, no query)."""
     parts = urlparse(url)
@@ -4126,13 +4170,15 @@ def profile_rejects(
     *,
     url: str = "",
     country: str = "",
+    html: str = "",
 ) -> str | None:
     """Why a fetched page is not this applicant's programme page, or ``None``.
 
     One predicate, shared by the confirm stage and the catalogue walker: the
     page has to read as a single programme, at the level the applicant asked
     for, in a subject they asked for. The strings are trace copy and are
-    pinned by tests — change them only together with the tests.
+    pinned by tests — change them only together with the tests. ``html`` is
+    the page as read; only HONS-1 reads it, and only while its flag is on.
     """
     if page.page_type not in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
         return f"reads as {page.page_type.value}, not a programme page"
@@ -4170,7 +4216,16 @@ def profile_rejects(
         subpage = head_subpage_rejects(page, fields)
         if subpage is not None:
             return subpage
-    return _campus_abroad(page, url, country)
+    abroad = _campus_abroad(page, url, country)
+    if (
+        abroad is None
+        and HONOURS_YEAR_GUARD
+        and requested_level == "bachelor"
+        and honours_year_page(page, url, html)
+    ):
+        # HONS-1: an honours year after a bachelor's is no bachelor's programme.
+        return HONOURS_YEAR_VERDICT
+    return abroad
 
 
 def _campus_abroad(page: PageClassification, url: str, country: str) -> str | None:
@@ -5541,7 +5596,12 @@ class LiveDiscoveryAdapter:
             return verdict, ""
         page = classify_page(url=result.final_url or url, html=result.text)
         reason = profile_rejects(
-            page, level, fields, url=result.final_url or url, country=trace.country
+            page,
+            level,
+            fields,
+            url=result.final_url or url,
+            country=trace.country,
+            html=result.text,
         )
         trace.note_read(url, result.final_url or url, result.text, reason, page.subject or "")
         if reason is not None:
@@ -5954,7 +6014,12 @@ class LiveDiscoveryAdapter:
                 continue
             page = classify_page(url=result.final_url or url, html=result.text)
             reason = profile_rejects(
-                page, requested_level, fields, url=result.final_url or url, country=trace.country
+                page,
+                requested_level,
+                fields,
+                url=result.final_url or url,
+                country=trace.country,
+                html=result.text,
             )
             if LOCALIZED_IDENTITY:
                 reads = self._queue_english_alternate(
@@ -6095,7 +6160,12 @@ class LiveDiscoveryAdapter:
                 continue
             page = classify_page(url=result.final_url or url, html=result.text)
             reason = profile_rejects(
-                page, requested_level, fields, url=result.final_url or url, country=trace.country
+                page,
+                requested_level,
+                fields,
+                url=result.final_url or url,
+                country=trace.country,
+                html=result.text,
             )
             trace.note_read(url, result.final_url or url, result.text, reason, page.subject or "")
             if reason is not None:
@@ -6905,7 +6975,12 @@ class LiveDiscoveryAdapter:
                 continue
             page = classify_page(url=result.final_url or found.url, html=result.text)
             reason = profile_rejects(
-                page, level, fields, url=result.final_url or found.url, country=trace.country
+                page,
+                level,
+                fields,
+                url=result.final_url or found.url,
+                country=trace.country,
+                html=result.text,
             )
             if LOCALIZED_IDENTITY and not (page.degree_level and page.degree_level != level):
                 read_url = result.final_url or found.url
